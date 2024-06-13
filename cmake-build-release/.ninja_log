@@ -1,6 +1,0 @@
-# ninja log v6
-1	33	1718288964647271147	CMakeFiles/reskia.dir/src/reskia.cpp.o	20d05c8a2ee417dc
-2	382	1718288964648149210	CMakeFiles/reskia.dir/src/core/SkColor.cpp.o	6bbaa4be6d93b530
-383	414	1718288965029744350	libreskia.dylib	7641c499180661eb
-15	440	1718289113177276429	CMakeFiles/reskia.dir/src/reskia.cpp.o	20d05c8a2ee417dc
-440	600	1718289113602520717	libreskia.dylib	7641c499180661eb
