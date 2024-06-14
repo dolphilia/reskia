@@ -25,8 +25,7 @@ set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 #add_compile_options(-fopenmp)
 
-add_library(reskia SHARED
-        binding/reskia.cpp
+set(SOURCE_FILES
         src/core/SkColor.cpp
         src/core/SkBitmap.cpp
         src/core/SkColorSpaceXformSteps.cpp
@@ -426,7 +425,6 @@ add_library(reskia SHARED
         #src/codec/SkJpegSourceMgr.cpp
         src/codec/SkMasks.cpp
         src/codec/SkMaskSwizzler.cpp
-        src/ports/SkOSFile_posix.cpp
         src/ports/SkOSFile_stdio.cpp
         src/ports/SkMemory_malloc.cpp
         src/pathops/SkAddIntersections.cpp
@@ -462,8 +460,7 @@ add_library(reskia SHARED
         src/pathops/SkPathWriter.cpp
         src/pathops/SkReduceOrder.cpp
         src/ports/SkDebug_stdio.cpp
-        src/ports/SkDebug_win.cpp
-        src/ports/SkOSFile_win.cpp
+
         src/effects/Sk1DPathEffect.cpp
         src/effects/Sk2DPathEffect.cpp
         src/effects/SkBlenders.cpp
@@ -550,6 +547,23 @@ add_library(reskia SHARED
         src/ports/SkFontMgr_empty_factory.cpp
         #        src/codec/SkXmp.cpp
 )
+
+if (WIN32)
+    list(APPEND SOURCE_FILES
+            src/ports/SkDebug_win.cpp
+            src/ports/SkOSFile_win.cpp
+    )
+elseif (APPLE)
+    list(APPEND SOURCE_FILES
+            src/ports/SkOSFile_posix.cpp
+    )
+elseif (UNIX)
+    list(APPEND SOURCE_FILES
+            src/ports/SkOSFile_posix.cpp
+    )
+endif()
+
+add_library(reskia SHARED ${SOURCE_FILES})
 
 target_link_libraries(reskia
         $<$<PLATFORM_ID:Darwin>: skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux>
