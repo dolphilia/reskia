@@ -8,7 +8,7 @@ project(reskia)
 #set(CMAKE_C_COMPILER "gcc")
 
 include_directories(${PROJECT_SOURCE_DIR}/)
-link_directories(${PROJECT_SOURCE_DIR}/)
+link_directories(${PROJECT_SOURCE_DIR}/lib)
 #include(${PROJECT_SOURCE_DIR}/src)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -120,6 +120,14 @@ add_library(reskia SHARED
         src/core/SkPixelRef.cpp
         src/core/SkBitmapCache.cpp
         src/core/SkString.cpp
+        src/core/SkPath.cpp
+        src/core/SkEdgeClipper.cpp
+)
+
+target_link_libraries(reskia
+        $<$<PLATFORM_ID:Darwin>: skcms>
+        $<$<PLATFORM_ID:Linux>:skcms>
+        $<$<PLATFORM_ID:Windows>: skcms>
 )
 
 # set_target_properties(raia_primitive PROPERTIES PREFIX "")
