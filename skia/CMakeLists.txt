@@ -500,7 +500,7 @@ set(SOURCE_FILES
         src/effects/imagefilters/SkPictureImageFilter.cpp
         src/effects/imagefilters/SkRuntimeImageFilter.cpp
         src/effects/imagefilters/SkShaderImageFilter.cpp
-        src/codec/SkAvifCodec.cpp
+        #src/codec/SkAvifCodec.cpp
         src/codec/SkBmpBaseCodec.cpp
         src/codec/SkBmpCodec.cpp
         src/codec/SkBmpMaskCodec.cpp
@@ -545,7 +545,12 @@ set(SOURCE_FILES
         src/encode/SkICC.cpp
         src/encode/SkEncoder.cpp
         src/ports/SkFontMgr_empty_factory.cpp
+        src/opts/SkOpts_hsw.cpp
         #        src/codec/SkXmp.cpp
+)
+
+list(APPEND SOURCE_FILES
+        binding/reskia.cpp
 )
 
 if (WIN32)
@@ -568,7 +573,7 @@ add_library(reskia SHARED ${SOURCE_FILES})
 target_link_libraries(reskia
         $<$<PLATFORM_ID:Darwin>: skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux>
         $<$<PLATFORM_ID:Linux>:skcms>
-        $<$<PLATFORM_ID:Windows>: skcms>
+        $<$<PLATFORM_ID:Windows>: skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux>
 )
 
 # set_target_properties(raia_primitive PROPERTIES PREFIX "")
