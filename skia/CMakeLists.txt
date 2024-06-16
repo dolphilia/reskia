@@ -805,4 +805,6 @@ target_link_libraries(reskia
         $<$<PLATFORM_ID:Windows>: skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux>
 )
 
-# set_target_properties(raia_primitive PROPERTIES PREFIX "")
+if(WIN32)
+    set_target_properties(reskia PROPERTIES PREFIX "lib")
+endif()

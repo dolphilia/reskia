@@ -16,9 +16,10 @@
 #include "../static/static_sk_pixel_ref.h"
 #include "../static/static_sk_pixmap.h"
 #include "../static/static_sk_shader.h"
+#include "export_api.h"
 
 extern "C" {
-SkBitmap *SkBitmap_new(void);
+RAIA_API SkBitmap *SkBitmap_new(void);
 SkBitmap *SkBitmap_new_2(const SkBitmap *src);
 void SkBitmap_delete(SkBitmap *bitmap);
 void SkBitmap_allocN32Pixels(SkBitmap *bitmap, int width, int height, bool isOpaque);
