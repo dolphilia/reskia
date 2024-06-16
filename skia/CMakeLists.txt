@@ -630,7 +630,7 @@ list(APPEND SOURCE_FILES
         binding/sk_point_3.cpp
         binding/sk_point.cpp
         binding/sk_r_rect.cpp
-        binding/sk_raster_handle_allocator.cpp
+#        binding/sk_raster_handle_allocator.cpp
 #        binding/sk_raw_decoder.cpp
         binding/sk_rect.cpp
         binding/sk_ref_cnt_base.cpp
