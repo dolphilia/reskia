@@ -9,6 +9,9 @@
 #include <string>
 #include <map>
 #include "include/core/SkBlendMode.h"
+#ifdef _WIN32
+#include <optional>
+#endif
 
 typedef int optional_sk_blend_mode_t;
 

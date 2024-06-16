@@ -9,6 +9,9 @@
 #include <string>
 #include <map>
 #include "include/core/SkImageGenerator.h"
+#ifdef _WIN32
+#include <memory>
+#endif
 
 typedef int sk_image_generator_t;
 

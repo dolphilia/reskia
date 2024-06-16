@@ -8,6 +8,9 @@
 #include <set>
 #include <string>
 #include <map>
+#ifdef _WIN32
+#include <chrono>
+#endif
 
 typedef int chrono_milliseconds_t;
 

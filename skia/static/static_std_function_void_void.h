@@ -8,6 +8,9 @@
 #include <set>
 #include <string>
 #include <map>
+#ifdef _WIN32
+#include <functional>
+#endif
 
 typedef int function_void_void_t;
 
