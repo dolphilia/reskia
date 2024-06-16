@@ -1,9 +1,9 @@
 //
-// Created by dolphilia on 24/06/13.
+// Created by dolphilia on 2024/01/08.
 //
 
-#ifndef RESKIA_RESKIA_H
-#define RESKIA_RESKIA_H
+#ifndef RAIA_SKIA_SK_COLOR_H
+#define RAIA_SKIA_SK_COLOR_H
 
 #include "include/core/SkColor.h"
 
@@ -18,4 +18,4 @@ SkPMColor SkColor_SkPreMultiplyColor(SkColor c);
 void SkColor_SkRGBToHSV(U8CPU red, U8CPU green, U8CPU blue, SkScalar hsv[3]);
 }
 
-#endif //RESKIA_RESKIA_H
+#endif //RAIA_SKIA_SK_COLOR_H
