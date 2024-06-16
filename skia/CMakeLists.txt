@@ -536,17 +536,105 @@ list(APPEND SOURCE_FILES
 )
 
 list(APPEND SOURCE_FILES
+        static/static_sk_android_codec.cpp
+        static/static_sk_b_box_hierarchy.cpp
+        static/static_sk_blend_mode.cpp
+        static/static_sk_blender.cpp
+        static/static_sk_canvas.cpp
+        static/static_sk_capabilities.cpp
+        static/static_sk_codec.cpp
+        static/static_sk_codecs_decoder.cpp
         static/static_sk_color_4f.cpp
+        static/static_sk_color_filter.cpp
+        static/static_sk_color_info.cpp
+        static/static_sk_color_matrix.cpp
         static/static_sk_color_space.cpp
+        static/static_sk_color_table.cpp
+        static/static_sk_color.cpp
+        static/static_sk_contour_measure.cpp
+        static/static_sk_cubic_resampler.cpp
+        static/static_sk_data_table.cpp
+        static/static_sk_data.cpp
+        static/static_sk_document.cpp
+        static/static_sk_drawable_gpu_draw_handler.cpp
+        static/static_sk_drawable.cpp
+        static/static_sk_encoder_frame.cpp
+        static/static_sk_encoder.cpp
+        static/static_sk_executor.cpp
+        static/static_sk_file_stream.cpp
+        static/static_sk_flattenable_factory.cpp
+        static/static_sk_flattenable.cpp
+        static/static_sk_font_arguments_palette.cpp
+        static/static_sk_font_arguments_variation_position.cpp
+        static/static_sk_font_arguments.cpp
+        static/static_sk_font_mgr.cpp
+        static/static_sk_font_style_set.cpp
+        static/static_sk_font_style.cpp
+        static/static_sk_font.cpp
         static/static_sk_i_point.cpp
         static/static_sk_i_rect.cpp
-        static/static_sk_i_rect.cpp
         static/static_sk_i_size.cpp
+        static/static_sk_id_change_listener.cpp
+        static/static_sk_image_filter.cpp
+        static/static_sk_image_generator.cpp
         static/static_sk_image_info.cpp
+        static/static_sk_image_read_pixels_callback.cpp
+        static/static_sk_image_required_properties.cpp
         static/static_sk_image.cpp
+        static/static_sk_m_44.cpp
+        static/static_sk_mask_filter.cpp
+        static/static_sk_matrix.cpp
+        static/static_sk_memory_stream.cpp
+        static/static_sk_mesh_child_ptr.cpp
+        static/static_sk_mesh_index_buffer.cpp
+        static/static_sk_mesh_vertex_buffer.cpp
+        static/static_sk_path_effect.cpp
+        static/static_sk_path.cpp
+        static/static_sk_picture.cpp
         static/static_sk_pixel_ref.cpp
         static/static_sk_pixmap.cpp
+        static/static_sk_point_3.cpp
+        static/static_sk_point.cpp
+        static/static_sk_r_rect.cpp
+        static/static_sk_rect.cpp
+        static/static_sk_rsx_form.cpp
+        static/static_sk_runtime_effect_builder_builder_child.cpp
+        static/static_sk_runtime_effect_builder_builder_uniform.cpp
+        static/static_sk_runtime_effect_child_ptr.cpp
+        static/static_sk_runtime_effect_child.cpp
+        static/static_sk_runtime_effect_result.cpp
+        static/static_sk_runtime_effect_traced_shader.cpp
+        static/static_sk_runtime_effect_uniform.cpp
+        static/static_sk_runtime_effect.cpp
+        static/static_sk_sampling_options.cpp
         static/static_sk_shader.cpp
+        static/static_sk_size_t.cpp
+        static/static_sk_stream_asset.cpp
+        static/static_sk_stream_memory.cpp
+        static/static_sk_stream_rewindable.cpp
+        static/static_sk_stream_seekable.cpp
+        static/static_sk_stream.cpp
+        static/static_sk_string.cpp
+        static/static_sk_stroke_rec.cpp
+        static/static_sk_surface_props.cpp
+        static/static_sk_surface.cpp
+        static/static_sk_text_blob.cpp
+        static/static_sk_typeface.cpp
+        static/static_sk_v2.cpp
+        static/static_sk_v3.cpp
+        static/static_sk_v4.cpp
+        static/static_sk_vertices.cpp
+        static/static_sk_yuva_info.cpp
+        static/static_sk_yuva_pixmap_info.cpp
+        static/static_sk_yuva_pixmaps.cpp
+        static/static_std_chrono_milliseconds.cpp
+        static/static_std_function_void_void.cpp
+        static/static_std_string_view.cpp
+        static/static_std_tuple_int_int.cpp
+        static/static_std_tuple_int_sk_yuva_pixmap_info_data_type.cpp
+        static/static_std_tuple_sk_image_sk_codec_result.cpp
+        static/static_std_vector_sk_codec_frame_info.cpp
+        static/static_std_vector_sk_scalar.cpp
 )
 
 if (WIN32)
