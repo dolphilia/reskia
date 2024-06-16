@@ -18,6 +18,7 @@ int static_optional_sk_blend_mode_make(std::optional<SkBlendMode> value) {
         key = static_optional_sk_blend_mode_index++;
     }
     static_optional_sk_blend_mode[key] = value;
+    return key;
 }
 
 void static_optional_sk_blend_mode_delete(int key) {
