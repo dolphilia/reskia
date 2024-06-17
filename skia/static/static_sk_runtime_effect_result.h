@@ -10,12 +10,16 @@
 #include <map>
 #include <utility>
 #include "include/effects/SkRuntimeEffect.h"
+#include "export_api.h"
 
 typedef int sk_runtime_effect_result_t;
 
+extern "C" {
+RAIA_API void static_sk_runtime_effect_result_delete(int key);
+}
+
 // const
 int static_sk_runtime_effect_result_make(SkRuntimeEffect::Result value);
-extern "C" void static_sk_runtime_effect_result_delete(int key);
 SkRuntimeEffect::Result static_sk_runtime_effect_result_get(int key);
 void static_sk_runtime_effect_result_set(int key, SkRuntimeEffect::Result value);
 

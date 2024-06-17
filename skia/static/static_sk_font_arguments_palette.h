@@ -8,11 +8,15 @@
 #include <set>
 #include <map>
 #include "include/core/SkFontArguments.h"
+#include "export_api.h"
 
 typedef int sk_font_arguments_palette_t;
 
+extern "C" {
+RAIA_API void static_sk_font_arguments_palette_delete(int key);
+}
+
 int static_sk_font_arguments_palette_make(SkFontArguments::Palette value);
-extern "C" void static_sk_font_arguments_palette_delete(int key);
 SkFontArguments::Palette static_sk_font_arguments_palette_get(int key);
 void static_sk_font_arguments_palette_set(int key, SkFontArguments::Palette value);
 

@@ -9,11 +9,15 @@
 #include <string>
 #include <map>
 #include "include/core/SkPixmap.h"
+#include "export_api.h"
 
 typedef int sk_pixmap_t;
 
+extern "C" {
+RAIA_API void static_sk_pixmap_delete(int key);
+}
+
 int static_sk_pixmap_make(SkPixmap value);
-extern "C" void static_sk_pixmap_delete(int key);
 SkPixmap static_sk_pixmap_get(int key) ;
 void static_sk_pixmap_set(int key, SkPixmap value);
 

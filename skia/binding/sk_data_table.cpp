@@ -26,9 +26,6 @@ const void * SkDataTable_at(SkDataTable *data_table, int index, size_t *size) {
     return data_table->at(index, size);
 }
 
-// template<typename T>
-// const T * SkDataTable_atT(int index, size_t *size=nullptr) const
-
 const char * SkDataTable_atStr(SkDataTable *data_table, int index) {
     return data_table->atStr(index);
 }

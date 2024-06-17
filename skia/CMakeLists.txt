@@ -541,7 +541,7 @@ list(APPEND SOURCE_FILES
         binding/sk_blend_mode.cpp
         binding/sk_blender.cpp
         binding/sk_blenders.cpp
-        binding/sk_bmp_decoder.h.cpp
+        binding/sk_bmp_decoder.cpp
         binding/sk_canvas.cpp
         binding/sk_capabilities.cpp
         binding/sk_codec.cpp
