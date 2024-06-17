@@ -15,6 +15,7 @@ typedef int sk_runtime_effect_traced_shader_t;
 
 extern "C" {
 RAIA_API void static_sk_runtime_effect_traced_shader_delete(int key);
+RAIA_API SkRuntimeEffect::TracedShader * static_sk_runtime_effect_traced_shader_get_ptr(int key);
 }
 
 // const

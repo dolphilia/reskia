@@ -16,6 +16,7 @@ typedef int sk_color_t;
 
 extern "C" {
 RAIA_API void static_sk_color_delete(int key);
+RAIA_API SkColor static_sk_color_get_value(int key, int index);
 }
 
 int static_sk_color_make(SkSpan<SkColor> value);

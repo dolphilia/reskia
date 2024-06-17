@@ -30,6 +30,10 @@ SkRuntimeEffectBuilder::BuilderUniform static_sk_runtime_effect_builder_builder_
     return static_sk_runtime_effect_builder_builder_uniform[key];
 }
 
+SkRuntimeEffectBuilder::BuilderUniform * static_sk_runtime_effect_builder_builder_uniform_get_ptr(int key) {
+    return &static_sk_runtime_effect_builder_builder_uniform[key];
+}
+
 void static_sk_runtime_effect_builder_builder_uniform_set(int key, SkRuntimeEffectBuilder::BuilderUniform value) {
     static_sk_runtime_effect_builder_builder_uniform[key] = value;
 }

@@ -32,6 +32,10 @@ SkColorInfo static_sk_color_info_get(int key) {
     return static_sk_color_info[key];
 }
 
+SkColorInfo * static_sk_color_info_get_ptr(int key) {
+    return &static_sk_color_info[key];
+}
+
 void static_sk_color_info_set(int key, SkColorInfo value) {
     static_sk_color_info[key] = std::move(value);
 }

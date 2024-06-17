@@ -30,6 +30,10 @@ SkV3 static_sk_v3_get(int key) {
     return static_sk_v3[key];
 }
 
+SkV3 * static_sk_v3_get_ptr(int key) {
+    return &static_sk_v3[key];
+}
+
 void static_sk_v3_set(int key, SkV3 value) {
     static_sk_v3[key] = value;
 }

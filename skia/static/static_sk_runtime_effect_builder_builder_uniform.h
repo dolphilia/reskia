@@ -14,6 +14,7 @@ typedef int sk_runtime_effect_builder_builder_uniform_t;
 
 extern "C" {
 RAIA_API void static_sk_runtime_effect_builder_builder_uniform_delete(int key);
+RAIA_API SkRuntimeEffectBuilder::BuilderUniform * static_sk_runtime_effect_builder_builder_uniform_get_ptr(int key);
 }
 
 int static_sk_runtime_effect_builder_builder_uniform_make(SkRuntimeEffectBuilder::BuilderUniform value);

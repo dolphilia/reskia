@@ -16,6 +16,7 @@ typedef int sk_runtime_effect_result_t;
 
 extern "C" {
 RAIA_API void static_sk_runtime_effect_result_delete(int key);
+RAIA_API SkRuntimeEffect::Result * static_sk_runtime_effect_result_get_ptr(int key);
 }
 
 // const

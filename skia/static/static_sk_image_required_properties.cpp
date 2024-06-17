@@ -30,6 +30,10 @@ SkImage::RequiredProperties static_sk_image_required_properties_get(int key) {
     return static_sk_image_required_properties[key];
 }
 
+SkImage::RequiredProperties * static_sk_image_required_properties_get_ptr(int key) {
+    return &static_sk_image_required_properties[key];
+}
+
 void static_sk_image_required_properties_set(int key, SkImage::RequiredProperties value) {
     static_sk_image_required_properties[key] = value;
 }

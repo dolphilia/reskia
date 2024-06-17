@@ -14,6 +14,7 @@ typedef int sk_v2_t;
 
 extern "C" {
 RAIA_API void static_sk_v2_delete(int key);
+RAIA_API SkV2 * static_sk_v2_get_ptr(int key);
 }
 
 int static_sk_v2_make(SkV2 value);

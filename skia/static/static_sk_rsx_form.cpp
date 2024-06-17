@@ -30,6 +30,10 @@ SkRSXform static_sk_rsx_form_get(int key) {
     return static_sk_rsx_form[key];
 }
 
+SkRSXform* static_sk_rsx_form_get_ptr(int key) {
+    return &static_sk_rsx_form[key];
+}
+
 void static_sk_rsx_form_set(int key, SkRSXform value) {
     static_sk_rsx_form[key] = value;
 }

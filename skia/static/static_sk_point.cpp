@@ -30,6 +30,10 @@ SkPoint static_sk_point_get(int key) {
     return static_sk_point[key];
 }
 
+SkPoint * static_sk_point_get_ptr(int key) {
+    return &static_sk_point[key];
+}
+
 void static_sk_point_set(int key, SkPoint value) {
     static_sk_point[key] = value;
 }

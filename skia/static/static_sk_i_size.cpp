@@ -30,6 +30,10 @@ SkISize static_sk_i_size_get(int key) {
     return static_sk_i_size[key];
 }
 
+SkISize * static_sk_i_size_get_ptr(int key) {
+    return &static_sk_i_size[key];
+}
+
 void static_sk_i_size_set(int key, SkISize value) {
     static_sk_i_size[key] = value;
 }

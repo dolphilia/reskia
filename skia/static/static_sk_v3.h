@@ -14,6 +14,7 @@ typedef int sk_v3_t;
 
 extern "C" {
 RAIA_API void static_sk_v3_delete(int key);
+RAIA_API SkV3 * static_sk_v3_get_ptr(int key);
 }
 
 int static_sk_v3_make(SkV3 value);

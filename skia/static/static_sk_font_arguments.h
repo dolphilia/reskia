@@ -15,6 +15,7 @@ typedef int sk_font_arguments_t;
 
 extern "C" {
 RAIA_API void static_sk_font_arguments_delete(int key);
+RAIA_API SkFontArguments * static_sk_font_arguments_get_ptr(int key);
 }
 
 int static_sk_font_arguments_make(SkFontArguments value);

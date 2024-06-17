@@ -30,6 +30,10 @@ SkRuntimeEffectBuilder::BuilderChild static_sk_runtime_effect_builder_builder_ch
     return static_sk_runtime_effect_builder_builder_child[key];
 }
 
+SkRuntimeEffectBuilder::BuilderChild* static_sk_runtime_effect_builder_builder_child_get_ptr(int key) {
+    return &static_sk_runtime_effect_builder_builder_child[key];
+}
+
 void static_sk_runtime_effect_builder_builder_child_set(int key, SkRuntimeEffectBuilder::BuilderChild value) {
     static_sk_runtime_effect_builder_builder_child[key] = value;
 }

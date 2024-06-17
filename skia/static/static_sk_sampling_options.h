@@ -15,6 +15,7 @@ typedef int sk_sampling_options_t;
 
 extern "C" {
 RAIA_API void static_sk_sampling_options_delete(int key);
+RAIA_API SkSamplingOptions * static_sk_sampling_options_get_ptr(int key);
 }
 
 int static_sk_sampling_options_make(SkSamplingOptions value);

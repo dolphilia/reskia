@@ -30,6 +30,10 @@ SkFontArguments::VariationPosition static_sk_font_arguments_variation_position_g
     return static_sk_font_arguments_variation_position[key];
 }
 
+SkFontArguments::VariationPosition * static_sk_font_arguments_variation_position_get_ptr(int key) {
+    return &static_sk_font_arguments_variation_position[key];
+}
+
 void static_sk_font_arguments_variation_position_set(int key, SkFontArguments::VariationPosition value) {
     static_sk_font_arguments_variation_position[key] = value;
 }

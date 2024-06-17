@@ -30,6 +30,10 @@ SkV2 static_sk_v2_get(int key) {
     return static_sk_v2[key];
 }
 
+SkV2 * static_sk_v2_get_ptr(int key) {
+    return &static_sk_v2[key];
+}
+
 void static_sk_v2_set(int key, SkV2 value) {
     static_sk_v2[key] = value;
 }

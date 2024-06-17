@@ -14,6 +14,7 @@ typedef int sk_font_arguments_variation_position_t;
 
 extern "C" {
 RAIA_API void static_sk_font_arguments_variation_position_delete(int key);
+RAIA_API SkFontArguments::VariationPosition * static_sk_font_arguments_variation_position_get_ptr(int key);
 }
 
 int static_sk_font_arguments_variation_position_make(SkFontArguments::VariationPosition value);

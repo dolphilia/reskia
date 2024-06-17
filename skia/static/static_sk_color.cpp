@@ -30,6 +30,10 @@ SkSpan<SkColor> static_sk_color_get(int key) {
     return static_sk_color[key];
 }
 
+SkColor static_sk_color_get_value(int key, int index) {
+    return static_sk_color[key][index];
+}
+
 void static_color_set(int key, SkSpan<SkColor> value) {
     static_sk_color[key] = value;
 }

@@ -14,6 +14,7 @@ typedef int sk_image_required_properties_t;
 
 extern "C" {
 RAIA_API void static_sk_image_required_properties_delete(int key);
+RAIA_API SkImage::RequiredProperties * static_sk_image_required_properties_get_ptr(int key);
 }
 
 int static_sk_image_required_properties_make(SkImage::RequiredProperties value);

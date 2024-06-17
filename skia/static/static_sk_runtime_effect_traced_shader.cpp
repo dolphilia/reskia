@@ -34,6 +34,10 @@ SkRuntimeEffect::TracedShader static_sk_runtime_effect_traced_shader_get(int key
     return static_sk_runtime_effect_traced_shader[key];
 }
 
+SkRuntimeEffect::TracedShader * static_sk_runtime_effect_traced_shader_get_ptr(int key) {
+    return &static_sk_runtime_effect_traced_shader[key];
+}
+
 void static_sk_runtime_effect_traced_shader_set(int key, SkRuntimeEffect::TracedShader value) {
     static_sk_runtime_effect_traced_shader[key] = std::move(value);
 }

@@ -30,6 +30,10 @@ SkV4 static_sk_v4_get(int key) {
     return static_sk_v4[key];
 }
 
+SkV4 * static_sk_v4_get_ptr(int key) {
+    return &static_sk_v4[key];
+}
+
 void static_sk_v4_set(int key, SkV4 value) {
     static_sk_v4[key] = value;
 }

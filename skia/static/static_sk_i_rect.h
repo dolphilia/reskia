@@ -15,6 +15,7 @@ typedef int sk_i_rect_t;
 
 extern "C" {
 RAIA_API void static_sk_i_rect_delete(int key);
+RAIA_API SkIRect * static_sk_i_rect_get_ptr(int key);
 }
 
 int static_sk_i_rect_make(SkIRect value);

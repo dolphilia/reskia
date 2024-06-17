@@ -14,6 +14,7 @@ typedef int sk_size_t;
 
 extern "C" {
 RAIA_API void static_sk_size_delete(int key);
+RAIA_API SkSize * static_sk_size_get_ptr(int key);
 }
 
 int static_sk_size_make(SkSize value);

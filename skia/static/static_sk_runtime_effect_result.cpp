@@ -34,6 +34,10 @@ SkRuntimeEffect::Result static_sk_runtime_effect_result_get(int key) {
     return static_sk_runtime_effect_result[key];
 }
 
+SkRuntimeEffect::Result * static_sk_runtime_effect_result_get_ptr(int key) {
+    return &static_sk_runtime_effect_result[key];
+}
+
 void static_sk_runtime_effect_result_set(int key, SkRuntimeEffect::Result value) {
     static_sk_runtime_effect_result[key] = std::move(value);
 }

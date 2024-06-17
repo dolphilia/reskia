@@ -30,6 +30,10 @@ SkColor4f static_sk_color_4f_get(int key) {
     return static_sk_color_4f[key];
 }
 
+SkColor4f * static_sk_color_4f_get_ptr(int key) {
+    return &static_sk_color_4f[key];
+}
+
 void static_sk_color_4f_set(int key, SkColor4f value) {
     static_sk_color_4f[key] = value;
 }

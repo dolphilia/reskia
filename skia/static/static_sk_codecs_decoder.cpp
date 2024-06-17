@@ -30,6 +30,10 @@ SkCodecs::Decoder static_sk_codecs_decoder_get(int key) {
     return static_sk_codecs_decoder[key];
 }
 
+SkCodecs::Decoder * static_sk_codecs_decoder_get_ptr(int key) {
+    return &static_sk_codecs_decoder[key];
+}
+
 void static_sk_codecs_decoder_set(int key, SkCodecs::Decoder value) {
     static_sk_codecs_decoder[key] = std::move(value);
 }

@@ -30,6 +30,10 @@ SkSize static_sk_size_get(int key) {
     return static_sk_size[key];
 }
 
+SkSize * static_sk_size_get_ptr(int key) {
+    return &static_sk_size[key];
+}
+
 void static_sk_size_set(int key, SkSize value) {
     static_sk_size[key] = value;
 }

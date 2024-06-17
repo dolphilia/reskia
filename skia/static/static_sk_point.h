@@ -15,6 +15,7 @@ typedef int sk_point_t;
 
 extern "C" {
 RAIA_API void static_sk_point_delete(int key);
+RAIA_API SkPoint * static_sk_point_get_ptr(int key);
 }
 
 int static_sk_point_make(SkPoint value);

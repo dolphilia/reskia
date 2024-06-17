@@ -14,6 +14,7 @@ typedef int sk_font_arguments_palette_t;
 
 extern "C" {
 RAIA_API void static_sk_font_arguments_palette_delete(int key);
+RAIA_API SkFontArguments::Palette * static_sk_font_arguments_palette_get_ptr(int key);
 }
 
 int static_sk_font_arguments_palette_make(SkFontArguments::Palette value);
