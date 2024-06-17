@@ -30,6 +30,10 @@ SkPath static_sk_path_get(int key) {
     return static_sk_path[key];
 }
 
+SkPath * static_sk_path_get_ptr(int key) {
+    return &static_sk_path[key];
+}
+
 void static_sk_path_set(int key, const SkPath& value) {
     static_sk_path[key] = value;
 }

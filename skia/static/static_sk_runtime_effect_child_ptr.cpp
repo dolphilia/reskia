@@ -32,6 +32,10 @@ SkSpan<const SkRuntimeEffect::ChildPtr> static_const_sk_runtime_effect_child_ptr
     return static_const_sk_runtime_effect_child_ptr[key];
 }
 
+const SkRuntimeEffect::ChildPtr * static_const_sk_runtime_effect_child_ptr_get_ptr(int key, int index) {
+    return &static_const_sk_runtime_effect_child_ptr[key][index];
+}
+
 void static_const_sk_runtime_effect_child_ptr_set(int key, SkSpan<const SkRuntimeEffect::ChildPtr> value) {
     static_const_sk_runtime_effect_child_ptr[key] = value;
 }

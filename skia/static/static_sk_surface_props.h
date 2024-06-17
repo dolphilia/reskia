@@ -15,6 +15,7 @@ typedef int sk_surface_props_t;
 
 extern "C" {
 RAIA_API void static_sk_surface_props_delete(int key);
+RAIA_API SkSurfaceProps * static_sk_surface_props_get_ptr(int key);
 }
 
 int static_sk_surface_props_make(SkSurfaceProps value);

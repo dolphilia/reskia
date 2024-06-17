@@ -15,6 +15,7 @@ typedef int sk_yuva_info_t;
 
 extern "C" {
 RAIA_API void static_sk_yuva_info_delete(int key);
+RAIA_API SkYUVAInfo * static_sk_yuva_info_get_ptr(int key);
 }
 
 int static_sk_yuva_info_make(SkYUVAInfo value);

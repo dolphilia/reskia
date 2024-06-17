@@ -30,6 +30,10 @@ SkSpan<const SkEncoder::Frame> static_const_sk_encoder_frame_get(int key) {
     return static_const_sk_encoder_frame[key];
 }
 
+const SkEncoder::Frame * static_const_sk_encoder_frame_get_ptr(int key, int index) {
+    return &static_const_sk_encoder_frame[key][index];
+}
+
 void static_const_encoder_frame_set(int key, SkSpan<const SkEncoder::Frame> value) {
     static_const_sk_encoder_frame[key] = value;
 }

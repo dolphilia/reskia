@@ -15,6 +15,7 @@ typedef int sk_stroke_rec_t;
 
 extern "C" {
 RAIA_API void static_sk_stroke_rec_delete(int key);
+RAIA_API SkStrokeRec * static_sk_stroke_rec_get_ptr(int key);
 }
 
 int static_sk_stroke_rec_make(SkStrokeRec value);

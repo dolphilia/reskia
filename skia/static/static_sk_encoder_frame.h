@@ -16,6 +16,7 @@ typedef int const_sk_encoder_frame_t;
 
 extern "C" {
 RAIA_API void static_const_sk_encoder_frame_delete(int key);
+RAIA_API const SkEncoder::Frame * static_const_sk_encoder_frame_get_ptr(int key, int index);
 }
 
 int static_const_sk_encoder_frame_make(SkSpan<const SkEncoder::Frame> value);

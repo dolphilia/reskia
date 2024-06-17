@@ -15,6 +15,7 @@ typedef int sk_pixmap_t;
 
 extern "C" {
 RAIA_API void static_sk_pixmap_delete(int key);
+RAIA_API SkPixmap * static_sk_pixmap_get_ptr(int key);
 }
 
 int static_sk_pixmap_make(SkPixmap value);

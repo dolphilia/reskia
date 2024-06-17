@@ -32,6 +32,10 @@ SkFont static_sk_font_get(int key) {
     return static_sk_font[key];
 }
 
+SkFont * static_sk_font_get_ptr(int key) {
+    return &static_sk_font[key];
+}
+
 void static_sk_font_set(int key, SkFont value) {
     static_sk_font[key] = std::move(value);
 }

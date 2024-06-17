@@ -32,6 +32,10 @@ SkSpan<const SkRuntimeEffect::Uniform> static_const_sk_runtime_effect_uniform_ge
     return static_const_sk_runtime_effect_uniform[key];
 }
 
+const SkRuntimeEffect::Uniform * static_const_sk_runtime_effect_uniform_get(int key, int index) {
+    return &static_const_sk_runtime_effect_uniform[key][index];
+}
+
 void static_const_sk_runtime_effect_uniform_set(int key, SkSpan<const SkRuntimeEffect::Uniform> value) {
     static_const_sk_runtime_effect_uniform[key] = value;
 }

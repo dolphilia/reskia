@@ -30,6 +30,10 @@ SkRRect static_sk_r_rect_get(int key) {
     return static_sk_r_rect[key];
 }
 
+SkRRect * static_sk_r_rect_get_ptr(int key) {
+    return &static_sk_r_rect[key];
+}
+
 void static_sk_r_rect_set(int key, SkRRect value) {
     static_sk_r_rect[key] = value;
 }

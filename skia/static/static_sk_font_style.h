@@ -15,6 +15,7 @@ typedef int sk_font_style_t;
 
 extern "C" {
 RAIA_API void static_sk_font_style_delete(int key);
+RAIA_API SkFontStyle * static_sk_font_style_get_ptr(int key);
 }
 
 int static_sk_font_style_make(SkFontStyle value);

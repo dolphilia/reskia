@@ -30,6 +30,10 @@ SkSurfaceProps static_sk_surface_props_get(int key) {
     return static_sk_surface_props[key];
 }
 
+SkSurfaceProps * static_sk_surface_props_get_ptr(int key) {
+    return &static_sk_surface_props[key];
+}
+
 void static_sk_surface_props_set(int key, SkSurfaceProps value) {
     static_sk_surface_props[key] = value;
 }

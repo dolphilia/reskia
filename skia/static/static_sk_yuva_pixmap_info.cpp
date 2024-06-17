@@ -30,6 +30,10 @@ SkYUVAPixmapInfo static_sk_yuva_pixmap_info_get(int key) {
     return static_sk_yuva_pixmap_info[key];
 }
 
+SkYUVAPixmapInfo * static_sk_yuva_pixmap_info_get_ptr(int key) {
+    return &static_sk_yuva_pixmap_info[key];
+}
+
 void static_sk_yuva_pixmap_info_set(int key, SkYUVAPixmapInfo value) {
     static_sk_yuva_pixmap_info[key] = value;
 }

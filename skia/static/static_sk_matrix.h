@@ -15,6 +15,7 @@ typedef int sk_matrix_t;
 
 extern "C" {
 RAIA_API void static_sk_matrix_delete(int key);
+RAIA_API SkMatrix * static_sk_matrix_get_ptr(int key);
 }
 
 int static_sk_matrix_make(SkMatrix value);

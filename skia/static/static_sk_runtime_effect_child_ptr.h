@@ -15,6 +15,7 @@ typedef int const_sk_runtime_effect_child_ptr_t;
 
 extern "C" {
 RAIA_API void static_const_sk_runtime_effect_child_ptr_delete(int key);
+RAIA_API const SkRuntimeEffect::ChildPtr * static_const_sk_runtime_effect_child_ptr_get_ptr(int key, int index);
 }
 
 // const

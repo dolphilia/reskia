@@ -15,6 +15,7 @@ typedef int sk_yuva_pixmaps_t;
 
 extern "C" {
 RAIA_API void static_sk_yuva_pixmaps_delete(int key);
+RAIA_API SkYUVAPixmaps * static_sk_yuva_pixmaps_get_ptr(int key);
 }
 
 int static_sk_yuva_pixmaps_make(SkYUVAPixmaps value);

@@ -30,6 +30,10 @@ SkStrokeRec static_sk_stroke_rec_get(int key) {
     return static_sk_stroke_rec.at(key);
 }
 
+SkStrokeRec * static_sk_stroke_rec_get_ptr(int key) {
+    return &static_sk_stroke_rec.at(key);
+}
+
 void static_sk_stroke_rec_set(int key, SkStrokeRec value) {
     static_sk_stroke_rec.at(key) = value;
 }

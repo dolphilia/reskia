@@ -15,6 +15,7 @@ typedef int sk_m_44_t;
 
 extern "C" {
 RAIA_API void static_sk_m_44_delete(int key);
+RAIA_API SkM44 * static_sk_m_44_get_ptr(int key);
 }
 
 int static_sk_m_44_make(SkM44 value);

@@ -17,8 +17,10 @@ typedef int sk_span_sk_string_t;
 
 extern "C" {
 RAIA_API void static_sk_string_delete(int key);
+RAIA_API SkString * static_sk_string_get_ptr(int key);
 // sk_span
 RAIA_API void static_sk_span_sk_string_delete(int key);
+RAIA_API SkString * static_sk_span_sk_string_get_ptr(int key, int index);
 }
 
 int static_sk_string_make(SkString value);

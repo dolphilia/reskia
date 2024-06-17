@@ -30,6 +30,10 @@ SkM44 static_sk_m_44_get(int key) {
     return static_sk_m_44[key];
 }
 
+SkM44 * static_sk_m_44_get_ptr(int key) {
+    return &static_sk_m_44[key];
+}
+
 void static_sk_m_44_set(int key, SkM44 value) {
     static_sk_m_44[key] = value;
 }

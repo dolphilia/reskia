@@ -30,6 +30,10 @@ SkFontStyle static_sk_font_style_get(int key) {
     return static_sk_font_style[key];
 }
 
+SkFontStyle * static_sk_font_style_get_ptr(int key) {
+    return &static_sk_font_style[key];
+}
+
 void static_sk_font_style_set(int key, SkFontStyle value) {
     static_sk_font_style[key] = value;
 }

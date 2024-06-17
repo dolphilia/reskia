@@ -32,6 +32,10 @@ SkPixmap static_sk_pixmap_get(int key) {
     return static_sk_pixmap[key];
 }
 
+SkPixmap * static_sk_pixmap_get_ptr(int key) {
+    return &static_sk_pixmap[key];
+}
+
 void static_sk_pixmap_set(int key, SkPixmap value) {
     static_sk_pixmap[key] = std::move(value);
 }
