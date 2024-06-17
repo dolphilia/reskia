@@ -32,6 +32,10 @@ SkImageInfo static_sk_image_info_get(int key) {
     return static_sk_image_info[key];
 }
 
+SkImageInfo * static_sk_image_info_get_ptr(int key) {
+    return &static_sk_image_info[key];
+}
+
 void static_sk_image_info_set(int key, SkImageInfo value) {
     static_sk_image_info[key] = std::move(value);
 }
