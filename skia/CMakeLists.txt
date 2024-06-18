@@ -664,7 +664,6 @@ list(APPEND SOURCE_FILES
         binding/sk_tiled_image_utils.cpp
         binding/sk_trace_memory_dump.cpp
         binding/sk_trim_path_effect.cpp
-#        binding/sk_typeface_mac.cpp
         binding/sk_typeface.cpp
         binding/sk_un_pre_multiply.cpp
         binding/sk_v2.cpp
@@ -789,7 +788,13 @@ if (WIN32)
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
+            src/sfnt/SkOTTable_name.cpp
+            src/sfnt/SkOTUtils.cpp
+            src/ports/SkScalerContext_mac_ct.cpp
+            src/ports/SkTypeface_mac_ct.cpp
             src/ports/SkOSFile_posix.cpp
+            binding/sk_typeface_mac.cpp
+            src/utils/mac/SkCTFont.cpp
     )
 elseif (UNIX)
     list(APPEND SOURCE_FILES
@@ -800,7 +805,7 @@ endif()
 add_library(reskia SHARED ${SOURCE_FILES})
 
 target_link_libraries(reskia
-        $<$<PLATFORM_ID:Darwin>: skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux>
+        $<$<PLATFORM_ID:Darwin>: skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText">
         $<$<PLATFORM_ID:Linux>:skcms>
         $<$<PLATFORM_ID:Windows>: skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux>
 )
@@ -808,3 +813,14 @@ target_link_libraries(reskia
 if(WIN32)
     set_target_properties(reskia PROPERTIES PREFIX "lib")
 endif()
+
+# TEST
+
+enable_testing()
+add_executable(test_c_skia test/test.cpp)
+if(APPLE)
+    find_library(CORE_FOUNDATION CoreFoundation)
+    find_library(CORE_TEXT CoreText)
+    target_link_libraries(test_c_skia reskia "-framework CoreFoundation" "-framework CoreText" ${CORE_FOUNDATION} ${CORE_TEXT} fontconfig)
+endif ()
+add_test(NAME c_skia_test COMMAND test_c_skia)

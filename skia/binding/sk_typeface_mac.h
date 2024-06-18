@@ -5,7 +5,7 @@
 #ifndef RAIA_SKIA_SK_TYPEFACE_MAC_H
 #define RAIA_SKIA_SK_TYPEFACE_MAC_H
 
-#include "../../../common/c/utility/platform.h"
+#include "../export_api.h"
 #include "../static/static_sk_typeface.h"
 
 #ifdef __MACOS__
