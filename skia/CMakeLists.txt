@@ -367,7 +367,6 @@ set(SOURCE_FILES
         src/pathops/SkPathWriter.cpp
         src/pathops/SkReduceOrder.cpp
         src/ports/SkDebug_stdio.cpp
-        src/ports/SkFontMgr_empty_factory.cpp
         src/ports/SkGlobalInitialization_default.cpp
         src/ports/SkMemory_malloc.cpp
         src/ports/SkOSFile_stdio.cpp
@@ -783,11 +782,27 @@ list(APPEND SOURCE_FILES
 
 if (WIN32)
     list(APPEND SOURCE_FILES
+            src/fonts/SkFontMgr_indirect.cpp
+            src/fonts/SkRemotableFontMgr.cpp
             src/ports/SkDebug_win.cpp
             src/ports/SkOSFile_win.cpp
+            src/ports/SkTypeface_win_dw.cpp
+            src/ports/SkScalerContext_win_dw.cpp
+            src/sfnt/SkOTTable_name.cpp
+            src/sfnt/SkOTUtils.cpp
+            src/utils/win/SkAutoCoInitialize.cpp
+            src/utils/win/SkDWrite.cpp
+            src/utils/win/SkDWriteFontFileStream.cpp
+            src/utils/win/SkDWriteGeometrySink.cpp
+            src/utils/win/SkHRESULT.cpp
+            src/utils/win/SkIStream.cpp
+            src/ports/SkFontMgr_win_dw.cpp
+            src/ports/SkFontMgr_win_dw_factory.cpp
+            #src/utils/win/SkWGL_win.cpp
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
+            src/ports/SkFontMgr_empty_factory.cpp
             src/sfnt/SkOTTable_name.cpp
             src/sfnt/SkOTUtils.cpp
             src/ports/SkScalerContext_mac_ct.cpp
@@ -798,17 +813,20 @@ elseif (APPLE)
     )
 elseif (UNIX)
     list(APPEND SOURCE_FILES
+            src/ports/SkFontMgr_empty_factory.cpp
             src/ports/SkOSFile_posix.cpp
     )
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
 
-target_link_libraries(reskia
-        $<$<PLATFORM_ID:Darwin>: skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText">
-        $<$<PLATFORM_ID:Linux>:skcms>
-        $<$<PLATFORM_ID:Windows>: skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux>
-)
+if(WIN32)
+    target_link_libraries(reskia skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux)
+elseif(APPLE)
+    target_link_libraries(reskia skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
+elseif(UNIX)
+    target_link_libraries(reskia skcms)
+endif()
 
 if(WIN32)
     set_target_properties(reskia PROPERTIES PREFIX "lib")
@@ -822,5 +840,7 @@ if(APPLE)
     find_library(CORE_FOUNDATION CoreFoundation)
     find_library(CORE_TEXT CoreText)
     target_link_libraries(test_c_skia reskia "-framework CoreFoundation" "-framework CoreText" ${CORE_FOUNDATION} ${CORE_TEXT} fontconfig)
+elseif (WIN32)
+    target_link_libraries(test_c_skia reskia)
 endif ()
 add_test(NAME c_skia_test COMMAND test_c_skia)

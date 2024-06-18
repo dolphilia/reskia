@@ -331,8 +331,8 @@ static UTEST_INLINE utest_int64_t utest_ns(void) {
 #if defined(_MSC_VER) || defined(__MINGW64__) || defined(__MINGW32__)
   utest_large_integer counter;
   utest_large_integer frequency;
-  QueryPerformanceCounter(&counter);
-  QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&counter);
+    QueryPerformanceFrequency(&frequency);
   return UTEST_CAST(utest_int64_t,
                     (counter.QuadPart * 1000000000) / frequency.QuadPart);
 #elif defined(__linux__) && defined(__STRICT_ANSI__)
