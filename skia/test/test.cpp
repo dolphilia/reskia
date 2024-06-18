@@ -4,6 +4,9 @@
 
 #include "test.h"
 #include "../export_api.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -626,6 +629,72 @@ UTEST(cskia, BlendMode) {
     void* bitmap_pixels = SkBitmap_getPixels(bitmap);
     int bitmap_row_bytes = (int)SkBitmap_rowBytes(bitmap);
     stbi_write_png("output12.png", bitmap_width, bitmap_height, 4, bitmap_pixels, (int)bitmap_row_bytes);
+
+    // free
+    SkBitmap_delete(bitmap);
+    SkCanvas_delete(canvas);
+    SkPaint_delete(paint);
+}
+
+/**
+ * 矩形を描画する
+ */
+UTEST(cskia, stb_image) {
+    const int image_width = 500;
+    const int image_height = 500;
+    SkBitmap* bitmap = SkBitmap_new();
+    sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
+    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    SkBitmap_allocPixels_3(bitmap, imageInfoPtr);
+    SkCanvas *canvas = SkCanvas_new_3(bitmap);
+    SkPaint *paint = SkPaint_new();
+
+    // LodePNGを使ってPNGファイルを読み込む
+    const char* filePath = "miga.png";
+
+    // PNGファイルをバイナリデータとして読み込む
+    int width, height, channels;
+    // STB_IMAGEを使って画像データを読み込む
+    unsigned char* data = stbi_load(filePath, &width, &height, &channels, STBI_rgb_alpha);
+    if (!data) {
+        std::cerr << "Error loading PNG file: " << stbi_failure_reason() << std::endl;
+        exit(1);
+    }
+
+    // Skiaで使用するために画像データをSkImageに変換する
+    sk_image_info_t image_info = SkImageInfo_Make(width, height, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
+    SkImageInfo * image_info_ptr = static_sk_image_info_get_ptr(image_info);
+
+    SkBitmap* image_bitmap = SkBitmap_new();
+    SkBitmap_allocPixels_3(image_bitmap, image_info_ptr);
+    memcpy(image_bitmap->getPixels(), data, width * height * 4);
+
+    sk_image_t image = SkBitmap_asImage(image_bitmap);
+    stbi_image_free(data);
+
+    SkCanvas_drawImage(canvas, image, 0, 0);
+
+
+
+    //canvas->drawBitmap(bitmap, 100, 100, &paint); // 位置(100, 100)に描画
+
+//    SkPaint_setBlendMode(paint, SkBlendMode::kOverlay);
+//    SkPaint_setColor(paint,SK_ColorRED);
+//    int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // 矩形の位置とサイズ
+//    SkCanvas_drawRect(canvas, rect_key, paint);
+//
+//    SkPaint_setBlendMode(paint, SkBlendMode::kScreen);
+//    SkPaint_setColor(paint,SK_ColorBLUE);
+//    rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // 矩形の位置とサイズ
+//    SkCanvas_drawRect(canvas, rect_key, paint);
+//
+//    static_sk_rect_delete(rect_key);
+
+    int bitmap_width = SkBitmap_width(bitmap);
+    int bitmap_height = SkBitmap_height(bitmap);
+    void* bitmap_pixels = SkBitmap_getPixels(bitmap);
+    int bitmap_row_bytes = (int)SkBitmap_rowBytes(bitmap);
+    stbi_write_png("output13.png", bitmap_width, bitmap_height, 4, bitmap_pixels, (int)bitmap_row_bytes);
 
     // free
     SkBitmap_delete(bitmap);

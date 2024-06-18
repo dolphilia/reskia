@@ -837,7 +837,7 @@ endif()
 # TEST
 
 enable_testing()
-add_executable(test_c_skia test/test.cpp)
+add_executable(test_c_skia test/test.cpp )
 if(APPLE)
     find_library(CORE_FOUNDATION CoreFoundation)
     find_library(CORE_TEXT CoreText)
