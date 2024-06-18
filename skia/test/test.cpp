@@ -497,7 +497,7 @@ UTEST(cskia, FractalNoise) {
 /**
  * 画像を読み込んで描画する
  */
- /*
+
 UTEST(cskia, LoadImage) {
     const int image_width = 500;
     const int image_height = 500;
@@ -527,7 +527,7 @@ UTEST(cskia, LoadImage) {
     static_sk_stream_asset_delete(image_file_id);
     SkBitmap_delete(bitmap);
     SkCanvas_delete(canvas);
-}*/
+}
 
 /**
  * 円を描画する
