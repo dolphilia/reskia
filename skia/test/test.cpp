@@ -435,7 +435,7 @@ UTEST(cskia, SkTypeface_MakeFromFile) {
 /**
  * グラデーションを描画する
  */
-#ifdef __MACOS__
+//#ifdef __MACOS__
 UTEST(cskia, SkGradientShader) {
     const int image_width = 500;
     const int image_height = 500;
@@ -445,8 +445,11 @@ UTEST(cskia, SkGradientShader) {
     SkBitmap_allocPixels_3(bitmap, imageInfoPtr);
     SkCanvas *canvas = SkCanvas_new_3(bitmap);
 
-    SkPoint point1 = static_sk_point_get(SkPoint_Make(0.0f, 0.0f));
-    SkPoint point2 = static_sk_point_get(SkPoint_Make(500.0f, 500.0f));
+    auto p1 = SkPoint_Make(0.0f, 0.0f);
+    auto p2 = SkPoint_Make(500.0f, 500.0f);
+
+    SkPoint point1 = static_sk_point_get(p1);
+    SkPoint point2 = static_sk_point_get(p2);
     SkPoint points[2] = {point1, point2};
     SkColor colors[2] = {SK_ColorBLUE, SK_ColorYELLOW};
     SkPaint *paint = SkPaint_new();
@@ -465,7 +468,7 @@ UTEST(cskia, SkGradientShader) {
     SkCanvas_delete(canvas);
     SkPaint_delete(paint);
 }
-#endif
+//#endif
 
 /**
  * フラクタルノイズを描画する
