@@ -802,7 +802,9 @@ if (WIN32)
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
-            src/ports/SkFontMgr_empty_factory.cpp
+            src/ports/SkFontMgr_mac_ct.cpp
+            src/ports/SkFontMgr_mac_ct_factory.cpp
+            #src/ports/SkFontMgr_empty_factory.cpp
             src/sfnt/SkOTTable_name.cpp
             src/sfnt/SkOTUtils.cpp
             src/ports/SkScalerContext_mac_ct.cpp
