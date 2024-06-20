@@ -59,6 +59,7 @@
 #include "binding/sk_r_rect.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include "static/static_sk_point_two.h"
 
 /**
  * 矩形を描画する
@@ -445,15 +446,15 @@ UTEST(cskia, SkGradientShader) {
     SkBitmap_allocPixels_3(bitmap, imageInfoPtr);
     SkCanvas *canvas = SkCanvas_new_3(bitmap);
 
-    auto p1 = SkPoint_Make(0.0f, 0.0f);
-    auto p2 = SkPoint_Make(500.0f, 500.0f);
-
-    SkPoint point1 = static_sk_point_get(p1);
-    SkPoint point2 = static_sk_point_get(p2);
-    SkPoint points[2] = {point1, point2};
+    auto two = static_sk_point_two_make_float(0,0,500,500);
+//    auto p1 = SkPoint_Make(0.0f, 0.0f);
+//    auto p2 = SkPoint_Make(500.0f, 500.0f);
+//    SkPoint point1 = static_sk_point_get(p1);
+//    SkPoint point2 = static_sk_point_get(p2);
+//    SkPoint points[2] = {point1, point2};
     SkColor colors[2] = {SK_ColorBLUE, SK_ColorYELLOW};
     SkPaint *paint = SkPaint_new();
-    int shader_key = SkGradientShader_MakeLinear(points, colors, nullptr, 2, SkTileMode::kClamp, 0, nullptr);
+    int shader_key = SkGradientShader_MakeLinear(static_sk_point_two_get_ptr(two), colors, nullptr, 2, SkTileMode::kClamp, 0, nullptr);
     SkPaint_setShader(paint, shader_key);
     SkCanvas_drawPaint(canvas, paint);
     static_sk_shader_delete(shader_key);
@@ -665,17 +666,18 @@ UTEST(cskia, stb_image) {
     }
 
     // Skiaで使用するために画像データをSkImageに変換する
-    sk_image_info_t image_info = SkImageInfo_Make(width, height, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
+    sk_image_info_t image_info = SkImageInfo_Make(width, height, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kUnpremul_SkAlphaType);
     SkImageInfo * image_info_ptr = static_sk_image_info_get_ptr(image_info);
 
     SkBitmap* image_bitmap = SkBitmap_new();
     SkBitmap_allocPixels_3(image_bitmap, image_info_ptr);
     memcpy(image_bitmap->getPixels(), data, width * height * 4);
-
+    SkSamplingOptions
     sk_image_t image = SkBitmap_asImage(image_bitmap);
     stbi_image_free(data);
 
     SkCanvas_drawImage(canvas, image, 0, 0);
+    SkCanvas_drawImage(canvas, image, 50, 0);
 
 
 
@@ -703,6 +705,18 @@ UTEST(cskia, stb_image) {
     SkBitmap_delete(bitmap);
     SkCanvas_delete(canvas);
     SkPaint_delete(paint);
+}
+
+UTEST(cskia, SkColors_SkPoints) {
+    struct point_t {
+        float fx;
+        float fy;
+    };
+    point_t point = {0,0};
+    SkPoint sk_point = SkPoint::Make(point.fx, point.fy);
+    point_t point2 = { 500, 500};
+    SkPoint sk_point2 = SkPoint::Make(point2.fx, point2.fy);
+    SkPoint points[2] = {sk_point, sk_point2};
 }
 
 UTEST_MAIN()

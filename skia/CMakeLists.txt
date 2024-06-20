@@ -737,6 +737,7 @@ list(APPEND SOURCE_FILES
         static/static_sk_pixel_ref.cpp
         static/static_sk_pixmap.cpp
         static/static_sk_point_3.cpp
+        static/static_sk_point_two.cpp
         static/static_sk_point.cpp
         static/static_sk_r_rect.cpp
         static/static_sk_rect.cpp
