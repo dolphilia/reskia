@@ -672,7 +672,7 @@ UTEST(cskia, stb_image) {
     SkBitmap* image_bitmap = SkBitmap_new();
     SkBitmap_allocPixels_3(image_bitmap, image_info_ptr);
     memcpy(image_bitmap->getPixels(), data, width * height * 4);
-    SkSamplingOptions
+    //SkSamplingOptions
     sk_image_t image = SkBitmap_asImage(image_bitmap);
     stbi_image_free(data);
 
@@ -717,6 +717,64 @@ UTEST(cskia, SkColors_SkPoints) {
     point_t point2 = { 500, 500};
     SkPoint sk_point2 = SkPoint::Make(point2.fx, point2.fy);
     SkPoint points[2] = {sk_point, sk_point2};
+}
+
+/**
+ * パス曲線を描画する
+ */
+UTEST(cskia, drawPath2) {
+    int image_width = 500;
+    int image_height = 500;
+    SkBitmap* bitmap = SkBitmap_new();
+    sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
+    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    SkBitmap_allocPixels_3(bitmap, imageInfoPtr);
+    SkCanvas* canvas = SkCanvas_new_3(bitmap);
+
+    SkPath* path = SkPath_new();
+    //SkPath_moveTo(path, 100, 100);
+    //SkPath_quadTo(path, 150, 50, 200, 100); // 二次ベジェ曲線を追加
+    //SkPath_cubicTo(path, 250, 150, 300, 50, 350, 100); // 三次ベジェ曲線を追加
+    //SkPath_lineTo(path, 400, 200);     // 直線を追加
+    SkPath_moveTo(path, 200, 100);      // 始点
+    SkPath_lineTo(path, 400, 100);      // 上辺
+    SkPath_arcTo_2(path, 450, 100, 450, 150, 50); // 右上の角を丸める
+    SkPath_lineTo(path, 450, 250);      // 右辺
+    SkPath_arcTo_2(path, 450, 300, 400, 300, 50); // 右下の角を丸める
+    SkPath_lineTo(path, 250, 300);      // 下辺
+    SkPath_lineTo(path, 220, 350);      // 吹き出しのポイント部分
+    SkPath_lineTo(path, 200, 300);      // 吹き出しのポイント部分
+    SkPath_lineTo(path, 150, 300);      // 下辺
+    SkPath_arcTo_2(path, 100, 300, 100, 250, 50); // 左下の角を丸める
+    SkPath_lineTo(path, 100, 150);      // 左辺
+    SkPath_arcTo_2(path, 100, 100, 150, 100, 50); // 左上の角を丸める
+    SkPath_close(path);
+
+    SkPaint *paint = SkPaint_new();
+    SkPaint_setAntiAlias(paint, true);
+
+    // 塗りつぶし
+    SkPaint_setColor(paint,SK_ColorYELLOW);
+    SkPaint_setStyle(paint,SkPaint::kFill_Style);
+    SkCanvas_drawPath(canvas, path, paint);
+
+    // 線
+    SkPaint_setColor(paint, SK_ColorBLACK);
+    SkPaint_setStyle(paint, SkPaint::kStroke_Style);
+    SkPaint_setStrokeWidth(paint, 4);
+    SkCanvas_drawPath(canvas, path, paint);
+
+    int bitmap_width = SkBitmap_width(bitmap);
+    int bitmap_height = SkBitmap_height(bitmap);
+    void* bitmap_pixels = SkBitmap_getPixels(bitmap);
+    int bitmap_row_bytes = (int)SkBitmap_rowBytes(bitmap);
+    stbi_write_png("output14.png", bitmap_width, bitmap_height, 4, bitmap_pixels, (int)bitmap_row_bytes);
+
+    // free
+    SkBitmap_delete(bitmap);
+    SkCanvas_delete(canvas);
+    SkPath_delete(path);
+    SkPaint_delete(paint);
 }
 
 UTEST_MAIN()
