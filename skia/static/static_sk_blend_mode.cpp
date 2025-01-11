@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_blend_mode.h"
+#include "static_sk_blend_mode-internal.h"
 
 static std::set<int> static_optional_sk_blend_mode_available_keys;
 static std::map<int, std::optional<SkBlendMode>> static_optional_sk_blend_mode;
@@ -27,8 +28,8 @@ void static_optional_sk_blend_mode_delete(int key) {
     static_optional_sk_blend_mode_available_keys.insert(key);
 }
 
-SkBlendMode static_optional_sk_blend_mode_get(int key) {
-    return *static_optional_sk_blend_mode[key];
+int static_optional_sk_blend_mode_get(int key) { // // -> (int)SkBlendMode
+    return static_cast<int>(*static_optional_sk_blend_mode[key]);
 }
 
 void static_optional_sk_blend_mode_set(int key, std::optional<SkBlendMode> value) {

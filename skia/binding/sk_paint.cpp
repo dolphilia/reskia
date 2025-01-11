@@ -3,6 +3,7 @@
 //
 
 #include "sk_paint.h"
+#include "../static/static_sk_blend_mode-internal.h"
 
 extern "C" {
 

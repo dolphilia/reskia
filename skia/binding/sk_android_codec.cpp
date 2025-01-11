@@ -3,8 +3,11 @@
 //
 
 #include "sk_android_codec.h"
+#include "../static/static_sk_android_codec-internal.h"
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 void SkAndroidCodec_delete(SkAndroidCodec *androidCodec) {
     delete androidCodec;
@@ -84,4 +87,6 @@ sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, SkPngChunkReade
     return static_sk_android_codec_make(SkAndroidCodec::MakeFromData(static_sk_data_move(codec), pngChunkReader));
 }
 
+#ifdef __cplusplus
 }
+#endif

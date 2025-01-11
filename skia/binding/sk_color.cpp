@@ -4,6 +4,8 @@
 
 #include "sk_color.h"
 
+#include "include/core/SkColor.h"
+
 extern "C" {
 
 // SK_API

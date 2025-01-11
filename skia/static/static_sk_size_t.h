@@ -12,10 +12,16 @@
 
 typedef int sk_size_t;
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 RAIA_API void static_sk_size_delete(int key);
 RAIA_API SkSize * static_sk_size_get_ptr(int key);
+
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_size_make(SkSize value);
 SkSize static_sk_size_get(int key);

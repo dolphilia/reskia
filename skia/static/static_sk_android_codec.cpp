@@ -3,6 +3,10 @@
 //
 
 #include "static_sk_android_codec.h"
+#include "static_sk_android_codec-internal.h"
+
+#include <set>
+#include <map>
 
 static std::set<int> static_sk_android_codec_available_keys;
 static std::map<int , std::unique_ptr<SkAndroidCodec>> static_sk_android_codec;
@@ -27,7 +31,7 @@ void static_sk_android_codec_delete(int key) {
     static_sk_android_codec_available_keys.insert(key);
 }
 
-SkAndroidCodec *static_sk_android_codec_get(int key) {
+void *static_sk_android_codec_get(int key) {
     return static_sk_android_codec[key].get();
 }
 

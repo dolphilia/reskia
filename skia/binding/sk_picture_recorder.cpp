@@ -3,6 +3,7 @@
 //
 
 #include "sk_picture_recorder.h"
+#include "../static/static_sk_b_box_hierarchy-internal.h"
 
 extern "C" {
 

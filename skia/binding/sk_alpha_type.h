@@ -5,11 +5,14 @@
 #ifndef RAIA_SKIA_SK_ALPHA_TYPE_H
 #define RAIA_SKIA_SK_ALPHA_TYPE_H
 
-#include "include/core/SkAlphaType.h"
-#include "export_api.h"
-
+#ifdef __cplusplus
 extern "C" {
-RAIA_API bool SkAlphaType_SkAlphaTypeIsOpaque(SkAlphaType at);
+#endif
+
+bool SkAlphaType_SkAlphaTypeIsOpaque(int at);
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_ALPHA_TYPE_H

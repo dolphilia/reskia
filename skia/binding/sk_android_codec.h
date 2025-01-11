@@ -14,7 +14,10 @@
 #include "../static/static_sk_i_size.h"
 #include "export_api.h"
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 RAIA_API void SkAndroidCodec_delete(SkAndroidCodec *androidCodec);
 RAIA_API const SkImageInfo* SkAndroidCodec_getInfo(SkAndroidCodec *androidCodec);
 RAIA_API const skcms_ICCProfile* SkAndroidCodec_getICCProfile(SkAndroidCodec *androidCodec);
@@ -32,9 +35,12 @@ RAIA_API SkCodec::Result SkAndroidCodec_getPixels(SkAndroidCodec *androidCodec, 
 RAIA_API SkCodec* SkAndroidCodec_codec(SkAndroidCodec *androidCodec);
 RAIA_API bool SkAndroidCodec_getAndroidGainmap(SkAndroidCodec *androidCodec, SkGainmapInfo* outInfo, std::unique_ptr<SkStream>* outGainmapImageStream);
 // static
-RAIA_API sk_android_codec_t SkAndroidCodec_MakeFromCodec(sk_codec_t codec);
-RAIA_API sk_android_codec_t SkAndroidCodec_MakeFromStream(sk_codec_t codec, SkPngChunkReader* pngChunkReader);
-RAIA_API sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, SkPngChunkReader* pngChunkReader);
+RAIA_API int SkAndroidCodec_MakeFromCodec(sk_codec_t codec); // -> sk_android_codec_t
+RAIA_API int SkAndroidCodec_MakeFromStream(sk_codec_t codec, SkPngChunkReader* pngChunkReader); // -> sk_android_codec_t
+RAIA_API int SkAndroidCodec_MakeFromData(sk_codec_t codec, SkPngChunkReader* pngChunkReader); // -> sk_android_codec_t
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_ANDROID_CODEC_H

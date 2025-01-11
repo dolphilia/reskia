@@ -3,6 +3,10 @@
 //
 
 #include "static_sk_b_box_hierarchy.h"
+#include "static_sk_b_box_hierarchy-internal.h"
+
+#include <set>
+#include <map>
 
 static std::set<int> static_sk_b_box_hierarchy_available_keys;
 static std::map<int, sk_sp<SkBBoxHierarchy>> static_sk_b_box_hierarchy;
@@ -27,7 +31,7 @@ void static_sk_b_box_hierarchy_delete(int key) {
     static_sk_b_box_hierarchy_available_keys.insert(key);
 }
 
-SkBBoxHierarchy *static_sk_b_box_hierarchy_get(int key) {
+void *static_sk_b_box_hierarchy_get(int key) { // -> SkBBoxHierarchy
     return static_sk_b_box_hierarchy[key].get();
 }
 
