@@ -8,19 +8,16 @@
 #include "include/core/SkBlender.h"
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 extern "C" {
 #endif
-#endif
+
+typedef int sk_blender_t;
 
 void static_sk_blender_delete(int key);
 SkBlender *static_sk_blender_get(int key);
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 }
-#endif
-typedef int sk_blender_t;
 #endif
 
 int static_sk_blender_make(sk_sp<SkBlender> value);

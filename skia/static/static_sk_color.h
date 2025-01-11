@@ -6,20 +6,15 @@
 #define RAIA_SKIA_STATIC_SK_COLOR_H
 
 
-
-#ifdef __cplusplus
 #ifdef __cplusplus
 extern "C" {
-#endif
 #endif
 
 // void static_sk_color_delete(int key);
 // SkColor static_sk_color_get_value(int key, int index);
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 }
-#endif
 #endif
 
 // int static_sk_color_make(SkSpan<SkColor> value);

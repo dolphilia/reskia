@@ -8,20 +8,16 @@
 #include "include/core/SkCanvas.h"
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 extern "C" {
 #endif
-#endif
 
+typedef int sk_canvas_t;
 
 void static_sk_canvas_delete(int key);
 SkCanvas *static_sk_canvas_get(int key);
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 }
-#endif
-typedef int sk_canvas_t;
 #endif
 
 int static_sk_canvas_make(std::unique_ptr<SkCanvas> value);

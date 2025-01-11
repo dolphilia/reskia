@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_STD_TUPLE_SK_IMAGE_SK_CODEC_RESULT_H
 
 #include <set>
-#include <string>
 #include <map>
 #include <tuple>
 #include <utility>

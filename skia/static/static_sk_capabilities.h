@@ -6,10 +6,8 @@
 #define RAIA_SKIA_STATIC_SK_CAPABILITIES_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/core/SkCapabilities.h"
-
 
 #ifdef __cplusplus
 extern "C" {

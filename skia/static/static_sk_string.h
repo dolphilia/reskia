@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_SK_STRING_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/core/SkString.h"
 #include "include/private/base/SkSpan_impl.h"

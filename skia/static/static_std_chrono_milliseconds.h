@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_STD_CHRONO_MILLISECONDS_H
 
 #include <set>
-#include <string>
 #include <map>
 #ifdef _WIN32
 #include <chrono>

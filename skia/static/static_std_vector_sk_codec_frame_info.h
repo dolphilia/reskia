@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_STD_VECTOR_SK_CODEC_FRAME_INFO_H
 
 #include <set>
-#include <string>
 #include <map>
 #include <vector>
 #include "include/core/SkScalar.h"

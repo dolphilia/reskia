@@ -6,7 +6,6 @@
 #define RESKIA_STATIC_SK_POINT_TWO_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/core/SkRect.h"
 

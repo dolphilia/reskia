@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_STD_TUPLE_INT_SK_YUVA_PIXMAP_INFO_DATA_TYPE_H
 
 #include <set>
-#include <string>
 #include <map>
 #include <tuple>
 #include "include/core/SkYUVAPixmaps.h"

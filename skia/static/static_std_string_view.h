@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_STD_STRING_VIEW_H
 
 #include <set>
-#include <string>
 #include <map>
 
 typedef int string_view_t;

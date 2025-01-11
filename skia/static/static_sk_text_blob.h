@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_SK_TEXT_BLOB_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/core/SkTextBlob.h"
 

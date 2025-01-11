@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_SK_RUNTIME_EFFECT_UNIFORM_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/effects/SkRuntimeEffect.h"
 

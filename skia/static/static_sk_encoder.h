@@ -6,7 +6,6 @@
 #define RAIA_SKIA_STATIC_SK_ENCODER_H
 
 #include <set>
-#include <string>
 #include <map>
 #include "include/encode/SkEncoder.h"
 
