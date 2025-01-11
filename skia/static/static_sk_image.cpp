@@ -30,7 +30,7 @@ void static_sk_image_delete(int key) {
     static_sk_image_available_keys.insert(key);
 }
 
-SkImage *static_sk_image_get(int key) {
+void *static_sk_image_get(int key) { // -> SkImage *
     return static_sk_image[key].get();
 }
 

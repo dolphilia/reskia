@@ -28,7 +28,7 @@ void static_sk_stream_asset_delete(int key) {
     static_sk_stream_asset_available_keys.insert(key);
 }
 
-SkStreamAsset *static_sk_stream_asset_get(int key) {
+void *static_sk_stream_asset_get(int key) { // -> SkStreamAsset *
     return static_sk_stream_asset[key].get();
 }
 

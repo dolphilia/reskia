@@ -28,7 +28,7 @@ void static_sk_drawable_gpu_draw_handler_delete(int key) {
     static_sk_drawable_gpu_draw_handler_available_keys.insert(key);
 }
 
-SkDrawable::GpuDrawHandler *static_sk_drawable_gpu_draw_handler_get(int key) {
+void *static_sk_drawable_gpu_draw_handler_get(int key) { // -> SkDrawable::GpuDrawHandler *
     return static_sk_drawable_gpu_draw_handler[key].get();
 }
 

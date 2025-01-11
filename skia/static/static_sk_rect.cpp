@@ -35,6 +35,6 @@ void static_sk_rect_set(int key, SkRect value) {
     static_sk_rect[key] = value;
 }
 
-SkRect *static_sk_rect_get_ptr(int key) {
+void *static_sk_rect_get_ptr(int key) { // -> SkRect *
     return &static_sk_rect[key];
 }

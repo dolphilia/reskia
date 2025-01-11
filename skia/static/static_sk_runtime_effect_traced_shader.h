@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_runtime_effect_traced_shader_t;
 void static_sk_runtime_effect_traced_shader_delete(int key);
-SkRuntimeEffect::TracedShader * static_sk_runtime_effect_traced_shader_get_ptr(int key);
+void * static_sk_runtime_effect_traced_shader_get_ptr(int key); // -> SkRuntimeEffect::TracedShader *
 #ifdef __cplusplus
 }
 #endif

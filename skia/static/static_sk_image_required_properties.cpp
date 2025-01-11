@@ -31,7 +31,7 @@ SkImage::RequiredProperties static_sk_image_required_properties_get(int key) {
     return static_sk_image_required_properties[key];
 }
 
-SkImage::RequiredProperties * static_sk_image_required_properties_get_ptr(int key) {
+void * static_sk_image_required_properties_get_ptr(int key) { // -> SkImage::RequiredProperties *
     return &static_sk_image_required_properties[key];
 }
 

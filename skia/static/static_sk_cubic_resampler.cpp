@@ -31,6 +31,6 @@ SkCubicResampler static_sk_cubic_resampler_get(int key) {
     return static_sk_cubic_resampler[key];
 }
 
-SkCubicResampler * static_sk_cubic_resampler_get_ptr(int key) {
+void * static_sk_cubic_resampler_get_ptr(int key) { // -> SkCubicResampler *
     return &static_sk_cubic_resampler[key];
 }

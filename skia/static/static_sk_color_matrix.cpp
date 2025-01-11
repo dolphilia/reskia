@@ -32,7 +32,7 @@ SkColorMatrix static_sk_color_matrix_get(int key) {
     return static_sk_color_matrix[key];
 }
 
-SkColorMatrix * static_sk_color_matrix_get_ptr(int key) {
+void * static_sk_color_matrix_get_ptr(int key) { // -> SkColorMatrix *
     return &static_sk_color_matrix[key];
 }
 

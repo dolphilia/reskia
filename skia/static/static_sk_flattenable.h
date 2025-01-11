@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_flattenable_t;
 void static_sk_flattenable_delete(int key);
-SkFlattenable *static_sk_flattenable_get(int key);
+void *static_sk_flattenable_get(int key); // -> SkFlattenable *
 #ifdef __cplusplus
 }
 #endif

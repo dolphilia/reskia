@@ -31,7 +31,7 @@ SkV4 static_sk_v4_get(int key) {
     return static_sk_v4[key];
 }
 
-SkV4 * static_sk_v4_get_ptr(int key) {
+void * static_sk_v4_get_ptr(int key) { // -> SkV4 *
     return &static_sk_v4[key];
 }
 

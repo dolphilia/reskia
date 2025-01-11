@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_pixel_ref_t;
 void static_sk_pixel_ref_delete(int key);
-SkPixelRef *static_sk_pixel_ref_get(int key);
+void *static_sk_pixel_ref_get(int key); // -> SkPixelRef *
 #ifdef __cplusplus
 }
 #endif

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_mesh_vertex_buffer_t;
 void static_sk_mesh_vertex_buffer_delete(int key);
-SkMesh::VertexBuffer *static_sk_mesh_vertex_buffer_get(int key);
+void *static_sk_mesh_vertex_buffer_get(int key); // -> SkMesh::VertexBuffer *
 #ifdef __cplusplus
 }
 #endif

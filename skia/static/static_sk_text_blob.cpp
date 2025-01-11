@@ -30,7 +30,7 @@ void static_sk_text_blob_delete(int key) {
     static_sk_text_blob_available_keys.insert(key);
 }
 
-SkTextBlob *static_sk_text_blob_get(int key) {
+void * static_sk_text_blob_get(int key) { // -> SkTextBlob *
     return static_sk_text_blob[key].get();
 }
 

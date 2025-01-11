@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_pixmap_t;
 void static_sk_pixmap_delete(int key);
-SkPixmap * static_sk_pixmap_get_ptr(int key);
+void * static_sk_pixmap_get_ptr(int key); // -> SkPixmap *
 #ifdef __cplusplus
 }
 #endif

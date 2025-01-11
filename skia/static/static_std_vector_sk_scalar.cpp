@@ -29,7 +29,7 @@ void static_vector_sk_scalar_delete(int key) {
     static_vector_float_available_keys.insert(key);
 }
 
-SkScalar static_vector_sk_scalar_get(int key, int index) {
+float static_vector_sk_scalar_get(int key, int index) { // -> SkScalar
     return static_vector_float[key][index];
 }
 
@@ -37,11 +37,11 @@ void static_vector_sk_scalar_set(int key, std::vector<SkScalar> value) {
     static_vector_float[key] = std::move(value);
 }
 
-void static_vector_sk_scalar_push_back(int key, SkScalar value) {
+void static_vector_sk_scalar_push_back(int key, float value) { // SkScalar value
     static_vector_float[key].push_back(value);
 }
 
-void static_vector_sk_scalar_insert(int key, int index, SkScalar value) {
+void static_vector_sk_scalar_insert(int key, int index, float value) { // SkScalar value
     static_vector_float[key].insert(static_vector_float[key].begin() + index, value);
 }
 

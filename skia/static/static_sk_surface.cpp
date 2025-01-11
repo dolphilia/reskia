@@ -30,7 +30,7 @@ void static_sk_surface_delete(int key) {
     static_sk_surface_available_keys.insert(key);
 }
 
-SkSurface *static_sk_surface_get(int key) {
+void * static_sk_surface_get(int key) { // -> SkSurface *
     return static_sk_surface[key].get();
 }
 

@@ -30,7 +30,7 @@ void static_sk_image_filter_delete(int key) {
     static_sk_image_filter_available_keys.insert(key);
 }
 
-SkImageFilter *static_sk_image_filter_get(int key) {
+void *static_sk_image_filter_get(int key) { // -> SkImageFilter *
     return static_sk_image_filter[key].get();
 }
 

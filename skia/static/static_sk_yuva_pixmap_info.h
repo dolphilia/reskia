@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_yuva_pixmap_info_t;
 void static_sk_yuva_pixmap_info_delete(int key);
-SkYUVAPixmapInfo * static_sk_yuva_pixmap_info_get_ptr(int key);
+void * static_sk_yuva_pixmap_info_get_ptr(int key); // -> SkYUVAPixmapInfo *
 #ifdef __cplusplus
 }
 #endif

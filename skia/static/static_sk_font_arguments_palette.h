@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_font_arguments_palette_t;
 void static_sk_font_arguments_palette_delete(int key);
-SkFontArguments::Palette * static_sk_font_arguments_palette_get_ptr(int key);
+void * static_sk_font_arguments_palette_get_ptr(int key); // -> SkFontArguments::Palette *
 #ifdef __cplusplus
 }
 #endif

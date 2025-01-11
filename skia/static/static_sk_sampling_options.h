@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_sampling_options_t;
 void static_sk_sampling_options_delete(int key);
-SkSamplingOptions * static_sk_sampling_options_get_ptr(int key);
+void * static_sk_sampling_options_get_ptr(int key); // -> SkSamplingOptions *
 #ifdef __cplusplus
 }
 #endif

@@ -31,7 +31,7 @@ SkPoint3 static_sk_point_3_get(int key) {
     return static_sk_point_3[key];
 }
 
-SkPoint3 * static_sk_point_3_get_ptr(int key) {
+void * static_sk_point_3_get_ptr(int key) { // -> SkPoint3 *
     return &static_sk_point_3[key];
 }
 

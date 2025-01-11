@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_file_stream_t;
 void static_sk_file_stream_delete(int key);
-SkFILEStream *static_sk_file_stream_get(int key);
+void *static_sk_file_stream_get(int key); // -> SkFILEStream *
 #ifdef __cplusplus
 }
 #endif

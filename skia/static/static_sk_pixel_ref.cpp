@@ -30,7 +30,7 @@ void static_sk_pixel_ref_delete(int key) {
     static_sk_pixel_ref_available_keys.insert(key);
 }
 
-SkPixelRef *static_sk_pixel_ref_get(int key) {
+void *static_sk_pixel_ref_get(int key) { // -> SkPixelRef *
     return static_sk_pixel_ref[key].get();
 }
 

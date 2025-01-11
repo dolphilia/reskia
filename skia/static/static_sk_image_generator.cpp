@@ -28,7 +28,7 @@ void static_sk_image_generator_delete(int key) {
     static_sk_image_generator_available_keys.insert(key);
 }
 
-SkImageGenerator *static_sk_image_generator_get(int key) {
+void *static_sk_image_generator_get(int key) { // -> SkImageGenerator *
     return static_sk_image_generator[key].get();
 }
 

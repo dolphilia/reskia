@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_path_t;
 void static_sk_path_delete(int key);
-SkPath * static_sk_path_get_ptr(int key);
+void * static_sk_path_get_ptr(int key); // -> SkPath *
 #ifdef __cplusplus
 }
 #endif

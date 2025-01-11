@@ -30,7 +30,7 @@ void static_sk_mask_filter_delete(int key) {
     static_sk_mask_filter_available_keys.insert(key);
 }
 
-SkMaskFilter *static_sk_mask_filter_get(int key) {
+void *static_sk_mask_filter_get(int key) { // -> SkMaskFilter *
     return static_sk_mask_filter[key].get();
 }
 

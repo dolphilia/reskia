@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_matrix_t;
 void static_sk_matrix_delete(int key);
-SkMatrix * static_sk_matrix_get_ptr(int key);
+void * static_sk_matrix_get_ptr(int key); // -> SkMatrix *
 #ifdef __cplusplus
 }
 #endif

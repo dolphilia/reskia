@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_image_required_properties_t;
 void static_sk_image_required_properties_delete(int key);
-SkImage::RequiredProperties * static_sk_image_required_properties_get_ptr(int key);
+void * static_sk_image_required_properties_get_ptr(int key); // -> SkImage::RequiredProperties *
 #ifdef __cplusplus
 }
 #endif

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_color_table_t;
 void static_sk_color_table_delete(int key);
-SkColorTable *static_sk_color_table_get(int key);
+void *static_sk_color_table_get(int key); // -> SkColorTable *
 #ifdef __cplusplus
 }
 #endif

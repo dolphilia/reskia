@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_font_style_t;
 void static_sk_font_style_delete(int key);
-SkFontStyle * static_sk_font_style_get_ptr(int key);
+void * static_sk_font_style_get_ptr(int key); // -> SkFontStyle *
 #ifdef __cplusplus
 }
 #endif

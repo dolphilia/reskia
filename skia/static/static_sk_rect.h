@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_rect_t;
 void static_sk_rect_delete(int key);
-SkRect *static_sk_rect_get_ptr(int key);
+void *static_sk_rect_get_ptr(int key); // -> SkRect *
 #ifdef __cplusplus
 }
 #endif

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_rsx_form_t;
 void static_sk_rsx_form_delete(int key);
-SkRSXform * static_sk_rsx_form_get_ptr(int key);
+void * static_sk_rsx_form_get_ptr(int key); // -> SkRSXform *
 #ifdef __cplusplus
 }
 #endif

@@ -30,7 +30,7 @@ void static_sk_flattenable_delete(int key) {
     static_sk_flattenable_available_keys.insert(key);
 }
 
-SkFlattenable *static_sk_flattenable_get(int key) {
+void *static_sk_flattenable_get(int key) { // -> SkFlattenable *
     return static_sk_flattenable[key].get();
 }
 

@@ -30,7 +30,7 @@ void static_sk_color_space_delete(int key) {
     static_sk_color_space_available_keys.insert(key);
 }
 
-SkColorSpace *static_sk_color_space_get(int key) {
+void *static_sk_color_space_get(int key) { // -> SkColorSpace *
     return static_sk_color_space[key].get();
 }
 

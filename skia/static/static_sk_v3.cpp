@@ -31,7 +31,7 @@ SkV3 static_sk_v3_get(int key) {
     return static_sk_v3[key];
 }
 
-SkV3 * static_sk_v3_get_ptr(int key) {
+void * static_sk_v3_get_ptr(int key) { // -> SkV3 *
     return &static_sk_v3[key];
 }
 

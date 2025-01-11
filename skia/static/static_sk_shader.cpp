@@ -30,7 +30,7 @@ void static_sk_shader_delete(int key) {
     static_sk_shader_available_keys.insert(key);
 }
 
-SkShader *static_sk_shader_get(int key) {
+void * static_sk_shader_get(int key) { // -> SkShader *
     return static_sk_shader[key].get();
 }
 

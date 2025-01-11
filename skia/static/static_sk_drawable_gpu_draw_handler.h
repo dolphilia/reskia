@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_drawable_gpu_draw_handler_t;
 void static_sk_drawable_gpu_draw_handler_delete(int key);
-SkDrawable::GpuDrawHandler *static_sk_drawable_gpu_draw_handler_get(int key);
+void *static_sk_drawable_gpu_draw_handler_get(int key); // -> SkDrawable::GpuDrawHandler *
 #ifdef __cplusplus
 }
 #endif

@@ -16,7 +16,7 @@ extern "C" {
 #endif
 typedef int sk_image_info_t;
 void static_sk_image_info_delete(int key);
-SkImageInfo * static_sk_image_info_get_ptr(int key);
+void * static_sk_image_info_get_ptr(int key); // -> SkImageInfo *
 #ifdef __cplusplus
 }
 #endif

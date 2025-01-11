@@ -31,7 +31,7 @@ SkPath static_sk_path_get(int key) {
     return static_sk_path[key];
 }
 
-SkPath * static_sk_path_get_ptr(int key) {
+void * static_sk_path_get_ptr(int key) { // -> SkPath *
     return &static_sk_path[key];
 }
 

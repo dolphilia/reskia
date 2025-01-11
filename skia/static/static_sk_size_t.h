@@ -11,19 +11,16 @@
 
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 extern "C" {
 #endif
+
 typedef int sk_size_t;
-#endif
 
 void static_sk_size_delete(int key);
-SkSize * static_sk_size_get_ptr(int key);
+void * static_sk_size_get_ptr(int key); // -> SkSize *
 
 #ifdef __cplusplus
-#ifdef __cplusplus
 }
-#endif
 #endif
 
 int static_sk_size_make(SkSize value);

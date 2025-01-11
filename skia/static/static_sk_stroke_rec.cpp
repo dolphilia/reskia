@@ -31,7 +31,7 @@ SkStrokeRec static_sk_stroke_rec_get(int key) {
     return static_sk_stroke_rec.at(key);
 }
 
-SkStrokeRec * static_sk_stroke_rec_get_ptr(int key) {
+void * static_sk_stroke_rec_get_ptr(int key) { // -> SkStrokeRec *
     return &static_sk_stroke_rec.at(key);
 }
 

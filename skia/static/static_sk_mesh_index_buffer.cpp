@@ -30,7 +30,7 @@ void static_sk_mesh_index_buffer_delete(int key) {
     static_sk_mesh_index_buffer_available_keys.insert(key);
 }
 
-SkMesh::IndexBuffer *static_sk_mesh_index_buffer_get(int key) {
+void *static_sk_mesh_index_buffer_get(int key) { // -> SkMesh::IndexBuffer *
     return static_sk_mesh_index_buffer[key].get();
 }
 

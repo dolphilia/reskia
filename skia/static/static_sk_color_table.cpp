@@ -30,7 +30,7 @@ void static_sk_color_table_delete(int key) {
     static_sk_color_table_available_keys.insert(key);
 }
 
-SkColorTable *static_sk_color_table_get(int key) {
+void *static_sk_color_table_get(int key) { // -> SkColorTable *
     return static_sk_color_table[key].get();
 }
 

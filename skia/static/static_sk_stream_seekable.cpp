@@ -28,7 +28,7 @@ void static_sk_stream_seekable_delete(int key) {
     static_sk_stream_seekable_available_keys.insert(key);
 }
 
-SkStreamSeekable *static_sk_stream_seekable_get(int key) {
+void *static_sk_stream_seekable_get(int key) { // -> SkStreamSeekable *
     return static_sk_stream_seekable[key].get();
 }
 

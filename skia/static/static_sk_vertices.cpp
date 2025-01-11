@@ -30,7 +30,7 @@ void static_sk_vertices_delete(int key) {
     static_sk_vertices_available_keys.insert(key);
 }
 
-SkVertices *static_sk_vertices_get(int key) {
+void * static_sk_vertices_get(int key) { // -> SkVertices *
     return static_sk_vertices[key].get();
 }
 

@@ -28,7 +28,7 @@ void static_sk_stream_rewindable_delete(int key) {
     static_sk_stream_rewindable_available_keys.insert(key);
 }
 
-SkStreamRewindable *static_sk_stream_rewindable_get(int key) {
+void *static_sk_stream_rewindable_get(int key) { // -> SkStreamRewindable *
     return static_sk_stream_rewindable[key].get();
 }
 

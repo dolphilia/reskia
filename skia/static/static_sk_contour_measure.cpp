@@ -30,7 +30,7 @@ void static_sk_contour_measure_delete(int key) {
     static_sk_contour_measure_available_keys.insert(key);
 }
 
-SkContourMeasure *static_sk_contour_measure_get(int key) {
+void *static_sk_contour_measure_get(int key) { // -> SkContourMeasure *
     return static_sk_contour_measure[key].get();
 }
 

@@ -30,7 +30,7 @@ void static_sk_id_change_listener_delete(int key) {
     static_sk_id_change_listener_available_keys.insert(key);
 }
 
-SkIDChangeListener *static_sk_id_change_listener_get(int key) {
+void *static_sk_id_change_listener_get(int key) { // -> SkIDChangeListener *
     return static_sk_id_change_listener[key].get();
 }
 

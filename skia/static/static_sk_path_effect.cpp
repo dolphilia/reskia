@@ -30,7 +30,7 @@ void static_sk_path_effect_delete(int key) {
     static_sk_path_effect_available_keys.insert(key);
 }
 
-SkPathEffect *static_sk_path_effect_get(int key) {
+void *static_sk_path_effect_get(int key) { // -> SkPathEffect *
     return static_sk_path_effect[key].get();
 }
 

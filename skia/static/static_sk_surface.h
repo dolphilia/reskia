@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_surface_t;
 void static_sk_surface_delete(int key);
-SkSurface *static_sk_surface_get(int key);
+void * static_sk_surface_get(int key); // -> SkSurface *
 #ifdef __cplusplus
 }
 #endif

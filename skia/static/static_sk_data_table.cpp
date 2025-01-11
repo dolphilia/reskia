@@ -30,7 +30,7 @@ void static_sk_data_table_delete(int key) {
     static_sk_data_table_available_keys.insert(key);
 }
 
-SkDataTable *static_sk_data_table_get(int key) {
+void *static_sk_data_table_get(int key) { // -> SkDataTable *
     return static_sk_data_table[key].get();
 }
 

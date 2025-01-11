@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_stream_rewindable_t;
 void static_sk_stream_rewindable_delete(int key);
-SkStreamRewindable *static_sk_stream_rewindable_get(int key);
+void *static_sk_stream_rewindable_get(int key); // -> SkStreamRewindable *
 #ifdef __cplusplus
 }
 #endif

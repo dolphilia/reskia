@@ -31,7 +31,7 @@ SkSurfaceProps static_sk_surface_props_get(int key) {
     return static_sk_surface_props[key];
 }
 
-SkSurfaceProps * static_sk_surface_props_get_ptr(int key) {
+void * static_sk_surface_props_get_ptr(int key) { // -> SkSurfaceProps *
     return &static_sk_surface_props[key];
 }
 

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_yuva_info_t;
 void static_sk_yuva_info_delete(int key);
-SkYUVAInfo * static_sk_yuva_info_get_ptr(int key);
+void * static_sk_yuva_info_get_ptr(int key); // -> SkYUVAInfo *
 #ifdef __cplusplus
 }
 #endif

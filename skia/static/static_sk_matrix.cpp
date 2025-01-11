@@ -31,7 +31,7 @@ SkMatrix static_sk_matrix_get(int key) {
     return static_sk_matrix[key];
 }
 
-SkMatrix * static_sk_matrix_get_ptr(int key) {
+void * static_sk_matrix_get_ptr(int key) { // -> SkMatrix *
     return &static_sk_matrix[key];
 }
 

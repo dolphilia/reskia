@@ -30,7 +30,7 @@ void static_sk_mesh_vertex_buffer_delete(int key) {
     static_sk_mesh_vertex_buffer_available_keys.insert(key);
 }
 
-SkMesh::VertexBuffer *static_sk_mesh_vertex_buffer_get(int key) {
+void *static_sk_mesh_vertex_buffer_get(int key) { // -> SkMesh::VertexBuffer *
     return static_sk_mesh_vertex_buffer[key].get();
 }
 

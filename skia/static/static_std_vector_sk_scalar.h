@@ -16,9 +16,9 @@ extern "C" {
 #endif
 typedef int vector_sk_scalar_t;
 void static_vector_sk_scalar_delete(int key);
-SkScalar static_vector_sk_scalar_get(int key, int index);
-void static_vector_sk_scalar_push_back(int key, SkScalar value);
-void static_vector_sk_scalar_insert(int key, int index, SkScalar value);
+float static_vector_sk_scalar_get(int key, int index); // -> SkScalar
+void static_vector_sk_scalar_push_back(int key, float value); // SkScalar value
+void static_vector_sk_scalar_insert(int key, int index, float value); // SkScalar value
 void static_vector_sk_scalar_pop_back(int key);
 void static_vector_sk_scalar_erase(int key, int index);
 #ifdef __cplusplus

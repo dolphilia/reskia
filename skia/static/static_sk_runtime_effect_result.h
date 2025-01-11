@@ -16,7 +16,7 @@ extern "C" {
 #endif
 typedef int sk_runtime_effect_result_t;
 void static_sk_runtime_effect_result_delete(int key);
-SkRuntimeEffect::Result * static_sk_runtime_effect_result_get_ptr(int key);
+void * static_sk_runtime_effect_result_get_ptr(int key); // -> SkRuntimeEffect::Result *
 #ifdef __cplusplus
 }
 #endif

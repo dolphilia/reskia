@@ -28,7 +28,7 @@ void static_sk_memory_stream_delete(int key) {
     static_sk_memory_stream_available_keys.insert(key);
 }
 
-SkMemoryStream *static_sk_memory_stream_get(int key) {
+void *static_sk_memory_stream_get(int key) { // -> SkMemoryStream *
     return static_sk_memory_stream[key].get();
 }
 

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int const_sk_runtime_effect_child_t;
 void static_const_sk_runtime_effect_child_delete(int key);
-const SkRuntimeEffect::Child * static_const_sk_runtime_effect_child_get_ptr(int key, int index);
+const void * static_const_sk_runtime_effect_child_get_ptr(int key, int index); // -> const SkRuntimeEffect::Child *
 #ifdef __cplusplus
 }
 #endif

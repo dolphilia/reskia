@@ -31,7 +31,7 @@ SkFontArguments static_sk_font_arguments_get(int key) {
     return static_sk_font_arguments[key];
 }
 
-SkFontArguments * static_sk_font_arguments_get_ptr(int key) {
+void * static_sk_font_arguments_get_ptr(int key) { // -> SkFontArguments *
     return &static_sk_font_arguments[key];
 }
 

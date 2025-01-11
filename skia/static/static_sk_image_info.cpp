@@ -33,7 +33,7 @@ SkImageInfo static_sk_image_info_get(int key) {
     return static_sk_image_info[key];
 }
 
-SkImageInfo * static_sk_image_info_get_ptr(int key) {
+void * static_sk_image_info_get_ptr(int key) { // -> SkImageInfo *
     return &static_sk_image_info[key];
 }
 

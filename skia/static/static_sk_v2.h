@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_v2_t;
 void static_sk_v2_delete(int key);
-SkV2 * static_sk_v2_get_ptr(int key);
+void * static_sk_v2_get_ptr(int key); // -> SkV2 *
 #ifdef __cplusplus
 }
 #endif

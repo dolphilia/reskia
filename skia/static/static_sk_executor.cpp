@@ -28,7 +28,7 @@ void static_sk_executor_delete(int key) {
     static_sk_executor_available_keys.insert(key);
 }
 
-SkExecutor *static_sk_executor_get(int key) {
+void *static_sk_executor_get(int key) { // -> SkExecutor *
     return static_sk_executor[key].get();
 }
 

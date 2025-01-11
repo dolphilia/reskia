@@ -39,7 +39,7 @@ SkString static_sk_string_get(int key) {
     return static_sk_string[key];
 }
 
-SkString * static_sk_string_get_ptr(int key) {
+void * static_sk_string_get_ptr(int key) { // -> SkString *
     return &static_sk_string[key];
 }
 
@@ -71,7 +71,7 @@ SkSpan<SkString> static_sk_span_sk_string_get(int key) {
     return static_sk_span_sk_string[key];
 }
 
-SkString * static_sk_span_sk_string_get_ptr(int key, int index) {
+void * static_sk_span_sk_string_get_ptr(int key, int index) { // -> SkString *
     return &static_sk_span_sk_string[key][index];
 }
 

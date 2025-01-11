@@ -31,7 +31,7 @@ SkISize static_sk_i_size_get(int key) {
     return static_sk_i_size[key];
 }
 
-SkISize * static_sk_i_size_get_ptr(int key) {
+void * static_sk_i_size_get_ptr(int key) { // -> SkISize *
     return &static_sk_i_size[key];
 }
 

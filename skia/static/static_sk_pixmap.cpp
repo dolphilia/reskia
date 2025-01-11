@@ -33,7 +33,7 @@ SkPixmap static_sk_pixmap_get(int key) {
     return static_sk_pixmap[key];
 }
 
-SkPixmap * static_sk_pixmap_get_ptr(int key) {
+void * static_sk_pixmap_get_ptr(int key) { // -> SkPixmap *
     return &static_sk_pixmap[key];
 }
 

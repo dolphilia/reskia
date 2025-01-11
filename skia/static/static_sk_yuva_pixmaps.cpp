@@ -33,7 +33,7 @@ SkYUVAPixmaps static_sk_yuva_pixmaps_get(int key) {
     return static_sk_yuva_pixmaps[key];
 }
 
-SkYUVAPixmaps * static_sk_yuva_pixmaps_get_ptr(int key) {
+void * static_sk_yuva_pixmaps_get_ptr(int key) { // -> SkYUVAPixmaps *
     return &static_sk_yuva_pixmaps[key];
 }
 

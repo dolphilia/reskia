@@ -16,10 +16,10 @@ extern "C" {
 typedef int sk_data_t;
 typedef int const_sk_data_t;
 void static_sk_data_delete(int key);
-SkData *static_sk_data_get(int key);
+void *static_sk_data_get(int key); // -> SkData *
 // const
 void static_const_sk_data_delete(int key);
-const SkData *static_const_sk_data_get(int key);
+const void *static_const_sk_data_get(int key); // -> const SkData *
 #ifdef __cplusplus
 }
 #endif

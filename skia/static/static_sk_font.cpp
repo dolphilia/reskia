@@ -33,7 +33,7 @@ SkFont static_sk_font_get(int key) {
     return static_sk_font[key];
 }
 
-SkFont * static_sk_font_get_ptr(int key) {
+void * static_sk_font_get_ptr(int key) { // -> SkFont *
     return &static_sk_font[key];
 }
 

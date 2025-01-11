@@ -48,7 +48,7 @@ void static_sk_point_two_delete(int key) {
 //    return static_sk_point_two[key];
 //}
 
-SkPoint * static_sk_point_two_get_ptr(int key) {
+void * static_sk_point_two_get_ptr(int key) { // -> SkPoint *
     return reinterpret_cast<SkPoint *>(&static_sk_point_two[key]);
 }
 

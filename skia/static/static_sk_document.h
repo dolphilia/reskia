@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_document_t;
 void static_sk_document_delete(int key);
-SkDocument *static_sk_document_get(int key);
+void *static_sk_document_get(int key); // -> SkDocument *
 #ifdef __cplusplus
 }
 #endif

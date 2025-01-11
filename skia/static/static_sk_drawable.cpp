@@ -30,7 +30,7 @@ void static_sk_drawable_delete(int key) {
     static_sk_drawable_available_keys.insert(key);
 }
 
-SkDrawable *static_sk_drawable_get(int key) {
+void *static_sk_drawable_get(int key) { // -> SkDrawable *
     return static_sk_drawable[key].get();
 }
 

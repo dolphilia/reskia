@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_drawable_t;
 void static_sk_drawable_delete(int key);
-SkDrawable *static_sk_drawable_get(int key);
+void *static_sk_drawable_get(int key); // -> SkDrawable *
 #ifdef __cplusplus
 }
 #endif

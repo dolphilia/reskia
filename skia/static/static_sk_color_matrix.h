@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_color_matrix_t;
 void static_sk_color_matrix_delete(int key);
-SkColorMatrix * static_sk_color_matrix_get_ptr(int key);
+void * static_sk_color_matrix_get_ptr(int key); // -> SkColorMatrix *
 #ifdef __cplusplus
 }
 #endif

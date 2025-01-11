@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_mask_filter_t;
 void static_sk_mask_filter_delete(int key);
-SkMaskFilter *static_sk_mask_filter_get(int key);
+void *static_sk_mask_filter_get(int key); // -> SkMaskFilter *
 #ifdef __cplusplus
 }
 #endif

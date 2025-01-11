@@ -35,7 +35,7 @@ SkRuntimeEffect::Result static_sk_runtime_effect_result_get(int key) {
     return static_sk_runtime_effect_result[key];
 }
 
-SkRuntimeEffect::Result * static_sk_runtime_effect_result_get_ptr(int key) {
+void * static_sk_runtime_effect_result_get_ptr(int key) { // -> SkRuntimeEffect::Result *
     return &static_sk_runtime_effect_result[key];
 }
 

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_runtime_effect_t;
 void static_sk_runtime_effect_delete(int key);
-SkRuntimeEffect *static_sk_runtime_effect_get(int key);
+void *static_sk_runtime_effect_get(int key); // -> SkRuntimeEffect *
 #ifdef __cplusplus
 }
 #endif

@@ -30,7 +30,7 @@ void static_sk_font_style_set_delete(int key) {
     static_sk_font_style_set_available_keys.insert(key);
 }
 
-SkFontStyleSet *static_sk_font_style_set_get(int key) {
+void *static_sk_font_style_set_get(int key) { // -> SkFontStyleSet *
     return static_sk_font_style_set[key].get();
 }
 

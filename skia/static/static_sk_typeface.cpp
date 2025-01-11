@@ -30,7 +30,7 @@ void static_sk_typeface_delete(int key) {
     static_sk_typeface_available_keys.insert(key);
 }
 
-SkTypeface *static_sk_typeface_get(int key) {
+void * static_sk_typeface_get(int key) { // -> SkTypeface *
     return static_sk_typeface[key].get();
 }
 

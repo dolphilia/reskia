@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_cubic_resampler_t;
 void static_sk_cubic_resampler_delete(int key);
-SkCubicResampler * static_sk_cubic_resampler_get_ptr(int key);
+void * static_sk_cubic_resampler_get_ptr(int key); // -> SkCubicResampler *
 #ifdef __cplusplus
 }
 #endif

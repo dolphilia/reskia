@@ -31,7 +31,7 @@ SkFontArguments::Palette static_sk_font_arguments_palette_get(int key) {
     return static_sk_font_arguments_palette[key];
 }
 
-SkFontArguments::Palette * static_sk_font_arguments_palette_get_ptr(int key) {
+void * static_sk_font_arguments_palette_get_ptr(int key) { // -> SkFontArguments::Palette *
     return &static_sk_font_arguments_palette[key];
 }
 

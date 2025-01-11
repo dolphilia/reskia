@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_vertices_t;
 void static_sk_vertices_delete(int key);
-SkVertices *static_sk_vertices_get(int key);
+void * static_sk_vertices_get(int key); // -> SkVertices *
 #ifdef __cplusplus
 }
 #endif

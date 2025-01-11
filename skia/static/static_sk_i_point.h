@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_i_point_t;
 void static_sk_i_point_delete(int key);
-SkIPoint * static_sk_i_point_get_ptr(int key);
+void * static_sk_i_point_get_ptr(int key); // -> SkIPoint *
 #ifdef __cplusplus
 }
 #endif

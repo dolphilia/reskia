@@ -31,7 +31,7 @@ SkSamplingOptions static_sk_sampling_options_get(int key) {
     return static_sk_sampling_options[key];
 }
 
-SkSamplingOptions * static_sk_sampling_options_get_ptr(int key) {
+void * static_sk_sampling_options_get_ptr(int key) { // -> SkSamplingOptions *
     return &static_sk_sampling_options[key];
 }
 

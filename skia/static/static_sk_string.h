@@ -16,10 +16,10 @@ extern "C" {
 #endif
 typedef int sk_string_t;
 void static_sk_string_delete(int key);
-SkString * static_sk_string_get_ptr(int key);
+void * static_sk_string_get_ptr(int key); // -> SkString *
 // sk_span
 void static_sk_span_sk_string_delete(int key);
-SkString * static_sk_span_sk_string_get_ptr(int key, int index);
+void * static_sk_span_sk_string_get_ptr(int key, int index); // -> SkString *
 #ifdef __cplusplus
 }
 #endif

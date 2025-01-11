@@ -31,7 +31,7 @@ SkRRect static_sk_r_rect_get(int key) {
     return static_sk_r_rect[key];
 }
 
-SkRRect * static_sk_r_rect_get_ptr(int key) {
+void * static_sk_r_rect_get_ptr(int key) { // -> SkRRect *
     return &static_sk_r_rect[key];
 }
 

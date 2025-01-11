@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_runtime_effect_builder_builder_uniform_t;
 void static_sk_runtime_effect_builder_builder_uniform_delete(int key);
-SkRuntimeEffectBuilder::BuilderUniform * static_sk_runtime_effect_builder_builder_uniform_get_ptr(int key);
+void * static_sk_runtime_effect_builder_builder_uniform_get_ptr(int key); // -> SkRuntimeEffectBuilder::BuilderUniform *
 #ifdef __cplusplus
 }
 #endif

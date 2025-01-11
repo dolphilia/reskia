@@ -31,7 +31,7 @@ SkFontArguments::VariationPosition static_sk_font_arguments_variation_position_g
     return static_sk_font_arguments_variation_position[key];
 }
 
-SkFontArguments::VariationPosition * static_sk_font_arguments_variation_position_get_ptr(int key) {
+void * static_sk_font_arguments_variation_position_get_ptr(int key) { // -> SkFontArguments::VariationPosition *
     return &static_sk_font_arguments_variation_position[key];
 }
 

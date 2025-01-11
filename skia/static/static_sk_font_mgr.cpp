@@ -30,7 +30,7 @@ void static_sk_font_mgr_delete(int key) {
     static_sk_font_mgr_available_keys.insert(key);
 }
 
-SkFontMgr *static_sk_font_mgr_get(int key) {
+void *static_sk_font_mgr_get(int key) { // -> SkFontMgr *
     return static_sk_font_mgr[key].get();
 }
 

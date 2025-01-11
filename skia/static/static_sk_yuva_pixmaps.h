@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_yuva_pixmaps_t;
 void static_sk_yuva_pixmaps_delete(int key);
-SkYUVAPixmaps * static_sk_yuva_pixmaps_get_ptr(int key);
+void * static_sk_yuva_pixmaps_get_ptr(int key); // -> SkYUVAPixmaps *
 #ifdef __cplusplus
 }
 #endif

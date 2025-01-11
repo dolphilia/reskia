@@ -31,7 +31,7 @@ SkSize static_sk_size_get(int key) {
     return static_sk_size[key];
 }
 
-SkSize * static_sk_size_get_ptr(int key) {
+void * static_sk_size_get_ptr(int key) { // -> SkSize *
     return &static_sk_size[key];
 }
 

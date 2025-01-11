@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_stroke_rec_t;
 void static_sk_stroke_rec_delete(int key);
-SkStrokeRec * static_sk_stroke_rec_get_ptr(int key);
+void * static_sk_stroke_rec_get_ptr(int key); // -> SkStrokeRec *
 #ifdef __cplusplus
 }
 #endif

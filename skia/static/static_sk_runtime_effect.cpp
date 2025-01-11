@@ -30,7 +30,7 @@ void static_sk_runtime_effect_delete(int key) {
     static_sk_runtime_effect_available_keys.insert(key);
 }
 
-SkRuntimeEffect *static_sk_runtime_effect_get(int key) {
+void *static_sk_runtime_effect_get(int key) { // -> SkRuntimeEffect *
     return static_sk_runtime_effect[key].get();
 }
 

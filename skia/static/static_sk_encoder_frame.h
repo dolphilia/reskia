@@ -16,7 +16,7 @@ extern "C" {
 #endif
 typedef int const_sk_encoder_frame_t;
 void static_const_sk_encoder_frame_delete(int key);
-const SkEncoder::Frame * static_const_sk_encoder_frame_get_ptr(int key, int index);
+const void * static_const_sk_encoder_frame_get_ptr(int key, int index); // -> const SkEncoder::Frame *
 #ifdef __cplusplus
 }
 #endif

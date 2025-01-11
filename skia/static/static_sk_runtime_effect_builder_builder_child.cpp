@@ -31,7 +31,7 @@ SkRuntimeEffectBuilder::BuilderChild static_sk_runtime_effect_builder_builder_ch
     return static_sk_runtime_effect_builder_builder_child[key];
 }
 
-SkRuntimeEffectBuilder::BuilderChild* static_sk_runtime_effect_builder_builder_child_get_ptr(int key) {
+void * static_sk_runtime_effect_builder_builder_child_get_ptr(int key) { // -> SkRuntimeEffectBuilder::BuilderChild *
     return &static_sk_runtime_effect_builder_builder_child[key];
 }
 

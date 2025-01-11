@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_font_arguments_variation_position_t;
 void static_sk_font_arguments_variation_position_delete(int key);
-SkFontArguments::VariationPosition * static_sk_font_arguments_variation_position_get_ptr(int key);
+void * static_sk_font_arguments_variation_position_get_ptr(int key); // -> SkFontArguments::VariationPosition *
 #ifdef __cplusplus
 }
 #endif

@@ -33,7 +33,7 @@ void static_sk_data_delete(int key) {
     static_sk_data_available_keys.insert(key);
 }
 
-SkData *static_sk_data_get(int key) {
+void *static_sk_data_get(int key) { // -> SkData *
     return static_sk_data[key].get();
 }
 
@@ -67,7 +67,7 @@ void static_const_sk_data_delete(int key) {
     static_const_sk_data_available_keys.insert(key);
 }
 
-const SkData *static_const_sk_data_get(int key) {
+const void *static_const_sk_data_get(int key) { // -> const SkData *
     return static_const_sk_data[key].get();
 }
 

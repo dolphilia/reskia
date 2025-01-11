@@ -31,7 +31,7 @@ SkFontStyle static_sk_font_style_get(int key) {
     return static_sk_font_style[key];
 }
 
-SkFontStyle * static_sk_font_style_get_ptr(int key) {
+void * static_sk_font_style_get_ptr(int key) { // -> SkFontStyle *
     return &static_sk_font_style[key];
 }
 

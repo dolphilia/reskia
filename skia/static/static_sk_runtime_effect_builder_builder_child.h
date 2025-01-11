@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_runtime_effect_builder_builder_child_t;
 void static_sk_runtime_effect_builder_builder_child_delete(int key);
-SkRuntimeEffectBuilder::BuilderChild* static_sk_runtime_effect_builder_builder_child_get_ptr(int key);
+void * static_sk_runtime_effect_builder_builder_child_get_ptr(int key); // -> SkRuntimeEffectBuilder::BuilderChild *
 #ifdef __cplusplus
 }
 #endif

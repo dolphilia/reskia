@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int const_sk_runtime_effect_uniform_t;
 void static_const_sk_runtime_effect_uniform_delete(int key);
-const SkRuntimeEffect::Uniform * static_const_sk_runtime_effect_uniform_get(int key, int index);
+const void * static_const_sk_runtime_effect_uniform_get(int key, int index); // -> const SkRuntimeEffect::Uniform *
 #ifdef __cplusplus
 }
 #endif

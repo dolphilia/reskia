@@ -30,7 +30,7 @@ void static_sk_document_delete(int key) {
     static_sk_document_available_keys.insert(key);
 }
 
-SkDocument *static_sk_document_get(int key) {
+void *static_sk_document_get(int key) { // -> SkDocument *
     return static_sk_document[key].get();
 }
 

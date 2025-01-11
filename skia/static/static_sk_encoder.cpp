@@ -28,7 +28,7 @@ void static_sk_encoder_delete(int key) {
     static_sk_encoder_available_keys.insert(key);
 }
 
-SkEncoder *static_sk_encoder_get(int key) {
+void *static_sk_encoder_get(int key) { // -> SkEncoder *
     return static_sk_encoder[key].get();
 }
 

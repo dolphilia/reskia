@@ -31,7 +31,7 @@ SkYUVAInfo static_sk_yuva_info_get(int key) {
     return static_sk_yuva_info[key];
 }
 
-SkYUVAInfo * static_sk_yuva_info_get_ptr(int key) {
+void * static_sk_yuva_info_get_ptr(int key) { // -> SkYUVAInfo *
     return &static_sk_yuva_info[key];
 }
 
