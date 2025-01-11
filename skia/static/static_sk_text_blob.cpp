@@ -5,6 +5,7 @@
 #include "static_sk_text_blob.h"
 
 #include <utility>
+#include "static_sk_text_blob-internal.h"
 
 static std::set<int> static_sk_text_blob_available_keys;
 static std::map<int , sk_sp<SkTextBlob>> static_sk_text_blob;

@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_rsx_form.h"
+#include "static_sk_rsx_form-internal.h"
 
 static std::set<int> static_sk_rsx_form_available_keys;
 static std::map<int , SkRSXform> static_sk_rsx_form;

@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_color_4f.h"
+#include "static_sk_color_4f-internal.h"
 
 static std::set<int> static_sk_color_4f_available_keys;
 static std::map<int , SkColor4f> static_sk_color_4f;

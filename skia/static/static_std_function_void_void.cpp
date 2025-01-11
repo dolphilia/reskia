@@ -5,6 +5,7 @@
 #include "static_std_function_void_void.h"
 
 #include <utility>
+#include "static_std_function_void_void-internal.h"
 
 static std::set<int> static_function_void_void_available_keys;
 static std::map<int , std::function<void(void)>> static_function_void_void;

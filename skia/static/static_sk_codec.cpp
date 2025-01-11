@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_codec.h"
+#include "static_sk_codec-internal.h"
 
 static std::set<int> static_sk_codec_available_keys;
 static std::map<int , std::unique_ptr<SkCodec>> static_sk_codec;

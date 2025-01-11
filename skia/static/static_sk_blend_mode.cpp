@@ -4,6 +4,7 @@
 
 #include "static_sk_blend_mode.h"
 #include "static_sk_blend_mode-internal.h"
+#include <set>
 
 static std::set<int> static_optional_sk_blend_mode_available_keys;
 static std::map<int, std::optional<SkBlendMode>> static_optional_sk_blend_mode;

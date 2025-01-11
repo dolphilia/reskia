@@ -5,6 +5,7 @@
 #include "static_sk_pixmap.h"
 
 #include <utility>
+#include "static_sk_pixmap-internal.h"
 
 static std::set<int> static_sk_pixmap_available_keys;
 static std::map<int , SkPixmap> static_sk_pixmap;

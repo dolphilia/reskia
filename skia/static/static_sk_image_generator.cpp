@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_image_generator.h"
+#include "static_sk_image_generator-internal.h"
 
 static std::set<int> static_sk_image_generator_available_keys;
 static std::map<int , std::unique_ptr<SkImageGenerator>> static_sk_image_generator;

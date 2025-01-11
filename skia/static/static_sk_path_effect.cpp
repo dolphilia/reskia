@@ -5,6 +5,7 @@
 #include "static_sk_path_effect.h"
 
 #include <utility>
+#include "static_sk_path_effect-internal.h"
 
 static std::set<int> static_sk_path_effect_available_keys;
 static std::map<int , sk_sp<SkPathEffect>> static_sk_path_effect;

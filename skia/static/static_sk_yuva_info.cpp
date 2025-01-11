@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_yuva_info.h"
+#include "static_sk_yuva_info-internal.h"
 
 static std::set<int> static_sk_yuva_info_available_keys;
 static std::map<int , SkYUVAInfo> static_sk_yuva_info;

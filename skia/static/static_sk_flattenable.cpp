@@ -5,6 +5,7 @@
 #include "static_sk_flattenable.h"
 
 #include <utility>
+#include "static_sk_flattenable-internal.h"
 
 static std::set<int> static_sk_flattenable_available_keys;
 static std::map<int , sk_sp<SkFlattenable>> static_sk_flattenable;

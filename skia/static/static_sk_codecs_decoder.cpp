@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_codecs_decoder.h"
+#include "static_sk_codecs_decoder-internal.h"
 
 static std::set<int> static_sk_codecs_decoder_available_keys;
 static std::map<int , SkCodecs::Decoder> static_sk_codecs_decoder;

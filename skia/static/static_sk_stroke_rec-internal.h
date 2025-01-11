@@ -1,0 +1,5 @@
+#ifndef STATIC_SK_STROKE_REC_INTERNAL_H
+#define STATIC_SK_STROKE_REC_INTERNAL_H
+#include <set>
+#include <map>
+#endif // STATIC_SK_STROKE_REC_INTERNAL_H

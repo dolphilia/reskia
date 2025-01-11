@@ -5,6 +5,7 @@
 #include "static_sk_yuva_pixmaps.h"
 
 #include <utility>
+#include "static_sk_yuva_pixmaps-internal.h"
 
 static std::set<int> static_sk_yuva_pixmaps_available_keys;
 static std::map<int , SkYUVAPixmaps> static_sk_yuva_pixmaps;

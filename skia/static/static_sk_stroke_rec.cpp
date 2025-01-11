@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_stroke_rec.h"
+#include "static_sk_stroke_rec-internal.h"
 
 static std::set<int> static_sk_stroke_rec_available_keys;
 static std::map<int , SkStrokeRec> static_sk_stroke_rec;

@@ -5,6 +5,7 @@
 #include "static_sk_mesh_index_buffer.h"
 
 #include <utility>
+#include "static_sk_mesh_index_buffer-internal.h"
 
 static std::set<int> static_sk_mesh_index_buffer_available_keys;
 static std::map<int , sk_sp<SkMesh::IndexBuffer>> static_sk_mesh_index_buffer;

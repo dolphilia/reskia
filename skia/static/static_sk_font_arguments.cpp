@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_font_arguments.h"
+#include "static_sk_font_arguments-internal.h"
 
 static std::set<int> static_sk_font_arguments_available_keys;
 static std::map<int , SkFontArguments> static_sk_font_arguments;

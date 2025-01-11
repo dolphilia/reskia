@@ -5,18 +5,19 @@
 #ifndef RAIA_SKIA_STATIC_SK_BLENDER_H
 #define RAIA_SKIA_STATIC_SK_BLENDER_H
 
-#include <set>
-#include <string>
-#include <map>
 #include "include/core/SkBlender.h"
-#include "export_api.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef int sk_blender_t;
+void static_sk_blender_delete(int key);
+SkBlender *static_sk_blender_get(int key);
 
-extern "C" {
-RAIA_API void static_sk_blender_delete(int key);
-RAIA_API SkBlender *static_sk_blender_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_blender_make(sk_sp<SkBlender> value);
 void static_sk_blender_set(int key, sk_sp<SkBlender> value);

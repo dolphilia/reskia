@@ -5,6 +5,7 @@
 #include "static_sk_document.h"
 
 #include <utility>
+#include "static_sk_document-internal.h"
 
 static std::set<int> static_sk_document_available_keys;
 static std::map<int , sk_sp<SkDocument>> static_sk_document;

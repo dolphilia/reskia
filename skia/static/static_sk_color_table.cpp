@@ -5,6 +5,7 @@
 #include "static_sk_color_table.h"
 
 #include <utility>
+#include "static_sk_color_table-internal.h"
 
 static std::set<int> static_sk_color_table_available_keys;
 static std::map<int , sk_sp<SkColorTable>> static_sk_color_table;

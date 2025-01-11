@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_font_arguments_palette.h"
+#include "static_sk_font_arguments_palette-internal.h"
 
 static std::set<int> static_sk_font_arguments_palette_available_keys;
 static std::map<int , SkFontArguments::Palette> static_sk_font_arguments_palette;

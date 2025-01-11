@@ -9,6 +9,7 @@
 #include <map>
 #include "include/private/base/SkSpan_impl.h"
 #include "include/core/SkColor.h"
+#include "static_sk_color-internal.h"
 
 // struct color_t {
 //     int r;

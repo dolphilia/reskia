@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_executor.h"
+#include "static_sk_executor-internal.h"
 
 static std::set<int> static_sk_executor_available_keys;
 static std::map<int , std::unique_ptr<SkExecutor>> static_sk_executor;

@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_stream_seekable.h"
+#include "static_sk_stream_seekable-internal.h"
 
 static std::set<int> static_sk_stream_seekable_available_keys;
 static std::map<int , std::unique_ptr<SkStreamSeekable>> static_sk_stream_seekable;

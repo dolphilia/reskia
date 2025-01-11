@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_runtime_effect_uniform.h"
+#include "static_sk_runtime_effect_uniform-internal.h"
 
 static std::set<int> static_const_sk_runtime_effect_uniform_available_keys;
 static std::map<int , SkSpan<const SkRuntimeEffect::Uniform>> static_const_sk_runtime_effect_uniform;

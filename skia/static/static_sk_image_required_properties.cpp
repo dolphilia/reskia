@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_image_required_properties.h"
+#include "static_sk_image_required_properties-internal.h"
 
 static std::set<int> static_sk_image_required_properties_available_keys;
 static std::map<int , SkImage::RequiredProperties> static_sk_image_required_properties;

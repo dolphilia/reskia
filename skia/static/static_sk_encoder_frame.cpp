@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_encoder_frame.h"
+#include "static_sk_encoder_frame-internal.h"
 
 static std::set<int> static_const_sk_encoder_frame_available_keys;
 static std::map<int , SkSpan<const SkEncoder::Frame>> static_const_sk_encoder_frame;

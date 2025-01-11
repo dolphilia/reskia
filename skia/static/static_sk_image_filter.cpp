@@ -5,6 +5,7 @@
 #include "static_sk_image_filter.h"
 
 #include <utility>
+#include "static_sk_image_filter-internal.h"
 
 static std::set<int> static_sk_image_filter_available_keys;
 static std::map<int , sk_sp<SkImageFilter>> static_sk_image_filter;

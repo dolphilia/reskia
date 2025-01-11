@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_drawable_gpu_draw_handler.h"
+#include "static_sk_drawable_gpu_draw_handler-internal.h"
 
 static std::set<int> static_sk_drawable_gpu_draw_handler_available_keys;
 static std::map<int , std::unique_ptr<SkDrawable::GpuDrawHandler>> static_sk_drawable_gpu_draw_handler;

@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_stream_rewindable.h"
+#include "static_sk_stream_rewindable-internal.h"
 
 static std::set<int> static_sk_stream_rewindable_available_keys;
 static std::map<int , std::unique_ptr<SkStreamRewindable>> static_sk_stream_rewindable;

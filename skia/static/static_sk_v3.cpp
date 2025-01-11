@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_v3.h"
+#include "static_sk_v3-internal.h"
 
 static std::set<int> static_sk_v3_available_keys;
 static std::map<int , SkV3> static_sk_v3;

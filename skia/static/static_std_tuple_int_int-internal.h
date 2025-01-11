@@ -1,0 +1,5 @@
+#ifndef STATIC_STD_TUPLE_INT_INT_INTERNAL_H
+#define STATIC_STD_TUPLE_INT_INT_INTERNAL_H
+#include <set>
+#include <map>
+#endif // STATIC_STD_TUPLE_INT_INT_INTERNAL_H

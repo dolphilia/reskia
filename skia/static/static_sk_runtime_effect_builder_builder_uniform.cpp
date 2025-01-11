@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_runtime_effect_builder_builder_uniform.h"
+#include "static_sk_runtime_effect_builder_builder_uniform-internal.h"
 
 static std::set<int> static_sk_runtime_effect_builder_builder_uniform_available_keys;
 static std::map<int , SkRuntimeEffectBuilder::BuilderUniform> static_sk_runtime_effect_builder_builder_uniform;

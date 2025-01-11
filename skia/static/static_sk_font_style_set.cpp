@@ -5,6 +5,7 @@
 #include "static_sk_font_style_set.h"
 
 #include <utility>
+#include "static_sk_font_style_set-internal.h"
 
 static std::set<int> static_sk_font_style_set_available_keys;
 static std::map<int , sk_sp<SkFontStyleSet>> static_sk_font_style_set;

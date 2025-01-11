@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_runtime_effect_builder_builder_child.h"
+#include "static_sk_runtime_effect_builder_builder_child-internal.h"
 
 static std::set<int> static_sk_runtime_effect_builder_builder_child_available_keys;
 static std::map<int , SkRuntimeEffectBuilder::BuilderChild> static_sk_runtime_effect_builder_builder_child;

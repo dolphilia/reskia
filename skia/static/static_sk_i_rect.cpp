@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_i_rect.h"
+#include "static_sk_i_rect-internal.h"
 
 static std::set<int> static_sk_i_rect_available_keys;
 static std::map<int , SkIRect> static_sk_i_rect;

@@ -5,6 +5,7 @@
 #include "static_sk_contour_measure.h"
 
 #include <utility>
+#include "static_sk_contour_measure-internal.h"
 
 static std::set<int> static_sk_contour_measure_available_keys;
 static std::map<int , sk_sp<SkContourMeasure>> static_sk_contour_measure;

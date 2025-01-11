@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_surface_props.h"
+#include "static_sk_surface_props-internal.h"
 
 static std::set<int> static_sk_surface_props_available_keys;
 static std::map<int , SkSurfaceProps> static_sk_surface_props;

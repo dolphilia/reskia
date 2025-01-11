@@ -5,6 +5,7 @@
 #include "static_sk_color_space.h"
 
 #include <utility>
+#include "static_sk_color_space-internal.h"
 
 static std::set<int> static_sk_color_space_available_keys;
 static std::map<int , sk_sp<SkColorSpace>> static_sk_color_space;

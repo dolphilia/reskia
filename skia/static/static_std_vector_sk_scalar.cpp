@@ -5,6 +5,7 @@
 #include "static_std_vector_sk_scalar.h"
 
 #include <utility>
+#include "static_std_vector_sk_scalar-internal.h"
 
 static std::set<int> static_vector_float_available_keys;
 static std::map<int , std::vector<SkScalar>> static_vector_float;

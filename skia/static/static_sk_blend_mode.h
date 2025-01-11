@@ -5,8 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_BLEND_MODE_H
 #define RAIA_SKIA_STATIC_SK_BLEND_MODE_H
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif

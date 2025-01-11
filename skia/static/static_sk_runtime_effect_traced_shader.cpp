@@ -5,6 +5,7 @@
 #include "static_sk_runtime_effect_traced_shader.h"
 
 #include <utility>
+#include "static_sk_runtime_effect_traced_shader-internal.h"
 
 static std::set<int> static_sk_runtime_effect_traced_shader_available_keys;
 static std::map<int , SkRuntimeEffect::TracedShader> static_sk_runtime_effect_traced_shader;

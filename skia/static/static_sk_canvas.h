@@ -5,18 +5,20 @@
 #ifndef RAIA_SKIA_STATIC_SK_CANVAS_H
 #define RAIA_SKIA_STATIC_SK_CANVAS_H
 
-#include <set>
-#include <string>
-#include <map>
 #include "include/core/SkCanvas.h"
-#include "export_api.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef int sk_canvas_t;
 
-extern "C" {
-RAIA_API void static_sk_canvas_delete(int key);
-RAIA_API SkCanvas *static_sk_canvas_get(int key);
+void static_sk_canvas_delete(int key);
+SkCanvas *static_sk_canvas_get(int key);
+
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_canvas_make(std::unique_ptr<SkCanvas> value);
 void static_sk_canvas_set(int key, std::unique_ptr<SkCanvas> value);

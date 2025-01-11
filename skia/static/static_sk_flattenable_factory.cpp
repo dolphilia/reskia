@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_flattenable_factory.h"
+#include "static_sk_flattenable_factory-internal.h"
 
 static std::set<int> static_sk_flattenable_factory_available_keys;
 static std::map<int , SkFlattenable::Factory> static_sk_flattenable_factory;

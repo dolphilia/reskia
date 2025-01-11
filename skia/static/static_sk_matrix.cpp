@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_matrix.h"
+#include "static_sk_matrix-internal.h"
 
 static std::set<int> static_sk_matrix_available_keys;
 static std::map<int , SkMatrix> static_sk_matrix;

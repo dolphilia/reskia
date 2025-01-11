@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_encoder.h"
+#include "static_sk_encoder-internal.h"
 
 static std::set<int> static_sk_encoder_available_keys;
 static std::map<int , std::unique_ptr<SkEncoder>> static_sk_encoder;

@@ -5,6 +5,7 @@
 #include "static_sk_mesh_vertex_buffer.h"
 
 #include <utility>
+#include "static_sk_mesh_vertex_buffer-internal.h"
 
 static std::set<int> static_sk_mesh_vertex_buffer_available_keys;
 static std::map<int , sk_sp<SkMesh::VertexBuffer>> static_sk_mesh_vertex_buffer;

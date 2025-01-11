@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_image_read_pixels_callback.h"
+#include "static_sk_image_read_pixels_callback-internal.h"
 
 //#include <set>
 //#include <string>

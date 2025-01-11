@@ -5,6 +5,7 @@
 #include "static_sk_surface.h"
 
 #include <utility>
+#include "static_sk_surface-internal.h"
 
 static std::set<int> static_sk_surface_available_keys;
 static std::map<int , sk_sp<SkSurface>> static_sk_surface;

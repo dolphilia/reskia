@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_m_44.h"
+#include "static_sk_m_44-internal.h"
 
 static std::set<int> static_sk_m_44_available_keys;
 static std::map<int , SkM44> static_sk_m_44;

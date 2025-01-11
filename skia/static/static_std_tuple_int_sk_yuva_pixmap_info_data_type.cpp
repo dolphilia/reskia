@@ -3,6 +3,7 @@
 //
 
 #include "static_std_tuple_int_sk_yuva_pixmap_info_data_type.h"
+#include "static_std_tuple_int_sk_yuva_pixmap_info_data_type-internal.h"
 
 static std::set<int> static_tuple_int_sk_yuva_pixmap_info_data_type_available_keys;
 static std::map<int , std::tuple<int, SkYUVAPixmapInfo::DataType>> static_tuple_int_sk_yuva_pixmap_info_data_type;

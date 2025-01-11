@@ -5,6 +5,7 @@
 #include "static_sk_image_info.h"
 
 #include <utility>
+#include "static_sk_image_info-internal.h"
 
 static std::set<int> static_sk_image_info_available_keys;
 static std::map<int , SkImageInfo> static_sk_image_info;

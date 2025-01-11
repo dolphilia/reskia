@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_capabilities.h"
+#include "static_sk_capabilities-internal.h"
 
 static std::set<int> static_const_sk_capabilities_available_keys;
 static std::map<int , sk_sp<const SkCapabilities>> static_const_sk_capabilities;

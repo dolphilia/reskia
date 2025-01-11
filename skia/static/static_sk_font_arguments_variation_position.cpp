@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_font_arguments_variation_position.h"
+#include "static_sk_font_arguments_variation_position-internal.h"
 
 static std::set<int> static_sk_font_arguments_variation_position_available_keys;
 static std::map<int , SkFontArguments::VariationPosition> static_sk_font_arguments_variation_position;

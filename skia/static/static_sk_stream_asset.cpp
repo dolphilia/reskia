@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_stream_asset.h"
+#include "static_sk_stream_asset-internal.h"
 
 static std::set<int> static_sk_stream_asset_available_keys;
 static std::map<int , std::unique_ptr<SkStreamAsset>> static_sk_stream_asset;

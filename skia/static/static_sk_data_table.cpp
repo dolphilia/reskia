@@ -5,6 +5,7 @@
 #include "static_sk_data_table.h"
 
 #include <utility>
+#include "static_sk_data_table-internal.h"
 
 static std::set<int> static_sk_data_table_available_keys;
 static std::map<int , sk_sp<SkDataTable>> static_sk_data_table;

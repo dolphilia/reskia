@@ -5,6 +5,7 @@
 #include "static_sk_string.h"
 
 #include <utility>
+#include "static_sk_string-internal.h"
 
 static std::set<int> static_sk_string_available_keys;
 static std::map<int , SkString> static_sk_string;

@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_cubic_resampler.h"
+#include "static_sk_cubic_resampler-internal.h"
 
 static std::set<int> static_sk_cubic_resampler_available_keys;
 static std::map<int , SkCubicResampler> static_sk_cubic_resampler;

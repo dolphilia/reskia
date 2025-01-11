@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_color_matrix.h"
+#include "static_sk_color_matrix-internal.h"
 
 static std::set<int> static_sk_color_matrix_available_keys;
 static std::map<int , SkColorMatrix> static_sk_color_matrix;

@@ -3,6 +3,7 @@
 //
 
 #include "static_std_tuple_sk_image_sk_codec_result.h"
+#include "static_std_tuple_sk_image_sk_codec_result-internal.h"
 
 static std::set<int> static_tuple_sk_image_sk_codec_result_available_keys;
 static std::map<int , std::tuple<sk_sp<SkImage>, SkCodec::Result>> static_tuple_sk_image_sk_codec_result;

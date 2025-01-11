@@ -5,6 +5,7 @@
 #include "static_sk_drawable.h"
 
 #include <utility>
+#include "static_sk_drawable-internal.h"
 
 static std::set<int> static_sk_drawable_available_keys;
 static std::map<int, sk_sp<SkDrawable>> static_sk_drawable;

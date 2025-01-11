@@ -5,6 +5,7 @@
 #include "static_std_string_view.h"
 
 #include <map>
+#include "static_std_string_view-internal.h"
 
 static std::set<int> static_string_view_available_keys;
 static std::map<int , std::string_view> static_string_view;

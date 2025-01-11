@@ -3,6 +3,7 @@
 //
 
 #include "static_std_chrono_milliseconds.h"
+#include "static_std_chrono_milliseconds-internal.h"
 
 static std::set<int> static_chrono_milliseconds_available_keys;
 static std::map<int , std::chrono::milliseconds> static_chrono_milliseconds;

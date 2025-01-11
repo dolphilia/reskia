@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_sampling_options.h"
+#include "static_sk_sampling_options-internal.h"
 
 static std::set<int> static_sk_sampling_options_available_keys;
 static std::map<int , SkSamplingOptions> static_sk_sampling_options;

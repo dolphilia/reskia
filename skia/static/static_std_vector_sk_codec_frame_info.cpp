@@ -3,6 +3,7 @@
 //
 
 #include "static_std_vector_sk_codec_frame_info.h"
+#include "static_std_vector_sk_codec_frame_info-internal.h"
 
 static std::set<int> static_vector_sk_codec_frame_into_available_keys;
 static std::map<int , std::vector<SkCodec::FrameInfo>> static_vector_sk_codec_frame_into;

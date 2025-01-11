@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_point.h"
+#include "static_sk_point-internal.h"
 
 static std::set<int> static_sk_point_available_keys;
 static std::map<int , SkPoint> static_sk_point;

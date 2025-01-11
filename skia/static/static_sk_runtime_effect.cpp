@@ -5,6 +5,7 @@
 #include "static_sk_runtime_effect.h"
 
 #include <utility>
+#include "static_sk_runtime_effect-internal.h"
 
 static std::set<int> static_sk_runtime_effect_available_keys;
 static std::map<int , sk_sp<SkRuntimeEffect>> static_sk_runtime_effect;

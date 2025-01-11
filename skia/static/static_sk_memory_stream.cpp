@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_memory_stream.h"
+#include "static_sk_memory_stream-internal.h"
 
 static std::set<int> static_sk_memory_stream_available_keys;
 static std::map<int , std::unique_ptr<SkMemoryStream>> static_sk_memory_stream;

@@ -5,6 +5,7 @@
 #include "static_sk_vertices.h"
 
 #include <utility>
+#include "static_sk_vertices-internal.h"
 
 static std::set<int> static_sk_vertices_available_keys;
 static std::map<int , sk_sp<SkVertices>> static_sk_vertices;

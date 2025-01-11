@@ -3,6 +3,7 @@
 //
 
 #include "static_std_tuple_int_int.h"
+#include "static_std_tuple_int_int-internal.h"
 
 static std::set<int> static_tuple_int_int_available_keys;
 static std::map<int , std::tuple<int, int>> static_tuple_int_int;

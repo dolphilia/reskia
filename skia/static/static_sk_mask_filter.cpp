@@ -5,6 +5,7 @@
 #include "static_sk_mask_filter.h"
 
 #include <utility>
+#include "static_sk_mask_filter-internal.h"
 
 static std::set<int> static_sk_mask_filter_available_keys;
 static std::map<int , sk_sp<SkMaskFilter>> static_sk_mask_filter;

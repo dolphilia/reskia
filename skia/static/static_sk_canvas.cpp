@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_canvas.h"
+#include "static_sk_canvas-internal.h"
 
 static std::set<int> static_sk_canvas_available_keys;
 static std::map<int , std::unique_ptr<SkCanvas>> static_sk_canvas;

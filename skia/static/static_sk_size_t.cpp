@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_size_t.h"
+#include "static_sk_size_t-internal.h"
 
 static std::set<int> static_sk_size_available_keys;
 static std::map<int , SkSize> static_sk_size;

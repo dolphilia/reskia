@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_color_filter.h"
+#include "static_sk_color_filter-internal.h"
 
 static std::set<int> static_sk_color_filter_available_keys;
 static std::map<int , sk_sp<SkColorFilter>> static_sk_color_filter;

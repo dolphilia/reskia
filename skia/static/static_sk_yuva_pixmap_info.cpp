@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_yuva_pixmap_info.h"
+#include "static_sk_yuva_pixmap_info-internal.h"
 
 static std::set<int> static_sk_yuva_pixmap_info_available_keys;
 static std::map<int , SkYUVAPixmapInfo> static_sk_yuva_pixmap_info;

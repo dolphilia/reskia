@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_runtime_effect_child_ptr.h"
+#include "static_sk_runtime_effect_child_ptr-internal.h"
 
 static std::set<int> static_const_sk_runtime_effect_child_ptr_available_keys;
 static std::map<int , SkSpan<const SkRuntimeEffect::ChildPtr>> static_const_sk_runtime_effect_child_ptr;

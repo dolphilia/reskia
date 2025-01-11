@@ -5,6 +5,7 @@
 #include "static_sk_data.h"
 
 #include <utility>
+#include "static_sk_data-internal.h"
 
 static std::set<int> static_sk_data_available_keys;
 static std::set<int> static_const_sk_data_available_keys;

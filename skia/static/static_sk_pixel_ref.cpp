@@ -5,6 +5,7 @@
 #include "static_sk_pixel_ref.h"
 
 #include <utility>
+#include "static_sk_pixel_ref-internal.h"
 
 static std::set<int> static_sk_pixel_ref_available_keys;
 static std::map<int , sk_sp<SkPixelRef>> static_sk_pixel_ref;

@@ -5,6 +5,7 @@
 #include "static_sk_id_change_listener.h"
 
 #include <utility>
+#include "static_sk_id_change_listener-internal.h"
 
 static std::set<int> static_sk_id_change_listener_available_keys;
 static std::map<int , sk_sp<SkIDChangeListener>> static_sk_id_change_listener;

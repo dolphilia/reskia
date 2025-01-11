@@ -5,6 +5,7 @@
 #include "static_sk_typeface.h"
 
 #include <utility>
+#include "static_sk_typeface-internal.h"
 
 static std::set<int> static_sk_typeface_available_keys;
 static std::map<int , sk_sp<SkTypeface>> static_sk_typeface;

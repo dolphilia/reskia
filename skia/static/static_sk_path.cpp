@@ -3,6 +3,7 @@
 //
 
 #include "static_sk_path.h"
+#include "static_sk_path-internal.h"
 
 static std::set<int> static_sk_path_available_keys;
 static std::map<int , SkPath> static_sk_path;
