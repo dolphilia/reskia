@@ -33,7 +33,7 @@ SkColorInfo static_sk_color_info_get(int key) {
     return static_sk_color_info[key];
 }
 
-SkColorInfo * static_sk_color_info_get_ptr(int key) {
+void * static_sk_color_info_get_ptr(int key) { // -> SkColorInfo *
     return &static_sk_color_info[key];
 }
 

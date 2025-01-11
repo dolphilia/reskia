@@ -28,7 +28,7 @@ void static_const_sk_capabilities_delete(int key) {
     static_const_sk_capabilities_available_keys.insert(key);
 }
 
-const SkCapabilities *static_const_sk_capabilities_get(int key) {
+const void *static_const_sk_capabilities_get(int key) { // -> const SkCapabilities *
     return static_const_sk_capabilities[key].get();
 }
 

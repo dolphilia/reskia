@@ -3,6 +3,7 @@
 //
 
 #include "sk_runtime_blend_builder.h"
+#include "../static/static_sk_blender-internal.h"
 
 extern "C" {
 

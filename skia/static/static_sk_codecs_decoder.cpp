@@ -31,7 +31,7 @@ SkCodecs::Decoder static_sk_codecs_decoder_get(int key) {
     return static_sk_codecs_decoder[key];
 }
 
-SkCodecs::Decoder * static_sk_codecs_decoder_get_ptr(int key) {
+void * static_sk_codecs_decoder_get_ptr(int key) { // -> SkCodecs::Decoder *
     return &static_sk_codecs_decoder[key];
 }
 

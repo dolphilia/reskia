@@ -28,7 +28,7 @@ void static_sk_codec_delete(int key) {
     static_sk_codec_available_keys.insert(key);
 }
 
-SkCodec *static_sk_codec_get(int key) {
+void *static_sk_codec_get(int key) { // -> SkCodec *
     return static_sk_codec[key].get();
 }
 

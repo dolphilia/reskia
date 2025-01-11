@@ -5,6 +5,7 @@
 #include "sk_runtime_effect.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_string.h"
+#include "../static/static_sk_blender-internal.h"
 
 extern "C" {
 

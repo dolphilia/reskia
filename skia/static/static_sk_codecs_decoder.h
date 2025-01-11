@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_codecs_decoder_t;
 void static_sk_codecs_decoder_delete(int key);
-SkCodecs::Decoder * static_sk_codecs_decoder_get_ptr(int key);
+void * static_sk_codecs_decoder_get_ptr(int key); // -> SkCodecs::Decoder *
 #ifdef __cplusplus
 }
 #endif

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_color_4f_t;
 void static_sk_color_4f_delete(int key);
-SkColor4f * static_sk_color_4f_get_ptr(int key);
+void * static_sk_color_4f_get_ptr(int key); // -> SkColor4f *
 #ifdef __cplusplus
 }
 #endif

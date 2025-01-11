@@ -28,7 +28,7 @@ void static_sk_canvas_delete(int key) {
     static_sk_canvas_available_keys.insert(key);
 }
 
-SkCanvas *static_sk_canvas_get(int key) {
+void *static_sk_canvas_get(int key) {  // -> SkCanvas *
     return static_sk_canvas[key].get();
 }
 

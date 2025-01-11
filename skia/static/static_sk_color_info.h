@@ -15,7 +15,7 @@ extern "C" {
 #endif
 typedef int sk_color_info_t;
 void static_sk_color_info_delete(int key);
-SkColorInfo * static_sk_color_info_get_ptr(int key);
+void * static_sk_color_info_get_ptr(int key); // -> SkColorInfo *
 #ifdef __cplusplus
 }
 #endif

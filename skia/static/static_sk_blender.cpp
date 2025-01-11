@@ -28,7 +28,7 @@ void static_sk_blender_delete(int key) {
     static_sk_blender_available_keys.insert(key);
 }
 
-SkBlender *static_sk_blender_get(int key) {
+void *static_sk_blender_get(int key) { // -> SkBlender *
     return static_sk_blender[key].get();
 }
 

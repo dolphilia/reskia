@@ -31,7 +31,7 @@ SkColor4f static_sk_color_4f_get(int key) {
     return static_sk_color_4f[key];
 }
 
-SkColor4f * static_sk_color_4f_get_ptr(int key) {
+void * static_sk_color_4f_get_ptr(int key) { // -> SkColor4f *
     return &static_sk_color_4f[key];
 }
 

@@ -28,7 +28,7 @@ void static_sk_color_filter_delete(int key) {
     static_sk_color_filter_available_keys.insert(key);
 }
 
-SkColorFilter *static_sk_color_filter_get(int key) {
+void *static_sk_color_filter_get(int key) { // -> SkColorFilter *
     return static_sk_color_filter[key].get();
 }
 

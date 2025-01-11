@@ -3,6 +3,8 @@
 //
 
 #include "sk_canvas.h"
+#include "../static/static_sk_blender-internal.h"
+#include "../static/static_sk_canvas-internal.h"
 
 extern "C" {
 

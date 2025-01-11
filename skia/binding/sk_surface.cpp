@@ -4,6 +4,7 @@
 
 #include "sk_surface.h"
 #include "../static/static_sk_color_space.h"
+#include "../static/static_sk_capabilities-internal.h"
 
 extern "C" {
 
