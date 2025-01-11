@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkExecutor.h"
-#include "export_api.h"
 
-typedef int sk_executor_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_executor_delete(int key);
-RAIA_API SkExecutor *static_sk_executor_get(int key);
+#endif
+typedef int sk_executor_t;
+void static_sk_executor_delete(int key);
+SkExecutor *static_sk_executor_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_executor_make(std::unique_ptr<SkExecutor> value);
 void static_sk_executor_set(int key, std::unique_ptr<SkExecutor> value);

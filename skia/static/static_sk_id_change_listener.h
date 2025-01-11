@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/private/SkIDChangeListener.h"
-#include "export_api.h"
 
-typedef int sk_id_change_listener_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_id_change_listener_delete(int key);
-RAIA_API SkIDChangeListener *static_sk_id_change_listener_get(int key);
+#endif
+typedef int sk_id_change_listener_t;
+void static_sk_id_change_listener_delete(int key);
+SkIDChangeListener *static_sk_id_change_listener_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_id_change_listener_make(sk_sp<SkIDChangeListener> value);
 void static_sk_id_change_listener_set(int key, sk_sp<SkIDChangeListener> value);

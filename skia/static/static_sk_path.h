@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkPath.h"
-#include "export_api.h"
 
-typedef int sk_path_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_path_delete(int key);
-RAIA_API SkPath * static_sk_path_get_ptr(int key);
+#endif
+typedef int sk_path_t;
+void static_sk_path_delete(int key);
+SkPath * static_sk_path_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_path_make(const SkPath& value);
 SkPath static_sk_path_get(int key);

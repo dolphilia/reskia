@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkStream.h"
-#include "export_api.h"
 
-typedef int sk_stream_rewindable_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_stream_rewindable_delete(int key);
-RAIA_API SkStreamRewindable *static_sk_stream_rewindable_get(int key);
+#endif
+typedef int sk_stream_rewindable_t;
+void static_sk_stream_rewindable_delete(int key);
+SkStreamRewindable *static_sk_stream_rewindable_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_stream_rewindable_make(std::unique_ptr<SkStreamRewindable> value);
 void static_sk_stream_rewindable_set(int key, std::unique_ptr<SkStreamRewindable> value);

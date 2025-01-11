@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkMaskFilter.h"
-#include "export_api.h"
 
-typedef int sk_mask_filter_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_mask_filter_delete(int key);
-RAIA_API SkMaskFilter *static_sk_mask_filter_get(int key);
+#endif
+typedef int sk_mask_filter_t;
+void static_sk_mask_filter_delete(int key);
+SkMaskFilter *static_sk_mask_filter_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_mask_filter_make(sk_sp<SkMaskFilter> value);
 void static_sk_mask_filter_set(int key, sk_sp<SkMaskFilter> value);

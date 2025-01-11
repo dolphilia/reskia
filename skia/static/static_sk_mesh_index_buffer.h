@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkMesh.h"
-#include "export_api.h"
 
-typedef int sk_mesh_index_buffer_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_mesh_index_buffer_delete(int key);
-RAIA_API SkMesh::IndexBuffer *static_sk_mesh_index_buffer_get(int key);
+#endif
+typedef int sk_mesh_index_buffer_t;
+void static_sk_mesh_index_buffer_delete(int key);
+SkMesh::IndexBuffer *static_sk_mesh_index_buffer_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_mesh_index_buffer_make(sk_sp<SkMesh::IndexBuffer> value);
 void static_sk_mesh_index_buffer_set(int key, sk_sp<SkMesh::IndexBuffer> value);

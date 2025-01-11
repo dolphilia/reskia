@@ -8,19 +8,22 @@
 #include <set>
 #include <map>
 #include "include/core/SkRect.h"
-#include "export_api.h"
 
-typedef int sk_size_t;
 
+#ifdef __cplusplus
 #ifdef __cplusplus
 extern "C" {
 #endif
+typedef int sk_size_t;
+#endif
 
-RAIA_API void static_sk_size_delete(int key);
-RAIA_API SkSize * static_sk_size_get_ptr(int key);
+void static_sk_size_delete(int key);
+SkSize * static_sk_size_get_ptr(int key);
 
 #ifdef __cplusplus
+#ifdef __cplusplus
 }
+#endif
 #endif
 
 int static_sk_size_make(SkSize value);

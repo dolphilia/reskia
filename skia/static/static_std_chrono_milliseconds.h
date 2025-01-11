@@ -11,13 +11,16 @@
 #ifdef _WIN32
 #include <chrono>
 #endif
-#include "export_api.h"
 
 typedef int chrono_milliseconds_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_chrono_milliseconds_delete(int key);
+#endif
+void static_chrono_milliseconds_delete(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_chrono_milliseconds_make(std::chrono::milliseconds value);
 std::chrono::milliseconds static_chrono_milliseconds_get(int key);

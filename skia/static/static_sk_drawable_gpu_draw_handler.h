@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkDrawable.h"
-#include "export_api.h"
 
-typedef int sk_drawable_gpu_draw_handler_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_drawable_gpu_draw_handler_delete(int key);
-RAIA_API SkDrawable::GpuDrawHandler *static_sk_drawable_gpu_draw_handler_get(int key);
+#endif
+typedef int sk_drawable_gpu_draw_handler_t;
+void static_sk_drawable_gpu_draw_handler_delete(int key);
+SkDrawable::GpuDrawHandler *static_sk_drawable_gpu_draw_handler_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_drawable_gpu_draw_handler_make(std::unique_ptr<SkDrawable::GpuDrawHandler> value);
 void static_sk_drawable_gpu_draw_handler_set(int key, std::unique_ptr<SkDrawable::GpuDrawHandler> value);

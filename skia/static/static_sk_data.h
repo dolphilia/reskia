@@ -9,18 +9,21 @@
 #include <string>
 #include <map>
 #include "include/core/SkData.h"
-#include "export_api.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef int sk_data_t;
 typedef int const_sk_data_t;
-
-extern "C" {
-RAIA_API void static_sk_data_delete(int key);
-RAIA_API SkData *static_sk_data_get(int key);
+void static_sk_data_delete(int key);
+SkData *static_sk_data_get(int key);
 // const
-RAIA_API void static_const_sk_data_delete(int key);
-RAIA_API const SkData *static_const_sk_data_get(int key);
+void static_const_sk_data_delete(int key);
+const SkData *static_const_sk_data_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_data_make(sk_sp<SkData> value);
 void static_sk_data_set(int key, sk_sp<SkData> value);

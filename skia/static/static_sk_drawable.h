@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkDrawable.h"
-#include "export_api.h"
 
-typedef int sk_drawable_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_drawable_delete(int key);
-RAIA_API SkDrawable *static_sk_drawable_get(int key);
+#endif
+typedef int sk_drawable_t;
+void static_sk_drawable_delete(int key);
+SkDrawable *static_sk_drawable_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_drawable_make(sk_sp<SkDrawable> value);
 void static_sk_drawable_set(int key, sk_sp<SkDrawable> value);

@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/encode/SkEncoder.h"
-#include "export_api.h"
 
-typedef int sk_encoder_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_encoder_delete(int key);
-RAIA_API SkEncoder *static_sk_encoder_get(int key);
+#endif
+typedef int sk_encoder_t;
+void static_sk_encoder_delete(int key);
+SkEncoder *static_sk_encoder_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_encoder_make(std::unique_ptr<SkEncoder> value);
 void static_sk_encoder_set(int key, std::unique_ptr<SkEncoder> value);

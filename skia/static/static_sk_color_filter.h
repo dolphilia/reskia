@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkColorFilter.h"
-#include "export_api.h"
 
-typedef int sk_color_filter_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_color_filter_delete(int key);
-RAIA_API SkColorFilter *static_sk_color_filter_get(int key);
+#endif
+typedef int sk_color_filter_t;
+void static_sk_color_filter_delete(int key);
+SkColorFilter *static_sk_color_filter_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_color_filter_make(sk_sp<SkColorFilter> value);
 void static_sk_color_filter_set(int key, sk_sp<SkColorFilter> value);

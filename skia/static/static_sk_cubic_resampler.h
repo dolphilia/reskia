@@ -8,14 +8,17 @@
 #include <set>
 #include <map>
 #include "include/core/SkSamplingOptions.h"
-#include "export_api.h"
 
-typedef int sk_cubic_resampler_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_cubic_resampler_delete(int key);
-RAIA_API SkCubicResampler * static_sk_cubic_resampler_get_ptr(int key);
+#endif
+typedef int sk_cubic_resampler_t;
+void static_sk_cubic_resampler_delete(int key);
+SkCubicResampler * static_sk_cubic_resampler_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_cubic_resampler_make(SkCubicResampler value);
 SkCubicResampler static_sk_cubic_resampler_get(int key);

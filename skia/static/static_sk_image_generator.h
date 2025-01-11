@@ -12,14 +12,17 @@
 #ifdef _WIN32
 #include <memory>
 #endif
-#include "export_api.h"
 
-typedef int sk_image_generator_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_image_generator_delete(int key);
-RAIA_API SkImageGenerator *static_sk_image_generator_get(int key);
+#endif
+typedef int sk_image_generator_t;
+void static_sk_image_generator_delete(int key);
+SkImageGenerator *static_sk_image_generator_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_image_generator_make(std::unique_ptr<SkImageGenerator> value);
 void static_sk_image_generator_set(int key, std::unique_ptr<SkImageGenerator> value);

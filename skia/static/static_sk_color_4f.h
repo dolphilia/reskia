@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkColor.h"
-#include "export_api.h"
 
-typedef int sk_color_4f_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_color_4f_delete(int key);
-RAIA_API SkColor4f * static_sk_color_4f_get_ptr(int key);
+#endif
+typedef int sk_color_4f_t;
+void static_sk_color_4f_delete(int key);
+SkColor4f * static_sk_color_4f_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_color_4f_make(SkColor4f value);
 SkColor4f static_sk_color_4f_get(int key);

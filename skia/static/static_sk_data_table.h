@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkDataTable.h"
-#include "export_api.h"
 
-typedef int sk_data_table_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_data_table_delete(int key);
-RAIA_API SkDataTable *static_sk_data_table_get(int key);
+#endif
+typedef int sk_data_table_t;
+void static_sk_data_table_delete(int key);
+SkDataTable *static_sk_data_table_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_data_table_make(sk_sp<SkDataTable> value);
 void static_sk_data_table_set(int key, sk_sp<SkDataTable> value);

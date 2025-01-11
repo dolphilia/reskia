@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkColorSpace.h"
-#include "export_api.h"
 
-typedef int sk_color_space_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_color_space_delete(int key);
-RAIA_API SkColorSpace *static_sk_color_space_get(int key);
+#endif
+typedef int sk_color_space_t;
+void static_sk_color_space_delete(int key);
+SkColorSpace *static_sk_color_space_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_color_space_make(sk_sp<SkColorSpace> value);
 void static_sk_color_space_set(int key, sk_sp<SkColorSpace> value);

@@ -11,15 +11,18 @@
 #include <vector>
 #include "include/core/SkScalar.h"
 #include "include/codec/SkCodec.h"
-#include "export_api.h"
 
-typedef int vector_sk_codec_frame_into_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_vector_sk_codec_frame_into_delete(int key);
-RAIA_API void static_vector_sk_codec_frame_into_pop_back(int key);
-RAIA_API void static_vector_sk_codec_frame_into_erase(int key, int index);
+#endif
+typedef int vector_sk_codec_frame_into_t;
+void static_vector_sk_codec_frame_into_delete(int key);
+void static_vector_sk_codec_frame_into_pop_back(int key);
+void static_vector_sk_codec_frame_into_erase(int key, int index);
+#ifdef __cplusplus
 }
+#endif
 
 int static_vector_sk_codec_frame_into_make(std::vector<SkCodec::FrameInfo> value);
 SkCodec::FrameInfo static_vector_sk_codec_frame_into_get(int key, int index);

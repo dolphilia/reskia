@@ -6,16 +6,20 @@
 #define RAIA_SKIA_STATIC_SK_B_BOX_HIERARCHY_H
 
 #ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
+#endif
 
-typedef int sk_b_box_hierarchy_t;
 
 void static_sk_b_box_hierarchy_delete(int key);
 void *static_sk_b_box_hierarchy_get(int key); // -> SkBBoxHierarchy
 
 #ifdef __cplusplus
+#ifdef __cplusplus
 }
+#endif
+typedef int sk_b_box_hierarchy_t;
 #endif
 
 #endif //RAIA_SKIA_STATIC_SK_B_BOX_HIERARCHY_H

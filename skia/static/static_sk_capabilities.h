@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkCapabilities.h"
-#include "export_api.h"
 
-typedef int const_sk_capabilities_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_const_sk_capabilities_delete(int key);
-RAIA_API const SkCapabilities *static_const_sk_capabilities_get(int key);
+#endif
+typedef int const_sk_capabilities_t;
+void static_const_sk_capabilities_delete(int key);
+const SkCapabilities *static_const_sk_capabilities_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_const_sk_capabilities_make(sk_sp<const SkCapabilities> value);
 void static_const_sk_capabilities_set(int key, sk_sp<const SkCapabilities> value);

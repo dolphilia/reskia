@@ -10,18 +10,20 @@
 #include <map>
 #include "include/core/SkString.h"
 #include "include/private/base/SkSpan_impl.h"
-#include "export_api.h"
 
-typedef int sk_string_t;
-typedef int sk_span_sk_string_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_string_delete(int key);
-RAIA_API SkString * static_sk_string_get_ptr(int key);
+#endif
+typedef int sk_string_t;
+void static_sk_string_delete(int key);
+SkString * static_sk_string_get_ptr(int key);
 // sk_span
-RAIA_API void static_sk_span_sk_string_delete(int key);
-RAIA_API SkString * static_sk_span_sk_string_get_ptr(int key, int index);
+void static_sk_span_sk_string_delete(int key);
+SkString * static_sk_span_sk_string_get_ptr(int key, int index);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_string_make(SkString value);
 SkString static_sk_string_get(int key);

@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkPixelRef.h"
-#include "export_api.h"
 
-typedef int sk_pixel_ref_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_pixel_ref_delete(int key);
-RAIA_API SkPixelRef *static_sk_pixel_ref_get(int key);
+#endif
+typedef int sk_pixel_ref_t;
+void static_sk_pixel_ref_delete(int key);
+SkPixelRef *static_sk_pixel_ref_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_pixel_ref_make(sk_sp<SkPixelRef> value);
 void static_sk_pixel_ref_set(int key, sk_sp<SkPixelRef> value);

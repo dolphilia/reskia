@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/effects/SkRuntimeEffect.h"
-#include "export_api.h"
 
-typedef int sk_runtime_effect_traced_shader_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_runtime_effect_traced_shader_delete(int key);
-RAIA_API SkRuntimeEffect::TracedShader * static_sk_runtime_effect_traced_shader_get_ptr(int key);
+#endif
+typedef int sk_runtime_effect_traced_shader_t;
+void static_sk_runtime_effect_traced_shader_delete(int key);
+SkRuntimeEffect::TracedShader * static_sk_runtime_effect_traced_shader_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 // const
 int static_sk_runtime_effect_traced_shader_make(SkRuntimeEffect::TracedShader value);

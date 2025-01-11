@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkSurface.h"
-#include "export_api.h"
 
-typedef int sk_surface_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_surface_delete(int key);
-RAIA_API SkSurface *static_sk_surface_get(int key);
+#endif
+typedef int sk_surface_t;
+void static_sk_surface_delete(int key);
+SkSurface *static_sk_surface_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_surface_make(sk_sp<SkSurface> value);
 void static_sk_surface_set(int key, sk_sp<SkSurface> value);

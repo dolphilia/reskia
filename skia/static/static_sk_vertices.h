@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkVertices.h"
-#include "export_api.h"
 
-typedef int sk_vertices_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_vertices_delete(int key);
-RAIA_API SkVertices *static_sk_vertices_get(int key);
+#endif
+typedef int sk_vertices_t;
+void static_sk_vertices_delete(int key);
+SkVertices *static_sk_vertices_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_vertices_make(sk_sp<SkVertices> value);
 void static_sk_vertices_set(int key, sk_sp<SkVertices> value);

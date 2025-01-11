@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkStream.h"
-#include "export_api.h"
 
-typedef int sk_stream_memory_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_stream_memory_delete(int key);
-RAIA_API SkStreamMemory *static_sk_stream_memory_get(int key);
+#endif
+typedef int sk_stream_memory_t;
+void static_sk_stream_memory_delete(int key);
+SkStreamMemory *static_sk_stream_memory_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_stream_memory_make(std::unique_ptr<SkStreamMemory> value);
 void static_sk_stream_memory_set(int key, std::unique_ptr<SkStreamMemory> value);

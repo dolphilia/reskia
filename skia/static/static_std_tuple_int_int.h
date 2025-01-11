@@ -9,13 +9,16 @@
 #include <string>
 #include <map>
 #include <tuple>
-#include "export_api.h"
 
 typedef int tuple_int_int_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_tuple_int_int_delete(int key);
+#endif
+void static_tuple_int_int_delete(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_tuple_int_int_make(std::tuple<int, int> value);
 std::tuple<int, int> static_tuple_int_int_get(int key);

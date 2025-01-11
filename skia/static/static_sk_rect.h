@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkRect.h"
-#include "export_api.h"
 
-typedef int sk_rect_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_rect_delete(int key);
-RAIA_API SkRect *static_sk_rect_get_ptr(int key);
+#endif
+typedef int sk_rect_t;
+void static_sk_rect_delete(int key);
+SkRect *static_sk_rect_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_rect_make(SkRect value);
 SkRect static_sk_rect_get(int key);

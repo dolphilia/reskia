@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkPathEffect.h"
-#include "export_api.h"
 
-typedef int sk_path_effect_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_path_effect_delete(int key);
-RAIA_API SkPathEffect *static_sk_path_effect_get(int key);
+#endif
+typedef int sk_path_effect_t;
+void static_sk_path_effect_delete(int key);
+SkPathEffect *static_sk_path_effect_get(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_path_effect_make(sk_sp<SkPathEffect> value);
 void static_sk_path_effect_set(int key, sk_sp<SkPathEffect> value);

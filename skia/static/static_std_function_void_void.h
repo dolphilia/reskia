@@ -11,13 +11,16 @@
 #ifdef _WIN32
 #include <functional>
 #endif
-#include "export_api.h"
 
 typedef int function_void_void_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_function_void_void_delete(int key);
+#endif
+void static_function_void_void_delete(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_function_void_void_make(std::function<void(void)> value);
 std::function<void(void)> static_function_void_void_get(int key);

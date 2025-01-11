@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkYUVAPixmaps.h"
-#include "export_api.h"
 
-typedef int sk_yuva_pixmap_info_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_yuva_pixmap_info_delete(int key);
-RAIA_API SkYUVAPixmapInfo * static_sk_yuva_pixmap_info_get_ptr(int key);
+#endif
+typedef int sk_yuva_pixmap_info_t;
+void static_sk_yuva_pixmap_info_delete(int key);
+SkYUVAPixmapInfo * static_sk_yuva_pixmap_info_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_yuva_pixmap_info_make(SkYUVAPixmapInfo value);
 SkYUVAPixmapInfo static_sk_yuva_pixmap_info_get(int key);

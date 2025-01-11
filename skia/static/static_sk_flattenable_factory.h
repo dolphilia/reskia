@@ -9,13 +9,16 @@
 #include <string>
 #include <map>
 #include "include/core/SkFlattenable.h"
-#include "export_api.h"
 
-typedef int sk_flattenable_factory_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_flattenable_factory_delete(int key);
+#endif
+typedef int sk_flattenable_factory_t;
+void static_sk_flattenable_factory_delete(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_flattenable_factory_make(SkFlattenable::Factory value);
 SkFlattenable::Factory static_sk_flattenable_factory_get(int key);

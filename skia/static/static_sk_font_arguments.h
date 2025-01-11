@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/core/SkFontArguments.h"
-#include "export_api.h"
 
-typedef int sk_font_arguments_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_sk_font_arguments_delete(int key);
-RAIA_API SkFontArguments * static_sk_font_arguments_get_ptr(int key);
+#endif
+typedef int sk_font_arguments_t;
+void static_sk_font_arguments_delete(int key);
+SkFontArguments * static_sk_font_arguments_get_ptr(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_sk_font_arguments_make(SkFontArguments value);
 SkFontArguments static_sk_font_arguments_get(int key);

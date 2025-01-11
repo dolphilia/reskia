@@ -10,13 +10,16 @@
 #include <map>
 #include <tuple>
 #include "include/core/SkYUVAPixmaps.h"
-#include "export_api.h"
 
-typedef int tuple_int_sk_yuva_pixmap_info_data_type_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_tuple_int_sk_yuva_pixmap_info_data_type_delete(int key);
+#endif
+typedef int tuple_int_sk_yuva_pixmap_info_data_type_t;
+void static_tuple_int_sk_yuva_pixmap_info_data_type_delete(int key);
+#ifdef __cplusplus
 }
+#endif
 
 int static_tuple_int_sk_yuva_pixmap_info_data_type_make(std::tuple<int, SkYUVAPixmapInfo::DataType> value);
 std::tuple<int, SkYUVAPixmapInfo::DataType> static_tuple_int_sk_yuva_pixmap_info_data_type_get(int key, int index);

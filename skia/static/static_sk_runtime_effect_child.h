@@ -9,14 +9,17 @@
 #include <string>
 #include <map>
 #include "include/effects/SkRuntimeEffect.h"
-#include "export_api.h"
 
-typedef int const_sk_runtime_effect_child_t;
 
+#ifdef __cplusplus
 extern "C" {
-RAIA_API void static_const_sk_runtime_effect_child_delete(int key);
-RAIA_API const SkRuntimeEffect::Child * static_const_sk_runtime_effect_child_get_ptr(int key, int index);
+#endif
+typedef int const_sk_runtime_effect_child_t;
+void static_const_sk_runtime_effect_child_delete(int key);
+const SkRuntimeEffect::Child * static_const_sk_runtime_effect_child_get_ptr(int key, int index);
+#ifdef __cplusplus
 }
+#endif
 
 // const
 int static_const_sk_runtime_effect_child_make(SkSpan<const SkRuntimeEffect::Child> value);
