@@ -9,8 +9,11 @@
 extern "C" {
 #endif
 typedef int sk_stream_t;
+typedef int sk_stream_ptr_t;
 void static_sk_stream_delete(int key);
 void *static_sk_stream_get(int key); // -> SkStream *
+void static_sk_stream_ptr_delete(int key);
+void* static_sk_stream_ptr_get(int key);
 #ifdef __cplusplus
 }
 #endif

@@ -195,6 +195,8 @@ public:
      */
     SkISize getSampledSubsetDimensions(int sampleSize, const SkIRect& subset) const;
 
+    bool getAndroidGainmap(SkGainmapInfo * out_info, const std::unique_ptr<SkStream> & unique);
+
     /**
      *  Additional options to pass to getAndroidPixels().
      */

@@ -534,7 +534,7 @@ list(APPEND SOURCE_FILES
         binding/sk_android_codec.cpp
         binding/sk_annotation.cpp
         binding/sk_auto_canvas_restore.cpp
-        binding/sk_avif_decoder.h.cpp
+        binding/sk_avif_decoder.cpp
         binding/sk_b_box_hierarchy.cpp
         binding/sk_bitmap.cpp
         binding/sk_blend_mode.cpp
@@ -778,6 +778,7 @@ list(APPEND SOURCE_FILES
         static/static_std_tuple_int_sk_yuva_pixmap_info_data_type.cpp
         static/static_std_tuple_sk_image_sk_codec_result.cpp
         static/static_std_vector_sk_codec_frame_info.cpp
+        static/static_std_vector_int_ptr.cpp
         static/static_std_vector_sk_scalar.cpp
 )
 

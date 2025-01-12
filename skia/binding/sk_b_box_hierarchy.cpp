@@ -4,38 +4,42 @@
 
 #include "sk_b_box_hierarchy.h"
 
+#include "include/core/SkBBHFactory.h"
+
+#include "../static/static_std_vector_int_ptr-internal.h"
+
 extern "C" {
 
-void SkBBoxHierarchy_delete(SkBBoxHierarchy *b_box_hierarchy) {
-    delete b_box_hierarchy;
+void SkBBoxHierarchy_delete(void *b_box_hierarchy) {
+    delete static_cast<SkBBoxHierarchy *>(b_box_hierarchy);
 }
 
-void SkBBoxHierarchy_insert(SkBBoxHierarchy *b_box_hierarchy, const SkRect rect[], int N) {
-    b_box_hierarchy->insert(rect, N);
+void SkBBoxHierarchy_insert(void *b_box_hierarchy, const void *rect, int N) {
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(static_cast<const SkRect *>(rect), N);
 }
 
-void SkBBoxHierarchy_insert_2(SkBBoxHierarchy *b_box_hierarchy, const SkRect rect[], const SkBBoxHierarchy::Metadata metadata[], int N) {
-    b_box_hierarchy->insert(rect, metadata, N);
+void SkBBoxHierarchy_insert_2(void *b_box_hierarchy, const void *rect, const void * metadata, int N) {
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(static_cast<const SkRect *>(rect), static_cast<const SkBBoxHierarchy::Metadata *>(metadata), N);
 }
 
-void SkBBoxHierarchy_search(SkBBoxHierarchy *b_box_hierarchy, const SkRect *query, std::vector<int> *results) { // @TODO
-    b_box_hierarchy->search(*query, results);
+void SkBBoxHierarchy_search(void *b_box_hierarchy, const void *query, vector_int_ptr_t results) {
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->search(* static_cast<const SkRect *>(query), static_int_vector_ptr_move(results));
 }
 
-size_t SkBBoxHierarchy_bytesUsed(SkBBoxHierarchy *b_box_hierarchy) {
-    return b_box_hierarchy->bytesUsed();
+size_t SkBBoxHierarchy_bytesUsed(void *b_box_hierarchy) {
+    return static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->bytesUsed();
 }
 
-bool SkBBoxHierarchy_unique(SkBBoxHierarchy *b_box_hierarchy) {
-    return b_box_hierarchy->unique();
+bool SkBBoxHierarchy_unique(void *b_box_hierarchy) {
+    return static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unique();
 }
 
-void SkBBoxHierarchy_ref(SkBBoxHierarchy *b_box_hierarchy) {
-    b_box_hierarchy->ref();
+void SkBBoxHierarchy_ref(void *b_box_hierarchy) {
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->ref();
 }
 
-void SkBBoxHierarchy_unref(SkBBoxHierarchy *b_box_hierarchy) {
-    b_box_hierarchy->unref();
+void SkBBoxHierarchy_unref(void *b_box_hierarchy) {
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 
 }

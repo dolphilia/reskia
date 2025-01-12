@@ -2,7 +2,7 @@
 // Created by dolphilia on 2024/02/02.
 //
 
-#include "sk_avif_decoder.h.h"
+#include "sk_avif_decoder.h"
 
 extern "C" {
 

@@ -5,12 +5,15 @@
 #ifndef RAIA_SKIA_SK_AUTO_CANVAS_RESTORE_H
 #define RAIA_SKIA_SK_AUTO_CANVAS_RESTORE_H
 
-#include "include/core/SkCanvas.h"
-
+#ifdef __cplusplus
 extern "C" {
-SkAutoCanvasRestore *SkAutoCanvasRestore_new(SkCanvas * canvas, bool doSave);
-void SkAutoCanvasRestore_delete(SkAutoCanvasRestore *autoCanvasRestore);
-void SkAutoCanvasRestore_restore(SkAutoCanvasRestore *autoCanvasRestore);
+#endif
+
+void * SkAutoCanvasRestore_new(void * canvas, bool doSave); // (SkCanvas * canvas, bool doSave) -> SkAutoCanvasRestore *
+void SkAutoCanvasRestore_delete(void * autoCanvasRestore); // (SkAutoCanvasRestore *autoCanvasRestore)
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_AUTO_CANVAS_RESTORE_H
