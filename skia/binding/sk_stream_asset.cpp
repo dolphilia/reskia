@@ -4,6 +4,8 @@
 
 #include "sk_stream_asset.h"
 
+#include "../static/static_sk_stream_asset-internal.h"
+
 extern "C" {
 
 void SkStreamAsset_delete(SkStreamAsset *stream_asset) {

@@ -4,6 +4,10 @@
 
 #include "sk_path_builder.h"
 
+#include "../static/static_sk_path-internal.h"
+#include "../static/static_sk_point-internal.h"
+#include "../static/static_sk_rect-internal.h"
+
 extern "C" {
 
 // SkPathBuilder & operator=(const SkPath &)

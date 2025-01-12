@@ -4,6 +4,11 @@
 
 #include "sk_picture.h"
 
+#include "../static/static_sk_picture-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkPicture_delete(SkPicture *picture) {

@@ -4,6 +4,11 @@
 
 #include "sk_png_decoder.h"
 
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_codecs_decoder-internal.h"
+#include "../static/static_sk_codec-internal.h"
+
 extern "C" {
 
 bool SkPngDecoder_IsPng(const void* ptr, size_t size) {

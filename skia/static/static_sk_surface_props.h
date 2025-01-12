@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_SURFACE_PROPS_H
 #define RAIA_SKIA_STATIC_SK_SURFACE_PROPS_H
 
-#include <set>
-#include <map>
-#include "include/core/SkSurfaceProps.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void * static_sk_surface_props_get_ptr(int key); // -> SkSurfaceProps *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_surface_props_make(SkSurfaceProps value);
-SkSurfaceProps static_sk_surface_props_get(int key);
-void static_sk_surface_props_set(int key, SkSurfaceProps value);
 
 #endif //RAIA_SKIA_STATIC_SK_SURFACE_PROPS_H

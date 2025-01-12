@@ -4,6 +4,9 @@
 
 #include "sk_shader_mask_filter.h"
 
+#include "../static/static_sk_mask_filter-internal.h"
+#include "../static/static_sk_shader-internal.h"
+
 extern "C" {
 
 void SkShaderMaskFilter_delete(SkShaderMaskFilter *shaderMaskFilter) {

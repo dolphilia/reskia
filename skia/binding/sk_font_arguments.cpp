@@ -4,6 +4,10 @@
 
 #include "sk_font_arguments.h"
 
+#include "static/static_sk_font_arguments-internal.h"
+#include "static/static_sk_font_arguments_palette-internal.h"
+#include "static/static_sk_font_arguments_variation_position-internal.h"
+
 extern "C" {
 
 SkFontArguments *SkFontArguments_new() {

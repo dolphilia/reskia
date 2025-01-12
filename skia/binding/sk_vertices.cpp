@@ -4,6 +4,8 @@
 
 #include "sk_vertices.h"
 
+#include "../static/static_sk_vertices-internal.h"
+
 extern "C" {
 
 void SkVertices_delete(SkVertices * vertices) {

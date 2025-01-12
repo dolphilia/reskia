@@ -4,6 +4,11 @@
 
 #include "sk_yuva_info.h"
 
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_matrix-internal.h"
+#include "../static/static_sk_yuva_info-internal.h"
+#include "../static/static_std_tuple_int_int-internal.h"
+
 extern "C" {
 
 // SkYUVAInfo & operator=(const SkYUVAInfo &that)

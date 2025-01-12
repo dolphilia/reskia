@@ -3,8 +3,24 @@
 //
 
 #include "sk_canvas.h"
+
+#include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_blender-internal.h"
 #include "../static/static_sk_canvas-internal.h"
+#include "../static/static_sk_surface-internal.h"
+#include "../static/static_sk_vertices-internal.h"
+#include "../static/static_sk_text_blob-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_picture-internal.h"
+#include "../static/static_sk_image-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_surface_props-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_m_44-internal.h"
+#include "../static/static_sk_matrix-internal.h"
+#include "../static/static_sk_image_info-internal.h"
+#include "../static/static_sk_point-internal.h"
+#include "../static/static_sk_i_size-internal.h"
 
 extern "C" {
 

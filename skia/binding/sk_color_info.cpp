@@ -3,6 +3,9 @@
 //
 
 #include "sk_color_info.h"
+
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_info-internal.h"
 #include "../static/static_sk_color_info.h"
 
 extern "C" {

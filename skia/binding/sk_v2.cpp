@@ -4,6 +4,8 @@
 
 #include "sk_v2.h"
 
+#include "../static/static_sk_v2-internal.h"
+
 extern "C" {
 
 // bool operator==(const SkV2 v)

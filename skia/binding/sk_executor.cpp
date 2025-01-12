@@ -3,6 +3,9 @@
 //
 
 #include "sk_executor.h"
+
+#include "../static/static_std_function_void_void-internal.h"
+#include "../static/static_sk_executor-internal.h"
 #include "../static/static_std_function_void_void.h"
 
 extern "C" {

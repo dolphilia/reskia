@@ -4,6 +4,11 @@
 
 #include "sk_pixmap.h"
 
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_4f-internal.h"
+
 extern "C" {
 
 SkPixmap *SkPixmap_new() {

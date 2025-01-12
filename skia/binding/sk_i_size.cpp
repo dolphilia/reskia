@@ -4,6 +4,8 @@
 
 #include "sk_i_size.h"
 
+#include "../static/static_sk_i_size-internal.h"
+
 extern "C" {
 
 void SkISize_delete(SkISize *i_size) {

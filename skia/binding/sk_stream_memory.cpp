@@ -4,6 +4,9 @@
 
 #include "sk_stream_memory.h"
 
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_stream_memory-internal.h"
+
 extern "C" {
 
 void SkStreamMemory_delete(SkStreamMemory *stream_memory) {

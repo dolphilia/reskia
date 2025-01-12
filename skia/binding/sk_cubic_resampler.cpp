@@ -4,6 +4,8 @@
 
 #include "sk_cubic_resampler.h"
 
+#include "../static/static_sk_cubic_resampler-internal.h"
+
 extern "C" {
 
 void SkCubicResampler_delete(SkCubicResampler *cubicResampler) {

@@ -3,6 +3,13 @@
 //
 
 #include "sk_runtime_blend_builder.h"
+
+#include "../static/static_sk_runtime_effect_child_ptr-internal.h"
+#include "../static/static_sk_runtime_effect-internal.h"
+#include "../static/static_sk_runtime_effect_builder_builder_child-internal.h"
+#include "../static/static_sk_runtime_effect_builder_builder_uniform-internal.h"
+#include "../static/static_std_string_view-internal.h"
+#include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_blender-internal.h"
 
 extern "C" {

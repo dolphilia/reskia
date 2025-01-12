@@ -4,6 +4,9 @@
 
 #include "sk_text_blob.h"
 
+#include "../static/static_sk_text_blob-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkTextBlob_delete(SkTextBlob *text_blob) {

@@ -4,6 +4,8 @@
 
 #include "sk_data.h"
 
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkData_delete(SkData *sk_data) {

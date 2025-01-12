@@ -4,6 +4,8 @@
 
 #include "sk_corner_path_effect.h"
 
+#include "../static/static_sk_path_effect-internal.h"
+
 extern "C" {
 
 void SkCornerPathEffect_delete(SkCornerPathEffect * cornerPathEffect) {

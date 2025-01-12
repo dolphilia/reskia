@@ -4,6 +4,10 @@
 
 #include "sk_r_rect.h"
 
+#include "../static/static_sk_point-internal.h"
+#include "../static/static_sk_r_rect-internal.h"
+#include "../static/static_sk_string-internal.h"
+
 extern "C" {
 
 //SkRRect & operator=(const SkRRect &rrect)

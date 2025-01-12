@@ -4,6 +4,12 @@
 
 #include "sk_color_filter.h"
 
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
+#include "../static/static_sk_color_4f-internal.h"
+
 extern "C" {
 
 void SkColorFilter_delete(SkColorFilter *color_filter) {

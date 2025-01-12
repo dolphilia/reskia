@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_DRAWABLE_H
 #define RAIA_SKIA_STATIC_SK_DRAWABLE_H
 
-#include <set>
-#include <map>
-#include "include/core/SkDrawable.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void *static_sk_drawable_get(int key); // -> SkDrawable *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_drawable_make(sk_sp<SkDrawable> value);
-void static_sk_drawable_set(int key, sk_sp<SkDrawable> value);
-sk_sp<SkDrawable> static_sk_drawable_move(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_DRAWABLE_H

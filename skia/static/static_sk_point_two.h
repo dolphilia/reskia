@@ -5,11 +5,6 @@
 #ifndef RESKIA_STATIC_SK_POINT_TWO_H
 #define RESKIA_STATIC_SK_POINT_TWO_H
 
-#include <set>
-#include <map>
-#include "include/core/SkRect.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,9 +15,5 @@ void * static_sk_point_two_get_ptr(int key); // -> SkPoint *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_point_two_make(SkPoint value1, SkPoint value2);
-void static_sk_point_two_set(int key, SkPoint value1, SkPoint value2);
-//SkPoint static_sk_point_two_get(int key);
 
 #endif //RESKIA_STATIC_SK_POINT_TWO_H

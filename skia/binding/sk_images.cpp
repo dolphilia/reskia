@@ -4,6 +4,14 @@
 
 #include "sk_images.h"
 
+#include <static/static_sk_image_generator-internal.h>
+#include <static/static_sk_picture-internal.h>
+#include <static/static_sk_surface_props-internal.h>
+
+#include "../static/static_sk_image-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+
 extern "C" {
 
 sk_image_t SkImages_RasterFromBitmap(const SkBitmap *bitmap) {

@@ -3,6 +3,17 @@
 //
 
 #include "sk_runtime_effect.h"
+
+#include "../static/static_sk_runtime_effect_child-internal.h"
+#include "../static/static_sk_runtime_effect_child_ptr-internal.h"
+#include "../static/static_sk_runtime_effect_result-internal.h"
+#include "../static/static_sk_runtime_effect_traced_shader-internal.h"
+#include "../static/static_sk_runtime_effect_uniform-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_string-internal.h"
+#include "../static/static_std_string_view-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_string.h"
 #include "../static/static_sk_blender-internal.h"

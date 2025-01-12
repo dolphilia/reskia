@@ -4,6 +4,10 @@
 
 #include "sk_yuva_pixmaps.h"
 
+#include "../static/static_sk_yuva_pixmaps-internal.h"
+#include "../static/static_sk_yuva_pixmap_info-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 // SkYUVAPixmaps & operator=(SkYUVAPixmaps &&that)

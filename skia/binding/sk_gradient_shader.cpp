@@ -4,6 +4,9 @@
 
 #include "sk_gradient_shader.h"
 
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+
 extern "C" {
 
 void SkGradientShader_delete(SkGradientShader * gradientShader) {

@@ -4,6 +4,12 @@
 
 #include "sk_runtime_effect_builder.h"
 
+#include "../static/static_sk_runtime_effect_builder_builder_child-internal.h"
+#include "../static/static_sk_runtime_effect_builder_builder_uniform-internal.h"
+#include "../static/static_sk_runtime_effect_child_ptr-internal.h"
+#include "../static/static_std_string_view-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkRuntimeEffectBuilder_delete(SkRuntimeEffectBuilder *runtime_effect_builder) {

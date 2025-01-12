@@ -3,6 +3,13 @@
 //
 
 #include "sk_typeface.h"
+
+#include "../static/static_sk_font_mgr-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_typeface-internal.h"
+#include "../static/static_sk_font_style-internal.h"
+#include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_font_mgr.h"
 
 extern "C" {

@@ -4,6 +4,8 @@
 
 #include "sk_overdraw_color_filter.h"
 
+#include "../static/static_sk_color_filter-internal.h"
+
 extern "C" {
 
 void SkOverdrawColorFilter_delete(SkOverdrawColorFilter * overdrawColorFilter) {

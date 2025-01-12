@@ -4,6 +4,11 @@
 
 #include "sk_ico_cecoder.h"
 
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_codecs_decoder-internal.h"
+#include "../static/static_sk_codec-internal.h"
+
 extern "C" {
 
 bool SkIcoDecoder_IsIco(const void* ptr, size_t size) {

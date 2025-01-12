@@ -4,6 +4,15 @@
 
 #include "sk_codec.h"
 
+#include "../static/static_sk_image_info-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_std_tuple_sk_image_sk_codec_result-internal.h"
+#include "../static/static_std_vector_sk_codec_frame_info-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_codec-internal.h"
+
 extern "C" {
 
 void SkCodec_delete(SkCodec* codec) {

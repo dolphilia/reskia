@@ -3,6 +3,9 @@
 //
 
 #include "sk_stream.h"
+
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_stream_asset-internal.h"
 #include "../static/static_sk_stream_asset.h"
 
 extern "C" {

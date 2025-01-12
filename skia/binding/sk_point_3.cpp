@@ -4,6 +4,8 @@
 
 #include "sk_point_3.h"
 
+#include "../static/static_sk_point_3-internal.h"
+
 extern "C" {
 
 // SkPoint3 operator-()

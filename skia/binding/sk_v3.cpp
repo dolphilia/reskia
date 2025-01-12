@@ -4,6 +4,8 @@
 
 #include "sk_v3.h"
 
+#include "../static/static_sk_v3-internal.h"
+
 bool SkV3_Equal(const SkV3 &v1, const SkV3 &v2) {
     return v1 == v2;
 }

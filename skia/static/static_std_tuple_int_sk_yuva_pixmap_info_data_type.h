@@ -5,12 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_STD_TUPLE_INT_SK_YUVA_PIXMAP_INFO_DATA_TYPE_H
 #define RAIA_SKIA_STATIC_STD_TUPLE_INT_SK_YUVA_PIXMAP_INFO_DATA_TYPE_H
 
-#include <set>
-#include <map>
-#include <tuple>
-#include "include/core/SkYUVAPixmaps.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +13,5 @@ void static_tuple_int_sk_yuva_pixmap_info_data_type_delete(int key);
 #ifdef __cplusplus
 }
 #endif
-
-int static_tuple_int_sk_yuva_pixmap_info_data_type_make(std::tuple<int, SkYUVAPixmapInfo::DataType> value);
-std::tuple<int, SkYUVAPixmapInfo::DataType> static_tuple_int_sk_yuva_pixmap_info_data_type_get(int key, int index);
-void static_tuple_int_sk_yuva_pixmap_info_data_type_set(int key, std::tuple<int, SkYUVAPixmapInfo::DataType> value);
 
 #endif //RAIA_SKIA_STATIC_STD_TUPLE_INT_SK_YUVA_PIXMAP_INFO_DATA_TYPE_H

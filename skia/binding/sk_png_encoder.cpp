@@ -4,6 +4,9 @@
 
 #include "sk_png_encoder.h"
 
+#include "../static/static_sk_encoder-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 bool SkPngEncoder_Encode(SkWStream* dst, const SkPixmap* src, const SkPngEncoder::Options* options) {

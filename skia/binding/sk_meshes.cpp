@@ -4,6 +4,9 @@
 
 #include "sk_meshes.h"
 
+#include "../static/static_sk_mesh_vertex_buffer-internal.h"
+#include "../static/static_sk_mesh_index_buffer-internal.h"
+
 extern "C" {
 
 sk_mesh_index_buffer_t SkMeshes_MakeIndexBuffer(const void *data, size_t size) {

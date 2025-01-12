@@ -4,6 +4,10 @@
 
 #include "sk_color_filters.h"
 
+#include "../static/static_sk_color_table-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
+
 extern "C" {
 
 // static

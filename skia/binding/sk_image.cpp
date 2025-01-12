@@ -4,6 +4,14 @@
 
 #include "sk_image.h"
 
+#include "../static/static_sk_image-internal.h"
+#include "../static/static_sk_image_required_properties-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+
 extern "C" {
 
 void SkImage_delete(SkImage *image) {

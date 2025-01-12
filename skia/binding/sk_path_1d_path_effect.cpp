@@ -4,6 +4,8 @@
 
 #include "sk_path_1d_path_effect.h"
 
+#include "../static/static_sk_path_effect-internal.h"
+
 extern "C" {
 
 void SkPath1DPathEffect_delete(SkPath1DPathEffect * path1DPathEffect) {

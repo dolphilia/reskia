@@ -4,6 +4,13 @@
 
 #include "sk_drawable.h"
 
+#include "../static/static_sk_picture-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_drawable_gpu_draw_handler-internal.h"
+#include "../static/static_sk_drawable-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkDrawable_delete(SkDrawable *drawable) {

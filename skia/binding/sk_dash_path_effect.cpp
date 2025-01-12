@@ -4,6 +4,8 @@
 
 #include "sk_dash_path_effect.h"
 
+#include "../static/static_sk_path_effect-internal.h"
+
 extern "C" {
 
 void SkDashPathEffect_delete(SkDashPathEffect * dashPathEffect) {

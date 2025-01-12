@@ -4,6 +4,8 @@
 
 #include "sk_rsx_form.h"
 
+#include "../static/static_sk_rsx_form-internal.h"
+
 extern "C" {
 
 void SkRSXform_delete(SkRSXform *rsx_form) {

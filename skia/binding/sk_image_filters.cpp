@@ -3,8 +3,14 @@
 //
 
 #include "sk_image_filters.h"
-#include "../static/static_sk_blender-internal.h"
 
+#include "../static/static_sk_image-internal.h"
+#include "../static/static_sk_image_filter-internal.h"
+#include "../static/static_sk_picture-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_std_string_view-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
+#include "../static/static_sk_blender-internal.h"
 
 extern "C" {
 

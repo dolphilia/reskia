@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_POINT_H
 #define RAIA_SKIA_STATIC_SK_POINT_H
 
-#include <set>
-#include <map>
-#include "include/core/SkRect.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void * static_sk_point_get_ptr(int key); // -> SkPoint *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_point_make(SkPoint value);
-void static_sk_point_set(int key, SkPoint value);
-SkPoint static_sk_point_get(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_POINT_H

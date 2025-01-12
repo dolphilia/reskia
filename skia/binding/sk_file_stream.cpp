@@ -4,6 +4,9 @@
 
 #include "sk_file_stream.h"
 
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_file_stream-internal.h"
+
 extern "C" {
 
 SkFILEStream *SkFILEStream_new(const char path[]) {

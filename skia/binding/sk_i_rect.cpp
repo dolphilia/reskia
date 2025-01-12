@@ -4,6 +4,10 @@
 
 #include "sk_i_rect.h"
 
+#include "../static/static_sk_i_point-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_i_size-internal.h"
+
 extern "C" {
 
 void SkIRect_delete(SkIRect *i_rect) {

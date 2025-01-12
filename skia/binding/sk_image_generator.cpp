@@ -4,6 +4,9 @@
 
 #include "sk_image_generator.h"
 
+#include "../static/static_sk_image_info-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkImageGenerator_delete(SkImageGenerator *image_generator) {

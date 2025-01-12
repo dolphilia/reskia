@@ -4,6 +4,8 @@
 
 #include "sk_sampling_options.h"
 
+#include "../static/static_sk_sampling_options-internal.h"
+
 extern "C" {
 
 //bool operator==(const SkSamplingOptions &other)

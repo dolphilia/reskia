@@ -4,6 +4,11 @@
 
 #include "sk_mask_filter.h"
 
+#include "../static/static_sk_mask_filter-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkMaskFilter_delete(SkMaskFilter *maskFilter) {

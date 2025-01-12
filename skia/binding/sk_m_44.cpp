@@ -4,6 +4,11 @@
 
 #include "sk_m_44.h"
 
+#include "../static/static_sk_matrix-internal.h"
+#include "../static/static_sk_m_44-internal.h"
+#include "../static/static_sk_v3-internal.h"
+#include "../static/static_sk_v4-internal.h"
+
 extern "C" {
 
 //SkM44 & operator=(const SkM44 &src)

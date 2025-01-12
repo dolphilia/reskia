@@ -4,6 +4,8 @@
 
 #include "sk_trim_path_effect.h"
 
+#include "../static/static_sk_path_effect-internal.h"
+
 extern "C" {
 
 void SkTrimPathEffect_delete(SkTrimPathEffect * trimPathEffect) {

@@ -4,6 +4,11 @@
 
 #include "sk_webp_decoder.h"
 
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_codecs_decoder-internal.h"
+#include "../static/static_sk_codec-internal.h"
+
 extern "C" {
 
 bool SkWebpDecoder_IsWbmp(const void* ptr, size_t size) {

@@ -4,6 +4,8 @@
 
 #include "sk_yuva_pixmap_info.h"
 
+#include "../static/static_std_tuple_int_sk_yuva_pixmap_info_data_type-internal.h"
+
 extern "C" {
 
 // SkYUVAPixmapInfo & operator=(const SkYUVAPixmapInfo &)

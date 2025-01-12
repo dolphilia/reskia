@@ -4,6 +4,12 @@
 
 #include "sk_image_info.h"
 
+#include "../static/static_sk_image_info-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_info-internal.h"
+
 extern "C" {
 
 //bool operator==(const SkImageInfo &other)

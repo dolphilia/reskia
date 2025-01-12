@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_MEMORY_STREAM_H
 #define RAIA_SKIA_STATIC_SK_MEMORY_STREAM_H
 
-#include <set>
-#include <map>
-#include "include/core/SkStream.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void *static_sk_memory_stream_get(int key); // -> SkMemoryStream *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_memory_stream_make(std::unique_ptr<SkMemoryStream> value);
-void static_sk_memory_stream_set(int key, std::unique_ptr<SkMemoryStream> value);
-std::unique_ptr<SkMemoryStream> static_sk_memory_stream_move(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_MEMORY_STREAM_H

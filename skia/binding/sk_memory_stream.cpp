@@ -4,6 +4,9 @@
 
 #include "sk_memory_stream.h"
 
+#include "../static/static_sk_memory_stream-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 SkMemoryStream *SkMemoryStream_new() {

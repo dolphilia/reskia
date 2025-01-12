@@ -4,6 +4,8 @@
 
 #include "sk_color_table.h"
 
+#include "../static/static_sk_color_table-internal.h"
+
 extern "C" {
 
 void SkColorTable_delete(SkColorTable *color_table) {

@@ -4,6 +4,8 @@
 
 #include "sk_perlin_noise_shader.h"
 
+#include "../static/static_sk_shader-internal.h"
+
 extern "C" {
 
 sk_shader_t SkPerlinNoiseShader_MakeFractalNoise(SkScalar baseFrequencyX, SkScalar baseFrequencyY, int numOctaves, SkScalar seed, const SkISize *tileSize) {

@@ -4,6 +4,8 @@
 
 #include "sk_encoded_origin.h"
 
+#include "../static/static_sk_matrix-internal.h"
+
 extern "C" {
 
 // static

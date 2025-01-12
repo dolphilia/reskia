@@ -4,6 +4,11 @@
 
 #include "sk_font.h"
 
+#include "../static/static_sk_font-internal.h"
+#include "../static/static_sk_point-internal.h"
+#include "../static/static_std_vector_sk_scalar-internal.h"
+#include "../static/static_sk_typeface-internal.h"
+
 extern "C" {
 
 SkFont *SkFont_new() {

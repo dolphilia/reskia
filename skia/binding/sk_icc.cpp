@@ -4,6 +4,8 @@
 
 #include "sk_icc.h"
 
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 sk_data_t SkICC_SkWriteICCProfile(const skcms_TransferFunction* transferFunction, const skcms_Matrix3x3* toXYZD50) {

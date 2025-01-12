@@ -4,6 +4,8 @@
 
 #include "sk_color_matrix.h"
 
+#include "../static/static_sk_color_matrix-internal.h"
+
 extern "C" {
 
 SkColorMatrix *SkColorMatrix_new() {

@@ -3,6 +3,11 @@
 //
 
 #include "sk_surface.h"
+
+#include "../static/static_sk_image-internal.h"
+#include "../static/static_sk_image_info-internal.h"
+#include "../static/static_sk_surface-internal.h"
+#include "../static/static_sk_color_space-internal.h"
 #include "../static/static_sk_color_space.h"
 #include "../static/static_sk_capabilities-internal.h"
 

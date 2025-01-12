@@ -4,6 +4,8 @@
 
 #include "sk_data_table.h"
 
+#include "../static/static_sk_data_table-internal.h"
+
 extern "C" {
 
 void SkDataTable_delete(SkDataTable *data_table) {

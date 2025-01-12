@@ -4,6 +4,10 @@
 
 #include "sk_stream_rewindable.h"
 
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_stream_rewindable-internal.h"
+
 extern "C" {
 
 void SkStreamRewindable_delete(SkStreamRewindable *stream_rewindable) {

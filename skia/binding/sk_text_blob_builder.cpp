@@ -4,6 +4,8 @@
 
 #include "sk_text_blob_builder.h"
 
+#include "../static/static_sk_text_blob-internal.h"
+
 extern "C" {
 
 SkTextBlobBuilder *SkTextBlobBuilder_new() {

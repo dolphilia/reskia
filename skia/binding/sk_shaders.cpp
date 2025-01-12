@@ -3,6 +3,9 @@
 //
 
 #include "sk_shaders.h"
+
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_color_space-internal.h"
 #include "../static/static_sk_blender-internal.h"
 
 

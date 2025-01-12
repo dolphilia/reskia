@@ -4,6 +4,9 @@
 
 #include "sk_stream_seekable.h"
 
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_stream_seekable-internal.h"
+
 extern "C" {
 
 void SkStreamSeekable_delete(SkStreamSeekable *stream_seekable) {

@@ -4,6 +4,13 @@
 
 #include "sk_font_mgr.h"
 
+#include "../static/static_sk_font_mgr-internal.h"
+#include "../static/static_sk_font_style-internal.h"
+#include "../static/static_sk_font_style_set-internal.h"
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_typeface-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkFontMgr_delete(SkFontMgr *font_mgr) {

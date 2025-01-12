@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_RSX_FORM_H
 #define RAIA_SKIA_STATIC_SK_RSX_FORM_H
 
-#include <set>
-#include <map>
-#include "include/core/SkRSXform.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void * static_sk_rsx_form_get_ptr(int key); // -> SkRSXform *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_rsx_form_make(SkRSXform value);
-SkRSXform static_sk_rsx_form_get(int key);
-void static_sk_rsx_form_set(int key, SkRSXform value);
 
 #endif //RAIA_SKIA_STATIC_SK_RSX_FORM_H

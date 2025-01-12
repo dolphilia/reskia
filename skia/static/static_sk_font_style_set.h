@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_FONT_STYLE_SET_H
 #define RAIA_SKIA_STATIC_SK_FONT_STYLE_SET_H
 
-#include <set>
-#include <map>
-#include "include/core/SkFontMgr.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void *static_sk_font_style_set_get(int key); // -> SkFontStyleSet *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_font_style_set_make(sk_sp<SkFontStyleSet> value);
-void static_sk_font_style_set_set(int key, sk_sp<SkFontStyleSet> value);
-sk_sp<SkFontStyleSet> static_sk_font_style_set_move(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_FONT_STYLE_SET_H

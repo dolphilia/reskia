@@ -4,6 +4,9 @@
 
 #include "sk_color_space.h"
 
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+
 extern "C" {
 
 void SkColorSpace_delete(SkColorSpace *color_space) {

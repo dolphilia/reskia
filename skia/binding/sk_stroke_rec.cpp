@@ -4,6 +4,8 @@
 
 #include "sk_stroke_rec.h"
 
+#include "../static/static_sk_stroke_rec-internal.h"
+
 extern "C" {
 
 void SkStrokeRec_delete(SkStrokeRec *stroke_rec) {

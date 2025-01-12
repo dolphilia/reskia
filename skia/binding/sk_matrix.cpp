@@ -4,6 +4,11 @@
 
 #include "sk_matrix.h"
 
+#include "../static/static_sk_i_point-internal.h"
+#include "../static/static_sk_matrix-internal.h"
+#include "../static/static_sk_point-internal.h"
+#include "../static/static_sk_rect-internal.h"
+
 extern "C" {
 
 // SkScalar operator[](int index)

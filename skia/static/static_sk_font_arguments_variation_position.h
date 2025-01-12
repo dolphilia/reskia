@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_FONT_ARGUMENTS_VARIATION_POSITION_H
 #define RAIA_SKIA_STATIC_SK_FONT_ARGUMENTS_VARIATION_POSITION_H
 
-#include <set>
-#include <map>
-#include "include/core/SkFontArguments.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void * static_sk_font_arguments_variation_position_get_ptr(int key); // -> SkFon
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_font_arguments_variation_position_make(SkFontArguments::VariationPosition value);
-SkFontArguments::VariationPosition static_sk_font_arguments_variation_position_get(int key);
-void static_sk_font_arguments_variation_position_set(int key, SkFontArguments::VariationPosition value);
 
 #endif //RAIA_SKIA_STATIC_SK_FONT_ARGUMENTS_VARIATION_POSITION_H

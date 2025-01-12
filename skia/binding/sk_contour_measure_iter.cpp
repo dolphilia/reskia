@@ -4,6 +4,8 @@
 
 #include "sk_contour_measure_iter.h"
 
+#include "../static/static_sk_contour_measure-internal.h"
+
 extern "C" {
 
 SkContourMeasureIter *SkContourMeasureIter_new() {

@@ -5,12 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_STD_VECTOR_SK_SCALAR_H
 #define RAIA_SKIA_STATIC_STD_VECTOR_SK_SCALAR_H
 
-#include <set>
-#include <map>
-#include <vector>
-#include "include/core/SkScalar.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,8 +18,5 @@ void static_vector_sk_scalar_erase(int key, int index);
 #ifdef __cplusplus
 }
 #endif
-
-int static_vector_sk_scalar_make(std::vector<SkScalar> value);
-void static_vector_sk_scalar_set(int key, std::vector<SkScalar> value);
 
 #endif //RAIA_SKIA_STATIC_STD_VECTOR_SK_SCALAR_H

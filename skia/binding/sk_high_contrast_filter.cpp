@@ -4,6 +4,8 @@
 
 #include "sk_high_contrast_filter.h"
 
+#include "../static/static_sk_color_filter-internal.h"
+
 extern "C" {
 
 void SkHighContrastFilter_delete(SkHighContrastFilter * highContrastFilter) {

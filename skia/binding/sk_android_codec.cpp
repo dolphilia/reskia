@@ -3,6 +3,12 @@
 //
 
 #include "sk_android_codec.h"
+
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_stream-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_codec-internal.h"
 #include "../static/static_sk_android_codec-internal.h"
 
 #ifdef __cplusplus

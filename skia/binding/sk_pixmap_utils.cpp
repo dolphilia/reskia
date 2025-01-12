@@ -4,6 +4,8 @@
 
 #include "sk_pixmap_utils.h"
 
+#include "../static/static_sk_image_info-internal.h"
+
 extern "C" {
 
 bool SkPixmapUtils_Orient(const SkPixmap* dst, const SkPixmap* src, SkEncodedOrigin origin) {

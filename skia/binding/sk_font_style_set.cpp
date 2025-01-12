@@ -4,6 +4,9 @@
 
 #include "sk_font_style_set.h"
 
+#include "../static/static_sk_font_style_set-internal.h"
+#include "../static/static_sk_typeface-internal.h"
+
 extern "C" {
 
 void SkFontStyleSet_delete(SkFontStyleSet *font_style_set) {

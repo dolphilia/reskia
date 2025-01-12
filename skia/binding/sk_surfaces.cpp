@@ -4,6 +4,8 @@
 
 #include "sk_surfaces.h"
 
+#include "../static/static_sk_surface-internal.h"
+
 extern "C" {
 
 sk_surface_t SkSurfaces_Null(int width, int height) {

@@ -4,6 +4,9 @@
 
 #include "sk_size.h"
 
+#include "../static/static_sk_i_size-internal.h"
+#include "../static/static_sk_size_t-internal.h"
+
 extern "C" {
 
 void SkSize_delete(SkSize *size) {

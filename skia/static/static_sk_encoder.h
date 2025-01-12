@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_ENCODER_H
 #define RAIA_SKIA_STATIC_SK_ENCODER_H
 
-#include <set>
-#include <map>
-#include "include/encode/SkEncoder.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void *static_sk_encoder_get(int key); // -> SkEncoder *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_encoder_make(std::unique_ptr<SkEncoder> value);
-void static_sk_encoder_set(int key, std::unique_ptr<SkEncoder> value);
-std::unique_ptr<SkEncoder> static_sk_encoder_move(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_ENCODER_H

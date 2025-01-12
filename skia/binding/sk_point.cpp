@@ -4,6 +4,8 @@
 
 #include "sk_point.h"
 
+#include "../static/static_sk_point-internal.h"
+
 extern "C" {
 
 void SkPoint_delete(SkPoint *point) {

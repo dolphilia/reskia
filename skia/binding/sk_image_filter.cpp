@@ -4,6 +4,13 @@
 
 #include "sk_image_filter.h"
 
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_image_filter-internal.h"
+#include "../static/static_sk_i_rect-internal.h"
+#include "../static/static_sk_rect-internal.h"
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkImageFilter_delete(SkImageFilter *image_filter) {

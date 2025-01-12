@@ -4,6 +4,8 @@
 
 #include "sk_cubic_map.h"
 
+#include "../static/static_sk_point-internal.h"
+
 extern "C" {
 
 SkCubicMap *SkCubicMap_new(sk_point_t p1, sk_point_t p2) {

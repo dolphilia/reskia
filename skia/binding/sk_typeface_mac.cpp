@@ -4,6 +4,8 @@
 
 #include "sk_typeface_mac.h"
 
+#include "../static/static_sk_typeface-internal.h"
+
 #ifdef __MACOS__
 
 extern "C" {

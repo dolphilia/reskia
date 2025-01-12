@@ -3,6 +3,13 @@
 //
 
 #include "sk_paint.h"
+
+#include "../static/static_sk_image_filter-internal.h"
+#include "../static/static_sk_mask_filter-internal.h"
+#include "../static/static_sk_path_effect-internal.h"
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
+#include "../static/static_sk_color_4f-internal.h"
 #include "../static/static_sk_blender-internal.h"
 #include "../static/static_sk_blend_mode-internal.h"
 

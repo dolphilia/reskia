@@ -4,6 +4,8 @@
 
 #include "sk_surface_props.h"
 
+#include "../static/static_sk_surface_props-internal.h"
+
 extern "C" {
 
 // SkSurfaceProps & operator=(const SkSurfaceProps &)

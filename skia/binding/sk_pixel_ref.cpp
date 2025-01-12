@@ -3,6 +3,9 @@
 //
 
 #include "sk_pixel_ref.h"
+
+#include "../static/static_sk_id_change_listener-internal.h"
+#include "../static/static_sk_i_size-internal.h"
 #include "../static/static_sk_id_change_listener.h"
 
 extern "C" {

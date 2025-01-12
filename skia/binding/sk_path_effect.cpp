@@ -4,6 +4,10 @@
 
 #include "sk_path_effect.h"
 
+#include "../static/static_sk_path_effect-internal.h"
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 void SkPathEffect_delete(SkPathEffect * pathEffect) {

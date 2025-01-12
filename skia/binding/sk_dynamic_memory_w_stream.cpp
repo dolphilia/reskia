@@ -4,6 +4,9 @@
 
 #include "sk_dynamic_memory_w_stream.h"
 
+#include "../static/static_sk_stream_asset-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 SkDynamicMemoryWStream *SkDynamicMemoryWStream_new() {

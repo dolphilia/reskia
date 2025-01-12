@@ -4,6 +4,8 @@
 
 #include "sk_string.h"
 
+#include "../static/static_std_string_view-internal.h"
+
 extern "C" {
 
 // SkString & operator=(const SkString &)

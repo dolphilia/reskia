@@ -5,11 +5,6 @@
 #ifndef RAIA_SKIA_STATIC_SK_DATA_TABLE_H
 #define RAIA_SKIA_STATIC_SK_DATA_TABLE_H
 
-#include <set>
-#include <map>
-#include "include/core/SkDataTable.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,9 +14,5 @@ void *static_sk_data_table_get(int key); // -> SkDataTable *
 #ifdef __cplusplus
 }
 #endif
-
-int static_sk_data_table_make(sk_sp<SkDataTable> value);
-void static_sk_data_table_set(int key, sk_sp<SkDataTable> value);
-sk_sp<SkDataTable> static_sk_data_table_move(int key);
 
 #endif //RAIA_SKIA_STATIC_SK_DATA_TABLE_H

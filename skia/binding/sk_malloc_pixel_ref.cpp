@@ -4,6 +4,9 @@
 
 #include "sk_malloc_pixel_ref.h"
 
+#include "../static/static_sk_pixel_ref-internal.h"
+#include "../static/static_sk_data-internal.h"
+
 extern "C" {
 
 sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const SkImageInfo *imageInfo, size_t rowBytes) {

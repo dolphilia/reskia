@@ -4,6 +4,13 @@
 
 #include "sk_shader.h"
 
+#include "../static/static_sk_shader-internal.h"
+#include "../static/static_sk_flattenable_factory-internal.h"
+#include "../static/static_sk_flattenable-internal.h"
+#include "../static/static_sk_data-internal.h"
+#include "../static/static_sk_color_space-internal.h"
+#include "../static/static_sk_color_filter-internal.h"
+
 extern "C" {
 
 void SkShader_delete(SkShader *shader) {
