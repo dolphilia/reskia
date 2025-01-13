@@ -6,6 +6,8 @@
 
 #include "include/core/SkCapabilities.h"
 
+#include "../static/static_sk_capabilities.h"
+
 #include "../static/static_sk_capabilities-internal.h"
 
 extern "C" {

@@ -6,6 +6,8 @@
 
 #include "include/core/SkBBHFactory.h"
 
+#include "../static/static_std_vector_int_ptr.h"
+
 #include "../static/static_std_vector_int_ptr-internal.h"
 
 extern "C" {

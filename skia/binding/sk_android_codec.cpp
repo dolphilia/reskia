@@ -6,6 +6,13 @@
 
 #include "include/codec/SkAndroidCodec.h"
 
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_android_codec.h"
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_i_size.h"
+
 #include "../static/static_sk_i_size-internal.h"
 #include "../static/static_sk_stream-internal.h"
 #include "../static/static_sk_data-internal.h"

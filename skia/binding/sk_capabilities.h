@@ -5,8 +5,6 @@
 #ifndef RAIA_SKIA_SK_CAPABILITIES_H
 #define RAIA_SKIA_SK_CAPABILITIES_H
 
-#include "../static/static_sk_capabilities.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,7 +17,7 @@ void SkCapabilities_unref(void * capabilities); // (SkCapabilities *capabilities
 
 // static
 
-const_sk_capabilities_t SkCapabilities_RasterBackend(); // () -> const_sk_capabilities_t
+int SkCapabilities_RasterBackend(); // () -> const_sk_capabilities_t
 
 #ifdef __cplusplus
 }

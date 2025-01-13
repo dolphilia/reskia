@@ -6,6 +6,17 @@
 
 #include "include/core/SkBitmap.h"
 
+#include "../static/static_sk_color_4f.h"
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_i_point.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_sk_i_size.h"
+#include "../static/static_sk_image_info.h"
+#include "../static/static_sk_image.h"
+#include "../static/static_sk_pixel_ref.h"
+#include "../static/static_sk_pixmap.h"
+#include "../static/static_sk_shader.h"
+
 #include "../static/static_sk_image-internal.h"
 #include "../static/static_sk_image_info-internal.h"
 #include "../static/static_sk_i_point-internal.h"

@@ -6,6 +6,11 @@
 
 #include "include/codec/SkBmpDecoder.h"
 
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_codecs_decoder.h"
+
 #include "../static/static_sk_stream-internal.h"
 #include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_codecs_decoder-internal.h"

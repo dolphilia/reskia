@@ -4,6 +4,17 @@
 
 #include "sk_codec.h"
 
+#include "include/codec/SkCodec.h"
+
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_image_info.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_std_tuple_sk_image_sk_codec_result.h"
+#include "../static/static_std_vector_sk_codec_frame_info.h"
+#include "../static/static_sk_i_size.h"
+
 #include "../static/static_sk_image_info-internal.h"
 #include "../static/static_sk_i_rect-internal.h"
 #include "../static/static_sk_i_size-internal.h"
@@ -15,124 +26,124 @@
 
 extern "C" {
 
-void SkCodec_delete(SkCodec* codec) {
-    delete codec;
+void SkCodec_delete(void * codec) {
+    delete static_cast<SkCodec *>(codec);
 }
 
-sk_image_info_t SkCodec_getInfo(SkCodec* codec) {
-    return static_sk_image_info_make(codec->getInfo());
+sk_image_info_t SkCodec_getInfo(void * codec) {
+    return static_sk_image_info_make(static_cast<SkCodec *>(codec)->getInfo());
 }
 
-sk_i_size_t SkCodec_dimensions(SkCodec* codec) {
-    return static_sk_i_size_make(codec->dimensions());
+sk_i_size_t SkCodec_dimensions(void * codec) {
+    return static_sk_i_size_make(static_cast<SkCodec *>(codec)->dimensions());
 }
 
-sk_i_rect_t SkCodec_bounds(SkCodec* codec) {
-    return static_sk_i_rect_make(codec->bounds());
+sk_i_rect_t SkCodec_bounds(void * codec) {
+    return static_sk_i_rect_make(static_cast<SkCodec *>(codec)->bounds());
 }
 
-const skcms_ICCProfile* SkCodec_getICCProfile(SkCodec* codec) {
-    return codec->getICCProfile();
+const void * SkCodec_getICCProfile(void * codec) {
+    return static_cast<SkCodec *>(codec)->getICCProfile();
 }
 
-SkEncodedOrigin SkCodec_getOrigin(SkCodec* codec) {
-    return codec->getOrigin();
+int SkCodec_getOrigin(void * codec) {
+    return static_cast<SkCodec *>(codec)->getOrigin();
 }
 
-sk_i_size_t SkCodec_getScaledDimensions(SkCodec* codec, float desiredScale) {
-    return static_sk_i_size_make(codec->getScaledDimensions(desiredScale));
+sk_i_size_t SkCodec_getScaledDimensions(void * codec, float desiredScale) {
+    return static_sk_i_size_make(static_cast<SkCodec *>(codec)->getScaledDimensions(desiredScale));
 }
 
-bool SkCodec_getValidSubset(SkCodec* codec, SkIRect* desiredSubset) {
-    return codec->getValidSubset(desiredSubset);
+bool SkCodec_getValidSubset(void * codec, void * desiredSubset) {
+    return static_cast<SkCodec *>(codec)->getValidSubset(static_cast<SkIRect *>(desiredSubset));
 }
 
-SkEncodedImageFormat SkCodec_getEncodedFormat(SkCodec* codec) {
-    return codec->getEncodedFormat();
+int SkCodec_getEncodedFormat(void * codec) {
+    return static_cast<int>(static_cast<SkCodec *>(codec)->getEncodedFormat());
 }
 
-SkCodec::Result SkCodec_getPixels(SkCodec* codec, const SkImageInfo* info, void* pixels, size_t rowBytes, const SkCodec::Options* options) {
-    return codec->getPixels(*info, pixels, rowBytes, options);
+int SkCodec_getPixels(void * codec, const void * info, void* pixels, size_t rowBytes, const void * options) {
+    return static_cast<SkCodec *>(codec)->getPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes, static_cast<const SkCodec::Options *>(options));
 }
 
-SkCodec::Result SkCodec_getPixels_2(SkCodec* codec, const SkImageInfo* info, void* pixels, size_t rowBytes) {
-    return codec->getPixels(*info, pixels, rowBytes);
+int SkCodec_getPixels_2(void * codec, const void * info, void* pixels, size_t rowBytes) {
+    return static_cast<SkCodec *>(codec)->getPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-SkCodec::Result SkCodec_getPixels_3(SkCodec* codec, const SkPixmap* pm, const SkCodec::Options* opts) {
-    return codec->getPixels(*pm, opts);
+int SkCodec_getPixels_3(void * codec, const void * pm, const void * opts) {
+    return static_cast<SkCodec *>(codec)->getPixels(* static_cast<const SkPixmap *>(pm), static_cast<const SkCodec::Options *>(opts));
 }
 
-tuple_sk_image_sk_codec_result_t SkCodec_getImage(SkCodec* codec, const SkImageInfo* info, const SkCodec::Options* opts) {
-    return static_tuple_sk_image_sk_codec_result_make(codec->getImage(*info, opts));
+tuple_sk_image_sk_codec_result_t SkCodec_getImage(void * codec, const void * info, const void * opts) {
+    return static_tuple_sk_image_sk_codec_result_make(static_cast<SkCodec *>(codec)->getImage(* static_cast<const SkImageInfo *>(info), static_cast<const SkCodec::Options *>(opts)));
 }
 
-tuple_sk_image_sk_codec_result_t SkCodec_getImage_2(SkCodec* codec) {
-    return static_tuple_sk_image_sk_codec_result_make(codec->getImage());
+tuple_sk_image_sk_codec_result_t SkCodec_getImage_2(void * codec) {
+    return static_tuple_sk_image_sk_codec_result_make(static_cast<SkCodec *>(codec)->getImage());
 }
 
-bool SkCodec_queryYUVAInfo(SkCodec* codec, const SkYUVAPixmapInfo::SupportedDataTypes* supportedDataTypes, SkYUVAPixmapInfo* yuvaPixmapInfo) {
-    return codec->queryYUVAInfo(*supportedDataTypes, yuvaPixmapInfo);
+bool SkCodec_queryYUVAInfo(void * codec, const void * supportedDataTypes, void * yuvaPixmapInfo) {
+    return static_cast<SkCodec *>(codec)->queryYUVAInfo(* static_cast<const SkYUVAPixmapInfo::SupportedDataTypes *>(supportedDataTypes), static_cast<SkYUVAPixmapInfo *>(yuvaPixmapInfo));
 }
 
-SkCodec::Result SkCodec_getYUVAPlanes(SkCodec* codec, const SkYUVAPixmaps* yuvaPixmaps) {
-    return codec->getYUVAPlanes(*yuvaPixmaps);
+int SkCodec_getYUVAPlanes(void * codec, const void * yuvaPixmaps) {
+    return static_cast<SkCodec *>(codec)->getYUVAPlanes(* static_cast<const SkYUVAPixmaps *>(yuvaPixmaps));
 }
 
-SkCodec::Result SkCodec_startIncrementalDecode(SkCodec* codec, const SkImageInfo* dstInfo, void* dst, size_t rowBytes, const SkCodec::Options* options) {
-    return codec->startIncrementalDecode(*dstInfo, dst, rowBytes, options);
+int SkCodec_startIncrementalDecode(void * codec, const void * dstInfo, void* dst, size_t rowBytes, const void * options) {
+    return static_cast<SkCodec *>(codec)->startIncrementalDecode(* static_cast<const SkImageInfo *>(dstInfo), dst, rowBytes, static_cast<const SkCodec::Options *>(options));
 }
 
-SkCodec::Result SkCodec_startIncrementalDecode_2(SkCodec* codec, const SkImageInfo* dstInfo, void* dst, size_t rowBytes) {
-    return codec->startIncrementalDecode(*dstInfo, dst, rowBytes);
+int SkCodec_startIncrementalDecode_2(void * codec, const void * dstInfo, void* dst, size_t rowBytes) {
+    return static_cast<SkCodec *>(codec)->startIncrementalDecode(* static_cast<const SkImageInfo *>(dstInfo), dst, rowBytes);
 }
 
-SkCodec::Result SkCodec_incrementalDecode(SkCodec* codec, int* rowsDecoded) {
-    return codec->incrementalDecode(rowsDecoded);
+int SkCodec_incrementalDecode(void * codec, int* rowsDecoded) {
+    return static_cast<SkCodec *>(codec)->incrementalDecode(rowsDecoded);
 }
 
-SkCodec::Result SkCodec_startScanlineDecode(SkCodec* codec, const SkImageInfo* dstInfo, const SkCodec::Options* options) {
-    return codec->startScanlineDecode(*dstInfo, options);
+int SkCodec_startScanlineDecode(void * codec, const void * dstInfo, const void * options) {
+    return static_cast<SkCodec *>(codec)->startScanlineDecode(* static_cast<const SkImageInfo *>(dstInfo), static_cast<const SkCodec::Options *>(options));
 }
 
-SkCodec::Result SkCodec_startScanlineDecode_2(SkCodec* codec, const SkImageInfo* dstInfo) {
-    return codec->startScanlineDecode(*dstInfo);
+int SkCodec_startScanlineDecode_2(void * codec, const void * dstInfo) {
+    return static_cast<SkCodec *>(codec)->startScanlineDecode(* static_cast<const SkImageInfo *>(dstInfo));
 }
 
-int SkCodec_getScanlines(SkCodec* codec, void* dst, int countLines, size_t rowBytes) {
-    return codec->getScanlines(dst, countLines, rowBytes);
+int SkCodec_getScanlines(void * codec, void* dst, int countLines, size_t rowBytes) {
+    return static_cast<SkCodec *>(codec)->getScanlines(dst, countLines, rowBytes);
 }
 
-bool SkCodec_skipScanlines(SkCodec* codec, int countLines) {
-    return codec->skipScanlines(countLines);
+bool SkCodec_skipScanlines(void * codec, int countLines) {
+    return static_cast<SkCodec *>(codec)->skipScanlines(countLines);
 }
 
-SkCodec::SkScanlineOrder SkCodec_getScanlineOrder(SkCodec* codec) {
-    return codec->getScanlineOrder();
+int SkCodec_getScanlineOrder(void * codec) {
+    return static_cast<SkCodec *>(codec)->getScanlineOrder();
 }
 
-int SkCodec_nextScanline(SkCodec* codec) {
-    return codec->nextScanline();
+int SkCodec_nextScanline(void * codec) {
+    return static_cast<SkCodec *>(codec)->nextScanline();
 }
 
-int SkCodec_outputScanline(SkCodec* codec, int inputScanline) {
-    return codec->outputScanline(inputScanline);
+int SkCodec_outputScanline(void * codec, int inputScanline) {
+    return static_cast<SkCodec *>(codec)->outputScanline(inputScanline);
 }
 
-int SkCodec_getFrameCount(SkCodec* codec) {
-    return codec->getFrameCount();
+int SkCodec_getFrameCount(void * codec) {
+    return static_cast<SkCodec *>(codec)->getFrameCount();
 }
 
-bool SkCodec_getFrameInfo(SkCodec* codec, int index, SkCodec::FrameInfo* info) {
-    return codec->getFrameInfo(index, info);
+bool SkCodec_getFrameInfo(void * codec, int index, void * info) {
+    return static_cast<SkCodec *>(codec)->getFrameInfo(index, static_cast<SkCodec::FrameInfo *>(info));
 }
 
-vector_sk_codec_frame_into_t SkCodec_getFrameInfo_2(SkCodec* codec) {
-    return static_vector_sk_codec_frame_into_make(codec->getFrameInfo());
+vector_sk_codec_frame_into_t SkCodec_getFrameInfo_2(void * codec) {
+    return static_vector_sk_codec_frame_into_make(static_cast<SkCodec *>(codec)->getFrameInfo());
 }
 
-int SkCodec_getRepetitionCount(SkCodec* codec) {
-    return codec->getRepetitionCount();
+int SkCodec_getRepetitionCount(void * codec) {
+    return static_cast<SkCodec *>(codec)->getRepetitionCount();
 }
 
 // static
@@ -141,16 +152,16 @@ size_t SkCodec_MinBufferedBytesNeeded() {
     return SkCodec::MinBufferedBytesNeeded();
 }
 
-const char* SkCodec_ResultToString(SkCodec::Result result) {
-    return SkCodec::ResultToString(result);
+const char* SkCodec_ResultToString(int result) {
+    return SkCodec::ResultToString(static_cast<SkCodec::Result>(result));
 }
 
-sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, SkCodec::Result* result, SkPngChunkReader* pngChunkReader, SkCodec::SelectionPolicy selectionPolicy) {
-    return static_sk_codec_make(SkCodec::MakeFromStream(static_sk_stream_move(stream), result, pngChunkReader, selectionPolicy));
+sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, void * result, void * pngChunkReader, int selectionPolicy) {
+    return static_sk_codec_make(SkCodec::MakeFromStream(static_sk_stream_move(stream), static_cast<SkCodec::Result *>(result), static_cast<SkPngChunkReader *>(pngChunkReader), static_cast<SkCodec::SelectionPolicy>(selectionPolicy)));
 }
 
-sk_codec_t SkCodec_MakeFromData(sk_stream_t stream, SkPngChunkReader* pngChunkReader) {
-    return static_sk_codec_make(SkCodec::MakeFromData(static_sk_data_move(stream), pngChunkReader));
+sk_codec_t SkCodec_MakeFromData(sk_stream_t stream, void * pngChunkReader) {
+    return static_sk_codec_make(SkCodec::MakeFromData(static_sk_data_move(stream), static_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
 //void SkCodec_Register(bool (*peek)(const void*, size_t), std::unique_ptr<SkCodec> (*make)(std::unique_ptr<SkStream>, SkCodec::Result*)) {

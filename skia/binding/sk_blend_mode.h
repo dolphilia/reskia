@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-bool SkBlendMode_SkBlendMode_AsCoeff(int mode, void *src, void *dst); // (SkBlendMode mode, SkBlendModeCoeff *src, SkBlendModeCoeff *dst) -> bool
-const char *SkBlendMode_SkBlendMode_Name(int blendMode); // (SkBlendMode blendMode) -> const char *
+bool SkBlendMode_SkBlendMode_AsCoeff(int mode, void * src, void * dst); // (SkBlendMode mode, SkBlendModeCoeff *src, SkBlendModeCoeff *dst) -> bool
+const char * SkBlendMode_SkBlendMode_Name(int blendMode); // (SkBlendMode blendMode) -> const char *
 
 #ifdef __cplusplus
 }

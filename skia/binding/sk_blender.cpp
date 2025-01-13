@@ -6,6 +6,11 @@
 
 #include "include/core/SkBlender.h"
 
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_blender.h"
+#include "../static/static_sk_flattenable.h"
+#include "../static/static_sk_flattenable_factory.h"
+
 #include "../static/static_sk_flattenable_factory-internal.h"
 #include "../static/static_sk_flattenable-internal.h"
 #include "../static/static_sk_data-internal.h"
