@@ -3,6 +3,9 @@
 //
 
 #include "sk_blenders.h"
+
+#include "include/effects/SkBlenders.h"
+
 #include "../static/static_sk_blender-internal.h"
 
 extern "C" {

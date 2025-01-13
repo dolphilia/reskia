@@ -4,6 +4,8 @@
 
 #include "sk_bmp_decoder.h"
 
+#include "include/codec/SkBmpDecoder.h"
+
 #include "../static/static_sk_stream-internal.h"
 #include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_codecs_decoder-internal.h"
@@ -17,12 +19,12 @@ bool SkBmpDecoder_IsBmp(const void* ptr, size_t size) {
     return SkBmpDecoder::IsBmp(ptr, size);
 }
 
-sk_codec_t SkBmpDecoder_Decode(sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-    return static_sk_codec_make(SkBmpDecoder::Decode(static_sk_stream_move(stream), result, decodeContext));
+sk_codec_t SkBmpDecoder_Decode(sk_stream_t stream, void * result, void * decodeContext) {
+    return static_sk_codec_make(SkBmpDecoder::Decode(static_sk_stream_move(stream), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
-sk_codec_t SkBmpDecoder_Decode_2(sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-    return static_sk_codec_make(SkBmpDecoder::Decode(static_sk_data_move(stream), result, decodeContext));
+sk_codec_t SkBmpDecoder_Decode_2(sk_stream_t stream, void * result, void * decodeContext) {
+    return static_sk_codec_make(SkBmpDecoder::Decode(static_sk_data_move(stream), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
 sk_codecs_decoder_t SkBmpDecoder_Decoder() {

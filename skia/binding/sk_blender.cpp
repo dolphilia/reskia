@@ -4,6 +4,8 @@
 
 #include "sk_blender.h"
 
+#include "include/core/SkBlender.h"
+
 #include "../static/static_sk_flattenable_factory-internal.h"
 #include "../static/static_sk_flattenable-internal.h"
 #include "../static/static_sk_data-internal.h"
@@ -11,53 +13,53 @@
 
 extern "C" {
 
-void SkBlender_delete(SkBlender *blender) {
-    delete blender;
+void SkBlender_delete(void *blender) {
+    delete static_cast<SkBlender *>(blender);
 }
 
-sk_flattenable_factory_t SkBlender_getFactory(SkBlender *blender) {
-    return static_sk_flattenable_factory_make(blender->getFactory());
+sk_flattenable_factory_t SkBlender_getFactory(void *blender) {
+    return static_sk_flattenable_factory_make(static_cast<SkBlender *>(blender)->getFactory());
 }
 
-const char *SkBlender_getTypeName(SkBlender *blender) {
-    return blender->getTypeName();
+const char *SkBlender_getTypeName(void *blender) {
+    return static_cast<SkBlender *>(blender)->getTypeName();
 }
 
-void SkBlender_flatten(SkBlender *blender, SkWriteBuffer *write_buffer) {
-    blender->flatten(*write_buffer);
+void SkBlender_flatten(void *blender, void *write_buffer) {
+    static_cast<SkBlender *>(blender)->flatten(* static_cast<SkWriteBuffer *>(write_buffer));
 }
 
-SkBlender::Type SkBlender_getFlattenableType(SkBlender *blender) {
-    return blender->getFlattenableType();
+int SkBlender_getFlattenableType(void *blender) {
+    return static_cast<SkBlender *>(blender)->getFlattenableType();
 }
 
-sk_data_t SkBlender_serialize(SkBlender *blender, const SkSerialProcs *serial_procs) {
-    return static_sk_data_make(blender->serialize(serial_procs));
+sk_data_t SkBlender_serialize(void *blender, const void *serial_procs) {
+    return static_sk_data_make(static_cast<SkBlender *>(blender)->serialize(static_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkBlender_serialize_2(SkBlender *blender, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) {
-    return blender->serialize(memory, memory_size, serial_procs);
+size_t SkBlender_serialize_2(void *blender, void *memory, size_t memory_size, const void *serial_procs) {
+    return static_cast<SkBlender *>(blender)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(serial_procs));
 }
 
-bool SkBlender_unique(SkBlender *blender) {
-    return blender->unique();
+bool SkBlender_unique(void *blender) {
+    return static_cast<SkBlender *>(blender)->unique();
 }
 
-void SkBlender_ref(SkBlender *blender) {
-    blender->ref();
+void SkBlender_ref(void *blender) {
+    static_cast<SkBlender *>(blender)->ref();
 }
 
-void SkBlender_unref(SkBlender *blender) {
-    blender->unref();
+void SkBlender_unref(void *blender) {
+    static_cast<SkBlender *>(blender)->unref();
 }
 
 // static
 
-sk_blender_t SkBlender_Mode(SkBlendMode mode) {
-    return static_sk_blender_make(SkBlender::Mode(mode));
+sk_blender_t SkBlender_Mode(int mode) {
+    return static_sk_blender_make(SkBlender::Mode(static_cast<SkBlendMode>(mode)));
 }
 
-sk_flattenable_factory_t SkBlender_NameToFactory(const char name[]) {
+sk_flattenable_factory_t SkBlender_NameToFactory(const char * name) {
     return static_sk_flattenable_factory_make(SkBlender::NameToFactory(name));
 }
 
@@ -65,12 +67,12 @@ const char *SkBlender_FactoryToName(sk_flattenable_factory_t factory) {
     return SkBlender::FactoryToName(static_sk_flattenable_factory_get(factory));
 }
 
-void SkBlender_Register(const char name[], sk_flattenable_factory_t factory) {
+void SkBlender_Register(const char * name, sk_flattenable_factory_t factory) {
     SkBlender::Register(name, static_sk_flattenable_factory_get(factory));
 }
 
-sk_flattenable_t SkBlender_Deserialize(SkBlender::Type type, const void *data, size_t length, const SkDeserialProcs *procs) {
-    return static_sk_flattenable_make(SkBlender::Deserialize(type, data, length, procs));
+sk_flattenable_t SkBlender_Deserialize(int type, const void *data, size_t length, const void *procs) {
+    return static_sk_flattenable_make(SkBlender::Deserialize(static_cast<SkBlender::Type>(type), data, length, static_cast<const SkDeserialProcs *>(procs)));
 }
 
 }
