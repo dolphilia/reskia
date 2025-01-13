@@ -5,19 +5,24 @@
 #ifndef RAIA_SKIA_SK_CAPABILITIES_H
 #define RAIA_SKIA_SK_CAPABILITIES_H
 
-#include "include/core/SkCapabilities.h"
 #include "../static/static_sk_capabilities.h"
 
+#ifdef __cplusplus
 extern "C" {
-void SkCapabilities_delete(SkCapabilities *capabilities);
-void SkCapabilities_ref(SkCapabilities *capabilities);
-SkSL::Version SkCapabilities_skslVersion(SkCapabilities *capabilities);
-bool SkCapabilities_unique(SkCapabilities *capabilities);
-void SkCapabilities_unref(SkCapabilities *capabilities);
+#endif
+
+void SkCapabilities_delete(void * capabilities); // (SkCapabilities *capabilities)
+void SkCapabilities_ref(void * capabilities); // (SkCapabilities *capabilities)
+int SkCapabilities_skslVersion(void * capabilities); // (SkCapabilities *capabilities) -> SkSL::Version
+bool SkCapabilities_unique(void * capabilities); // (SkCapabilities *capabilities) -> bool
+void SkCapabilities_unref(void * capabilities); // (SkCapabilities *capabilities)
 
 // static
 
-const_sk_capabilities_t SkCapabilities_RasterBackend();
+const_sk_capabilities_t SkCapabilities_RasterBackend(); // () -> const_sk_capabilities_t
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_CAPABILITIES_H

@@ -3,28 +3,31 @@
 //
 
 #include "sk_capabilities.h"
+
+#include "include/core/SkCapabilities.h"
+
 #include "../static/static_sk_capabilities-internal.h"
 
 extern "C" {
 
-void SkCapabilities_delete(SkCapabilities *capabilities) {
-    delete capabilities;
+void SkCapabilities_delete(void * capabilities) {
+    delete static_cast<SkCapabilities *>(capabilities);
 }
 
-void SkCapabilities_ref(SkCapabilities *capabilities) {
-    capabilities->ref();
+void SkCapabilities_ref(void * capabilities) {
+    static_cast<SkCapabilities *>(capabilities)->ref();
 }
 
-SkSL::Version SkCapabilities_skslVersion(SkCapabilities *capabilities) {
-    return capabilities->skslVersion();
+int SkCapabilities_skslVersion(void * capabilities) {
+    return static_cast<int>(static_cast<SkCapabilities *>(capabilities)->skslVersion());
 }
 
-bool SkCapabilities_unique(SkCapabilities *capabilities) {
-    return capabilities->unique();
+bool SkCapabilities_unique(void * capabilities) {
+    return static_cast<SkCapabilities *>(capabilities)->unique();
 }
 
-void SkCapabilities_unref(SkCapabilities *capabilities) {
-    capabilities->unref();
+void SkCapabilities_unref(void * capabilities) {
+    static_cast<SkCapabilities *>(capabilities)->unref();
 }
 
 // static
