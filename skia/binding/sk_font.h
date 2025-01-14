@@ -5,7 +5,9 @@
 #ifndef RAIA_SKIA_SK_FONT_H
 #define RAIA_SKIA_SK_FONT_H
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 void *SkFont_new(); // () -> SkFont *
 void *SkFont_new_2(int typeface, float size); // (sk_typeface_t typeface, SkScalar size) -> SkFont *
@@ -64,6 +66,8 @@ float SkFont_getMetrics(void *font, void * metrics); // (SkFont *font, SkFontMet
 float SkFont_getSpacing(void *font); // (SkFont *font) -> SkScalar
 void SkFont_dump(void *font); // (SkFont *font)
 
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_FONT_H
