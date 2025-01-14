@@ -8,10 +8,12 @@
 #include "include/core/SkRefCnt.h"
 
 extern "C" {
+
 void SkRefCnt_delete(SkRefCnt* refCnt);
 bool SkRefCnt_unique(SkRefCnt* ref_cnt);
 void SkRefCnt_ref(SkRefCnt* ref_cnt);
 void SkRefCnt_unref(SkRefCnt* ref_cnt);
+
 }
 
 #endif //RAIA_SKIA_SK_REF_CNT_H

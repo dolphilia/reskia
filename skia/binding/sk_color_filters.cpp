@@ -4,24 +4,30 @@
 
 #include "sk_color_filters.h"
 
+#include "include/core/SkColorFilter.h"
+
+#include "../static/static_sk_color_filter.h"
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_color_table.h"
+
 #include "../static/static_sk_color_table-internal.h"
 #include "../static/static_sk_color_space-internal.h"
 #include "../static/static_sk_color_filter-internal.h"
 
 extern "C" {
 
+void SkColorFilters_delete(void *colorFilters) {
+    delete static_cast<SkColorFilters *>(colorFilters);
+}
+
 // static
 
-void SkColorFilters_delete(SkColorFilters *colorFilters) {
-    delete colorFilters;
+sk_color_filter_t SkColorFilters_Blend(const void *c, sk_color_space_t color_space, int mode) {
+    return static_sk_color_filter_make(SkColorFilters::Blend(* static_cast<const SkColor4f *>(c), static_sk_color_space_move(color_space), static_cast<SkBlendMode>(mode)));
 }
 
-sk_color_filter_t SkColorFilters_Blend(const SkColor4f *c, sk_color_space_t color_space, SkBlendMode mode) {
-    return static_sk_color_filter_make(SkColorFilters::Blend(*c, static_sk_color_space_move(color_space), mode));
-}
-
-sk_color_filter_t SkColorFilters_Blend_2(SkColor c, SkBlendMode mode) {
-    return static_sk_color_filter_make(SkColorFilters::Blend(c, mode));
+sk_color_filter_t SkColorFilters_Blend_2(unsigned int c, int mode) {
+    return static_sk_color_filter_make(SkColorFilters::Blend(c, static_cast<SkBlendMode>(mode)));
 }
 
 sk_color_filter_t SkColorFilters_Compose(sk_color_filter_t color_filter1, sk_color_filter_t color_filter2) {
@@ -32,15 +38,15 @@ sk_color_filter_t SkColorFilters_HSLAMatrix(const float rowMajor[20]) {
     return static_sk_color_filter_make(SkColorFilters::HSLAMatrix(rowMajor));
 }
 
-sk_color_filter_t SkColorFilters_HSLAMatrix_2(const SkColorMatrix *matrix) {
-    return static_sk_color_filter_make(SkColorFilters::HSLAMatrix(*matrix));
+sk_color_filter_t SkColorFilters_HSLAMatrix_2(const void *matrix) {
+    return static_sk_color_filter_make(SkColorFilters::HSLAMatrix(* static_cast<const SkColorMatrix *>(matrix)));
 }
 
 sk_color_filter_t SkColorFilters_Lerp(float t, sk_color_filter_t color_filter1, sk_color_filter_t color_filter2) {
     return static_sk_color_filter_make(SkColorFilters::Lerp(t, static_sk_color_filter_move(color_filter1), static_sk_color_filter_move(color_filter2)));
 }
 
-sk_color_filter_t SkColorFilters_Lighting(SkColor mul, SkColor add) {
+sk_color_filter_t SkColorFilters_Lighting(unsigned int mul, unsigned int add) {
     return static_sk_color_filter_make(SkColorFilters::Lighting(mul, add));
 }
 
@@ -52,8 +58,8 @@ sk_color_filter_t SkColorFilters_Matrix(const float rowMajor[20]) {
     return static_sk_color_filter_make(SkColorFilters::Matrix(rowMajor));
 }
 
-sk_color_filter_t SkColorFilters_Matrix_2(const SkColorMatrix *matrix) {
-    return static_sk_color_filter_make(SkColorFilters::Matrix(*matrix));
+sk_color_filter_t SkColorFilters_Matrix_2(const void *matrix) {
+    return static_sk_color_filter_make(SkColorFilters::Matrix(* static_cast<const SkColorMatrix *>(matrix)));
 }
 
 sk_color_filter_t SkColorFilters_SRGBToLinearGamma() {
