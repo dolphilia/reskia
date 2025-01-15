@@ -4,106 +4,111 @@
 
 #include "sk_stream.h"
 
+#include "include/core/SkStream.h"
+
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_stream_asset.h"
+
 #include "../static/static_sk_stream-internal.h"
 #include "../static/static_sk_stream_asset-internal.h"
 #include "../static/static_sk_stream_asset.h"
 
 extern "C" {
 
-void SkStream_delete(SkStream *stream) {
-    delete stream;
+void SkStream_delete(void *stream) {
+    delete static_cast<SkStream *>(stream);
 }
 
-size_t SkStream_read(SkStream *stream, void *buffer, size_t size) {
-    return stream->read(buffer, size);
+size_t SkStream_read(void *stream, void *buffer, size_t size) {
+    return static_cast<SkStream *>(stream)->read(buffer, size);
 }
 
-size_t SkStream_skip(SkStream *stream, size_t size) {
-    return stream->skip(size);
+size_t SkStream_skip(void *stream, size_t size) {
+    return static_cast<SkStream *>(stream)->skip(size);
 }
 
-size_t SkStream_peek(SkStream *stream, void *buffer, size_t size) {
-    return stream->peek(buffer, size);
+size_t SkStream_peek(void *stream, void *buffer, size_t size) {
+    return static_cast<SkStream *>(stream)->peek(buffer, size);
 }
 
-bool SkStream_isAtEnd(SkStream *stream) {
-    return stream->isAtEnd();
+bool SkStream_isAtEnd(void *stream) {
+    return static_cast<SkStream *>(stream)->isAtEnd();
 }
 
-bool SkStream_readS8(SkStream *stream, int8_t *i) {
-    return stream->readS8(i);
+bool SkStream_readS8(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readS8(static_cast<int8_t *>(i));
 }
 
-bool SkStream_readS16(SkStream *stream, int16_t *i) {
-    return stream->readS16(i);
+bool SkStream_readS16(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readS16(static_cast<int16_t *>(i));
 }
 
-bool SkStream_readS32(SkStream *stream, int32_t *i) {
-    return stream->readS32(i);
+bool SkStream_readS32(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readS32(static_cast<int32_t *>(i));
 }
 
-bool SkStream_readU8(SkStream *stream, uint8_t *i) {
-    return stream->readU8(i);
+bool SkStream_readU8(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readU8(static_cast<uint8_t *>(i));
 }
 
-bool SkStream_readU16(SkStream *stream, uint16_t *i) {
-    return stream->readU16(i);
+bool SkStream_readU16(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readU16(static_cast<uint16_t *>(i));
 }
 
-bool SkStream_readU32(SkStream *stream, uint32_t *i) {
-    return stream->readU32(i);
+bool SkStream_readU32(void *stream, void *i) {
+    return static_cast<SkStream *>(stream)->readU32(static_cast<uint32_t *>(i));
 }
 
-bool SkStream_readBool(SkStream *stream, bool *b) {
-    return stream->readBool(b);
+bool SkStream_readBool(void *stream, void *b) {
+    return static_cast<SkStream *>(stream)->readBool(static_cast<bool *>(b));
 }
 
-bool SkStream_readScalar(SkStream *stream, SkScalar *v) {
-    return stream->readScalar(v);
+bool SkStream_readScalar(void *stream, void *v) {
+    return static_cast<SkStream *>(stream)->readScalar(static_cast<SkScalar *>(v));
 }
 
-bool SkStream_readPackedUInt(SkStream *stream, size_t *size) {
-    return stream->readPackedUInt(size);
+bool SkStream_readPackedUInt(void *stream, void *size) {
+    return static_cast<SkStream *>(stream)->readPackedUInt(static_cast<size_t *>(size));
 }
 
-bool SkStream_rewind(SkStream *stream) {
-    return stream->rewind();
+bool SkStream_rewind(void *stream) {
+    return static_cast<SkStream *>(stream)->rewind();
 }
 
-sk_stream_t SkStream_duplicate(SkStream *stream) {
-    return static_sk_stream_make(stream->duplicate());
+sk_stream_t SkStream_duplicate(void *stream) {
+    return static_sk_stream_make(static_cast<SkStream *>(stream)->duplicate());
 }
 
-sk_stream_t SkStream_fork(SkStream *stream) {
-    return static_sk_stream_make(stream->fork());
+sk_stream_t SkStream_fork(void *stream) {
+    return static_sk_stream_make(static_cast<SkStream *>(stream)->fork());
 }
 
-bool SkStream_hasPosition(SkStream *stream) {
-    return stream->hasPosition();
+bool SkStream_hasPosition(void *stream) {
+    return static_cast<SkStream *>(stream)->hasPosition();
 }
 
-size_t SkStream_getPosition(SkStream *stream) {
-    return stream->getPosition();
+size_t SkStream_getPosition(void *stream) {
+    return static_cast<SkStream *>(stream)->getPosition();
 }
 
-bool SkStream_seek(SkStream *stream, size_t size) {
-    return stream->seek(size);
+bool SkStream_seek(void *stream, size_t size) {
+    return static_cast<SkStream *>(stream)->seek(size);
 }
 
-bool SkStream_move(SkStream *stream, long i) {
-    return stream->move(i);
+bool SkStream_move(void *stream, long i) {
+    return static_cast<SkStream *>(stream)->move(i);
 }
 
-bool SkStream_hasLength(SkStream *stream) {
-    return stream->hasLength();
+bool SkStream_hasLength(void *stream) {
+    return static_cast<SkStream *>(stream)->hasLength();
 }
 
-size_t SkStream_getLength(SkStream *stream) {
-    return stream->getLength();
+size_t SkStream_getLength(void *stream) {
+    return static_cast<SkStream *>(stream)->getLength();
 }
 
-const void * SkStream_getMemoryBase(SkStream *stream) {
-    return stream->getMemoryBase();
+const void * SkStream_getMemoryBase(void *stream) {
+    return static_cast<SkStream *>(stream)->getMemoryBase();
 }
 
 // static

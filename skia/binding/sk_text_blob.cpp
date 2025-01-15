@@ -4,79 +4,86 @@
 
 #include "sk_text_blob.h"
 
+#include "include/core/SkTextBlob.h"
+
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_text_blob.h"
+
 #include "../static/static_sk_text_blob-internal.h"
 #include "../static/static_sk_data-internal.h"
 
 extern "C" {
 
-void SkTextBlob_delete(SkTextBlob *text_blob) {
-    delete &text_blob;
+void SkTextBlob_delete(void *text_blob) {
+    const SkTextBlob *t = static_cast<SkTextBlob *>(text_blob);
+    delete &t;
 }
 
-const SkRect * SkTextBlob_bounds(SkTextBlob *text_blob) {
-    return &text_blob->bounds();
+const void * SkTextBlob_bounds(void *text_blob) {
+    const SkTextBlob *t = static_cast<SkTextBlob *>(text_blob);
+    return &t->bounds();
 }
 
-uint32_t SkTextBlob_uniqueID(SkTextBlob *text_blob) {
-    return text_blob->uniqueID();
+uint32_t SkTextBlob_uniqueID(void *text_blob) {
+    return static_cast<SkTextBlob *>(text_blob)->uniqueID();
 }
 
-int SkTextBlob_getIntercepts(SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) {
-    return text_blob->getIntercepts(bounds, intervals, paint);
+int SkTextBlob_getIntercepts(void *text_blob, const void * bounds, void * intervals, const void *paint) {
+    return static_cast<SkTextBlob *>(text_blob)->getIntercepts(static_cast<const SkScalar *>(bounds), static_cast<SkScalar *>(intervals), static_cast<const SkPaint *>(paint));
 }
 
-size_t SkTextBlob_serialize(SkTextBlob *text_blob, const SkSerialProcs *procs, void *memory, size_t memory_size) {
-    return text_blob->serialize(*procs, memory, memory_size);
+size_t SkTextBlob_serialize(void *text_blob, const void *procs, void *memory, size_t memory_size) {
+    return static_cast<SkTextBlob *>(text_blob)->serialize(* static_cast<const SkSerialProcs *>(procs), memory, memory_size);
 }
 
-sk_data_t SkTextBlob_serialize_2(SkTextBlob *text_blob, const SkSerialProcs *procs) {
-    return static_sk_data_make(text_blob->serialize(*procs));
+sk_data_t SkTextBlob_serialize_2(void *text_blob, const void *procs) {
+    return static_sk_data_make(static_cast<SkTextBlob *>(text_blob)->serialize(* static_cast<const SkSerialProcs *>(procs)));
 }
 
-bool SkTextBlob_unique(SkTextBlob *text_blob) {
-    return text_blob->unique();
+bool SkTextBlob_unique(void *text_blob) {
+    return static_cast<SkTextBlob *>(text_blob)->unique();
 }
 
-void SkTextBlob_ref(SkTextBlob *text_blob) {
-    text_blob->ref();
+void SkTextBlob_ref(void *text_blob) {
+    static_cast<SkTextBlob *>(text_blob)->ref();
 }
 
-void SkTextBlob_unref(SkTextBlob *text_blob) {
-    text_blob->unref();
+void SkTextBlob_unref(void *text_blob) {
+    static_cast<SkTextBlob *>(text_blob)->unref();
 }
 
-void SkTextBlob_deref(SkTextBlob *text_blob) {
-    text_blob->deref();
+void SkTextBlob_deref(void *text_blob) {
+    static_cast<SkTextBlob *>(text_blob)->deref();
 }
 
-bool SkTextBlob_refCntGreaterThan(SkTextBlob *text_blob, int32_t threadIsolatedTestCnt) {
-    return text_blob->refCntGreaterThan(threadIsolatedTestCnt);
+bool SkTextBlob_refCntGreaterThan(void *text_blob, int32_t threadIsolatedTestCnt) {
+    return static_cast<SkTextBlob *>(text_blob)->refCntGreaterThan(threadIsolatedTestCnt);
 }
 
 // static
 
-sk_text_blob_t SkTextBlob_MakeFromText(const void *text, size_t byteLength, const SkFont *font, SkTextEncoding encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromText(text, byteLength, *font, encoding));
+sk_text_blob_t SkTextBlob_MakeFromText(const void *text, size_t byteLength, const void *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromText(text, byteLength, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const SkFont *font, SkTextEncoding encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromString(string, *font, encoding));
+sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const void *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromString(string, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosTextH(const void *text, size_t byteLength, const SkScalar xpos[], SkScalar constY, const SkFont *font, SkTextEncoding encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromPosTextH(text, byteLength, xpos, constY, *font, encoding));
+sk_text_blob_t SkTextBlob_MakeFromPosTextH(const void *text, size_t byteLength, const void * xpos, float constY, const void *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromPosTextH(text, byteLength, static_cast<const SkScalar *>(xpos), constY, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosText(const void *text, size_t byteLength, const SkPoint pos[], const SkFont *font, SkTextEncoding encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromPosText(text, byteLength, pos, *font, encoding));
+sk_text_blob_t SkTextBlob_MakeFromPosText(const void *text, size_t byteLength, const void * pos, const void *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromPosText(text, byteLength, static_cast<const SkPoint *>(pos), * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromRSXform(const void *text, size_t byteLength, const SkRSXform xform[], const SkFont *font, SkTextEncoding encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromRSXform(text, byteLength, xform, *font, encoding));
+sk_text_blob_t SkTextBlob_MakeFromRSXform(const void *text, size_t byteLength, const void * xform, const void *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromRSXform(text, byteLength, static_cast<const SkRSXform *>(xform), * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_Deserialize(const void *data, size_t size, const SkDeserialProcs *procs) {
-    return static_sk_text_blob_make(SkTextBlob::Deserialize(data, size, *procs));
+sk_text_blob_t SkTextBlob_Deserialize(const void *data, size_t size, const void *procs) {
+    return static_sk_text_blob_make(SkTextBlob::Deserialize(data, size, * static_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

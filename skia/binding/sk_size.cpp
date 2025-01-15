@@ -4,63 +4,68 @@
 
 #include "sk_size.h"
 
+#include "include/core/SkSize.h"
+
+#include "../static/static_sk_i_size.h"
+#include "../static/static_sk_size_t.h"
+
 #include "../static/static_sk_i_size-internal.h"
 #include "../static/static_sk_size_t-internal.h"
 
 extern "C" {
 
-void SkSize_delete(SkSize *size) {
-    delete size;
+void SkSize_delete(void *size) {
+    delete static_cast<SkSize *>(size);
 }
 
-void SkSize_set(SkSize *size, SkScalar w, SkScalar h) {
-    size->set(w, h);
+void SkSize_set(void *size, float w, float h) {
+    static_cast<SkSize *>(size)->set(w, h);
 }
 
-bool SkSize_isZero(SkSize *size) {
-    return size->isZero();
+bool SkSize_isZero(void *size) {
+    return static_cast<SkSize *>(size)->isZero();
 }
 
-bool SkSize_isEmpty(SkSize *size) {
-    return size->isEmpty();
+bool SkSize_isEmpty(void *size) {
+    return static_cast<SkSize *>(size)->isEmpty();
 }
 
-void SkSize_setEmpty(SkSize *size) {
-    size->setEmpty();
+void SkSize_setEmpty(void *size) {
+    static_cast<SkSize *>(size)->setEmpty();
 }
 
-SkScalar SkSize_width(SkSize *size) {
-    return size->width();
+float SkSize_width(void *size) {
+    return static_cast<SkSize *>(size)->width();
 }
 
-SkScalar SkSize_height(SkSize *size) {
-    return size->height();
+float SkSize_height(void *size) {
+    return static_cast<SkSize *>(size)->height();
 }
 
-bool SkSize_equals(SkSize *size, SkScalar w, SkScalar h) {
-    return size->equals(w, h);
+bool SkSize_equals(void *size, float w, float h) {
+    return static_cast<SkSize *>(size)->equals(w, h);
 }
 
-sk_i_size_t SkSize_toRound(SkSize *size) {
-    return static_sk_i_size_make(size->toRound());
+sk_i_size_t SkSize_toRound(void *size) {
+    return static_sk_i_size_make(static_cast<SkSize *>(size)->toRound());
 }
 
-sk_i_size_t SkSize_toCeil(SkSize *size) {
-    return static_sk_i_size_make(size->toCeil());
+sk_i_size_t SkSize_toCeil(void *size) {
+    return static_sk_i_size_make(static_cast<SkSize *>(size)->toCeil());
 }
 
-sk_i_size_t SkSize_toFloor(SkSize *size) {
-    return static_sk_i_size_make(size->toFloor());
+sk_i_size_t SkSize_toFloor(void *size) {
+    return static_sk_i_size_make(static_cast<SkSize *>(size)->toFloor());
 }
 
 // static
 
-sk_size_t SkSize_Make(SkScalar w, SkScalar h) {
+sk_size_t SkSize_Make(float w, float h) {
     return static_sk_size_make(SkSize::Make(w, h));
 }
 
-sk_size_t SkSize_Make_2(const SkISize *src) {
-    return static_sk_size_make(SkSize::Make(*src));
+sk_size_t SkSize_Make_2(const void *src) {
+    return static_sk_size_make(SkSize::Make(* static_cast<const SkISize *>(src)));
 }
 
 sk_size_t SkSize_MakeEmpty() {
