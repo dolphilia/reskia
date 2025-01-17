@@ -4,30 +4,32 @@
 
 #include "sk_font_metrics.h"
 
+#include "include/core/SkFontMetrics.h"
+
 extern "C" {
 
-void SkFontMetrics_delete(SkFontMetrics *font_metrics) {
-    delete font_metrics;
+void SkFontMetrics_delete(void *font_metrics) {
+    delete static_cast<SkFontMetrics *>(font_metrics);
 }
 
-bool SkFontMetrics_hasUnderlineThickness(SkFontMetrics *font_metrics, SkScalar *thickness) {
-    return font_metrics->hasUnderlineThickness(thickness);
+bool SkFontMetrics_hasUnderlineThickness(void *font_metrics, void *thickness) {
+    return static_cast<SkFontMetrics *>(font_metrics)->hasUnderlineThickness(static_cast<SkScalar *>(thickness));
 }
 
-bool SkFontMetrics_hasUnderlinePosition(SkFontMetrics *font_metrics, SkScalar *position) {
-    return font_metrics->hasUnderlinePosition(position);
+bool SkFontMetrics_hasUnderlinePosition(void *font_metrics, void *position) {
+    return static_cast<SkFontMetrics *>(font_metrics)->hasUnderlinePosition(static_cast<SkScalar *>(position));
 }
 
-bool SkFontMetrics_hasStrikeoutThickness(SkFontMetrics *font_metrics, SkScalar *thickness) {
-    return font_metrics->hasStrikeoutThickness(thickness);
+bool SkFontMetrics_hasStrikeoutThickness(void *font_metrics, void *thickness) {
+    return static_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutThickness(static_cast<SkScalar *>(thickness));
 }
 
-bool SkFontMetrics_hasStrikeoutPosition(SkFontMetrics *font_metrics, SkScalar *position) {
-    return font_metrics->hasStrikeoutPosition(position);
+bool SkFontMetrics_hasStrikeoutPosition(void *font_metrics, void *position) {
+    return static_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutPosition(static_cast<SkScalar *>(position));
 }
 
-bool SkFontMetrics_hasBounds(SkFontMetrics *font_metrics) {
-    return font_metrics->hasBounds();
+bool SkFontMetrics_hasBounds(void *font_metrics) {
+    return static_cast<SkFontMetrics *>(font_metrics)->hasBounds();
 }
 
 }

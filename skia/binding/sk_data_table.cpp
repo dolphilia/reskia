@@ -4,44 +4,49 @@
 
 #include "sk_data_table.h"
 
+#include "include/core/SkDataTable.h"
+
+#include "../static/static_sk_data_table.h"
+
 #include "../static/static_sk_data_table-internal.h"
 
 extern "C" {
 
-void SkDataTable_delete(SkDataTable *data_table) {
-    delete &data_table;
+void SkDataTable_delete(void *data_table) {
+    const SkDataTable *table = static_cast<SkDataTable *>(data_table);
+    delete &table;
 }
 
-bool SkDataTable_isEmpty(SkDataTable *data_table) {
-    return data_table->isEmpty();
+bool SkDataTable_isEmpty(void *data_table) {
+    return static_cast<SkDataTable *>(data_table)->isEmpty();
 }
 
-int SkDataTable_count(SkDataTable *data_table) {
-    return data_table->count();
+int SkDataTable_count(void *data_table) {
+    return static_cast<SkDataTable *>(data_table)->count();
 }
 
-size_t SkDataTable_atSize(SkDataTable *data_table, int index) {
-    return data_table->atSize(index);
+size_t SkDataTable_atSize(void *data_table, int index) {
+    return static_cast<SkDataTable *>(data_table)->atSize(index);
 }
 
-const void * SkDataTable_at(SkDataTable *data_table, int index, size_t *size) {
-    return data_table->at(index, size);
+const void * SkDataTable_at(void *data_table, int index, void *size) {
+    return static_cast<SkDataTable *>(data_table)->at(index, static_cast<size_t *>(size));
 }
 
-const char * SkDataTable_atStr(SkDataTable *data_table, int index) {
-    return data_table->atStr(index);
+const char * SkDataTable_atStr(void *data_table, int index) {
+    return static_cast<SkDataTable *>(data_table)->atStr(index);
 }
 
-bool SkDataTable_unique(SkDataTable *data_table) {
-    return data_table->unique();
+bool SkDataTable_unique(void *data_table) {
+    return static_cast<SkDataTable *>(data_table)->unique();
 }
 
-void SkDataTable_ref(SkDataTable *data_table) {
-    data_table->ref();
+void SkDataTable_ref(void *data_table) {
+    static_cast<SkDataTable *>(data_table)->ref();
 }
 
-void SkDataTable_unref(SkDataTable *data_table) {
-    data_table->unref();
+void SkDataTable_unref(void *data_table) {
+    static_cast<SkDataTable *>(data_table)->unref();
 }
 
 // static
@@ -50,15 +55,15 @@ sk_data_table_t SkDataTable_MakeEmpty() {
     return static_sk_data_table_make(SkDataTable::MakeEmpty());
 }
 
-sk_data_table_t SkDataTable_MakeCopyArrays(const void *const *ptrs, const size_t sizes[], int count) {
-    return static_sk_data_table_make(SkDataTable::MakeCopyArrays(ptrs, sizes, count));
+sk_data_table_t SkDataTable_MakeCopyArrays(const void *const *ptrs, const void * sizes, int count) {
+    return static_sk_data_table_make(SkDataTable::MakeCopyArrays(ptrs, static_cast<const size_t *>(sizes), count));
 }
 
 sk_data_table_t SkDataTable_MakeCopyArray(const void *array, size_t elemSize, int count) {
     return static_sk_data_table_make(SkDataTable::MakeCopyArray(array, elemSize, count));
 }
 
-sk_data_table_t SkDataTable_MakeArrayProc(const void *array, size_t elemSize, int count, SkDataTable::FreeProc proc, void *context) {
+sk_data_table_t SkDataTable_MakeArrayProc(const void *array, size_t elemSize, int count, void (*proc)(void*), void *context) {
     return static_sk_data_table_make(SkDataTable::MakeArrayProc(array, elemSize, count, proc, context));
 }
 

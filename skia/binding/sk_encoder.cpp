@@ -4,14 +4,16 @@
 
 #include "sk_encoder.h"
 
+#include "include/encode/SkEncoder.h"
+
 extern "C" {
 
-void SkEncoder_delete(SkEncoder *encoder) {
-    delete encoder;
+void SkEncoder_delete(void *encoder) {
+    delete static_cast<SkEncoder *>(encoder);
 }
 
-bool SkEncoder_encodeRows(SkEncoder *encoder, int numRows) {
-    return encoder->encodeRows(numRows);
+bool SkEncoder_encodeRows(void *encoder, int numRows) {
+    return static_cast<SkEncoder *>(encoder)->encodeRows(numRows);
 }
 
 }

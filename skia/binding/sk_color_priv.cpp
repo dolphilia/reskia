@@ -4,11 +4,13 @@
 
 #include "sk_color_priv.h"
 
+#include "include/core/SkColorPriv.h"
+
 extern "C" {
 
 // static
 
-unsigned SkColorPriv_SkAlpha255To256(U8CPU alpha) {
+unsigned SkColorPriv_SkAlpha255To256(unsigned int alpha) {
     return SkAlpha255To256(alpha);
 }
 
@@ -16,23 +18,23 @@ uint32_t SkColorPriv_SkAlphaMulQ(uint32_t c, unsigned scale) {
     return SkAlphaMulQ(c, scale);
 }
 
-SkPMColor SkColorPriv_SkPackARGB32(U8CPU a, U8CPU r, U8CPU g, U8CPU b) {
+unsigned int SkColorPriv_SkPackARGB32(unsigned int a, unsigned int r, unsigned int g, unsigned int b) {
     return SkPackARGB32(a, r, g, b);
 }
 
-SkPMColor SkColorPriv_SkPackARGB32NoCheck(U8CPU a, U8CPU r, U8CPU g, U8CPU b) {
+unsigned int SkColorPriv_SkPackARGB32NoCheck(unsigned int a, unsigned int r, unsigned int g, unsigned int b) {
     return SkPackARGB32NoCheck(a, r, g, b);
 }
 
-SkPMColor SkColorPriv_SkPMSrcOver(SkPMColor src, SkPMColor dst) {
+unsigned int SkColorPriv_SkPMSrcOver(unsigned int src, unsigned int dst) {
     return SkPMSrcOver(src, dst);
 }
 
-SkPMColor SkColorPriv_SkPremultiplyARGBInline(U8CPU a, U8CPU r, U8CPU g, U8CPU b) {
+unsigned int SkColorPriv_SkPremultiplyARGBInline(unsigned int a, unsigned int r, unsigned int g, unsigned int b) {
     return SkPremultiplyARGBInline(a, r, g, b);
 }
 
-U8CPU SkColorPriv_SkUnitScalarClampToByte(SkScalar x) {
+unsigned int SkColorPriv_SkUnitScalarClampToByte(float x) {
     return SkUnitScalarClampToByte(x);
 }
 

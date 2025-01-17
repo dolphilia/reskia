@@ -4,22 +4,26 @@
 
 #include "sk_executor.h"
 
+#include "include/core/SkExecutor.h"
+
+#include "../static/static_sk_executor.h"
+
 #include "../static/static_std_function_void_void-internal.h"
 #include "../static/static_sk_executor-internal.h"
 #include "../static/static_std_function_void_void.h"
 
 extern "C" {
 
-void SkExecutor_delete(SkExecutor *executor) {
-    delete executor;
+void SkExecutor_delete(void *executor) {
+    delete static_cast<SkExecutor *>(executor);
 }
 
-void SkExecutor_add(int function_void_void_key_in, SkExecutor *executor) {
-    executor->add(static_function_void_void_get(function_void_void_key_in));
+void SkExecutor_add(int function_void_void_key_in, void *executor) {
+    static_cast<SkExecutor *>(executor)->add(static_function_void_void_get(function_void_void_key_in));
 }
 
-void SkExecutor_borrow(SkExecutor *executor) {
-    executor->borrow();
+void SkExecutor_borrow(void *executor) {
+    static_cast<SkExecutor *>(executor)->borrow();
 }
 
 // static
@@ -32,12 +36,12 @@ sk_executor_t SkExecutor_MakeLIFOThreadPool(int threads, bool allowBorrowing) {
     return static_sk_executor_make(SkExecutor::MakeLIFOThreadPool(threads, allowBorrowing));
 }
 
-SkExecutor *SkExecutor_GetDefault() {
+void *SkExecutor_GetDefault() {
     return &SkExecutor::GetDefault();
 }
 
-void SkExecutor_SetDefault(SkExecutor * executor) {
-    SkExecutor::SetDefault(executor);
+void SkExecutor_SetDefault(void * executor) {
+    SkExecutor::SetDefault(static_cast<SkExecutor *>(executor));
 }
 
 }

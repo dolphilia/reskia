@@ -4,38 +4,41 @@
 
 #include "sk_document.h"
 
+#include "include/core/SkDocument.h"
+
 extern "C" {
 
-void SkDocument_delete(SkDocument *document) {
-    delete &document;
+void SkDocument_delete(void *document) {
+    const SkDocument* doc = static_cast<SkDocument*>(document);
+    delete &doc;
 }
 
-SkCanvas * SkDocument_beginPage(SkDocument * document, SkScalar width, SkScalar height, const SkRect *content) {
-    return document->beginPage(width, height, content);
+void * SkDocument_beginPage(void * document, float width, float height, const void *content) {
+    return static_cast<SkDocument*>(document)->beginPage(width, height, static_cast<const SkRect *>(content));
 }
 
-void SkDocument_endPage(SkDocument *document) {
-    document->endPage();
+void SkDocument_endPage(void *document) {
+    static_cast<SkDocument*>(document)->endPage();
 }
 
-void SkDocument_close(SkDocument *document) {
-    document->close();
+void SkDocument_close(void *document) {
+    static_cast<SkDocument*>(document)->close();
 }
 
-void SkDocument_abort(SkDocument *document) {
-    document->abort();
+void SkDocument_abort(void *document) {
+    static_cast<SkDocument*>(document)->abort();
 }
 
-bool SkDocument_unique(SkDocument *document) {
-    return document->unique();
+bool SkDocument_unique(void *document) {
+    return static_cast<SkDocument*>(document)->unique();
 }
 
-void SkDocument_ref(SkDocument *document) {
-    document->ref();
+void SkDocument_ref(void *document) {
+    static_cast<SkDocument*>(document)->ref();
 }
 
-void SkDocument_unref(SkDocument *document) {
-    document->unref();
+void SkDocument_unref(void *document) {
+    static_cast<SkDocument*>(document)->unref();
 }
 
 }

@@ -4,28 +4,32 @@
 
 #include "sk_contour_measure_iter.h"
 
+#include "include/core/SkContourMeasure.h"
+
+#include "../static/static_sk_contour_measure.h"
+
 #include "../static/static_sk_contour_measure-internal.h"
 
 extern "C" {
 
-SkContourMeasureIter *SkContourMeasureIter_new() {
+void *SkContourMeasureIter_new() {
     return new SkContourMeasureIter();
 }
 
-SkContourMeasureIter *SkContourMeasureIter_new_2(const SkPath *path, bool forceClosed, SkScalar resScale) {
-    return new SkContourMeasureIter(*path, forceClosed, resScale);
+void *SkContourMeasureIter_new_2(const void *path, bool forceClosed, float resScale) {
+    return new SkContourMeasureIter(* static_cast<const SkPath *>(path), forceClosed, resScale);
 }
 
-void SkContourMeasureIter_delete(SkContourMeasureIter *contour_measure_iter) {
-    delete contour_measure_iter;
+void SkContourMeasureIter_delete(void *contour_measure_iter) {
+    delete static_cast<SkContourMeasureIter *>(contour_measure_iter);
 }
 
-void SkContourMeasureIter_reset(SkContourMeasureIter *contour_measure_iter, const SkPath *path, bool forceClosed, SkScalar resScale) {
-    contour_measure_iter->reset(*path, forceClosed, resScale);
+void SkContourMeasureIter_reset(void *contour_measure_iter, const void *path, bool forceClosed, float resScale) {
+    static_cast<SkContourMeasureIter *>(contour_measure_iter)->reset(* static_cast<const SkPath *>(path), forceClosed, resScale);
 }
 
-sk_contour_measure_t SkContourMeasureIter_next(SkContourMeasureIter *contour_measure_iter) {
-    return static_sk_contour_measure_make(contour_measure_iter->next());
+sk_contour_measure_t SkContourMeasureIter_next(void *contour_measure_iter) {
+    return static_sk_contour_measure_make(static_cast<SkContourMeasureIter *>(contour_measure_iter)->next());
 }
 
 }

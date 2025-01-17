@@ -4,50 +4,56 @@
 
 #include "sk_flattenable.h"
 
+#include "include/core/SkFlattenable.h"
+
+#include "../static/static_sk_flattenable.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_flattenable_factory.h"
+
 #include "../static/static_sk_flattenable_factory-internal.h"
 #include "../static/static_sk_flattenable-internal.h"
 #include "../static/static_sk_data-internal.h"
 
 extern "C" {
 
-void SkFlattenable_delete(SkFlattenable *flattenable) {
-    delete flattenable;
+void SkFlattenable_delete(void *flattenable) {
+    delete static_cast<SkFlattenable *>(flattenable);
 }
 
-sk_flattenable_factory_t SkFlattenable_getFactory(SkFlattenable *flattenable) {
-    return static_sk_flattenable_factory_make(flattenable->getFactory());
+sk_flattenable_factory_t SkFlattenable_getFactory(void *flattenable) {
+    return static_sk_flattenable_factory_make(static_cast<SkFlattenable *>(flattenable)->getFactory());
 }
 
-const char * SkFlattenable_getTypeName(SkFlattenable *flattenable) {
-    return flattenable->getTypeName();
+const char * SkFlattenable_getTypeName(void *flattenable) {
+    return static_cast<SkFlattenable *>(flattenable)->getTypeName();
 }
 
-void SkFlattenable_flatten(SkFlattenable *flattenable, SkWriteBuffer * write_buffer) {
-    flattenable->flatten(*write_buffer);
+void SkFlattenable_flatten(void *flattenable, void * write_buffer) {
+    static_cast<SkFlattenable *>(flattenable)->flatten(* static_cast<SkWriteBuffer *>(write_buffer));
 }
 
-SkFlattenable::Type SkFlattenable_getFlattenableType(SkFlattenable *flattenable) {
-    return flattenable->getFlattenableType();
+int SkFlattenable_getFlattenableType(void *flattenable) {
+    return static_cast<SkFlattenable *>(flattenable)->getFlattenableType();
 }
 
-sk_data_t SkFlattenable_serialize(SkFlattenable *flattenable, const SkSerialProcs * serial_procs) {
-    return static_sk_data_make(flattenable->serialize(serial_procs));
+sk_data_t SkFlattenable_serialize(void *flattenable, const void * serial_procs) {
+    return static_sk_data_make(static_cast<SkFlattenable *>(flattenable)->serialize(static_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkFlattenable_serialize_2(SkFlattenable *flattenable, void *memory, size_t memory_size, const SkSerialProcs * serial_procs) {
-    return flattenable->serialize(memory, memory_size, serial_procs);
+size_t SkFlattenable_serialize_2(void *flattenable, void *memory, size_t memory_size, const void * serial_procs) {
+    return static_cast<SkFlattenable *>(flattenable)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(serial_procs));
 }
 
-bool SkFlattenable_unique(SkFlattenable *flattenable) {
-    return flattenable->unique();
+bool SkFlattenable_unique(void *flattenable) {
+    return static_cast<SkFlattenable *>(flattenable)->unique();
 }
 
-void SkFlattenable_ref(SkFlattenable *flattenable) {
-    flattenable->ref();
+void SkFlattenable_ref(void *flattenable) {
+    static_cast<SkFlattenable *>(flattenable)->ref();
 }
 
-void SkFlattenable_unref(SkFlattenable *flattenable) {
-    flattenable->unref();
+void SkFlattenable_unref(void *flattenable) {
+    static_cast<SkFlattenable *>(flattenable)->unref();
 }
 
 // static
@@ -64,8 +70,8 @@ void SkFlattenable_Register(const char name[], sk_flattenable_factory_t factory)
     SkFlattenable::Register(name, static_sk_flattenable_factory_get(factory));
 }
 
-sk_flattenable_t SkFlattenable_Deserialize(SkFlattenable::Type type, const void *data, size_t length, const SkDeserialProcs *procs) {
-    return static_sk_flattenable_make(SkFlattenable::Deserialize(type, data, length, procs));
+sk_flattenable_t SkFlattenable_Deserialize(int type, const void *data, size_t length, const void *procs) {
+    return static_sk_flattenable_make(SkFlattenable::Deserialize(static_cast<SkFlattenable::Type>(type), data, length, static_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

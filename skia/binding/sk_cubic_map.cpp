@@ -4,24 +4,28 @@
 
 #include "sk_cubic_map.h"
 
+#include "include/core/SkCubicMap.h"
+
+#include "../static/static_sk_point.h"
+
 #include "../static/static_sk_point-internal.h"
 
 extern "C" {
 
-SkCubicMap *SkCubicMap_new(sk_point_t p1, sk_point_t p2) {
+void *SkCubicMap_new(sk_point_t p1, sk_point_t p2) {
     return new SkCubicMap(static_sk_point_get(p1), static_sk_point_get(p2));
 }
 
-void SkCubicMap_delete(SkCubicMap * cubic_map) {
-    delete cubic_map;
+void SkCubicMap_delete(void * cubic_map) {
+    delete static_cast<SkCubicMap *>(cubic_map);
 }
 
-float SkCubicMap_computeYFromX(SkCubicMap * cubic_map, float x) {
-    return cubic_map->computeYFromX(x);
+float SkCubicMap_computeYFromX(void * cubic_map, float x) {
+    return static_cast<SkCubicMap *>(cubic_map)->computeYFromX(x);
 }
 
-sk_point_t SkCubicMap_computeFromT(SkCubicMap * cubic_map, float t) {
-    return static_sk_point_make(cubic_map->computeFromT(t));
+sk_point_t SkCubicMap_computeFromT(void * cubic_map, float t) {
+    return static_sk_point_make(static_cast<SkCubicMap *>(cubic_map)->computeFromT(t));
 }
 
 // static
