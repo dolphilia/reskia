@@ -4,44 +4,48 @@
 
 #include "sk_i_size.h"
 
+#include "include/core/SkSize.h"
+
+#include "../static/static_sk_i_size.h"
+
 #include "../static/static_sk_i_size-internal.h"
 
 extern "C" {
 
-void SkISize_delete(SkISize *i_size) {
-    delete i_size;
+void SkISize_delete(void *i_size) {
+    delete static_cast<SkISize *>(i_size);
 }
 
-void SkISize_set(SkISize *i_size, int32_t w, int32_t h) {
-    i_size->set(w, h);
+void SkISize_set(void *i_size, int32_t w, int32_t h) {
+    static_cast<SkISize *>(i_size)->set(w, h);
 }
 
-bool SkISize_isZero(SkISize *i_size) {
-    return i_size->isZero();
+bool SkISize_isZero(void *i_size) {
+    return static_cast<SkISize *>(i_size)->isZero();
 }
 
-bool SkISize_isEmpty(SkISize *i_size) {
-    return i_size->isEmpty();
+bool SkISize_isEmpty(void *i_size) {
+    return static_cast<SkISize *>(i_size)->isEmpty();
 }
 
-void SkISize_setEmpty(SkISize *i_size) {
-    return i_size->setEmpty();
+void SkISize_setEmpty(void *i_size) {
+    return static_cast<SkISize *>(i_size)->setEmpty();
 }
 
-int32_t SkISize_width(SkISize *i_size) {
-    return i_size->width();
+int32_t SkISize_width(void *i_size) {
+    return static_cast<SkISize *>(i_size)->width();
 }
 
-int32_t SkISize_height(SkISize *i_size) {
-    return i_size->height();
+int32_t SkISize_height(void *i_size) {
+    return static_cast<SkISize *>(i_size)->height();
 }
 
-int64_t SkISize_area(SkISize *i_size) {
-    return i_size->area();
+int64_t SkISize_area(void *i_size) {
+    return static_cast<SkISize *>(i_size)->area();
 }
 
-bool SkISize_equals(SkISize *i_size, int32_t w, int32_t h) {
-    return i_size->equals(w, h);
+bool SkISize_equals(void *i_size, int32_t w, int32_t h) {
+    return static_cast<SkISize *>(i_size)->equals(w, h);
 }
 
 // static

@@ -4,22 +4,24 @@
 
 #include "sk_font_style.h"
 
+#include "include/core/SkFontStyle.h"
+
 extern "C" {
 
-void SkFontStyle_delete(SkFontStyle *font_style) {
-    delete font_style;
+void SkFontStyle_delete(void *font_style) {
+    delete static_cast<SkFontStyle *>(font_style);
 }
 
-int SkFontStyle_weight(SkFontStyle *font_style) {
-    return font_style->weight();
+int SkFontStyle_weight(void *font_style) {
+    return static_cast<SkFontStyle *>(font_style)->weight();
 }
 
-int SkFontStyle_width(SkFontStyle *font_style) {
-    return font_style->width();
+int SkFontStyle_width(void *font_style) {
+    return static_cast<SkFontStyle *>(font_style)->width();
 }
 
-SkFontStyle::Slant SkFontStyle_slant(SkFontStyle *font_style) {
-    return font_style->slant();
+int SkFontStyle_slant(void *font_style) {
+    return static_cast<SkFontStyle *>(font_style)->slant();
 }
 
 }

@@ -4,22 +4,24 @@
 
 #include "sk_high_contrast_config.h"
 
+#include "include/effects/SkHighContrastFilter.h"
+
 extern "C" {
 
-SkHighContrastConfig *SkHighContrastConfig_new() {
+void *SkHighContrastConfig_new() {
     return new SkHighContrastConfig();
 }
 
-SkHighContrastConfig *SkHighContrastConfig_new_2(bool grayscale, SkHighContrastConfig::InvertStyle invertStyle, SkScalar contrast) {
-    return new SkHighContrastConfig(grayscale, invertStyle, contrast);
+void *SkHighContrastConfig_new_2(bool grayscale, int invertStyle, float contrast) {
+    return new SkHighContrastConfig(grayscale, static_cast<SkHighContrastConfig::InvertStyle>(invertStyle), contrast);
 }
 
-void SkHighContrastConfig_delete(SkHighContrastConfig * highContrastConfig) {
-    delete highContrastConfig;
+void SkHighContrastConfig_delete(void * highContrastConfig) {
+    delete static_cast<SkHighContrastConfig *>(highContrastConfig);
 }
 
-bool isValid(SkHighContrastConfig *high_contrast_config) {
-    return high_contrast_config->isValid();
+bool isValid(void *high_contrast_config) {
+    return static_cast<SkHighContrastConfig *>(high_contrast_config)->isValid();
 }
 
 }

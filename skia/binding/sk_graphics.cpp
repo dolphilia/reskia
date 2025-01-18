@@ -4,10 +4,12 @@
 
 #include "sk_graphics.h"
 
+#include "include/core/SkGraphics.h"
+
 extern "C" {
 
-void SkGraphics_delete(SkGraphics * graphics) {
-    delete graphics;
+void SkGraphics_delete(void * graphics) {
+    delete static_cast<SkGraphics *>(graphics);
 }
 
 // static
@@ -71,24 +73,24 @@ size_t SkGraphics_SetResourceCacheSingleAllocationByteLimit(size_t newLimit) {
     return SkGraphics::SetResourceCacheSingleAllocationByteLimit(newLimit);
 }
 
-void SkGraphics_DumpMemoryStatistics(SkTraceMemoryDump *dump) {
-    SkGraphics::DumpMemoryStatistics(dump);
+void SkGraphics_DumpMemoryStatistics(void *dump) {
+    SkGraphics::DumpMemoryStatistics(static_cast<SkTraceMemoryDump *>(dump));
 }
 
 void SkGraphics_PurgeAllCaches() {
     SkGraphics::PurgeAllCaches();
 }
 
-SkGraphics::ImageGeneratorFromEncodedDataFactory SkGraphics_SetImageGeneratorFromEncodedDataFactory(SkGraphics::ImageGeneratorFromEncodedDataFactory factory) {
-    return SkGraphics::SetImageGeneratorFromEncodedDataFactory(factory);
+void * SkGraphics_SetImageGeneratorFromEncodedDataFactory(SkGraphics::ImageGeneratorFromEncodedDataFactory factory) {
+    return reinterpret_cast<SkGraphics::ImageGeneratorFromEncodedDataFactory *>(SkGraphics::SetImageGeneratorFromEncodedDataFactory(factory));
 }
 
-SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory) {
-    return SkGraphics::SetOpenTypeSVGDecoderFactory(factory);
+void * SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory) {
+    return reinterpret_cast<SkGraphics::OpenTypeSVGDecoderFactory *>(SkGraphics::SetOpenTypeSVGDecoderFactory(factory));
 }
 
-SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_GetOpenTypeSVGDecoderFactory() {
-    return SkGraphics::GetOpenTypeSVGDecoderFactory();
+void * SkGraphics_GetOpenTypeSVGDecoderFactory() {
+    return reinterpret_cast<SkGraphics::OpenTypeSVGDecoderFactory *>(SkGraphics::GetOpenTypeSVGDecoderFactory());
 }
 
 }
