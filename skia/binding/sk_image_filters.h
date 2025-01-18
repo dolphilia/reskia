@@ -16,8 +16,11 @@
 #include "../static/static_std_string_view.h"
 
 extern "C" {
+
 void SkImageFilters_delete(SkImageFilters * imageFilters);
+
 // static
+
 sk_image_filter_t SkImageFilters_Arithmetic(SkScalar k1, SkScalar k2, SkScalar k3, SkScalar k4, bool enforcePMColor, sk_image_filter_t background, sk_image_filter_t foreground, const SkImageFilters::CropRect *cropRect);
 sk_image_filter_t SkImageFilters_Blend(SkBlendMode mode, sk_image_filter_t background, sk_image_filter_t foreground, const SkImageFilters::CropRect *cropRect);
 sk_image_filter_t SkImageFilters_Blend_2(sk_blender_t blender, sk_image_filter_t background, sk_image_filter_t foreground, const SkImageFilters::CropRect *cropRect);
@@ -56,6 +59,7 @@ sk_image_filter_t SkImageFilters_SpotLitDiffuse(const SkPoint3 *location, const 
 sk_image_filter_t SkImageFilters_DistantLitSpecular(const SkPoint3 *direction, SkColor lightColor, SkScalar surfaceScale, SkScalar ks, SkScalar shininess, sk_image_filter_t input, const SkImageFilters::CropRect *cropRect);
 sk_image_filter_t SkImageFilters_PointLitSpecular(const SkPoint3 *location, SkColor lightColor, SkScalar surfaceScale, SkScalar ks, SkScalar shininess, sk_image_filter_t input, const SkImageFilters::CropRect *cropRect);
 sk_image_filter_t SkImageFilters_SpotLitSpecular(const SkPoint3 *location, const SkPoint3 *target, SkScalar falloffExponent, SkScalar cutoffAngle, SkColor lightColor, SkScalar surfaceScale, SkScalar ks, SkScalar shininess, sk_image_filter_t input, const SkImageFilters::CropRect *cropRect);
+
 }
 
 #endif //RAIA_SKIA_SK_IMAGE_FILTERS_H
