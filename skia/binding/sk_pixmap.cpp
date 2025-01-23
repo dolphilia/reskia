@@ -4,6 +4,14 @@
 
 #include "sk_pixmap.h"
 
+#include "include/core/SkPixmap.h"
+#include "include/core/SkColorSpace.h"
+
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_sk_i_size.h"
+#include "../static/static_sk_color_4f.h"
+
 #include "../static/static_sk_i_rect-internal.h"
 #include "../static/static_sk_i_size-internal.h"
 #include "../static/static_sk_color_space-internal.h"
@@ -11,216 +19,216 @@
 
 extern "C" {
 
-SkPixmap *SkPixmap_new() {
+void *SkPixmap_new() {
     return new SkPixmap();
 }
 
-SkPixmap *SkPixmap_new_2(const SkImageInfo *info, const void *addr, size_t rowBytes) {
-    return new SkPixmap(*info, addr, rowBytes);
+void *SkPixmap_new_2(const void *info, const void *addr, size_t rowBytes) {
+    return new SkPixmap(* static_cast<const SkImageInfo *>(info), addr, rowBytes);
 }
 
-void SkPixmap_delete(SkPixmap *pixmap) {
-    delete pixmap;
+void SkPixmap_delete(void *pixmap) {
+    delete static_cast<SkPixmap *>(pixmap);
 }
 
-void SkPixmap_reset(SkPixmap *pixmap) {
-    return pixmap->reset();
+void SkPixmap_reset(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->reset();
 }
 
-void SkPixmap_reset_2(SkPixmap *pixmap, const SkImageInfo *info, const void *addr, size_t rowBytes) {
-    return pixmap->reset(*info, addr, rowBytes);
+void SkPixmap_reset_2(void *pixmap, const void *info, const void *addr, size_t rowBytes) {
+    return static_cast<SkPixmap *>(pixmap)->reset(* static_cast<const SkImageInfo *>(info), addr, rowBytes);
 }
 
-bool SkPixmap_reset_3(SkPixmap *pixmap, const SkMask *mask) {
-    return pixmap->reset(*mask);
+bool SkPixmap_reset_3(void *pixmap, const void *mask) {
+    return static_cast<SkPixmap *>(pixmap)->reset(* static_cast<const SkMask *>(mask));
 }
 
-void SkPixmap_setColorSpace(SkPixmap *pixmap, sk_color_space_t color_space) {
-    return pixmap->setColorSpace(static_sk_color_space_move(color_space));
+void SkPixmap_setColorSpace(void *pixmap, sk_color_space_t color_space) {
+    return static_cast<SkPixmap *>(pixmap)->setColorSpace(static_sk_color_space_move(color_space));
 }
 
-bool SkPixmap_extractSubset(SkPixmap *pixmap, SkPixmap *subset, const SkIRect *area) {
-    return pixmap->extractSubset(subset, *area);
+bool SkPixmap_extractSubset(void *pixmap, void *subset, const void *area) {
+    return static_cast<SkPixmap *>(pixmap)->extractSubset(static_cast<SkPixmap *>(subset), * static_cast<const SkIRect *>(area));
 }
 
-const SkImageInfo * SkPixmap_info(SkPixmap *pixmap) {
-    return &pixmap->info();
+const void * SkPixmap_info(void *pixmap) {
+    return &static_cast<SkPixmap *>(pixmap)->info();
 }
 
-size_t SkPixmap_rowBytes(SkPixmap *pixmap) {
-    return pixmap->rowBytes();
+size_t SkPixmap_rowBytes(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->rowBytes();
 }
 
-const void * SkPixmap_addr(SkPixmap *pixmap) {
-    return pixmap->addr();
+const void * SkPixmap_addr(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addr();
 }
 
-int SkPixmap_width(SkPixmap *pixmap) {
-    return pixmap->width();
+int SkPixmap_width(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->width();
 }
 
-int SkPixmap_height(SkPixmap *pixmap) {
-    return pixmap->height();
+int SkPixmap_height(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->height();
 }
 
-sk_i_size_t SkPixmap_dimensions(SkPixmap *pixmap) {
-    return static_sk_i_size_make(pixmap->dimensions());
+sk_i_size_t SkPixmap_dimensions(void *pixmap) {
+    return static_sk_i_size_make(static_cast<SkPixmap *>(pixmap)->dimensions());
 }
 
-SkColorType SkPixmap_colorType(SkPixmap *pixmap) {
-    return pixmap->colorType();
+int SkPixmap_colorType(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->colorType();
 }
 
-SkAlphaType SkPixmap_alphaType(SkPixmap *pixmap) {
-    return pixmap->alphaType();
+int SkPixmap_alphaType(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->alphaType();
 }
 
-SkColorSpace * SkPixmap_colorSpace(SkPixmap *pixmap) {
-    return pixmap->colorSpace();
+void * SkPixmap_colorSpace(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->colorSpace();
 }
 
-sk_color_space_t SkPixmap_refColorSpace(SkPixmap *pixmap) {
-    return static_sk_color_space_make(pixmap->refColorSpace());
+sk_color_space_t SkPixmap_refColorSpace(void *pixmap) {
+    return static_sk_color_space_make(static_cast<SkPixmap *>(pixmap)->refColorSpace());
 }
 
-bool SkPixmap_isOpaque(SkPixmap *pixmap) {
-    return pixmap->isOpaque();
+bool SkPixmap_isOpaque(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->isOpaque();
 }
 
-sk_i_rect_t SkPixmap_bounds(SkPixmap *pixmap) {
-    return static_sk_i_rect_make(pixmap->bounds());
+sk_i_rect_t SkPixmap_bounds(void *pixmap) {
+    return static_sk_i_rect_make(static_cast<SkPixmap *>(pixmap)->bounds());
 }
 
-int SkPixmap_rowBytesAsPixels(SkPixmap *pixmap) {
-    return pixmap->rowBytesAsPixels();
+int SkPixmap_rowBytesAsPixels(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->rowBytesAsPixels();
 }
 
-int SkPixmap_shiftPerPixel(SkPixmap *pixmap) {
-    return pixmap->shiftPerPixel();
+int SkPixmap_shiftPerPixel(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->shiftPerPixel();
 }
 
-size_t SkPixmap_computeByteSize(SkPixmap *pixmap) {
-    return pixmap->computeByteSize();
+size_t SkPixmap_computeByteSize(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->computeByteSize();
 }
 
-bool SkPixmap_computeIsOpaque(SkPixmap *pixmap) {
-    return pixmap->computeIsOpaque();
+bool SkPixmap_computeIsOpaque(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->computeIsOpaque();
 }
 
-SkColor SkPixmap_getColor(SkPixmap *pixmap, int x, int y) {
-    return pixmap->getColor(x, y);
+SkColor SkPixmap_getColor(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->getColor(x, y);
 }
 
-sk_color_4f_t SkPixmap_getColor4f(SkPixmap *pixmap, int x, int y) {
-    return static_sk_color_4f_make(pixmap->getColor4f(x, y));
+sk_color_4f_t SkPixmap_getColor4f(void *pixmap, int x, int y) {
+    return static_sk_color_4f_make(static_cast<SkPixmap *>(pixmap)->getColor4f(x, y));
 }
 
-float SkPixmap_getAlphaf(SkPixmap *pixmap, int x, int y) {
-    return pixmap->getAlphaf(x, y);
+float SkPixmap_getAlphaf(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->getAlphaf(x, y);
 }
 
-const void * SkPixmap_addr_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addr(x, y);
+const void * SkPixmap_addr_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addr(x, y);
 }
 
-const uint8_t * SkPixmap_addr8(SkPixmap *pixmap) {
-    return pixmap->addr8();
+const void * SkPixmap_addr8(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addr8();
 }
 
-const uint16_t * SkPixmap_addr16(SkPixmap *pixmap) {
-    return pixmap->addr16();
+const void * SkPixmap_addr16(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addr16();
 }
 
-const uint32_t * SkPixmap_addr32(SkPixmap *pixmap) {
-    return pixmap->addr32();
+const void * SkPixmap_addr32(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addr32();
 }
 
-const uint64_t * SkPixmap_addr64(SkPixmap *pixmap) {
-    return pixmap->addr64();
+const void * SkPixmap_addr64(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addr64();
 }
 
-const uint16_t * SkPixmap_addrF16(SkPixmap *pixmap) {
-    return pixmap->addrF16();
+const void * SkPixmap_addrF16(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->addrF16();
 }
 
-const uint8_t * SkPixmap_addr8_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addr8(x, y);
+const void * SkPixmap_addr8_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addr8(x, y);
 }
 
-const uint16_t * SkPixmap_addr16_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addr16(x, y);
+const void * SkPixmap_addr16_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addr16(x, y);
 }
 
-const uint32_t * SkPixmap_addr32_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addr32(x, y);
+const void * SkPixmap_addr32_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addr32(x, y);
 }
 
-const uint64_t * SkPixmap_addr64_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addr64(x, y);
+const void * SkPixmap_addr64_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addr64(x, y);
 }
 
-const uint16_t * SkPixmap_addrF16_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->addrF16(x, y);
+const void * SkPixmap_addrF16_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->addrF16(x, y);
 }
 
-void * SkPixmap_writable_addr(SkPixmap *pixmap) {
-    return pixmap->writable_addr();
+void * SkPixmap_writable_addr(void *pixmap) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr();
 }
 
-void * SkPixmap_writable_addr_2(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addr(x, y);
+void * SkPixmap_writable_addr_2(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr(x, y);
 }
 
-uint8_t * SkPixmap_writable_addr8(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addr8(x, y);
+void * SkPixmap_writable_addr8(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr8(x, y);
 }
 
-uint16_t * SkPixmap_writable_addr16(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addr16(x, y);
+void * SkPixmap_writable_addr16(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr16(x, y);
 }
 
-uint32_t * SkPixmap_writable_addr32(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addr32(x, y);
+void * SkPixmap_writable_addr32(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr32(x, y);
 }
 
-uint64_t * SkPixmap_writable_addr64(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addr64(x, y);
+void * SkPixmap_writable_addr64(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addr64(x, y);
 }
 
-uint16_t * SkPixmap_writable_addrF16(SkPixmap *pixmap, int x, int y) {
-    return pixmap->writable_addrF16(x, y);
+void * SkPixmap_writable_addrF16(void *pixmap, int x, int y) {
+    return static_cast<SkPixmap *>(pixmap)->writable_addrF16(x, y);
 }
 
-bool SkPixmap_readPixels(SkPixmap *pixmap, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes) {
-    return pixmap->readPixels(*dstInfo, dstPixels, dstRowBytes);
+bool SkPixmap_readPixels(void *pixmap, const void *dstInfo, void *dstPixels, size_t dstRowBytes) {
+    return static_cast<SkPixmap *>(pixmap)->readPixels(* static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes);
 }
 
-bool SkPixmap_readPixels_2(SkPixmap *pixmap, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
-    return pixmap->readPixels(*dstInfo, dstPixels, dstRowBytes, srcX, srcY);
+bool SkPixmap_readPixels_2(void *pixmap, const void *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+    return static_cast<SkPixmap *>(pixmap)->readPixels(* static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkPixmap_readPixels_3(SkPixmap *pixmap, const SkPixmap *dst, int srcX, int srcY) {
-    return pixmap->readPixels(*dst, srcX, srcY);
+bool SkPixmap_readPixels_3(void *pixmap, const void *dst, int srcX, int srcY) {
+    return static_cast<SkPixmap *>(pixmap)->readPixels(* static_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
-bool SkPixmap_readPixels_4(SkPixmap *pixmap, const SkPixmap *dst) {
-    return pixmap->readPixels(*dst);
+bool SkPixmap_readPixels_4(void *pixmap, const void *dst) {
+    return static_cast<SkPixmap *>(pixmap)->readPixels(* static_cast<const SkPixmap *>(dst));
 }
 
-bool SkPixmap_scalePixels(SkPixmap *pixmap, const SkPixmap *dst, const SkSamplingOptions *options) {
-    return pixmap->scalePixels(*dst, *options);
+bool SkPixmap_scalePixels(void *pixmap, const void *dst, const void *options) {
+    return static_cast<SkPixmap *>(pixmap)->scalePixels(* static_cast<const SkPixmap *>(dst), * static_cast<const SkSamplingOptions *>(options));
 }
 
-bool SkPixmap_erase(SkPixmap *pixmap, SkColor color, const SkIRect *subset) {
-    return pixmap->erase(color, *subset);
+bool SkPixmap_erase(void *pixmap, unsigned int color, const void *subset) {
+    return static_cast<SkPixmap *>(pixmap)->erase(color, * static_cast<const SkIRect *>(subset));
 }
 
-bool SkPixmap_erase_2(SkPixmap *pixmap, SkColor color) {
-    return pixmap->erase(color);
+bool SkPixmap_erase_2(void *pixmap, unsigned int color) {
+    return static_cast<SkPixmap *>(pixmap)->erase(color);
 }
 
-bool SkPixmap_erase_3(SkPixmap *pixmap, const SkColor4f *color, const SkIRect *subset) {
-    return pixmap->erase(*color, subset);
+bool SkPixmap_erase_3(void *pixmap, const void *color, const void *subset) {
+    return static_cast<SkPixmap *>(pixmap)->erase(* static_cast<const SkColor4f *>(color), static_cast<const SkIRect *>(subset));
 }
 
 }

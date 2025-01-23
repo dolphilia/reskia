@@ -4,48 +4,50 @@
 
 #include "sk_path_measure.h"
 
+#include "include/core/SkPathMeasure.h"
+
 extern "C" {
 
 // SkPathMeasure & operator=(SkPathMeasure &&)
 
-SkPathMeasure *SkPathMeasure_new() {
+void *SkPathMeasure_new() {
     return new SkPathMeasure();
 }
 
-SkPathMeasure *SkPathMeasure_new_2(const SkPath *path, bool forceClosed, SkScalar resScale) {
-    return new SkPathMeasure(*path, forceClosed, resScale);
+void *SkPathMeasure_new_2(const void *path, bool forceClosed, float resScale) {
+    return new SkPathMeasure(* static_cast<const SkPath *>(path), forceClosed, resScale);
 }
 
-void SkPathMeasure_delete(SkPathMeasure *path_measure) {
-    delete path_measure;
+void SkPathMeasure_delete(void *path_measure) {
+    delete static_cast<SkPathMeasure *>(path_measure);
 }
 
-void SkPathMeasure_setPath(SkPathMeasure *path_measure, const SkPath *path, bool forceClosed) {
-    path_measure->setPath(path, forceClosed);
+void SkPathMeasure_setPath(void *path_measure, const void *path, bool forceClosed) {
+    static_cast<SkPathMeasure *>(path_measure)->setPath(static_cast<const SkPath *>(path), forceClosed);
 }
 
-SkScalar SkPathMeasure_getLength(SkPathMeasure *path_measure) {
-    return path_measure->getLength();
+float SkPathMeasure_getLength(void *path_measure) {
+    return static_cast<SkPathMeasure *>(path_measure)->getLength();
 }
 
-bool SkPathMeasure_getPosTan(SkPathMeasure *path_measure, SkScalar distance, SkPoint *position, SkVector *tangent) {
-    return path_measure->getPosTan(distance, position, tangent);
+bool SkPathMeasure_getPosTan(void *path_measure, float distance, void *position, void *tangent) {
+    return static_cast<SkPathMeasure *>(path_measure)->getPosTan(distance, static_cast<SkPoint *>(position), static_cast<SkVector *>(tangent));
 }
 
-bool SkPathMeasure_getMatrix(SkPathMeasure *path_measure, SkScalar distance, SkMatrix *matrix, SkPathMeasure::MatrixFlags flags) {
-    return path_measure->getMatrix(distance, matrix, flags);
+bool SkPathMeasure_getMatrix(void *path_measure, float distance, void *matrix, int flags) {
+    return static_cast<SkPathMeasure *>(path_measure)->getMatrix(distance, static_cast<SkMatrix *>(matrix), static_cast<SkPathMeasure::MatrixFlags>(flags));
 }
 
-bool SkPathMeasure_getSegment(SkPathMeasure *path_measure, SkScalar startD, SkScalar stopD, SkPath *dst, bool startWithMoveTo) {
-    return path_measure->getSegment(startD, stopD, dst, startWithMoveTo);
+bool SkPathMeasure_getSegment(void *path_measure, float startD, float stopD, void *dst, bool startWithMoveTo) {
+    return static_cast<SkPathMeasure *>(path_measure)->getSegment(startD, stopD, static_cast<SkPath *>(dst), startWithMoveTo);
 }
 
-bool SkPathMeasure_isClosed(SkPathMeasure *path_measure) {
-    return path_measure->isClosed();
+bool SkPathMeasure_isClosed(void *path_measure) {
+    return static_cast<SkPathMeasure *>(path_measure)->isClosed();
 }
 
-bool SkPathMeasure_nextContour(SkPathMeasure *path_measure) {
-    return path_measure->nextContour();
+bool SkPathMeasure_nextContour(void *path_measure) {
+    return static_cast<SkPathMeasure *>(path_measure)->nextContour();
 }
 
 }

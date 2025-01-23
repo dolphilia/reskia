@@ -4,16 +4,20 @@
 
 #include "sk_pixmap_utils.h"
 
+#include "include/codec/SkPixmapUtils.h"
+
+#include "../static/static_sk_image_info.h"
+
 #include "../static/static_sk_image_info-internal.h"
 
 extern "C" {
 
-bool SkPixmapUtils_Orient(const SkPixmap* dst, const SkPixmap* src, SkEncodedOrigin origin) {
-    return SkPixmapUtils::Orient(*dst, *src, origin);
+bool SkPixmapUtils_Orient(const void * dst, const void * src, int origin) {
+    return SkPixmapUtils::Orient(* static_cast<const SkPixmap *>(dst), * static_cast<const SkPixmap *>(src), static_cast<SkEncodedOrigin>(origin));
 }
 
-sk_image_info_t SkPixmapUtils_SwapWidthHeight(const SkImageInfo* info) {
-    return static_sk_image_info_make(SkPixmapUtils::SwapWidthHeight(*info));
+sk_image_info_t SkPixmapUtils_SwapWidthHeight(const void * info) {
+    return static_sk_image_info_make(SkPixmapUtils::SwapWidthHeight(* static_cast<const SkImageInfo *>(info)));
 }
 
 }

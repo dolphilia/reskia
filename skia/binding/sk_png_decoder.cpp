@@ -4,6 +4,13 @@
 
 #include "sk_png_decoder.h"
 
+#include "include/codec/SkPngDecoder.h"
+
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_codecs_decoder.h"
+
 #include "../static/static_sk_stream-internal.h"
 #include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_codecs_decoder-internal.h"
@@ -15,12 +22,12 @@ bool SkPngDecoder_IsPng(const void* ptr, size_t size) {
     return SkPngDecoder::IsPng(ptr, size);
 }
 
-sk_codec_t SkPngDecoder_Decode(int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-    return static_sk_codec_make(SkPngDecoder::Decode(static_sk_stream_move(static_stream), result, decodeContext));
+sk_codec_t SkPngDecoder_Decode(int static_stream, void * result, void * decodeContext) {
+    return static_sk_codec_make(SkPngDecoder::Decode(static_sk_stream_move(static_stream), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
-sk_codec_t SkPngDecoder_Decode_2(int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-    return static_sk_codec_make(SkPngDecoder::Decode(static_sk_data_move(static_data), result, decodeContext));
+sk_codec_t SkPngDecoder_Decode_2(int static_data, void * result, void * decodeContext) {
+    return static_sk_codec_make(SkPngDecoder::Decode(static_sk_data_move(static_data), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
 sk_codecs_decoder_t SkPngDecoder_Decoder() {
