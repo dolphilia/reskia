@@ -4,6 +4,13 @@
 
 #include "sk_path.h"
 
+#include "include/core/SkPath.h"
+
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_rect.h"
+#include "../static/static_sk_path.h"
+#include "../static/static_sk_point.h"
+
 #include "../static/static_sk_path-internal.h"
 #include "../static/static_sk_point-internal.h"
 #include "../static/static_sk_rect-internal.h"
@@ -29,16 +36,16 @@ bool SkPath_isInterpolatable(void *path, const void *compare) {
     return static_cast<SkPath *>(path)->isInterpolatable(* static_cast<const SkPath *>(compare));
 }
 
-bool SkPath_interpolate(void *path, const void *ending, SkScalar weight, void *out) {
+bool SkPath_interpolate(void *path, const void *ending, float weight, void *out) {
     return static_cast<SkPath *>(path)->interpolate(* static_cast<const SkPath *>(ending), weight, static_cast<SkPath *>(out));
 }
 
-SkPathFillType SkPath_getFillType(void *path) {
-    return static_cast<SkPath *>(path)->getFillType();
+int SkPath_getFillType(void *path) {
+    return static_cast<int>(static_cast<SkPath *>(path)->getFillType());
 }
 
-void SkPath_setFillType(void *path, SkPathFillType ft) {
-    static_cast<SkPath *>(path)->setFillType(ft);
+void SkPath_setFillType(void *path, int ft) {
+    static_cast<SkPath *>(path)->setFillType(static_cast<SkPathFillType>(ft));
 }
 
 bool SkPath_isInverseFillType(void *path) {
@@ -61,12 +68,12 @@ bool SkPath_isRRect(void *path, void *rrect) {
     return static_cast<SkPath *>(path)->isRRect(static_cast<SkRRect *>(rrect));
 }
 
-SkPath * SkPath_reset(void *path) {
+void * SkPath_reset(void *path) {
     auto *p = static_cast<SkPath *>(path);
     return &p->reset();
 }
 
-SkPath * SkPath_rewind(void *path) {
+void * SkPath_rewind(void *path) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rewind();
 }
@@ -87,7 +94,7 @@ bool SkPath_isVolatile(void *path) {
     return static_cast<SkPath *>(path)->isVolatile();
 }
 
-SkPath * SkPath_setIsVolatile(void *path, bool isVolatile) {
+void * SkPath_setIsVolatile(void *path, bool isVolatile) {
     auto *p = static_cast<SkPath *>(path);
     return &p->setIsVolatile(isVolatile);
 }
@@ -124,7 +131,7 @@ void SkPath_swap(void *path, void *other) {
     static_cast<SkPath *>(path)->swap(* static_cast<SkPath *>(other));
 }
 
-const SkRect * SkPath_getBounds(void *path) {
+const void * SkPath_getBounds(void *path) {
     auto *p = static_cast<SkPath *>(path);
     return &p->getBounds();
 }
@@ -145,112 +152,112 @@ void SkPath_incReserve(void *path, int extraPtCount) {
     static_cast<SkPath *>(path)->incReserve(extraPtCount);
 }
 
-SkPath * SkPath_moveTo(void *path, SkScalar x, SkScalar y) {
+void * SkPath_moveTo(void *path, float x, float y) {
     auto *p = static_cast<SkPath *>(path);
     return &p->moveTo(x, y);
 }
 
-SkPath * SkPath_moveTo_2(void *path, const void *p) {
+void * SkPath_moveTo_2(void *path, const void *p) {
     auto *_path = static_cast<SkPath *>(path);
     return &_path->moveTo(* static_cast<const SkPoint *>(p));
 }
 
-SkPath * SkPath_rMoveTo(void *path, SkScalar dx, SkScalar dy) {
+void * SkPath_rMoveTo(void *path, float dx, float dy) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rMoveTo(dx, dy);
 }
 
-SkPath * SkPath_lineTo(void *path, SkScalar x, SkScalar y) {
+void * SkPath_lineTo(void *path, float x, float y) {
     auto *p = static_cast<SkPath *>(path);
     return &p->lineTo(x, y);
 }
 
-SkPath * SkPath_lineTo_2(void *path, const void *p) {
+void * SkPath_lineTo_2(void *path, const void *p) {
     auto *_path = static_cast<SkPath *>(path);
     return &_path->lineTo(* static_cast<const SkPoint *>(p));
 }
 
-SkPath * SkPath_rLineTo(void *path, SkScalar dx, SkScalar dy) {
+void * SkPath_rLineTo(void *path, float dx, float dy) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rLineTo(dx, dy);
 }
 
-SkPath * SkPath_quadTo(void *path, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2) {
+void * SkPath_quadTo(void *path, float x1, float y1, float x2, float y2) {
     auto *p = static_cast<SkPath *>(path);
     return &p->quadTo(x1, y1, x2, y2);
 }
 
-SkPath * SkPath_quadTo_2(void *path, const void *p1, const void *p2) {
+void * SkPath_quadTo_2(void *path, const void *p1, const void *p2) {
     auto *p = static_cast<SkPath *>(path);
     return &p->quadTo(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2));
 }
 
-SkPath * SkPath_rQuadTo(void *path, SkScalar dx1, SkScalar dy1, SkScalar dx2, SkScalar dy2) {
+void * SkPath_rQuadTo(void *path, float dx1, float dy1, float dx2, float dy2) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rQuadTo(dx1, dy1, dx2, dy2);
 }
 
-SkPath * SkPath_conicTo(void *path, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar w) {
+void * SkPath_conicTo(void *path, float x1, float y1, float x2, float y2, float w) {
     auto *p = static_cast<SkPath *>(path);
     return &p->conicTo(x1, y1, x2, y2, w);
 }
 
-SkPath * SkPath_conicTo_2(void *path, const void *p1, const void *p2, SkScalar w) {
+void * SkPath_conicTo_2(void *path, const void *p1, const void *p2, float w) {
     auto *p = static_cast<SkPath *>(path);
     return &p->conicTo(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), w);
 }
 
-SkPath * SkPath_rConicTo(void *path, SkScalar dx1, SkScalar dy1, SkScalar dx2, SkScalar dy2, SkScalar w) {
+void * SkPath_rConicTo(void *path, float dx1, float dy1, float dx2, float dy2, float w) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rConicTo(dx1, dy1, dx2, dy2, w);
 }
 
-SkPath * SkPath_cubicTo(void *path, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar x3, SkScalar y3) {
+void * SkPath_cubicTo(void *path, float x1, float y1, float x2, float y2, float x3, float y3) {
     auto *p = static_cast<SkPath *>(path);
     return &p->cubicTo(x1, y1, x2, y2, x3, y3);
 }
 
-SkPath * SkPath_cubicTo_2(void *path, const void *p1, const void *p2, const void *p3) {
+void * SkPath_cubicTo_2(void *path, const void *p1, const void *p2, const void *p3) {
     auto *p = static_cast<SkPath *>(path);
     return &p->cubicTo(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), * static_cast<const SkPoint *>(p3));
 }
 
-SkPath * SkPath_rCubicTo(void *path, SkScalar dx1, SkScalar dy1, SkScalar dx2, SkScalar dy2, SkScalar dx3, SkScalar dy3) {
+void * SkPath_rCubicTo(void *path, float dx1, float dy1, float dx2, float dy2, float dx3, float dy3) {
     auto *p = static_cast<SkPath *>(path);
     return &p->rCubicTo(dx1, dy1, dx2, dy2, dx3, dy3);
 }
 
-SkPath * SkPath_arcTo(void *path, const void *oval, SkScalar startAngle, SkScalar sweepAngle, bool forceMoveTo) {
+void * SkPath_arcTo(void *path, const void *oval, float startAngle, float sweepAngle, bool forceMoveTo) {
     auto *p = static_cast<SkPath *>(path);
     return &p->arcTo(* static_cast<const SkRect *>(oval), startAngle, sweepAngle, forceMoveTo);
 }
 
-SkPath * SkPath_arcTo_2(void *path, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar radius) {
+void * SkPath_arcTo_2(void *path, float x1, float y1, float x2, float y2, float radius) {
     auto *p = static_cast<SkPath *>(path);
     return &p->arcTo(x1, y1, x2, y2, radius);
 }
 
-SkPath * SkPath_arcTo_3(void *path, sk_point_t p1, sk_point_t p2, SkScalar radius) {
+void * SkPath_arcTo_3(void *path, sk_point_t p1, sk_point_t p2, float radius) {
     auto *p = static_cast<SkPath *>(path);
     return &p->arcTo(static_sk_point_get(p1), static_sk_point_get(p2), radius);
 }
 
-SkPath * SkPath_arcTo_4(void *path, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, SkScalar x, SkScalar y) {
+void * SkPath_arcTo_4(void *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float x, float y) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->arcTo(rx, ry, xAxisRotate, largeArc, sweep, x, y);
+    return &p->arcTo(rx, ry, xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), x, y);
 }
 
-SkPath * SkPath_arcTo_5(void *path, sk_point_t r, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, sk_point_t xy) {
+void * SkPath_arcTo_5(void *path, sk_point_t r, float xAxisRotate, int largeArc, int sweep, sk_point_t xy) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->arcTo(static_sk_point_get(r), xAxisRotate, largeArc, sweep, static_sk_point_get(xy));
+    return &p->arcTo(static_sk_point_get(r), xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), static_sk_point_get(xy));
 }
 
-SkPath * SkPath_rArcTo(void *path, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) {
+void * SkPath_rArcTo(void *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->arcTo(rx, ry, xAxisRotate, largeArc, sweep, dx, dy);
+    return &p->arcTo(rx, ry, xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), dx, dy);
 }
 
-SkPath * SkPath_close(void *path) {
+void * SkPath_close(void *path) {
     auto *p = static_cast<SkPath *>(path);
     return &p->close();
 }
@@ -259,137 +266,137 @@ bool SkPath_isRect(void *path, void *rect, void *isClosed, void *direction) {
     return static_cast<SkPath *>(path)->isRect(static_cast<SkRect *>(rect), static_cast<bool *>(isClosed), static_cast<SkPathDirection *>(direction));
 }
 
-SkPath * SkPath_addRect(void *path, const void *rect, SkPathDirection dir, unsigned start) {
+void * SkPath_addRect(void *path, const void *rect, int dir, unsigned start) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRect(* static_cast<const SkRect *>(rect), dir, start);
+    return &p->addRect(* static_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), start);
 }
 
-SkPath * SkPath_addRect_2(void *path, const void *rect, SkPathDirection dir) {
+void * SkPath_addRect_2(void *path, const void *rect, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRect(* static_cast<const SkRect *>(rect), dir);
+    return &p->addRect(* static_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addRect_3(void *path, SkScalar left, SkScalar top, SkScalar right, SkScalar bottom, SkPathDirection dir) {
+void * SkPath_addRect_3(void *path, float left, float top, float right, float bottom, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRect(left, top, right, bottom, dir);
+    return &p->addRect(left, top, right, bottom, static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addOval(void *path, const void *oval, SkPathDirection dir) {
+void * SkPath_addOval(void *path, const void *oval, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addOval(* static_cast<const SkRect *>(oval), dir);
+    return &p->addOval(* static_cast<const SkRect *>(oval), static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addOval_2(void *path, const void *oval, SkPathDirection dir, unsigned start) {
+void * SkPath_addOval_2(void *path, const void *oval, int dir, unsigned start) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addOval(* static_cast<const SkRect *>(oval), dir, start);
+    return &p->addOval(* static_cast<const SkRect *>(oval), static_cast<SkPathDirection>(dir), start);
 }
 
-SkPath * SkPath_addCircle(void *path, SkScalar x, SkScalar y, SkScalar radius, SkPathDirection dir) {
+void * SkPath_addCircle(void *path, float x, float y, float radius, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addCircle(x, y, radius, dir);
+    return &p->addCircle(x, y, radius, static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addArc(void *path, const void *oval, SkScalar startAngle, SkScalar sweepAngle) {
+void * SkPath_addArc(void *path, const void *oval, float startAngle, float sweepAngle) {
     auto *p = static_cast<SkPath *>(path);
     return &p->addArc(* static_cast<const SkRect *>(oval), startAngle, sweepAngle);
 }
 
-SkPath * SkPath_addRoundRect(void *path, const void *rect, SkScalar rx, SkScalar ry, SkPathDirection dir) {
+void * SkPath_addRoundRect(void *path, const void *rect, float rx, float ry, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRoundRect(* static_cast<const SkRect *>(rect), rx, ry, dir);
+    return &p->addRoundRect(* static_cast<const SkRect *>(rect), rx, ry, static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addRoundRect_2(void *path, const void *rect, const void * radii, SkPathDirection dir) {
+void * SkPath_addRoundRect_2(void *path, const void *rect, const void * radii, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRoundRect(* static_cast<const SkRect *>(rect), static_cast<const SkScalar *>(radii), dir);
+    return &p->addRoundRect(* static_cast<const SkRect *>(rect), static_cast<const SkScalar *>(radii), static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addRRect(void *path, const SkRRect *rrect, SkPathDirection dir) {
+void * SkPath_addRRect(void *path, const void *rrect, int dir) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRRect(*rrect, dir);
+    return &p->addRRect(* static_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir));
 }
 
-SkPath * SkPath_addRRect_2(void *path, const SkRRect *rrect, SkPathDirection dir, unsigned start) {
+void * SkPath_addRRect_2(void *path, const void *rrect, int dir, unsigned start) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addRRect(*rrect, dir, start);
+    return &p->addRRect(* static_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir), start);
 }
 
-SkPath * SkPath_addPoly(void *path, const SkPoint pts[], int count, bool close) {
+void * SkPath_addPoly(void *path, const void * pts, int count, bool close) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addPoly(pts, count, close);
+    return &p->addPoly(static_cast<const SkPoint *>(pts), count, close);
 }
 
-SkPath * SkPath_addPoly_2(void *path, const std::initializer_list<SkPoint> *list, bool close) {
+void * SkPath_addPoly_2(void *path, const void *list, bool close) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addPoly(*list, close);
+    return &p->addPoly(* static_cast<const std::initializer_list<SkPoint> *>(list), close);
 }
 
-SkPath * SkPath_addPath(void *path, const SkPath *src, SkScalar dx, SkScalar dy, SkPath::AddPathMode mode) {
+void * SkPath_addPath(void *path, const void *src, float dx, float dy, int mode) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addPath(*src, dx, dy, mode);
+    return &p->addPath(* static_cast<const SkPath *>(src), dx, dy, static_cast<SkPath::AddPathMode>(mode));
 }
 
-SkPath * SkPath_addPath_2(void *path, const SkPath *src, SkPath::AddPathMode modeSkPath) {
+void * SkPath_addPath_2(void *path, const void *src, int modeSkPath) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addPath(*src, modeSkPath);
+    return &p->addPath(* static_cast<const SkPath *>(src), static_cast<SkPath::AddPathMode>(modeSkPath));
 }
 
-SkPath * SkPath_addPath_3(void *path, const SkPath *src, const SkMatrix *matrix, SkPath::AddPathMode mode) {
+void * SkPath_addPath_3(void *path, const void *src, const void *matrix, int mode) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->addPath(*src, *matrix, mode);
+    return &p->addPath(* static_cast<const SkPath *>(src), * static_cast<const SkMatrix *>(matrix), static_cast<SkPath::AddPathMode>(mode));
 }
 
-SkPath * SkPath_reverseAddPath(void *path, const SkPath *src) {
+void * SkPath_reverseAddPath(void *path, const void *src) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->reverseAddPath(*src);
+    return &p->reverseAddPath(* static_cast<const SkPath *>(src));
 }
 
-void SkPath_offset(void *path, SkScalar dx, SkScalar dy, SkPath *dst) {
-    static_cast<SkPath *>(path)->offset(dx, dy, dst);
+void SkPath_offset(void *path, float dx, float dy, void *dst) {
+    static_cast<SkPath *>(path)->offset(dx, dy, static_cast<SkPath *>(dst));
 }
 
-void SkPath_offset_2(void *path, SkScalar dx, SkScalar dy) {
+void SkPath_offset_2(void *path, float dx, float dy) {
     static_cast<SkPath *>(path)->offset(dx, dy);
 }
 
-void SkPath_transform(void *path, const SkMatrix *matrix, SkPath *dst, SkApplyPerspectiveClip pc) {
-    static_cast<SkPath *>(path)->transform(*matrix, dst, pc);
+void SkPath_transform(void *path, const void *matrix, void *dst, int pc) {
+    static_cast<SkPath *>(path)->transform(* static_cast<const SkMatrix *>(matrix), static_cast<SkPath *>(dst), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-void SkPath_transform_2(void *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc) {
-    static_cast<SkPath *>(path)->transform(*matrix, pc);
+void SkPath_transform_2(void *path, const void *matrix, int pc) {
+    static_cast<SkPath *>(path)->transform(* static_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-sk_path_t SkPath_makeTransform(void *path, const SkMatrix *m, SkApplyPerspectiveClip pc) {
-    return static_sk_path_make(static_cast<SkPath *>(path)->makeTransform(*m, pc));
+sk_path_t SkPath_makeTransform(void *path, const void *m, int pc) {
+    return static_sk_path_make(static_cast<SkPath *>(path)->makeTransform(* static_cast<const SkMatrix *>(m), static_cast<SkApplyPerspectiveClip>(pc)));
 }
 
-sk_path_t SkPath_makeScale(void *path, SkScalar sx, SkScalar sy) {
+sk_path_t SkPath_makeScale(void *path, float sx, float sy) {
     return static_sk_path_make(static_cast<SkPath *>(path)->makeScale(sx, sy));
 }
 
-bool SkPath_getLastPt(void *path, SkPoint *lastPt) {
-    return static_cast<SkPath *>(path)->getLastPt(lastPt);
+bool SkPath_getLastPt(void *path, void *lastPt) {
+    return static_cast<SkPath *>(path)->getLastPt(static_cast<SkPoint *>(lastPt));
 }
 
-void SkPath_setLastPt(void *path, SkScalar x, SkScalar y) {
+void SkPath_setLastPt(void *path, float x, float y) {
     static_cast<SkPath *>(path)->setLastPt(x, y);
 }
 
-void SkPath_setLastPt_2(void *path, const SkPoint *p) {
-    static_cast<SkPath *>(path)->setLastPt(*p);
+void SkPath_setLastPt_2(void *path, const void *p) {
+    static_cast<SkPath *>(path)->setLastPt(* static_cast<const SkPoint *>(p));
 }
 
 uint32_t SkPath_getSegmentMasks(void *path) {
     return static_cast<SkPath *>(path)->getSegmentMasks();
 }
 
-bool SkPath_contains(void *path, SkScalar x, SkScalar y) {
+bool SkPath_contains(void *path, float x, float y) {
     return static_cast<SkPath *>(path)->contains(x, y);
 }
 
-void SkPath_dump(void *path, SkWStream *stream, bool dumpAsHex) {
-    static_cast<SkPath *>(path)->dump(stream, dumpAsHex);
+void SkPath_dump(void *path, void *stream, bool dumpAsHex) {
+    static_cast<SkPath *>(path)->dump(static_cast<SkWStream *>(stream), dumpAsHex);
 }
 
 void SkPath_dump_2(void *path) {
@@ -400,8 +407,8 @@ void SkPath_dumpHex(void *path) {
     static_cast<SkPath *>(path)->dumpHex();
 }
 
-void SkPath_dumpArrays(void *path, SkWStream *stream, bool dumpAsHex) {
-    static_cast<SkPath *>(path)->dumpArrays(stream, dumpAsHex);
+void SkPath_dumpArrays(void *path, void *stream, bool dumpAsHex) {
+    static_cast<SkPath *>(path)->dumpArrays(static_cast<SkWStream *>(stream), dumpAsHex);
 }
 
 void SkPath_dumpArrays_2(void *path) {
@@ -431,64 +438,64 @@ bool SkPath_isValid(void *path) {
 
 // static
 
-sk_path_t SkPath_Make(const SkPoint point[], int pointCount, const uint8_t i[], int verbCount, const SkScalar v[], int conicWeightCount, SkPathFillType type, bool isVolatile) {
-    return static_sk_path_make(SkPath::Make(point, pointCount, i, verbCount, v, conicWeightCount, type, isVolatile));
+sk_path_t SkPath_Make(const void * point, int pointCount, const void * i, int verbCount, const void * v, int conicWeightCount, int type, bool isVolatile) {
+    return static_sk_path_make(SkPath::Make(static_cast<const SkPoint *>(point), pointCount, static_cast<const uint8_t *>(i), verbCount, static_cast<const SkScalar *>(v), conicWeightCount, static_cast<SkPathFillType>(type), isVolatile));
 }
 
-sk_path_t SkPath_Rect(const SkRect *rect, SkPathDirection dir, unsigned startIndex) {
-    return static_sk_path_make(SkPath::Rect(*rect, dir, startIndex));
+sk_path_t SkPath_Rect(const void *rect, int dir, unsigned startIndex) {
+    return static_sk_path_make(SkPath::Rect(* static_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_Oval(const SkRect *rect, SkPathDirection dir) {
-    return static_sk_path_make(SkPath::Oval(*rect, dir));
+sk_path_t SkPath_Oval(const void *rect, int dir) {
+    return static_sk_path_make(SkPath::Oval(* static_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_Oval_2(const SkRect *rect, SkPathDirection dir, unsigned startIndex) {
-    return static_sk_path_make(SkPath::Oval(*rect, dir, startIndex));
+sk_path_t SkPath_Oval_2(const void *rect, int dir, unsigned startIndex) {
+    return static_sk_path_make(SkPath::Oval(* static_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_Circle(SkScalar center_x, SkScalar center_y, SkScalar radius, SkPathDirection dir) {
-    return static_sk_path_make(SkPath::Circle(center_x, center_y, radius, dir));
+sk_path_t SkPath_Circle(float center_x, float center_y, float radius, int dir) {
+    return static_sk_path_make(SkPath::Circle(center_x, center_y, radius, static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_RRect(const SkRRect *rrect, SkPathDirection dir) {
-    return static_sk_path_make(SkPath::RRect(*rrect, dir));
+sk_path_t SkPath_RRect(const void *rrect, int dir) {
+    return static_sk_path_make(SkPath::RRect(* static_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_RRect_2(const SkRRect *rrect, SkPathDirection dir, unsigned startIndex) {
-    return static_sk_path_make(SkPath::RRect(*rrect, dir, startIndex));
+sk_path_t SkPath_RRect_2(const void *rrect, int dir, unsigned startIndex) {
+    return static_sk_path_make(SkPath::RRect(* static_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_RRect_3(const SkRect *bounds, SkScalar rx, SkScalar ry, SkPathDirection dir) {
-    return static_sk_path_make(SkPath::RRect(*bounds, rx, ry, dir));
+sk_path_t SkPath_RRect_3(const void *bounds, float rx, float ry, int dir) {
+    return static_sk_path_make(SkPath::RRect(* static_cast<const SkRect *>(bounds), rx, ry, static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_Polygon(const SkPoint pts[], int count, bool isClosed, SkPathFillType type, bool isVolatile) {
-    return static_sk_path_make(SkPath::Polygon(pts, count, isClosed, type, isVolatile));
+sk_path_t SkPath_Polygon(const void * pts, int count, bool isClosed, int type, bool isVolatile) {
+    return static_sk_path_make(SkPath::Polygon(static_cast<const SkPoint *>(pts), count, isClosed, static_cast<SkPathFillType>(type), isVolatile));
 }
 
-sk_path_t SkPath_Polygon_2(const std::initializer_list<SkPoint> *list, bool isClosed, SkPathFillType fillType, bool isVolatile) {
-    return static_sk_path_make(SkPath::Polygon(*list, isClosed, fillType, isVolatile));
+sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, int fillType, bool isVolatile) {
+    return static_sk_path_make(SkPath::Polygon(* static_cast<const std::initializer_list<SkPoint> *>(list), isClosed, static_cast<SkPathFillType>(fillType), isVolatile));
 }
 
 sk_path_t SkPath_Line(sk_point_t a, sk_point_t b) {
     return static_sk_path_make(SkPath::Line(static_sk_point_get(a), static_sk_point_get(b)));
 }
 
-bool SkPath_IsLineDegenerate(const SkPoint *p1, const SkPoint *p2, bool exact) {
-    return SkPath::IsLineDegenerate(*p1, *p2, exact);
+bool SkPath_IsLineDegenerate(const void *p1, const void *p2, bool exact) {
+    return SkPath::IsLineDegenerate(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), exact);
 }
 
-bool SkPath_IsQuadDegenerate(const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, bool exact) {
-    return SkPath::IsQuadDegenerate(*p1, *p2, *p3, exact);
+bool SkPath_IsQuadDegenerate(const void *p1, const void *p2, const void *p3, bool exact) {
+    return SkPath::IsQuadDegenerate(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), * static_cast<const SkPoint *>(p3), exact);
 }
 
-bool SkPath_IsCubicDegenerate(const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, const SkPoint *p4, bool exact) {
-    return SkPath::IsCubicDegenerate(*p1, *p2, *p3, *p4, exact);
+bool SkPath_IsCubicDegenerate(const void *p1, const void *p2, const void *p3, const void *p4, bool exact) {
+    return SkPath::IsCubicDegenerate(* static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), * static_cast<const SkPoint *>(p3), * static_cast<const SkPoint *>(p4), exact);
 }
 
-int SkPath_ConvertConicToQuads(const SkPoint *p0, const SkPoint *p1, const SkPoint *p2, SkScalar w, SkPoint pts[], int pow2) {
-    return SkPath::ConvertConicToQuads(*p0, *p1, *p2, w, pts, pow2);
+int SkPath_ConvertConicToQuads(const void *p0, const void *p1, const void *p2, float w, void * pts, int pow2) {
+    return SkPath::ConvertConicToQuads(* static_cast<const SkPoint *>(p0), * static_cast<const SkPoint *>(p1), * static_cast<const SkPoint *>(p2), w, static_cast<SkPoint *>(pts), pow2);
 }
 
 }
