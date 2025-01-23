@@ -4,12 +4,16 @@
 
 #include "sk_luma_color_filter.h"
 
+#include "include/effects/SkLumaColorFilter.h"
+
+#include "../static/static_sk_color_filter.h"
+
 #include "../static/static_sk_color_filter-internal.h"
 
 extern "C" {
 
-void SkLumaColorFilter_delete(SkLumaColorFilter * lumaColorFilter) {
-    delete lumaColorFilter;
+void SkLumaColorFilter_delete(void * lumaColorFilter) {
+    delete static_cast<SkLumaColorFilter *>(lumaColorFilter);
 }
 
 // static

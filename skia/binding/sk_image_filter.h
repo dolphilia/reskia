@@ -39,4 +39,5 @@ void SkImageFilter_Register(const char name[], int factory); // (const char name
 #ifdef __cplusplus
 }
 #endif
+
 #endif //RAIA_SKIA_SK_IMAGE_FILTER_H

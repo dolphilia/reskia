@@ -4,6 +4,13 @@
 
 #include "sk_m_44.h"
 
+#include "include/core/SkM44.h"
+
+#include "../static/static_sk_m_44.h"
+#include "../static/static_sk_matrix.h"
+#include "../static/static_sk_v4.h"
+#include "../static/static_sk_v3.h"
+
 #include "../static/static_sk_matrix-internal.h"
 #include "../static/static_sk_m_44-internal.h"
 #include "../static/static_sk_v3-internal.h"
@@ -17,182 +24,182 @@ extern "C" {
 //SkV4 operator*(const SkV4 &v)
 //SkV3 operator*(SkV3 v)
 
-SkM44 *SkM44_new(const SkM44 *src) {
-    return new SkM44(*src);
+void *SkM44_new(const void *src) {
+    return new SkM44(* static_cast<const SkM44 *>(src));
 }
 
-SkM44 *SkM44_new_2(const SkMatrix *src) {
-    return new SkM44(*src);
+void *SkM44_new_2(const void *src) {
+    return new SkM44(* static_cast<const SkMatrix *>(src));
 }
 
-SkM44 *SkM44_new_3() {
+void *SkM44_new_3() {
     return new SkM44();
 }
 
-SkM44 *SkM44_new_4(const SkM44 *a, const SkM44*b) {
-    return new SkM44(*a, *b);
+void *SkM44_new_4(const void *a, const void *b) {
+    return new SkM44(* static_cast<const SkM44 *>(a), * static_cast<const SkM44 *>(b));
 }
 
-SkM44 *SkM44_new_5(SkScalar m0, SkScalar m4, SkScalar m8, SkScalar m12, SkScalar m1, SkScalar m5, SkScalar m9, SkScalar m13, SkScalar m2, SkScalar m6, SkScalar m10, SkScalar m14, SkScalar m3, SkScalar m7, SkScalar m11, SkScalar m15) {
+void *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15) {
     return new SkM44(m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, m15);
 }
 
-void SkM44_delete(SkM44 *m44) {
-    delete m44;
+void SkM44_delete(void *m44) {
+    delete static_cast<SkM44 *>(m44);
 }
 
-void SkM44_getColMajor(SkM44 *m44, SkScalar v[]) {
-    m44->getColMajor(v);
+void SkM44_getColMajor(void *m44, void * v) {
+    static_cast<SkM44 *>(m44)->getColMajor(static_cast<SkScalar *>(v));
 }
 
-void SkM44_getRowMajor(SkM44 *m44, SkScalar v[]) {
-    m44->getRowMajor(v);
+void SkM44_getRowMajor(void *m44, void * v) {
+    static_cast<SkM44 *>(m44)->getRowMajor(static_cast<SkScalar *>(v));
 }
 
-SkScalar SkM44_rc(SkM44 *m44, int r, int c) {
-    return m44->rc(r, c);
+float SkM44_rc(void *m44, int r, int c) {
+    return static_cast<SkM44 *>(m44)->rc(r, c);
 }
 
-void SkM44_setRC(SkM44 *m44, int r, int c, SkScalar value) {
-    m44->setRC(r, c, value);
+void SkM44_setRC(void *m44, int r, int c, float value) {
+    static_cast<SkM44 *>(m44)->setRC(r, c, value);
 }
 
-sk_v4_t SkM44_row(SkM44 *m44, int i) {
-    return static_sk_v4_make(m44->row(i));
+sk_v4_t SkM44_row(void *m44, int i) {
+    return static_sk_v4_make(static_cast<SkM44 *>(m44)->row(i));
 }
 
-sk_v4_t SkM44_col(SkM44 *m44, int i) {
-    return static_sk_v4_make(m44->col(i));
+sk_v4_t SkM44_col(void *m44, int i) {
+    return static_sk_v4_make(static_cast<SkM44 *>(m44)->col(i));
 }
 
-void SkM44_setRow(SkM44 *m44, int i, const SkV4 *v) {
-    m44->setRow(i, *v);
+void SkM44_setRow(void *m44, int i, const void *v) {
+    static_cast<SkM44 *>(m44)->setRow(i, * static_cast<const SkV4 *>(v));
 }
 
-void SkM44_setCol(SkM44 *m44, int i, const SkV4 *v) {
-    m44->setCol(i, *v);
+void SkM44_setCol(void *m44, int i, const void *v) {
+    static_cast<SkM44 *>(m44)->setCol(i, * static_cast<const SkV4 *>(v));
 }
 
-sk_m_44_t SkM44_setIdentity(SkM44 *m44) {
-    return static_sk_m_44_make(m44->setIdentity());
+sk_m_44_t SkM44_setIdentity(void *m44) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setIdentity());
 }
 
-sk_m_44_t SkM44_setTranslate(SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) {
-    return static_sk_m_44_make(m44->setTranslate(x, y, z));
+sk_m_44_t SkM44_setTranslate(void *m44, float x, float y, float z) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setTranslate(x, y, z));
 }
 
-sk_m_44_t SkM44_setScale(SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) {
-    return static_sk_m_44_make(m44->setScale(x, y, z));
+sk_m_44_t SkM44_setScale(void *m44, float x, float y, float z) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setScale(x, y, z));
 }
 
-sk_m_44_t SkM44_setRotateUnitSinCos(SkM44 *m44, sk_v3_t axis, SkScalar sinAngle, SkScalar cosAngle) {
-    return static_sk_m_44_make(m44->setRotateUnitSinCos(static_sk_v3_get(axis), sinAngle, cosAngle));
+sk_m_44_t SkM44_setRotateUnitSinCos(void *m44, sk_v3_t axis, float sinAngle, float cosAngle) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnitSinCos(static_sk_v3_get(axis), sinAngle, cosAngle));
 }
 
-sk_m_44_t SkM44_setRotateUnit(SkM44 *m44, sk_v3_t axis, SkScalar radians) {
-    return static_sk_m_44_make(m44->setRotateUnit(static_sk_v3_get(axis), radians));
+sk_m_44_t SkM44_setRotateUnit(void *m44, sk_v3_t axis, float radians) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnit(static_sk_v3_get(axis), radians));
 }
 
-sk_m_44_t SkM44_setRotate(SkM44 *m44, sk_v3_t axis, SkScalar radians) {
-    return static_sk_m_44_make(m44->setRotate(static_sk_v3_get(axis), radians));
+sk_m_44_t SkM44_setRotate(void *m44, sk_v3_t axis, float radians) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotate(static_sk_v3_get(axis), radians));
 }
 
-sk_m_44_t SkM44_setConcat(SkM44 *m44, const SkM44 *a, const SkM44 *b) {
-    return static_sk_m_44_make(m44->setConcat(*a, *b));
+sk_m_44_t SkM44_setConcat(void *m44, const void *a, const void *b) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setConcat(* static_cast<const SkM44 *>(a), * static_cast<const SkM44 *>(b)));
 }
 
-sk_m_44_t SkM44_preConcat(SkM44 *m44, const SkM44 *m) {
-    return static_sk_m_44_make(m44->preConcat(*m));
+sk_m_44_t SkM44_preConcat(void *m44, const void *m) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->preConcat(* static_cast<const SkM44 *>(m)));
 }
 
-sk_m_44_t SkM44_preConcat_2(SkM44 *m44, const SkMatrix *matrix) {
-    return static_sk_m_44_make(m44->preConcat(*matrix));
+sk_m_44_t SkM44_preConcat_2(void *m44, const void *matrix) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->preConcat(* static_cast<const SkMatrix *>(matrix)));
 }
 
-sk_m_44_t SkM44_postConcat(SkM44 *m44, const SkM44 *m) {
-    return static_sk_m_44_make(m44->postConcat(*m));
+sk_m_44_t SkM44_postConcat(void *m44, const void *m) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->postConcat(* static_cast<const SkM44 *>(m)));
 }
 
-void SkM44_normalizePerspective(SkM44 *m44) {
-    m44->normalizePerspective();
+void SkM44_normalizePerspective(void *m44) {
+    static_cast<SkM44 *>(m44)->normalizePerspective();
 }
 
-bool SkM44_isFinite(SkM44 *m44) {
-    return m44->isFinite();
+bool SkM44_isFinite(void *m44) {
+    return static_cast<SkM44 *>(m44)->isFinite();
 }
 
-bool SkM44_invert(SkM44 *m44, SkM44 *inverse) {
-    return m44->invert(inverse);
+bool SkM44_invert(void *m44, void *inverse) {
+    return static_cast<SkM44 *>(m44)->invert(static_cast<SkM44 *>(inverse));
 }
 
-sk_m_44_t SkM44_transpose(SkM44 *m44) {
-    return static_sk_m_44_make(m44->transpose());
+sk_m_44_t SkM44_transpose(void *m44) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->transpose());
 }
 
-void SkM44_dump(SkM44 *m44) {
-    m44->dump();
+void SkM44_dump(void *m44) {
+    static_cast<SkM44 *>(m44)->dump();
 }
 
-sk_v4_t SkM44_map(SkM44 *m44, float x, float y, float z, float w) {
-    return static_sk_v4_make(m44->map(x, y, z, w));
+sk_v4_t SkM44_map(void *m44, float x, float y, float z, float w) {
+    return static_sk_v4_make(static_cast<SkM44 *>(m44)->map(x, y, z, w));
 }
 
-sk_matrix_t SkM44_asM33(SkM44 *m44) {
-    return static_sk_matrix_make(m44->asM33());
+sk_matrix_t SkM44_asM33(void *m44) {
+    return static_sk_matrix_make(static_cast<SkM44 *>(m44)->asM33());
 }
 
-sk_m_44_t SkM44_preTranslate(SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) {
-    return static_sk_m_44_make(m44->preTranslate(x, y, z));
+sk_m_44_t SkM44_preTranslate(void *m44, float x, float y, float z) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->preTranslate(x, y, z));
 }
 
-sk_m_44_t SkM44_postTranslate(SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) {
-    return static_sk_m_44_make(m44->postTranslate(x, y, z));
+sk_m_44_t SkM44_postTranslate(void *m44, float x, float y, float z) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->postTranslate(x, y, z));
 }
 
-sk_m_44_t SkM44_preScale(SkM44 *m44, SkScalar x, SkScalar y) {
-    return static_sk_m_44_make(m44->preScale(x, y));
+sk_m_44_t SkM44_preScale(void *m44, float x, float y) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->preScale(x, y));
 }
 
-sk_m_44_t SkM44_preScale_2(SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) {
-    return static_sk_m_44_make(m44->preScale(x, y, z));
+sk_m_44_t SkM44_preScale_2(void *m44, float x, float y, float z) {
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->preScale(x, y, z));
 }
 
 // static
 
-sk_m_44_t SkM44_Rows(const SkV4 *r0, const SkV4 *r1, const SkV4 *r2, const SkV4 *r3) {
-    return static_sk_m_44_make(SkM44::Rows(*r0, *r1, *r2, *r3));
+sk_m_44_t SkM44_Rows(const void *r0, const void *r1, const void *r2, const void *r3) {
+    return static_sk_m_44_make(SkM44::Rows(* static_cast<const SkV4 *>(r0), * static_cast<const SkV4 *>(r1), * static_cast<const SkV4 *>(r2), * static_cast<const SkV4 *>(r3)));
 }
 
-sk_m_44_t SkM44_Cols(const SkV4 *c0, const SkV4 *c1, const SkV4 *c2, const SkV4 *c3) {
-    return static_sk_m_44_make(SkM44::Cols(*c0, *c1, *c2, *c3));
+sk_m_44_t SkM44_Cols(const void *c0, const void *c1, const void *c2, const void *c3) {
+    return static_sk_m_44_make(SkM44::Cols(* (const SkV4 *)c0, * static_cast<const SkV4 *>(c1), * static_cast<const SkV4 *>(c2), * static_cast<const SkV4 *>(c3)));
 }
 
-sk_m_44_t SkM44_RowMajor(const SkScalar r[16]) {
-    return static_sk_m_44_make(SkM44::RowMajor(r));
+sk_m_44_t SkM44_RowMajor(const void * r) {
+    return static_sk_m_44_make(SkM44::RowMajor(static_cast<const SkScalar *>(r)));
 }
 
-sk_m_44_t SkM44_ColMajor(const SkScalar c[16]) {
-    return static_sk_m_44_make(SkM44::ColMajor(c));
+sk_m_44_t SkM44_ColMajor(const void * c) {
+    return static_sk_m_44_make(SkM44::ColMajor(static_cast<const SkScalar *>(c)));
 }
 
-sk_m_44_t SkM44_Translate(SkScalar x, SkScalar y, SkScalar z) {
+sk_m_44_t SkM44_Translate(float x, float y, float z) {
     return static_sk_m_44_make(SkM44::Translate(x, y, z));
 }
 
-sk_m_44_t SkM44_Scale(SkScalar x, SkScalar y, SkScalar z) {
+sk_m_44_t SkM44_Scale(float x, float y, float z) {
     return static_sk_m_44_make(SkM44::Scale(x, y, z));
 }
 
-sk_m_44_t SkM44_Rotate(sk_v3_t axis, SkScalar radians) {
+sk_m_44_t SkM44_Rotate(sk_v3_t axis, float radians) {
     return static_sk_m_44_make(SkM44::Rotate(static_sk_v3_get(axis), radians));
 }
 
-sk_m_44_t SkM44_RectToRect(const SkRect *src, const SkRect *dst) {
-    return static_sk_m_44_make(SkM44::RectToRect(*src, *dst));
+sk_m_44_t SkM44_RectToRect(const void *src, const void *dst) {
+    return static_sk_m_44_make(SkM44::RectToRect(* static_cast<const SkRect *>(src), * static_cast<const SkRect *>(dst)));
 }
 
-sk_m_44_t SkM44_LookAt(const SkV3 *eye, const SkV3 *center, const SkV3 *up) {
-    return static_sk_m_44_make(SkM44::LookAt(*eye, *center, *up));
+sk_m_44_t SkM44_LookAt(const void *eye, const void *center, const void *up) {
+    return static_sk_m_44_make(SkM44::LookAt(* static_cast<const SkV3 *>(eye), * static_cast<const SkV3 *>(center), * static_cast<const SkV3 *>(up)));
 }
 
 sk_m_44_t SkM44_Perspective(float near, float far, float angle) {

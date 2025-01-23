@@ -4,18 +4,20 @@
 
 #include "sk_op_builder.h"
 
+#include "include/pathops/SkPathOps.h"
+
 extern "C" {
 
-void SkOpBuilder_delete(SkOpBuilder *opBuilder) {
-    delete opBuilder;
+void SkOpBuilder_delete(void *opBuilder) {
+    delete static_cast<SkOpBuilder *>(opBuilder);
 }
 
-void SkOpBuilder_add(SkOpBuilder *op_builder, const SkPath *path, SkPathOp path_operator) {
-    op_builder->add(*path, path_operator);
+void SkOpBuilder_add(void *op_builder, const void *path, int path_operator) {
+    static_cast<SkOpBuilder *>(op_builder)->add(* static_cast<const SkPath *>(path), static_cast<SkPathOp>(path_operator));
 }
 
-bool SkOpBuilder_resolve(SkOpBuilder *op_builder, SkPath *result) {
-    return op_builder->resolve(result);
+bool SkOpBuilder_resolve(void *op_builder, void *result) {
+    return static_cast<SkOpBuilder *>(op_builder)->resolve(static_cast<SkPath *>(result));
 }
 
 }
