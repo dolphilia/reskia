@@ -4,6 +4,17 @@
 
 #include "sk_shader.h"
 
+#include <utility>
+
+#include "include/core/SkShader.h"
+
+#include "../static/static_sk_shader.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_color_filter.h"
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_flattenable.h"
+#include "../static/static_sk_flattenable_factory.h"
+
 #include "../static/static_sk_shader-internal.h"
 #include "../static/static_sk_flattenable_factory-internal.h"
 #include "../static/static_sk_flattenable-internal.h"
@@ -13,68 +24,68 @@
 
 extern "C" {
 
-void SkShader_delete(SkShader *shader) {
-    delete shader;
+void SkShader_delete(void *shader) {
+    delete static_cast<SkShader *>(shader);
 }
 
-bool SkShader_isOpaque(SkShader *shader) {
-    return shader->isOpaque();
+bool SkShader_isOpaque(void *shader) {
+    return static_cast<SkShader *>(shader)->isOpaque();
 }
 
-SkImage * SkShader_isAImage(SkShader *shader, SkMatrix *localMatrix, SkTileMode xy[2]) {
-    return shader->isAImage(localMatrix, xy);
+void * SkShader_isAImage(void *shader, void *localMatrix, void * xy) {
+    return static_cast<SkShader *>(shader)->isAImage(static_cast<SkMatrix *>(localMatrix), static_cast<SkTileMode *>(xy));
 }
 
-bool SkShader_isAImage_2(SkShader *shader) {
-    return shader->isAImage();
+bool SkShader_isAImage_2(void *shader) {
+    return static_cast<SkShader *>(shader)->isAImage();
 }
 
-sk_shader_t SkShader_makeWithLocalMatrix(SkShader *shader, const SkMatrix *matrix) {
-    return static_sk_shader_make(shader->makeWithLocalMatrix(*matrix));
+int SkShader_makeWithLocalMatrix(void *shader, const void *matrix) {
+    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithLocalMatrix(* static_cast<const SkMatrix *>(matrix)));
 }
 
-sk_shader_t SkShader_makeWithColorFilter(SkShader *shader, sk_color_filter_t color_filter) {
-    return static_sk_shader_make(shader->makeWithColorFilter(static_sk_color_filter_move(color_filter)));
+int SkShader_makeWithColorFilter(void *shader, sk_color_filter_t color_filter) {
+    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithColorFilter(static_sk_color_filter_move(color_filter)));
 }
 
-sk_shader_t SkShader_makeWithWorkingColorSpace(SkShader *shader, sk_color_space_t color_space) {
-    return static_sk_shader_make(shader->makeWithWorkingColorSpace(static_sk_color_space_move(color_space)));
+int SkShader_makeWithWorkingColorSpace(void *shader, sk_color_space_t color_space) {
+    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithWorkingColorSpace(static_sk_color_space_move(color_space)));
 }
 
-sk_flattenable_factory_t SkShader_getFactory(SkShader *shader) {
-    return static_sk_flattenable_factory_make(shader->getFactory());
+int SkShader_getFactory(void *shader) {
+    return static_sk_flattenable_factory_make(static_cast<SkShader *>(shader)->getFactory());
 }
 
-const char * SkShader_getTypeName(SkShader *shader) {
-    return shader->getTypeName();
+const char * SkShader_getTypeName(void *shader) {
+    return static_cast<SkShader *>(shader)->getTypeName();
 }
 
-void SkShader_flatten(SkShader *shader, SkWriteBuffer *buffer) {
-    shader->flatten(*buffer);
+void SkShader_flatten(void *shader, void *buffer) {
+    static_cast<SkShader *>(shader)->flatten(* static_cast<SkWriteBuffer *>(buffer));
 }
 
-SkShader::Type SkShader_getFlattenableType(SkShader *shader) {
-    return shader->getFlattenableType();
+int SkShader_getFlattenableType(void *shader) {
+    return static_cast<SkShader *>(shader)->getFlattenableType();
 }
 
-sk_data_t SkShader_serialize(SkShader *shader, const SkSerialProcs *procs) {
-    return static_sk_data_make(shader->serialize(procs));
+sk_data_t SkShader_serialize(void *shader, const void *procs) {
+    return static_sk_data_make(static_cast<SkShader *>(shader)->serialize(static_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkShader_serialize_2(SkShader *shader, void *memory, size_t memory_size, const SkSerialProcs *procs) {
-    return shader->serialize(memory, memory_size, procs);
+size_t SkShader_serialize_2(void *shader, void *memory, size_t memory_size, const void *procs) {
+    return static_cast<SkShader *>(shader)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(procs));
 }
 
-bool SkShader_unique(SkShader *shader) {
-    return shader->unique();
+bool SkShader_unique(void *shader) {
+    return static_cast<SkShader *>(shader)->unique();
 }
 
-void SkShader_ref(SkShader *shader) {
-    shader->ref();
+void SkShader_ref(void *shader) {
+    static_cast<SkShader *>(shader)->ref();
 }
 
-void SkShader_unref(SkShader *shader) {
-    shader->unref();
+void SkShader_unref(void *shader) {
+    static_cast<SkShader *>(shader)->unref();
 }
 
 // static
@@ -91,8 +102,8 @@ void SkShader_Register(const char name[], sk_flattenable_factory_t factory) {
     SkShader::Register(name, static_sk_flattenable_factory_get(factory));
 }
 
-sk_flattenable_t SkShader_Deserialize(SkShader::Type type, const void *data, size_t length, const SkDeserialProcs *procs) {
-    return static_sk_flattenable_make(SkShader::Deserialize(type, data, length, procs));
+sk_flattenable_t SkShader_Deserialize(int type, const void *data, size_t length, const void *procs) {
+    return static_sk_flattenable_make(SkShader::Deserialize(static_cast<SkShader::Type>(type), data, length, static_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

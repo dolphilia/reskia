@@ -6,8 +6,8 @@
 
 extern "C" {
 
-void SkRasterHandleAllocator_delete(SkRasterHandleAllocator *raster_handle_allocator) {
-    delete raster_handle_allocator;
+void SkRasterHandleAllocator_delete(void *raster_handle_allocator) {
+    delete (SkRasterHandleAllocator *)raster_handle_allocator;
 }
 
 bool SkRasterHandleAllocator_allocHandle(SkRasterHandleAllocator *raster_handle_allocator, const SkImageInfo *info, SkRasterHandleAllocator::Rec *rec) {

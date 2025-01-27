@@ -11,10 +11,14 @@
 #ifdef __MACOS__
 #include "include/ports/SkTypeface_mac.h"
 #include <CoreText/CoreText.h>
+
 extern "C" {
-sk_typeface_t Mac_SkMakeTypefaceFromCTFont(CTFontRef fontRef);
-CTFontRef Mac_SkTypeface_GetCTFontRef(const SkTypeface *face);
+
+sk_typeface_t Mac_SkMakeTypefaceFromCTFont(CTFontRef fontRef); // (CTFontRef fontRef) -> sk_typeface_t
+CTFontRef Mac_SkTypeface_GetCTFontRef(const SkTypeface *face); // (const SkTypeface *face) -> CTFontRef
+
 }
+
 #endif
 
 #endif //RAIA_SKIA_SK_TYPEFACE_MAC_H

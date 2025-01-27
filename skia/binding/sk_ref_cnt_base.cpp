@@ -4,26 +4,28 @@
 
 #include "sk_ref_cnt_base.h"
 
+#include "include/core/SkRefCnt.h"
+
 extern "C" {
 
-SkRefCntBase *SkRefCntBase_new() {
+void *SkRefCntBase_new() {
     return new SkRefCntBase();
 }
 
-void SkRefCntBase_delete(SkRefCntBase *ref_cnt_base) {
-    delete ref_cnt_base;
+void SkRefCntBase_delete(void *ref_cnt_base) {
+    delete static_cast<SkRefCntBase *>(ref_cnt_base);
 }
 
-bool SkRefCntBase_unique(SkRefCntBase *ref_cnt_base) {
-    return ref_cnt_base->unique();
+bool SkRefCntBase_unique(void *ref_cnt_base) {
+    return static_cast<SkRefCntBase *>(ref_cnt_base)->unique();
 }
 
-void SkRefCntBase_ref(SkRefCntBase *ref_cnt_base) {
-    ref_cnt_base->ref();
+void SkRefCntBase_ref(void *ref_cnt_base) {
+    static_cast<SkRefCntBase *>(ref_cnt_base)->ref();
 }
 
-void SkRefCntBase_unref(SkRefCntBase *ref_cnt_base) {
-    ref_cnt_base->unref();
+void SkRefCntBase_unref(void *ref_cnt_base) {
+    static_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 
 }

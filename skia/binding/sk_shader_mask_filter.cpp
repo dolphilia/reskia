@@ -4,13 +4,18 @@
 
 #include "sk_shader_mask_filter.h"
 
+#include "include/effects/SkShaderMaskFilter.h"
+
+#include "../static/static_sk_mask_filter.h"
+#include "../static/static_sk_shader.h"
+
 #include "../static/static_sk_mask_filter-internal.h"
 #include "../static/static_sk_shader-internal.h"
 
 extern "C" {
 
-void SkShaderMaskFilter_delete(SkShaderMaskFilter *shaderMaskFilter) {
-    delete shaderMaskFilter;
+void SkShaderMaskFilter_delete(void *shaderMaskFilter) {
+    delete static_cast<SkShaderMaskFilter *>(shaderMaskFilter);
 }
 
 // static

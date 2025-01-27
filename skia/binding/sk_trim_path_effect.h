@@ -9,9 +9,13 @@
 #include "../static/static_sk_path_effect.h"
 
 extern "C" {
-void SkTrimPathEffect_delete(SkTrimPathEffect * trimPathEffect);
+
+void SkTrimPathEffect_delete(SkTrimPathEffect * trimPathEffect); // (SkTrimPathEffect * trimPathEffect)
+
 // static
-sk_path_effect_t SkTrimPathEffect_Make(SkScalar startT, SkScalar stopT, SkTrimPathEffect::Mode mode);
+
+sk_path_effect_t SkTrimPathEffect_Make(SkScalar startT, SkScalar stopT, SkTrimPathEffect::Mode mode); // (SkScalar startT, SkScalar stopT, SkTrimPathEffect::Mode mode) -> sk_path_effect_t
+
 }
 
 #endif //RAIA_SKIA_SK_TRIM_PATH_EFFECT_H

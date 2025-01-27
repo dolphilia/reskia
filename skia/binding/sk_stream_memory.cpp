@@ -4,105 +4,110 @@
 
 #include "sk_stream_memory.h"
 
+#include "include/core/SkStream.h"
+
+#include "../static/static_sk_stream_memory.h"
+#include "../static/static_sk_stream_asset.h"
+
 #include "../static/static_sk_stream_asset-internal.h"
 #include "../static/static_sk_stream_memory-internal.h"
 
 extern "C" {
 
-void SkStreamMemory_delete(SkStreamMemory *stream_memory) {
-    delete stream_memory;
+void SkStreamMemory_delete(void *stream_memory) {
+    delete static_cast<SkStreamMemory *>(stream_memory);
 }
 
-const void * SkStreamMemory_getMemoryBase(SkStreamMemory *stream_memory) {
-    return stream_memory->getMemoryBase();
+const void * SkStreamMemory_getMemoryBase(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->getMemoryBase();
 }
 
-sk_stream_memory_t SkStreamMemory_duplicate(SkStreamMemory *stream_memory) {
-    return static_sk_stream_memory_make(stream_memory->duplicate());
+sk_stream_memory_t SkStreamMemory_duplicate(void *stream_memory) {
+    return static_sk_stream_memory_make(static_cast<SkStreamMemory *>(stream_memory)->duplicate());
 }
 
-sk_stream_memory_t SkStreamMemory_fork(SkStreamMemory *stream_memory) {
-    return static_sk_stream_memory_make(stream_memory->fork());
+sk_stream_memory_t SkStreamMemory_fork(void *stream_memory) {
+    return static_sk_stream_memory_make(static_cast<SkStreamMemory *>(stream_memory)->fork());
 }
 
-bool SkStreamMemory_hasLength(SkStreamMemory *stream_memory) {
-    return stream_memory->hasLength();
+bool SkStreamMemory_hasLength(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->hasLength();
 }
 
-size_t SkStreamMemory_getLength(SkStreamMemory *stream_memory) {
-    return stream_memory->getLength();
+size_t SkStreamMemory_getLength(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->getLength();
 }
 
-bool SkStreamMemory_hasPosition(SkStreamMemory *stream_memory) {
-    return stream_memory->hasPosition();
+bool SkStreamMemory_hasPosition(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->hasPosition();
 }
 
-size_t SkStreamMemory_getPosition(SkStreamMemory *stream_memory) {
-    return stream_memory->getPosition();
+size_t SkStreamMemory_getPosition(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->getPosition();
 }
 
-bool SkStreamMemory_seek(SkStreamMemory *stream_memory, size_t position) {
-    return stream_memory->seek(position);
+bool SkStreamMemory_seek(void *stream_memory, size_t position) {
+    return static_cast<SkStreamMemory *>(stream_memory)->seek(position);
 }
 
-bool SkStreamMemory_move(SkStreamMemory *stream_memory, long offset) {
-    return stream_memory->move(offset);
+bool SkStreamMemory_move(void *stream_memory, long offset) {
+    return static_cast<SkStreamMemory *>(stream_memory)->move(offset);
 }
 
-bool SkStreamMemory_rewind(SkStreamMemory *stream_memory) {
-    return stream_memory->rewind();
+bool SkStreamMemory_rewind(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->rewind();
 }
 
-size_t SkStreamMemory_read(SkStreamMemory *stream_memory, void *buffer, size_t size) {
-    return stream_memory->read(buffer, size);
+size_t SkStreamMemory_read(void *stream_memory, void *buffer, size_t size) {
+    return static_cast<SkStreamMemory *>(stream_memory)->read(buffer, size);
 }
 
-size_t SkStreamMemory_skip(SkStreamMemory *stream_memory, size_t size) {
-    return stream_memory->skip(size);
+size_t SkStreamMemory_skip(void *stream_memory, size_t size) {
+    return static_cast<SkStreamMemory *>(stream_memory)->skip(size);
 }
 
-size_t SkStreamMemory_peek(SkStreamMemory *stream_memory, void *buffer, size_t size) {
-    return stream_memory->peek(buffer, size);
+size_t SkStreamMemory_peek(void *stream_memory, void *buffer, size_t size) {
+    return static_cast<SkStreamMemory *>(stream_memory)->peek(buffer, size);
 }
 
-bool SkStreamMemory_isAtEnd(SkStreamMemory *stream_memory) {
-    return stream_memory->isAtEnd();
+bool SkStreamMemory_isAtEnd(void *stream_memory) {
+    return static_cast<SkStreamMemory *>(stream_memory)->isAtEnd();
 }
 
-bool SkStreamMemory_readS8(SkStreamMemory *stream_memory, int8_t *i) {
-    return stream_memory->readS8(i);
+bool SkStreamMemory_readS8(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readS8(static_cast<int8_t *>(i));
 }
 
-bool SkStreamMemory_readS16(SkStreamMemory *stream_memory, int16_t *i) {
-    return stream_memory->readS16(i);
+bool SkStreamMemory_readS16(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readS16(static_cast<int16_t *>(i));
 }
 
-bool SkStreamMemory_readS32(SkStreamMemory *stream_memory, int32_t *i) {
-    return stream_memory->readS32(i);
+bool SkStreamMemory_readS32(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readS32(static_cast<int32_t *>(i));
 }
 
-bool SkStreamMemory_readU8(SkStreamMemory *stream_memory, uint8_t *i) {
-    return stream_memory->readU8(i);
+bool SkStreamMemory_readU8(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readU8(static_cast<uint8_t *>(i));
 }
 
-bool SkStreamMemory_readU16(SkStreamMemory *stream_memory, uint16_t *i) {
-    return stream_memory->readU16(i);
+bool SkStreamMemory_readU16(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readU16(static_cast<uint16_t *>(i));
 }
 
-bool SkStreamMemory_readU32(SkStreamMemory *stream_memory, uint32_t *i) {
-    return stream_memory->readU32(i);
+bool SkStreamMemory_readU32(void *stream_memory, void *i) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readU32(static_cast<uint32_t *>(i));
 }
 
-bool SkStreamMemory_readBool(SkStreamMemory *stream_memory, bool *b) {
-    return stream_memory->readBool(b);
+bool SkStreamMemory_readBool(void *stream_memory, void *b) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readBool(static_cast<bool *>(b));
 }
 
-bool SkStreamMemory_readScalar(SkStreamMemory *stream_memory, SkScalar *v) {
-    return stream_memory->readScalar(v);
+bool SkStreamMemory_readScalar(void *stream_memory, void *v) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readScalar(static_cast<SkScalar *>(v));
 }
 
-bool SkStreamMemory_readPackedUInt(SkStreamMemory *stream_memory, size_t *size) {
-    return stream_memory->readPackedUInt(size);
+bool SkStreamMemory_readPackedUInt(void *stream_memory, void *size) {
+    return static_cast<SkStreamMemory *>(stream_memory)->readPackedUInt(static_cast<size_t *>(size));
 }
 
 // static

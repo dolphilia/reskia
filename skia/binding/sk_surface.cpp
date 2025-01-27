@@ -4,6 +4,15 @@
 
 #include "sk_surface.h"
 
+#include "include/core/SkSurface.h"
+#include "include/core/SkColorSpace.h"
+
+#include "../static/static_sk_image_info.h"
+#include "../static/static_sk_capabilities.h"
+#include "../static/static_sk_surface.h"
+#include "../static/static_sk_image.h"
+#include "../static/static_sk_color_space.h"
+
 #include "../static/static_sk_image-internal.h"
 #include "../static/static_sk_image_info-internal.h"
 #include "../static/static_sk_surface-internal.h"
@@ -13,136 +22,136 @@
 
 extern "C" {
 
-void SkSurface_delete(SkSurface *surface) {
-    delete surface;
+void SkSurface_delete(void *surface) {
+    delete static_cast<SkSurface *>(surface);
 }
 
-bool SkSurface_isCompatible(SkSurface *surface, const GrSurfaceCharacterization *characterization) {
-    return surface->isCompatible(*characterization);
+bool SkSurface_isCompatible(void *surface, const void *characterization) {
+    return static_cast<SkSurface *>(surface)->isCompatible(* static_cast<const GrSurfaceCharacterization *>(characterization));
 }
 
-int SkSurface_width(SkSurface *surface) {
-    return surface->width();
+int SkSurface_width(void *surface) {
+    return static_cast<SkSurface *>(surface)->width();
 }
 
-int SkSurface_height(SkSurface *surface) {
-    return surface->height();
+int SkSurface_height(void *surface) {
+    return static_cast<SkSurface *>(surface)->height();
 }
 
-sk_image_info_t SkSurface_imageInfo(SkSurface *surface) {
-    return static_sk_image_info_make(surface->imageInfo());
+sk_image_info_t SkSurface_imageInfo(void *surface) {
+    return static_sk_image_info_make(static_cast<SkSurface *>(surface)->imageInfo());
 }
 
-uint32_t SkSurface_generationID(SkSurface *surface) {
-    return surface->generationID();
+uint32_t SkSurface_generationID(void *surface) {
+    return static_cast<SkSurface *>(surface)->generationID();
 }
 
-void SkSurface_notifyContentWillChange(SkSurface *surface, SkSurface::ContentChangeMode mode) {
-    surface->notifyContentWillChange(mode);
+void SkSurface_notifyContentWillChange(void *surface, int mode) {
+    static_cast<SkSurface *>(surface)->notifyContentWillChange(static_cast<SkSurface::ContentChangeMode>(mode));
 }
 
-GrRecordingContext * SkSurface_recordingContext(SkSurface *surface) {
-    return surface->recordingContext();
+void * SkSurface_recordingContext(void *surface) {
+    return static_cast<SkSurface *>(surface)->recordingContext();
 }
 
-skgpu::graphite::Recorder * SkSurface_recorder(SkSurface *surface) {
-    return surface->recorder();
+void * SkSurface_recorder(void *surface) {
+    return static_cast<SkSurface *>(surface)->recorder();
 }
 
-bool SkSurface_replaceBackendTexture(SkSurface *surface, const GrBackendTexture *backendTexture, GrSurfaceOrigin origin, SkSurface::ContentChangeMode mode, SkSurface::TextureReleaseProc proc, SkSurface::ReleaseContext context) {
-    return surface->replaceBackendTexture(*backendTexture, origin, mode, proc, context);
+bool SkSurface_replaceBackendTexture(void *surface, const void *backendTexture, int origin, int mode, void(* proc)(void *), void * context) {
+    return static_cast<SkSurface *>(surface)->replaceBackendTexture(* static_cast<const GrBackendTexture *>(backendTexture), static_cast<GrSurfaceOrigin>(origin), static_cast<SkSurface::ContentChangeMode>(mode), proc, context);
 }
 
-SkCanvas * SkSurface_getCanvas(SkSurface *surface) {
-    return surface->getCanvas();
+void * SkSurface_getCanvas(void *surface) {
+    return static_cast<SkSurface *>(surface)->getCanvas();
 }
 
-const_sk_capabilities_t SkSurface_capabilities(SkSurface *surface) {
-    return static_const_sk_capabilities_make(surface->capabilities());
+const_sk_capabilities_t SkSurface_capabilities(void *surface) {
+    return static_const_sk_capabilities_make(static_cast<SkSurface *>(surface)->capabilities());
 }
 
-sk_surface_t SkSurface_makeSurface(SkSurface *surface, const SkImageInfo *imageInfo) {
-    return static_sk_surface_make(surface->makeSurface(*imageInfo));
+sk_surface_t SkSurface_makeSurface(void *surface, const void *imageInfo) {
+    return static_sk_surface_make(static_cast<SkSurface *>(surface)->makeSurface(* static_cast<const SkImageInfo *>(imageInfo)));
 }
 
-sk_surface_t SkSurface_makeSurface_2(SkSurface *surface, int width, int height) {
-    return static_sk_surface_make(surface->makeSurface(width, height));
+sk_surface_t SkSurface_makeSurface_2(void *surface, int width, int height) {
+    return static_sk_surface_make(static_cast<SkSurface *>(surface)->makeSurface(width, height));
 }
 
-sk_image_t SkSurface_makeImageSnapshot(SkSurface *surface) {
-    return static_sk_image_make(surface->makeImageSnapshot());
+sk_image_t SkSurface_makeImageSnapshot(void *surface) {
+    return static_sk_image_make(static_cast<SkSurface *>(surface)->makeImageSnapshot());
 }
 
-sk_image_t SkSurface_makeImageSnapshot_2(SkSurface *surface, const SkIRect *bounds) {
-    return static_sk_image_make(surface->makeImageSnapshot(*bounds));
+sk_image_t SkSurface_makeImageSnapshot_2(void *surface, const void *bounds) {
+    return static_sk_image_make(static_cast<SkSurface *>(surface)->makeImageSnapshot(* static_cast<const SkIRect *>(bounds)));
 }
 
-void SkSurface_draw(SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint) {
-    surface->draw(canvas, x, y, *sampling, paint);
+void SkSurface_draw(void *surface, void *canvas, float x, float y, const void *sampling, const void *paint) {
+    static_cast<SkSurface *>(surface)->draw(static_cast<SkCanvas *>(canvas), x, y, * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
-void SkSurface_draw_2(SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkPaint *paint) {
-    surface->draw(canvas, x, y, paint);
+void SkSurface_draw_2(void *surface, void *canvas, float x, float y, const void *paint) {
+    static_cast<SkSurface *>(surface)->draw(static_cast<SkCanvas *>(canvas), x, y, static_cast<const SkPaint *>(paint));
 }
 
-bool SkSurface_peekPixels(SkSurface *surface, SkPixmap *pixmap) {
-    return surface->peekPixels(pixmap);
+bool SkSurface_peekPixels(void *surface, void *pixmap) {
+    return static_cast<SkSurface *>(surface)->peekPixels(static_cast<SkPixmap *>(pixmap));
 }
 
-bool SkSurface_readPixels(SkSurface *surface, const SkPixmap *dst, int srcX, int srcY) {
-    return surface->readPixels(*dst, srcX, srcY);
+bool SkSurface_readPixels(void *surface, const void *dst, int srcX, int srcY) {
+    return static_cast<SkSurface *>(surface)->readPixels(* static_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
-bool SkSurface_readPixels_2(SkSurface *surface, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
-    return surface->readPixels(*dstInfo, dstPixels, dstRowBytes, srcX, srcY);
+bool SkSurface_readPixels_2(void *surface, const void *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+    return static_cast<SkSurface *>(surface)->readPixels(* static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkSurface_readPixels_3(SkSurface *surface, const SkBitmap *dst, int srcX, int srcY) {
-    return surface->readPixels(*dst, srcX, srcY);
+bool SkSurface_readPixels_3(void *surface, const void *dst, int srcX, int srcY) {
+    return static_cast<SkSurface *>(surface)->readPixels(* static_cast<const SkBitmap *>(dst), srcX, srcY);
 }
 
-void SkSurface_asyncRescaleAndReadPixels(SkSurface *surface, const SkImageInfo *info, const SkIRect *srcRect, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context) {
-    surface->asyncRescaleAndReadPixels(*info, *srcRect, rescaleGamma, rescaleMode, callback, context);
+void SkSurface_asyncRescaleAndReadPixels(void *surface, const void *info, const void *srcRect, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context) {
+    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixels(* static_cast<const SkImageInfo *>(info), * static_cast<const SkIRect *>(srcRect), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
 }
 
-void SkSurface_asyncRescaleAndReadPixelsYUV420(SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, const SkISize *dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context) {
-    surface->asyncRescaleAndReadPixelsYUV420(yuvColorSpace, static_sk_color_space_move(dstColorSpace), *srcRect, *dstSize, rescaleGamma, rescaleMode, callback, context);
+void SkSurface_asyncRescaleAndReadPixelsYUV420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context) {
+    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
 }
 
-void SkSurface_asyncRescaleAndReadPixelsYUVA420(SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, const SkISize *dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context) {
-    surface->asyncRescaleAndReadPixelsYUVA420(yuvColorSpace, static_sk_color_space_move(dstColorSpace), *srcRect, *dstSize, rescaleGamma, rescaleMode, callback, context);
+void SkSurface_asyncRescaleAndReadPixelsYUVA420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context) {
+    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
 }
 
-void SkSurface_writePixels(SkSurface *surface, const SkPixmap *src, int dstX, int dstY) {
-    surface->writePixels(*src, dstX, dstY);
+void SkSurface_writePixels(void *surface, const void *src, int dstX, int dstY) {
+    static_cast<SkSurface *>(surface)->writePixels(* static_cast<const SkPixmap *>(src), dstX, dstY);
 }
 
-void SkSurface_writePixels_2(SkSurface *surface, const SkBitmap *src, int dstX, int dstY) {
-    surface->writePixels(*src, dstX, dstY);
+void SkSurface_writePixels_2(void *surface, const void *src, int dstX, int dstY) {
+    static_cast<SkSurface *>(surface)->writePixels(* static_cast<const SkBitmap *>(src), dstX, dstY);
 }
 
-const SkSurfaceProps * SkSurface_props(SkSurface *surface) {
-    return &surface->props();
+const void * SkSurface_props(void *surface) {
+    return &static_cast<SkSurface *>(surface)->props();
 }
 
-bool SkSurface_wait(SkSurface *surface, int numSemaphores, const GrBackendSemaphore *waitSemaphores, bool deleteSemaphoresAfterWait) {
-    return surface->wait(numSemaphores, waitSemaphores, deleteSemaphoresAfterWait);
+bool SkSurface_wait(void *surface, int numSemaphores, const void *waitSemaphores, bool deleteSemaphoresAfterWait) {
+    return static_cast<SkSurface *>(surface)->wait(numSemaphores, static_cast<const GrBackendSemaphore *>(waitSemaphores), deleteSemaphoresAfterWait);
 }
 
-bool SkSurface_characterize(SkSurface *surface, GrSurfaceCharacterization *characterization) {
-    return surface->characterize(characterization);
+bool SkSurface_characterize(void *surface, void *characterization) {
+    return static_cast<SkSurface *>(surface)->characterize(static_cast<GrSurfaceCharacterization *>(characterization));
 }
 
-bool SkSurface_unique(SkSurface *surface) {
-    return surface->unique();
+bool SkSurface_unique(void *surface) {
+    return static_cast<SkSurface *>(surface)->unique();
 }
 
-void SkSurface_ref(SkSurface *surface) {
-    surface->ref();
+void SkSurface_ref(void *surface) {
+    static_cast<SkSurface *>(surface)->ref();
 }
 
-void SkSurface_unref(SkSurface *surface) {
-    surface->unref();
+void SkSurface_unref(void *surface) {
+    static_cast<SkSurface *>(surface)->unref();
 }
 
 }

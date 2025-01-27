@@ -4,6 +4,10 @@
 
 #include "sk_sampling_options.h"
 
+#include "include/core/SkSamplingOptions.h"
+
+#include "../static/static_sk_sampling_options.h"
+
 #include "../static/static_sk_sampling_options-internal.h"
 
 extern "C" {
@@ -14,32 +18,32 @@ extern "C" {
 //    return new SkSamplingOptions();
 //}
 
-SkSamplingOptions *SkSamplingOptions_new() {
+void *SkSamplingOptions_new() {
     return new SkSamplingOptions();
 }
 
-SkSamplingOptions *SkSamplingOptions_new_2(const SkSamplingOptions *options) {
-    return new SkSamplingOptions(*options);
+void *SkSamplingOptions_new_2(const void *options) {
+    return new SkSamplingOptions(* static_cast<const SkSamplingOptions *>(options));
 }
 
-SkSamplingOptions *SkSamplingOptions_new_3(SkFilterMode fm, SkMipmapMode mm) {
-    return new SkSamplingOptions(fm, mm);
+void *SkSamplingOptions_new_3(int fm, int mm) {
+    return new SkSamplingOptions(static_cast<SkFilterMode>(fm), static_cast<SkMipmapMode>(mm));
 }
 
-SkSamplingOptions *SkSamplingOptions_new_4(SkFilterMode fm) {
-    return new SkSamplingOptions(fm);
+void *SkSamplingOptions_new_4(int fm) {
+    return new SkSamplingOptions(static_cast<SkFilterMode>(fm));
 }
 
-SkSamplingOptions *SkSamplingOptions_new_5(const SkCubicResampler *c) {
-    return new SkSamplingOptions(*c);
+void *SkSamplingOptions_new_5(const void *c) {
+    return new SkSamplingOptions(* static_cast<const SkCubicResampler *>(c));
 }
 
-void SkSamplingOptions_delete(SkSamplingOptions *sampling_options) {
-    delete sampling_options;
+void SkSamplingOptions_delete(void *sampling_options) {
+    delete static_cast<SkSamplingOptions *>(sampling_options);
 }
 
-bool SkSamplingOptions_isAniso(SkSamplingOptions *sampling_options) {
-    return sampling_options->isAniso();
+bool SkSamplingOptions_isAniso(void *sampling_options) {
+    return static_cast<SkSamplingOptions *>(sampling_options)->isAniso();
 }
 
 // static

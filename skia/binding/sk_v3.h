@@ -9,6 +9,7 @@
 #include "../static/static_sk_v3.h"
 
 extern "C" {
+
 // bool operator==(const SkV3 &v)
 // bool operator!=(const SkV3 &v)
 // SkV3 operator-()
@@ -19,18 +20,22 @@ extern "C" {
 // void operator-=(SkV3 v)
 // void operator*=(SkV3 v)
 // void operator*=(SkScalar s)
-void SkV3_delete(SkV3 *v3);
-SkScalar SkV3_lengthSquared(SkV3 *v3);
-SkScalar SkV3_length(SkV3 *v3);
-SkScalar SkV3_dot(SkV3 *v3, const SkV3 *v);
-sk_v3_t SkV3_cross(SkV3 *v3, const SkV3 *v);
-sk_v3_t SkV3_normalize(SkV3 *v3);
-const float * SkV3_ptr(SkV3 *v3);
-float * SkV3_ptr_2(SkV3 *v3);
+
+void SkV3_delete(SkV3 *v3); // (SkV3 *v3)
+SkScalar SkV3_lengthSquared(SkV3 *v3); // (SkV3 *v3) -> SkScalar
+SkScalar SkV3_length(SkV3 *v3); // (SkV3 *v3) -> SkScalar
+SkScalar SkV3_dot(SkV3 *v3, const SkV3 *v); // (SkV3 *v3, const SkV3 *v) -> SkScalar
+sk_v3_t SkV3_cross(SkV3 *v3, const SkV3 *v); // (SkV3 *v3, const SkV3 *v) -> sk_v3_t
+sk_v3_t SkV3_normalize(SkV3 *v3); // (SkV3 *v3) -> sk_v3_t
+const float * SkV3_ptr(SkV3 *v3); // (SkV3 *v3) -> const float *
+float * SkV3_ptr_2(SkV3 *v3); // (SkV3 *v3) -> float *
+
 // static
-SkScalar SkV3_Dot(const SkV3 *a, const SkV3 *b);
-sk_v3_t SkV3_Cross(const SkV3 *a, const SkV3 *b);
-sk_v3_t SkV3_Normalize(const SkV3 *v);
+
+SkScalar SkV3_Dot(const SkV3 *a, const SkV3 *b); // (const SkV3 *a, const SkV3 *b) -> SkScalar
+sk_v3_t SkV3_Cross(const SkV3 *a, const SkV3 *b); // (const SkV3 *a, const SkV3 *b) -> sk_v3_t
+sk_v3_t SkV3_Normalize(const SkV3 *v); // (const SkV3 *v) -> sk_v3_t
+
 }
 
 #endif //RAIA_SKIA_SK_V3_H
