@@ -4,24 +4,29 @@
 
 #include "sk_vertices.h"
 
+#include "include/core/SkVertices.h"
+
+#include "../static/static_sk_vertices.h"
+
 #include "../static/static_sk_vertices-internal.h"
 
 extern "C" {
 
-void SkVertices_delete(SkVertices * vertices) {
-    delete &vertices;
+void SkVertices_delete(void * vertices) {
+    const SkVertices * v = static_cast<SkVertices *>(vertices);
+    delete &v;
 }
 
-uint32_t SkVertices_uniqueID(SkVertices *vertices) {
-    return vertices->uniqueID();
+uint32_t SkVertices_uniqueID(void *vertices) {
+    return static_cast<SkVertices *>(vertices)->uniqueID();
 }
 
-const SkRect * SkVertices_bounds(SkVertices *vertices) {
-    return &vertices->bounds();
+const void * SkVertices_bounds(void *vertices) {
+    return &static_cast<SkVertices *>(vertices)->bounds();
 }
 
-size_t SkVertices_approximateSize(SkVertices *vertices) {
-    return vertices->approximateSize();
+size_t SkVertices_approximateSize(void *vertices) {
+    return static_cast<SkVertices *>(vertices)->approximateSize();
 }
 
 //SkVerticesPriv SkVertices_priv(SkVertices *vertices) {
@@ -32,34 +37,34 @@ size_t SkVertices_approximateSize(SkVertices *vertices) {
 //    return vertices->priv();
 //}
 
-bool SkVertices_unique(SkVertices *vertices) {
-    return vertices->unique();
+bool SkVertices_unique(void *vertices) {
+    return static_cast<SkVertices *>(vertices)->unique();
 }
 
-void SkVertices_ref(SkVertices *vertices) {
-    vertices->ref();
+void SkVertices_ref(void *vertices) {
+    static_cast<SkVertices *>(vertices)->ref();
 }
 
-void SkVertices_unref(SkVertices *vertices) {
-    vertices->unref();
+void SkVertices_unref(void *vertices) {
+    static_cast<SkVertices *>(vertices)->unref();
 }
 
-void SkVertices_deref(SkVertices *vertices) {
-    vertices->deref();
+void SkVertices_deref(void *vertices) {
+    static_cast<SkVertices *>(vertices)->deref();
 }
 
-bool SkVertices_refCntGreaterThan(SkVertices *vertices, int32_t threadIsolatedTestCnt) {
-    return vertices->refCntGreaterThan(threadIsolatedTestCnt);
+bool SkVertices_refCntGreaterThan(void *vertices, int32_t threadIsolatedTestCnt) {
+    return static_cast<SkVertices *>(vertices)->refCntGreaterThan(threadIsolatedTestCnt);
 }
 
 // static
 
-sk_vertices_t SkVertices_MakeCopy(SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[], int indexCount, const uint16_t indices[]) {
-    return static_sk_vertices_make(SkVertices::MakeCopy(mode, vertexCount, positions, texs, colors, indexCount, indices));
+sk_vertices_t SkVertices_MakeCopy(int mode, int vertexCount, const void * positions, const void * texs, const void * colors, int indexCount, const void * indices) {
+    return static_sk_vertices_make(SkVertices::MakeCopy(static_cast<SkVertices::VertexMode>(mode), vertexCount, static_cast<const SkPoint *>(positions), static_cast<const SkPoint *>(texs), static_cast<const SkColor *>(colors), indexCount, static_cast<const uint16_t *>(indices)));
 }
 
-sk_vertices_t SkVertices_MakeCopy_2(SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[]) {
-    return static_sk_vertices_make(SkVertices::MakeCopy(mode, vertexCount, positions, texs, colors));
+sk_vertices_t SkVertices_MakeCopy_2(int mode, int vertexCount, const void * positions, const void * texs, const void * colors) {
+    return static_sk_vertices_make(SkVertices::MakeCopy(static_cast<SkVertices::VertexMode>(mode), vertexCount, static_cast<const SkPoint *>(positions), static_cast<const SkPoint *>(texs), static_cast<const SkColor *>(colors)));
 }
 
 }

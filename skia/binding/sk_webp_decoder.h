@@ -5,19 +5,17 @@
 #ifndef RAIA_SKIA_SK_WEBP_DECODER_H
 #define RAIA_SKIA_SK_WEBP_DECODER_H
 
-#include "include/codec/SkWebpDecoder.h"
-#include "../static/static_sk_stream.h"
-#include "../static/static_sk_data.h"
-#include "../static/static_sk_codec.h"
-#include "../static/static_sk_codecs_decoder.h"
-
+#ifdef __cplusplus
 extern "C" {
+#endif
 
-bool SkWebpDecoder_IsWbmp(const void* ptr, size_t size); // (const void* ptr, size_t size) -> bool
-sk_codec_t SkWebpDecoder_Decode(int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkWebpDecoder_Decode_2(int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codecs_decoder_t SkWebpDecoder_Decoder(); // () -> sk_codecs_decoder_t
+bool SkWebpDecoder_IsWbmp(const void* ptr, unsigned long size); // (const void* ptr, size_t size) -> bool
+int SkWebpDecoder_Decode(int static_stream, void * result, void * decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+int SkWebpDecoder_Decode_2(int static_data, void * result, void * decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+int SkWebpDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_WEBP_DECODER_H

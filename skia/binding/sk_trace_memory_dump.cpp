@@ -4,46 +4,49 @@
 
 #include "sk_trace_memory_dump.h"
 
+#include "include/core/SkTraceMemoryDump.h"
+
 extern "C" {
 
-void SkTraceMemoryDump_delete(SkTraceMemoryDump * traceMemoryDump) {
-    delete &traceMemoryDump;
+void SkTraceMemoryDump_delete(void * traceMemoryDump) {
+    const SkTraceMemoryDump *traceMemoryDumpPtr = static_cast<SkTraceMemoryDump *>(traceMemoryDump);
+    delete &traceMemoryDumpPtr;
 }
 
-void SkTraceMemoryDump_dumpNumericValue(SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const char *valueName, const char *units, uint64_t value) {
-    trace_memory_dump->dumpNumericValue(dumpName, valueName, units, value);
+void SkTraceMemoryDump_dumpNumericValue(void *trace_memory_dump, const char *dumpName, const char *valueName, const char *units, uint64_t value) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->dumpNumericValue(dumpName, valueName, units, value);
 }
 
-void SkTraceMemoryDump_dumpStringValue(SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const char *str1, const char *str2) {
-    trace_memory_dump->dumpStringValue(dumpName, str1, str2);
+void SkTraceMemoryDump_dumpStringValue(void *trace_memory_dump, const char *dumpName, const char *str1, const char *str2) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->dumpStringValue(dumpName, str1, str2);
 }
 
-void SkTraceMemoryDump_setMemoryBacking(SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const char *backingType, const char *backingObjectId) {
-    trace_memory_dump->setMemoryBacking(dumpName, backingType, backingObjectId);
+void SkTraceMemoryDump_setMemoryBacking(void *trace_memory_dump, const char *dumpName, const char *backingType, const char *backingObjectId) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->setMemoryBacking(dumpName, backingType, backingObjectId);
 }
 
-void SkTraceMemoryDump_setDiscardableMemoryBacking(SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const SkDiscardableMemory *discardableMemoryObject) {
-    trace_memory_dump->setDiscardableMemoryBacking(dumpName, *discardableMemoryObject);
+void SkTraceMemoryDump_setDiscardableMemoryBacking(void *trace_memory_dump, const char *dumpName, const void *discardableMemoryObject) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->setDiscardableMemoryBacking(dumpName, * static_cast<const SkDiscardableMemory *>(discardableMemoryObject));
 }
 
-SkTraceMemoryDump::LevelOfDetail SkTraceMemoryDump_getRequestedDetails(SkTraceMemoryDump *trace_memory_dump) {
-    return trace_memory_dump->getRequestedDetails();
+int SkTraceMemoryDump_getRequestedDetails(void *trace_memory_dump) {
+    return static_cast<SkTraceMemoryDump *>(trace_memory_dump)->getRequestedDetails();
 }
 
-bool SkTraceMemoryDump_shouldDumpWrappedObjects(SkTraceMemoryDump *trace_memory_dump) {
-    return trace_memory_dump->shouldDumpWrappedObjects();
+bool SkTraceMemoryDump_shouldDumpWrappedObjects(void *trace_memory_dump) {
+    return static_cast<SkTraceMemoryDump *>(trace_memory_dump)->shouldDumpWrappedObjects();
 }
 
-void SkTraceMemoryDump_dumpWrappedState(SkTraceMemoryDump *trace_memory_dump, const char *str, bool b) {
-    trace_memory_dump->dumpWrappedState(str, b);
+void SkTraceMemoryDump_dumpWrappedState(void *trace_memory_dump, const char *str, bool b) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->dumpWrappedState(str, b);
 }
 
-bool SkTraceMemoryDump_shouldDumpUnbudgetedObjects(SkTraceMemoryDump *trace_memory_dump) {
-    return trace_memory_dump->shouldDumpUnbudgetedObjects();
+bool SkTraceMemoryDump_shouldDumpUnbudgetedObjects(void *trace_memory_dump) {
+    return static_cast<SkTraceMemoryDump *>(trace_memory_dump)->shouldDumpUnbudgetedObjects();
 }
 
-void SkTraceMemoryDump_dumpBudgetedState(SkTraceMemoryDump *trace_memory_dump, const char *str, bool b) {
-    trace_memory_dump->dumpBudgetedState(str, b);
+void SkTraceMemoryDump_dumpBudgetedState(void *trace_memory_dump, const char *str, bool b) {
+    static_cast<SkTraceMemoryDump *>(trace_memory_dump)->dumpBudgetedState(str, b);
 }
 
 }

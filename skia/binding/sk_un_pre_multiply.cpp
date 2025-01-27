@@ -4,27 +4,29 @@
 
 #include "sk_un_pre_multiply.h"
 
+#include "include/core/SkUnPreMultiply.h"
+
 extern "C" {
 
-void SkUnPreMultiply_delete(SkUnPreMultiply * unPreMultiply) {
-    delete unPreMultiply;
+void SkUnPreMultiply_delete(void * unPreMultiply) {
+    delete static_cast<SkUnPreMultiply *>(unPreMultiply);
 }
 
 // static
 
-const SkUnPreMultiply::Scale * SkUnPreMultiply_GetScaleTable() {
+const void * SkUnPreMultiply_GetScaleTable() {
     return SkUnPreMultiply::GetScaleTable();
 }
 
-SkUnPreMultiply::Scale SkUnPreMultiply_GetScale(U8CPU alpha) {
+unsigned int SkUnPreMultiply_GetScale(unsigned int alpha) {
     return SkUnPreMultiply::GetScale(alpha);
 }
 
-U8CPU SkUnPreMultiply_ApplyScale(SkUnPreMultiply::Scale scale, U8CPU component) {
+unsigned int SkUnPreMultiply_ApplyScale(unsigned int scale, unsigned int component) {
     return SkUnPreMultiply::ApplyScale(scale, component);
 }
 
-SkColor SkUnPreMultiply_PMColorToColor(SkPMColor c) {
+unsigned int SkUnPreMultiply_PMColorToColor(unsigned int c) {
     return SkUnPreMultiply::PMColorToColor(c);
 }
 

@@ -4,31 +4,33 @@
 
 #include "sk_table_mask_filter.h"
 
+#include "include/effects/SkTableMaskFilter.h"
+
 extern "C" {
 
-void SkTableMaskFilter_delete(SkTableMaskFilter *tableMaskFilter) {
-    delete tableMaskFilter;
+void SkTableMaskFilter_delete(void *tableMaskFilter) {
+    delete static_cast<SkTableMaskFilter *>(tableMaskFilter);
 }
 
 // static
 
-void SkTableMaskFilter_MakeGammaTable(uint8_t table[256], SkScalar gamma) {
-    SkTableMaskFilter::MakeGammaTable(table, gamma);
+void SkTableMaskFilter_MakeGammaTable(void * table, float gamma) {
+    SkTableMaskFilter::MakeGammaTable(static_cast<uint8_t *>(table), gamma);
 }
 
-void SkTableMaskFilter_MakeClipTable(uint8_t table[256], uint8_t min, uint8_t max) {
-    SkTableMaskFilter::MakeClipTable(table, min, max);
+void SkTableMaskFilter_MakeClipTable(void * table, uint8_t min, uint8_t max) {
+    SkTableMaskFilter::MakeClipTable(static_cast<uint8_t *>(table), min, max);
 }
 
-SkMaskFilter * SkTableMaskFilter_Create(const uint8_t table[256]) {
-    return SkTableMaskFilter::Create(table);
+void * SkTableMaskFilter_Create(const void * table) {
+    return SkTableMaskFilter::Create(static_cast<const uint8_t *>(table));
 }
 
-SkMaskFilter * SkTableMaskFilter_CreateGamma(SkScalar gamma) {
+void * SkTableMaskFilter_CreateGamma(float gamma) {
     return SkTableMaskFilter::CreateGamma(gamma);
 }
 
-SkMaskFilter * SkTableMaskFilter_CreateClip(uint8_t min, uint8_t max) {
+void * SkTableMaskFilter_CreateClip(uint8_t min, uint8_t max) {
     return SkTableMaskFilter::CreateClip(min, max);
 }
 

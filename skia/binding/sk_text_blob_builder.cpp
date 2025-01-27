@@ -4,52 +4,56 @@
 
 #include "sk_text_blob_builder.h"
 
+#include "include/core/SkTextBlob.h"
+
+#include "../static/static_sk_text_blob.h"
+
 #include "../static/static_sk_text_blob-internal.h"
 
 extern "C" {
 
-SkTextBlobBuilder *SkTextBlobBuilder_new() {
+void *SkTextBlobBuilder_new() {
     return new SkTextBlobBuilder();
 }
 
-void SkTextBlobBuilder_delete(SkTextBlobBuilder *text_blob_builder) {
-    delete text_blob_builder;
+void SkTextBlobBuilder_delete(void *text_blob_builder) {
+    delete static_cast<SkTextBlobBuilder *>(text_blob_builder);
 }
 
-sk_text_blob_t SkTextBlobBuilder_make(SkTextBlobBuilder *text_blob_builder) {
-    return static_sk_text_blob_make(text_blob_builder->make());
+sk_text_blob_t SkTextBlobBuilder_make(void *text_blob_builder) {
+    return static_sk_text_blob_make(static_cast<SkTextBlobBuilder *>(text_blob_builder)->make());
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRun(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, SkScalar x, SkScalar y, const SkRect *bounds) {
-    return &text_blob_builder->allocRun(*font, count, x, y, bounds);
+const void * SkTextBlobBuilder_allocRun(void *text_blob_builder, const void *font, int count, float x, float y, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRun(* static_cast<const SkFont *>(font), count, x, y, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunPosH(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, SkScalar y, const SkRect *bounds) {
-    return &text_blob_builder->allocRunPosH(*font, count, y, bounds);
+const void * SkTextBlobBuilder_allocRunPosH(void *text_blob_builder, const void *font, int count, float y, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunPosH(* static_cast<const SkFont *>(font), count, y, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunPos(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, const SkRect *bounds) {
-    return &text_blob_builder->allocRunPos(*font, count, bounds);
+const void * SkTextBlobBuilder_allocRunPos(void *text_blob_builder, const void *font, int count, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunPos(* static_cast<const SkFont *>(font), count, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunRSXform(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count) {
-    return &text_blob_builder->allocRunRSXform(*font, count);
+const void * SkTextBlobBuilder_allocRunRSXform(void *text_blob_builder, const void *font, int count) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunRSXform(* static_cast<const SkFont *>(font), count);
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunText(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, SkScalar x, SkScalar y, int textByteCount, const SkRect *bounds) {
-    return &text_blob_builder->allocRunText(*font, count, x, y, textByteCount, bounds);
+const void * SkTextBlobBuilder_allocRunText(void *text_blob_builder, const void *font, int count, float x, float y, int textByteCount, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunText(* static_cast<const SkFont *>(font), count, x, y, textByteCount, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunTextPosH(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, SkScalar y, int textByteCount, const SkRect *bounds) {
-    return &text_blob_builder->allocRunTextPosH(*font, count, y, textByteCount, bounds);
+const void * SkTextBlobBuilder_allocRunTextPosH(void *text_blob_builder, const void *font, int count, float y, int textByteCount, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunTextPosH(* static_cast<const SkFont *>(font), count, y, textByteCount, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunTextPos(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, int textByteCount, const SkRect *bounds) {
-    return &text_blob_builder->allocRunTextPos(*font, count, textByteCount, bounds);
+const void * SkTextBlobBuilder_allocRunTextPos(void *text_blob_builder, const void *font, int count, int textByteCount, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunTextPos(* static_cast<const SkFont *>(font), count, textByteCount, static_cast<const SkRect *>(bounds));
 }
 
-const SkTextBlobBuilder::RunBuffer * SkTextBlobBuilder_allocRunTextRSXform(SkTextBlobBuilder *text_blob_builder, const SkFont *font, int count, int textByteCount, const SkRect *bounds) {
-    return &text_blob_builder->allocRunTextRSXform(*font, count, textByteCount, bounds);
+const void * SkTextBlobBuilder_allocRunTextRSXform(void *text_blob_builder, const void *font, int count, int textByteCount, const void *bounds) {
+    return &static_cast<SkTextBlobBuilder *>(text_blob_builder)->allocRunTextRSXform(* static_cast<const SkFont *>(font), count, textByteCount, static_cast<const SkRect *>(bounds));
 }
 
 }
