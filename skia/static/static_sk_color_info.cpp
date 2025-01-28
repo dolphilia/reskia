@@ -25,6 +25,7 @@ int static_sk_color_info_make(SkColorInfo value) {
 }
 
 void static_sk_color_info_delete(int key) {
+    delete &static_sk_color_info[key];
     static_sk_color_info.erase(key);
     static_sk_color_info_available_keys.insert(key);
 }

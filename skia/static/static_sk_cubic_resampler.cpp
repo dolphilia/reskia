@@ -23,6 +23,7 @@ int static_sk_cubic_resampler_make(SkCubicResampler value) {
 }
 
 void static_sk_cubic_resampler_delete(int key) {
+    delete &static_sk_cubic_resampler[key];
     static_sk_cubic_resampler.erase(key);
     static_sk_cubic_resampler_available_keys.insert(key);
 }

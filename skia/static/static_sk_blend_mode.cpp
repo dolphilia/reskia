@@ -24,6 +24,7 @@ int static_optional_sk_blend_mode_make(std::optional<SkBlendMode> value) {
 }
 
 void static_optional_sk_blend_mode_delete(int key) {
+    delete &static_optional_sk_blend_mode[key];
     static_optional_sk_blend_mode[key].reset();
     static_optional_sk_blend_mode.erase(key);
     static_optional_sk_blend_mode_available_keys.insert(key);

@@ -23,6 +23,7 @@ int static_sk_blender_make(sk_sp<SkBlender> value) {
 }
 
 void static_sk_blender_delete(int key) {
+    delete static_sk_blender[key].get();
     static_sk_blender[key].reset();
     static_sk_blender.erase(key);
     static_sk_blender_available_keys.insert(key);

@@ -25,6 +25,7 @@ int static_sk_color_table_make(sk_sp<SkColorTable> value) {
 }
 
 void static_sk_color_table_delete(int key) {
+    delete static_sk_color_table[key].get();
     static_sk_color_table[key].reset();
     static_sk_color_table.erase(key);
     static_sk_color_table_available_keys.insert(key);

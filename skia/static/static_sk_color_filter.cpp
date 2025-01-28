@@ -23,6 +23,7 @@ int static_sk_color_filter_make(sk_sp<SkColorFilter> value) {
 }
 
 void static_sk_color_filter_delete(int key) {
+    delete static_sk_color_filter[key].get();
     static_sk_color_filter[key].reset();
     static_sk_color_filter.erase(key);
     static_sk_color_filter_available_keys.insert(key);

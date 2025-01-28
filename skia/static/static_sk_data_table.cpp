@@ -25,6 +25,7 @@ int static_sk_data_table_make(sk_sp<SkDataTable> value) {
 }
 
 void static_sk_data_table_delete(int key) {
+    free(static_sk_data_table[key].get());
     static_sk_data_table[key].reset();
     static_sk_data_table.erase(key);
     static_sk_data_table_available_keys.insert(key);

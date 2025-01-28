@@ -138,8 +138,8 @@ bool SkCodec_getFrameInfo(void * codec, int index, void * info) {
     return static_cast<SkCodec *>(codec)->getFrameInfo(index, static_cast<SkCodec::FrameInfo *>(info));
 }
 
-vector_sk_codec_frame_into_t SkCodec_getFrameInfo_2(void * codec) {
-    return static_vector_sk_codec_frame_into_make(static_cast<SkCodec *>(codec)->getFrameInfo());
+vector_sk_codec_frame_info_t SkCodec_getFrameInfo_2(void * codec) {
+    return static_vector_sk_codec_frame_info_make(static_cast<SkCodec *>(codec)->getFrameInfo());
 }
 
 int SkCodec_getRepetitionCount(void * codec) {

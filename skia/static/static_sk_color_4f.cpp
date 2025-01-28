@@ -23,6 +23,7 @@ int static_sk_color_4f_make(SkColor4f value) {
 }
 
 void static_sk_color_4f_delete(int key) {
+    delete &static_sk_color_4f[key];
     static_sk_color_4f.erase(key);
     static_sk_color_4f_available_keys.insert(key);
 }

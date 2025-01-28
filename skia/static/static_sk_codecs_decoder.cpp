@@ -23,6 +23,7 @@ int static_sk_codecs_decoder_make(SkCodecs::Decoder value) {
 }
 
 void static_sk_codecs_decoder_delete(int key) {
+    delete &static_sk_codecs_decoder[key];
     static_sk_codecs_decoder.erase(key);
     static_sk_codecs_decoder_available_keys.insert(key);
 }

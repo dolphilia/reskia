@@ -25,6 +25,7 @@ int static_sk_contour_measure_make(sk_sp<SkContourMeasure> value) {
 }
 
 void static_sk_contour_measure_delete(int key) {
+    free(static_sk_contour_measure[key].get());
     static_sk_contour_measure[key].reset();
     static_sk_contour_measure.erase(key);
     static_sk_contour_measure_available_keys.insert(key);

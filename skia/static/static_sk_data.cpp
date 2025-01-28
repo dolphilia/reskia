@@ -28,6 +28,7 @@ int static_sk_data_make(sk_sp<SkData> value) {
 }
 
 void static_sk_data_delete(int key) {
+    free(static_sk_data[key].get());
     static_sk_data[key].reset();
     static_sk_data.erase(key);
     static_sk_data_available_keys.insert(key);
@@ -62,6 +63,7 @@ int static_const_sk_data_make(sk_sp<const SkData> value) {
 
 
 void static_const_sk_data_delete(int key) {
+    free((void *)static_const_sk_data[key].get());
     static_const_sk_data[key].reset();
     static_const_sk_data.erase(key);
     static_const_sk_data_available_keys.insert(key);

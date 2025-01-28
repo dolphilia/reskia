@@ -23,6 +23,7 @@ int static_sk_canvas_make(std::unique_ptr<SkCanvas> value) {
 }
 
 void static_sk_canvas_delete(int key) {
+    delete static_sk_canvas[key].get();
     static_sk_canvas[key].reset();
     static_sk_canvas.erase(key);
     static_sk_canvas_available_keys.insert(key);

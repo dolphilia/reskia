@@ -26,6 +26,7 @@ int static_sk_b_box_hierarchy_make(sk_sp<SkBBoxHierarchy> value) {
 }
 
 void static_sk_b_box_hierarchy_delete(int key) {
+    delete static_sk_b_box_hierarchy[key].get();
     static_sk_b_box_hierarchy[key].reset();
     static_sk_b_box_hierarchy.erase(key);
     static_sk_b_box_hierarchy_available_keys.insert(key);

@@ -23,6 +23,7 @@ int static_const_sk_capabilities_make(sk_sp<const SkCapabilities> value) {
 }
 
 void static_const_sk_capabilities_delete(int key) {
+    delete static_const_sk_capabilities[key].get();
     static_const_sk_capabilities[key].reset();
     static_const_sk_capabilities.erase(key);
     static_const_sk_capabilities_available_keys.insert(key);

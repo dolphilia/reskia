@@ -23,6 +23,7 @@ int static_sk_codec_make(std::unique_ptr<SkCodec> value) {
 }
 
 void static_sk_codec_delete(int key) {
+    delete static_sk_codec[key].get();
     static_sk_codec[key].reset();
     static_sk_codec.erase(key);
     static_sk_codec_available_keys.insert(key);
