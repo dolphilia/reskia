@@ -25,6 +25,7 @@ int static_sk_color_space_make(sk_sp<SkColorSpace> value) {
 }
 
 void static_sk_color_space_delete(int key) {
+    delete static_sk_color_space[key].get();
     static_sk_color_space[key].reset();
     static_sk_color_space.erase(key);
     static_sk_color_space_available_keys.insert(key);

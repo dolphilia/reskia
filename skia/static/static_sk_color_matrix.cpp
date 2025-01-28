@@ -24,6 +24,7 @@ int static_sk_color_matrix_make(SkColorMatrix value) {
 }
 
 void static_sk_color_matrix_delete(int key) {
+    delete &static_sk_color_matrix[key];
     static_sk_color_matrix.erase(key);
     static_sk_color_matrix_available_keys.insert(key);
 }

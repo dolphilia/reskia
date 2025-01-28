@@ -10,24 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES reskia.cpp)
 
 list(APPEND SOURCE_FILES
-        #       src/codec/SkAvifCodec.cpp
-        #       src/codec/SkBmpBaseCodec.cpp
-        #       src/codec/SkBmpCodec.cpp
-        #       src/codec/SkBmpMaskCodec.cpp
-        #       src/codec/SkBmpRLECodec.cpp
-        #       src/codec/SkCodecImageGenerator.cpp
-        #       src/codec/SkEncodedInfo.cpp
-        #       src/codec/SkImageGenerator_FromEncoded.cpp
-        #       src/codec/SkJpegSegmentScan.cpp
-        #       src/codec/SkJpegSourceMgr.cpp
-        #       src/codec/SkJpegxlCodec.cpp
-        #       src/codec/SkJpegXmp.cpp
-        #       src/codec/SkXmp.cpp
-        #       src/encode/SkPngEncoder_none.cpp
-        #       src/utils/SkTestCanvas.cpp
-        #       src/xml/SkDOM.cpp
-        #       src/xml/SkXMLParser.cpp
-        #       src/xml/SkXMLWriter.cpp
         src/base/SkArenaAlloc.cpp
         src/base/SkBase64.cpp
         src/base/SkBezierCurves.cpp
@@ -54,6 +36,7 @@ list(APPEND SOURCE_FILES
         src/base/SkUtils.cpp
         src/codec/SkAndroidCodec.cpp
         src/codec/SkAndroidCodecAdapter.cpp
+        # src/codec/SkAvifCodec.cpp
         src/codec/SkBmpBaseCodec.cpp
         src/codec/SkBmpCodec.cpp
         src/codec/SkBmpMaskCodec.cpp
@@ -73,6 +56,8 @@ list(APPEND SOURCE_FILES
         src/codec/SkJpegSegmentScan.cpp
         src/codec/SkJpegSourceMgr.cpp
         src/codec/SkJpegUtility.cpp
+        #  src/codec/SkJpegxlCodec.cpp
+        #  src/codec/SkJpegXmp.cpp
         src/codec/SkMasks.cpp
         src/codec/SkMaskSwizzler.cpp
         src/codec/SkParseEncodedOrigin.cpp
@@ -84,6 +69,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkTiffUtility.cpp
         src/codec/SkWbmpCodec.cpp
         src/codec/SkWebpCodec.cpp
+        # src/codec/SkXmp.cpp
         src/core/SkAAClip.cpp
         src/core/SkAlphaRuns.cpp
         src/core/SkAnalyticEdge.cpp
@@ -317,6 +303,7 @@ list(APPEND SOURCE_FILES
         src/effects/SkShaderMaskFilterImpl.cpp
         src/effects/SkTableMaskFilter.cpp
         src/effects/SkTrimPathEffect.cpp
+        # src/encode/SkPngEncoder_none.cpp
         src/encode/SkEncoder.cpp
         src/encode/SkICC.cpp
         src/encode/SkPngEncoderImpl.cpp
@@ -531,6 +518,7 @@ list(APPEND SOURCE_FILES
         src/utils/SkShadowTessellator.cpp
         src/utils/SkShadowUtils.cpp
         src/utils/SkTextUtils.cpp
+        # src/utils/SkTestCanvas.cpp
         src/xml/SkDOM.cpp
         src/xml/SkXMLParser.cpp
         src/xml/SkXMLWriter.cpp

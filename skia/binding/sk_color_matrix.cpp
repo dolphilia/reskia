@@ -52,12 +52,12 @@ void SkColorMatrix_setSaturation(void *color_matrix, float sat) {
     static_cast<SkColorMatrix *>(color_matrix)->setSaturation(sat);
 }
 
-void SkColorMatrix_setRowMajor(void *color_matrix, const float src[20]) {
-    static_cast<SkColorMatrix *>(color_matrix)->setRowMajor(src);
+void SkColorMatrix_setRowMajor(void *color_matrix, const void * src) {
+    static_cast<SkColorMatrix *>(color_matrix)->setRowMajor(static_cast<const float *>(src));
 }
 
-void SkColorMatrix_getRowMajor(void *color_matrix, float dst[20]) {
-    static_cast<SkColorMatrix *>(color_matrix)->getRowMajor(dst);
+void SkColorMatrix_getRowMajor(void *color_matrix, void * dst) {
+    static_cast<SkColorMatrix *>(color_matrix)->getRowMajor(static_cast<float *>(dst));
 }
 
 // static

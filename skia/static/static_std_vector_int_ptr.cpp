@@ -26,13 +26,8 @@ int static_int_vector_ptr_make(std::vector<int>* value) {
 }
 
 void static_int_vector_ptr_delete(int key) {
-    // 例: マップから取り除くだけ
-    //     もし「pointer自体をdeleteしたい」ならここで delete static_int_vector_ptr_map[key];
-    //     しかし、本当にそれをやるかどうかは設計次第
     delete static_int_vector_ptr_map[key];
     static_int_vector_ptr_map.erase(key);
-
-    // キーを再利用可能リストへ
     static_int_vector_ptr_available_keys.insert(key);
 }
 

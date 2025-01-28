@@ -26,6 +26,7 @@ int static_sk_android_codec_make(std::unique_ptr<SkAndroidCodec> value) {
 }
 
 void static_sk_android_codec_delete(int key) {
+    delete static_sk_android_codec[key].get();
     static_sk_android_codec[key].reset();
     static_sk_android_codec.erase(key);
     static_sk_android_codec_available_keys.insert(key);
