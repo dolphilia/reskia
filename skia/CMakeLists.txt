@@ -7,7 +7,9 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES
+set(SOURCE_FILES reskia.cpp)
+
+list(APPEND SOURCE_FILES
         #       src/codec/SkAvifCodec.cpp
         #       src/codec/SkBmpBaseCodec.cpp
         #       src/codec/SkBmpCodec.cpp
@@ -496,6 +498,8 @@ set(SOURCE_FILES
         src/sksl/transform/SkSLRenamePrivateSymbols.cpp
         src/sksl/transform/SkSLReplaceConstVarsWithLiterals.cpp
         src/sksl/transform/SkSLRewriteIndexedSwizzle.cpp
+        src/svg/SkSVGCanvas.cpp
+        src/svg/SkSVGDevice.cpp
         src/text/GlyphRun.cpp
         src/text/SlugFromBuffer.cpp
         src/text/StrikeForGPU.cpp
@@ -527,6 +531,9 @@ set(SOURCE_FILES
         src/utils/SkShadowTessellator.cpp
         src/utils/SkShadowUtils.cpp
         src/utils/SkTextUtils.cpp
+        src/xml/SkDOM.cpp
+        src/xml/SkXMLParser.cpp
+        src/xml/SkXMLWriter.cpp
 )
 
 list(APPEND SOURCE_FILES
@@ -827,7 +834,7 @@ add_library(reskia SHARED ${SOURCE_FILES})
 if(WIN32)
     target_link_libraries(reskia skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux)
 elseif(APPLE)
-    target_link_libraries(reskia skcms png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
+    target_link_libraries(reskia skcms skresources svg expat png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
 elseif(UNIX)
     target_link_libraries(reskia skcms)
 endif()
