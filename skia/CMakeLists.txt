@@ -580,6 +580,7 @@ list(APPEND SOURCE_FILES
         binding/sk_graphics.cpp
         binding/sk_high_contrast_config.cpp
         binding/sk_high_contrast_filter.cpp
+        binding/sk_i_point.cpp
         binding/sk_i_rect.cpp
         binding/sk_i_size.cpp
         binding/sk_icc.cpp
