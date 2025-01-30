@@ -200,7 +200,7 @@ int SkBitmap_height(void *bitmap) { // inline
     return static_cast<SkBitmap *>(bitmap)->height();
 }
 
-int SkBitmap_info(void *bitmap) { // inline
+sk_image_info_t SkBitmap_info(void *bitmap) { // inline
     return static_sk_image_info_make(static_cast<SkBitmap *>(bitmap)->info());
 }
 

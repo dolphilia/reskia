@@ -540,6 +540,7 @@ list(APPEND SOURCE_FILES
         binding/sk_capabilities.cpp
         binding/sk_codec.cpp
         binding/sk_codecs.cpp
+        binding/sk_color_4f.cpp
         binding/sk_color_filter.cpp
         binding/sk_color_filters.cpp
         binding/sk_color_info.cpp
@@ -598,6 +599,8 @@ list(APPEND SOURCE_FILES
         binding/sk_luma_color_filter.cpp
         binding/sk_m_44.cpp
         binding/sk_malloc_pixel_ref.cpp
+        binding/sk_mask.cpp
+        binding/sk_mask_builder.cpp
         binding/sk_mask_filter.cpp
         binding/sk_matrix.cpp
         binding/sk_memory_stream.cpp
@@ -721,6 +724,8 @@ list(APPEND SOURCE_FILES
         static/static_sk_image_required_properties.cpp
         static/static_sk_image.cpp
         static/static_sk_m_44.cpp
+        static/static_sk_mask.cpp
+        static/static_sk_mask_builder.cpp
         static/static_sk_mask_filter.cpp
         static/static_sk_matrix.cpp
         static/static_sk_memory_stream.cpp

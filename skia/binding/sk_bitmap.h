@@ -51,7 +51,7 @@ unsigned int SkBitmap_getGenerationID(void *bitmap); // (SkBitmap *bitmap) -> ui
 void * SkBitmap_getPixels(void *bitmap); // (SkBitmap *bitmap) -> void *
 int SkBitmap_getSubset(void *bitmap); // (SkBitmap *bitmap) -> sk_i_rect_t
 int SkBitmap_height(void *bitmap); // (SkBitmap *bitmap) -> int
-int SkBitmap_info(void *bitmap); // (SkBitmap *bitmap) -> int
+int SkBitmap_info(void *bitmap); // (SkBitmap *bitmap) -> sk_image_info_t
 bool SkBitmap_installMaskPixels(void *bitmap, void *mask); // (SkBitmap *bitmap, SkMaskBuilder *mask) -> bool
 bool SkBitmap_installPixels(void *bitmap, const void *info, void *pixels, unsigned long rowBytes); // (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes) -> bool
 bool SkBitmap_installPixels_2(void *bitmap, const void *info, void *pixels, unsigned long rowBytes, void(*releaseProc)(void *addr, void *context), void *context); // (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) -> bool
