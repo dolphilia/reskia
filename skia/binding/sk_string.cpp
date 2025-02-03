@@ -264,31 +264,38 @@ void SkString_prependScalar(void *string, float value) {
     static_cast<SkString *>(string)->prependScalar(value);
 }
 
-// @TODO
+void SkString_printf(void *string, const char format[], ...) {
+    va_list args;
+    va_start(args, format);
+    static_cast<SkString*>(string)->printVAList(format, args);
+    va_end(args);
+}
 
-//void SkString_printf(SkString *string, const char format[],...) {
-//    string->
-//}
+void SkString_printVAList(void *string, const char format[], va_list args) {
+    static_cast<SkString*>(string)->printVAList(format, args);
+}
 
-//void SkString_printVAList(SkString *string, const char format[], va_list) {
-//    string->
-//}
+void SkString_appendf(void *string, const char format[], ...) {
+    va_list args;
+    va_start(args, format);
+    static_cast<SkString*>(string)->appendVAList(format, args);
+    va_end(args);
+}
 
-//void SkString_appendf(SkString *string, const char format[],...)  {
-//    string->
-//}
+void SkString_appendVAList(void *string, const char format[], va_list args) {
+    static_cast<SkString*>(string)->appendVAList(format, args);
+}
 
-//void SkString_appendVAList(SkString *string, const char format[], va_list) {
-//    string->
-//}
+void SkString_prependf(void *string, const char format[], ...) {
+    va_list args;
+    va_start(args, format);
+    static_cast<SkString*>(string)->prependVAList(format, args);
+    va_end(args);
+}
 
-//void SkString_prependf(SkString *string, const char format[],...) {
-//    string->
-//}
-
-//void SkString_prependVAList(SkString *string, const char format[], va_list) {
-//    string->
-//}
+void SkString_prependVAList(void *string, const char format[], va_list args) {
+    static_cast<SkString*>(string)->prependVAList(format, args);
+}
 
 void SkString_remove(void *string, size_t offset, size_t length) {
     static_cast<SkString *>(string)->remove(offset, length);
