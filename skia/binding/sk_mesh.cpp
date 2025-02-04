@@ -11,6 +11,7 @@
 #include "../static/static_sk_mesh_index_buffer.h"
 #include "../static/static_sk_mesh_child_ptr.h"
 #include "../static/static_sk_mesh_specification.h"
+#include "../static/static_sk_mesh_result.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_rect.h"
 
@@ -18,81 +19,88 @@
 #include "../static/static_sk_mesh_index_buffer-internal.h"
 #include "../static/static_sk_mesh_child_ptr-internal.h"
 #include "../static/static_sk_mesh_specification-internal.h"
+#include "../static/static_sk_mesh_result-internal.h"
 #include "../static/static_sk_data-internal.h"
 #include "../static/static_sk_rect-internal.h"
 
 extern "C" {
 
-SkMesh::Result SkMesh_Make(sk_sp<SkMeshSpecification> spec, SkMesh::Mode mode, sk_sp<SkMesh::VertexBuffer> vBuffer, size_t vertexCount, size_t vertexOffset, sk_sp<const SkData> uniforms, SkSpan<SkMesh::ChildPtr> children, const SkRect& bounds) {
-    return SkMesh::Make(spec, mode, vBuffer, vertexCount, vertexOffset, uniforms, children, bounds);
+void SkMesh_delete(void * mesh) {
+    delete static_cast<SkMesh *>(mesh);
 }
 
-SkMesh::Result SkMesh_MakeIndexed(sk_sp<SkMeshSpecification> spec, SkMesh::Mode mode, sk_sp<SkMesh::VertexBuffer> vBuffer, size_t vertexCount, size_t vertexOffset, sk_sp<SkMesh::IndexBuffer> iBuffer, size_t indexCount, size_t indexOffset, sk_sp<const SkData> uniforms, SkSpan<SkMesh::ChildPtr> children, const SkRect& bounds) {
-    return SkMesh::MakeIndexed(spec, mode, vBuffer, vertexCount, vertexOffset, iBuffer, indexCount, indexOffset, uniforms, children, bounds);
+sk_mesh_specification_t SkMesh_refSpec(void * mesh) {
+    return static_sk_mesh_specification_make(static_cast<SkMesh *>(mesh)->refSpec());
 }
 
-sk_mesh_specification_t SkMesh_refSpec(SkMesh * mesh) {
-    return static_sk_mesh_specification_make(mesh->refSpec());
+void * SkMesh_spec(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->spec();
 }
 
-SkMeshSpecification* SkMesh_spec(SkMesh * mesh) {
-    return mesh->spec();
+int SkMesh_mode(void * mesh) {
+    return static_cast<int>(static_cast<SkMesh *>(mesh)->mode());
 }
 
-SkMesh::Mode SkMesh_mode(SkMesh * mesh) {
-    return mesh->mode();
+sk_mesh_vertex_buffer_t SkMesh_refVertexBuffer(void * mesh) {
+    return static_sk_mesh_vertex_buffer_make(static_cast<SkMesh *>(mesh)->refVertexBuffer());
 }
 
-sk_mesh_vertex_buffer_t SkMesh_refVertexBuffer(SkMesh * mesh) {
-    return static_sk_mesh_vertex_buffer_make(mesh->refVertexBuffer());
+void * SkMesh_vertexBuffer(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->vertexBuffer();
 }
 
-SkMesh::VertexBuffer* SkMesh_vertexBuffer(SkMesh * mesh) {
-    return mesh->vertexBuffer();
+size_t SkMesh_vertexOffset(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->vertexOffset();
 }
 
-size_t SkMesh_vertexOffset(SkMesh * mesh) {
-    return mesh->vertexOffset();
+size_t SkMesh_vertexCount(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->vertexCount();
 }
 
-size_t SkMesh_vertexCount(SkMesh * mesh) {
-    return mesh->vertexCount();
+sk_mesh_index_buffer_t SkMesh_refIndexBuffer(void * mesh) {
+    return static_sk_mesh_index_buffer_make(static_cast<SkMesh *>(mesh)->refIndexBuffer());
 }
 
-sk_mesh_index_buffer_t SkMesh_refIndexBuffer(SkMesh * mesh) {
-    return static_sk_mesh_index_buffer_make(mesh->refIndexBuffer());
+void * SkMesh_indexBuffer(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->indexBuffer();
 }
 
-SkMesh::IndexBuffer* SkMesh_indexBuffer(SkMesh * mesh) {
-    return mesh->indexBuffer();
+size_t SkMesh_indexOffset(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->indexOffset();
 }
 
-size_t SkMesh_indexOffset(SkMesh * mesh) {
-    return mesh->indexOffset();
+size_t SkMesh_indexCount(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->indexCount();
 }
 
-size_t SkMesh_indexCount(SkMesh * mesh) {
-    return mesh->indexCount();
+const_sk_data_t SkMesh_refUniforms(void * mesh) {
+    return static_const_sk_data_make(static_cast<SkMesh *>(mesh)->refUniforms());
 }
 
-const_sk_data_t SkMesh_refUniforms(SkMesh * mesh) {
-    return static_const_sk_data_make(mesh->refUniforms());
+const void * SkMesh_uniforms(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->uniforms();
 }
 
-const SkData* SkMesh_uniforms(SkMesh * mesh) {
-    return mesh->uniforms();
+const_sk_mesh_child_ptr_t SkMesh_children(void * mesh) {
+    return static_const_sk_mesh_child_ptr_make(static_cast<SkMesh *>(mesh)->children());
 }
 
-const_sk_mesh_child_ptr_t SkMesh_children(SkMesh * mesh) {
-    return static_sk_span_const_sk_mesh_make(mesh->children());
+sk_rect_t SkMesh_bounds(void * mesh) {
+    return static_sk_rect_make(static_cast<SkMesh *>(mesh)->bounds());
 }
 
-sk_rect_t SkMesh_bounds(SkMesh * mesh) {
-    return static_sk_rect_make(mesh->bounds());
+bool SkMesh_isValid(void * mesh) {
+    return static_cast<SkMesh *>(mesh)->isValid();
 }
 
-bool SkMesh_isValid(SkMesh * mesh) {
-    return mesh->isValid();
+// static
+
+sk_mesh_result_t SkMesh_Make(sk_mesh_specification_t spec, int mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const void * bounds) {
+    return static_sk_mesh_result_make(SkMesh::Make(static_sk_mesh_specification_move(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_move(vBuffer), vertexCount, vertexOffset, static_const_sk_data_move(uniforms), static_sk_mesh_child_ptr_get(children), * static_cast<const SkRect *>(bounds)));
+}
+
+sk_mesh_result_t SkMesh_MakeIndexed(sk_mesh_specification_t spec, int mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, sk_mesh_index_buffer_t iBuffer, size_t indexCount, size_t indexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const void * bounds) {
+    return static_sk_mesh_result_make(SkMesh::MakeIndexed(static_sk_mesh_specification_move(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_move(vBuffer), vertexCount, vertexOffset, static_sk_mesh_index_buffer_move(iBuffer), indexCount, indexOffset, static_const_sk_data_move(uniforms), static_sk_mesh_child_ptr_get(children), * static_cast<const SkRect *>(bounds)));
 }
 
 }

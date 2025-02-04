@@ -8,8 +8,8 @@
 extern "C" {
 #endif
 typedef int sk_mesh_specification_t;
-void static_sk_mesh_delete(int key);
-void *static_sk_mesh_get(int key); // -> SkMesh::IndexBuffer *
+void static_sk_mesh_specification_delete(int key);
+void *static_sk_mesh_specification_get(int key); // -> SkMesh::IndexBuffer *
 #ifdef __cplusplus
 }
 #endif

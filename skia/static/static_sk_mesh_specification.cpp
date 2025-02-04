@@ -27,20 +27,20 @@ int static_sk_mesh_specification_make(sk_sp<SkMeshSpecification> value) {
     return key;
 }
 
-void static_sk_mesh_delete(int key) {
+void static_sk_mesh_specification_delete(int key) {
     static_sk_mesh_specification[key].reset();
     static_sk_mesh_specification.erase(key);
     static_sk_mesh_specification_available_keys.insert(key);
 }
 
-void *static_sk_mesh_get(int key) { // -> SkMesh::IndexBuffer *
+void *static_sk_mesh_specification_get(int key) { // -> SkMesh::IndexBuffer *
     return static_sk_mesh_specification[key].get();
 }
 
-void static_sk_mesh_set(int key, sk_sp<SkMeshSpecification> value) {
+void static_sk_mesh_specification_set(int key, sk_sp<SkMeshSpecification> value) {
     static_sk_mesh_specification[key] = std::move(value);
 }
 
-sk_sp<SkMeshSpecification> static_sk_mesh_move(int key) {
+sk_sp<SkMeshSpecification> static_sk_mesh_specification_move(int key) {
     return std::move(static_sk_mesh_specification[key]);
 }

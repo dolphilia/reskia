@@ -10,10 +10,10 @@ extern "C" {
 #endif
 typedef int sk_mesh_child_ptr_t;
 typedef int const_sk_mesh_child_ptr_t;
-void static_sk_span_sk_mesh_delete(int key);
-void * static_sk_span_sk_mesh_get_ptr(int key, int index);
-void static_sk_span_const_sk_mesh_delete(int key);
-void * static_sk_span_const_sk_mesh_get_ptr(int key, int index);
+void static_sk_mesh_child_ptr_delete(int key);
+void * static_sk_mesh_child_ptr_get_ptr(int key, int index);
+void static_const_sk_mesh_child_ptr_delete(int key);
+void * static_const_sk_mesh_child_ptr_get_ptr(int key, int index);
 #ifdef __cplusplus
 }
 #endif
