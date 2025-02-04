@@ -731,6 +731,7 @@ list(APPEND SOURCE_FILES
         static/static_sk_memory_stream.cpp
         static/static_sk_mesh_child_ptr.cpp
         static/static_sk_mesh_index_buffer.cpp
+        static/static_sk_mesh_specification.cpp
         static/static_sk_mesh_vertex_buffer.cpp
         static/static_sk_path_effect.cpp
         static/static_sk_path.cpp
