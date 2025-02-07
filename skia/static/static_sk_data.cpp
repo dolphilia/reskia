@@ -28,21 +28,32 @@ int static_sk_data_make(sk_sp<SkData> value) {
 }
 
 void static_sk_data_delete(int key) {
-    free(static_sk_data[key].get());
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_data[key].reset();
     static_sk_data.erase(key);
     static_sk_data_available_keys.insert(key);
 }
 
 void *static_sk_data_get(int key) { // -> SkData *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_data[key].get();
 }
 
 void static_sk_data_set(int key, sk_sp<SkData> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_data[key] = std::move(value);
 }
 
 sk_sp<SkData> static_sk_data_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_data[key]);
 }
 
@@ -63,20 +74,31 @@ int static_const_sk_data_make(sk_sp<const SkData> value) {
 
 
 void static_const_sk_data_delete(int key) {
-    free((void *)static_const_sk_data[key].get());
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_const_sk_data[key].reset();
     static_const_sk_data.erase(key);
     static_const_sk_data_available_keys.insert(key);
 }
 
 const void *static_const_sk_data_get(int key) { // -> const SkData *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_const_sk_data[key].get();
 }
 
 void static_const_sk_data_set(int key, sk_sp<const SkData> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_const_sk_data[key] = std::move(value);
 }
 
 sk_sp<const SkData> static_const_sk_data_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_const_sk_data[key]);
 }

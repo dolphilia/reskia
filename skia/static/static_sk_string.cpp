@@ -31,19 +31,31 @@ int static_sk_string_make(SkString value) {
 }
 
 void static_sk_string_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_string.erase(key);
     static_sk_string_available_keys.insert(key);
 }
 
 SkString static_sk_string_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_string[key];
 }
 
 void * static_sk_string_get_ptr(int key) { // -> SkString *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_string[key];
 }
 
 void static_sk_string_set(int key, SkString value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_string[key] = std::move(value);
 }
 
@@ -63,18 +75,30 @@ int static_sk_span_sk_string_make(SkSpan<SkString> value) {
 }
 
 void static_sk_span_sk_string_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_span_sk_string.erase(key);
     static_sk_span_sk_string_available_keys.insert(key);
 }
 
 SkSpan<SkString> static_sk_span_sk_string_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_span_sk_string[key];
 }
 
 void * static_sk_span_sk_string_get_ptr(int key, int index) { // -> SkString *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_span_sk_string[key][index];
 }
 
 void static_sk_span_sk_string_set(int key, SkSpan<SkString> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_span_sk_string[key] = value;
 }

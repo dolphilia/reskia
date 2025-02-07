@@ -25,30 +25,51 @@ int static_vector_sk_scalar_make(std::vector<SkScalar> value) {
 }
 
 void static_vector_sk_scalar_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float.erase(key);
     static_vector_float_available_keys.insert(key);
 }
 
 float static_vector_sk_scalar_get(int key, int index) { // -> SkScalar
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_vector_float[key][index];
 }
 
 void static_vector_sk_scalar_set(int key, std::vector<SkScalar> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float[key] = std::move(value);
 }
 
 void static_vector_sk_scalar_push_back(int key, float value) { // SkScalar value
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float[key].push_back(value);
 }
 
 void static_vector_sk_scalar_insert(int key, int index, float value) { // SkScalar value
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float[key].insert(static_vector_float[key].begin() + index, value);
 }
 
 void static_vector_sk_scalar_pop_back(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float[key].pop_back();
 }
 
 void static_vector_sk_scalar_erase(int key, int index) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_vector_float[key].erase(static_vector_float[key].begin() + index);
 }

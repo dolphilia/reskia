@@ -25,19 +25,31 @@ int static_sk_image_filter_make(sk_sp<SkImageFilter> value) {
 }
 
 void static_sk_image_filter_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_image_filter[key].reset();
     static_sk_image_filter.erase(key);
     static_sk_image_filter_available_keys.insert(key);
 }
 
 void *static_sk_image_filter_get(int key) { // -> SkImageFilter *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_image_filter[key].get();
 }
 
 void static_sk_image_filter_set(int key, sk_sp<SkImageFilter> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_image_filter[key] = std::move(value);
 }
 
 sk_sp<SkImageFilter> static_sk_image_filter_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_image_filter[key]);
 }

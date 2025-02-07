@@ -23,10 +23,16 @@ int static_sk_flattenable_factory_make(SkFlattenable::Factory value) {
 }
 
 void static_sk_flattenable_factory_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_flattenable_factory.erase(key);
     static_sk_flattenable_factory_available_keys.insert(key);
 }
 
 SkFlattenable::Factory static_sk_flattenable_factory_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_flattenable_factory[key];
 }

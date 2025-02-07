@@ -605,6 +605,7 @@ list(APPEND SOURCE_FILES
         binding/sk_matrix.cpp
         binding/sk_memory_stream.cpp
         binding/sk_mesh.cpp
+        binding/sk_mesh_specification.cpp
         binding/sk_meshes.cpp
         binding/sk_op_builder.cpp
 #        binding/sk_open_type_svg_decoder.cpp
@@ -734,6 +735,8 @@ list(APPEND SOURCE_FILES
         static/static_sk_mesh_index_buffer.cpp
         static/static_sk_mesh_result.cpp
         static/static_sk_mesh_specification.cpp
+        static/static_sk_mesh_specification_attribute.cpp
+        static/static_sk_mesh_specification_result.cpp
         static/static_sk_mesh_vertex_buffer.cpp
         static/static_sk_path_effect.cpp
         static/static_sk_path.cpp

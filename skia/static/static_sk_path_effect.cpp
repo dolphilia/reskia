@@ -25,19 +25,31 @@ int static_sk_path_effect_make(sk_sp<SkPathEffect> value) {
 }
 
 void static_sk_path_effect_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_path_effect[key].reset();
     static_sk_path_effect.erase(key);
     static_sk_path_effect_available_keys.insert(key);
 }
 
 void *static_sk_path_effect_get(int key) { // -> SkPathEffect *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_path_effect[key].get();
 }
 
 void static_sk_path_effect_set(int key, sk_sp<SkPathEffect> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_path_effect[key] = std::move(value);
 }
 
 sk_sp<SkPathEffect> static_sk_path_effect_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_path_effect[key]);
 }

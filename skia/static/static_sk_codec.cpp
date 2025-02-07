@@ -23,20 +23,31 @@ int static_sk_codec_make(std::unique_ptr<SkCodec> value) {
 }
 
 void static_sk_codec_delete(int key) {
-    delete static_sk_codec[key].get();
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_codec[key].reset();
     static_sk_codec.erase(key);
     static_sk_codec_available_keys.insert(key);
 }
 
 void *static_sk_codec_get(int key) { // -> SkCodec *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_codec[key].get();
 }
 
 void static_sk_codec_set(int key, std::unique_ptr<SkCodec> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_codec[key] = std::move(value);
 }
 
 std::unique_ptr<SkCodec> static_sk_codec_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_codec[key]);
 }

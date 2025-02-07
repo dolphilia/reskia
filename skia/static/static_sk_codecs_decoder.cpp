@@ -23,19 +23,30 @@ int static_sk_codecs_decoder_make(SkCodecs::Decoder value) {
 }
 
 void static_sk_codecs_decoder_delete(int key) {
-    delete &static_sk_codecs_decoder[key];
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_codecs_decoder.erase(key);
     static_sk_codecs_decoder_available_keys.insert(key);
 }
 
 SkCodecs::Decoder static_sk_codecs_decoder_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_codecs_decoder[key];
 }
 
 void * static_sk_codecs_decoder_get_ptr(int key) { // -> SkCodecs::Decoder *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_codecs_decoder[key];
 }
 
 void static_sk_codecs_decoder_set(int key, SkCodecs::Decoder value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_codecs_decoder[key] = std::move(value);
 }

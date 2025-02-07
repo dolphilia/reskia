@@ -23,18 +23,30 @@ int static_sk_rsx_form_make(SkRSXform value) {
 }
 
 void static_sk_rsx_form_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_rsx_form.erase(key);
     static_sk_rsx_form_available_keys.insert(key);
 }
 
 SkRSXform static_sk_rsx_form_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_rsx_form[key];
 }
 
 void * static_sk_rsx_form_get_ptr(int key) { // -> SkRSXform *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_rsx_form[key];
 }
 
 void static_sk_rsx_form_set(int key, SkRSXform value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_rsx_form[key] = value;
 }

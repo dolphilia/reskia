@@ -23,20 +23,31 @@ int static_const_sk_capabilities_make(sk_sp<const SkCapabilities> value) {
 }
 
 void static_const_sk_capabilities_delete(int key) {
-    delete static_const_sk_capabilities[key].get();
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_const_sk_capabilities[key].reset();
     static_const_sk_capabilities.erase(key);
     static_const_sk_capabilities_available_keys.insert(key);
 }
 
 const void *static_const_sk_capabilities_get(int key) { // -> const SkCapabilities *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_const_sk_capabilities[key].get();
 }
 
 void static_const_sk_capabilities_set(int key, sk_sp<const SkCapabilities> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_const_sk_capabilities[key] = std::move(value);
 }
 
 sk_sp<const SkCapabilities> static_const_sk_capabilities_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_const_sk_capabilities[key]);
 }

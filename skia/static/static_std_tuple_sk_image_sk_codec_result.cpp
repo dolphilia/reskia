@@ -23,14 +23,23 @@ int static_tuple_sk_image_sk_codec_result_make(std::tuple<sk_sp<SkImage>, SkCode
 }
 
 void static_tuple_sk_image_sk_codec_result_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_tuple_sk_image_sk_codec_result.erase(key);
     static_tuple_sk_image_sk_codec_result_available_keys.insert(key);
 }
 
-std::tuple<sk_sp<SkImage>, SkCodec::Result> static_tuple_sk_image_sk_codec_result_get(int key, int index) {
+std::tuple<sk_sp<SkImage>, SkCodec::Result> static_tuple_sk_image_sk_codec_result_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_tuple_sk_image_sk_codec_result[key];
 }
 
 void static_tuple_sk_image_sk_codec_result_set(int key, std::tuple<sk_sp<SkImage>, SkCodec::Result> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_tuple_sk_image_sk_codec_result[key] = std::move(value);
 }

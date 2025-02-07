@@ -9,61 +9,68 @@
 
 #include "../static/static_sk_runtime_effect_child.h"
 #include "../static/static_sk_runtime_effect_uniform.h"
+#include "../static/static_sk_mesh_specification_attribute.h"
+#include "../static/static_sk_mesh_specification_result.h"
 
 #include "../static/static_sk_runtime_effect_child-internal.h"
 #include "../static/static_sk_runtime_effect_uniform-internal.h"
-
+#include "../static/static_sk_mesh_specification_attribute-internal.h"
+#include "../static/static_sk_mesh_specification_result-internal.h"
 
 extern "C" {
 
-SkSpan<const SkMeshSpecification::Attribute> SkMeshSpecification_attributes(SkMeshSpecification* spec) {
-    return spec->attributes();
+void SkMeshSpecification_delete(void* spec) {
+    delete static_cast<SkMeshSpecification *>(spec);
 }
 
-size_t SkMeshSpecification_uniformSize(SkMeshSpecification* spec) {
-    return spec->uniformSize();
+sk_mesh_specification_attribute_t SkMeshSpecification_attributes(void* spec) {
+    return static_sk_mesh_specification_attribute_make(static_cast<SkMeshSpecification *>(spec)->attributes());
 }
 
-const_sk_runtime_effect_uniform_t SkMeshSpecification_uniforms(SkMeshSpecification* spec) {
-    return static_const_sk_runtime_effect_uniform_make(spec->uniforms());
+size_t SkMeshSpecification_uniformSize(void* spec) {
+    return static_cast<SkMeshSpecification *>(spec)->uniformSize();
 }
 
-const_sk_runtime_effect_child_t SkMeshSpecification_children(SkMeshSpecification* spec) {
-    return static_const_sk_runtime_effect_child_make(spec->children());
+const_sk_runtime_effect_uniform_t SkMeshSpecification_uniforms(void* spec) {
+    return static_const_sk_runtime_effect_uniform_make(static_cast<SkMeshSpecification *>(spec)->uniforms());
 }
 
-const SkRuntimeEffect::Child* SkMeshSpecification_findChild(SkMeshSpecification* spec, std::string_view * name) {
-    return spec->findChild(*name);
+const_sk_runtime_effect_child_t SkMeshSpecification_children(void* spec) {
+    return static_const_sk_runtime_effect_child_make(static_cast<SkMeshSpecification *>(spec)->children());
 }
 
-const SkRuntimeEffect::Uniform* SkMeshSpecification_findUniform(SkMeshSpecification* spec, std::string_view * name) {
-    return spec->findUniform(*name);
+const void * SkMeshSpecification_findChild(void* spec, void * name) {
+    return static_cast<SkMeshSpecification *>(spec)->findChild(* static_cast<std::string_view *>(name));
 }
 
-const SkMeshSpecification::Attribute* SkMeshSpecification_findAttribute(SkMeshSpecification* spec, std::string_view * name) {
-    return spec->findAttribute(*name);
+const void * SkMeshSpecification_findUniform(void* spec, void * name) {
+    return static_cast<SkMeshSpecification *>(spec)->findUniform(*static_cast<std::string_view *>(name));
 }
 
-const SkMeshSpecification::Varying* SkMeshSpecification_findVarying(SkMeshSpecification* spec, std::string_view * name) {
-    return spec->findVarying(*name);
+const void * SkMeshSpecification_findAttribute(void* spec, void * name) {
+    return static_cast<SkMeshSpecification *>(spec)->findAttribute(*static_cast<std::string_view *>(name));
 }
 
-size_t SkMeshSpecification_stride(SkMeshSpecification* spec) {
-    return spec->stride();
+const void * SkMeshSpecification_findVarying(void* spec, void * name) {
+    return static_cast<SkMeshSpecification *>(spec)->findVarying(*static_cast<std::string_view *>(name));
+}
+
+size_t SkMeshSpecification_stride(void* spec) {
+    return static_cast<SkMeshSpecification *>(spec)->stride();
 }
 
 // static
 
-SkMeshSpecification::Result SkMeshSpecification_Make(SkSpan<const SkMeshSpecification::Attribute> * attributes, size_t vertexStride, SkSpan<const SkMeshSpecification::Varying> * varyings, const SkString * vs, const SkString * fs) {
-    return SkMeshSpecification::Make(*attributes, vertexStride, *varyings, *vs, *fs);
+sk_mesh_specification_result_t SkMeshSpecification_Make(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs)));
 }
 
-SkMeshSpecification::Result SkMeshSpecification_Make_2(SkSpan<const SkMeshSpecification::Attribute> * attributes, size_t vertexStride, SkSpan<const SkMeshSpecification::Varying> * varyings, const SkString * vs, const SkString * fs, sk_sp<SkColorSpace> * cs) {
-    return SkMeshSpecification::Make(*attributes, vertexStride, *varyings, *vs, *fs, *cs);
+sk_mesh_specification_result_t SkMeshSpecification_Make_2(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs, void * cs) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs), * static_cast<sk_sp<SkColorSpace> *>(cs)));
 }
 
-SkMeshSpecification::Result SkMeshSpecification_Make_3(SkSpan<const SkMeshSpecification::Attribute> * attributes, size_t vertexStride, SkSpan<const SkMeshSpecification::Varying> * varyings, const SkString * vs, const SkString * fs, sk_sp<SkColorSpace> * cs, SkAlphaType at) {
-    return SkMeshSpecification::Make(*attributes, vertexStride, *varyings, *vs, *fs, *cs, at);
+sk_mesh_specification_result_t SkMeshSpecification_Make_3(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs, void * cs, int at) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs), * static_cast<sk_sp<SkColorSpace> *>(cs), static_cast<SkAlphaType>(at)));
 }
 
 }

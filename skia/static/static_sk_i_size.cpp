@@ -23,18 +23,30 @@ int static_sk_i_size_make(SkISize value) {
 }
 
 void static_sk_i_size_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_i_size.erase(key);
     static_sk_i_size_available_keys.insert(key);
 }
 
 SkISize static_sk_i_size_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_i_size[key];
 }
 
 void * static_sk_i_size_get_ptr(int key) { // -> SkISize *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_i_size[key];
 }
 
 void static_sk_i_size_set(int key, SkISize value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_i_size[key] = value;
 }

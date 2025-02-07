@@ -23,18 +23,30 @@ int static_sk_runtime_effect_builder_builder_uniform_make(SkRuntimeEffectBuilder
 }
 
 void static_sk_runtime_effect_builder_builder_uniform_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_runtime_effect_builder_builder_uniform.erase(key);
     static_sk_runtime_effect_builder_builder_uniform_available_keys.insert(key);
 }
 
 SkRuntimeEffectBuilder::BuilderUniform static_sk_runtime_effect_builder_builder_uniform_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_runtime_effect_builder_builder_uniform[key];
 }
 
 void * static_sk_runtime_effect_builder_builder_uniform_get_ptr(int key) { // -> SkRuntimeEffectBuilder::BuilderUniform *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_runtime_effect_builder_builder_uniform[key];
 }
 
 void static_sk_runtime_effect_builder_builder_uniform_set(int key, SkRuntimeEffectBuilder::BuilderUniform value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_runtime_effect_builder_builder_uniform[key] = value;
 }

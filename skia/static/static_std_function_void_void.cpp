@@ -25,14 +25,23 @@ int static_function_void_void_make(std::function<void(void)> value) {
 }
 
 void static_function_void_void_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_function_void_void.erase(key);
     static_function_void_void_available_keys.insert(key);
 }
 
 std::function<void(void)> static_function_void_void_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_function_void_void[key];
 }
 
 void static_function_void_void_set(int key, std::function<void(void)> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_function_void_void[key] = std::move(value);
 }

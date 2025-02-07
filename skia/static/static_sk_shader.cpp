@@ -25,19 +25,31 @@ int static_sk_shader_make(sk_sp<SkShader> value) {
 }
 
 void static_sk_shader_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_shader[key].reset();
     static_sk_shader.erase(key);
     static_sk_shader_available_keys.insert(key);
 }
 
 void * static_sk_shader_get(int key) { // -> SkShader *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_shader[key].get();
 }
 
 void static_sk_shader_set(int key, sk_sp<SkShader> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_shader[key] = std::move(value);
 }
 
 sk_sp<SkShader> static_sk_shader_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_shader[key]);
 }

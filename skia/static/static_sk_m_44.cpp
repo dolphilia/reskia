@@ -23,18 +23,30 @@ int static_sk_m_44_make(SkM44 value) {
 }
 
 void static_sk_m_44_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_m_44.erase(key);
     static_sk_m_44_available_keys.insert(key);
 }
 
 SkM44 static_sk_m_44_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_m_44[key];
 }
 
 void * static_sk_m_44_get_ptr(int key) { // -> SkM44 *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_m_44[key];
 }
 
 void static_sk_m_44_set(int key, SkM44 value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_m_44[key] = value;
 }

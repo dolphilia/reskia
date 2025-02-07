@@ -26,22 +26,33 @@ int static_int_vector_ptr_make(std::vector<int>* value) {
 }
 
 void static_int_vector_ptr_delete(int key) {
-    delete static_int_vector_ptr_map[key];
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_int_vector_ptr_map.erase(key);
     static_int_vector_ptr_available_keys.insert(key);
 }
 
 void* static_int_vector_ptr_get(int key) { // 実際は std::vector<int>* を返したい
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     // 返り値を C 互換の void* にしている例
     // もちろん C++ のみで使うなら、 std::vector<int>* をそのまま返してもOK
     return static_int_vector_ptr_map[key];
 }
 
 void static_int_vector_ptr_set(int key, std::vector<int>* value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_int_vector_ptr_map[key] = value;
 }
 
 std::vector<int>* static_int_vector_ptr_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     // マップから取り出して返す
     std::vector<int>* tmp = static_int_vector_ptr_map[key];
     // テーブルから削除

@@ -25,19 +25,31 @@ int static_sk_drawable_make(sk_sp<SkDrawable> value) {
 }
 
 void static_sk_drawable_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_drawable[key].reset();
     static_sk_drawable.erase(key);
     static_sk_drawable_available_keys.insert(key);
 }
 
 void *static_sk_drawable_get(int key) { // -> SkDrawable *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_drawable[key].get();
 }
 
 void static_sk_drawable_set(int key, sk_sp<SkDrawable> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_drawable[key] = std::move(value);
 }
 
 sk_sp<SkDrawable> static_sk_drawable_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_drawable[key]);
 }

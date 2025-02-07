@@ -23,18 +23,30 @@ int static_sk_v4_make(SkV4 value) {
 }
 
 void static_sk_v4_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_v4.erase(key);
     static_sk_v4_available_keys.insert(key);
 }
 
 SkV4 static_sk_v4_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_v4[key];
 }
 
 void * static_sk_v4_get_ptr(int key) { // -> SkV4 *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_v4[key];
 }
 
 void static_sk_v4_set(int key, SkV4 value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_v4[key] = value;
 }

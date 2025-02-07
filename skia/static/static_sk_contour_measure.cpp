@@ -25,20 +25,31 @@ int static_sk_contour_measure_make(sk_sp<SkContourMeasure> value) {
 }
 
 void static_sk_contour_measure_delete(int key) {
-    free(static_sk_contour_measure[key].get());
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_contour_measure[key].reset();
     static_sk_contour_measure.erase(key);
     static_sk_contour_measure_available_keys.insert(key);
 }
 
 void *static_sk_contour_measure_get(int key) { // -> SkContourMeasure *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_contour_measure[key].get();
 }
 
 void static_sk_contour_measure_set(int key, sk_sp<SkContourMeasure> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_contour_measure[key] = std::move(value);
 }
 
 sk_sp<SkContourMeasure> static_sk_contour_measure_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_contour_measure[key]);
 }

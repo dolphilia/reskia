@@ -25,19 +25,31 @@ int static_sk_font_style_set_make(sk_sp<SkFontStyleSet> value) {
 }
 
 void static_sk_font_style_set_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_font_style_set[key].reset();
     static_sk_font_style_set.erase(key);
     static_sk_font_style_set_available_keys.insert(key);
 }
 
 void *static_sk_font_style_set_get(int key) { // -> SkFontStyleSet *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_font_style_set[key].get();
 }
 
 void static_sk_font_style_set_set(int key, sk_sp<SkFontStyleSet> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_font_style_set[key] = std::move(value);
 }
 
 sk_sp<SkFontStyleSet> static_sk_font_style_set_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_font_style_set[key]);
 }

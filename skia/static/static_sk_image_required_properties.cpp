@@ -23,18 +23,30 @@ int static_sk_image_required_properties_make(SkImage::RequiredProperties value) 
 }
 
 void static_sk_image_required_properties_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_image_required_properties.erase(key);
     static_sk_image_required_properties_available_keys.insert(key);
 }
 
 SkImage::RequiredProperties static_sk_image_required_properties_get(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_image_required_properties[key];
 }
 
 void * static_sk_image_required_properties_get_ptr(int key) { // -> SkImage::RequiredProperties *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return &static_sk_image_required_properties[key];
 }
 
 void static_sk_image_required_properties_set(int key, SkImage::RequiredProperties value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_image_required_properties[key] = value;
 }

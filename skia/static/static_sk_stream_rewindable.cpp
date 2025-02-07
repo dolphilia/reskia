@@ -23,19 +23,31 @@ int static_sk_stream_rewindable_make(std::unique_ptr<SkStreamRewindable> value) 
 }
 
 void static_sk_stream_rewindable_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_stream_rewindable[key].reset();
     static_sk_stream_rewindable.erase(key);
     static_sk_stream_rewindable_available_keys.insert(key);
 }
 
 void *static_sk_stream_rewindable_get(int key) { // -> SkStreamRewindable *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_stream_rewindable[key].get();
 }
 
 void static_sk_stream_rewindable_set(int key, std::unique_ptr<SkStreamRewindable> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_stream_rewindable[key] = std::move(value);
 }
 
 std::unique_ptr<SkStreamRewindable> static_sk_stream_rewindable_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_stream_rewindable[key]);
 }

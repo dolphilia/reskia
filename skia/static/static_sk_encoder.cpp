@@ -23,19 +23,31 @@ int static_sk_encoder_make(std::unique_ptr<SkEncoder> value) {
 }
 
 void static_sk_encoder_delete(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_encoder[key].reset();
     static_sk_encoder.erase(key);
     static_sk_encoder_available_keys.insert(key);
 }
 
 void *static_sk_encoder_get(int key) { // -> SkEncoder *
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return static_sk_encoder[key].get();
 }
 
 void static_sk_encoder_set(int key, std::unique_ptr<SkEncoder> value) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     static_sk_encoder[key] = std::move(value);
 }
 
 std::unique_ptr<SkEncoder> static_sk_encoder_move(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
     return std::move(static_sk_encoder[key]);
 }
