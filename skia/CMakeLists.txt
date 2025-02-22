@@ -632,6 +632,7 @@ list(APPEND SOURCE_FILES
         binding/sk_r_rect.cpp
 #        binding/sk_raster_handle_allocator.cpp
 #        binding/sk_raw_decoder.cpp
+        binding/sk_read_buffer.cpp
         binding/sk_rect.cpp
         binding/sk_ref_cnt_base.cpp
         binding/sk_ref_cnt.cpp
@@ -674,6 +675,7 @@ list(APPEND SOURCE_FILES
         binding/sk_wbmp_decoder.cpp
         binding/sk_webp_decoder.cpp
 #        binding/sk_webp_encoder.cpp
+        binding/sk_write_buffer.cpp
         binding/sk_yuva_info.cpp
         binding/sk_yuva_pixmap_info.cpp
         binding/sk_yuva_pixmaps.cpp
@@ -738,6 +740,7 @@ list(APPEND SOURCE_FILES
         static/static_sk_mesh_specification_attribute.cpp
         static/static_sk_mesh_specification_result.cpp
         static/static_sk_mesh_vertex_buffer.cpp
+        static/static_sk_paint.cpp
         static/static_sk_path_effect.cpp
         static/static_sk_path.cpp
         static/static_sk_picture.cpp

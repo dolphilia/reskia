@@ -36,3 +36,10 @@ SkFlattenable::Factory static_sk_flattenable_factory_get(int key) {
     }
     return static_sk_flattenable_factory[key];
 }
+
+void * static_sk_flattenable_factory_get_ptr(int key) {
+    if (key < 0) {
+        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
+    }
+    return (void *)static_sk_flattenable_factory[key];
+}
