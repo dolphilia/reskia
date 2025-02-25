@@ -24,35 +24,27 @@ int static_sk_stream_make(std::unique_ptr<SkStream> value) {
     return key;
 }
 
+void static_sk_stream_set(int key, std::unique_ptr<SkStream> value) {
+    static_sk_stream[key] = std::move(value);
+}
+
+std::unique_ptr<SkStream> static_sk_stream_get_entity(int key) {
+    return std::move(static_sk_stream[key]);
+}
+
+extern "C" {
+
 void static_sk_stream_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     delete &static_sk_stream[key];
     static_sk_stream[key].reset();
     static_sk_stream.erase(key);
     static_sk_stream_available_keys.insert(key);
 }
 
-void *static_sk_stream_get(int key) { // -> SkStream *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_stream_get_ptr(int key) { // -> SkStream *
     return static_sk_stream[key].get();
 }
 
-void static_sk_stream_set(int key, std::unique_ptr<SkStream> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_stream[key] = std::move(value);
-}
-
-std::unique_ptr<SkStream> static_sk_stream_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_stream[key]);
 }
 
 // static_sk_stream_ptr
@@ -74,34 +66,26 @@ int static_sk_stream_ptr_make(std::unique_ptr<SkStream>* value) {
     return key;
 }
 
-void static_sk_stream_ptr_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_stream_ptr.erase(key);
-    static_sk_stream_ptr_available_keys.insert(key);
-}
-
-void* static_sk_stream_ptr_get(int key) { // -> SkStream*
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_stream_ptr[key]->get();
-}
-
 void static_sk_stream_ptr_set(int key, std::unique_ptr<SkStream>* value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_stream_ptr[key] = value;
 }
 
-std::unique_ptr<SkStream>* static_sk_stream_ptr_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+std::unique_ptr<SkStream>* static_sk_stream_ptr_get_entity(int key) {
     auto tmp = static_sk_stream_ptr[key];
     static_sk_stream_ptr.erase(key);
     static_sk_stream_ptr_available_keys.insert(key);
     return tmp; // 所有権(？)の移動
+}
+
+extern "C" {
+
+void static_sk_stream_ptr_delete(int key) {
+    static_sk_stream_ptr.erase(key);
+    static_sk_stream_ptr_available_keys.insert(key);
+}
+
+void* static_sk_stream_ptr_get_ptr(int key) { // -> SkStream*
+    return static_sk_stream_ptr[key]->get();
+}
+
 }

@@ -45,11 +45,11 @@ sk_color_4f_t SkColorMatrixFilter_filterColor4f(void *color_matrix_filter, const
 }
 
 sk_color_filter_t SkColorMatrixFilter_makeComposed(void *color_matrix_filter, sk_color_filter_t colorFilter) {
-    return static_sk_color_filter_make(static_cast<SkColorMatrixFilter *>(color_matrix_filter)->makeComposed(static_sk_color_filter_move(colorFilter)));
+    return static_sk_color_filter_make(static_cast<SkColorMatrixFilter *>(color_matrix_filter)->makeComposed(static_sk_color_filter_get_entity(colorFilter)));
 }
 
 sk_color_filter_t SkColorMatrixFilter_makeWithWorkingColorSpace(void *color_matrix_filter, sk_color_space_t colorSpace) {
-    return static_sk_color_filter_make(static_cast<SkColorMatrixFilter *>(color_matrix_filter)->makeWithWorkingColorSpace(static_sk_color_space_move(colorSpace)));
+    return static_sk_color_filter_make(static_cast<SkColorMatrixFilter *>(color_matrix_filter)->makeWithWorkingColorSpace(static_sk_color_space_get_entity(colorSpace)));
 }
 
 sk_flattenable_factory_t SkColorMatrixFilter_getFactory(void *color_matrix_filter) {
@@ -103,11 +103,11 @@ sk_flattenable_factory_t SkColorMatrixFilter_NameToFactory(const char name[]) {
 }
 
 const char * SkColorMatrixFilter_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkColorMatrixFilter::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkColorMatrixFilter::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkColorMatrixFilter_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkColorMatrixFilter::Register(name, static_sk_flattenable_factory_get(factory));
+    SkColorMatrixFilter::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 }

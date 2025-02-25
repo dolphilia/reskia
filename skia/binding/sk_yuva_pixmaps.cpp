@@ -78,7 +78,7 @@ sk_yuva_pixmaps_t SkYUVAPixmaps_Allocate(const void *yuvaPixmapInfo) {
 }
 
 sk_yuva_pixmaps_t SkYUVAPixmaps_FromData(const void *yuvaPixmapInfo, sk_data_t data) {
-    return static_sk_yuva_pixmaps_make(SkYUVAPixmaps::FromData(* static_cast<const SkYUVAPixmapInfo *>(yuvaPixmapInfo), static_sk_data_move(data)));
+    return static_sk_yuva_pixmaps_make(SkYUVAPixmaps::FromData(* static_cast<const SkYUVAPixmapInfo *>(yuvaPixmapInfo), static_sk_data_get_entity(data)));
 }
 
 sk_yuva_pixmaps_t SkYUVAPixmaps_MakeCopy(const void *src) {

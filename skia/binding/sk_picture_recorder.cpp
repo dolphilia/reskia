@@ -26,7 +26,7 @@ void SkPictureRecorder_delete(void *picture_recorder) {
 }
 
 void *SkPictureRecorder_beginRecording(void *picture_recorder, const void *bounds, sk_b_box_hierarchy_t b_box_hierarchy) {
-    return static_cast<SkPictureRecorder *>(picture_recorder)->beginRecording(* static_cast<const SkRect *>(bounds), static_sk_b_box_hierarchy_move(b_box_hierarchy));
+    return static_cast<SkPictureRecorder *>(picture_recorder)->beginRecording(* static_cast<const SkRect *>(bounds), static_sk_b_box_hierarchy_get_entity(b_box_hierarchy));
 }
 
 void * SkPictureRecorder_beginRecording_2(void *picture_recorder, const void *bounds, void *bbhFactory) {

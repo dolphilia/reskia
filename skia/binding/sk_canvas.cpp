@@ -129,7 +129,7 @@ void SkCanvas_clipRRect_3(void *canvas, const void *rrect, int op, bool doAntiAl
 }
 
 void SkCanvas_clipShader(void *canvas, sk_shader_t shader, int op) {
-    static_cast<SkCanvas *>(canvas)->clipShader(static_sk_shader_move(shader), static_cast<SkClipOp>(op));
+    static_cast<SkCanvas *>(canvas)->clipShader(static_sk_shader_get_entity(shader), static_cast<SkClipOp>(op));
 }
 
 void SkCanvas_concat(void *canvas, const void * m44) {
@@ -150,7 +150,7 @@ void SkCanvas_discard(void *canvas) {
 }
 
 void SkCanvas_drawAnnotation(void *canvas, const void * rect, const char * key, sk_data_t data) {
-    static_cast<SkCanvas *>(canvas)->drawAnnotation(* static_cast<const SkRect *>(rect), key, static_sk_data_move(data));
+    static_cast<SkCanvas *>(canvas)->drawAnnotation(* static_cast<const SkRect *>(rect), key, static_sk_data_get_entity(data));
 }
 
 void SkCanvas_drawAnnotation_2(void *canvas, const void * rect, const char * key, void * value) {
@@ -166,7 +166,7 @@ void SkCanvas_drawAtlas(void *canvas, const void * atlas, const void * xform, co
 }
 
 void SkCanvas_drawCircle(void *canvas, sk_point_t center, float radius, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawCircle(static_sk_point_get(center), radius, * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawCircle(static_sk_point_get_entity(center), radius, * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawCircle_2(void *canvas, float cx, float cy, float radius, const void * paint) {
@@ -194,23 +194,23 @@ void SkCanvas_drawDRRect(void *canvas, const void *outer, const void *inner, con
 }
 
 void SkCanvas_drawGlyphs(void *canvas, int count, const void * glyphs, const void * positions, const void * clusters, int textByteCount, const char * utf8text, sk_point_t origin, const void * font, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_cast<const uint32_t *>(clusters), textByteCount, utf8text, static_sk_point_get(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_cast<const uint32_t *>(clusters), textByteCount, utf8text, static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawGlyphs_2(void *canvas, int count, const void * glyphs, const void * positions, sk_point_t origin, const void * font, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_sk_point_get(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawGlyphs_3(void *canvas, int count, const void * glyphs, const void * xforms, sk_point_t origin, const void * font, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkRSXform *>(xforms), static_sk_point_get(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkRSXform *>(xforms), static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawImage(void *canvas, sk_image_t image, float left, float top) {
-    static_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_move(image), left, top);
+    static_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), left, top);
 }
 
 void SkCanvas_drawImage_2(void *canvas, sk_image_t image, float x, float y, const void * sampling, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_move(image), x, y, * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), x, y, * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawImage_3(void *canvas, const void * image, float x, float y, const void * sampling, const void * paint) {
@@ -234,11 +234,11 @@ void SkCanvas_drawImageNine(void *canvas, const void * image, const void * cente
 }
 
 void SkCanvas_drawImageRect(void *canvas, sk_image_t image, const void * dst, const void * sampling, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_move(image), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawImageRect_2(void *canvas, sk_image_t image, const void * src, const void * dst, const void * sampling, const void * paint, int constraint) {
-    static_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_move(image), * static_cast<const SkRect *>(src), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
+    static_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * static_cast<const SkRect *>(src), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
 void SkCanvas_drawImageRect_3(void *canvas, const void * image, const void * dst, const void * sampling, const void * paint) {
@@ -254,7 +254,7 @@ void SkCanvas_drawIRect(void *canvas, const void * rect, const void * paint) {
 }
 
 void SkCanvas_drawLine(void *canvas, sk_point_t p0, sk_point_t p1, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawLine(static_sk_point_get(p0), static_sk_point_get(p1), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawLine(static_sk_point_get_entity(p0), static_sk_point_get_entity(p1), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawLine_2(void *canvas, float x0, float y0, float x1, float y1, const void * paint) {
@@ -262,7 +262,7 @@ void SkCanvas_drawLine_2(void *canvas, float x0, float y0, float x1, float y1, c
 }
 
 void SkCanvas_drawMesh(void *canvas, const void * mesh, sk_blender_t blender, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawMesh(* static_cast<const SkMesh *>(mesh), static_sk_blender_move(blender), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawMesh(* static_cast<const SkMesh *>(mesh), static_sk_blender_get_entity(blender), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawOval(void *canvas, const void * oval, const void * paint) {
@@ -282,11 +282,11 @@ void SkCanvas_drawPath(void *canvas, const void * path, const void * paint) {
 }
 
 void SkCanvas_drawPicture(void *canvas, sk_picture_t picture) {
-    static_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_move(picture));
+    static_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture));
 }
 
 void SkCanvas_drawPicture_2(void *canvas, sk_picture_t picture, const void * matrix, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_move(picture), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawPicture_3(void *canvas, const void * picture) {
@@ -298,7 +298,7 @@ void SkCanvas_drawPicture_4(void *canvas, const void * picture, const void * mat
 }
 
 void SkCanvas_drawPoint(void *canvas, sk_point_t p, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawPoint(static_sk_point_get(p), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawPoint(static_sk_point_get_entity(p), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawPoint_2(void *canvas, float x, float y, const void * paint) {
@@ -310,7 +310,7 @@ void SkCanvas_drawPoints(void *canvas, int mode, size_t count, const void * pts,
 }
 
 void SkCanvas_drawRect(void *canvas, sk_rect_t rect, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawRect(static_sk_rect_get(rect), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawRect(static_sk_rect_get_entity(rect), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawRegion(void *canvas, const void * region, const void * paint) {
@@ -338,7 +338,7 @@ void SkCanvas_drawString_2(void *canvas, const void * str, float x, float y, con
 }
 
 void SkCanvas_drawTextBlob(void *canvas, sk_text_blob_t text_blob, float x, float y, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawTextBlob(static_sk_text_blob_move(text_blob), x, y, * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawTextBlob(static_sk_text_blob_get_entity(text_blob), x, y, * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawTextBlob_2(void *canvas, const void * blob, float x, float y, const void * paint) {
@@ -346,7 +346,7 @@ void SkCanvas_drawTextBlob_2(void *canvas, const void * blob, float x, float y, 
 }
 
 void SkCanvas_drawVertices(void *canvas, sk_vertices_t vertices, int mode, const void * paint) {
-    static_cast<SkCanvas *>(canvas)->drawVertices(static_sk_vertices_move(vertices), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
+    static_cast<SkCanvas *>(canvas)->drawVertices(static_sk_vertices_get_entity(vertices), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawVertices_2(void *canvas, const void * vertices, int mode, const void * paint) {

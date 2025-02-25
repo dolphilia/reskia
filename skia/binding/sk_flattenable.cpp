@@ -63,11 +63,11 @@ sk_flattenable_factory_t SkFlattenable_NameToFactory(const char name[]) {
 }
 
 const char * SkFlattenable_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkFlattenable::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkFlattenable::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkFlattenable_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkFlattenable::Register(name, static_sk_flattenable_factory_get(factory));
+    SkFlattenable::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 sk_flattenable_t SkFlattenable_Deserialize(int type, const void *data, size_t length, const void *procs) {

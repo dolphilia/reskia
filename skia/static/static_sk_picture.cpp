@@ -24,32 +24,24 @@ int static_sk_picture_make(sk_sp<SkPicture> value) {
     return key;
 }
 
+void static_sk_picture_set(int key, sk_sp<SkPicture> value) {
+    static_sk_picture[key] = std::move(value);
+}
+
+sk_sp<SkPicture> static_sk_picture_get_entity(int key) {
+    return std::move(static_sk_picture[key]);
+}
+
+extern "C" {
+
 void static_sk_picture_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_picture[key].reset();
     static_sk_picture.erase(key);
     static_sk_picture_available_keys.insert(key);
 }
 
-void *static_sk_picture_get(int key) { // -> SkPicture *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_picture_get_ptr(int key) { // -> SkPicture *
     return static_sk_picture[key].get();
 }
 
-void static_sk_picture_set(int key, sk_sp<SkPicture> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_picture[key] = std::move(value);
-}
-
-sk_sp<SkPicture> static_sk_picture_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_picture[key]);
 }

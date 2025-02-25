@@ -125,7 +125,7 @@ sk_rect_t SkRect_makeOffset(void *rect, float dx, float dy) {
 }
 
 sk_rect_t SkRect_makeOffset_2(void *rect, sk_point_t v) {
-    return static_sk_rect_make(static_cast<SkRect *>(rect)->makeOffset(static_sk_point_get(v)));
+    return static_sk_rect_make(static_cast<SkRect *>(rect)->makeOffset(static_sk_point_get_entity(v)));
 }
 
 sk_rect_t SkRect_makeInset(void *rect, float dx, float dy) {

@@ -46,7 +46,7 @@ void *SkString_new_6(const void *str) {
 }
 
 void *SkString_new_7(string_view_t view) {
-    return new SkString(static_string_view_get(view));
+    return new SkString(static_string_view_get_entity(view));
 }
 
 void SkString_delete(void *string) {
@@ -137,7 +137,7 @@ void SkString_set_3(void *string, const char text[], size_t len) {
 }
 
 void SkString_set_4(void *string, string_view_t str) {
-    static_cast<SkString *>(string)->set(static_string_view_get(str));
+    static_cast<SkString *>(string)->set(static_string_view_get_entity(str));
 }
 
 void SkString_insert(void *string, size_t offset, const char text[]) {
@@ -153,7 +153,7 @@ void SkString_insert_3(void *string, size_t offset, const void *str) {
 }
 
 void SkString_insert_4(void *string, size_t offset, string_view_t str) {
-    static_cast<SkString *>(string)->insert(offset, static_string_view_get(str));
+    static_cast<SkString *>(string)->insert(offset, static_string_view_get_entity(str));
 }
 
 void SkString_insertUnichar(void *string, size_t offset, int unichar) {
@@ -197,7 +197,7 @@ void SkString_append_3(void *string, const void *str) {
 }
 
 void SkString_append_4(void *string, string_view_t str) {
-    static_cast<SkString *>(string)->append(static_string_view_get(str));
+    static_cast<SkString *>(string)->append(static_string_view_get_entity(str));
 }
 
 void SkString_appendUnichar(void *string, int uni) {
@@ -241,7 +241,7 @@ void SkString_prepend_3(void *string, const void *str) {
 }
 
 void SkString_prepend_4(void *string, string_view_t str) {
-    static_cast<SkString *>(string)->prepend(static_string_view_get(str));
+    static_cast<SkString *>(string)->prepend(static_string_view_get_entity(str));
 }
 
 void SkString_prependUnichar(void *string, int uni) {

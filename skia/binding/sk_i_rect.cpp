@@ -93,7 +93,7 @@ void SkIRect_setWH(void *i_rect, int32_t width, int32_t height) {
 }
 
 void SkIRect_setSize(void *i_rect, sk_i_size_t size) {
-    static_cast<SkIRect *>(i_rect)->setSize(static_sk_i_size_get(size));
+    static_cast<SkIRect *>(i_rect)->setSize(static_sk_i_size_get_entity(size));
 }
 
 sk_i_rect_t SkIRect_makeOffset(void *i_rect, int32_t dx, int32_t dy) {
@@ -101,7 +101,7 @@ sk_i_rect_t SkIRect_makeOffset(void *i_rect, int32_t dx, int32_t dy) {
 }
 
 sk_i_rect_t SkIRect_makeOffset_2(void *i_rect, sk_i_point_t offset) {
-    return static_sk_i_rect_make(static_cast<SkIRect *>(i_rect)->makeOffset(static_sk_i_point_get(offset)));
+    return static_sk_i_rect_make(static_cast<SkIRect *>(i_rect)->makeOffset(static_sk_i_point_get_entity(offset)));
 }
 
 sk_i_rect_t SkIRect_makeInset(void *i_rect, int32_t dx, int32_t dy) {
@@ -187,7 +187,7 @@ sk_i_rect_t SkIRect_MakeSize(const void *size) {
 }
 
 sk_i_rect_t SkIRect_MakePtSize(sk_i_point_t pt, sk_i_size_t size) {
-    return static_sk_i_rect_make(SkIRect::MakePtSize(static_sk_i_point_get(pt), static_sk_i_size_get(size)));
+    return static_sk_i_rect_make(SkIRect::MakePtSize(static_sk_i_point_get_entity(pt), static_sk_i_size_get_entity(size)));
 }
 
 sk_i_rect_t SkIRect_MakeLTRB(int32_t l, int32_t t, int32_t r, int32_t b) {

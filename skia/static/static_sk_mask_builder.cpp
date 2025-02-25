@@ -23,28 +23,19 @@ int static_sk_mask_builder_make(SkMaskBuilder value) {
     return key;
 }
 
+void static_sk_mask_builder_set(int key, SkMaskBuilder value) {
+    static_sk_mask_builder[key] = std::move(value);
+}
+
+extern "C" {
+
 void static_sk_mask_builder_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_mask_builder.erase(key);
     static_sk_mask_builder_available_keys.insert(key);
 }
 
-//SkMaskBuilder static_sk_mask_builder_get(int key) {
-//    return static_sk_mask_builder[key];
-//}
-
 void * static_sk_mask_builder_get_ptr(int key) { // -> SkMaskBuilder *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_mask_builder[key];
 }
 
-void static_sk_mask_builder_set(int key, SkMaskBuilder value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_mask_builder[key] = std::move(value);
 }

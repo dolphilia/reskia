@@ -28,23 +28,23 @@ sk_image_t SkImages_RasterFromBitmap(const void *bitmap) {
 }
 
 sk_image_t SkImages_RasterFromCompressedTextureData(sk_data_t data, int width, int height, int type) {
-    return static_sk_image_make(SkImages::RasterFromCompressedTextureData(static_sk_data_move(data), width, height, static_cast<SkTextureCompressionType>(type)));
+    return static_sk_image_make(SkImages::RasterFromCompressedTextureData(static_sk_data_get_entity(data), width, height, static_cast<SkTextureCompressionType>(type)));
 }
 
 sk_image_t SkImages_DeferredFromEncodedData(sk_data_t data) {
-    return static_sk_image_make(SkImages::DeferredFromEncodedData(static_sk_data_move(data)));
+    return static_sk_image_make(SkImages::DeferredFromEncodedData(static_sk_data_get_entity(data)));
 }
 
 sk_image_t SkImages_DeferredFromGenerator(sk_image_generator_t image_generator) {
-    return static_sk_image_make(SkImages::DeferredFromGenerator(static_sk_image_generator_move(image_generator)));
+    return static_sk_image_make(SkImages::DeferredFromGenerator(static_sk_image_generator_get_entity(image_generator)));
 }
 
 sk_image_t SkImages_DeferredFromPicture(sk_picture_t picture, const void *dimensions, const void *matrix, const void *paint, int bitDepth, sk_color_space_t color_space, sk_surface_props_t props) {
-    return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_move(picture), * static_cast<const SkISize *>(dimensions), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_move(color_space), static_sk_surface_props_get(props)));
+    return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), * static_cast<const SkISize *>(dimensions), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space), static_sk_surface_props_get_entity(props)));
 }
 
 sk_image_t SkImages_DeferredFromPicture_2(sk_picture_t picture, const void *dimensions, const void *matrix, const void *paint, int bitDepth, sk_color_space_t color_space) {
-    return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_move(picture), * static_cast<const SkISize *>(dimensions), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_move(color_space)));
+    return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), * static_cast<const SkISize *>(dimensions), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space)));
 }
 
 sk_image_t SkImages_RasterFromPixmapCopy(const void *pixmap) {
@@ -56,11 +56,11 @@ sk_image_t SkImages_RasterFromPixmap(const void *pixmap, void (*rasterReleasePro
 }
 
 sk_image_t SkImages_RasterFromData(const void *info, sk_data_t data, size_t rowBytes) {
-    return static_sk_image_make(SkImages::RasterFromData(* static_cast<const SkImageInfo *>(info), static_sk_data_move(data), rowBytes));
+    return static_sk_image_make(SkImages::RasterFromData(* static_cast<const SkImageInfo *>(info), static_sk_data_get_entity(data), rowBytes));
 }
 
 sk_image_t SkImages_MakeWithFilter(sk_image_t image, const void *filter, const void *subset, const void *clipBounds, void *outSubset, void *offset) {
-    return static_sk_image_make(SkImages::MakeWithFilter(static_sk_image_move(image), static_cast<const SkImageFilter *>(filter), * static_cast<const SkIRect *>(subset), * static_cast<const SkIRect *>(clipBounds), static_cast<SkIRect *>(outSubset), static_cast<SkIPoint *>(offset)));
+    return static_sk_image_make(SkImages::MakeWithFilter(static_sk_image_get_entity(image), static_cast<const SkImageFilter *>(filter), * static_cast<const SkIRect *>(subset), * static_cast<const SkIRect *>(clipBounds), static_cast<SkIRect *>(outSubset), static_cast<SkIPoint *>(offset)));
 }
 
 }

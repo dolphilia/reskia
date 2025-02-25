@@ -26,7 +26,7 @@
 extern "C" {
 
 void *SkRuntimeShaderBuilder_new(sk_runtime_effect_t runtime_effect) {
-    return new SkRuntimeShaderBuilder(static_sk_runtime_effect_move(runtime_effect));
+    return new SkRuntimeShaderBuilder(static_sk_runtime_effect_get_entity(runtime_effect));
 }
 
 void *SkRuntimeShaderBuilder_new_2(const void *builder) {
@@ -46,11 +46,11 @@ const void * SkRuntimeShaderBuilder_effect(void *runtime_shader_builder) {
 }
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(void *runtime_shader_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(static_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->uniform(static_string_view_get(name)));
+    return static_sk_runtime_effect_builder_builder_uniform_make(static_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->uniform(static_string_view_get_entity(name)));
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(void *runtime_shader_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(static_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->child(static_string_view_get(name)));
+    return static_sk_runtime_effect_builder_builder_child_make(static_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->child(static_string_view_get_entity(name)));
 }
 
 const_sk_data_t SkRuntimeShaderBuilder_uniforms(void *runtime_shader_builder) {

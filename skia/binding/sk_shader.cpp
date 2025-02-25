@@ -45,11 +45,11 @@ int SkShader_makeWithLocalMatrix(void *shader, const void *matrix) {
 }
 
 int SkShader_makeWithColorFilter(void *shader, sk_color_filter_t color_filter) {
-    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithColorFilter(static_sk_color_filter_move(color_filter)));
+    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithColorFilter(static_sk_color_filter_get_entity(color_filter)));
 }
 
 int SkShader_makeWithWorkingColorSpace(void *shader, sk_color_space_t color_space) {
-    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithWorkingColorSpace(static_sk_color_space_move(color_space)));
+    return static_sk_shader_make(static_cast<SkShader *>(shader)->makeWithWorkingColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
 int SkShader_getFactory(void *shader) {
@@ -95,11 +95,11 @@ sk_flattenable_factory_t SkShader_NameToFactory(const char name[]) {
 }
 
 const char * SkShader_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkShader::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkShader::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkShader_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkShader::Register(name, static_sk_flattenable_factory_get(factory));
+    SkShader::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 sk_flattenable_t SkShader_Deserialize(int type, const void *data, size_t length, const void *procs) {

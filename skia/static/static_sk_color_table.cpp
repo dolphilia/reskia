@@ -24,32 +24,24 @@ int static_sk_color_table_make(sk_sp<SkColorTable> value) {
     return key;
 }
 
+void static_sk_color_table_set(int key, sk_sp<SkColorTable> value) {
+    static_sk_color_table[key] = std::move(value);
+}
+
+sk_sp<SkColorTable> static_sk_color_table_get_entity(int key) {
+    return std::move(static_sk_color_table[key]);
+}
+
+extern "C" {
+
 void static_sk_color_table_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_color_table[key].reset();
     static_sk_color_table.erase(key);
     static_sk_color_table_available_keys.insert(key);
 }
 
-void *static_sk_color_table_get(int key) { // -> SkColorTable *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_color_table_get_ptr(int key) { // -> SkColorTable *
     return static_sk_color_table[key].get();
 }
 
-void static_sk_color_table_set(int key, sk_sp<SkColorTable> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_color_table[key] = std::move(value);
-}
-
-sk_sp<SkColorTable> static_sk_color_table_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_color_table[key]);
 }

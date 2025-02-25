@@ -44,7 +44,7 @@ bool SkPixmap_reset_3(void *pixmap, const void *mask) {
 }
 
 void SkPixmap_setColorSpace(void *pixmap, sk_color_space_t color_space) {
-    return static_cast<SkPixmap *>(pixmap)->setColorSpace(static_sk_color_space_move(color_space));
+    return static_cast<SkPixmap *>(pixmap)->setColorSpace(static_sk_color_space_get_entity(color_space));
 }
 
 bool SkPixmap_extractSubset(void *pixmap, void *subset, const void *area) {

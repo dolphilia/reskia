@@ -22,24 +22,19 @@ int static_tuple_int_int_make(std::tuple<int, int> value) {
     return key;
 }
 
+void static_tuple_int_int_set(int key, std::tuple<int, int> value) {
+    static_tuple_int_int[key] = value;
+}
+
+std::tuple<int, int> static_tuple_int_int_get_entity(int key) {
+    return static_tuple_int_int[key];
+}
+
+extern "C" {
+
 void static_tuple_int_int_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_tuple_int_int.erase(key);
     static_tuple_int_int_available_keys.insert(key);
 }
 
-std::tuple<int, int> static_tuple_int_int_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_tuple_int_int[key];
-}
-
-void static_tuple_int_int_set(int key, std::tuple<int, int> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_tuple_int_int[key] = value;
 }

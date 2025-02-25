@@ -22,31 +22,23 @@ int static_sk_i_point_make(SkIPoint value) {
     return key;
 }
 
+void static_sk_i_point_set(int key, SkIPoint value) {
+    static_sk_i_point[key] = value;
+}
+
+SkIPoint static_sk_i_point_get_entity(int key) {
+    return static_sk_i_point[key];
+}
+
+extern "C" {
+
 void static_sk_i_point_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_i_point.erase(key);
     static_sk_i_point_available_keys.insert(key);
 }
 
-SkIPoint static_sk_i_point_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_i_point[key];
-}
-
 void * static_sk_i_point_get_ptr(int key) { // -> SkIPoint *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_i_point[key];
 }
 
-void static_sk_i_point_set(int key, SkIPoint value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_i_point[key] = value;
 }

@@ -24,31 +24,23 @@ int static_sk_image_info_make(SkImageInfo value) {
     return key;
 }
 
+void static_sk_image_info_set(int key, SkImageInfo value) {
+    static_sk_image_info[key] = std::move(value);
+}
+
+SkImageInfo static_sk_image_info_get_entity(int key) {
+    return static_sk_image_info[key];
+}
+
+extern "C" {
+
 void static_sk_image_info_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_image_info.erase(key);
     static_sk_image_info_available_keys.insert(key);
 }
 
-SkImageInfo static_sk_image_info_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_image_info[key];
-}
-
 void * static_sk_image_info_get_ptr(int key) { // -> SkImageInfo *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_image_info[key];
 }
 
-void static_sk_image_info_set(int key, SkImageInfo value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_image_info[key] = std::move(value);
 }

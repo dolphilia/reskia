@@ -39,29 +39,20 @@ int static_sk_point_two_make_float(float fx1, float fy1, float fx2, float fy2) {
     return key;
 }
 
+void static_sk_point_two_set(int key, SkPoint value1, SkPoint value2) {
+    static_sk_point_two[key][0] = value1;
+    static_sk_point_two[key][1] = value2;
+}
+
+extern "C" {
+
 void static_sk_point_two_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_point_two.erase(key);
     static_sk_point_two_available_keys.insert(key);
 }
 
-//SkPoint static_sk_point_two_get(int key) {
-//    return static_sk_point_two[key];
-//}
-
 void * static_sk_point_two_get_ptr(int key) { // -> SkPoint *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return reinterpret_cast<SkPoint *>(&static_sk_point_two[key]);
 }
 
-void static_sk_point_two_set(int key, SkPoint value1, SkPoint value2) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_point_two[key][0] = value1;
-    static_sk_point_two[key][1] = value2;
 }

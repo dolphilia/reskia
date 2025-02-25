@@ -108,11 +108,11 @@ sk_flattenable_factory_t SkImageFilter_NameToFactory(const char name[]) {
 }
 
 const char * SkImageFilter_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkImageFilter::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkImageFilter::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkImageFilter_Register(const char name[], sk_flattenable_factory_t factory) {
-    return SkImageFilter::Register(name, static_sk_flattenable_factory_get(factory));
+    return SkImageFilter::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 }

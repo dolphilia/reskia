@@ -314,7 +314,7 @@ void SkMatrix_mapHomogeneousPoints_2(void *matrix, void * dst, const void * src,
 }
 
 sk_point_t SkMatrix_mapPoint(void *matrix, sk_point_t pt) {
-    return static_sk_point_make(static_cast<SkMatrix *>(matrix)->mapPoint(static_sk_point_get(pt)));
+    return static_sk_point_make(static_cast<SkMatrix *>(matrix)->mapPoint(static_sk_point_get_entity(pt)));
 }
 
 void SkMatrix_mapXY(void *matrix, float x, float y, void *result) {
@@ -413,11 +413,11 @@ sk_matrix_t SkMatrix_Translate(float dx, float dy) {
 }
 
 sk_matrix_t SkMatrix_Translate_2(sk_point_t t) {
-    return static_sk_matrix_make(SkMatrix::Translate(static_sk_point_get(t)));
+    return static_sk_matrix_make(SkMatrix::Translate(static_sk_point_get_entity(t)));
 }
 
 sk_matrix_t SkMatrix_Translate_3(sk_i_point_t t) {
-    return static_sk_matrix_make(SkMatrix::Translate(static_sk_i_point_get(t)));
+    return static_sk_matrix_make(SkMatrix::Translate(static_sk_i_point_get_entity(t)));
 }
 
 sk_matrix_t SkMatrix_RotateDeg(float deg) {
@@ -425,7 +425,7 @@ sk_matrix_t SkMatrix_RotateDeg(float deg) {
 }
 
 sk_matrix_t SkMatrix_RotateDeg_2(float deg, sk_point_t pt) {
-    return static_sk_matrix_make(SkMatrix::RotateDeg(deg, static_sk_point_get(pt)));
+    return static_sk_matrix_make(SkMatrix::RotateDeg(deg, static_sk_point_get_entity(pt)));
 }
 
 sk_matrix_t SkMatrix_RotateRad(float rad) {

@@ -22,24 +22,19 @@ int static_tuple_int_sk_yuva_pixmap_info_data_type_make(std::tuple<int, SkYUVAPi
     return key;
 }
 
+void static_tuple_int_sk_yuva_pixmap_info_data_type_set(int key, std::tuple<int, SkYUVAPixmapInfo::DataType> value) {
+    static_tuple_int_sk_yuva_pixmap_info_data_type[key] = std::move(value);
+}
+
+std::tuple<int, SkYUVAPixmapInfo::DataType> static_tuple_int_sk_yuva_pixmap_info_data_type_get_entity(int key) {
+    return static_tuple_int_sk_yuva_pixmap_info_data_type[key];
+}
+
+extern "C" {
+
 void static_tuple_int_sk_yuva_pixmap_info_data_type_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_tuple_int_sk_yuva_pixmap_info_data_type.erase(key);
     static_tuple_int_sk_yuva_pixmap_info_data_type_available_keys.insert(key);
 }
 
-std::tuple<int, SkYUVAPixmapInfo::DataType> static_tuple_int_sk_yuva_pixmap_info_data_type_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_tuple_int_sk_yuva_pixmap_info_data_type[key];
-}
-
-void static_tuple_int_sk_yuva_pixmap_info_data_type_set(int key, std::tuple<int, SkYUVAPixmapInfo::DataType> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_tuple_int_sk_yuva_pixmap_info_data_type[key] = std::move(value);
 }

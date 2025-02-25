@@ -21,7 +21,7 @@ void SkShaderMaskFilter_delete(void *shaderMaskFilter) {
 // static
 
 sk_mask_filter_t SkShaderMaskFilter_Make(sk_shader_t shader) {
-    return static_sk_mask_filter_make(SkShaderMaskFilter::Make(static_sk_shader_move(shader)));
+    return static_sk_mask_filter_make(SkShaderMaskFilter::Make(static_sk_shader_get_entity(shader)));
 }
 
 }

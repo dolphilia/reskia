@@ -22,31 +22,23 @@ int static_sk_stroke_rec_make(SkStrokeRec value) {
     return key;
 }
 
+void static_sk_stroke_rec_set(int key, SkStrokeRec value) {
+    static_sk_stroke_rec.at(key) = value;
+}
+
+SkStrokeRec static_sk_stroke_rec_get_entity(int key) {
+    return static_sk_stroke_rec.at(key);
+}
+
+extern "C" {
+
 void static_sk_stroke_rec_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_stroke_rec.erase(key);
     static_sk_stroke_rec_available_keys.insert(key);
 }
 
-SkStrokeRec static_sk_stroke_rec_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_stroke_rec.at(key);
-}
-
 void * static_sk_stroke_rec_get_ptr(int key) { // -> SkStrokeRec *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_stroke_rec.at(key);
 }
 
-void static_sk_stroke_rec_set(int key, SkStrokeRec value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_stroke_rec.at(key) = value;
 }

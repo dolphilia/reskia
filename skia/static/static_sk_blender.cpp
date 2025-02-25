@@ -22,32 +22,24 @@ int static_sk_blender_make(sk_sp<SkBlender> value) {
     return key;
 }
 
+void static_sk_blender_set(int key, sk_sp<SkBlender> value) {
+    static_sk_blender[key] = std::move(value);
+}
+
+sk_sp<SkBlender> static_sk_blender_get_entity(int key) {
+    return std::move(static_sk_blender[key]);
+}
+
+extern "C" {
+
 void static_sk_blender_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_blender[key].reset();
     static_sk_blender.erase(key);
     static_sk_blender_available_keys.insert(key);
 }
 
-void *static_sk_blender_get(int key) { // -> SkBlender *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_blender_get_ptr(int key) { // -> SkBlender *
     return static_sk_blender[key].get();
 }
 
-void static_sk_blender_set(int key, sk_sp<SkBlender> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_blender[key] = std::move(value);
-}
-
-sk_sp<SkBlender> static_sk_blender_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_blender[key]);
 }

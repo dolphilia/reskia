@@ -109,11 +109,11 @@ sk_flattenable_factory_t SkDrawable_NameToFactory(const char name[]) {
 }
 
 const char * SkDrawable_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkDrawable::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkDrawable::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkDrawable_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkDrawable::Register(name, static_sk_flattenable_factory_get(factory));
+    SkDrawable::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 }

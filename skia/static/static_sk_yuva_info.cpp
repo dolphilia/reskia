@@ -22,31 +22,23 @@ int static_sk_yuva_info_make(SkYUVAInfo value) {
     return key;
 }
 
+void static_sk_yuva_info_set(int key, SkYUVAInfo value) {
+    static_sk_yuva_info[key] = value;
+}
+
+SkYUVAInfo static_sk_yuva_info_get_entity(int key) {
+    return static_sk_yuva_info[key];
+}
+
+extern "C" {
+
 void static_sk_yuva_info_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_yuva_info.erase(key);
     static_sk_yuva_info_available_keys.insert(key);
 }
 
-SkYUVAInfo static_sk_yuva_info_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_yuva_info[key];
-}
-
 void * static_sk_yuva_info_get_ptr(int key) { // -> SkYUVAInfo *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_yuva_info[key];
 }
 
-void static_sk_yuva_info_set(int key, SkYUVAInfo value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_yuva_info[key] = value;
 }

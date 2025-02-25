@@ -25,7 +25,7 @@ void SkBBoxHierarchy_insert_2(void *b_box_hierarchy, const void *rect, const voi
 }
 
 void SkBBoxHierarchy_search(void *b_box_hierarchy, const void *query, vector_int_ptr_t results) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->search(* static_cast<const SkRect *>(query), static_int_vector_ptr_move(results));
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->search(* static_cast<const SkRect *>(query), static_int_vector_ptr_get_entity(results));
 }
 
 size_t SkBBoxHierarchy_bytesUsed(void *b_box_hierarchy) {

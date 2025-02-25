@@ -24,32 +24,24 @@ int static_sk_document_make(sk_sp<SkDocument> value) {
     return key;
 }
 
+void static_sk_document_set(int key, sk_sp<SkDocument> value) {
+    static_sk_document[key] = std::move(value);
+}
+
+sk_sp<SkDocument> static_sk_document_get_entity(int key) {
+    return std::move(static_sk_document[key]);
+}
+
+extern "C" {
+
 void static_sk_document_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_document[key].reset();
     static_sk_document.erase(key);
     static_sk_document_available_keys.insert(key);
 }
 
-void *static_sk_document_get(int key) { // -> SkDocument *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_document_get_ptr(int key) { // -> SkDocument *
     return static_sk_document[key].get();
 }
 
-void static_sk_document_set(int key, sk_sp<SkDocument> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_document[key] = std::move(value);
-}
-
-sk_sp<SkDocument> static_sk_document_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_document[key]);
 }

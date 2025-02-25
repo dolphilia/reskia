@@ -22,31 +22,23 @@ int static_sk_runtime_effect_builder_builder_child_make(SkRuntimeEffectBuilder::
     return key;
 }
 
+void static_sk_runtime_effect_builder_builder_child_set(int key, SkRuntimeEffectBuilder::BuilderChild value) {
+    static_sk_runtime_effect_builder_builder_child[key] = value;
+}
+
+SkRuntimeEffectBuilder::BuilderChild static_sk_runtime_effect_builder_builder_child_get_entity(int key) {
+    return static_sk_runtime_effect_builder_builder_child[key];
+}
+
+extern "C" {
+
 void static_sk_runtime_effect_builder_builder_child_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_runtime_effect_builder_builder_child.erase(key);
     static_sk_runtime_effect_builder_builder_child_available_keys.insert(key);
 }
 
-SkRuntimeEffectBuilder::BuilderChild static_sk_runtime_effect_builder_builder_child_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_runtime_effect_builder_builder_child[key];
-}
-
 void * static_sk_runtime_effect_builder_builder_child_get_ptr(int key) { // -> SkRuntimeEffectBuilder::BuilderChild *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_runtime_effect_builder_builder_child[key];
 }
 
-void static_sk_runtime_effect_builder_builder_child_set(int key, SkRuntimeEffectBuilder::BuilderChild value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_runtime_effect_builder_builder_child[key] = value;
 }

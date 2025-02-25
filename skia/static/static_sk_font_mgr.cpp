@@ -24,32 +24,24 @@ int static_sk_font_mgr_make(sk_sp<SkFontMgr> value) {
     return key;
 }
 
+void static_sk_font_mgr_set(int key, sk_sp<SkFontMgr> value) {
+    static_sk_font_mgr[key] = std::move(value);
+}
+
+sk_sp<SkFontMgr> static_sk_font_mgr_get_entity(int key) {
+    return std::move(static_sk_font_mgr[key]);
+}
+
+extern "C" {
+
 void static_sk_font_mgr_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_font_mgr[key].reset();
     static_sk_font_mgr.erase(key);
     static_sk_font_mgr_available_keys.insert(key);
 }
 
-void *static_sk_font_mgr_get(int key) { // -> SkFontMgr *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_font_mgr_get_ptr(int key) { // -> SkFontMgr *
     return static_sk_font_mgr[key].get();
 }
 
-void static_sk_font_mgr_set(int key, sk_sp<SkFontMgr> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_font_mgr[key] = std::move(value);
-}
-
-sk_sp<SkFontMgr> static_sk_font_mgr_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_font_mgr[key]);
 }

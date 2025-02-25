@@ -22,24 +22,19 @@ int static_sk_cubic_resampler_make(SkCubicResampler value) {
     return key;
 }
 
+SkCubicResampler static_sk_cubic_resampler_get_entity(int key) {
+    return static_sk_cubic_resampler[key];
+}
+
+extern "C" {
+
 void static_sk_cubic_resampler_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_cubic_resampler.erase(key);
     static_sk_cubic_resampler_available_keys.insert(key);
 }
 
-SkCubicResampler static_sk_cubic_resampler_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_cubic_resampler[key];
+void * static_sk_cubic_resampler_get_ptr(int key) { // -> SkCubicResampler *
+    return &static_sk_cubic_resampler[key];
 }
 
-void * static_sk_cubic_resampler_get_ptr(int key) { // -> SkCubicResampler *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return &static_sk_cubic_resampler[key];
 }

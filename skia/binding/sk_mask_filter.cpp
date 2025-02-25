@@ -80,11 +80,11 @@ sk_flattenable_factory_t SkMaskFilter_NameToFactory(const char name[]) {
 }
 
 const char * SkMaskFilter_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkMaskFilter::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkMaskFilter::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkMaskFilter_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkMaskFilter::Register(name, static_sk_flattenable_factory_get(factory));
+    SkMaskFilter::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 }

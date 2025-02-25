@@ -24,32 +24,24 @@ int static_sk_mesh_vertex_buffer_make(sk_sp<SkMesh::VertexBuffer> value) {
     return key;
 }
 
+void static_sk_mesh_vertex_buffer_set(int key, sk_sp<SkMesh::VertexBuffer> value) {
+    static_sk_mesh_vertex_buffer[key] = std::move(value);
+}
+
+sk_sp<SkMesh::VertexBuffer> static_sk_mesh_vertex_buffer_get_entity(int key) {
+    return std::move(static_sk_mesh_vertex_buffer[key]);
+}
+
+extern "C" {
+
 void static_sk_mesh_vertex_buffer_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_mesh_vertex_buffer[key].reset();
     static_sk_mesh_vertex_buffer.erase(key);
     static_sk_mesh_vertex_buffer_available_keys.insert(key);
 }
 
-void *static_sk_mesh_vertex_buffer_get(int key) { // -> SkMesh::VertexBuffer *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_mesh_vertex_buffer_get_ptr(int key) { // -> SkMesh::VertexBuffer *
     return static_sk_mesh_vertex_buffer[key].get();
 }
 
-void static_sk_mesh_vertex_buffer_set(int key, sk_sp<SkMesh::VertexBuffer> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_mesh_vertex_buffer[key] = std::move(value);
-}
-
-sk_sp<SkMesh::VertexBuffer> static_sk_mesh_vertex_buffer_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_mesh_vertex_buffer[key]);
 }

@@ -51,15 +51,15 @@ sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(void *font_mgr, const char fam
 }
 
 sk_typeface_t SkFontMgr_makeFromData(void *font_mgr, sk_data_t data, int ttcIndex) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromData(static_sk_data_move(data), ttcIndex));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromData(static_sk_data_get_entity(data), ttcIndex));
 }
 
 sk_typeface_t SkFontMgr_makeFromStream(void *font_mgr, sk_stream_asset_t stream_asset, int ttcIndex) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_move(stream_asset), ttcIndex));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_get_entity(stream_asset), ttcIndex));
 }
 
 sk_typeface_t SkFontMgr_makeFromStream_2(void *font_mgr, sk_stream_asset_t stream_asset, const void *font_argments) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_move(stream_asset), * static_cast<const SkFontArguments *>(font_argments)));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_get_entity(stream_asset), * static_cast<const SkFontArguments *>(font_argments)));
 }
 
 sk_typeface_t SkFontMgr_makeFromFile(void *font_mgr, const char path[], int ttcIndex) {
@@ -67,7 +67,7 @@ sk_typeface_t SkFontMgr_makeFromFile(void *font_mgr, const char path[], int ttcI
 }
 
 sk_typeface_t SkFontMgr_legacyMakeTypeface(void *font_mgr, const char familyName[], sk_font_style_t style) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->legacyMakeTypeface(familyName, static_sk_font_style_get(style)));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->legacyMakeTypeface(familyName, static_sk_font_style_get_entity(style)));
 }
 
 bool SkFontMgr_unique(void *font_mgr) {

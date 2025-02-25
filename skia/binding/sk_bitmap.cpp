@@ -113,7 +113,7 @@ void SkBitmap_erase(void *bitmap, unsigned int c, const void *area) {
 }
 
 void SkBitmap_erase_2(void *bitmap, sk_color_4f_t c, const void *area) {
-    static_cast<SkBitmap *>(bitmap)->erase(static_sk_color_4f_get(c), * static_cast<const SkIRect *>(area));
+    static_cast<SkBitmap *>(bitmap)->erase(static_sk_color_4f_get_entity(c), * static_cast<const SkIRect *>(area));
 }
 
 void SkBitmap_eraseArea(void *bitmap, const void *area, unsigned int c) { // inline
@@ -129,7 +129,7 @@ void SkBitmap_eraseColor(void *bitmap, unsigned int c) {
 }
 
 void SkBitmap_eraseColor_2(void *bitmap, sk_color_4f_t c) {
-    static_cast<SkBitmap *>(bitmap)->eraseColor(static_sk_color_4f_get(c));
+    static_cast<SkBitmap *>(bitmap)->eraseColor(static_sk_color_4f_get_entity(c));
 }
 
 bool SkBitmap_extractAlpha(void *bitmap, void *dst) { // inline
@@ -313,7 +313,7 @@ bool SkBitmap_setInfo(void *bitmap, const void *imageInfo, size_t rowBytes) {
 }
 
 void SkBitmap_setPixelRef(void *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy) {
-    static_cast<SkBitmap *>(bitmap)->setPixelRef(static_sk_pixel_ref_move(pixelRef), dx, dy);
+    static_cast<SkBitmap *>(bitmap)->setPixelRef(static_sk_pixel_ref_get_entity(pixelRef), dx, dy);
 }
 
 void SkBitmap_setPixels(void *bitmap, void *pixels) {

@@ -23,31 +23,23 @@ int static_sk_mesh_result_make(SkMesh::Result value) {
     return key;
 }
 
+void static_sk_mesh_result_set(int key, SkMesh::Result value) {
+    static_sk_mesh_result[key] = value;
+}
+
+SkMesh::Result static_sk_mesh_result_get_entity(int key) {
+    return static_sk_mesh_result[key];
+}
+
+extern "C" {
+
 void static_sk_mesh_result_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_mesh_result.erase(key);
     static_sk_mesh_result_available_keys.insert(key);
 }
 
-SkMesh::Result static_sk_mesh_result_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_mesh_result[key];
-}
-
-void * static_sk_mesh_result_get_ptr(int key) { // -> SkPath *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void * static_sk_mesh_result_get_ptr(int key) {
     return &static_sk_mesh_result[key];
 }
 
-void static_sk_mesh_result_set(int key, SkMesh::Result value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_mesh_result[key] = value;
 }

@@ -49,7 +49,7 @@ int SkAndroidCodec_computeOutputAlphaType(void * androidCodec, bool requestedUnp
 }
 
 sk_color_space_t SkAndroidCodec_computeOutputColorSpace(void * androidCodec, int outputColorType, sk_color_space_t prefColorSpace) {
-    return static_sk_color_space_make(static_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorSpace(static_cast<SkColorType>(outputColorType), static_sk_color_space_move(prefColorSpace)));
+    return static_sk_color_space_make(static_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorSpace(static_cast<SkColorType>(outputColorType), static_sk_color_space_get_entity(prefColorSpace)));
 }
 
 int SkAndroidCodec_computeSampleSize(void * androidCodec, void * size) {
@@ -85,21 +85,21 @@ void * SkAndroidCodec_codec(void * androidCodec) {
 }
 
 bool SkAndroidCodec_getAndroidGainmap(void *androidCodec, void *outInfo, sk_stream_ptr_t outGainmapImageStream) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(static_cast<SkGainmapInfo *>(outInfo), static_sk_stream_ptr_move(outGainmapImageStream));
+    return static_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(static_cast<SkGainmapInfo *>(outInfo), static_sk_stream_ptr_get_entity(outGainmapImageStream));
 }
 
 // static
 
 sk_android_codec_t SkAndroidCodec_MakeFromCodec(sk_codec_t codec) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromCodec(static_sk_codec_move(codec)));
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromCodec(static_sk_codec_get_entity(codec)));
 }
 
 sk_android_codec_t SkAndroidCodec_MakeFromStream(sk_codec_t codec, void * pngChunkReader) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_move(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_get_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
 sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, void * pngChunkReader) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromData(static_sk_data_move(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromData(static_sk_data_get_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
 #ifdef __cplusplus

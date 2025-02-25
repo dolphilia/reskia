@@ -19,7 +19,7 @@ void SkExecutor_delete(void *executor) {
 }
 
 void SkExecutor_add(int function_void_void_key_in, void *executor) {
-    static_cast<SkExecutor *>(executor)->add(static_function_void_void_get(function_void_void_key_in));
+    static_cast<SkExecutor *>(executor)->add(static_function_void_void_get_entity(function_void_void_key_in));
 }
 
 void SkExecutor_borrow(void *executor) {

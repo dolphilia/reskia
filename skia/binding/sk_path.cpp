@@ -239,7 +239,7 @@ void * SkPath_arcTo_2(void *path, float x1, float y1, float x2, float y2, float 
 
 void * SkPath_arcTo_3(void *path, sk_point_t p1, sk_point_t p2, float radius) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->arcTo(static_sk_point_get(p1), static_sk_point_get(p2), radius);
+    return &p->arcTo(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2), radius);
 }
 
 void * SkPath_arcTo_4(void *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float x, float y) {
@@ -249,7 +249,7 @@ void * SkPath_arcTo_4(void *path, float rx, float ry, float xAxisRotate, int lar
 
 void * SkPath_arcTo_5(void *path, sk_point_t r, float xAxisRotate, int largeArc, int sweep, sk_point_t xy) {
     auto *p = static_cast<SkPath *>(path);
-    return &p->arcTo(static_sk_point_get(r), xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), static_sk_point_get(xy));
+    return &p->arcTo(static_sk_point_get_entity(r), xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), static_sk_point_get_entity(xy));
 }
 
 void * SkPath_rArcTo(void *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy) {
@@ -479,7 +479,7 @@ sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, int fillType, bool i
 }
 
 sk_path_t SkPath_Line(sk_point_t a, sk_point_t b) {
-    return static_sk_path_make(SkPath::Line(static_sk_point_get(a), static_sk_point_get(b)));
+    return static_sk_path_make(SkPath::Line(static_sk_point_get_entity(a), static_sk_point_get_entity(b)));
 }
 
 bool SkPath_IsLineDegenerate(const void *p1, const void *p2, bool exact) {

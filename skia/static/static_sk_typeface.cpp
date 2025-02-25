@@ -24,32 +24,24 @@ int static_sk_typeface_make(sk_sp<SkTypeface> value) {
     return key;
 }
 
+void static_sk_typeface_set(int key, sk_sp<SkTypeface> value) {
+    static_sk_typeface[key] = std::move(value);
+}
+
+sk_sp<SkTypeface> static_sk_typeface_get_entity(int key) {
+    return std::move(static_sk_typeface[key]);
+}
+
+extern "C" {
+
 void static_sk_typeface_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_typeface[key].reset();
     static_sk_typeface.erase(key);
     static_sk_typeface_available_keys.insert(key);
 }
 
-void * static_sk_typeface_get(int key) { // -> SkTypeface *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void * static_sk_typeface_get_ptr(int key) { // -> SkTypeface *
     return static_sk_typeface[key].get();
 }
 
-void static_sk_typeface_set(int key, sk_sp<SkTypeface> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_typeface[key] = std::move(value);
-}
-
-sk_sp<SkTypeface> static_sk_typeface_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_typeface[key]);
 }

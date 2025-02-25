@@ -4,7 +4,7 @@
 
 #include "sk_mesh_specification.h"
 
-#include "include/Core/SkColorSpace.h"
+#include "include/core/SkColorSpace.h"
 #include "include/core/SkMesh.h"
 
 #include "../static/static_sk_runtime_effect_child.h"

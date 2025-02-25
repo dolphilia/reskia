@@ -23,31 +23,23 @@ int static_sk_paint_make(SkPaint value) {
     return key;
 }
 
+void static_sk_paint_set(int key, SkPaint value) {
+    static_sk_paint[key] = value;
+}
+
+SkPaint static_sk_paint_get_entity(int key) {
+    return static_sk_paint[key];
+}
+
+extern "C" {
+
 void static_sk_paint_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_paint.erase(key);
     static_sk_paint_available_keys.insert(key);
 }
 
-SkPaint static_sk_paint_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_paint[key];
-}
-
-void static_sk_paint_set(int key, SkPaint value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_paint[key] = value;
-}
-
 void *static_sk_paint_get_ptr(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_paint[key];
+}
+
 }

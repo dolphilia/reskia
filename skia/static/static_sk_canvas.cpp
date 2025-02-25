@@ -22,32 +22,24 @@ int static_sk_canvas_make(std::unique_ptr<SkCanvas> value) {
     return key;
 }
 
+void static_sk_canvas_set(int key, std::unique_ptr<SkCanvas> value) {
+    static_sk_canvas[key] = std::move(value);
+}
+
+std::unique_ptr<SkCanvas> static_sk_canvas_get_entity(int key) {
+    return std::move(static_sk_canvas[key]);
+}
+
+extern "C" {
+
 void static_sk_canvas_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_canvas[key].reset();
     static_sk_canvas.erase(key);
     static_sk_canvas_available_keys.insert(key);
 }
 
-void *static_sk_canvas_get(int key) {  // -> SkCanvas *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_canvas_get_ptr(int key) {  // -> SkCanvas *
     return static_sk_canvas[key].get();
 }
 
-void static_sk_canvas_set(int key, std::unique_ptr<SkCanvas> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_canvas[key] = std::move(value);
-}
-
-std::unique_ptr<SkCanvas> static_sk_canvas_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_canvas[key]);
 }

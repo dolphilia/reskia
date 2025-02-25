@@ -29,11 +29,11 @@ const void * SkRuntimeEffectBuilder_effect(void *runtime_effect_builder) {
 }
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeEffectBuilder_uniform(void *runtime_effect_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(static_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->uniform(static_string_view_get(name)));
+    return static_sk_runtime_effect_builder_builder_uniform_make(static_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->uniform(static_string_view_get_entity(name)));
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeEffectBuilder_child(void *runtime_effect_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(static_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->child(static_string_view_get(name)));
+    return static_sk_runtime_effect_builder_builder_child_make(static_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->child(static_string_view_get_entity(name)));
 }
 
 const_sk_data_t SkRuntimeEffectBuilder_uniforms(void *runtime_effect_builder) {

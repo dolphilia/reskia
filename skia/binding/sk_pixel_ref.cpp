@@ -60,7 +60,7 @@ void SkPixelRef_setImmutable(void *pixel_ref) {
 }
 
 void SkPixelRef_addGenIDChangeListener(void *pixel_ref, sk_id_change_listener_t id_change_listener) {
-    static_cast<SkPixelRef *>(pixel_ref)->addGenIDChangeListener(static_sk_id_change_listener_move(id_change_listener));
+    static_cast<SkPixelRef *>(pixel_ref)->addGenIDChangeListener(static_sk_id_change_listener_get_entity(id_change_listener));
 }
 
 void SkPixelRef_notifyAddedToCache(void *pixel_ref) {

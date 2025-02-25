@@ -75,11 +75,11 @@ void SkPathEffect_unref(void *path_effect) {
 // static
 
 sk_path_effect_t SkPathEffect_MakeSum(sk_path_effect_t first, sk_path_effect_t second) {
-    return static_sk_path_effect_make(SkPathEffect::MakeSum(static_sk_path_effect_move(first), static_sk_path_effect_move(second)));
+    return static_sk_path_effect_make(SkPathEffect::MakeSum(static_sk_path_effect_get_entity(first), static_sk_path_effect_get_entity(second)));
 }
 
 sk_path_effect_t SkPathEffect_MakeCompose(sk_path_effect_t outer, sk_path_effect_t inner) {
-    return static_sk_path_effect_make(SkPathEffect::MakeCompose(static_sk_path_effect_move(outer), static_sk_path_effect_move(inner)));
+    return static_sk_path_effect_make(SkPathEffect::MakeCompose(static_sk_path_effect_get_entity(outer), static_sk_path_effect_get_entity(inner)));
 }
 
 int SkPathEffect_GetFlattenableType() {
@@ -95,11 +95,11 @@ sk_flattenable_factory_t SkPathEffect_NameToFactory(const char name[]) {
 }
 
 const char * SkPathEffect_FactoryToName(sk_flattenable_factory_t factory) {
-    return SkPathEffect::FactoryToName(static_sk_flattenable_factory_get(factory));
+    return SkPathEffect::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
 }
 
 void SkPathEffect_Register(const char name[], sk_flattenable_factory_t factory) {
-    SkPathEffect::Register(name, static_sk_flattenable_factory_get(factory));
+    SkPathEffect::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
 }

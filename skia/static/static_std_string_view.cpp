@@ -24,24 +24,19 @@ int static_string_view_make(std::string_view value) {
     return key;
 }
 
+void static_string_view_set(int key, std::string_view value) {
+    static_string_view[key] = value;
+}
+
+std::string_view static_string_view_get_entity(int key) {
+    return static_string_view[key];
+}
+
+extern "C" {
+
 void static_string_view_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_string_view.erase(key);
     static_string_view_available_keys.insert(key);
 }
 
-std::string_view static_string_view_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_string_view[key];
-}
-
-void static_string_view_set(int key, std::string_view value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_string_view[key] = value;
 }

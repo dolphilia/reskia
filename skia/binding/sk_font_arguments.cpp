@@ -29,7 +29,7 @@ sk_font_arguments_t SkFontArguments_setCollectionIndex(void *font_argments, int 
 }
 
 sk_font_arguments_t SkFontArguments_setVariationDesignPosition(void *font_argments, sk_font_arguments_variation_position_t position) {
-    return static_sk_font_arguments_make(static_cast<SkFontArguments *>(font_argments)->setVariationDesignPosition(static_sk_font_arguments_variation_position_get(position)));
+    return static_sk_font_arguments_make(static_cast<SkFontArguments *>(font_argments)->setVariationDesignPosition(static_sk_font_arguments_variation_position_get_entity(position)));
 }
 
 int SkFontArguments_getCollectionIndex(void *font_argments) {
@@ -41,7 +41,7 @@ sk_font_arguments_variation_position_t SkFontArguments_getVariationDesignPositio
 }
 
 sk_font_arguments_t SkFontArguments_setPalette(void *font_argments, sk_font_arguments_palette_t palette) {
-    return static_sk_font_arguments_make(static_cast<SkFontArguments *>(font_argments)->setPalette(static_sk_font_arguments_palette_get(palette)));
+    return static_sk_font_arguments_make(static_cast<SkFontArguments *>(font_argments)->setPalette(static_sk_font_arguments_palette_get_entity(palette)));
 }
 
 sk_font_arguments_palette_t SkFontArguments_getPalette(void *font_argments) {

@@ -30,36 +30,28 @@ int static_sk_mesh_child_ptr_make(SkSpan<SkMesh::ChildPtr> value) {
     return key;
 }
 
+void static_sk_mesh_child_ptr_set(int key, SkSpan<SkMesh::ChildPtr> value) {
+    static_sk_mesh_child_ptr[key] = value;
+}
+
+SkSpan<SkMesh::ChildPtr> static_sk_mesh_child_ptr_get_entity(int key) {
+    return static_sk_mesh_child_ptr[key];
+}
+
+extern "C" {
+
 void static_sk_mesh_child_ptr_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_mesh_child_ptr.erase(key);
     static_sk_mesh_child_ptr_available_keys.insert(key);
 }
 
-SkSpan<SkMesh::ChildPtr> static_sk_mesh_child_ptr_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_sk_mesh_child_ptr[key];
-}
-
 void * static_sk_mesh_child_ptr_get_ptr(int key, int index) { // -> SkString *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_sk_mesh_child_ptr[key][index];
 }
 
-void static_sk_mesh_child_ptr_set(int key, SkSpan<SkMesh::ChildPtr> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_mesh_child_ptr[key] = value;
 }
 
-//
+// const
 
 int static_const_sk_mesh_child_ptr_make(SkSpan<const SkMesh::ChildPtr> value) {
     int key;
@@ -74,31 +66,23 @@ int static_const_sk_mesh_child_ptr_make(SkSpan<const SkMesh::ChildPtr> value) {
     return key;
 }
 
+void static_const_sk_mesh_child_ptr_set(int key, SkSpan<const SkMesh::ChildPtr> value) {
+    static_const_sk_mesh_child_ptr[key] = value;
+}
+
+SkSpan<const SkMesh::ChildPtr> static_const_sk_mesh_child_ptr_get_entity(int key) {
+    return static_const_sk_mesh_child_ptr[key];
+}
+
+extern "C" {
+
 void static_const_sk_mesh_child_ptr_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_const_sk_mesh_child_ptr.erase(key);
     static_const_sk_mesh_child_ptr_available_keys.insert(key);
 }
 
-SkSpan<const SkMesh::ChildPtr> static_const_sk_mesh_child_ptr_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_const_sk_mesh_child_ptr[key];
-}
-
 void * static_const_sk_mesh_child_ptr_get_ptr(int key, int index) { // -> SkString *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return (void *)&static_const_sk_mesh_child_ptr[key][index];
 }
 
-void static_const_sk_mesh_child_ptr_set(int key, SkSpan<const SkMesh::ChildPtr> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_const_sk_mesh_child_ptr[key] = value;
 }

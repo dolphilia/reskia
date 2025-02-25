@@ -158,7 +158,7 @@ sk_shader_t SkPaint_refShader(void *paint) {
 }
 
 void SkPaint_setShader(void *paint, sk_shader_t shader) {
-    static_cast<SkPaint *>(paint)->setShader(static_sk_shader_move(shader));
+    static_cast<SkPaint *>(paint)->setShader(static_sk_shader_get_entity(shader));
 }
 
 void * SkPaint_getColorFilter(void *paint) {
@@ -170,7 +170,7 @@ sk_color_filter_t SkPaint_refColorFilter(void *paint) {
 }
 
 void SkPaint_setColorFilter(void *paint, sk_color_filter_t color_filter) {
-    static_cast<SkPaint *>(paint)->setColorFilter(static_sk_color_filter_move(color_filter));
+    static_cast<SkPaint *>(paint)->setColorFilter(static_sk_color_filter_get_entity(color_filter));
 }
 
 optional_sk_blend_mode_t SkPaint_asBlendMode(void *paint) {
@@ -198,7 +198,7 @@ sk_blender_t SkPaint_refBlender(void *paint) {
 }
 
 void SkPaint_setBlender(void *paint, sk_blender_t blender) {
-    static_cast<SkPaint *>(paint)->setBlender(static_sk_blender_move(blender));
+    static_cast<SkPaint *>(paint)->setBlender(static_sk_blender_get_entity(blender));
 }
 
 void * SkPaint_getPathEffect(void *paint) {
@@ -210,7 +210,7 @@ sk_path_effect_t SkPaint_refPathEffect(void *paint) {
 }
 
 void SkPaint_setPathEffect(void *paint, sk_path_effect_t path_effect) {
-    static_cast<SkPaint *>(paint)->setPathEffect(static_sk_path_effect_move(path_effect));
+    static_cast<SkPaint *>(paint)->setPathEffect(static_sk_path_effect_get_entity(path_effect));
 }
 
 void * SkPaint_getMaskFilter(void *paint) {
@@ -222,7 +222,7 @@ sk_mask_filter_t SkPaint_refMaskFilter(void *paint) {
 }
 
 void SkPaint_setMaskFilter(void *paint, sk_mask_filter_t mask_filter) {
-    static_cast<SkPaint *>(paint)->setMaskFilter(static_sk_mask_filter_move(mask_filter));
+    static_cast<SkPaint *>(paint)->setMaskFilter(static_sk_mask_filter_get_entity(mask_filter));
 }
 
 void * SkPaint_getImageFilter(void *paint) {
@@ -234,7 +234,7 @@ sk_image_filter_t SkPaint_refImageFilter(void *paint) {
 }
 
 void SkPaint_setImageFilter(void *paint, sk_image_filter_t image_filter) {
-    static_cast<SkPaint *>(paint)->setImageFilter(static_sk_image_filter_move(image_filter));
+    static_cast<SkPaint *>(paint)->setImageFilter(static_sk_image_filter_get_entity(image_filter));
 }
 
 bool SkPaint_nothingToDraw(void *paint) {

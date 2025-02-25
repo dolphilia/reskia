@@ -24,31 +24,23 @@ int static_const_sk_runtime_effect_child_ptr_make(SkSpan<const SkRuntimeEffect::
     return key;
 }
 
+void static_const_sk_runtime_effect_child_ptr_set(int key, SkSpan<const SkRuntimeEffect::ChildPtr> value) {
+    static_const_sk_runtime_effect_child_ptr[key] = value;
+}
+
+SkSpan<const SkRuntimeEffect::ChildPtr> static_const_sk_runtime_effect_child_ptr_get_entity(int key) {
+    return static_const_sk_runtime_effect_child_ptr[key];
+}
+
+extern "C" {
+
 void static_const_sk_runtime_effect_child_ptr_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_const_sk_runtime_effect_child_ptr.erase(key);
     static_const_sk_runtime_effect_child_ptr_available_keys.insert(key);
 }
 
-SkSpan<const SkRuntimeEffect::ChildPtr> static_const_sk_runtime_effect_child_ptr_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_const_sk_runtime_effect_child_ptr[key];
-}
-
 const void * static_const_sk_runtime_effect_child_ptr_get_ptr(int key, int index) { // -> const SkRuntimeEffect::ChildPtr *
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     return &static_const_sk_runtime_effect_child_ptr[key][index];
 }
 
-void static_const_sk_runtime_effect_child_ptr_set(int key, SkSpan<const SkRuntimeEffect::ChildPtr> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_const_sk_runtime_effect_child_ptr[key] = value;
 }

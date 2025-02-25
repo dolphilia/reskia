@@ -6,7 +6,7 @@
 #include "include/core/SkScalar.h"
 #include "include/codec/SkCodec.h"
 int static_vector_sk_codec_frame_info_make(std::vector<SkCodec::FrameInfo> value);
-SkCodec::FrameInfo static_vector_sk_codec_frame_info_get(int key, int index);
+SkCodec::FrameInfo static_vector_sk_codec_frame_info_get_entity(int key, int index);
 void static_vector_sk_codec_frame_info_set(int key, std::vector<SkCodec::FrameInfo> value);
 void static_vector_sk_codec_frame_info_push_back(int key, SkCodec::FrameInfo value);
 void static_vector_sk_codec_frame_info_insert(int key, int index, SkCodec::FrameInfo value);

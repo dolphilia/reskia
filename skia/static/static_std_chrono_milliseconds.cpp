@@ -22,24 +22,19 @@ int static_chrono_milliseconds_make(std::chrono::milliseconds value) {
     return key;
 }
 
+void static_chrono_milliseconds_set(int key, std::chrono::milliseconds value) {
+    static_chrono_milliseconds[key] = value;
+}
+
+std::chrono::milliseconds static_chrono_milliseconds_get_entity(int key) {
+    return static_chrono_milliseconds[key];
+}
+
+extern "C" {
+
 void static_chrono_milliseconds_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_chrono_milliseconds.erase(key);
     static_chrono_milliseconds_available_keys.insert(key);
 }
 
-std::chrono::milliseconds static_chrono_milliseconds_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_chrono_milliseconds[key];
-}
-
-void static_chrono_milliseconds_set(int key, std::chrono::milliseconds value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_chrono_milliseconds[key] = value;
 }

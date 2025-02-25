@@ -17,75 +17,75 @@ void SkPoint_delete(void *point) {
 }
 
 float SkPoint_x(sk_point_t point) {
-    return static_sk_point_get(point).x();
+    return static_sk_point_get_entity(point).x();
 }
 
 float SkPoint_y(sk_point_t point) {
-    return static_sk_point_get(point).y();
+    return static_sk_point_get_entity(point).y();
 }
 
 float SkPoint_dot(sk_point_t point, const void *vec) {
-    return static_sk_point_get(point).dot(* static_cast<const SkVector *>(vec));
+    return static_sk_point_get_entity(point).dot(* static_cast<const SkVector *>(vec));
 }
 
 float SkPoint_length(sk_point_t point) {
-    return static_sk_point_get(point).length();
+    return static_sk_point_get_entity(point).length();
 }
 
 float SkPoint_cross(sk_point_t point, const void *vec) {
-    return static_sk_point_get(point).cross(* static_cast<const SkVector *>(vec));
+    return static_sk_point_get_entity(point).cross(* static_cast<const SkVector *>(vec));
 }
 
 void SkPoint_set(sk_point_t point, float x, float y) {
-    static_sk_point_get(point).set(x, y);
+    static_sk_point_get_entity(point).set(x, y);
 }
 
 bool SkPoint_equals(sk_point_t point, float x, float y) {
-    return static_sk_point_get(point).equals(x, y);
+    return static_sk_point_get_entity(point).equals(x, y);
 }
 
 bool SkPoint_isZero(sk_point_t point) {
-    return static_sk_point_get(point).isZero();
+    return static_sk_point_get_entity(point).isZero();
 }
 
 void SkPoint_scale(sk_point_t point, float value) {
-    static_sk_point_get(point).scale(value);
+    static_sk_point_get_entity(point).scale(value);
 }
 
 void SkPoint_scale_2(sk_point_t point, float scale, void *dst) {
-    static_sk_point_get(point).scale(scale, static_cast<SkPoint *>(dst));
+    static_sk_point_get_entity(point).scale(scale, static_cast<SkPoint *>(dst));
 }
 
 bool SkPoint_isFinite(sk_point_t point) {
-    return static_sk_point_get(point).isFinite();
+    return static_sk_point_get_entity(point).isFinite();
 }
 
 float SkPoint_distanceToOrigin(sk_point_t point) {
-    return static_sk_point_get(point).distanceToOrigin();
+    return static_sk_point_get_entity(point).distanceToOrigin();
 }
 
 void SkPoint_iset(sk_point_t point, const void *p) {
-    static_sk_point_get(point).iset(* static_cast<const SkIPoint *>(p));
+    static_sk_point_get_entity(point).iset(* static_cast<const SkIPoint *>(p));
 }
 
 void SkPoint_iset_2(sk_point_t point, int32_t x, int32_t y) {
-    static_sk_point_get(point).iset(x, y);
+    static_sk_point_get_entity(point).iset(x, y);
 }
 
 void SkPoint_negate(sk_point_t point) {
-    static_sk_point_get(point).negate();
+    static_sk_point_get_entity(point).negate();
 }
 
 void SkPoint_setAbs(sk_point_t point, const void *pt) {
-    static_sk_point_get(point).setAbs(* static_cast<const SkPoint *>(pt));
+    static_sk_point_get_entity(point).setAbs(* static_cast<const SkPoint *>(pt));
 }
 
 bool SkPoint_setLength(sk_point_t point, float length) {
-    return static_sk_point_get(point).setLength(length);
+    return static_sk_point_get_entity(point).setLength(length);
 }
 
 bool SkPoint_setNormalize(sk_point_t point, float x, float y) {
-    return static_sk_point_get(point).setNormalize(x, y);
+    return static_sk_point_get_entity(point).setNormalize(x, y);
 }
 
 // static

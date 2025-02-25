@@ -31,7 +31,7 @@ void *SkYUVAInfo_new_2(const void *info) {
 }
 
 void *SkYUVAInfo_new_3(sk_i_size_t dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY) {
-    return new SkYUVAInfo(static_sk_i_size_get(dimensions), static_cast<SkYUVAInfo::PlaneConfig>(config), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkYUVColorSpace>(space), static_cast<SkEncodedOrigin>(origin), static_cast<SkYUVAInfo::Siting>(sitingX), static_cast<SkYUVAInfo::Siting>(sitingY));
+    return new SkYUVAInfo(static_sk_i_size_get_entity(dimensions), static_cast<SkYUVAInfo::PlaneConfig>(config), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkYUVColorSpace>(space), static_cast<SkEncodedOrigin>(origin), static_cast<SkYUVAInfo::Siting>(sitingX), static_cast<SkYUVAInfo::Siting>(sitingY));
 }
 
 void SkYUVAInfo_delete(void *yuvaInfo) {
@@ -111,7 +111,7 @@ sk_yuva_info_t SkYUVAInfo_makeSubsampling(void * yuva_info, int subsampling) {
 }
 
 sk_yuva_info_t SkYUVAInfo_makeDimensions(void * yuva_info, sk_i_size_t size) {
-    return static_sk_yuva_info_make(static_cast<SkYUVAInfo *>(yuva_info)->makeDimensions(static_sk_i_size_get(size)));
+    return static_sk_yuva_info_make(static_cast<SkYUVAInfo *>(yuva_info)->makeDimensions(static_sk_i_size_get_entity(size)));
 }
 
 bool SkYUVAInfo_isValid(void * yuva_info) {
@@ -129,7 +129,7 @@ tuple_int_int_t SkYUVAInfo_PlaneSubsamplingFactors(int config, int subsampling, 
 }
 
 int SkYUVAInfo_PlaneDimensions(sk_i_size_t imageDimensions, int plane, int subsampling, int origin, void * planeDimensions) {
-    return SkYUVAInfo::PlaneDimensions(static_sk_i_size_get(imageDimensions), static_cast<SkYUVAInfo::PlaneConfig>(plane), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkEncodedOrigin>(origin), static_cast<SkISize *>(planeDimensions));
+    return SkYUVAInfo::PlaneDimensions(static_sk_i_size_get_entity(imageDimensions), static_cast<SkYUVAInfo::PlaneConfig>(plane), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkEncodedOrigin>(origin), static_cast<SkISize *>(planeDimensions));
 }
 
 int SkYUVAInfo_NumPlanes(int config) {

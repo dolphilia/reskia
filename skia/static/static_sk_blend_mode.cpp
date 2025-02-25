@@ -23,32 +23,24 @@ int static_optional_sk_blend_mode_make(std::optional<SkBlendMode> value) {
     return key;
 }
 
+void static_optional_sk_blend_mode_set(int key, std::optional<SkBlendMode> value) {
+    static_optional_sk_blend_mode[key] = value;
+}
+
+std::optional<SkBlendMode> static_optional_sk_blend_mode_get_entity(int key) {
+    return static_optional_sk_blend_mode[key];
+}
+
+extern "C" {
+
 void static_optional_sk_blend_mode_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_optional_sk_blend_mode[key].reset();
     static_optional_sk_blend_mode.erase(key);
     static_optional_sk_blend_mode_available_keys.insert(key);
 }
 
-int static_optional_sk_blend_mode_get(int key) { // // -> (int)SkBlendMode
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+int static_optional_sk_blend_mode_get_ptr(int key) { // // -> (int)SkBlendMode
     return static_cast<int>(*static_optional_sk_blend_mode[key]);
 }
 
-void static_optional_sk_blend_mode_set(int key, std::optional<SkBlendMode> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_optional_sk_blend_mode[key] = value;
-}
-
-std::optional<SkBlendMode> static_optional_sk_blend_mode_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return static_optional_sk_blend_mode[key];
 }

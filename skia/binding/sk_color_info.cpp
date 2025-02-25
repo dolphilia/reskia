@@ -20,7 +20,7 @@ void *SkColorInfo_new() {
 }
 
 void *SkColorInfo_new_2(int ct, int at, sk_color_space_t color_space) {
-    return new SkColorInfo(static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_move(color_space));
+    return new SkColorInfo(static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space));
 }
 
 void *SkColorInfo_new_3(const void *color_info) {
@@ -60,7 +60,7 @@ sk_color_info_t SkColorInfo_makeAlphaType(void *color_info, int newAlphaType) {
 }
 
 sk_color_info_t SkColorInfo_makeColorSpace(void *color_info, sk_color_space_t color_space) {
-    return static_sk_color_info_make(static_cast<SkColorInfo *>(color_info)->makeColorSpace(static_sk_color_space_move(color_space)));
+    return static_sk_color_info_make(static_cast<SkColorInfo *>(color_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
 sk_color_info_t SkColorInfo_makeColorType(void *color_info, int newColorType) {

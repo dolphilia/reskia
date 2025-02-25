@@ -56,7 +56,7 @@ void SkWriteBuffer_write32(void * writeBuffer, int32_t value) {
 }
 
 void SkWriteBuffer_writeString(void * writeBuffer, string_view_t value) {
-    static_cast<SkWriteBuffer *>(writeBuffer)->writeString(static_string_view_get(value));
+    static_cast<SkWriteBuffer *>(writeBuffer)->writeString(static_string_view_get_entity(value));
 }
 
 void SkWriteBuffer_writeFlattenable(void * writeBuffer, const void * flattenable) {

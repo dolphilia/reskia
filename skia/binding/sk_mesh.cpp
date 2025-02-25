@@ -96,11 +96,11 @@ bool SkMesh_isValid(void * mesh) {
 // static
 
 sk_mesh_result_t SkMesh_Make(sk_mesh_specification_t spec, int mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const void * bounds) {
-    return static_sk_mesh_result_make(SkMesh::Make(static_sk_mesh_specification_move(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_move(vBuffer), vertexCount, vertexOffset, static_const_sk_data_move(uniforms), static_sk_mesh_child_ptr_get(children), * static_cast<const SkRect *>(bounds)));
+    return static_sk_mesh_result_make(SkMesh::Make(static_sk_mesh_specification_get_entity(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_get_entity(vBuffer), vertexCount, vertexOffset, static_const_sk_data_get_entity(uniforms), static_sk_mesh_child_ptr_get_entity(children), * static_cast<const SkRect *>(bounds)));
 }
 
 sk_mesh_result_t SkMesh_MakeIndexed(sk_mesh_specification_t spec, int mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, sk_mesh_index_buffer_t iBuffer, size_t indexCount, size_t indexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const void * bounds) {
-    return static_sk_mesh_result_make(SkMesh::MakeIndexed(static_sk_mesh_specification_move(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_move(vBuffer), vertexCount, vertexOffset, static_sk_mesh_index_buffer_move(iBuffer), indexCount, indexOffset, static_const_sk_data_move(uniforms), static_sk_mesh_child_ptr_get(children), * static_cast<const SkRect *>(bounds)));
+    return static_sk_mesh_result_make(SkMesh::MakeIndexed(static_sk_mesh_specification_get_entity(spec), static_cast<SkMesh::Mode>(mode), static_sk_mesh_vertex_buffer_get_entity(vBuffer), vertexCount, vertexOffset, static_sk_mesh_index_buffer_get_entity(iBuffer), indexCount, indexOffset, static_const_sk_data_get_entity(uniforms), static_sk_mesh_child_ptr_get_entity(children), * static_cast<const SkRect *>(bounds)));
 }
 
 }

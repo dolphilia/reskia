@@ -13,7 +13,7 @@
 extern "C" {
 
 void *SkCubicMap_new(sk_point_t p1, sk_point_t p2) {
-    return new SkCubicMap(static_sk_point_get(p1), static_sk_point_get(p2));
+    return new SkCubicMap(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2));
 }
 
 void SkCubicMap_delete(void * cubic_map) {
@@ -31,7 +31,7 @@ sk_point_t SkCubicMap_computeFromT(void * cubic_map, float t) {
 // static
 
 bool SkCubicMap_IsLinear(sk_point_t p1, sk_point_t p2) {
-    return SkCubicMap::IsLinear(static_sk_point_get(p1), static_sk_point_get(p2));
+    return SkCubicMap::IsLinear(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2));
 }
 
 }

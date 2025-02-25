@@ -27,7 +27,7 @@ void *SkMemoryStream_new_3(const void *data, size_t length, bool copyData) {
 }
 
 void *SkMemoryStream_new_4(sk_data_t data) {
-    return new SkMemoryStream(static_sk_data_move(data));
+    return new SkMemoryStream(static_sk_data_get_entity(data));
 }
 
 void SkMemoryStream_delete(void *memoryStream) {
@@ -47,7 +47,7 @@ sk_data_t SkMemoryStream_asData(void *memory_stream) {
 }
 
 void SkMemoryStream_setData(void *memory_stream, sk_data_t data) {
-    static_cast<SkMemoryStream *>(memory_stream)->setData(static_sk_data_move(data));
+    static_cast<SkMemoryStream *>(memory_stream)->setData(static_sk_data_get_entity(data));
 }
 
 void SkMemoryStream_skipToAlign4(void *memory_stream) {
@@ -161,7 +161,7 @@ sk_memory_stream_t SkMemoryStream_MakeDirect(const void *data, size_t length) {
 }
 
 sk_memory_stream_t SkMemoryStream_Make(sk_data_t data) {
-    return static_sk_memory_stream_make(SkMemoryStream::Make(static_sk_data_move(data)));
+    return static_sk_memory_stream_make(SkMemoryStream::Make(static_sk_data_get_entity(data)));
 }
 
 }

@@ -115,11 +115,11 @@ void SkSurface_asyncRescaleAndReadPixels(void *surface, const void *info, const 
 }
 
 void SkSurface_asyncRescaleAndReadPixelsYUV420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context) {
-    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
+    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_get_entity(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
 }
 
 void SkSurface_asyncRescaleAndReadPixelsYUVA420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context) {
-    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
+    static_cast<SkSurface *>(surface)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_get_entity(dstColorSpace), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkSurface::RescaleGamma>(rescaleGamma), static_cast<SkSurface::RescaleMode>(rescaleMode), callback, context);
 }
 
 void SkSurface_writePixels(void *surface, const void *src, int dstX, int dstY) {

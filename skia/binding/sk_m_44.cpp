@@ -93,15 +93,15 @@ sk_m_44_t SkM44_setScale(void *m44, float x, float y, float z) {
 }
 
 sk_m_44_t SkM44_setRotateUnitSinCos(void *m44, sk_v3_t axis, float sinAngle, float cosAngle) {
-    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnitSinCos(static_sk_v3_get(axis), sinAngle, cosAngle));
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnitSinCos(static_sk_v3_get_entity(axis), sinAngle, cosAngle));
 }
 
 sk_m_44_t SkM44_setRotateUnit(void *m44, sk_v3_t axis, float radians) {
-    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnit(static_sk_v3_get(axis), radians));
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotateUnit(static_sk_v3_get_entity(axis), radians));
 }
 
 sk_m_44_t SkM44_setRotate(void *m44, sk_v3_t axis, float radians) {
-    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotate(static_sk_v3_get(axis), radians));
+    return static_sk_m_44_make(static_cast<SkM44 *>(m44)->setRotate(static_sk_v3_get_entity(axis), radians));
 }
 
 sk_m_44_t SkM44_setConcat(void *m44, const void *a, const void *b) {
@@ -191,7 +191,7 @@ sk_m_44_t SkM44_Scale(float x, float y, float z) {
 }
 
 sk_m_44_t SkM44_Rotate(sk_v3_t axis, float radians) {
-    return static_sk_m_44_make(SkM44::Rotate(static_sk_v3_get(axis), radians));
+    return static_sk_m_44_make(SkM44::Rotate(static_sk_v3_get_entity(axis), radians));
 }
 
 sk_m_44_t SkM44_RectToRect(const void *src, const void *dst) {

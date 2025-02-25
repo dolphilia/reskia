@@ -68,7 +68,7 @@ void * SkPathBuilder_reset(void *path_builder) {
 }
 
 void * SkPathBuilder_moveTo(void *path_builder, sk_point_t pt) {
-    return &static_cast<SkPathBuilder *>(path_builder)->moveTo(static_sk_point_get(pt));
+    return &static_cast<SkPathBuilder *>(path_builder)->moveTo(static_sk_point_get_entity(pt));
 }
 
 void * SkPathBuilder_moveTo_2(void *path_builder, float x, float y) {
@@ -76,7 +76,7 @@ void * SkPathBuilder_moveTo_2(void *path_builder, float x, float y) {
 }
 
 void * SkPathBuilder_lineTo(void *path_builder, sk_point_t pt) {
-    return &static_cast<SkPathBuilder *>(path_builder)->lineTo(static_sk_point_get(pt));
+    return &static_cast<SkPathBuilder *>(path_builder)->lineTo(static_sk_point_get_entity(pt));
 }
 
 void * SkPathBuilder_lineTo_2(void *path_builder, float x, float y) {
@@ -84,7 +84,7 @@ void * SkPathBuilder_lineTo_2(void *path_builder, float x, float y) {
 }
 
 void * SkPathBuilder_quadTo(void *path_builder, sk_point_t pt1, sk_point_t pt2) {
-    return &static_cast<SkPathBuilder *>(path_builder)->quadTo(static_sk_point_get(pt1), static_sk_point_get(pt2));
+    return &static_cast<SkPathBuilder *>(path_builder)->quadTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2));
 }
 
 void * SkPathBuilder_quadTo_2(void *path_builder, float x1, float y1, float x2, float y2) {
@@ -96,7 +96,7 @@ void * SkPathBuilder_quadTo_3(void *path_builder, const void * pts) {
 }
 
 void * SkPathBuilder_conicTo(void *path_builder, sk_point_t pt1, sk_point_t pt2, float w) {
-    return &static_cast<SkPathBuilder *>(path_builder)->conicTo(static_sk_point_get(pt1), static_sk_point_get(pt2), w);
+    return &static_cast<SkPathBuilder *>(path_builder)->conicTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2), w);
 }
 
 void * SkPathBuilder_conicTo_2(void *path_builder, float x1, float y1, float x2, float y2, float w) {
@@ -108,7 +108,7 @@ void * SkPathBuilder_conicTo_3(void *path_builder, const void * pts, float w) {
 }
 
 void * SkPathBuilder_cubicTo(void *path_builder, sk_point_t pt1, sk_point_t pt2, sk_point_t pt3) {
-    return &static_cast<SkPathBuilder *>(path_builder)->cubicTo(static_sk_point_get(pt1), static_sk_point_get(pt2), static_sk_point_get(pt3));
+    return &static_cast<SkPathBuilder *>(path_builder)->cubicTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2), static_sk_point_get_entity(pt3));
 }
 
 void * SkPathBuilder_cubicTo_2(void *path_builder, float x1, float y1, float x2, float y2, float x3, float y3) {
@@ -132,7 +132,7 @@ void * SkPathBuilder_polylineTo_2(void *path_builder, const void *list) {
 }
 
 void * SkPathBuilder_rLineTo(void *path_builder, sk_point_t pt) {
-    return &static_cast<SkPathBuilder *>(path_builder)->rLineTo(static_sk_point_get(pt));
+    return &static_cast<SkPathBuilder *>(path_builder)->rLineTo(static_sk_point_get_entity(pt));
 }
 
 void * SkPathBuilder_rLineTo_2(void *path_builder, float x, float y) {
@@ -140,7 +140,7 @@ void * SkPathBuilder_rLineTo_2(void *path_builder, float x, float y) {
 }
 
 void * SkPathBuilder_rQuadTo(void *path_builder, sk_point_t pt1, sk_point_t pt2) {
-    return &static_cast<SkPathBuilder *>(path_builder)->rQuadTo(static_sk_point_get(pt1), static_sk_point_get(pt2));
+    return &static_cast<SkPathBuilder *>(path_builder)->rQuadTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2));
 }
 
 void * SkPathBuilder_rQuadTo_2(void *path_builder, float x1, float y1, float x2, float y2) {
@@ -148,7 +148,7 @@ void * SkPathBuilder_rQuadTo_2(void *path_builder, float x1, float y1, float x2,
 }
 
 void * SkPathBuilder_rConicTo(void *path_builder, sk_point_t p1, sk_point_t p2, float w) {
-    return &static_cast<SkPathBuilder *>(path_builder)->rConicTo(static_sk_point_get(p1), static_sk_point_get(p2), w);
+    return &static_cast<SkPathBuilder *>(path_builder)->rConicTo(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2), w);
 }
 
 void * SkPathBuilder_rConicTo_2(void *path_builder, float x1, float y1, float x2, float y2, float w) {
@@ -156,7 +156,7 @@ void * SkPathBuilder_rConicTo_2(void *path_builder, float x1, float y1, float x2
 }
 
 void * SkPathBuilder_rCubicTo(void *path_builder, sk_point_t pt1, sk_point_t pt2, sk_point_t pt3) {
-    return &static_cast<SkPathBuilder *>(path_builder)->rCubicTo(static_sk_point_get(pt1), static_sk_point_get(pt2), static_sk_point_get(pt3));
+    return &static_cast<SkPathBuilder *>(path_builder)->rCubicTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2), static_sk_point_get_entity(pt3));
 }
 
 void * SkPathBuilder_rCubicTo_2(void *path_builder, float x1, float y1, float x2, float y2, float x3, float y3) {
@@ -168,11 +168,11 @@ void * SkPathBuilder_arcTo(void *path_builder, const void *oval, float startAngl
 }
 
 void * SkPathBuilder_arcTo_2(void *path_builder, sk_point_t p1, sk_point_t p2, float radius) {
-    return &static_cast<SkPathBuilder *>(path_builder)->arcTo(static_sk_point_get(p1), static_sk_point_get(p2), radius);
+    return &static_cast<SkPathBuilder *>(path_builder)->arcTo(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2), radius);
 }
 
 void * SkPathBuilder_arcTo_3(void *path_builder, sk_point_t r, float xAxisRotate, int largeArc, int sweep, sk_point_t xy) {
-    return &static_cast<SkPathBuilder *>(path_builder)->arcTo(static_sk_point_get(r), xAxisRotate, static_cast<SkPathBuilder::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), static_sk_point_get(xy));
+    return &static_cast<SkPathBuilder *>(path_builder)->arcTo(static_sk_point_get_entity(r), xAxisRotate, static_cast<SkPathBuilder::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), static_sk_point_get_entity(xy));
 }
 
 void * SkPathBuilder_addArc(void *path_builder, const void *oval, float startAngleDeg, float sweepAngleDeg) {

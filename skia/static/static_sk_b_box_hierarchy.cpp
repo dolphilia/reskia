@@ -25,32 +25,24 @@ int static_sk_b_box_hierarchy_make(sk_sp<SkBBoxHierarchy> value) {
     return key;
 }
 
+void static_sk_b_box_hierarchy_set(int key, sk_sp<SkBBoxHierarchy> value) {
+    static_sk_b_box_hierarchy[key] = std::move(value);
+}
+
+sk_sp<SkBBoxHierarchy> static_sk_b_box_hierarchy_get_entity(int key) {
+    return std::move(static_sk_b_box_hierarchy[key]);
+}
+
+extern "C" {
+
 void static_sk_b_box_hierarchy_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_b_box_hierarchy[key].reset();
     static_sk_b_box_hierarchy.erase(key);
     static_sk_b_box_hierarchy_available_keys.insert(key);
 }
 
-void *static_sk_b_box_hierarchy_get(int key) { // -> SkBBoxHierarchy
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_b_box_hierarchy_get_ptr(int key) { // -> SkBBoxHierarchy
     return static_sk_b_box_hierarchy[key].get();
 }
 
-void static_sk_b_box_hierarchy_set(int key, sk_sp<SkBBoxHierarchy> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_b_box_hierarchy[key] = std::move(value);
-}
-
-sk_sp<SkBBoxHierarchy> static_sk_b_box_hierarchy_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_b_box_hierarchy[key]);
 }

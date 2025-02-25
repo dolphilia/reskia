@@ -25,32 +25,24 @@ int static_sk_android_codec_make(std::unique_ptr<SkAndroidCodec> value) {
     return key;
 }
 
+void static_sk_android_codec_set(int key, std::unique_ptr<SkAndroidCodec> value) {
+    static_sk_android_codec[key] = std::move(value);
+}
+
+std::unique_ptr<SkAndroidCodec> static_sk_android_codec_get_entity(int key) {
+    return std::move(static_sk_android_codec[key]);
+}
+
+extern "C" {
+
 void static_sk_android_codec_delete(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
     static_sk_android_codec[key].reset();
     static_sk_android_codec.erase(key);
     static_sk_android_codec_available_keys.insert(key);
 }
 
-void *static_sk_android_codec_get(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
+void *static_sk_android_codec_get_ptr(int key) {
     return static_sk_android_codec[key].get();
 }
 
-void static_sk_android_codec_set(int key, std::unique_ptr<SkAndroidCodec> value) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    static_sk_android_codec[key] = std::move(value);
-}
-
-std::unique_ptr<SkAndroidCodec> static_sk_android_codec_move(int key) {
-    if (key < 0) {
-        throw std::runtime_error("Error in " + std::string(__func__) + " at " + std::string(__FILE__) + ":" + std::to_string(__LINE__) + " - Invalid key: " + std::to_string(key));
-    }
-    return std::move(static_sk_android_codec[key]);
 }

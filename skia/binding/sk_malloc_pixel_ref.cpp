@@ -22,7 +22,7 @@ sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const void *imageInfo, size_t rowBy
 }
 
 sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const void *imageInfo, size_t rowBytes, sk_data_t data) {
-    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeWithData(* static_cast<const SkImageInfo *>(imageInfo), rowBytes, static_sk_data_move(data)));
+    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeWithData(* static_cast<const SkImageInfo *>(imageInfo), rowBytes, static_sk_data_get_entity(data)));
 }
 
 }

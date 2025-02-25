@@ -23,15 +23,15 @@ void *SkFont_new() {
 }
 
 void *SkFont_new_2(sk_typeface_t typeface, float size) {
-    return new SkFont(static_sk_typeface_move(typeface), size);
+    return new SkFont(static_sk_typeface_get_entity(typeface), size);
 }
 
 void *SkFont_new_3(sk_typeface_t typeface) {
-    return new SkFont(static_sk_typeface_move(typeface));
+    return new SkFont(static_sk_typeface_get_entity(typeface));
 }
 
 void *SkFont_new_4(sk_typeface_t typeface, float size, float scaleX, float skewX) {
-    return new SkFont(static_sk_typeface_move(typeface), size, scaleX, skewX);
+    return new SkFont(static_sk_typeface_get_entity(typeface), size, scaleX, skewX);
 }
 
 void SkFont_delete(void *font) {
@@ -189,7 +189,7 @@ void SkFont_getBounds(void *font, const void * glyphs, int count, void * bounds,
 }
 
 void SkFont_getPos(void *font, const void * glyphs, int count, void * pos, sk_point_t origin) {
-    static_cast<SkFont *>(font)->getPos(static_cast<const SkGlyphID *>(glyphs), count, static_cast<SkPoint *>(pos), static_sk_point_get(origin));
+    static_cast<SkFont *>(font)->getPos(static_cast<const SkGlyphID *>(glyphs), count, static_cast<SkPoint *>(pos), static_sk_point_get_entity(origin));
 }
 
 void SkFont_getXPos(void *font, const void * glyphs, int count, void * xpos, float origin) {

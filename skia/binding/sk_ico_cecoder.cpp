@@ -23,11 +23,11 @@ bool SkIcoDecoder_IsIco(const void* ptr, size_t size) {
 }
 
 sk_codec_t SkIcoDecoder_Decode(int static_stream, void * result, void * decodeContext) {
-    return static_sk_codec_make(SkIcoDecoder::Decode(static_sk_stream_move(static_stream), static_cast<SkCodec::Result *>(result), decodeContext));
+    return static_sk_codec_make(SkIcoDecoder::Decode(static_sk_stream_get_entity(static_stream), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
 sk_codec_t SkIcoDecoder_Decode_2(int static_data, void * result, void * decodeContext) {
-    return static_sk_codec_make(SkIcoDecoder::Decode(static_sk_data_move(static_data), static_cast<SkCodec::Result *>(result), decodeContext));
+    return static_sk_codec_make(SkIcoDecoder::Decode(static_sk_data_get_entity(static_data), static_cast<SkCodec::Result *>(result), decodeContext));
 }
 
 sk_codecs_decoder_t SkIcoDecoder_Decoder() {
