@@ -126,3 +126,59 @@
 
 詳細は以下を参照:
 - `/Users/dolphilia/github/reskia/docs/skia-cmakelists-build-report-2026-02-13.md`
+
+## 9. 非`skia` CMake修正メモ（2026-02-14）
+
+`skia` 以外のCMakeプロジェクト（`skcms`, `skpath`, `skresources`, `svg`）を同様に検証した結果、`skpath` と `svg` に最小修正を実施した。
+
+### 9.1 `skpath` の修正
+
+対象:
+- `/Users/dolphilia/github/reskia/skpath/CMakeLists.txt`
+
+修正内容:
+- `src/skcms_Transform*.cc` が `skpath/src` に存在しない環境向けに、`../skcms/src` へ自動フォールバックするよう変更。
+- `skcms.cc` の `#include "src/skcms_public.h"` 解決のため、`../skcms` を include path に追加。
+
+意図:
+- `skpath` 単体の configure/build を、実体ソース配置差異があっても通るようにする。
+
+### 9.2 `svg`（`skshaper` / `skunicode`）の修正
+
+対象:
+- `/Users/dolphilia/github/reskia/svg/CMakeLists.txt`
+
+修正内容（最小構成化 + 依存検出）:
+- `skshaper` のデフォルト構成を以下に限定:
+  - `SkShaper.cpp`
+  - `SkShaper_primitive.cpp`
+- `skunicode` のデフォルト構成を以下に限定:
+  - `SkUnicode.cpp`
+  - `SkUnicode_hardcoded.cpp`
+- 追加実装は依存ヘッダが見つかった場合のみ有効化:
+  - CoreText（Apple）: `SkShaper_coretext.cpp`
+  - HarfBuzz（`hb.h`）: `SkShaper_harfbuzz.cpp`
+  - ICU（`unicode/ubidi.h`）: `SkUnicode_icu*.cpp` / `SkUnicode_client.cpp`
+  - ICU4X（`ICU4XDataProvider.hpp`）: `SkUnicode_icu4x.cpp`
+  - libgrapheme（`grapheme.h`）: `SkUnicode_libgrapheme.cpp`
+- `SkShaper_skunicode.cpp` は ICU が見つかった場合のみ追加。
+
+意図:
+- 外部依存が無い環境でも `svg` / `skshaper` / `skunicode` をビルド可能にする。
+
+### 9.3 機能縮退する条件
+
+この最小修正によりビルド通過性は上がるが、以下の条件で機能縮退する。
+
+- `hb.h` が無い場合:
+  - HarfBuzzベースのシェーピング機能は無効化（`SkShaper_harfbuzz.cpp` を未ビルド）。
+- `unicode/ubidi.h`（ICU）が無い場合:
+  - ICUベースUnicode処理および `SkShaper` の Unicode 連携機能（`SkShaper_skunicode.cpp`）を無効化。
+- `ICU4XDataProvider.hpp` が無い場合:
+  - ICU4X 実装を無効化。
+- `grapheme.h` が無い場合:
+  - libgrapheme 実装を無効化。
+- Apple以外:
+  - CoreText 実装を無効化（`SkShaper_coretext.cpp` 未ビルド）。
+
+つまり、依存不足時は「テキスト整形/Unicode処理の実装選択肢」が段階的に減り、最終的には primitive/hardcoded ベースの最小機能で動作する構成になる。

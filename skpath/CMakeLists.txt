@@ -8,6 +8,7 @@ project(skcms)
 #set(CMAKE_C_COMPILER "gcc")
 
 include_directories(${PROJECT_SOURCE_DIR}/)
+include_directories(${PROJECT_SOURCE_DIR}/../skcms)
 link_directories(${PROJECT_SOURCE_DIR}/)
 #include(${PROJECT_SOURCE_DIR}/src)
 
@@ -26,9 +27,17 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(skcms
     skcms.cc
-        src/skcms_TransformBaseline.cc
-        src/skcms_TransformHsw.cc
-        src/skcms_TransformSkx.cc
+)
+
+set(SKPATH_SKCMS_TRANSFORM_DIR "${PROJECT_SOURCE_DIR}/src")
+if(NOT EXISTS "${SKPATH_SKCMS_TRANSFORM_DIR}/skcms_TransformBaseline.cc")
+    set(SKPATH_SKCMS_TRANSFORM_DIR "${PROJECT_SOURCE_DIR}/../skcms/src")
+endif()
+
+target_sources(skcms PRIVATE
+        "${SKPATH_SKCMS_TRANSFORM_DIR}/skcms_TransformBaseline.cc"
+        "${SKPATH_SKCMS_TRANSFORM_DIR}/skcms_TransformHsw.cc"
+        "${SKPATH_SKCMS_TRANSFORM_DIR}/skcms_TransformSkx.cc"
 )
 
 # set_target_properties(raia_primitive PROPERTIES PREFIX "")

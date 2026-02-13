@@ -60,22 +60,55 @@ add_library(svg
 project(skshaper)
 add_library(skshaper
         modules/skshaper/src/SkShaper.cpp
-        modules/skshaper/src/SkShaper_coretext.cpp
-        modules/skshaper/src/SkShaper_harfbuzz.cpp
         modules/skshaper/src/SkShaper_primitive.cpp
-        modules/skshaper/src/SkShaper_skunicode.cpp
 )
 
 project(skunicode)
 add_library(skunicode
         modules/skunicode/src/SkUnicode.cpp
-        modules/skunicode/src/SkUnicode_client.cpp
         modules/skunicode/src/SkUnicode_hardcoded.cpp
-        modules/skunicode/src/SkUnicode_icu.cpp
-        modules/skunicode/src/SkUnicode_icu4x.cpp
-        modules/skunicode/src/SkUnicode_icu_bidi.cpp
-        modules/skunicode/src/SkUnicode_icu_builtin.cpp
-        modules/skunicode/src/SkUnicode_icu_runtime.cpp
-        modules/skunicode/src/SkUnicode_libgrapheme.cpp
-        modules/skunicode/src/SkUnicode_client.cpp
 )
+
+if(APPLE)
+    target_compile_definitions(skshaper PRIVATE SK_SHAPER_CORETEXT_AVAILABLE SK_BUILD_FOR_MAC)
+    target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_coretext.cpp)
+endif()
+
+find_path(HARFBUZZ_INCLUDE_DIR hb.h)
+if(HARFBUZZ_INCLUDE_DIR)
+    target_include_directories(skshaper PRIVATE "${HARFBUZZ_INCLUDE_DIR}")
+    target_compile_definitions(skshaper PRIVATE SK_SHAPER_HARFBUZZ_AVAILABLE)
+    target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_harfbuzz.cpp)
+endif()
+
+find_path(ICU_UBIDI_INCLUDE_DIR unicode/ubidi.h)
+if(ICU_UBIDI_INCLUDE_DIR)
+    target_include_directories(skunicode PRIVATE "${ICU_UBIDI_INCLUDE_DIR}")
+    target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU_IMPLEMENTATION)
+    target_sources(skunicode PRIVATE
+            modules/skunicode/src/SkUnicode_icu.cpp
+            modules/skunicode/src/SkUnicode_icu_bidi.cpp
+            modules/skunicode/src/SkUnicode_icu_builtin.cpp
+            modules/skunicode/src/SkUnicode_icu_runtime.cpp
+            modules/skunicode/src/SkUnicode_client.cpp
+    )
+endif()
+
+find_path(ICU4X_INCLUDE_DIR ICU4XDataProvider.hpp)
+if(ICU4X_INCLUDE_DIR)
+    target_include_directories(skunicode PRIVATE "${ICU4X_INCLUDE_DIR}")
+    target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU4X_IMPLEMENTATION)
+    target_sources(skunicode PRIVATE modules/skunicode/src/SkUnicode_icu4x.cpp)
+endif()
+
+find_path(LIBGRAPHEME_INCLUDE_DIR grapheme.h)
+if(LIBGRAPHEME_INCLUDE_DIR)
+    target_include_directories(skunicode PRIVATE "${LIBGRAPHEME_INCLUDE_DIR}")
+    target_compile_definitions(skunicode PRIVATE SK_UNICODE_LIBGRAPHEME_IMPLEMENTATION)
+    target_sources(skunicode PRIVATE modules/skunicode/src/SkUnicode_libgrapheme.cpp)
+endif()
+
+if(ICU_UBIDI_INCLUDE_DIR)
+    target_compile_definitions(skshaper PRIVATE SK_SHAPER_UNICODE_AVAILABLE)
+    target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_skunicode.cpp)
+endif()

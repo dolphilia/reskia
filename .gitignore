@@ -3,6 +3,9 @@ build/**/*
 cmake/**/*
 sdk/**/*
 third_party/**/*
+/vendor/skia-upstream/
+/AGENTS.md
+/CLAUDE.md
 
 !dummy.txt
 
