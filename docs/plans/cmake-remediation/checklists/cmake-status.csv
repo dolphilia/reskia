@@ -1,7 +1,10 @@
 file,status,phase,owner,note
 cmake/deps/ReskiaDeps.cmake,todo,,,
+cmake/reskia/sources-binding.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
+cmake/reskia/sources-core.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
+cmake/reskia/sources-static.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 skcms/CMakeLists.txt,todo,,,
-skia/CMakeLists.txt,todo,,,
+skia/CMakeLists.txt,doing,phase2,,step1(ソース列挙の移設)完了: 2026-02-14
 skpath/CMakeLists.txt,todo,,,
 skresources/CMakeLists.txt,todo,,,
 svg/CMakeLists.txt,todo,,,

@@ -4,6 +4,8 @@ cmake/**/*
 !cmake/
 !cmake/deps/
 !cmake/deps/*.cmake
+!cmake/reskia/
+!cmake/reskia/*.cmake
 sdk/**/*
 third_party/**/*
 !third_party/

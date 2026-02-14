@@ -21,9 +21,18 @@
 
 ## 作業ステップ
 
-1. ソース列挙の移設
+1. ソース列挙の移設 ✅ 完了（2026-02-14）
 - `SOURCE_FILES` を用途別ファイルへ移す。
 - 機能差分を起こさないよう、まずは単純移設を優先。
+  - 実施内容:
+    - `cmake/reskia/sources-core.cmake` を追加し、Skia本体の `SOURCE_FILES` 列挙を移設
+    - `cmake/reskia/sources-binding.cmake` を追加し、`binding/*.cpp` の列挙を移設
+    - `cmake/reskia/sources-static.cmake` を追加し、`static/*.cpp` の列挙を移設
+    - `skia/CMakeLists.txt` は `set(SOURCE_FILES reskia.cpp)` 後に上記3ファイルを `include()` する構成へ変更
+  - 検証結果:
+    - `cmake -S skia -B skia/cmake-build-cmake-review -DCMAKE_BUILD_TYPE=Debug`: 成功
+    - `cmake --build skia/cmake-build-cmake-review -j 8`: 成功（`Built target reskia`）
+    - `cmake -S skia -B skia/cmake-build-cmake-review-source -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Release`: 成功
 
 2. ターゲット定義の明確化
 - `add_library(reskia ...)` 後に `target_include_directories` / `target_compile_definitions` / `target_link_libraries` を集約。
