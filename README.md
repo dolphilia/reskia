@@ -48,6 +48,26 @@ cmake --build skia/cmake-build-local -j 8
 - `reskia` は `SK_ENABLE_OPTIMIZE_SIZE` を付与してビルドする構成です。
 - `test_c_skia` は既定 `OFF`（`RESKIA_BUILD_TESTS`）です。
 
+### skia（reskia）Release ビルド例
+
+```bash
+cmake -S skia -B skia/cmake-build-release-local -DCMAKE_BUILD_TYPE=Release
+cmake --build skia/cmake-build-release-local -j 8
+```
+
+### skia（reskia）`RESKIA_BUILD_TESTS=ON` 検証手順
+
+```bash
+cmake -S skia -B skia/cmake-build-tests-local -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON
+cmake --build skia/cmake-build-tests-local -j 8
+ctest --test-dir skia/cmake-build-tests-local --output-on-failure
+```
+
+注意:
+
+- 2026-02-14 時点では `test_c_skia` は API 不整合が残っており、`RESKIA_BUILD_TESTS=ON` では失敗する可能性があります。
+- 現行の安定運用は `RESKIA_BUILD_TESTS=OFF`（既定値）で `reskia` 本体をビルドする方法です。
+
 ### skcms / skpath / skresources / svg
 
 ```bash
