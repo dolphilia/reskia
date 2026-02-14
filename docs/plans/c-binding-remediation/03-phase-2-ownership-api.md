@@ -43,6 +43,23 @@ rg -n "\\bref\\(|\\bunref\\(" skia/binding/*.cpp
 cmake --build skia/cmake-build-local -j 8
 ```
 
+## 進捗（2026-02-14）
+
+- [x] 1. 型分類表を作成
+  - 追加: `docs/plans/c-binding-remediation/checklists/phase2-type-classification.md`
+  - 集計結果:
+    - RefCounted: 28
+    - NonRefCounted: 93
+    - Borrowed API: 17
+  - `checklists/binding-status.csv` 更新:
+    - `status in {todo,doing,blocked}` の行に `phase=P2` を設定（299件）
+    - `phase1` で `done` 済みの11件は履歴維持のため据え置き
+- [ ] 2. 解放APIの統一
+  - 準備完了: `docs/plans/c-binding-remediation/checklists/phase2-release-api-status.csv` を追加（RefCounted 28型の header/cpp を追跡）
+- [ ] 3. `void*` APIの型情報補強
+- [ ] 4. IN/OUT引数規約の統一
+- [ ] 5. フェーズ2検証
+
 ## 完了条件
 
 - RefCounted型で `delete static_cast<...>` がゼロ。
