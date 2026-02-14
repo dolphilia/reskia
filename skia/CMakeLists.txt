@@ -3,9 +3,15 @@ project(reskia)
 
 include_directories(${PROJECT_SOURCE_DIR}/)
 include_directories(${PROJECT_SOURCE_DIR}/_include)
-link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 set(CMAKE_CXX_STANDARD 17)
+
+set(RESKIA_ROOT_DIR "${PROJECT_SOURCE_DIR}/..")
+include("${RESKIA_ROOT_DIR}/cmake/deps/ReskiaDeps.cmake")
+reskia_resolve_third_party("${RESKIA_ROOT_DIR}" RESKIA_DEP_LINK_DIRS RESKIA_DEP_LIBS)
+if(RESKIA_DEP_LINK_DIRS)
+    link_directories(${RESKIA_DEP_LINK_DIRS})
+endif()
 
 set(SOURCE_FILES reskia.cpp)
 
@@ -836,11 +842,11 @@ add_library(reskia SHARED ${SOURCE_FILES})
 target_compile_definitions(reskia PRIVATE SK_ENABLE_OPTIMIZE_SIZE)
 
 if(WIN32)
-    target_link_libraries(reskia skcms zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux)
+    target_link_libraries(reskia skcms ${RESKIA_DEP_LIBS})
 elseif(APPLE)
-    target_link_libraries(reskia skcms skresources svg expat png png16 jpeg avif webp webpdecoder webpdemux webpmux "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
+    target_link_libraries(reskia skcms skresources svg ${RESKIA_DEP_LIBS} "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
 elseif(UNIX)
-    target_link_libraries(reskia skcms)
+    target_link_libraries(reskia skcms ${RESKIA_DEP_LIBS})
 endif()
 
 if(WIN32)

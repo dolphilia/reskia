@@ -32,6 +32,27 @@ Reskia が基準としている upstream Skia のコミット:
 - C++17
 - macOS では AppleClang 環境を前提（現行検証環境）
 
+## 依存管理モード（新規）
+
+`skia/CMakeLists.txt` は `RESKIA_DEPS_MODE` で依存解決方法を切り替えできます。
+
+- `prebuilt`（既定）:
+  - 従来どおり `skia/lib` の事前ビルド済みライブラリを使用
+- `source`:
+  - `third_party/install` を参照して依存を解決
+  - 依存が未インストールなら configure で失敗
+- `system`:
+  - システム環境（`find_package` / `find_library`）から依存を解決
+
+補足:
+
+- `source` モード用の初期ディレクトリ作成:
+  - `scripts/bootstrap_third_party.sh`
+- 依存ビルド自動化:
+  - `scripts/build_third_party.sh`
+- 依存解決ロジック:
+  - `cmake/deps/ReskiaDeps.cmake`
+
 ## ビルド手順（例）
 
 以下はリポジトリルートで実行します。
@@ -54,6 +75,23 @@ cmake --build skia/cmake-build-local -j 8
 cmake -S skia -B skia/cmake-build-release-local -DCMAKE_BUILD_TYPE=Release
 cmake --build skia/cmake-build-release-local -j 8
 ```
+
+### skia（reskia）`source` モード例
+
+```bash
+scripts/bootstrap_third_party.sh
+scripts/build_third_party.sh --build-type Release --clean
+cmake -S skia -B skia/cmake-build-source-local -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Release
+cmake --build skia/cmake-build-source-local -j 8
+```
+
+注意:
+
+- 上記を成功させるには、事前に `third_party/install` へ各依存ライブラリをインストールしておく必要があります。
+- AVIF を有効にする場合:
+  - 依存ビルド: `scripts/build_third_party.sh --with-avif`
+  - Reskia 側: `-DRESKIA_ENABLE_AVIF=ON`
+- 2026-02-14 時点では `source` モードで `reskia` 最終リンク時に `skcms` 解決が環境依存で失敗する場合があります（内部ライブラリ連携は別途整理中）。
 
 ### skia（reskia）`RESKIA_BUILD_TESTS=ON` 検証手順
 
@@ -106,3 +144,5 @@ cmake --build svg/cmake-build-local -j 8
 
 - 構造調査: `docs/repository-structure.md`
 - `skia/CMakeLists.txt` ビルド検証: `docs/skia-cmakelists-build-report-2026-02-13.md`
+- 依存管理方針の実施結果: `docs/dependency-management-report-2026-02-14.md`
+- `third_party` サブモジュール化と自動ビルド: `docs/third-party-submodule-automation-2026-02-14.md`

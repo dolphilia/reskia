@@ -1,8 +1,18 @@
 
 build/**/*
 cmake/**/*
+!cmake/
+!cmake/deps/
+!cmake/deps/*.cmake
 sdk/**/*
 third_party/**/*
+!third_party/
+!third_party/CMakeLists.txt
+!third_party/README.md
+!third_party/src/
+!third_party/src/*
+!third_party/*/
+!third_party/*/README.md
 /vendor/skia-upstream/
 /AGENTS.md
 /CLAUDE.md

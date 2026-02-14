@@ -182,3 +182,81 @@
   - CoreText 実装を無効化（`SkShaper_coretext.cpp` 未ビルド）。
 
 つまり、依存不足時は「テキスト整形/Unicode処理の実装選択肢」が段階的に減り、最終的には primitive/hardcoded ベースの最小機能で動作する構成になる。
+
+## 10. 依存管理方針の実施メモ（2026-02-14）
+
+`skia/lib` の事前配置依存だけでは他環境再現が難しいため、依存解決を切り替え可能にする最小実装を追加した。
+
+### 10.1 実施計画（実行済み）
+
+1. `RESKIA_DEPS_MODE` で依存解決方式を切り替える基盤を追加する。  
+2. `skia/CMakeLists.txt` を基盤に接続し、`prebuilt` 互換を維持しつつ `source/system` を選択可能にする。  
+3. `third_party` を分離ディレクトリとして整備し、初期化スクリプトとドキュメントを追加する。  
+
+### 10.2 追加・変更したファイル
+
+- `/Users/dolphilia/github/reskia/cmake/deps/ReskiaDeps.cmake`
+  - 依存解決モジュール本体。
+  - `RESKIA_DEPS_MODE=prebuilt|source|system` を解釈。
+- `/Users/dolphilia/github/reskia/skia/CMakeLists.txt`
+  - 上記モジュールを `include` し、リンクディレクトリ/リンクライブラリを外部化。
+- `/Users/dolphilia/github/reskia/third_party/CMakeLists.txt`
+- `/Users/dolphilia/github/reskia/third_party/README.md`
+- `/Users/dolphilia/github/reskia/scripts/bootstrap_third_party.sh`
+  - `third_party/src`, `third_party/build`, `third_party/install` を初期化。
+- `/Users/dolphilia/github/reskia/.gitignore`
+  - `third_party` 配下の管理方針を反映（生成物は追跡外、管理用ファイルのみ追跡）。
+
+### 10.3 ビルド確認結果
+
+- 確認日時: 2026-02-14 10:26:42 JST
+- 成功:
+  - `cmake -S skia -B skia/cmake-build-codex -DCMAKE_BUILD_TYPE=Debug`
+  - `cmake --build skia/cmake-build-codex -j 8`
+  - 結果: `Built target reskia`
+- 期待どおり失敗:
+  - `cmake -S skia -B skia/cmake-build-source-mode -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Release`
+  - 原因: `third_party/install` に EXPAT 等の CMake package 設定が未配置。
+
+### 10.4 現時点の制約（機能縮退/未実装）
+
+- `RESKIA_DEPS_MODE=source` は依存未配置時に configure 失敗する（フェイルファスト）。
+- `RESKIA_DEPS_MODE=source` の `WIN32` 分岐は未実装（明示的に `FATAL_ERROR`）。
+- `UNIX`（Apple 以外）は現状 `skcms` 最小リンクのままで、外部画像系依存は未接続。
+- `prebuilt` は従来互換を優先し、`skia/lib` 依存を維持している。
+
+詳細ログは以下を参照:
+- `/Users/dolphilia/github/reskia/docs/dependency-management-report-2026-02-14.md`
+
+## 11. `third_party/src` サブモジュール化と自動ビルド（2026-02-14）
+
+再現性向上のため、`third_party/src/*` を実サブモジュール化し、`install` まで自動化した。
+
+### 11.1 追加・更新
+
+- 追加: `/Users/dolphilia/github/reskia/.gitmodules`
+  - `zlib`, `libpng`, `libjpeg-turbo`, `libwebp`, `libavif`, `expat`, `harfbuzz`, `icu`, `icu4x`, `libgrapheme`
+- 更新: `/Users/dolphilia/github/reskia/.gitignore`
+  - `third_party/src/*` をサブモジュールとして追跡可能化
+- 更新: `/Users/dolphilia/github/reskia/scripts/bootstrap_third_party.sh`
+  - プレースホルダ作成方式を廃止し、submodule init/update 方式へ変更
+- 追加: `/Users/dolphilia/github/reskia/scripts/build_third_party.sh`
+  - core 依存（zlib/libpng/libjpeg-turbo/expat/libwebp）を `third_party/install` へ自動 install
+  - オプションで `--with-avif` / `--with-harfbuzz` / `--with-libgrapheme`
+
+### 11.2 検証
+
+- `scripts/bootstrap_third_party.sh`: 成功
+- `scripts/build_third_party.sh --build-type Release --clean`: 成功
+- `cmake -S skia -B ... -DRESKIA_DEPS_MODE=source`: configure 成功
+- `cmake --build`:
+  - 最終リンクで `ld: library 'skcms' not found`
+
+### 11.3 現時点の制約
+
+- third-party は自動化済みだが、`skcms/skresources/svg` の内部連携は未自動化。
+- `icu/icu4x` はサブモジュール化のみで、ビルド自動化対象外。
+- AVIF は `RESKIA_ENABLE_AVIF=ON` かつ `--with-avif` を前提とする拡張扱い。
+
+詳細ログ:
+- `/Users/dolphilia/github/reskia/docs/third-party-submodule-automation-2026-02-14.md`
