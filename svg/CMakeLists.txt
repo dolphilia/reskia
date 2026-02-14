@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.26.4)
-project(svg)
+project(svg LANGUAGES CXX)
 
-include_directories(${PROJECT_SOURCE_DIR}/)
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/../skia)
-link_directories(${PROJECT_SOURCE_DIR}/)
-link_directories(${PROJECT_SOURCE_DIR}/lib)
-
-set(CMAKE_CXX_STANDARD 17)
+set(SVG_COMMON_INCLUDE_DIRS
+    "${PROJECT_SOURCE_DIR}"
+    "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/../skia"
+)
 
 add_library(svg
         modules/svg/src/SkSVGAttribute.cpp
@@ -54,20 +52,24 @@ add_library(svg
         modules/svg/src/SkSVGUse.cpp
         modules/svg/src/SkSVGValue.cpp
 )
+target_compile_features(svg PUBLIC cxx_std_17)
+target_include_directories(svg PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 #---
 
-project(skshaper)
 add_library(skshaper
         modules/skshaper/src/SkShaper.cpp
         modules/skshaper/src/SkShaper_primitive.cpp
 )
+target_compile_features(skshaper PUBLIC cxx_std_17)
+target_include_directories(skshaper PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
-project(skunicode)
 add_library(skunicode
         modules/skunicode/src/SkUnicode.cpp
         modules/skunicode/src/SkUnicode_hardcoded.cpp
 )
+target_compile_features(skunicode PUBLIC cxx_std_17)
+target_include_directories(skunicode PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 if(APPLE)
     target_compile_definitions(skshaper PRIVATE SK_SHAPER_CORETEXT_AVAILABLE SK_BUILD_FOR_MAC)
