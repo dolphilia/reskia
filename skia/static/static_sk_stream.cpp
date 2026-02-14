@@ -3,89 +3,83 @@
 //
 
 #include "static_sk_stream.h"
+
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_stream-internal.h"
 
-static std::set<int> static_sk_stream_available_keys;
-static std::map<int , std::unique_ptr<SkStream>> static_sk_stream;
-static int static_sk_stream_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkStream>> static_sk_stream;
 
 // static_sk_stream
 
 int static_sk_stream_make(std::unique_ptr<SkStream> value) {
-    int key;
-    if (!static_sk_stream_available_keys.empty()) {
-        auto it = static_sk_stream_available_keys.begin();
-        key = *it;
-        static_sk_stream_available_keys.erase(it);
-    } else {
-        key = static_sk_stream_index++;
-    }
-    static_sk_stream[key] = std::move(value);
-    return key;
+    return static_sk_stream.create(std::move(value));
 }
 
 void static_sk_stream_set(int key, std::unique_ptr<SkStream> value) {
-    static_sk_stream[key] = std::move(value);
+    static_sk_stream.set(key, std::move(value));
+}
+
+SkStream* static_sk_stream_borrow_entity(int key) {
+    std::unique_ptr<SkStream>* entity = static_sk_stream.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
+}
+
+std::unique_ptr<SkStream> static_sk_stream_take_entity(int key) {
+    return static_sk_stream.take_or_default(key);
 }
 
 std::unique_ptr<SkStream> static_sk_stream_get_entity(int key) {
-    return std::move(static_sk_stream[key]);
+    return static_sk_stream_take_entity(key);
 }
 
 extern "C" {
 
 void static_sk_stream_delete(int key) {
-    delete &static_sk_stream[key];
-    static_sk_stream[key].reset();
     static_sk_stream.erase(key);
-    static_sk_stream_available_keys.insert(key);
 }
 
 void *static_sk_stream_get_ptr(int key) { // -> SkStream *
-    return static_sk_stream[key].get();
+    std::unique_ptr<SkStream>* entity = static_sk_stream.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }
 
 // static_sk_stream_ptr
 
-static std::set<int> static_sk_stream_ptr_available_keys;
-static std::map<int, std::unique_ptr<SkStream>*> static_sk_stream_ptr;
-static int static_sk_stream_ptr_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkStream>*> static_sk_stream_ptr;
 
 int static_sk_stream_ptr_make(std::unique_ptr<SkStream>* value) {
-    int key;
-    if (!static_sk_stream_ptr_available_keys.empty()) {
-        auto it = static_sk_stream_ptr_available_keys.begin();
-        key = *it;
-        static_sk_stream_ptr_available_keys.erase(it);
-    } else {
-        key = static_sk_stream_ptr_index++;
-    }
-    static_sk_stream_ptr[key] = value;
-    return key;
+    return static_sk_stream_ptr.create(value);
 }
 
 void static_sk_stream_ptr_set(int key, std::unique_ptr<SkStream>* value) {
-    static_sk_stream_ptr[key] = value;
+    static_sk_stream_ptr.set(key, value);
 }
 
 std::unique_ptr<SkStream>* static_sk_stream_ptr_get_entity(int key) {
-    auto tmp = static_sk_stream_ptr[key];
-    static_sk_stream_ptr.erase(key);
-    static_sk_stream_ptr_available_keys.insert(key);
-    return tmp; // 所有権(？)の移動
+    return static_sk_stream_ptr.take_or_default(key);
 }
 
 extern "C" {
 
 void static_sk_stream_ptr_delete(int key) {
     static_sk_stream_ptr.erase(key);
-    static_sk_stream_ptr_available_keys.insert(key);
 }
 
 void* static_sk_stream_ptr_get_ptr(int key) { // -> SkStream*
-    return static_sk_stream_ptr[key]->get();
+    std::unique_ptr<SkStream>** entity = static_sk_stream_ptr.get_ptr(key);
+    if (entity == nullptr || *entity == nullptr) {
+        return nullptr;
+    }
+    return (*entity)->get();
 }
 
 }

@@ -5,6 +5,8 @@
 #include "include/core/SkStream.h"
 int static_sk_stream_make(std::unique_ptr<SkStream> value);
 void static_sk_stream_set(int key, std::unique_ptr<SkStream> value);
+SkStream* static_sk_stream_borrow_entity(int key);
+std::unique_ptr<SkStream> static_sk_stream_take_entity(int key);
 std::unique_ptr<SkStream> static_sk_stream_get_entity(int key);
 int static_sk_stream_ptr_make(std::unique_ptr<SkStream>* value);
 void static_sk_stream_ptr_set(int key, std::unique_ptr<SkStream>* value);

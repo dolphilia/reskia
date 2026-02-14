@@ -4,37 +4,34 @@
 
 #include "static_sk_cubic_resampler.h"
 #include "static_sk_cubic_resampler-internal.h"
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_cubic_resampler_available_keys;
-static std::map<int , SkCubicResampler> static_sk_cubic_resampler;
-static int static_sk_cubic_resampler_index = 0;
+static reskia::static_registry::HandleTable<SkCubicResampler> static_sk_cubic_resampler;
 
 int static_sk_cubic_resampler_make(SkCubicResampler value) {
-    int key;
-    if (!static_sk_cubic_resampler_available_keys.empty()) {
-        auto it = static_sk_cubic_resampler_available_keys.begin();
-        key = *it;
-        static_sk_cubic_resampler_available_keys.erase(it);
-    } else {
-        key = static_sk_cubic_resampler_index++;
-    }
-    static_sk_cubic_resampler[key] = value;
-    return key;
+    return static_sk_cubic_resampler.create(value);
 }
 
 SkCubicResampler static_sk_cubic_resampler_get_entity(int key) {
-    return static_sk_cubic_resampler[key];
+    SkCubicResampler* entity = static_sk_cubic_resampler.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_cubic_resampler_delete(int key) {
     static_sk_cubic_resampler.erase(key);
-    static_sk_cubic_resampler_available_keys.insert(key);
 }
 
 void * static_sk_cubic_resampler_get_ptr(int key) { // -> SkCubicResampler *
-    return &static_sk_cubic_resampler[key];
+    SkCubicResampler* entity = static_sk_cubic_resampler.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity;
 }
 
 }

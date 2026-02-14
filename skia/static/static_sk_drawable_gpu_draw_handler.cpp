@@ -4,42 +4,46 @@
 
 #include "static_sk_drawable_gpu_draw_handler.h"
 #include "static_sk_drawable_gpu_draw_handler-internal.h"
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_drawable_gpu_draw_handler_available_keys;
-static std::map<int , std::unique_ptr<SkDrawable::GpuDrawHandler>> static_sk_drawable_gpu_draw_handler;
-static int static_sk_drawable_gpu_draw_handler_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkDrawable::GpuDrawHandler>> static_sk_drawable_gpu_draw_handler;
 
 int static_sk_drawable_gpu_draw_handler_make(std::unique_ptr<SkDrawable::GpuDrawHandler> value) {
-    int key;
-    if (!static_sk_drawable_gpu_draw_handler_available_keys.empty()) {
-        auto it = static_sk_drawable_gpu_draw_handler_available_keys.begin();
-        key = *it;
-        static_sk_drawable_gpu_draw_handler_available_keys.erase(it);
-    } else {
-        key = static_sk_drawable_gpu_draw_handler_index++;
-    }
-    static_sk_drawable_gpu_draw_handler[key] = std::move(value);
-    return key;
+    return static_sk_drawable_gpu_draw_handler.create(std::move(value));
 }
 
 void static_sk_drawable_gpu_draw_handler_set(int key, std::unique_ptr<SkDrawable::GpuDrawHandler> value) {
-    static_sk_drawable_gpu_draw_handler[key] = std::move(value);
+    static_sk_drawable_gpu_draw_handler.set(key, std::move(value));
+}
+
+SkDrawable::GpuDrawHandler* static_sk_drawable_gpu_draw_handler_borrow_entity(int key) {
+    std::unique_ptr<SkDrawable::GpuDrawHandler>* entity = static_sk_drawable_gpu_draw_handler.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
+}
+
+std::unique_ptr<SkDrawable::GpuDrawHandler> static_sk_drawable_gpu_draw_handler_take_entity(int key) {
+    return static_sk_drawable_gpu_draw_handler.take_or_default(key);
 }
 
 std::unique_ptr<SkDrawable::GpuDrawHandler> static_sk_drawable_gpu_draw_handler_get_entity(int key) {
-    return std::move(static_sk_drawable_gpu_draw_handler[key]);
+    return static_sk_drawable_gpu_draw_handler_take_entity(key);
 }
 
 extern "C" {
 
 void static_sk_drawable_gpu_draw_handler_delete(int key) {
-    static_sk_drawable_gpu_draw_handler[key].reset();
     static_sk_drawable_gpu_draw_handler.erase(key);
-    static_sk_drawable_gpu_draw_handler_available_keys.insert(key);
 }
 
 void *static_sk_drawable_gpu_draw_handler_get_ptr(int key) { // -> SkDrawable::GpuDrawHandler *
-    return static_sk_drawable_gpu_draw_handler[key].get();
+    std::unique_ptr<SkDrawable::GpuDrawHandler>* entity = static_sk_drawable_gpu_draw_handler.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

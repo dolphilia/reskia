@@ -5,5 +5,7 @@
 #include "include/core/SkImageFilter.h"
 int static_sk_image_filter_make(sk_sp<SkImageFilter> value);
 void static_sk_image_filter_set(int key, sk_sp<SkImageFilter> value);
+sk_sp<SkImageFilter> static_sk_image_filter_borrow_entity(int key);
+sk_sp<SkImageFilter> static_sk_image_filter_take_entity(int key);
 sk_sp<SkImageFilter> static_sk_image_filter_get_entity(int key);
 #endif // STATIC_SK_IMAGE_FILTER_INTERNAL_H

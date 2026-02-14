@@ -4,42 +4,36 @@
 
 #include "static_sk_mesh_specification_result.h"
 
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_mesh_specification_result-internal.h"
 
-static std::set<int> static_sk_mesh_specification_result_available_keys;
-static std::map<int , SkMeshSpecification::Result> static_sk_mesh_specification_result;
-static int static_sk_mesh_specification_result_index = 0;
+static reskia::static_registry::HandleTable<SkMeshSpecification::Result> static_sk_mesh_specification_result;
 
 int static_sk_mesh_specification_result_make(SkMeshSpecification::Result value) {
-    int key;
-    if (!static_sk_mesh_specification_result_available_keys.empty()) {
-        auto it = static_sk_mesh_specification_result_available_keys.begin();
-        key = *it;
-        static_sk_mesh_specification_result_available_keys.erase(it);
-    } else {
-        key = static_sk_mesh_specification_result_index++;
-    }
-    static_sk_mesh_specification_result[key] = value;
-    return key;
+    return static_sk_mesh_specification_result.create(std::move(value));
 }
 
 void static_sk_mesh_specification_result_set(int key, SkMeshSpecification::Result value) {
-    static_sk_mesh_specification_result[key] = value;
+    static_sk_mesh_specification_result.set(key, std::move(value));
 }
 
 SkMeshSpecification::Result static_sk_mesh_specification_result_get_entity(int key) {
-    return static_sk_mesh_specification_result[key];
+    SkMeshSpecification::Result* entity = static_sk_mesh_specification_result.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_mesh_specification_result_delete(int key) {
     static_sk_mesh_specification_result.erase(key);
-    static_sk_mesh_specification_result_available_keys.insert(key);
 }
 
 void * static_sk_mesh_specification_result_get_ptr(int key) {
-    return &static_sk_mesh_specification_result[key];
+    return static_sk_mesh_specification_result.get_ptr(key);
 }
 
 }

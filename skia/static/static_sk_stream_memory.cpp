@@ -3,43 +3,49 @@
 //
 
 #include "static_sk_stream_memory.h"
+
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_stream_memory-internal.h"
 
-static std::set<int> static_sk_stream_memory_available_keys;
-static std::map<int , std::unique_ptr<SkStreamMemory>> static_sk_stream_memory;
-static int static_sk_stream_memory_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkStreamMemory>> static_sk_stream_memory;
 
 int static_sk_stream_memory_make(std::unique_ptr<SkStreamMemory> value) {
-    int key;
-    if (!static_sk_stream_memory_available_keys.empty()) {
-        auto it = static_sk_stream_memory_available_keys.begin();
-        key = *it;
-        static_sk_stream_memory_available_keys.erase(it);
-    } else {
-        key = static_sk_stream_memory_index++;
-    }
-    static_sk_stream_memory[key] = std::move(value);
-    return key;
+    return static_sk_stream_memory.create(std::move(value));
 }
 
 void static_sk_stream_memory_set(int key, std::unique_ptr<SkStreamMemory> value) {
-    static_sk_stream_memory[key] = std::move(value);
+    static_sk_stream_memory.set(key, std::move(value));
+}
+
+SkStreamMemory* static_sk_stream_memory_borrow_entity(int key) {
+    std::unique_ptr<SkStreamMemory>* entity = static_sk_stream_memory.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
+}
+
+std::unique_ptr<SkStreamMemory> static_sk_stream_memory_take_entity(int key) {
+    return static_sk_stream_memory.take_or_default(key);
 }
 
 std::unique_ptr<SkStreamMemory> static_sk_stream_memory_get_entity(int key) {
-    return std::move(static_sk_stream_memory[key]);
+    return static_sk_stream_memory_take_entity(key);
 }
 
 extern "C" {
 
 void static_sk_stream_memory_delete(int key) {
-    static_sk_stream_memory[key].reset();
     static_sk_stream_memory.erase(key);
-    static_sk_stream_memory_available_keys.insert(key);
 }
 
 void *static_sk_stream_memory_get_ptr(int key) { // -> SkStreamMemory *
-    return static_sk_stream_memory[key].get();
+    std::unique_ptr<SkStreamMemory>* entity = static_sk_stream_memory.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

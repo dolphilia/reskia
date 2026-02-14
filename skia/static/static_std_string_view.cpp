@@ -4,39 +4,31 @@
 
 #include "static_std_string_view.h"
 
-#include <map>
+#include "handle_table.hpp"
 #include "static_std_string_view-internal.h"
 
-static std::set<int> static_string_view_available_keys;
-static std::map<int , std::string_view> static_string_view;
-static int static_string_view_index = 0;
+static reskia::static_registry::HandleTable<std::string_view> static_string_view;
 
 int static_string_view_make(std::string_view value) {
-    int key;
-    if (!static_string_view_available_keys.empty()) {
-        auto it = static_string_view_available_keys.begin();
-        key = *it;
-        static_string_view_available_keys.erase(it);
-    } else {
-        key = static_string_view_index++;
-    }
-    static_string_view[key] = value;
-    return key;
+    return static_string_view.create(value);
 }
 
 void static_string_view_set(int key, std::string_view value) {
-    static_string_view[key] = value;
+    static_string_view.set(key, value);
 }
 
 std::string_view static_string_view_get_entity(int key) {
-    return static_string_view[key];
+    std::string_view* entity = static_string_view.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_string_view_delete(int key) {
     static_string_view.erase(key);
-    static_string_view_available_keys.insert(key);
 }
 
 }

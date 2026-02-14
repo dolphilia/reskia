@@ -5,43 +5,47 @@
 #include "static_sk_picture.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_picture-internal.h"
 
-static std::set<int> static_sk_picture_available_keys;
-static std::map<int , sk_sp<SkPicture>> static_sk_picture;
-static int static_sk_picture_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkPicture>> static_sk_picture;
 
 int static_sk_picture_make(sk_sp<SkPicture> value) {
-    int key;
-    if (!static_sk_picture_available_keys.empty()) {
-        auto it = static_sk_picture_available_keys.begin();
-        key = *it;
-        static_sk_picture_available_keys.erase(it);
-    } else {
-        key = static_sk_picture_index++;
-    }
-    static_sk_picture[key] = std::move(value);
-    return key;
+    return static_sk_picture.create(std::move(value));
 }
 
 void static_sk_picture_set(int key, sk_sp<SkPicture> value) {
-    static_sk_picture[key] = std::move(value);
+    static_sk_picture.set(key, std::move(value));
+}
+
+sk_sp<SkPicture> static_sk_picture_borrow_entity(int key) {
+    sk_sp<SkPicture>* entity = static_sk_picture.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkPicture> static_sk_picture_take_entity(int key) {
+    return static_sk_picture.take_or_default(key);
 }
 
 sk_sp<SkPicture> static_sk_picture_get_entity(int key) {
-    return std::move(static_sk_picture[key]);
+    return static_sk_picture_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_picture_delete(int key) {
-    static_sk_picture[key].reset();
     static_sk_picture.erase(key);
-    static_sk_picture_available_keys.insert(key);
 }
 
 void *static_sk_picture_get_ptr(int key) { // -> SkPicture *
-    return static_sk_picture[key].get();
+    sk_sp<SkPicture>* entity = static_sk_picture.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

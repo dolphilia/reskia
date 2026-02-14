@@ -3,43 +3,49 @@
 //
 
 #include "static_sk_stream_asset.h"
+
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_stream_asset-internal.h"
 
-static std::set<int> static_sk_stream_asset_available_keys;
-static std::map<int , std::unique_ptr<SkStreamAsset>> static_sk_stream_asset;
-static int static_sk_stream_asset_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkStreamAsset>> static_sk_stream_asset;
 
 int static_sk_stream_asset_make(std::unique_ptr<SkStreamAsset> value) {
-    int key;
-    if (!static_sk_stream_asset_available_keys.empty()) {
-        auto it = static_sk_stream_asset_available_keys.begin();
-        key = *it;
-        static_sk_stream_asset_available_keys.erase(it);
-    } else {
-        key = static_sk_stream_asset_index++;
-    }
-    static_sk_stream_asset[key] = std::move(value);
-    return key;
+    return static_sk_stream_asset.create(std::move(value));
 }
 
 void static_sk_stream_asset_set(int key, std::unique_ptr<SkStreamAsset> value) {
-    static_sk_stream_asset[key] = std::move(value);
+    static_sk_stream_asset.set(key, std::move(value));
+}
+
+SkStreamAsset* static_sk_stream_asset_borrow_entity(int key) {
+    std::unique_ptr<SkStreamAsset>* entity = static_sk_stream_asset.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
+}
+
+std::unique_ptr<SkStreamAsset> static_sk_stream_asset_take_entity(int key) {
+    return static_sk_stream_asset.take_or_default(key);
 }
 
 std::unique_ptr<SkStreamAsset> static_sk_stream_asset_get_entity(int key) {
-    return std::move(static_sk_stream_asset[key]);
+    return static_sk_stream_asset_take_entity(key);
 }
 
 extern "C" {
 
 void static_sk_stream_asset_delete(int key) {
-    static_sk_stream_asset[key].reset();
     static_sk_stream_asset.erase(key);
-    static_sk_stream_asset_available_keys.insert(key);
 }
 
 void *static_sk_stream_asset_get_ptr(int key) { // -> SkStreamAsset *
-    return static_sk_stream_asset[key].get();
+    std::unique_ptr<SkStreamAsset>* entity = static_sk_stream_asset.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

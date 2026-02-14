@@ -3,42 +3,35 @@
 //
 
 #include "static_sk_rect.h"
+#include "handle_table.hpp"
 #include "static_sk_rect-internal.h"
 
-static std::set<int> static_sk_rect_available_keys;
-static std::map<int , SkRect> static_sk_rect;
-static int static_sk_rect_index = 0;
+static reskia::static_registry::HandleTable<SkRect> static_sk_rect;
 
 int static_sk_rect_make(SkRect value) {
-    int key;
-    if (!static_sk_rect_available_keys.empty()) {
-        auto it = static_sk_rect_available_keys.begin();
-        key = *it;
-        static_sk_rect_available_keys.erase(it);
-    } else {
-        key = static_sk_rect_index++;
-    }
-    static_sk_rect[key] = value;
-    return key;
+    return static_sk_rect.create(value);
 }
 
 void static_sk_rect_set(int key, SkRect value) {
-    static_sk_rect[key] = value;
+    static_sk_rect.set(key, value);
 }
 
 SkRect static_sk_rect_get_entity(int key) {
-    return static_sk_rect[key];
+    SkRect* entity = static_sk_rect.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_rect_delete(int key) {
     static_sk_rect.erase(key);
-    static_sk_rect_available_keys.insert(key);
 }
 
 void *static_sk_rect_get_ptr(int key) { // -> SkRect *
-    return &static_sk_rect[key];
+    return static_sk_rect.get_ptr(key);
 }
 
 }

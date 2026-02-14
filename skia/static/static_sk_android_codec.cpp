@@ -5,44 +5,46 @@
 #include "static_sk_android_codec.h"
 #include "static_sk_android_codec-internal.h"
 
-#include <set>
-#include <map>
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_android_codec_available_keys;
-static std::map<int , std::unique_ptr<SkAndroidCodec>> static_sk_android_codec;
-static int static_sk_android_codec_index = 0;
+static reskia::static_registry::HandleTable<std::unique_ptr<SkAndroidCodec>> static_sk_android_codec;
 
 int static_sk_android_codec_make(std::unique_ptr<SkAndroidCodec> value) {
-    int key;
-    if (!static_sk_android_codec_available_keys.empty()) {
-        auto it = static_sk_android_codec_available_keys.begin();
-        key = *it;
-        static_sk_android_codec_available_keys.erase(it);
-    } else {
-        key = static_sk_android_codec_index++;
-    }
-    static_sk_android_codec[key] = std::move(value);
-    return key;
+    return static_sk_android_codec.create(std::move(value));
 }
 
 void static_sk_android_codec_set(int key, std::unique_ptr<SkAndroidCodec> value) {
-    static_sk_android_codec[key] = std::move(value);
+    static_sk_android_codec.set(key, std::move(value));
+}
+
+SkAndroidCodec* static_sk_android_codec_borrow_entity(int key) {
+    std::unique_ptr<SkAndroidCodec>* entity = static_sk_android_codec.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
+}
+
+std::unique_ptr<SkAndroidCodec> static_sk_android_codec_take_entity(int key) {
+    return static_sk_android_codec.take_or_default(key);
 }
 
 std::unique_ptr<SkAndroidCodec> static_sk_android_codec_get_entity(int key) {
-    return std::move(static_sk_android_codec[key]);
+    return static_sk_android_codec_take_entity(key);
 }
 
 extern "C" {
 
 void static_sk_android_codec_delete(int key) {
-    static_sk_android_codec[key].reset();
     static_sk_android_codec.erase(key);
-    static_sk_android_codec_available_keys.insert(key);
 }
 
 void *static_sk_android_codec_get_ptr(int key) {
-    return static_sk_android_codec[key].get();
+    std::unique_ptr<SkAndroidCodec>* entity = static_sk_android_codec.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

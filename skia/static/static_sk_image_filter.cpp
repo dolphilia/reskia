@@ -5,43 +5,47 @@
 #include "static_sk_image_filter.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_image_filter-internal.h"
 
-static std::set<int> static_sk_image_filter_available_keys;
-static std::map<int , sk_sp<SkImageFilter>> static_sk_image_filter;
-static int static_sk_image_filter_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkImageFilter>> static_sk_image_filter_table;
 
 int static_sk_image_filter_make(sk_sp<SkImageFilter> value) {
-    int key;
-    if (!static_sk_image_filter_available_keys.empty()) {
-        auto it = static_sk_image_filter_available_keys.begin();
-        key = *it;
-        static_sk_image_filter_available_keys.erase(it);
-    } else {
-        key = static_sk_image_filter_index++;
-    }
-    static_sk_image_filter[key] = std::move(value);
-    return key;
+    return static_sk_image_filter_table.create(std::move(value));
 }
 
 void static_sk_image_filter_set(int key, sk_sp<SkImageFilter> value) {
-    static_sk_image_filter[key] = std::move(value);
+    static_sk_image_filter_table.set(key, std::move(value));
+}
+
+sk_sp<SkImageFilter> static_sk_image_filter_borrow_entity(int key) {
+    sk_sp<SkImageFilter>* entity = static_sk_image_filter_table.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkImageFilter> static_sk_image_filter_take_entity(int key) {
+    return static_sk_image_filter_table.take_or_default(key);
 }
 
 sk_sp<SkImageFilter> static_sk_image_filter_get_entity(int key) {
-    return std::move(static_sk_image_filter[key]);
+    return static_sk_image_filter_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_image_filter_delete(int key) {
-    static_sk_image_filter[key].reset();
-    static_sk_image_filter.erase(key);
-    static_sk_image_filter_available_keys.insert(key);
+    static_sk_image_filter_table.erase(key);
 }
 
 void *static_sk_image_filter_get_ptr(int key) { // -> SkImageFilter *
-    return static_sk_image_filter[key].get();
+    sk_sp<SkImageFilter>* entity = static_sk_image_filter_table.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

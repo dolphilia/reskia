@@ -157,7 +157,7 @@ const char* SkCodec_ResultToString(int result) {
 }
 
 sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, void * result, void * pngChunkReader, int selectionPolicy) {
-    return static_sk_codec_make(SkCodec::MakeFromStream(static_sk_stream_get_entity(stream), static_cast<SkCodec::Result *>(result), static_cast<SkPngChunkReader *>(pngChunkReader), static_cast<SkCodec::SelectionPolicy>(selectionPolicy)));
+    return static_sk_codec_make(SkCodec::MakeFromStream(static_sk_stream_take_entity(stream), static_cast<SkCodec::Result *>(result), static_cast<SkPngChunkReader *>(pngChunkReader), static_cast<SkCodec::SelectionPolicy>(selectionPolicy)));
 }
 
 sk_codec_t SkCodec_MakeFromData(sk_stream_t stream, void * pngChunkReader) {

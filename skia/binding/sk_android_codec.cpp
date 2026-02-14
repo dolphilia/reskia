@@ -91,11 +91,11 @@ bool SkAndroidCodec_getAndroidGainmap(void *androidCodec, void *outInfo, sk_stre
 // static
 
 sk_android_codec_t SkAndroidCodec_MakeFromCodec(sk_codec_t codec) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromCodec(static_sk_codec_get_entity(codec)));
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromCodec(static_sk_codec_take_entity(codec)));
 }
 
 sk_android_codec_t SkAndroidCodec_MakeFromStream(sk_codec_t codec, void * pngChunkReader) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_get_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_take_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
 sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, void * pngChunkReader) {

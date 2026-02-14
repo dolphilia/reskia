@@ -5,42 +5,35 @@
 #include "static_sk_pixmap.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_pixmap-internal.h"
 
-static std::set<int> static_sk_pixmap_available_keys;
-static std::map<int , SkPixmap> static_sk_pixmap;
-static int static_sk_pixmap_index = 0;
+static reskia::static_registry::HandleTable<SkPixmap> static_sk_pixmap;
 
 int static_sk_pixmap_make(SkPixmap value) {
-    int key;
-    if (!static_sk_pixmap_available_keys.empty()) {
-        auto it = static_sk_pixmap_available_keys.begin();
-        key = *it;
-        static_sk_pixmap_available_keys.erase(it);
-    } else {
-        key = static_sk_pixmap_index++;
-    }
-    static_sk_pixmap[key] = std::move(value);
-    return key;
+    return static_sk_pixmap.create(std::move(value));
 }
 
 void static_sk_pixmap_set(int key, SkPixmap value) {
-    static_sk_pixmap[key] = std::move(value);
+    static_sk_pixmap.set(key, std::move(value));
 }
 
 SkPixmap static_sk_pixmap_get_entity(int key) {
-    return static_sk_pixmap[key];
+    SkPixmap* entity = static_sk_pixmap.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_pixmap_delete(int key) {
     static_sk_pixmap.erase(key);
-    static_sk_pixmap_available_keys.insert(key);
 }
 
 void * static_sk_pixmap_get_ptr(int key) { // -> SkPixmap *
-    return &static_sk_pixmap[key];
+    return static_sk_pixmap.get_ptr(key);
 }
 
 }

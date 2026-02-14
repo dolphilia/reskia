@@ -5,54 +5,63 @@
 #include "static_std_vector_sk_scalar.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_std_vector_sk_scalar-internal.h"
 
-static std::set<int> static_vector_float_available_keys;
-static std::map<int , std::vector<SkScalar>> static_vector_float;
-static int static_vector_float_index = 0;
+static reskia::static_registry::HandleTable<std::vector<SkScalar>> static_vector_float;
 
 int static_vector_sk_scalar_make(std::vector<SkScalar> value) {
-    int key;
-    if (!static_vector_float_available_keys.empty()) {
-        auto it = static_vector_float_available_keys.begin();
-        key = *it;
-        static_vector_float_available_keys.erase(it);
-    } else {
-        key = static_vector_float_index++;
-    }
-    static_vector_float[key] = std::move(value);
-    return key;
+    return static_vector_float.create(std::move(value));
 }
 
 void static_vector_sk_scalar_set(int key, std::vector<SkScalar> value) {
-    static_vector_float[key] = std::move(value);
+    static_vector_float.set(key, std::move(value));
 }
 
 extern "C" {
 
 void static_vector_sk_scalar_delete(int key) {
     static_vector_float.erase(key);
-    static_vector_float_available_keys.insert(key);
 }
 
 float static_vector_sk_scalar_get(int key, int index) { // -> SkScalar
-    return static_vector_float[key][index];
+    std::vector<SkScalar>* entity = static_vector_float.get_ptr(key);
+    if (entity == nullptr || index < 0 || static_cast<size_t>(index) >= entity->size()) {
+        return 0.0f;
+    }
+    return (*entity)[index];
 }
 
 void static_vector_sk_scalar_push_back(int key, float value) { // SkScalar value
-    static_vector_float[key].push_back(value);
+    std::vector<SkScalar>* entity = static_vector_float.get_ptr(key);
+    if (entity == nullptr) {
+        return;
+    }
+    entity->push_back(value);
 }
 
 void static_vector_sk_scalar_insert(int key, int index, float value) { // SkScalar value
-    static_vector_float[key].insert(static_vector_float[key].begin() + index, value);
+    std::vector<SkScalar>* entity = static_vector_float.get_ptr(key);
+    if (entity == nullptr || index < 0 || static_cast<size_t>(index) > entity->size()) {
+        return;
+    }
+    entity->insert(entity->begin() + index, value);
 }
 
 void static_vector_sk_scalar_pop_back(int key) {
-    static_vector_float[key].pop_back();
+    std::vector<SkScalar>* entity = static_vector_float.get_ptr(key);
+    if (entity == nullptr || entity->empty()) {
+        return;
+    }
+    entity->pop_back();
 }
 
 void static_vector_sk_scalar_erase(int key, int index) {
-    static_vector_float[key].erase(static_vector_float[key].begin() + index);
+    std::vector<SkScalar>* entity = static_vector_float.get_ptr(key);
+    if (entity == nullptr || index < 0 || static_cast<size_t>(index) >= entity->size()) {
+        return;
+    }
+    entity->erase(entity->begin() + index);
 }
 
 }

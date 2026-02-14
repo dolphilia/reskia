@@ -36,7 +36,7 @@ sk_image_t SkImages_DeferredFromEncodedData(sk_data_t data) {
 }
 
 sk_image_t SkImages_DeferredFromGenerator(sk_image_generator_t image_generator) {
-    return static_sk_image_make(SkImages::DeferredFromGenerator(static_sk_image_generator_get_entity(image_generator)));
+    return static_sk_image_make(SkImages::DeferredFromGenerator(static_sk_image_generator_take_entity(image_generator)));
 }
 
 sk_image_t SkImages_DeferredFromPicture(sk_picture_t picture, const void *dimensions, const void *matrix, const void *paint, int bitDepth, sk_color_space_t color_space, sk_surface_props_t props) {

@@ -4,43 +4,38 @@
 
 #include "static_sk_blend_mode.h"
 #include "static_sk_blend_mode-internal.h"
-#include <set>
+#include "handle_table.hpp"
 
-static std::set<int> static_optional_sk_blend_mode_available_keys;
-static std::map<int, std::optional<SkBlendMode>> static_optional_sk_blend_mode;
-static int static_optional_sk_blend_mode_index = 0;
+static reskia::static_registry::HandleTable<std::optional<SkBlendMode>> static_optional_sk_blend_mode;
 
 int static_optional_sk_blend_mode_make(std::optional<SkBlendMode> value) {
-    int key;
-    if (!static_optional_sk_blend_mode_available_keys.empty()) {
-        auto it = static_optional_sk_blend_mode_available_keys.begin();
-        key = *it;
-        static_optional_sk_blend_mode_available_keys.erase(it);
-    } else {
-        key = static_optional_sk_blend_mode_index++;
-    }
-    static_optional_sk_blend_mode[key] = value;
-    return key;
+    return static_optional_sk_blend_mode.create(value);
 }
 
 void static_optional_sk_blend_mode_set(int key, std::optional<SkBlendMode> value) {
-    static_optional_sk_blend_mode[key] = value;
+    static_optional_sk_blend_mode.set(key, value);
 }
 
 std::optional<SkBlendMode> static_optional_sk_blend_mode_get_entity(int key) {
-    return static_optional_sk_blend_mode[key];
+    std::optional<SkBlendMode>* entity = static_optional_sk_blend_mode.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_optional_sk_blend_mode_delete(int key) {
-    static_optional_sk_blend_mode[key].reset();
     static_optional_sk_blend_mode.erase(key);
-    static_optional_sk_blend_mode_available_keys.insert(key);
 }
 
 int static_optional_sk_blend_mode_get_ptr(int key) { // // -> (int)SkBlendMode
-    return static_cast<int>(*static_optional_sk_blend_mode[key]);
+    std::optional<SkBlendMode>* entity = static_optional_sk_blend_mode.get_ptr(key);
+    if (entity == nullptr || !entity->has_value()) {
+        return 0;
+    }
+    return static_cast<int>(**entity);
 }
 
 }

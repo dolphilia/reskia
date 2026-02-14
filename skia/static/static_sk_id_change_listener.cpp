@@ -5,43 +5,47 @@
 #include "static_sk_id_change_listener.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_id_change_listener-internal.h"
 
-static std::set<int> static_sk_id_change_listener_available_keys;
-static std::map<int , sk_sp<SkIDChangeListener>> static_sk_id_change_listener;
-static int static_sk_id_change_listener_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkIDChangeListener>> static_sk_id_change_listener_table;
 
 int static_sk_id_change_listener_make(sk_sp<SkIDChangeListener> value) {
-    int key;
-    if (!static_sk_id_change_listener_available_keys.empty()) {
-        auto it = static_sk_id_change_listener_available_keys.begin();
-        key = *it;
-        static_sk_id_change_listener_available_keys.erase(it);
-    } else {
-        key = static_sk_id_change_listener_index++;
-    }
-    static_sk_id_change_listener[key] = std::move(value);
-    return key;
+    return static_sk_id_change_listener_table.create(std::move(value));
 }
 
 void static_sk_id_change_listener_set(int key, sk_sp<SkIDChangeListener> value) {
-    static_sk_id_change_listener[key] = std::move(value);
+    static_sk_id_change_listener_table.set(key, std::move(value));
+}
+
+sk_sp<SkIDChangeListener> static_sk_id_change_listener_borrow_entity(int key) {
+    sk_sp<SkIDChangeListener>* entity = static_sk_id_change_listener_table.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkIDChangeListener> static_sk_id_change_listener_take_entity(int key) {
+    return static_sk_id_change_listener_table.take_or_default(key);
 }
 
 sk_sp<SkIDChangeListener> static_sk_id_change_listener_get_entity(int key) {
-    return std::move(static_sk_id_change_listener[key]);
+    return static_sk_id_change_listener_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_id_change_listener_delete(int key) {
-    static_sk_id_change_listener[key].reset();
-    static_sk_id_change_listener.erase(key);
-    static_sk_id_change_listener_available_keys.insert(key);
+    static_sk_id_change_listener_table.erase(key);
 }
 
 void *static_sk_id_change_listener_get_ptr(int key) { // -> SkIDChangeListener *
-    return static_sk_id_change_listener[key].get();
+    sk_sp<SkIDChangeListener>* entity = static_sk_id_change_listener_table.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

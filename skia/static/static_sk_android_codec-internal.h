@@ -8,5 +8,7 @@
 #include <map>
 int static_sk_android_codec_make(std::unique_ptr<SkAndroidCodec> value);
 void static_sk_android_codec_set(int key, std::unique_ptr<SkAndroidCodec> value);
+SkAndroidCodec* static_sk_android_codec_borrow_entity(int key);
+std::unique_ptr<SkAndroidCodec> static_sk_android_codec_take_entity(int key);
 std::unique_ptr<SkAndroidCodec> static_sk_android_codec_get_entity(int key);
 #endif //STATIC_SK_ANDROID_CODEC_INTERNAL_H

@@ -4,42 +4,40 @@
 
 #include "static_sk_mesh_specification_attribute.h"
 
+#include "handle_table.hpp"
 #include "static_sk_mesh_specification_attribute-internal.h"
 
-static std::set<int> static_sk_mesh_specification_attribute_available_keys;
-static std::map<int , SkSpan<const SkMeshSpecification::Attribute>> static_sk_mesh_specification_attribute;
-static int static_sk_mesh_specification_attribute_index = 0;
+static reskia::static_registry::HandleTable<SkSpan<const SkMeshSpecification::Attribute>>
+    static_sk_mesh_specification_attribute;
 
 int static_sk_mesh_specification_attribute_make(SkSpan<const SkMeshSpecification::Attribute> value) {
-    int key;
-    if (!static_sk_mesh_specification_attribute_available_keys.empty()) {
-        auto it = static_sk_mesh_specification_attribute_available_keys.begin();
-        key = *it;
-        static_sk_mesh_specification_attribute_available_keys.erase(it);
-    } else {
-        key = static_sk_mesh_specification_attribute_index++;
-    }
-    static_sk_mesh_specification_attribute[key] = value;
-    return key;
+    return static_sk_mesh_specification_attribute.create(value);
 }
 
 void static_sk_mesh_specification_attribute_set(int key, SkSpan<const SkMeshSpecification::Attribute> value) {
-    static_sk_mesh_specification_attribute[key] = value;
+    static_sk_mesh_specification_attribute.set(key, value);
 }
 
 SkSpan<const SkMeshSpecification::Attribute> static_sk_mesh_specification_attribute_get_entity(int key) {
-    return static_sk_mesh_specification_attribute[key];
+    SkSpan<const SkMeshSpecification::Attribute>* entity = static_sk_mesh_specification_attribute.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_mesh_specification_attribute_delete(int key) {
     static_sk_mesh_specification_attribute.erase(key);
-    static_sk_mesh_specification_attribute_available_keys.insert(key);
 }
 
 const void * static_sk_mesh_specification_attribute_get_ptr(int key, int index) {
-    return &static_sk_mesh_specification_attribute[key][index];
+    SkSpan<const SkMeshSpecification::Attribute>* entity = static_sk_mesh_specification_attribute.get_ptr(key);
+    if (entity == nullptr || index < 0 || static_cast<size_t>(index) >= entity->size()) {
+        return nullptr;
+    }
+    return &(*entity)[index];
 }
 
 }

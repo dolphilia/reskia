@@ -5,43 +5,47 @@
 #include "static_sk_path_effect.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_path_effect-internal.h"
 
-static std::set<int> static_sk_path_effect_available_keys;
-static std::map<int , sk_sp<SkPathEffect>> static_sk_path_effect;
-static int static_sk_path_effect_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkPathEffect>> static_sk_path_effect;
 
 int static_sk_path_effect_make(sk_sp<SkPathEffect> value) {
-    int key;
-    if (!static_sk_path_effect_available_keys.empty()) {
-        auto it = static_sk_path_effect_available_keys.begin();
-        key = *it;
-        static_sk_path_effect_available_keys.erase(it);
-    } else {
-        key = static_sk_path_effect_index++;
-    }
-    static_sk_path_effect[key] = std::move(value);
-    return key;
+    return static_sk_path_effect.create(std::move(value));
 }
 
 void static_sk_path_effect_set(int key, sk_sp<SkPathEffect> value) {
-    static_sk_path_effect[key] = std::move(value);
+    static_sk_path_effect.set(key, std::move(value));
+}
+
+sk_sp<SkPathEffect> static_sk_path_effect_borrow_entity(int key) {
+    sk_sp<SkPathEffect>* entity = static_sk_path_effect.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkPathEffect> static_sk_path_effect_take_entity(int key) {
+    return static_sk_path_effect.take_or_default(key);
 }
 
 sk_sp<SkPathEffect> static_sk_path_effect_get_entity(int key) {
-    return std::move(static_sk_path_effect[key]);
+    return static_sk_path_effect_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_path_effect_delete(int key) {
-    static_sk_path_effect[key].reset();
     static_sk_path_effect.erase(key);
-    static_sk_path_effect_available_keys.insert(key);
 }
 
 void *static_sk_path_effect_get_ptr(int key) { // -> SkPathEffect *
-    return static_sk_path_effect[key].get();
+    sk_sp<SkPathEffect>* entity = static_sk_path_effect.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

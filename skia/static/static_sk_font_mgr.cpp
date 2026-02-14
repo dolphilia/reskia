@@ -5,43 +5,47 @@
 #include "static_sk_font_mgr.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_font_mgr-internal.h"
 
-static std::set<int> static_sk_font_mgr_available_keys;
-static std::map<int , sk_sp<SkFontMgr>> static_sk_font_mgr;
-static int static_sk_font_mgr_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkFontMgr>> static_sk_font_mgr;
 
 int static_sk_font_mgr_make(sk_sp<SkFontMgr> value) {
-    int key;
-    if (!static_sk_font_mgr_available_keys.empty()) {
-        auto it = static_sk_font_mgr_available_keys.begin();
-        key = *it;
-        static_sk_font_mgr_available_keys.erase(it);
-    } else {
-        key = static_sk_font_mgr_index++;
-    }
-    static_sk_font_mgr[key] = std::move(value);
-    return key;
+    return static_sk_font_mgr.create(std::move(value));
 }
 
 void static_sk_font_mgr_set(int key, sk_sp<SkFontMgr> value) {
-    static_sk_font_mgr[key] = std::move(value);
+    static_sk_font_mgr.set(key, std::move(value));
+}
+
+sk_sp<SkFontMgr> static_sk_font_mgr_borrow_entity(int key) {
+    sk_sp<SkFontMgr>* entity = static_sk_font_mgr.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkFontMgr> static_sk_font_mgr_take_entity(int key) {
+    return static_sk_font_mgr.take_or_default(key);
 }
 
 sk_sp<SkFontMgr> static_sk_font_mgr_get_entity(int key) {
-    return std::move(static_sk_font_mgr[key]);
+    return static_sk_font_mgr_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_font_mgr_delete(int key) {
-    static_sk_font_mgr[key].reset();
     static_sk_font_mgr.erase(key);
-    static_sk_font_mgr_available_keys.insert(key);
 }
 
 void *static_sk_font_mgr_get_ptr(int key) { // -> SkFontMgr *
-    return static_sk_font_mgr[key].get();
+    sk_sp<SkFontMgr>* entity = static_sk_font_mgr.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

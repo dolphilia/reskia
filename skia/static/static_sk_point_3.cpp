@@ -3,42 +3,35 @@
 //
 
 #include "static_sk_point_3.h"
+#include "handle_table.hpp"
 #include "static_sk_point_3-internal.h"
 
-static std::set<int> static_sk_point_3_available_keys;
-static std::map<int , SkPoint3> static_sk_point_3;
-static int static_sk_point_3_index = 0;
+static reskia::static_registry::HandleTable<SkPoint3> static_sk_point_3;
 
 int static_sk_point_3_make(SkPoint3 value) {
-    int key;
-    if (!static_sk_point_3_available_keys.empty()) {
-        auto it = static_sk_point_3_available_keys.begin();
-        key = *it;
-        static_sk_point_3_available_keys.erase(it);
-    } else {
-        key = static_sk_point_3_index++;
-    }
-    static_sk_point_3[key] = value;
-    return key;
+    return static_sk_point_3.create(value);
 }
 
 void static_sk_point_3_set(int key, SkPoint3 value) {
-    static_sk_point_3[key] = value;
+    static_sk_point_3.set(key, value);
 }
 
 SkPoint3 static_sk_point_3_get_entity(int key) {
-    return static_sk_point_3[key];
+    SkPoint3* entity = static_sk_point_3.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_point_3_delete(int key) {
     static_sk_point_3.erase(key);
-    static_sk_point_3_available_keys.insert(key);
 }
 
 void * static_sk_point_3_get_ptr(int key) { // -> SkPoint3 *
-    return &static_sk_point_3[key];
+    return static_sk_point_3.get_ptr(key);
 }
 
 }

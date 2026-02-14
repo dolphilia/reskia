@@ -5,43 +5,47 @@
 #include "static_sk_image.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_image-internal.h"
 
-static std::set<int> static_sk_image_available_keys;
-static std::map<int , sk_sp<SkImage>> static_sk_image;
-static int static_sk_image_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkImage>> static_sk_image_table;
 
 int static_sk_image_make(sk_sp<SkImage> value) {
-    int key;
-    if (!static_sk_image_available_keys.empty()) {
-        auto it = static_sk_image_available_keys.begin();
-        key = *it;
-        static_sk_image_available_keys.erase(it);
-    } else {
-        key = static_sk_image_index++;
-    }
-    static_sk_image[key] = std::move(value);
-    return key;
+    return static_sk_image_table.create(std::move(value));
 }
 
 void static_sk_image_set(int key, sk_sp<SkImage> value) {
-    static_sk_image[key] = std::move(value);
+    static_sk_image_table.set(key, std::move(value));
+}
+
+sk_sp<SkImage> static_sk_image_borrow_entity(int key) {
+    sk_sp<SkImage>* entity = static_sk_image_table.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkImage> static_sk_image_take_entity(int key) {
+    return static_sk_image_table.take_or_default(key);
 }
 
 sk_sp<SkImage> static_sk_image_get_entity(int key) {
-    return std::move(static_sk_image[key]);
+    return static_sk_image_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_image_delete(int key) {
-    static_sk_image[key].reset();
-    static_sk_image.erase(key);
-    static_sk_image_available_keys.insert(key);
+    static_sk_image_table.erase(key);
 }
 
 void *static_sk_image_get_ptr(int key) { // -> SkImage *
-    return static_sk_image[key].get();
+    sk_sp<SkImage>* entity = static_sk_image_table.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

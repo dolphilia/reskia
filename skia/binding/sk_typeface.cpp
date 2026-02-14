@@ -189,7 +189,7 @@ sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index) {
 }
 
 sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index) {
-    return static_sk_typeface_make(SkTypeface::MakeFromStream(static_sk_stream_asset_get_entity(stream_asset), index));
+    return static_sk_typeface_make(SkTypeface::MakeFromStream(static_sk_stream_asset_take_entity(stream_asset), index));
 }
 
 sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index) {

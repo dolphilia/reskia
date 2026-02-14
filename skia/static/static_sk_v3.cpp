@@ -3,42 +3,35 @@
 //
 
 #include "static_sk_v3.h"
+#include "handle_table.hpp"
 #include "static_sk_v3-internal.h"
 
-static std::set<int> static_sk_v3_available_keys;
-static std::map<int , SkV3> static_sk_v3;
-static int static_sk_v3_index = 0;
+static reskia::static_registry::HandleTable<SkV3> static_sk_v3;
 
 int static_sk_v3_make(SkV3 value) {
-    int key;
-    if (!static_sk_v3_available_keys.empty()) {
-        auto it = static_sk_v3_available_keys.begin();
-        key = *it;
-        static_sk_v3_available_keys.erase(it);
-    } else {
-        key = static_sk_v3_index++;
-    }
-    static_sk_v3[key] = value;
-    return key;
+    return static_sk_v3.create(value);
 }
 
 void static_sk_v3_set(int key, SkV3 value) {
-    static_sk_v3[key] = value;
+    static_sk_v3.set(key, value);
 }
 
 SkV3 static_sk_v3_get_entity(int key) {
-    return static_sk_v3[key];
+    SkV3* entity = static_sk_v3.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_v3_delete(int key) {
     static_sk_v3.erase(key);
-    static_sk_v3_available_keys.insert(key);
 }
 
 void * static_sk_v3_get_ptr(int key) { // -> SkV3 *
-    return &static_sk_v3[key];
+    return static_sk_v3.get_ptr(key);
 }
 
 }

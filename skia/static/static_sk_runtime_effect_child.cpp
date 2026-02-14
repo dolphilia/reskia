@@ -3,44 +3,41 @@
 //
 
 #include "static_sk_runtime_effect_child.h"
+#include "handle_table.hpp"
 #include "static_sk_runtime_effect_child-internal.h"
 
-static std::set<int> static_const_sk_runtime_effect_child_available_keys;
-static std::map<int , SkSpan<const SkRuntimeEffect::Child>> static_const_sk_runtime_effect_child;
-static int static_const_sk_runtime_effect_child_index = 0;
+static reskia::static_registry::HandleTable<SkSpan<const SkRuntimeEffect::Child>> static_const_sk_runtime_effect_child;
 
 // const
 
 int static_const_sk_runtime_effect_child_make(SkSpan<const SkRuntimeEffect::Child> value) {
-    int key;
-    if (!static_const_sk_runtime_effect_child_available_keys.empty()) {
-        auto it = static_const_sk_runtime_effect_child_available_keys.begin();
-        key = *it;
-        static_const_sk_runtime_effect_child_available_keys.erase(it);
-    } else {
-        key = static_const_sk_runtime_effect_child_index++;
-    }
-    static_const_sk_runtime_effect_child[key] = value;
-    return key;
+    return static_const_sk_runtime_effect_child.create(value);
 }
 
 void static_const_sk_runtime_effect_child_set(int key, SkSpan<const SkRuntimeEffect::Child> value) {
-    static_const_sk_runtime_effect_child[key] = value;
+    static_const_sk_runtime_effect_child.set(key, value);
 }
 
 SkSpan<const SkRuntimeEffect::Child> static_const_sk_runtime_effect_child_get_entity(int key) {
-    return static_const_sk_runtime_effect_child[key];
+    SkSpan<const SkRuntimeEffect::Child>* entity = static_const_sk_runtime_effect_child.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_const_sk_runtime_effect_child_delete(int key) {
     static_const_sk_runtime_effect_child.erase(key);
-    static_const_sk_runtime_effect_child_available_keys.insert(key);
 }
 
 const void * static_const_sk_runtime_effect_child_get_ptr(int key, int index) { // -> const SkRuntimeEffect::Child *
-    return &static_const_sk_runtime_effect_child[key][index];
+    SkSpan<const SkRuntimeEffect::Child>* entity = static_const_sk_runtime_effect_child.get_ptr(key);
+    if (entity == nullptr || index < 0 || static_cast<size_t>(index) >= entity->size()) {
+        return nullptr;
+    }
+    return &(*entity)[index];
 }
 
 }

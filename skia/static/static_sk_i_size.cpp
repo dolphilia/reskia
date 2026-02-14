@@ -4,41 +4,38 @@
 
 #include "static_sk_i_size.h"
 #include "static_sk_i_size-internal.h"
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_i_size_available_keys;
-static std::map<int , SkISize> static_sk_i_size;
-static int static_sk_i_size_index = 0;
+static reskia::static_registry::HandleTable<SkISize> static_sk_i_size;
 
 int static_sk_i_size_make(SkISize value) {
-    int key;
-    if (!static_sk_i_size_available_keys.empty()) {
-        auto it = static_sk_i_size_available_keys.begin();
-        key = *it;
-        static_sk_i_size_available_keys.erase(it);
-    } else {
-        key = static_sk_i_size_index++;
-    }
-    static_sk_i_size[key] = value;
-    return key;
+    return static_sk_i_size.create(value);
 }
 
 void static_sk_i_size_set(int key, SkISize value) {
-    static_sk_i_size[key] = value;
+    static_sk_i_size.set(key, value);
 }
 
 SkISize static_sk_i_size_get_entity(int key) {
-    return static_sk_i_size[key];
+    SkISize* entity = static_sk_i_size.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_i_size_delete(int key) {
     static_sk_i_size.erase(key);
-    static_sk_i_size_available_keys.insert(key);
 }
 
 void * static_sk_i_size_get_ptr(int key) { // -> SkISize *
-    return &static_sk_i_size[key];
+    SkISize* entity = static_sk_i_size.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity;
 }
 
 }

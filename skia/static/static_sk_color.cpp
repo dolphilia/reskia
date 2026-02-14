@@ -41,7 +41,11 @@
 // }
 //
 // color_t static_sk_color_get(int key) {
-//     return colors[key];
+//     auto it = colors.find(key);
+//     if (it == colors.end()) {
+//         return {};
+//     }
+//     return it->second;
 // }
 //
 // void static_sk_color_set(int key, color_t value) {

@@ -4,41 +4,38 @@
 
 #include "static_sk_i_rect.h"
 #include "static_sk_i_rect-internal.h"
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_i_rect_available_keys;
-static std::map<int , SkIRect> static_sk_i_rect;
-static int static_sk_i_rect_index = 0;
+static reskia::static_registry::HandleTable<SkIRect> static_sk_i_rect;
 
 int static_sk_i_rect_make(SkIRect value) {
-    int key;
-    if (!static_sk_i_rect_available_keys.empty()) {
-        auto it = static_sk_i_rect_available_keys.begin();
-        key = *it;
-        static_sk_i_rect_available_keys.erase(it);
-    } else {
-        key = static_sk_i_rect_index++;
-    }
-    static_sk_i_rect[key] = value;
-    return key;
+    return static_sk_i_rect.create(value);
 }
 
 void static_sk_i_rect_set(int key, SkIRect value) {
-    static_sk_i_rect[key] = value;
+    static_sk_i_rect.set(key, value);
 }
 
 SkIRect static_sk_i_rect_get_entity(int key) {
-    return static_sk_i_rect[key];
+    SkIRect* entity = static_sk_i_rect.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_i_rect_delete(int key) {
     static_sk_i_rect.erase(key);
-    static_sk_i_rect_available_keys.insert(key);
 }
 
 void * static_sk_i_rect_get_ptr(int key) { // -> SkIRect *
-    return &static_sk_i_rect[key];
+    SkIRect* entity = static_sk_i_rect.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity;
 }
 
 }

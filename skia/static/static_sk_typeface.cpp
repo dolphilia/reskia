@@ -5,43 +5,47 @@
 #include "static_sk_typeface.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_typeface-internal.h"
 
-static std::set<int> static_sk_typeface_available_keys;
-static std::map<int , sk_sp<SkTypeface>> static_sk_typeface;
-static int static_sk_typeface_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkTypeface>> static_sk_typeface;
 
 int static_sk_typeface_make(sk_sp<SkTypeface> value) {
-    int key;
-    if (!static_sk_typeface_available_keys.empty()) {
-        auto it = static_sk_typeface_available_keys.begin();
-        key = *it;
-        static_sk_typeface_available_keys.erase(it);
-    } else {
-        key = static_sk_typeface_index++;
-    }
-    static_sk_typeface[key] = std::move(value);
-    return key;
+    return static_sk_typeface.create(std::move(value));
 }
 
 void static_sk_typeface_set(int key, sk_sp<SkTypeface> value) {
-    static_sk_typeface[key] = std::move(value);
+    static_sk_typeface.set(key, std::move(value));
+}
+
+sk_sp<SkTypeface> static_sk_typeface_borrow_entity(int key) {
+    sk_sp<SkTypeface>* entity = static_sk_typeface.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkTypeface> static_sk_typeface_take_entity(int key) {
+    return static_sk_typeface.take_or_default(key);
 }
 
 sk_sp<SkTypeface> static_sk_typeface_get_entity(int key) {
-    return std::move(static_sk_typeface[key]);
+    return static_sk_typeface_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_typeface_delete(int key) {
-    static_sk_typeface[key].reset();
     static_sk_typeface.erase(key);
-    static_sk_typeface_available_keys.insert(key);
 }
 
 void * static_sk_typeface_get_ptr(int key) { // -> SkTypeface *
-    return static_sk_typeface[key].get();
+    sk_sp<SkTypeface>* entity = static_sk_typeface.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

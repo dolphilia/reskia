@@ -4,47 +4,49 @@
 
 #include "static_sk_mesh_specification.h"
 
-#include <map>
-#include <set>
 #include <utility>
 #include "include/core/SkMesh.h"
+#include "handle_table.hpp"
 //#include "static_sk_mesh-internal.h"
 
-static std::set<int> static_sk_mesh_specification_available_keys;
-static std::map<int , sk_sp<SkMeshSpecification>> static_sk_mesh_specification;
-static int static_sk_mesh_specification_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkMeshSpecification>> static_sk_mesh_specification;
 
 int static_sk_mesh_specification_make(sk_sp<SkMeshSpecification> value) {
-    int key;
-    if (!static_sk_mesh_specification_available_keys.empty()) {
-        auto it = static_sk_mesh_specification_available_keys.begin();
-        key = *it;
-        static_sk_mesh_specification_available_keys.erase(it);
-    } else {
-        key = static_sk_mesh_specification_index++;
-    }
-    static_sk_mesh_specification[key] = std::move(value);
-    return key;
+    return static_sk_mesh_specification.create(std::move(value));
 }
 
 void static_sk_mesh_specification_set(int key, sk_sp<SkMeshSpecification> value) {
-    static_sk_mesh_specification[key] = std::move(value);
+    static_sk_mesh_specification.set(key, std::move(value));
+}
+
+sk_sp<SkMeshSpecification> static_sk_mesh_specification_borrow_entity(int key) {
+    sk_sp<SkMeshSpecification>* entity = static_sk_mesh_specification.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkMeshSpecification> static_sk_mesh_specification_take_entity(int key) {
+    return static_sk_mesh_specification.take_or_default(key);
 }
 
 sk_sp<SkMeshSpecification> static_sk_mesh_specification_get_entity(int key) {
-    return std::move(static_sk_mesh_specification[key]);
+    return static_sk_mesh_specification_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_mesh_specification_delete(int key) {
-    static_sk_mesh_specification[key].reset();
     static_sk_mesh_specification.erase(key);
-    static_sk_mesh_specification_available_keys.insert(key);
 }
 
 void *static_sk_mesh_specification_get_ptr(int key) {
-    return static_sk_mesh_specification[key].get();
+    sk_sp<SkMeshSpecification>* entity = static_sk_mesh_specification.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

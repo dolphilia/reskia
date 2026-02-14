@@ -5,44 +5,46 @@
 #include "static_sk_b_box_hierarchy.h"
 #include "static_sk_b_box_hierarchy-internal.h"
 
-#include <set>
-#include <map>
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_b_box_hierarchy_available_keys;
-static std::map<int, sk_sp<SkBBoxHierarchy>> static_sk_b_box_hierarchy;
-static int static_sk_b_box_hierarchy_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkBBoxHierarchy>> static_sk_b_box_hierarchy;
 
 int static_sk_b_box_hierarchy_make(sk_sp<SkBBoxHierarchy> value) {
-    int key;
-    if (!static_sk_b_box_hierarchy_available_keys.empty()) {
-        auto it = static_sk_b_box_hierarchy_available_keys.begin();
-        key = *it;
-        static_sk_b_box_hierarchy_available_keys.erase(it);
-    } else {
-        key = static_sk_b_box_hierarchy_index++;
-    }
-    static_sk_b_box_hierarchy[key] = std::move(value);
-    return key;
+    return static_sk_b_box_hierarchy.create(std::move(value));
 }
 
 void static_sk_b_box_hierarchy_set(int key, sk_sp<SkBBoxHierarchy> value) {
-    static_sk_b_box_hierarchy[key] = std::move(value);
+    static_sk_b_box_hierarchy.set(key, std::move(value));
+}
+
+sk_sp<SkBBoxHierarchy> static_sk_b_box_hierarchy_borrow_entity(int key) {
+    sk_sp<SkBBoxHierarchy>* entity = static_sk_b_box_hierarchy.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkBBoxHierarchy> static_sk_b_box_hierarchy_take_entity(int key) {
+    return static_sk_b_box_hierarchy.take_or_default(key);
 }
 
 sk_sp<SkBBoxHierarchy> static_sk_b_box_hierarchy_get_entity(int key) {
-    return std::move(static_sk_b_box_hierarchy[key]);
+    return static_sk_b_box_hierarchy_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_b_box_hierarchy_delete(int key) {
-    static_sk_b_box_hierarchy[key].reset();
     static_sk_b_box_hierarchy.erase(key);
-    static_sk_b_box_hierarchy_available_keys.insert(key);
 }
 
 void *static_sk_b_box_hierarchy_get_ptr(int key) { // -> SkBBoxHierarchy
-    return static_sk_b_box_hierarchy[key].get();
+    sk_sp<SkBBoxHierarchy>* entity = static_sk_b_box_hierarchy.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

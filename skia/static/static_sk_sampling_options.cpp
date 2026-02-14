@@ -3,42 +3,35 @@
 //
 
 #include "static_sk_sampling_options.h"
+#include "handle_table.hpp"
 #include "static_sk_sampling_options-internal.h"
 
-static std::set<int> static_sk_sampling_options_available_keys;
-static std::map<int , SkSamplingOptions> static_sk_sampling_options;
-static int static_sk_sampling_options_index = 0;
+static reskia::static_registry::HandleTable<SkSamplingOptions> static_sk_sampling_options;
 
 int static_sk_sampling_options_make(SkSamplingOptions value) {
-    int key;
-    if (!static_sk_sampling_options_available_keys.empty()) {
-        auto it = static_sk_sampling_options_available_keys.begin();
-        key = *it;
-        static_sk_sampling_options_available_keys.erase(it);
-    } else {
-        key = static_sk_sampling_options_index++;
-    }
-    static_sk_sampling_options[key] = value;
-    return key;
+    return static_sk_sampling_options.create(value);
 }
 
 void static_sk_sampling_options_set(int key, SkSamplingOptions value) {
-    static_sk_sampling_options[key] = value;
+    static_sk_sampling_options.set(key, value);
 }
 
 SkSamplingOptions static_sk_sampling_options_get_entity(int key) {
-    return static_sk_sampling_options[key];
+    SkSamplingOptions* entity = static_sk_sampling_options.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_sampling_options_delete(int key) {
     static_sk_sampling_options.erase(key);
-    static_sk_sampling_options_available_keys.insert(key);
 }
 
 void * static_sk_sampling_options_get_ptr(int key) { // -> SkSamplingOptions *
-    return &static_sk_sampling_options[key];
+    return static_sk_sampling_options.get_ptr(key);
 }
 
 }

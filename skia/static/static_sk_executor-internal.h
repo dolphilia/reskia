@@ -5,5 +5,7 @@
 #include "include/core/SkExecutor.h"
 int static_sk_executor_make(std::unique_ptr<SkExecutor> value);
 void static_sk_executor_set(int key, std::unique_ptr<SkExecutor> value);
+SkExecutor* static_sk_executor_borrow_entity(int key);
+std::unique_ptr<SkExecutor> static_sk_executor_take_entity(int key);
 std::unique_ptr<SkExecutor> static_sk_executor_get_entity(int key);
 #endif // STATIC_SK_EXECUTOR_INTERNAL_H

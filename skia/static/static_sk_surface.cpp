@@ -5,43 +5,47 @@
 #include "static_sk_surface.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_surface-internal.h"
 
-static std::set<int> static_sk_surface_available_keys;
-static std::map<int , sk_sp<SkSurface>> static_sk_surface;
-static int static_sk_surface_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkSurface>> static_sk_surface;
 
 int static_sk_surface_make(sk_sp<SkSurface> value) {
-    int key;
-    if (!static_sk_surface_available_keys.empty()) {
-        auto it = static_sk_surface_available_keys.begin();
-        key = *it;
-        static_sk_surface_available_keys.erase(it);
-    } else {
-        key = static_sk_surface_index++;
-    }
-    static_sk_surface[key] = std::move(value);
-    return key;
+    return static_sk_surface.create(std::move(value));
 }
 
 void static_sk_surface_set(int key, sk_sp<SkSurface> value) {
-    static_sk_surface[key] = std::move(value);
+    static_sk_surface.set(key, std::move(value));
+}
+
+sk_sp<SkSurface> static_sk_surface_borrow_entity(int key) {
+    sk_sp<SkSurface>* entity = static_sk_surface.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkSurface> static_sk_surface_take_entity(int key) {
+    return static_sk_surface.take_or_default(key);
 }
 
 sk_sp<SkSurface> static_sk_surface_get_entity(int key) {
-    return std::move(static_sk_surface[key]);
+    return static_sk_surface_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_surface_delete(int key) {
-    static_sk_surface[key].reset();
     static_sk_surface.erase(key);
-    static_sk_surface_available_keys.insert(key);
 }
 
 void * static_sk_surface_get_ptr(int key) { // -> SkSurface *
-    return static_sk_surface[key].get();
+    sk_sp<SkSurface>* entity = static_sk_surface.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return entity->get();
 }
 
 }

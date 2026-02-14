@@ -5,5 +5,7 @@
 #include "include/core/SkCapabilities.h"
 int static_const_sk_capabilities_make(sk_sp<const SkCapabilities> value);
 void static_const_sk_capabilities_set(int key, sk_sp<const SkCapabilities> value);
+sk_sp<const SkCapabilities> static_const_sk_capabilities_borrow_entity(int key);
+sk_sp<const SkCapabilities> static_const_sk_capabilities_take_entity(int key);
 sk_sp<const SkCapabilities> static_const_sk_capabilities_get_entity(int key);
 #endif // STATIC_SK_CAPABILITIES_INTERNAL_H

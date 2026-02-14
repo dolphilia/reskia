@@ -3,42 +3,37 @@
 //
 
 #include "static_sk_m_44.h"
+
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_m_44-internal.h"
 
-static std::set<int> static_sk_m_44_available_keys;
-static std::map<int , SkM44> static_sk_m_44;
-static int static_sk_m_44_index = 0;
+static reskia::static_registry::HandleTable<SkM44> static_sk_m_44;
 
 int static_sk_m_44_make(SkM44 value) {
-    int key;
-    if (!static_sk_m_44_available_keys.empty()) {
-        auto it = static_sk_m_44_available_keys.begin();
-        key = *it;
-        static_sk_m_44_available_keys.erase(it);
-    } else {
-        key = static_sk_m_44_index++;
-    }
-    static_sk_m_44[key] = value;
-    return key;
+    return static_sk_m_44.create(std::move(value));
 }
 
 void static_sk_m_44_set(int key, SkM44 value) {
-    static_sk_m_44[key] = value;
+    static_sk_m_44.set(key, std::move(value));
 }
 
 SkM44 static_sk_m_44_get_entity(int key) {
-    return static_sk_m_44[key];
+    SkM44* entity = static_sk_m_44.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_m_44_delete(int key) {
     static_sk_m_44.erase(key);
-    static_sk_m_44_available_keys.insert(key);
 }
 
 void * static_sk_m_44_get_ptr(int key) { // -> SkM44 *
-    return &static_sk_m_44[key];
+    return static_sk_m_44.get_ptr(key);
 }
 
 }

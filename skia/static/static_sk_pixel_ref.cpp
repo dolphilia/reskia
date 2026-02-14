@@ -5,43 +5,47 @@
 #include "static_sk_pixel_ref.h"
 
 #include <utility>
+#include "handle_table.hpp"
 #include "static_sk_pixel_ref-internal.h"
 
-static std::set<int> static_sk_pixel_ref_available_keys;
-static std::map<int , sk_sp<SkPixelRef>> static_sk_pixel_ref;
-static int static_sk_pixel_ref_index = 0;
+static reskia::static_registry::HandleTable<sk_sp<SkPixelRef>> static_sk_pixel_ref;
 
 int static_sk_pixel_ref_make(sk_sp<SkPixelRef> value) {
-    int key;
-    if (!static_sk_pixel_ref_available_keys.empty()) {
-        auto it = static_sk_pixel_ref_available_keys.begin();
-        key = *it;
-        static_sk_pixel_ref_available_keys.erase(it);
-    } else {
-        key = static_sk_pixel_ref_index++;
-    }
-    static_sk_pixel_ref[key] = std::move(value);
-    return key;
+    return static_sk_pixel_ref.create(std::move(value));
 }
 
 void static_sk_pixel_ref_set(int key, sk_sp<SkPixelRef> value) {
-    static_sk_pixel_ref[key] = std::move(value);
+    static_sk_pixel_ref.set(key, std::move(value));
+}
+
+sk_sp<SkPixelRef> static_sk_pixel_ref_borrow_entity(int key) {
+    sk_sp<SkPixelRef>* entity = static_sk_pixel_ref.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
+}
+
+sk_sp<SkPixelRef> static_sk_pixel_ref_take_entity(int key) {
+    return static_sk_pixel_ref.take_or_default(key);
 }
 
 sk_sp<SkPixelRef> static_sk_pixel_ref_get_entity(int key) {
-    return std::move(static_sk_pixel_ref[key]);
+    return static_sk_pixel_ref_borrow_entity(key);
 }
 
 extern "C" {
 
 void static_sk_pixel_ref_delete(int key) {
-    static_sk_pixel_ref[key].reset();
     static_sk_pixel_ref.erase(key);
-    static_sk_pixel_ref_available_keys.insert(key);
 }
 
 void *static_sk_pixel_ref_get_ptr(int key) { // -> SkPixelRef *
-    return static_sk_pixel_ref[key].get();
+    sk_sp<SkPixelRef>* entity = static_sk_pixel_ref.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity->get();
 }
 
 }

@@ -4,41 +4,38 @@
 
 #include "static_sk_font_style.h"
 #include "static_sk_font_style-internal.h"
+#include "handle_table.hpp"
 
-static std::set<int> static_sk_font_style_available_keys;
-static std::map<int , SkFontStyle> static_sk_font_style;
-static int static_sk_font_style_index = 0;
+static reskia::static_registry::HandleTable<SkFontStyle> static_sk_font_style;
 
 int static_sk_font_style_make(SkFontStyle value) {
-    int key;
-    if (!static_sk_font_style_available_keys.empty()) {
-        auto it = static_sk_font_style_available_keys.begin();
-        key = *it;
-        static_sk_font_style_available_keys.erase(it);
-    } else {
-        key = static_sk_font_style_index++;
-    }
-    static_sk_font_style[key] = value;
-    return key;
+    return static_sk_font_style.create(value);
 }
 
 void static_sk_font_style_set(int key, SkFontStyle value) {
-    static_sk_font_style[key] = value;
+    static_sk_font_style.set(key, value);
 }
 
 SkFontStyle static_sk_font_style_get_entity(int key) {
-    return static_sk_font_style[key];
+    SkFontStyle* entity = static_sk_font_style.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_font_style_delete(int key) {
     static_sk_font_style.erase(key);
-    static_sk_font_style_available_keys.insert(key);
 }
 
 void * static_sk_font_style_get_ptr(int key) { // -> SkFontStyle *
-    return &static_sk_font_style[key];
+    SkFontStyle* entity = static_sk_font_style.get_ptr(key);
+    if (entity == nullptr) {
+        return nullptr;
+    }
+    return entity;
 }
 
 }

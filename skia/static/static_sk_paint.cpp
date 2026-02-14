@@ -4,42 +4,36 @@
 
 #include "static_sk_paint.h"
 
+#include <utility>
+#include "handle_table.hpp"
 #include "static_sk_paint-internal.h"
 
-static std::set<int> static_sk_paint_available_keys;
-static std::map<int, SkPaint> static_sk_paint;
-static int static_sk_paint_index = 0;
+static reskia::static_registry::HandleTable<SkPaint> static_sk_paint;
 
 int static_sk_paint_make(SkPaint value) {
-    int key;
-    if (!static_sk_paint_available_keys.empty()) {
-        auto it = static_sk_paint_available_keys.begin();
-        key = *it;
-        static_sk_paint_available_keys.erase(it);
-    } else {
-        key = static_sk_paint_index++;
-    }
-    static_sk_paint[key] = value;
-    return key;
+    return static_sk_paint.create(std::move(value));
 }
 
 void static_sk_paint_set(int key, SkPaint value) {
-    static_sk_paint[key] = value;
+    static_sk_paint.set(key, std::move(value));
 }
 
 SkPaint static_sk_paint_get_entity(int key) {
-    return static_sk_paint[key];
+    SkPaint* entity = static_sk_paint.get_ptr(key);
+    if (entity == nullptr) {
+        return {};
+    }
+    return *entity;
 }
 
 extern "C" {
 
 void static_sk_paint_delete(int key) {
     static_sk_paint.erase(key);
-    static_sk_paint_available_keys.insert(key);
 }
 
 void *static_sk_paint_get_ptr(int key) {
-    return &static_sk_paint[key];
+    return static_sk_paint.get_ptr(key);
 }
 
 }

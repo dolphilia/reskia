@@ -55,11 +55,11 @@ sk_typeface_t SkFontMgr_makeFromData(void *font_mgr, sk_data_t data, int ttcInde
 }
 
 sk_typeface_t SkFontMgr_makeFromStream(void *font_mgr, sk_stream_asset_t stream_asset, int ttcIndex) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_get_entity(stream_asset), ttcIndex));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_take_entity(stream_asset), ttcIndex));
 }
 
 sk_typeface_t SkFontMgr_makeFromStream_2(void *font_mgr, sk_stream_asset_t stream_asset, const void *font_argments) {
-    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_get_entity(stream_asset), * static_cast<const SkFontArguments *>(font_argments)));
+    return static_sk_typeface_make(static_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_take_entity(stream_asset), * static_cast<const SkFontArguments *>(font_argments)));
 }
 
 sk_typeface_t SkFontMgr_makeFromFile(void *font_mgr, const char path[], int ttcIndex) {
