@@ -289,3 +289,44 @@
 - Reskia 本体リポジトリと比較クローンを明確に分離できる。
 - lock を更新するだけで「どの Skia を比較対象にしたか」を履歴化できる。
 - 将来の段階アップグレード（commit 単位での追従、CMake 化拡張）を小さい差分で進めやすい。
+
+## 13. Cバインディング（`binding/`・`static/`）調査（2026-02-14）
+
+`skia` のCバインディング実装方式について、`binding/` と `static/` の設計レビューを実施した。  
+主な所見は以下。
+
+- `static_*_get_entity()` の `std::move` により、取得時に所有権が失われる箇所がある。
+- `map[key]` 依存で無効キーが暗黙生成され、異常が潜在化しやすい。
+- キー再利用に世代管理がなく、stale handle を検出できない。
+- `delete` と `ref/unref` が混在し、所有権規約が読み取りづらい。
+- `void*` / `int` 主体のAPIで型情報が薄く、誤用検知が難しい。
+
+改善方針:
+
+- レジストリ層を共通化し、検証付きハンドル（世代付き）と同期を導入。
+- `get_entity` を `borrow/take` へ分離し、所有権を明示。
+- 命名を `static` -> `handles`（または `registry`）へ段階移行。
+- LuaJIT互換を維持しつつ、型付きC APIへ移行可能な二層構成を整備。
+
+詳細:
+- `/Users/dolphilia/github/reskia/docs/notes/c-binding-static-binding-review-2026-02-14.md`
+
+## 14. CMake構成レビュー（2026-02-14）
+
+`skia/CMakeLists.txt` を中心に CMake 構成を再点検した。主な課題は以下。
+
+- `skia/CMakeLists.txt` が巨大で責務集中（source list / 依存 / テストが混在）
+- `include_directories` / `link_directories` などグローバル設定が多い
+- `svg/CMakeLists.txt` で `project()` を複数回再定義している
+- `skpath` の project/library 命名が `skcms` と不一致
+- `ReskiaDeps.cmake` の platform 対応が非対称（WIN32 source未実装, UNIX最小）
+
+改善方針:
+
+- ターゲット指向へ移行（`target_include_directories` / `target_link_libraries`）
+- `skia/CMakeLists.txt` を用途別 `.cmake` に分割
+- `svg` と `skpath` の命名・構造を明確化
+- 将来的にルート superbuild を導入し、モジュールと依存モードを一元管理
+
+詳細:
+- `/Users/dolphilia/github/reskia/docs/notes/cmake-architecture-review-2026-02-14.md`

@@ -173,3 +173,7 @@ cmake --build svg/cmake-build-local -j 8
 - 依存管理方針の実施結果: `docs/notes/dependency-management-report-2026-02-14.md`
 - `third_party` サブモジュール化と自動ビルド: `docs/notes/third-party-submodule-automation-2026-02-14.md`
 - `vendor` 比較Skia管理の実装: `docs/notes/vendor-skia-management-2026-02-14.md`
+- Cバインディング設計レビュー: `docs/notes/c-binding-static-binding-review-2026-02-14.md`
+- Cバインディング改善計画: `docs/plans/c-binding-remediation/README.md`
+- CMake構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
+- CMake構成改善計画: `docs/plans/cmake-remediation/README.md`

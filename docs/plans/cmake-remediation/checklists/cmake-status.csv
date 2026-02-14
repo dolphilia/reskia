@@ -1,0 +1,8 @@
+file,status,phase,owner,note
+cmake/deps/ReskiaDeps.cmake,todo,,,
+skcms/CMakeLists.txt,todo,,,
+skia/CMakeLists.txt,todo,,,
+skpath/CMakeLists.txt,todo,,,
+skresources/CMakeLists.txt,todo,,,
+svg/CMakeLists.txt,todo,,,
+third_party/CMakeLists.txt,todo,,,
