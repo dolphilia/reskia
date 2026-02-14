@@ -14,16 +14,16 @@
 
 extern "C" {
 
-void SkExecutor_delete(void *executor) {
-    delete static_cast<SkExecutor *>(executor);
+void SkExecutor_delete(reskia_executor_t *executor) {
+    delete reinterpret_cast<SkExecutor *>(executor);
 }
 
-void SkExecutor_add(int function_void_void_key_in, void *executor) {
-    static_cast<SkExecutor *>(executor)->add(static_function_void_void_get_entity(function_void_void_key_in));
+void SkExecutor_add(int function_void_void_key_in, reskia_executor_t *executor) {
+    reinterpret_cast<SkExecutor *>(executor)->add(static_function_void_void_get_entity(function_void_void_key_in));
 }
 
-void SkExecutor_borrow(void *executor) {
-    static_cast<SkExecutor *>(executor)->borrow();
+void SkExecutor_borrow(reskia_executor_t *executor) {
+    reinterpret_cast<SkExecutor *>(executor)->borrow();
 }
 
 // static
@@ -36,12 +36,12 @@ sk_executor_t SkExecutor_MakeLIFOThreadPool(int threads, bool allowBorrowing) {
     return static_sk_executor_make(SkExecutor::MakeLIFOThreadPool(threads, allowBorrowing));
 }
 
-void *SkExecutor_GetDefault() {
-    return &SkExecutor::GetDefault();
+reskia_executor_t *SkExecutor_GetDefault() {
+    return reinterpret_cast<reskia_executor_t *>(&SkExecutor::GetDefault());
 }
 
-void SkExecutor_SetDefault(void * executor) {
-    SkExecutor::SetDefault(static_cast<SkExecutor *>(executor));
+void SkExecutor_SetDefault(reskia_executor_t *executor) {
+    SkExecutor::SetDefault(reinterpret_cast<SkExecutor *>(executor));
 }
 
 }

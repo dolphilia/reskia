@@ -8,36 +8,36 @@
 
 extern "C" {
 
-void SkDocument_delete(void *document) {
-    static_cast<SkDocument *>(document)->unref();
+void SkDocument_delete(reskia_document_t *document) {
+    reinterpret_cast<SkDocument *>(document)->unref();
 }
 
-void * SkDocument_beginPage(void * document, float width, float height, const void *content) {
-    return static_cast<SkDocument*>(document)->beginPage(width, height, static_cast<const SkRect *>(content));
+reskia_canvas_t * SkDocument_beginPage(reskia_document_t *document, float width, float height, const reskia_rect_t *content) {
+    return reinterpret_cast<reskia_canvas_t *>(reinterpret_cast<SkDocument*>(document)->beginPage(width, height, reinterpret_cast<const SkRect *>(content)));
 }
 
-void SkDocument_endPage(void *document) {
-    static_cast<SkDocument*>(document)->endPage();
+void SkDocument_endPage(reskia_document_t *document) {
+    reinterpret_cast<SkDocument*>(document)->endPage();
 }
 
-void SkDocument_close(void *document) {
-    static_cast<SkDocument*>(document)->close();
+void SkDocument_close(reskia_document_t *document) {
+    reinterpret_cast<SkDocument*>(document)->close();
 }
 
-void SkDocument_abort(void *document) {
-    static_cast<SkDocument*>(document)->abort();
+void SkDocument_abort(reskia_document_t *document) {
+    reinterpret_cast<SkDocument*>(document)->abort();
 }
 
-bool SkDocument_unique(void *document) {
-    return static_cast<SkDocument*>(document)->unique();
+bool SkDocument_unique(reskia_document_t *document) {
+    return reinterpret_cast<SkDocument*>(document)->unique();
 }
 
-void SkDocument_ref(void *document) {
-    static_cast<SkDocument*>(document)->ref();
+void SkDocument_ref(reskia_document_t *document) {
+    reinterpret_cast<SkDocument*>(document)->ref();
 }
 
-void SkDocument_unref(void *document) {
-    static_cast<SkDocument*>(document)->unref();
+void SkDocument_unref(reskia_document_t *document) {
+    reinterpret_cast<SkDocument*>(document)->unref();
 }
 
 }

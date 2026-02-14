@@ -16,44 +16,44 @@
 
 extern "C" {
 
-void SkFlattenable_delete(void *flattenable) {
-    static_cast<SkFlattenable *>(flattenable)->unref();
+void SkFlattenable_delete(reskia_flattenable_t *flattenable) {
+    reinterpret_cast<SkFlattenable *>(flattenable)->unref();
 }
 
-sk_flattenable_factory_t SkFlattenable_getFactory(void *flattenable) {
-    return static_sk_flattenable_factory_make(static_cast<SkFlattenable *>(flattenable)->getFactory());
+sk_flattenable_factory_t SkFlattenable_getFactory(reskia_flattenable_t *flattenable) {
+    return static_sk_flattenable_factory_make(reinterpret_cast<SkFlattenable *>(flattenable)->getFactory());
 }
 
-const char * SkFlattenable_getTypeName(void *flattenable) {
-    return static_cast<SkFlattenable *>(flattenable)->getTypeName();
+const char * SkFlattenable_getTypeName(reskia_flattenable_t *flattenable) {
+    return reinterpret_cast<SkFlattenable *>(flattenable)->getTypeName();
 }
 
-void SkFlattenable_flatten(void *flattenable, void * write_buffer) {
-    static_cast<SkFlattenable *>(flattenable)->flatten(* static_cast<SkWriteBuffer *>(write_buffer));
+void SkFlattenable_flatten(reskia_flattenable_t *flattenable, reskia_write_buffer_t *write_buffer) {
+    reinterpret_cast<SkFlattenable *>(flattenable)->flatten(* reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-int SkFlattenable_getFlattenableType(void *flattenable) {
-    return static_cast<SkFlattenable *>(flattenable)->getFlattenableType();
+int SkFlattenable_getFlattenableType(reskia_flattenable_t *flattenable) {
+    return reinterpret_cast<SkFlattenable *>(flattenable)->getFlattenableType();
 }
 
-sk_data_t SkFlattenable_serialize(void *flattenable, const void * serial_procs) {
-    return static_sk_data_make(static_cast<SkFlattenable *>(flattenable)->serialize(static_cast<const SkSerialProcs *>(serial_procs)));
+sk_data_t SkFlattenable_serialize(reskia_flattenable_t *flattenable, const reskia_serial_procs_t *serial_procs) {
+    return static_sk_data_make(reinterpret_cast<SkFlattenable *>(flattenable)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkFlattenable_serialize_2(void *flattenable, void *memory, size_t memory_size, const void * serial_procs) {
-    return static_cast<SkFlattenable *>(flattenable)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(serial_procs));
+size_t SkFlattenable_serialize_2(reskia_flattenable_t *flattenable, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+    return reinterpret_cast<SkFlattenable *>(flattenable)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 
-bool SkFlattenable_unique(void *flattenable) {
-    return static_cast<SkFlattenable *>(flattenable)->unique();
+bool SkFlattenable_unique(reskia_flattenable_t *flattenable) {
+    return reinterpret_cast<SkFlattenable *>(flattenable)->unique();
 }
 
-void SkFlattenable_ref(void *flattenable) {
-    static_cast<SkFlattenable *>(flattenable)->ref();
+void SkFlattenable_ref(reskia_flattenable_t *flattenable) {
+    reinterpret_cast<SkFlattenable *>(flattenable)->ref();
 }
 
-void SkFlattenable_unref(void *flattenable) {
-    static_cast<SkFlattenable *>(flattenable)->unref();
+void SkFlattenable_unref(reskia_flattenable_t *flattenable) {
+    reinterpret_cast<SkFlattenable *>(flattenable)->unref();
 }
 
 // static
@@ -70,8 +70,8 @@ void SkFlattenable_Register(const char name[], sk_flattenable_factory_t factory)
     SkFlattenable::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
-sk_flattenable_t SkFlattenable_Deserialize(int type, const void *data, size_t length, const void *procs) {
-    return static_sk_flattenable_make(SkFlattenable::Deserialize(static_cast<SkFlattenable::Type>(type), data, length, static_cast<const SkDeserialProcs *>(procs)));
+sk_flattenable_t SkFlattenable_Deserialize(int type, const uint8_t *data, size_t length, const reskia_deserial_procs_t *procs) {
+    return static_sk_flattenable_make(SkFlattenable::Deserialize(static_cast<SkFlattenable::Type>(type), data, length, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

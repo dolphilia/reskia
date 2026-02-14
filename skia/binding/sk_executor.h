@@ -9,16 +9,18 @@
 extern "C" {
 #endif
 
-void SkExecutor_delete(void *executor); // (SkExecutor *executor)
-void SkExecutor_add(int function_void_void_key_in, void *executor); // (int function_void_void_key_in, SkExecutor *executor)
-void SkExecutor_borrow(void *executor); // (SkExecutor *executor)
+typedef struct reskia_executor_t reskia_executor_t;
+
+void SkExecutor_delete(reskia_executor_t *executor); // (SkExecutor *executor)
+void SkExecutor_add(int function_void_void_key_in, reskia_executor_t *executor); // (int function_void_void_key_in, SkExecutor *executor)
+void SkExecutor_borrow(reskia_executor_t *executor); // (SkExecutor *executor)
 
 // static
 
 int SkExecutor_MakeFIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
 int SkExecutor_MakeLIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
-void *SkExecutor_GetDefault(); // () -> SkExecutor *
-void SkExecutor_SetDefault(void * executor); // (SkExecutor *executor)
+reskia_executor_t *SkExecutor_GetDefault(); // () -> SkExecutor *
+void SkExecutor_SetDefault(reskia_executor_t *executor); // (SkExecutor *executor)
 
 #ifdef __cplusplus
 }

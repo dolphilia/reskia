@@ -22,76 +22,76 @@
 
 extern "C" {
 
-void SkDrawable_delete(void *drawable) {
-    static_cast<SkDrawable *>(drawable)->unref();
+void SkDrawable_delete(reskia_drawable_t *drawable) {
+    reinterpret_cast<SkDrawable *>(drawable)->unref();
 }
 
-void SkDrawable_draw(void *drawable, void * canvas, const void * matrix) {
-    static_cast<SkDrawable *>(drawable)->draw(static_cast<SkCanvas *>(canvas), static_cast<const SkMatrix *>(matrix));
+void SkDrawable_draw(reskia_drawable_t *drawable, reskia_canvas_t *canvas, const reskia_matrix_t *matrix) {
+    reinterpret_cast<SkDrawable *>(drawable)->draw(reinterpret_cast<SkCanvas *>(canvas), reinterpret_cast<const SkMatrix *>(matrix));
 }
 
-void SkDrawable_draw_2(void *drawable, void *canvas, float x, float y) {
-    static_cast<SkDrawable *>(drawable)->draw(static_cast<SkCanvas *>(canvas), x, y);
+void SkDrawable_draw_2(reskia_drawable_t *drawable, reskia_canvas_t *canvas, float x, float y) {
+    reinterpret_cast<SkDrawable *>(drawable)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y);
 }
 
-sk_drawable_gpu_draw_handler_t SkDrawable_snapGpuDrawHandler(void *drawable, int backendApi, const void *matrix, const void *clipBounds, const void *bufferInfo) {
-    return static_sk_drawable_gpu_draw_handler_make(static_cast<SkDrawable *>(drawable)->snapGpuDrawHandler(static_cast<GrBackendApi>(backendApi), * static_cast<const SkMatrix *>(matrix), * static_cast<const SkIRect *>(clipBounds), * static_cast<const SkImageInfo *>(bufferInfo)));
+sk_drawable_gpu_draw_handler_t SkDrawable_snapGpuDrawHandler(reskia_drawable_t *drawable, int backendApi, const reskia_matrix_t *matrix, const reskia_i_rect_t *clipBounds, const reskia_image_info_t *bufferInfo) {
+    return static_sk_drawable_gpu_draw_handler_make(reinterpret_cast<SkDrawable *>(drawable)->snapGpuDrawHandler(static_cast<GrBackendApi>(backendApi), * reinterpret_cast<const SkMatrix *>(matrix), * reinterpret_cast<const SkIRect *>(clipBounds), * reinterpret_cast<const SkImageInfo *>(bufferInfo)));
 }
 
-sk_picture_t SkDrawable_makePictureSnapshot(void *drawable) {
-    return static_sk_picture_make(static_cast<SkDrawable *>(drawable)->makePictureSnapshot());
+sk_picture_t SkDrawable_makePictureSnapshot(reskia_drawable_t *drawable) {
+    return static_sk_picture_make(reinterpret_cast<SkDrawable *>(drawable)->makePictureSnapshot());
 }
 
-uint32_t SkDrawable_getGenerationID(void *drawable) {
-    return static_cast<SkDrawable *>(drawable)->getGenerationID();
+uint32_t SkDrawable_getGenerationID(reskia_drawable_t *drawable) {
+    return reinterpret_cast<SkDrawable *>(drawable)->getGenerationID();
 }
 
-sk_rect_t SkDrawable_getBounds(void *drawable) {
-    return static_sk_rect_make(static_cast<SkDrawable *>(drawable)->getBounds());
+sk_rect_t SkDrawable_getBounds(reskia_drawable_t *drawable) {
+    return static_sk_rect_make(reinterpret_cast<SkDrawable *>(drawable)->getBounds());
 }
 
-size_t SkDrawable_approximateBytesUsed(void *drawable) {
-    return static_cast<SkDrawable *>(drawable)->approximateBytesUsed();
+size_t SkDrawable_approximateBytesUsed(reskia_drawable_t *drawable) {
+    return reinterpret_cast<SkDrawable *>(drawable)->approximateBytesUsed();
 }
 
-void SkDrawable_notifyDrawingChanged(void *drawable) {
-    static_cast<SkDrawable *>(drawable)->notifyDrawingChanged();
+void SkDrawable_notifyDrawingChanged(reskia_drawable_t *drawable) {
+    reinterpret_cast<SkDrawable *>(drawable)->notifyDrawingChanged();
 }
 
-int SkDrawable_getFlattenableType(void *drawable) {
-    return static_cast<SkDrawable *>(drawable)->getFlattenableType();
+int SkDrawable_getFlattenableType(reskia_drawable_t *drawable) {
+    return reinterpret_cast<SkDrawable *>(drawable)->getFlattenableType();
 }
 
-sk_flattenable_factory_t SkDrawable_getFactory(void *drawable) {
-    return static_sk_flattenable_factory_make(static_cast<SkDrawable *>(drawable)->getFactory());
+sk_flattenable_factory_t SkDrawable_getFactory(reskia_drawable_t *drawable) {
+    return static_sk_flattenable_factory_make(reinterpret_cast<SkDrawable *>(drawable)->getFactory());
 }
 
-const char * SkDrawable_getTypeName(void *drawable) {
-    return static_cast<SkDrawable *>(drawable)->getTypeName();
+const char * SkDrawable_getTypeName(reskia_drawable_t *drawable) {
+    return reinterpret_cast<SkDrawable *>(drawable)->getTypeName();
 }
 
-void SkDrawable_flatten(void *drawable, void *write_buffer) {
-    static_cast<SkDrawable *>(drawable)->flatten(* static_cast<SkWriteBuffer *>(write_buffer));
+void SkDrawable_flatten(reskia_drawable_t *drawable, reskia_write_buffer_t *write_buffer) {
+    reinterpret_cast<SkDrawable *>(drawable)->flatten(* reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-sk_data_t SkDrawable_serialize(void *drawable, const void *serial_procs) {
-    return static_sk_data_make(static_cast<SkDrawable *>(drawable)->serialize(static_cast<const SkSerialProcs *>(serial_procs)));
+sk_data_t SkDrawable_serialize(reskia_drawable_t *drawable, const reskia_serial_procs_t *serial_procs) {
+    return static_sk_data_make(reinterpret_cast<SkDrawable *>(drawable)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkDrawable_serialize_2(void *drawable, void *memory, size_t memory_size, const void *serial_procs) {
-    return static_cast<SkDrawable *>(drawable)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(serial_procs));
+size_t SkDrawable_serialize_2(reskia_drawable_t *drawable, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+    return reinterpret_cast<SkDrawable *>(drawable)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 
-bool SkDrawable_unique(void *drawable) {
-    return static_cast<SkDrawable *>(drawable)->unique();
+bool SkDrawable_unique(reskia_drawable_t *drawable) {
+    return reinterpret_cast<SkDrawable *>(drawable)->unique();
 }
 
-void SkDrawable_ref(void *drawable) {
-    static_cast<SkDrawable *>(drawable)->ref();
+void SkDrawable_ref(reskia_drawable_t *drawable) {
+    reinterpret_cast<SkDrawable *>(drawable)->ref();
 }
 
-void SkDrawable_unref(void *drawable) {
-    static_cast<SkDrawable *>(drawable)->unref();
+void SkDrawable_unref(reskia_drawable_t *drawable) {
+    reinterpret_cast<SkDrawable *>(drawable)->unref();
 }
 
 // static
@@ -100,8 +100,8 @@ int SkDrawable_GetFlattenableType() {
     return SkDrawable::GetFlattenableType();
 }
 
-sk_drawable_t SkDrawable_Deserialize(const void *data, size_t size, const void *procs) {
-    return static_sk_drawable_make(SkDrawable::Deserialize(data, size, static_cast<const SkDeserialProcs *>(procs)));
+sk_drawable_t SkDrawable_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs) {
+    return static_sk_drawable_make(SkDrawable::Deserialize(data, size, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 sk_flattenable_factory_t SkDrawable_NameToFactory(const char name[]) {

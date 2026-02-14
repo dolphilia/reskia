@@ -9,8 +9,10 @@
 extern "C" {
 #endif
 
-void SkEncoder_delete(void *encoder); // (SkEncoder *encoder)
-bool SkEncoder_encodeRows(void *encoder, int numRows); // (SkEncoder *encoder, int numRows) -> bool
+typedef struct reskia_encoder_t reskia_encoder_t;
+
+void SkEncoder_delete(reskia_encoder_t *encoder); // (SkEncoder *encoder)
+bool SkEncoder_encodeRows(reskia_encoder_t *encoder, int numRows); // (SkEncoder *encoder, int numRows) -> bool
 
 #ifdef __cplusplus
 }

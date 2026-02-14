@@ -138,11 +138,33 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkCubicResampler` API の `delete` 受け口を `reskia_cubic_resampler_t*` へ型強化
     - `skia/binding/sk_data.h` + `skia/binding/sk_data.cpp`（22/22 関数 `done`）
     - 変更内容: `SkData` API の `void*` を不透明型/バイト列型へ置換し、`unsigned long/unsigned int` を `size_t/int32_t` へ正規化
+    - `skia/binding/sk_data_table.h` + `skia/binding/sk_data_table.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkDataTable` API の `void*` を不透明型/バイト列型へ置換し、`unsigned long` を `size_t` へ正規化
+    - `skia/binding/sk_discrete_path_effect.h` + `skia/binding/sk_discrete_path_effect.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkDiscretePathEffect` API の `delete` 受け口を不透明型ポインタへ置換し、`seedAssist` を `uint32_t` へ正規化
+    - `skia/binding/sk_document.h` + `skia/binding/sk_document.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkDocument` API の `void*` を不透明型ポインタへ置換し、`beginPage` の `SkCanvas`/`SkRect` ポインタを型強化
+    - `skia/binding/sk_drawable.h` + `skia/binding/sk_drawable.cpp`（19/19 関数 `done`）
+    - 変更内容: `SkDrawable` API の `void*` を不透明型ポインタへ置換し、`unsigned int/unsigned long` を `uint32_t/size_t` へ正規化
+    - `skia/binding/sk_dynamic_memory_w_stream.h` + `skia/binding/sk_dynamic_memory_w_stream.cpp`（30/30 関数 `done`）
+    - 変更内容: `SkDynamicMemoryWStream` API の `void*` を不透明型ポインタへ置換し、`unsigned int/unsigned long` を `uint8_t/uint16_t/uint32_t/size_t` へ正規化
+    - `skia/binding/sk_encoder.h` + `skia/binding/sk_encoder.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkEncoder` API の `void*` を `reskia_encoder_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_executor.h` + `skia/binding/sk_executor.cpp`（5/5 関数 `done`）
+    - 変更内容: `SkExecutor` API の `void*` を `reskia_executor_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_file_stream.h` + `skia/binding/sk_file_stream.cpp`（29/29 関数 `done`）
+    - 変更内容: `SkFILEStream` API の `void*` を不透明型ポインタへ置換し、`unsigned long` を `size_t` と型付きスカラポインタへ正規化
+    - `skia/binding/sk_file_w_stream.h` + `skia/binding/sk_file_w_stream.cpp`（21/21 関数 `done`）
+    - 変更内容: `SkFILEWStream` API の `void*` を不透明型ポインタへ置換し、`unsigned long/unsigned int` を `size_t/uint8_t/uint16_t/uint32_t` へ正規化
+    - `skia/binding/sk_flattenable.h` + `skia/binding/sk_flattenable.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkFlattenable` API の `void*` を不透明型ポインタへ置換し、`serialize/deserialize` の `size_t/uint8_t` シグネチャを正規化
+    - `skia/binding/sk_font.h` + `skia/binding/sk_font.cpp`（47/47 関数 `done`）
+    - 変更内容: `SkFont` API の `void*` を不透明型ポインタへ置換し、`unsigned long/void*` を `size_t/uint8_t/uint16_t` と型付き幾何ポインタへ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 470 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 656 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

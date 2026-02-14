@@ -8,84 +8,84 @@
 
 extern "C" {
 
-void *SkFILEWStream_new(const char path[]) {
-    return new SkFILEWStream(path);
+reskia_file_w_stream_t *SkFILEWStream_new(const char path[]) {
+    return reinterpret_cast<reskia_file_w_stream_t *>(new SkFILEWStream(path));
 }
 
-void SkFILEWStream_delete(void *file_w_stream) {
-    delete static_cast<SkFILEWStream *>(file_w_stream);
+void SkFILEWStream_delete(reskia_file_w_stream_t *file_w_stream) {
+    delete reinterpret_cast<SkFILEWStream *>(file_w_stream);
 }
 
-bool SkFILEWStream_isValid(void *file_w_stream) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->isValid();
+bool SkFILEWStream_isValid(reskia_file_w_stream_t *file_w_stream) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->isValid();
 }
 
-bool SkFILEWStream_write(void *file_w_stream, const void *buffer, size_t size) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->write(buffer, size);
+bool SkFILEWStream_write(reskia_file_w_stream_t *file_w_stream, const uint8_t *buffer, size_t size) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->write(buffer, size);
 }
 
-void SkFILEWStream_flush(void *file_w_stream) {
-    static_cast<SkFILEWStream *>(file_w_stream)->flush();
+void SkFILEWStream_flush(reskia_file_w_stream_t *file_w_stream) {
+    reinterpret_cast<SkFILEWStream *>(file_w_stream)->flush();
 }
 
-void SkFILEWStream_fsync(void *file_w_stream) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->fsync();
+void SkFILEWStream_fsync(reskia_file_w_stream_t *file_w_stream) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->fsync();
 }
 
-size_t SkFILEWStream_bytesWritten(void *file_w_stream) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->bytesWritten();
+size_t SkFILEWStream_bytesWritten(reskia_file_w_stream_t *file_w_stream) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->bytesWritten();
 }
 
-bool SkFILEWStream_write8(void *file_w_stream, unsigned int value) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->write8(value);
+bool SkFILEWStream_write8(reskia_file_w_stream_t *file_w_stream, uint8_t value) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->write8(value);
 }
 
-bool SkFILEWStream_write16(void *file_w_stream, unsigned int value) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->write16(value);
+bool SkFILEWStream_write16(reskia_file_w_stream_t *file_w_stream, uint16_t value) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->write16(value);
 }
 
-bool SkFILEWStream_write32(void *file_w_stream, uint32_t v) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->write32(v);
+bool SkFILEWStream_write32(reskia_file_w_stream_t *file_w_stream, uint32_t v) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->write32(v);
 }
 
-bool SkFILEWStream_writeText(void *file_w_stream, const char text[]) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeText(text);
+bool SkFILEWStream_writeText(reskia_file_w_stream_t *file_w_stream, const char text[]) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeText(text);
 }
 
-bool SkFILEWStream_newline(void *file_w_stream) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->newline();
+bool SkFILEWStream_newline(reskia_file_w_stream_t *file_w_stream) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->newline();
 }
 
-bool SkFILEWStream_writeDecAsText(void *file_w_stream, int32_t v) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeDecAsText(v);
+bool SkFILEWStream_writeDecAsText(reskia_file_w_stream_t *file_w_stream, int32_t v) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeDecAsText(v);
 }
 
-bool SkFILEWStream_writeBigDecAsText(void *file_w_stream, int64_t v, int minDigits) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeBigDecAsText(v, minDigits);
+bool SkFILEWStream_writeBigDecAsText(reskia_file_w_stream_t *file_w_stream, int64_t v, int minDigits) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeBigDecAsText(v, minDigits);
 }
 
-bool SkFILEWStream_writeHexAsText(void *file_w_stream, uint32_t v, int minDigits) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeHexAsText(v, minDigits);
+bool SkFILEWStream_writeHexAsText(reskia_file_w_stream_t *file_w_stream, uint32_t v, int minDigits) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeHexAsText(v, minDigits);
 }
 
-bool SkFILEWStream_writeScalarAsText(void *file_w_stream, float scalar) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeScalarAsText(scalar);
+bool SkFILEWStream_writeScalarAsText(reskia_file_w_stream_t *file_w_stream, float scalar) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeScalarAsText(scalar);
 }
 
-bool SkFILEWStream_writeBool(void *file_w_stream, bool v) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeBool(v);
+bool SkFILEWStream_writeBool(reskia_file_w_stream_t *file_w_stream, bool v) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeBool(v);
 }
 
-bool SkFILEWStream_writeScalar(void *file_w_stream, float scalar) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeScalar(scalar);
+bool SkFILEWStream_writeScalar(reskia_file_w_stream_t *file_w_stream, float scalar) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeScalar(scalar);
 }
 
-bool SkFILEWStream_writePackedUInt(void *file_w_stream, size_t size) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writePackedUInt(size);
+bool SkFILEWStream_writePackedUInt(reskia_file_w_stream_t *file_w_stream, size_t size) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writePackedUInt(size);
 }
 
-bool SkFILEWStream_writeStream(void *file_w_stream, void *input, size_t length) {
-    return static_cast<SkFILEWStream *>(file_w_stream)->writeStream(static_cast<SkStream *>(input), length);
+bool SkFILEWStream_writeStream(reskia_file_w_stream_t *file_w_stream, reskia_stream_t *input, size_t length) {
+    return reinterpret_cast<SkFILEWStream *>(file_w_stream)->writeStream(reinterpret_cast<SkStream *>(input), length);
 }
 
 // static

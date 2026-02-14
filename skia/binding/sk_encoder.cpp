@@ -8,12 +8,12 @@
 
 extern "C" {
 
-void SkEncoder_delete(void *encoder) {
-    delete static_cast<SkEncoder *>(encoder);
+void SkEncoder_delete(reskia_encoder_t *encoder) {
+    delete reinterpret_cast<SkEncoder *>(encoder);
 }
 
-bool SkEncoder_encodeRows(void *encoder, int numRows) {
-    return static_cast<SkEncoder *>(encoder)->encodeRows(numRows);
+bool SkEncoder_encodeRows(reskia_encoder_t *encoder, int numRows) {
+    return reinterpret_cast<SkEncoder *>(encoder)->encodeRows(numRows);
 }
 
 }

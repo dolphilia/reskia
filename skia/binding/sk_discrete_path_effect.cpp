@@ -12,11 +12,11 @@
 
 extern "C" {
 
-void SkDiscretePathEffect_delete(void * discretePathEffect) {
-    delete static_cast<SkDiscretePathEffect *>(discretePathEffect);
+void SkDiscretePathEffect_delete(reskia_discrete_path_effect_t *discretePathEffect) {
+    delete reinterpret_cast<SkDiscretePathEffect *>(discretePathEffect);
 }
 
-sk_path_effect_t SkDiscretePathEffect_Make(float segLength, float dev, unsigned int seedAssist) {
+sk_path_effect_t SkDiscretePathEffect_Make(float segLength, float dev, uint32_t seedAssist) {
     return static_sk_path_effect_make(SkDiscretePathEffect::Make(segLength, dev, seedAssist));
 }
 
