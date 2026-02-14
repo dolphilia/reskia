@@ -8,28 +8,28 @@
 
 extern "C" {
 
-void SkFontMetrics_delete(void *font_metrics) {
-    delete static_cast<SkFontMetrics *>(font_metrics);
+void SkFontMetrics_delete(reskia_font_metrics_t *font_metrics) {
+    delete reinterpret_cast<SkFontMetrics *>(font_metrics);
 }
 
-bool SkFontMetrics_hasUnderlineThickness(void *font_metrics, void *thickness) {
-    return static_cast<SkFontMetrics *>(font_metrics)->hasUnderlineThickness(static_cast<SkScalar *>(thickness));
+bool SkFontMetrics_hasUnderlineThickness(reskia_font_metrics_t *font_metrics, float *thickness) {
+    return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasUnderlineThickness(thickness);
 }
 
-bool SkFontMetrics_hasUnderlinePosition(void *font_metrics, void *position) {
-    return static_cast<SkFontMetrics *>(font_metrics)->hasUnderlinePosition(static_cast<SkScalar *>(position));
+bool SkFontMetrics_hasUnderlinePosition(reskia_font_metrics_t *font_metrics, float *position) {
+    return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasUnderlinePosition(position);
 }
 
-bool SkFontMetrics_hasStrikeoutThickness(void *font_metrics, void *thickness) {
-    return static_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutThickness(static_cast<SkScalar *>(thickness));
+bool SkFontMetrics_hasStrikeoutThickness(reskia_font_metrics_t *font_metrics, float *thickness) {
+    return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutThickness(thickness);
 }
 
-bool SkFontMetrics_hasStrikeoutPosition(void *font_metrics, void *position) {
-    return static_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutPosition(static_cast<SkScalar *>(position));
+bool SkFontMetrics_hasStrikeoutPosition(reskia_font_metrics_t *font_metrics, float *position) {
+    return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutPosition(position);
 }
 
-bool SkFontMetrics_hasBounds(void *font_metrics) {
-    return static_cast<SkFontMetrics *>(font_metrics)->hasBounds();
+bool SkFontMetrics_hasBounds(reskia_font_metrics_t *font_metrics) {
+    return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasBounds();
 }
 
 }

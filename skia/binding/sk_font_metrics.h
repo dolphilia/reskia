@@ -9,12 +9,14 @@
 extern "C" {
 #endif
 
-void SkFontMetrics_delete(void *font_metrics); // (SkFontMetrics *font_metrics)
-bool SkFontMetrics_hasUnderlineThickness(void *font_metrics, void *thickness); // (SkFontMetrics *font_metrics, SkScalar *thickness) -> bool
-bool SkFontMetrics_hasUnderlinePosition(void *font_metrics, void *position); // (SkFontMetrics *font_metrics, SkScalar *position) -> bool
-bool SkFontMetrics_hasStrikeoutThickness(void *font_metrics, void *thickness); // (SkFontMetrics *font_metrics, SkScalar *thickness) -> bool
-bool SkFontMetrics_hasStrikeoutPosition(void *font_metrics, void *position); // (SkFontMetrics *font_metrics, SkScalar *position) -> bool
-bool SkFontMetrics_hasBounds(void *font_metrics); // (SkFontMetrics *font_metrics) -> bool
+typedef struct reskia_font_metrics_t reskia_font_metrics_t;
+
+void SkFontMetrics_delete(reskia_font_metrics_t *font_metrics); // (SkFontMetrics *font_metrics)
+bool SkFontMetrics_hasUnderlineThickness(reskia_font_metrics_t *font_metrics, float *thickness); // (SkFontMetrics *font_metrics, SkScalar *thickness) -> bool
+bool SkFontMetrics_hasUnderlinePosition(reskia_font_metrics_t *font_metrics, float *position); // (SkFontMetrics *font_metrics, SkScalar *position) -> bool
+bool SkFontMetrics_hasStrikeoutThickness(reskia_font_metrics_t *font_metrics, float *thickness); // (SkFontMetrics *font_metrics, SkScalar *thickness) -> bool
+bool SkFontMetrics_hasStrikeoutPosition(reskia_font_metrics_t *font_metrics, float *position); // (SkFontMetrics *font_metrics, SkScalar *position) -> bool
+bool SkFontMetrics_hasBounds(reskia_font_metrics_t *font_metrics); // (SkFontMetrics *font_metrics) -> bool
 
 #ifdef __cplusplus
 }

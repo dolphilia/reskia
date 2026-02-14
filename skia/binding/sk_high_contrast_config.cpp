@@ -8,20 +8,21 @@
 
 extern "C" {
 
-void *SkHighContrastConfig_new() {
-    return new SkHighContrastConfig();
+reskia_high_contrast_config_t *SkHighContrastConfig_new() {
+    return reinterpret_cast<reskia_high_contrast_config_t *>(new SkHighContrastConfig());
 }
 
-void *SkHighContrastConfig_new_2(bool grayscale, int invertStyle, float contrast) {
-    return new SkHighContrastConfig(grayscale, static_cast<SkHighContrastConfig::InvertStyle>(invertStyle), contrast);
+reskia_high_contrast_config_t *SkHighContrastConfig_new_2(bool grayscale, int invertStyle, float contrast) {
+    return reinterpret_cast<reskia_high_contrast_config_t *>(
+        new SkHighContrastConfig(grayscale, static_cast<SkHighContrastConfig::InvertStyle>(invertStyle), contrast));
 }
 
-void SkHighContrastConfig_delete(void * highContrastConfig) {
-    delete static_cast<SkHighContrastConfig *>(highContrastConfig);
+void SkHighContrastConfig_delete(reskia_high_contrast_config_t *highContrastConfig) {
+    delete reinterpret_cast<SkHighContrastConfig *>(highContrastConfig);
 }
 
-bool isValid(void *high_contrast_config) {
-    return static_cast<SkHighContrastConfig *>(high_contrast_config)->isValid();
+bool isValid(reskia_high_contrast_config_t *high_contrast_config) {
+    return reinterpret_cast<SkHighContrastConfig *>(high_contrast_config)->isValid();
 }
 
 }

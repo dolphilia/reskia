@@ -9,10 +9,12 @@
 extern "C" {
 #endif
 
-void SkFontStyle_delete(void *font_style); // (SkFontStyle *font_style)
-int SkFontStyle_weight(void *font_style); // (SkFontStyle *font_style) -> int
-int SkFontStyle_width(void *font_style); // (SkFontStyle *font_style) -> int
-int SkFontStyle_slant(void *font_style); // (SkFontStyle *font_style) -> SkFontStyle::Slant
+typedef struct reskia_font_style_t reskia_font_style_t;
+
+void SkFontStyle_delete(reskia_font_style_t *font_style); // (SkFontStyle *font_style)
+int SkFontStyle_weight(reskia_font_style_t *font_style); // (SkFontStyle *font_style) -> int
+int SkFontStyle_width(reskia_font_style_t *font_style); // (SkFontStyle *font_style) -> int
+int SkFontStyle_slant(reskia_font_style_t *font_style); // (SkFontStyle *font_style) -> SkFontStyle::Slant
 
 #ifdef __cplusplus
 }

@@ -160,11 +160,31 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkFlattenable` API の `void*` を不透明型ポインタへ置換し、`serialize/deserialize` の `size_t/uint8_t` シグネチャを正規化
     - `skia/binding/sk_font.h` + `skia/binding/sk_font.cpp`（47/47 関数 `done`）
     - 変更内容: `SkFont` API の `void*` を不透明型ポインタへ置換し、`unsigned long/void*` を `size_t/uint8_t/uint16_t` と型付き幾何ポインタへ正規化
+    - `skia/binding/sk_font_arguments.h` + `skia/binding/sk_font_arguments.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkFontArguments` API の `void*` を `reskia_font_arguments_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_font_metrics.h` + `skia/binding/sk_font_metrics.cpp`（6/6 関数 `done`）
+    - 変更内容: `SkFontMetrics` API の `void*` を `reskia_font_metrics_t*` 不透明型ポインタへ置換し、`SkScalar*` out 引数を `float*` へ正規化
+    - `skia/binding/sk_font_mgr.h` + `skia/binding/sk_font_mgr.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkFontMgr` API の `void*` を不透明型ポインタへ置換し、`SkString` / `SkFontStyle` / `SkFontArguments` 引数ポインタを型強化
+    - `skia/binding/sk_font_style.h` + `skia/binding/sk_font_style.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkFontStyle` API の `void*` を `reskia_font_style_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_font_style_set.h` + `skia/binding/sk_font_style_set.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkFontStyleSet` API の `void*` を不透明型ポインタへ置換し、`SkFontStyle` / `SkString` 引数ポインタを型強化
+    - `skia/binding/sk_gif_decoder.h` + `skia/binding/sk_gif_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkGifDecoder` API の `void*` を `uint8_t*` / 不透明型ポインタへ置換し、`SkCodec::Result` / `SkCodecs::DecodeContext` 引数を型強化
+    - `skia/binding/sk_gradient_shader.h` + `skia/binding/sk_gradient_shader.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkGradientShader` API の `void*` を `reskia_*` 不透明型と `float*`/`uint32_t` に正規化し、点列・行列・色配列・補間引数を型強化
+    - `skia/binding/sk_graphics.h` + `skia/binding/sk_graphics.cpp`（10/10 関数 `done`）
+    - 変更内容: `SkGraphics` API の `void*` を不透明型ポインタへ置換し、キャッシュサイズ関連の `unsigned long` を `size_t` に正規化
+    - `skia/binding/sk_high_contrast_config.h` + `skia/binding/sk_high_contrast_config.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkHighContrastConfig` API の `void*` を `reskia_high_contrast_config_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_i_rect.h` + `skia/binding/sk_i_rect.cpp`（41/41 関数 `done`）
+    - 変更内容: `SkIRect` API の `void*` を `reskia_i_rect_t*` 不透明型ポインタへ置換し、`SkIPoint` / `SkISize` / `SkRect` 引数ポインタを型強化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 656 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 770 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

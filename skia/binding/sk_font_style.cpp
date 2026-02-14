@@ -8,20 +8,20 @@
 
 extern "C" {
 
-void SkFontStyle_delete(void *font_style) {
-    delete static_cast<SkFontStyle *>(font_style);
+void SkFontStyle_delete(reskia_font_style_t *font_style) {
+    delete reinterpret_cast<SkFontStyle *>(font_style);
 }
 
-int SkFontStyle_weight(void *font_style) {
-    return static_cast<SkFontStyle *>(font_style)->weight();
+int SkFontStyle_weight(reskia_font_style_t *font_style) {
+    return reinterpret_cast<SkFontStyle *>(font_style)->weight();
 }
 
-int SkFontStyle_width(void *font_style) {
-    return static_cast<SkFontStyle *>(font_style)->width();
+int SkFontStyle_width(reskia_font_style_t *font_style) {
+    return reinterpret_cast<SkFontStyle *>(font_style)->width();
 }
 
-int SkFontStyle_slant(void *font_style) {
-    return static_cast<SkFontStyle *>(font_style)->slant();
+int SkFontStyle_slant(reskia_font_style_t *font_style) {
+    return reinterpret_cast<SkFontStyle *>(font_style)->slant();
 }
 
 }

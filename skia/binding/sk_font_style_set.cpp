@@ -14,36 +14,36 @@
 
 extern "C" {
 
-void SkFontStyleSet_delete(void *font_style_set) {
-    static_cast<SkFontStyleSet *>(font_style_set)->unref();
+void SkFontStyleSet_delete(reskia_font_style_set_t *font_style_set) {
+    reinterpret_cast<SkFontStyleSet *>(font_style_set)->unref();
 }
 
-int SkFontStyleSet_count(void *font_style_set) {
-    return static_cast<SkFontStyleSet *>(font_style_set)->count();
+int SkFontStyleSet_count(reskia_font_style_set_t *font_style_set) {
+    return reinterpret_cast<SkFontStyleSet *>(font_style_set)->count();
 }
 
-void SkFontStyleSet_getStyle(void *font_style_set, int index, void * font_style, void *style) {
-    return static_cast<SkFontStyleSet *>(font_style_set)->getStyle(index, static_cast<SkFontStyle *>(font_style), static_cast<SkString *>(style));
+void SkFontStyleSet_getStyle(reskia_font_style_set_t *font_style_set, int index, reskia_font_style_t *font_style, reskia_string_t *style) {
+    return reinterpret_cast<SkFontStyleSet *>(font_style_set)->getStyle(index, reinterpret_cast<SkFontStyle *>(font_style), reinterpret_cast<SkString *>(style));
 }
 
-sk_typeface_t SkFontStyleSet_createTypeface(void *font_style_set, int index) {
-    return static_sk_typeface_make(static_cast<SkFontStyleSet *>(font_style_set)->createTypeface(index));
+sk_typeface_t SkFontStyleSet_createTypeface(reskia_font_style_set_t *font_style_set, int index) {
+    return static_sk_typeface_make(reinterpret_cast<SkFontStyleSet *>(font_style_set)->createTypeface(index));
 }
 
-sk_typeface_t SkFontStyleSet_matchStyle(void *font_style_set, const void *pattern) {
-    return static_sk_typeface_make(static_cast<SkFontStyleSet *>(font_style_set)->matchStyle(* static_cast<const SkFontStyle *>(pattern)));
+sk_typeface_t SkFontStyleSet_matchStyle(reskia_font_style_set_t *font_style_set, const reskia_font_style_t *pattern) {
+    return static_sk_typeface_make(reinterpret_cast<SkFontStyleSet *>(font_style_set)->matchStyle(* reinterpret_cast<const SkFontStyle *>(pattern)));
 }
 
-bool SkFontStyleSet_unique(void *font_style_set) {
-    return static_cast<SkFontStyleSet *>(font_style_set)->unique();
+bool SkFontStyleSet_unique(reskia_font_style_set_t *font_style_set) {
+    return reinterpret_cast<SkFontStyleSet *>(font_style_set)->unique();
 }
 
-void SkFontStyleSet_ref(void *font_style_set) {
-    return static_cast<SkFontStyleSet *>(font_style_set)->ref();
+void SkFontStyleSet_ref(reskia_font_style_set_t *font_style_set) {
+    return reinterpret_cast<SkFontStyleSet *>(font_style_set)->ref();
 }
 
-void SkFontStyleSet_unref(void *font_style_set) {
-    return static_cast<SkFontStyleSet *>(font_style_set)->unref();
+void SkFontStyleSet_unref(reskia_font_style_set_t *font_style_set) {
+    return reinterpret_cast<SkFontStyleSet *>(font_style_set)->unref();
 }
 
 // static

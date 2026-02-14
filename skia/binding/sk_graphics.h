@@ -5,30 +5,35 @@
 #ifndef RAIA_SKIA_SK_GRAPHICS_H
 #define RAIA_SKIA_SK_GRAPHICS_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void SkGraphics_delete(void *graphics); // (SkGraphics *graphics)
+typedef struct reskia_graphics_t reskia_graphics_t;
+typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
+
+void SkGraphics_delete(reskia_graphics_t *graphics); // (SkGraphics *graphics)
 
 // static
 
 void SkGraphics_Init(); // ()
-unsigned long SkGraphics_GetFontCacheLimit(); // () -> size_t
-unsigned long SkGraphics_SetFontCacheLimit(unsigned long bytes); // (size_t bytes) -> size_t
-unsigned long SkGraphics_GetFontCacheUsed(); // () -> size_t
+size_t SkGraphics_GetFontCacheLimit(); // () -> size_t
+size_t SkGraphics_SetFontCacheLimit(size_t bytes); // (size_t bytes) -> size_t
+size_t SkGraphics_GetFontCacheUsed(); // () -> size_t
 int SkGraphics_GetFontCacheCountUsed(); // () -> int
 int SkGraphics_GetFontCacheCountLimit(); // () -> int
 int SkGraphics_SetFontCacheCountLimit(int count); // (int count) -> int
 void SkGraphics_PurgeFontCache(); // ()
 void SkGraphics_PurgePinnedFontCache(); // ()
-unsigned long SkGraphics_GetResourceCacheTotalBytesUsed(); // () -> size_t
-unsigned long SkGraphics_GetResourceCacheTotalByteLimit(); // () -> size_t
-unsigned long SkGraphics_SetResourceCacheTotalByteLimit(unsigned long newLimit); // (size_t newLimit) -> size_t
+size_t SkGraphics_GetResourceCacheTotalBytesUsed(); // () -> size_t
+size_t SkGraphics_GetResourceCacheTotalByteLimit(); // () -> size_t
+size_t SkGraphics_SetResourceCacheTotalByteLimit(size_t newLimit); // (size_t newLimit) -> size_t
 void SkGraphics_PurgeResourceCache(); // ()
-unsigned long SkGraphics_GetResourceCacheSingleAllocationByteLimit(); // () -> size_t
-unsigned long SkGraphics_SetResourceCacheSingleAllocationByteLimit(unsigned long newLimit); // (size_t newLimit) -> size_t
-void SkGraphics_DumpMemoryStatistics(void *dump); // (SkTraceMemoryDump *dump)
+size_t SkGraphics_GetResourceCacheSingleAllocationByteLimit(); // () -> size_t
+size_t SkGraphics_SetResourceCacheSingleAllocationByteLimit(size_t newLimit); // (size_t newLimit) -> size_t
+void SkGraphics_DumpMemoryStatistics(reskia_trace_memory_dump_t *dump); // (SkTraceMemoryDump *dump)
 void SkGraphics_PurgeAllCaches(); // ()
 
 // TODO

@@ -8,8 +8,8 @@
 
 extern "C" {
 
-void SkGraphics_delete(void * graphics) {
-    delete static_cast<SkGraphics *>(graphics);
+void SkGraphics_delete(reskia_graphics_t *graphics) {
+    delete reinterpret_cast<SkGraphics *>(graphics);
 }
 
 // static
@@ -73,8 +73,8 @@ size_t SkGraphics_SetResourceCacheSingleAllocationByteLimit(size_t newLimit) {
     return SkGraphics::SetResourceCacheSingleAllocationByteLimit(newLimit);
 }
 
-void SkGraphics_DumpMemoryStatistics(void *dump) {
-    SkGraphics::DumpMemoryStatistics(static_cast<SkTraceMemoryDump *>(dump));
+void SkGraphics_DumpMemoryStatistics(reskia_trace_memory_dump_t *dump) {
+    SkGraphics::DumpMemoryStatistics(reinterpret_cast<SkTraceMemoryDump *>(dump));
 }
 
 void SkGraphics_PurgeAllCaches() {

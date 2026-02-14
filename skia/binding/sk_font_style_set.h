@@ -9,14 +9,18 @@
 extern "C" {
 #endif
 
-void SkFontStyleSet_delete(void *font_style_set); // owned: caller が保持する参照を release する (SkFontStyleSet *font_style_set)
-int SkFontStyleSet_count(void *font_style_set); // (SkFontStyleSet *font_style_set) -> int
-void SkFontStyleSet_getStyle(void *font_style_set, int index, void *font_style, void *style); // (SkFontStyleSet *font_style_set, int index, SkFontStyle *font_style, SkString *style)
-int SkFontStyleSet_createTypeface(void *font_style_set, int index); // (SkFontStyleSet *font_style_set, int index) -> sk_typeface_t
-int SkFontStyleSet_matchStyle(void *font_style_set, const void *pattern); // (SkFontStyleSet *font_style_set, const SkFontStyle *pattern) -> sk_typeface_t
-bool SkFontStyleSet_unique(void *font_style_set); // (SkFontStyleSet *font_style_set) -> bool
-void SkFontStyleSet_ref(void *font_style_set); // retained: 参照カウントを増やす (SkFontStyleSet *font_style_set)
-void SkFontStyleSet_unref(void *font_style_set); // owned: 参照カウントを減らす (SkFontStyleSet *font_style_set)
+typedef struct reskia_font_style_set_t reskia_font_style_set_t;
+typedef struct reskia_font_style_t reskia_font_style_t;
+typedef struct reskia_string_t reskia_string_t;
+
+void SkFontStyleSet_delete(reskia_font_style_set_t *font_style_set); // owned: caller が保持する参照を release する (SkFontStyleSet *font_style_set)
+int SkFontStyleSet_count(reskia_font_style_set_t *font_style_set); // (SkFontStyleSet *font_style_set) -> int
+void SkFontStyleSet_getStyle(reskia_font_style_set_t *font_style_set, int index, reskia_font_style_t *font_style, reskia_string_t *style); // (SkFontStyleSet *font_style_set, int index, SkFontStyle *font_style, SkString *style)
+int SkFontStyleSet_createTypeface(reskia_font_style_set_t *font_style_set, int index); // (SkFontStyleSet *font_style_set, int index) -> sk_typeface_t
+int SkFontStyleSet_matchStyle(reskia_font_style_set_t *font_style_set, const reskia_font_style_t *pattern); // (SkFontStyleSet *font_style_set, const SkFontStyle *pattern) -> sk_typeface_t
+bool SkFontStyleSet_unique(reskia_font_style_set_t *font_style_set); // (SkFontStyleSet *font_style_set) -> bool
+void SkFontStyleSet_ref(reskia_font_style_set_t *font_style_set); // retained: 参照カウントを増やす (SkFontStyleSet *font_style_set)
+void SkFontStyleSet_unref(reskia_font_style_set_t *font_style_set); // owned: 参照カウントを減らす (SkFontStyleSet *font_style_set)
 
 // static
 

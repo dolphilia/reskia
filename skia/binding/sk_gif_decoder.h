@@ -5,17 +5,28 @@
 #ifndef RAIA_SKIA_SK_GIF_DECODER_H
 #define RAIA_SKIA_SK_GIF_DECODER_H
 
-#include "include/codec/SkGifDecoder.h"
+#include <stddef.h>
+#include <stdint.h>
+
 #include "../static/static_sk_stream.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_codec.h"
 #include "../static/static_sk_codecs_decoder.h"
 
+#ifdef __cplusplus
 extern "C" {
-bool SkGifDecoder_IsGif(const void* ptr, size_t size); // (const void* ptr, size_t size) -> bool
-sk_codec_t SkGifDecoder_Decode(int static_stream, void * result, SkCodecs::DecodeContext decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkGifDecoder_Decode_2(int static_data, void * result, SkCodecs::DecodeContext decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+#endif
+
+typedef struct reskia_codec_result_t reskia_codec_result_t;
+typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
+
+bool SkGifDecoder_IsGif(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
+sk_codec_t SkGifDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codec_t SkGifDecoder_Decode_2(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_data_t data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
 sk_codecs_decoder_t SkGifDecoder_Decoder(); // () -> sk_codecs_decoder_t
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif //RAIA_SKIA_SK_GIF_DECODER_H
