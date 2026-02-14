@@ -8,40 +8,40 @@
 
 extern "C" {
 
-void SkContourMeasure_delete(void *contour_measure) {
-    static_cast<SkContourMeasure *>(contour_measure)->unref();
+void SkContourMeasure_delete(reskia_contour_measure_t *contour_measure) {
+    reinterpret_cast<SkContourMeasure *>(contour_measure)->unref();
 }
 
-float SkContourMeasure_length(void *contour_measure) {
-    return static_cast<SkContourMeasure *>(contour_measure)->length();
+float SkContourMeasure_length(reskia_contour_measure_t *contour_measure) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->length();
 }
 
-bool SkContourMeasure_getPosTan(void *contour_measure, float distance, void *position, void *tangent) {
-    return static_cast<SkContourMeasure *>(contour_measure)->getPosTan(distance, static_cast<SkPoint *>(position), static_cast<SkVector *>(tangent));
+bool SkContourMeasure_getPosTan(reskia_contour_measure_t *contour_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->getPosTan(distance, reinterpret_cast<SkPoint *>(position), reinterpret_cast<SkVector *>(tangent));
 }
 
-bool SkContourMeasure_getMatrix(void *contour_measure, float distance, void *matrix, int flags) {
-    return static_cast<SkContourMeasure *>(contour_measure)->getMatrix(distance, static_cast<SkMatrix *>(matrix), static_cast<SkContourMeasure::MatrixFlags>(flags));
+bool SkContourMeasure_getMatrix(reskia_contour_measure_t *contour_measure, float distance, reskia_matrix_t *matrix, int flags) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->getMatrix(distance, reinterpret_cast<SkMatrix *>(matrix), static_cast<SkContourMeasure::MatrixFlags>(flags));
 }
 
-bool SkContourMeasure_getSegment(void *contour_measure, float startD, float stopD, void *dst, bool startWithMoveTo) {
-    return static_cast<SkContourMeasure *>(contour_measure)->getSegment(startD, stopD, static_cast<SkPath *>(dst), startWithMoveTo);
+bool SkContourMeasure_getSegment(reskia_contour_measure_t *contour_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->getSegment(startD, stopD, reinterpret_cast<SkPath *>(dst), startWithMoveTo);
 }
 
-bool SkContourMeasure_isClosed(void *contour_measure) {
-    return static_cast<SkContourMeasure *>(contour_measure)->isClosed();
+bool SkContourMeasure_isClosed(reskia_contour_measure_t *contour_measure) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->isClosed();
 }
 
-bool SkContourMeasure_unique(void *contour_measure) {
-    return static_cast<SkContourMeasure *>(contour_measure)->unique();
+bool SkContourMeasure_unique(reskia_contour_measure_t *contour_measure) {
+    return reinterpret_cast<SkContourMeasure *>(contour_measure)->unique();
 }
 
-void SkContourMeasure_ref(void *contour_measure) {
-    static_cast<SkContourMeasure *>(contour_measure)->ref();
+void SkContourMeasure_ref(reskia_contour_measure_t *contour_measure) {
+    reinterpret_cast<SkContourMeasure *>(contour_measure)->ref();
 }
 
-void SkContourMeasure_unref(void *contour_measure) {
-    static_cast<SkContourMeasure *>(contour_measure)->unref();
+void SkContourMeasure_unref(reskia_contour_measure_t *contour_measure) {
+    reinterpret_cast<SkContourMeasure *>(contour_measure)->unref();
 }
 
 }

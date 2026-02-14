@@ -9,8 +9,11 @@
 extern "C" {
 #endif
 
-void SkColorSpacePrimaries_delete(void *color_pace_primaries); // (SkColorSpacePrimaries *color_pace_primaries)
-void SkColorSpacePrimaries_toXYZD50(void *color_pace_primaries, void *toXYZD50); // (SkColorSpacePrimaries *color_pace_primaries, skcms_Matrix3x3 *toXYZD50)
+typedef struct reskia_color_space_primaries_t reskia_color_space_primaries_t;
+typedef struct reskia_matrix3x3_t reskia_matrix3x3_t;
+
+void SkColorSpacePrimaries_delete(reskia_color_space_primaries_t *color_pace_primaries); // (SkColorSpacePrimaries *color_pace_primaries)
+void SkColorSpacePrimaries_toXYZD50(reskia_color_space_primaries_t *color_pace_primaries, reskia_matrix3x3_t *toXYZD50); // (SkColorSpacePrimaries *color_pace_primaries, skcms_Matrix3x3 *toXYZD50)
 
 #ifdef __cplusplus
 }

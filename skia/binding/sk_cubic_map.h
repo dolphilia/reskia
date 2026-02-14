@@ -9,10 +9,12 @@
 extern "C" {
 #endif
 
-void *SkCubicMap_new(int p1, int p2); // (sk_point_t p1, sk_point_t p2) -> SkCubicMap *
-void SkCubicMap_delete(void * cubic_map); // (SkCubicMap * cubic_map)
-float SkCubicMap_computeYFromX(void * cubic_map, float x); // (SkCubicMap * cubic_map, float x) -> float
-int SkCubicMap_computeFromT(void * cubic_map, float t); // (SkCubicMap * cubic_map, float t) -> sk_point_t
+typedef struct reskia_cubic_map_t reskia_cubic_map_t;
+
+reskia_cubic_map_t *SkCubicMap_new(int p1, int p2); // (sk_point_t p1, sk_point_t p2) -> SkCubicMap *
+void SkCubicMap_delete(reskia_cubic_map_t *cubic_map); // (SkCubicMap * cubic_map)
+float SkCubicMap_computeYFromX(reskia_cubic_map_t *cubic_map, float x); // (SkCubicMap * cubic_map, float x) -> float
+int SkCubicMap_computeFromT(reskia_cubic_map_t *cubic_map, float t); // (SkCubicMap * cubic_map, float t) -> sk_point_t
 
 // static
 

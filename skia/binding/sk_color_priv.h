@@ -5,18 +5,23 @@
 #ifndef RAIA_SKIA_SK_COLOR_PRIV_H
 #define RAIA_SKIA_SK_COLOR_PRIV_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef uint32_t reskia_u32_t;
+typedef uint32_t reskia_pmcolor_t;
+
 // static
-unsigned SkColorPriv_SkAlpha255To256(unsigned int alpha); // (U8CPU alpha) -> unsigned
-unsigned int SkColorPriv_SkAlphaMulQ(unsigned int c, unsigned scale); // (uint32_t c, unsigned scale) -> uint32_t
-unsigned int SkColorPriv_SkPackARGB32(unsigned int a, unsigned int r, unsigned int g, unsigned int b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
-unsigned int SkColorPriv_SkPackARGB32NoCheck(unsigned int a, unsigned int r, unsigned int g, unsigned int b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
-unsigned int SkColorPriv_SkPMSrcOver(unsigned int  src, unsigned int  dst); // (SkPMColor src, SkPMColor dst) -> SkPMColor
-unsigned int SkColorPriv_SkPremultiplyARGBInline(unsigned int a, unsigned int r, unsigned int g, unsigned int b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
-unsigned int SkColorPriv_SkUnitScalarClampToByte(float x); // (SkScalar x) -> U8CPU
+reskia_u32_t SkColorPriv_SkAlpha255To256(reskia_u32_t alpha); // (U8CPU alpha) -> unsigned
+reskia_u32_t SkColorPriv_SkAlphaMulQ(reskia_u32_t c, reskia_u32_t scale); // (uint32_t c, unsigned scale) -> uint32_t
+reskia_pmcolor_t SkColorPriv_SkPackARGB32(reskia_u32_t a, reskia_u32_t r, reskia_u32_t g, reskia_u32_t b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
+reskia_pmcolor_t SkColorPriv_SkPackARGB32NoCheck(reskia_u32_t a, reskia_u32_t r, reskia_u32_t g, reskia_u32_t b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
+reskia_pmcolor_t SkColorPriv_SkPMSrcOver(reskia_pmcolor_t src, reskia_pmcolor_t dst); // (SkPMColor src, SkPMColor dst) -> SkPMColor
+reskia_pmcolor_t SkColorPriv_SkPremultiplyARGBInline(reskia_u32_t a, reskia_u32_t r, reskia_u32_t g, reskia_u32_t b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor
+reskia_u32_t SkColorPriv_SkUnitScalarClampToByte(float x); // (SkScalar x) -> U8CPU
 
 #ifdef __cplusplus
 }

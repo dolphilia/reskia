@@ -9,11 +9,14 @@
 extern "C" {
 #endif
 
-void *SkContourMeasureIter_new(); // () -> SkContourMeasureIter *
-void *SkContourMeasureIter_new_2(const void *path, bool forceClosed, float resScale); // (const SkPath *path, bool forceClosed, SkScalar resScale) -> SkContourMeasureIter *
-void SkContourMeasureIter_delete(void *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter)
-void SkContourMeasureIter_reset(void *contour_measure_iter, const void *path, bool forceClosed, float resScale); // (SkContourMeasureIter *contour_measure_iter, const SkPath *path, bool forceClosed, SkScalar resScale)
-int SkContourMeasureIter_next(void *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter) -> sk_contour_measure_t
+typedef struct reskia_contour_measure_iter_t reskia_contour_measure_iter_t;
+typedef struct reskia_path_t reskia_path_t;
+
+reskia_contour_measure_iter_t *SkContourMeasureIter_new(); // () -> SkContourMeasureIter *
+reskia_contour_measure_iter_t *SkContourMeasureIter_new_2(const reskia_path_t *path, bool forceClosed, float resScale); // (const SkPath *path, bool forceClosed, SkScalar resScale) -> SkContourMeasureIter *
+void SkContourMeasureIter_delete(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter)
+void SkContourMeasureIter_reset(reskia_contour_measure_iter_t *contour_measure_iter, const reskia_path_t *path, bool forceClosed, float resScale); // (SkContourMeasureIter *contour_measure_iter, const SkPath *path, bool forceClosed, SkScalar resScale)
+int SkContourMeasureIter_next(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter) -> sk_contour_measure_t
 
 #ifdef __cplusplus
 }

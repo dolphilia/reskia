@@ -9,7 +9,9 @@
 extern "C" {
 #endif
 
-void SkCubicResampler_delete(void *cubicResampler); // (SkCubicResampler *cubicResampler)
+typedef struct reskia_cubic_resampler_t reskia_cubic_resampler_t;
+
+void SkCubicResampler_delete(reskia_cubic_resampler_t *cubicResampler); // (SkCubicResampler *cubicResampler)
 int SkCubicResampler_Mitchell(); // () -> sk_cubic_resampler_t
 int SkCubicResampler_CatmullRom(); // () -> sk_cubic_resampler_t
 

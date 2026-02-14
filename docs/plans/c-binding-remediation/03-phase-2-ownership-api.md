@@ -114,11 +114,35 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkColorFilter` API の `void*` を不透明型ポインタへ置換し、`size_t` と `reskia_color_t` でプリミティブ型を正規化
     - `skia/binding/sk_color_filters.h` + `skia/binding/sk_color_filters.cpp`（7/7 関数 `done`）
     - 変更内容: `SkColorFilters` API の `void*` と `unsigned int/unsigned char` を不透明型/意味型（`reskia_color_4f_t`, `reskia_color_t`, `uint8_t`）へ正規化
+    - `skia/binding/sk_color_info.h` + `skia/binding/sk_color_info.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkColorInfo` API の `void*` を `reskia_color_info_t*` 不透明型へ置換し、戻り値ポインタを `reskia_color_space_t*` へ型強化
+    - `skia/binding/sk_color_matrix.h` + `skia/binding/sk_color_matrix.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkColorMatrix` API の `void*` を `reskia_color_matrix_t*` 不透明型へ置換し、`set/getRowMajor` を `float[20]` へ型正規化
+    - `skia/binding/sk_color_matrix_filter.h` + `skia/binding/sk_color_matrix_filter.cpp`（19/19 関数 `done`）
+    - 変更内容: `SkColorMatrixFilter` API の `void*` を不透明型ポインタへ置換し、色プリミティブを `reskia_color_t`、サイズを `size_t` へ正規化
+    - `skia/binding/sk_color_priv.h` + `skia/binding/sk_color_priv.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkColorPriv` API の整数引数/戻り値を `reskia_u32_t` / `reskia_pmcolor_t` へ意味型正規化
+    - `skia/binding/sk_color_space.h` + `skia/binding/sk_color_space.cpp`（28/28 関数 `done`）
+    - 変更内容: `SkColorSpace` API の `void*` を不透明型ポインタへ置換し、`size_t`/`uint32_t`/`uint64_t` と skcms 関連型を正規化
+    - `skia/binding/sk_color_space_primaries.h` + `skia/binding/sk_color_space_primaries.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkColorSpacePrimaries` API の `void*` を不透明型ポインタへ置換し、`toXYZD50` の matrix 出力を型強化
+    - `skia/binding/sk_color_table.h` + `skia/binding/sk_color_table.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkColorTable` API の `void*` を不透明型ポインタへ置換し、テーブル入力/出力を `uint8_t[256]` / `const uint8_t*` に正規化
+    - `skia/binding/sk_contour_measure.h` + `skia/binding/sk_contour_measure.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkContourMeasure` API の `void*` を不透明型ポインタへ置換し、`SkPoint` / `SkVector` / `SkMatrix` / `SkPath` 引数を型強化
+    - `skia/binding/sk_contour_measure_iter.h` + `skia/binding/sk_contour_measure_iter.cpp`（5/5 関数 `done`）
+    - 変更内容: `SkContourMeasureIter` API の `void*` を不透明型ポインタへ置換し、`SkPath` 入力引数を型強化
+    - `skia/binding/sk_cubic_map.h` + `skia/binding/sk_cubic_map.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkCubicMap` API の `void*` を `reskia_cubic_map_t*` 不透明型ポインタへ置換
+    - `skia/binding/sk_cubic_resampler.h` + `skia/binding/sk_cubic_resampler.cpp`（1/1 関数 `done`）
+    - 変更内容: `SkCubicResampler` API の `delete` 受け口を `reskia_cubic_resampler_t*` へ型強化
+    - `skia/binding/sk_data.h` + `skia/binding/sk_data.cpp`（22/22 関数 `done`）
+    - 変更内容: `SkData` API の `void*` を不透明型/バイト列型へ置換し、`unsigned long/unsigned int` を `size_t/int32_t` へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 334 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 470 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

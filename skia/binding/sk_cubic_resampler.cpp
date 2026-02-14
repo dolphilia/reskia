@@ -12,8 +12,8 @@
 
 extern "C" {
 
-void SkCubicResampler_delete(void *cubicResampler) {
-    delete static_cast<SkCubicResampler *>(cubicResampler);
+void SkCubicResampler_delete(reskia_cubic_resampler_t *cubicResampler) {
+    delete reinterpret_cast<SkCubicResampler *>(cubicResampler);
 }
 
 sk_cubic_resampler_t SkCubicResampler_Mitchell() {

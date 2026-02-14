@@ -15,64 +15,64 @@
 
 extern "C" {
 
-void *SkColorInfo_new() {
-    return new SkColorInfo();
+reskia_color_info_t *SkColorInfo_new() {
+    return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo());
 }
 
-void *SkColorInfo_new_2(int ct, int at, sk_color_space_t color_space) {
-    return new SkColorInfo(static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space));
+reskia_color_info_t *SkColorInfo_new_2(int ct, int at, sk_color_space_t color_space) {
+    return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo(static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-void *SkColorInfo_new_3(const void *color_info) {
-    return new SkColorInfo(* static_cast<const SkColorInfo *>(color_info));
+reskia_color_info_t *SkColorInfo_new_3(const reskia_color_info_t *color_info) {
+    return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo(*reinterpret_cast<const SkColorInfo *>(color_info)));
 }
 
-void SkColorInfo_delete(void *color_info) {
-    delete static_cast<SkColorInfo *>(color_info);
+void SkColorInfo_delete(reskia_color_info_t *color_info) {
+    delete reinterpret_cast<SkColorInfo *>(color_info);
 }
 
-int SkColorInfo_alphaType(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->alphaType();
+int SkColorInfo_alphaType(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->alphaType();
 }
 
-int SkColorInfo_bytesPerPixel(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->bytesPerPixel();
+int SkColorInfo_bytesPerPixel(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->bytesPerPixel();
 }
 
-void* SkColorInfo_colorSpace(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->colorSpace();
+reskia_color_space_t *SkColorInfo_colorSpace(reskia_color_info_t *color_info) {
+    return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkColorInfo *>(color_info)->colorSpace());
 }
 
-int SkColorInfo_colorType(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->colorType();
+int SkColorInfo_colorType(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->colorType();
 }
 
-bool SkColorInfo_gammaCloseToSRGB(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->gammaCloseToSRGB();
+bool SkColorInfo_gammaCloseToSRGB(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->gammaCloseToSRGB();
 }
 
-bool SkColorInfo_isOpaque(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->isOpaque();
+bool SkColorInfo_isOpaque(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->isOpaque();
 }
 
-sk_color_info_t SkColorInfo_makeAlphaType(void *color_info, int newAlphaType) {
-    return static_sk_color_info_make(static_cast<SkColorInfo *>(color_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
+sk_color_info_t SkColorInfo_makeAlphaType(reskia_color_info_t *color_info, int newAlphaType) {
+    return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
 }
 
-sk_color_info_t SkColorInfo_makeColorSpace(void *color_info, sk_color_space_t color_space) {
-    return static_sk_color_info_make(static_cast<SkColorInfo *>(color_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
+sk_color_info_t SkColorInfo_makeColorSpace(reskia_color_info_t *color_info, sk_color_space_t color_space) {
+    return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
-sk_color_info_t SkColorInfo_makeColorType(void *color_info, int newColorType) {
-    return static_sk_color_info_make(static_cast<SkColorInfo *>(color_info)->makeColorType(static_cast<SkColorType>(newColorType)));
+sk_color_info_t SkColorInfo_makeColorType(reskia_color_info_t *color_info, int newColorType) {
+    return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeColorType(static_cast<SkColorType>(newColorType)));
 }
 
-sk_color_space_t SkColorInfo_refColorSpace(void *color_info) {
-    return static_sk_color_space_make(static_cast<SkColorInfo *>(color_info)->refColorSpace());
+sk_color_space_t SkColorInfo_refColorSpace(reskia_color_info_t *color_info) {
+    return static_sk_color_space_make(reinterpret_cast<SkColorInfo *>(color_info)->refColorSpace());
 }
 
-int SkColorInfo_shiftPerPixel(void *color_info) {
-    return static_cast<SkColorInfo *>(color_info)->shiftPerPixel();
+int SkColorInfo_shiftPerPixel(reskia_color_info_t *color_info) {
+    return reinterpret_cast<SkColorInfo *>(color_info)->shiftPerPixel();
 }
 
 }

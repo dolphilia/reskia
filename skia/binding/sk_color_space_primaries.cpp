@@ -8,12 +8,12 @@
 
 extern "C" {
 
-void SkColorSpacePrimaries_delete(void *color_pace_primaries) {
-    delete static_cast<SkColorSpacePrimaries *>(color_pace_primaries);
+void SkColorSpacePrimaries_delete(reskia_color_space_primaries_t *color_pace_primaries) {
+    delete reinterpret_cast<SkColorSpacePrimaries *>(color_pace_primaries);
 }
 
-void SkColorSpacePrimaries_toXYZD50(void *color_pace_primaries, void *toXYZD50) {
-    static_cast<SkColorSpacePrimaries *>(color_pace_primaries)->toXYZD50(static_cast<skcms_Matrix3x3 *>(toXYZD50));
+void SkColorSpacePrimaries_toXYZD50(reskia_color_space_primaries_t *color_pace_primaries, reskia_matrix3x3_t *toXYZD50) {
+    reinterpret_cast<SkColorSpacePrimaries *>(color_pace_primaries)->toXYZD50(reinterpret_cast<skcms_Matrix3x3 *>(toXYZD50));
 }
 
 }
