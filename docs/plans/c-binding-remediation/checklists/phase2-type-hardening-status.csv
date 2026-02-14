@@ -769,22 +769,22 @@ void_ptr,skia/binding/sk_i_rect.h,skia/binding/sk_i_rect.cpp,SkIRect_sort,49,don
 void_ptr,skia/binding/sk_i_rect.h,skia/binding/sk_i_rect.cpp,SkIRect_makeSorted,50,done,,typed opaque pointer aliases introduced for SkIRect API; SkIPoint/SkISize/SkRect parameters normalized
 void_ptr,skia/binding/sk_i_rect.h,skia/binding/sk_i_rect.cpp,SkIRect_MakeSize,56,done,,typed opaque pointer aliases introduced for SkIRect API; SkIPoint/SkISize/SkRect parameters normalized
 void_ptr,skia/binding/sk_i_rect.h,skia/binding/sk_i_rect.cpp,SkIRect_Intersects,60,done,,typed opaque pointer aliases introduced for SkIRect API; SkIPoint/SkISize/SkRect parameters normalized
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_set,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_isZero,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_isEmpty,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_setEmpty,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_width,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_height,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_area,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_equals,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkWriteICCProfile,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkWriteICCProfile_2,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkICCFloatXYZD50ToGrid16Lab,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkICCFloatToTable16,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_ico_cecoder.h,skia/binding/sk_ico_cecoder.cpp,SkIcoDecoder_IsIco,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_ico_cecoder.h,skia/binding/sk_ico_cecoder.cpp,SkIcoDecoder_Decode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_ico_cecoder.h,skia/binding/sk_ico_cecoder.cpp,SkIcoDecoder_Decode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_delete,12,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_set,13,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_isZero,14,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_isEmpty,15,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_setEmpty,16,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_width,17,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_height,18,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_area,19,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_i_size.h,skia/binding/sk_i_size.cpp,SkISize_equals,20,done,,typed opaque pointer alias introduced for SkISize API surface
+void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkWriteICCProfile,12,done,,typed skcms aliases and uint8_t buffers introduced for SkICC API surface
+void_ptr|suffix,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkWriteICCProfile_2,13,done,,typed skcms aliases and uint8_t buffers introduced for SkICC API surface
+void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkICCFloatXYZD50ToGrid16Lab,14,done,,typed skcms aliases and uint8_t buffers introduced for SkICC API surface
+void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkICCFloatToTable16,15,done,,typed skcms aliases and uint8_t buffers introduced for SkICC API surface
+void_ptr|primitive,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_IsIco,12,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
+void_ptr,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_Decode,13,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
+void_ptr|suffix,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_Decode_2,14,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
 void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_width,16,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_height,17,todo,,from step3 manifests: function declaration requires typed-API review

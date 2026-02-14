@@ -23,7 +23,7 @@ skia/binding/sk_flattenable.h
 skia/binding/sk_font.h
 skia/binding/sk_gradient_shader.h
 skia/binding/sk_graphics.h
-skia/binding/sk_ico_cecoder.h
+skia/binding/sk_ico_decoder.h
 skia/binding/sk_image.h
 skia/binding/sk_image_filter.h
 skia/binding/sk_image_filters.h

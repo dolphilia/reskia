@@ -27,7 +27,7 @@ skia/binding/sk_gradient_shader.h
 skia/binding/sk_high_contrast_config.h
 skia/binding/sk_i_rect.h
 skia/binding/sk_icc.h
-skia/binding/sk_ico_cecoder.h
+skia/binding/sk_ico_decoder.h
 skia/binding/sk_image.h
 skia/binding/sk_image_filter.h
 skia/binding/sk_image_filters.h

@@ -118,8 +118,8 @@ skia/binding/sk_i_size.cpp
 skia/binding/sk_i_size.h
 skia/binding/sk_icc.cpp
 skia/binding/sk_icc.h
-skia/binding/sk_ico_cecoder.cpp
-skia/binding/sk_ico_cecoder.h
+skia/binding/sk_ico_decoder.cpp
+skia/binding/sk_ico_decoder.h
 skia/binding/sk_image.cpp
 skia/binding/sk_image.h
 skia/binding/sk_image_filter.cpp

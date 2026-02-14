@@ -59,7 +59,7 @@ list(APPEND SOURCE_FILES
         binding/sk_i_rect.cpp
         binding/sk_i_size.cpp
         binding/sk_icc.cpp
-        binding/sk_ico_cecoder.cpp
+        binding/sk_ico_decoder.cpp
         binding/sk_image_filter.cpp
         binding/sk_image_filters.cpp
         binding/sk_image_generator.cpp

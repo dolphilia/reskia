@@ -12,40 +12,40 @@
 
 extern "C" {
 
-void SkISize_delete(void *i_size) {
-    delete static_cast<SkISize *>(i_size);
+void SkISize_delete(reskia_i_size_t *i_size) {
+    delete reinterpret_cast<SkISize *>(i_size);
 }
 
-void SkISize_set(void *i_size, int32_t w, int32_t h) {
-    static_cast<SkISize *>(i_size)->set(w, h);
+void SkISize_set(reskia_i_size_t *i_size, int32_t w, int32_t h) {
+    reinterpret_cast<SkISize *>(i_size)->set(w, h);
 }
 
-bool SkISize_isZero(void *i_size) {
-    return static_cast<SkISize *>(i_size)->isZero();
+bool SkISize_isZero(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->isZero();
 }
 
-bool SkISize_isEmpty(void *i_size) {
-    return static_cast<SkISize *>(i_size)->isEmpty();
+bool SkISize_isEmpty(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->isEmpty();
 }
 
-void SkISize_setEmpty(void *i_size) {
-    return static_cast<SkISize *>(i_size)->setEmpty();
+void SkISize_setEmpty(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->setEmpty();
 }
 
-int32_t SkISize_width(void *i_size) {
-    return static_cast<SkISize *>(i_size)->width();
+int32_t SkISize_width(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->width();
 }
 
-int32_t SkISize_height(void *i_size) {
-    return static_cast<SkISize *>(i_size)->height();
+int32_t SkISize_height(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->height();
 }
 
-int64_t SkISize_area(void *i_size) {
-    return static_cast<SkISize *>(i_size)->area();
+int64_t SkISize_area(reskia_i_size_t *i_size) {
+    return reinterpret_cast<SkISize *>(i_size)->area();
 }
 
-bool SkISize_equals(void *i_size, int32_t w, int32_t h) {
-    return static_cast<SkISize *>(i_size)->equals(w, h);
+bool SkISize_equals(reskia_i_size_t *i_size, int32_t w, int32_t h) {
+    return reinterpret_cast<SkISize *>(i_size)->equals(w, h);
 }
 
 // static

@@ -27,7 +27,7 @@ skia/binding/sk_gradient_shader.cpp
 skia/binding/sk_high_contrast_config.cpp
 skia/binding/sk_i_rect.cpp
 skia/binding/sk_icc.cpp
-skia/binding/sk_ico_cecoder.cpp
+skia/binding/sk_ico_decoder.cpp
 skia/binding/sk_image.cpp
 skia/binding/sk_image_filter.cpp
 skia/binding/sk_image_filters.cpp

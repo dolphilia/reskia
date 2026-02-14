@@ -180,11 +180,17 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkHighContrastConfig` API の `void*` を `reskia_high_contrast_config_t*` 不透明型ポインタへ置換
     - `skia/binding/sk_i_rect.h` + `skia/binding/sk_i_rect.cpp`（41/41 関数 `done`）
     - 変更内容: `SkIRect` API の `void*` を `reskia_i_rect_t*` 不透明型ポインタへ置換し、`SkIPoint` / `SkISize` / `SkRect` 引数ポインタを型強化
+    - `skia/binding/sk_i_size.h` + `skia/binding/sk_i_size.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkISize` API の `void*` を `reskia_i_size_t*` 不透明型ポインタへ置換し、`int64_t` 戻り値を明示化
+    - `skia/binding/sk_icc.h` + `skia/binding/sk_icc.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkICC` API の `void*` を `reskia_transfer_function_t*` / `reskia_matrix3x3_t*` / `reskia_icc_profile_t*` と `uint8_t*` バッファへ置換
+    - `skia/binding/sk_ico_decoder.h` + `skia/binding/sk_ico_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: ファイル名 typo（`sk_ico_cecoder`）を `sk_ico_decoder` に修正し、`SkIcoDecoder` API の `void*` を `uint8_t*` / 不透明型ポインタへ置換
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 770 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 786 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

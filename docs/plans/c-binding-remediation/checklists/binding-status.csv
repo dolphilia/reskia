@@ -119,8 +119,8 @@ skia/binding/sk_i_size.cpp,todo,P2,,
 skia/binding/sk_i_size.h,todo,P2,,
 skia/binding/sk_icc.cpp,todo,P2,,
 skia/binding/sk_icc.h,todo,P2,,
-skia/binding/sk_ico_cecoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
-skia/binding/sk_ico_cecoder.h,todo,P2,,
+skia/binding/sk_ico_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/binding/sk_ico_decoder.h,todo,P2,,
 skia/binding/sk_image.cpp,todo,P2,,
 skia/binding/sk_image.h,todo,P2,,
 skia/binding/sk_image_filter.cpp,todo,P2,,

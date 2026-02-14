@@ -23,7 +23,7 @@ skia/binding/sk_flattenable.cpp
 skia/binding/sk_font.cpp
 skia/binding/sk_gradient_shader.cpp
 skia/binding/sk_graphics.cpp
-skia/binding/sk_ico_cecoder.cpp
+skia/binding/sk_ico_decoder.cpp
 skia/binding/sk_image.cpp
 skia/binding/sk_image_filter.cpp
 skia/binding/sk_image_filters.cpp
