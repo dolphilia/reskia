@@ -76,6 +76,18 @@ scripts/fetch_skia_upstream.sh --remote fork
 - 依存解決ロジック:
   - `cmake/deps/ReskiaDeps.cmake`
 
+## CMake 移行ガイド（Phase 4）
+
+旧運用（`skia/lib` 前提）から新運用（mode 明示）へ移行する標準手順は、以下に一本化しています。
+
+- `docs/guides/cmake-migration-guide.md`
+
+差分の要点:
+
+- 旧: 依存解決は実質 `prebuilt` 固定
+- 新: `RESKIA_DEPS_MODE=prebuilt/source/system` を明示選択
+- 新: `source` は `bootstrap` + `build_third_party` を前提化
+
 ## ビルド手順（例）
 
 以下はリポジトリルートで実行します。
@@ -177,4 +189,5 @@ cmake --build svg/cmake-build-local -j 8
 - Cバインディング改善計画: `docs/plans/c-binding-remediation/README.md`
 - CMake構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
 - CMake構成改善計画: `docs/plans/cmake-remediation/README.md`
+- CMake移行ガイド（Phase 4）: `docs/guides/cmake-migration-guide.md`
 - 機能ギャップ調査（upstream比較）: `docs/notes/reskia-feature-gap-survey-2026-02-14.md`

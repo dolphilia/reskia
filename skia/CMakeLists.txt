@@ -44,13 +44,11 @@ if (WIN32)
             src/utils/win/SkIStream.cpp
             src/ports/SkFontMgr_win_dw.cpp
             src/ports/SkFontMgr_win_dw_factory.cpp
-            #src/utils/win/SkWGL_win.cpp
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
             src/ports/SkFontMgr_mac_ct.cpp
             src/ports/SkFontMgr_mac_ct_factory.cpp
-            #src/ports/SkFontMgr_empty_factory.cpp
             src/sfnt/SkOTTable_name.cpp
             src/sfnt/SkOTUtils.cpp
             src/ports/SkScalerContext_mac_ct.cpp

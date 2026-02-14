@@ -1,0 +1,55 @@
+name: CMake Deps Matrix
+
+on:
+  push:
+    paths:
+      - ".github/workflows/cmake-deps-matrix.yml"
+      - "cmake/deps/ReskiaDeps.cmake"
+      - "skia/CMakeLists.txt"
+      - "scripts/bootstrap_third_party.sh"
+      - "scripts/build_third_party.sh"
+  pull_request:
+    paths:
+      - ".github/workflows/cmake-deps-matrix.yml"
+      - "cmake/deps/ReskiaDeps.cmake"
+      - "skia/CMakeLists.txt"
+      - "scripts/bootstrap_third_party.sh"
+      - "scripts/build_third_party.sh"
+  workflow_dispatch:
+
+jobs:
+  configure:
+    name: Configure (${{ matrix.os }} / ${{ matrix.mode }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        mode: [prebuilt, source]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Prepare third_party (macOS source only)
+        if: runner.os == 'macOS' && matrix.mode == 'source'
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bash scripts/bootstrap_third_party.sh
+          bash scripts/build_third_party.sh --build-type Release
+
+      - name: Configure skia
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "runner_os=${RUNNER_OS}"
+          echo "matrix_os=${{ matrix.os }}"
+          echo "deps_mode=${{ matrix.mode }}"
+
+          build_dir="skia/cmake-build-ci-${RUNNER_OS}-${{ matrix.mode }}"
+          cmake -S skia -B "${build_dir}" \
+            -DRESKIA_DEPS_MODE=${{ matrix.mode }} \
+            -DCMAKE_BUILD_TYPE=Release

@@ -1,12 +1,12 @@
 file,status,phase,owner,note
-cmake/deps/ReskiaDeps.cmake,todo,,,
+cmake/deps/ReskiaDeps.cmake,done,phase3,,step1-4完了(mode別関数分離・サポート表・CI行列・回帰検証): 2026-02-14
 cmake/reskia/sources-binding.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-core.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-static.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/tests.cmake,done,phase2,,step3(テスト分離)で新規追加: 2026-02-14
-skcms/CMakeLists.txt,todo,,,
+skcms/CMakeLists.txt,done,phase1,,step1-4完了(project整理・target化・回帰検証): 2026-02-14
 skia/CMakeLists.txt,done,phase2,,step1-4完了(ソース列挙移設・ターゲット定義明確化・テスト分離・回帰検証): 2026-02-14
-skpath/CMakeLists.txt,todo,,,
-skresources/CMakeLists.txt,todo,,,
-svg/CMakeLists.txt,todo,,,
-third_party/CMakeLists.txt,todo,,,
+skpath/CMakeLists.txt,done,phase1,,step1-4完了(命名一貫化・target化・回帰検証): 2026-02-14
+skresources/CMakeLists.txt,done,phase1,,step1-4完了(target化・回帰検証): 2026-02-14
+svg/CMakeLists.txt,done,phase1,,step2-4完了(project再定義解消・target化・回帰検証): 2026-02-14
+third_party/CMakeLists.txt,done,phase1,,step3完了(グローバル設定最小化の整備対象として維持): 2026-02-14

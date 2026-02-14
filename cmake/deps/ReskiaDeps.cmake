@@ -145,7 +145,8 @@ function(_reskia_resolve_mode_system root_dir out_link_dirs out_link_libs)
                 "${_lib_webpmux}"
         )
     elseif(WIN32)
-        # Keep compatibility by using the same names as prebuilt.
+        # 互換維持: prebuilt と同名ライブラリ指定を許容（削除期限: 2026-06-30）。
+        # 期限までに imported target ベースへ移行する。
         set(_link_dirs "${root_dir}/skia/lib")
         set(_libs zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux)
     elseif(UNIX)
