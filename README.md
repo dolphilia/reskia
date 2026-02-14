@@ -177,3 +177,4 @@ cmake --build svg/cmake-build-local -j 8
 - Cバインディング改善計画: `docs/plans/c-binding-remediation/README.md`
 - CMake構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
 - CMake構成改善計画: `docs/plans/cmake-remediation/README.md`
+- 機能ギャップ調査（upstream比較）: `docs/notes/reskia-feature-gap-survey-2026-02-14.md`

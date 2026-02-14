@@ -330,3 +330,19 @@
 
 詳細:
 - `/Users/dolphilia/github/reskia/docs/notes/cmake-architecture-review-2026-02-14.md`
+
+## 15. 機能ギャップ調査（2026-02-14）
+
+Reskia と `vendor/skia-upstream` を比較し、代表機能の未網羅領域を調査した。
+
+主な未網羅:
+
+- `skottie`（Lottie）
+- `skparagraph`（高度テキストレイアウト）
+- `sksg`（Scene Graph）
+- GPU実行スタック（Ganesh/Graphite + backend）
+
+加えて、`binding` 実装が存在しても CMake で無効化されている機能がある（PDF, JPEG/WebP encoder, GIF/OpenType SVG decoder など）。
+
+詳細:
+- `/Users/dolphilia/github/reskia/docs/notes/reskia-feature-gap-survey-2026-02-14.md`
