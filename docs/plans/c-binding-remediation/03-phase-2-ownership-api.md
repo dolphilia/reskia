@@ -106,11 +106,19 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: 全APIで `canvas` 受け口を `reskia_canvas_t*` に型強化し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
     - `skia/binding/sk_codec.h` + `skia/binding/sk_codec.cpp`（33/33 関数 `done`）
     - 変更内容: `SkCodec` 系シグネチャの `void*` を不透明型ポインタへ置換し、`rowBytes/length` を `size_t` に正規化
+    - `skia/binding/sk_color.h` + `skia/binding/sk_color.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkColor` / `SkPMColor` / `U8CPU` を `reskia_color_t` / `reskia_pmcolor_t` / `reskia_u32_t` の意味型へ正規化
+    - `skia/binding/sk_color_4f.h` + `skia/binding/sk_color_4f.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkColor4f` API を `reskia_color_4f_t*` 不透明型へ移行し、`SkColor`/`SkPMColor` を意味型 typedef（`reskia_color_t`/`reskia_pmcolor_t`）へ正規化
+    - `skia/binding/sk_color_filter.h` + `skia/binding/sk_color_filter.cpp`（18/18 関数 `done`）
+    - 変更内容: `SkColorFilter` API の `void*` を不透明型ポインタへ置換し、`size_t` と `reskia_color_t` でプリミティブ型を正規化
+    - `skia/binding/sk_color_filters.h` + `skia/binding/sk_color_filters.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkColorFilters` API の `void*` と `unsigned int/unsigned char` を不透明型/意味型（`reskia_color_4f_t`, `reskia_color_t`, `uint8_t`）へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 286 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 334 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

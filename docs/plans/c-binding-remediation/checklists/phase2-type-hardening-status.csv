@@ -285,54 +285,54 @@ void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getRepetition
 primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MinBufferedBytesNeeded,45,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
 void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromStream,47,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
 void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromData,48,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetA,12,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetARGB,13,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorToHSV,14,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkHSVToColor,15,todo,,from step3 manifests: function declaration requires typed-API review
-suffix|primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkHSVToColor_2,16,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkPreMultiplyARGB,17,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkPreMultiplyColor,18,todo,,from step3 manifests: function declaration requires typed-API review
-primitive,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkRGBToHSV,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fR,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fG,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fB,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fA,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_vec,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_vec_2,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_isOpaque,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fitsInBytes,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_toSkColor,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_toBytes_RGBA,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_makeOpaque,45,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromColor,49,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromPMColor,50,todo,,from step3 manifests: function declaration requires typed-API review
-primitive,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromBytes_RGBA,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|semantic,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_asAColorMode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_asAColorMatrix,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_isAlphaUnchanged,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_filterColor,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_filterColor4f,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_makeComposed,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_makeWithWorkingColorSpace,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getFactory,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getTypeName,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_flatten,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getFlattenableType,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_serialize,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_serialize_2,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_unique,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_ref,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_unref,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_Deserialize,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Blend,16,todo,,from step3 manifests: function declaration requires typed-API review
-suffix|primitive|semantic,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Blend_2,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_HSLAMatrix_2,20,todo,,from step3 manifests: function declaration requires typed-API review
-primitive|semantic,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Lighting,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Matrix_2,25,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Table_2,28,todo,,from step3 manifests: function declaration requires typed-API review
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetA,12,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetARGB,13,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorToHSV,14,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkHSVToColor,15,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+suffix|primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkHSVToColor_2,16,done,,replacement planned name: SkColor_SkHSVToColorWithAlpha
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkPreMultiplyARGB,17,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkPreMultiplyColor,18,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+primitive,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkRGBToHSV,19,done,,semantic color typedefs introduced: reskia_color_t/reskia_pmcolor_t/reskia_u32_t
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_delete,12,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fR,16,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fG,17,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fB,18,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fA,19,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_vec,30,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr|suffix,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_vec_2,31,done,,replacement planned name: SkColor4f_vecMutable
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_isOpaque,36,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_fitsInBytes,37,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr|primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_toSkColor,38,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr|primitive,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_toBytes_RGBA,44,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_makeOpaque,45,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromColor,49,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+primitive|semantic,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromPMColor,50,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+primitive,skia/binding/sk_color_4f.h,skia/binding/sk_color_4f.cpp,SkColor4f_FromBytes_RGBA,51,done,,typed opaque pointer + semantic color typedefs introduced for SkColor4f API
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_delete,12,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr|semantic,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_asAColorMode,13,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_asAColorMatrix,14,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_isAlphaUnchanged,15,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr|primitive|semantic,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_filterColor,16,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_filterColor4f,17,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_makeComposed,18,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_makeWithWorkingColorSpace,19,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getFactory,20,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getTypeName,21,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_flatten,22,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_getFlattenableType,23,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_serialize,24,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr|suffix|primitive,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_serialize_2,25,done,,replacement planned name: SkColorFilter_serializeToMemory
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_unique,26,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_ref,27,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_unref,28,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr|primitive,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,SkColorFilter_Deserialize,32,done,,typed opaque pointer aliases introduced for SkColorFilter API surface; size_t/semantic color normalization applied
+void_ptr,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_delete,12,done,,typed opaque pointer + semantic color typedefs introduced for SkColorFilters API
+void_ptr,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Blend,16,done,,typed opaque pointer + semantic color typedefs introduced for SkColorFilters API
+suffix|primitive|semantic,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Blend_2,17,done,,replacement planned name: SkColorFilters_BlendColor
+void_ptr|suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_HSLAMatrix_2,20,done,,replacement planned name: SkColorFilters_HSLAMatrixFromColorMatrix
+primitive|semantic,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Lighting,22,done,,typed opaque pointer + semantic color typedefs introduced for SkColorFilters API
+void_ptr|suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Matrix_2,25,done,,replacement planned name: SkColorFilters_MatrixFromColorMatrix
+suffix,skia/binding/sk_color_filters.h,skia/binding/sk_color_filters.cpp,SkColorFilters_Table_2,28,done,,replacement planned name: SkColorFilters_TableFromColorTable
 void_ptr,skia/binding/sk_color_info.h,skia/binding/sk_color_info.cpp,SkColorInfo_new,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix,skia/binding/sk_color_info.h,skia/binding/sk_color_info.cpp,SkColorInfo_new_2,13,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix,skia/binding/sk_color_info.h,skia/binding/sk_color_info.cpp,SkColorInfo_new_3,14,todo,,from step3 manifests: function declaration requires typed-API review

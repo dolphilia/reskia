@@ -5,6 +5,7 @@
 #include "sk_color_4f.h"
 
 #include "include/core/SkColor.h"
+#include "include/core/SkUnPreMultiply.h"
 
 #include "../static/static_sk_color_4f.h"
 
@@ -12,26 +13,26 @@
 
 extern "C" {
 
-void SkColor4f_delete(void *color) {
-    delete static_cast<SkColor4f *>(color);
+void SkColor4f_delete(reskia_color_4f_t *color) {
+    delete reinterpret_cast<SkColor4f *>(color);
 }
 
 // Public Attributes
 
-float SkColor4f_fR(void *color) {
-    return static_cast<SkColor4f *>(color)->fR;
+float SkColor4f_fR(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->fR;
 }
 
-float SkColor4f_fG(void *color) {
-    return static_cast<SkColor4f *>(color)->fG;
+float SkColor4f_fG(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->fG;
 }
 
-float SkColor4f_fB(void *color) {
-    return static_cast<SkColor4f *>(color)->fB;
+float SkColor4f_fB(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->fB;
 }
 
-float SkColor4f_fA(void *color) {
-    return static_cast<SkColor4f *>(color)->fA;
+float SkColor4f_fA(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->fA;
 }
 
 // Public Member Functions
@@ -43,12 +44,12 @@ float SkColor4f_fA(void *color) {
 //float 	operator[] (SkColor4f *color, int index);
 //float & 	operator[] (SkColor4f *color, int index);
 
-const float * SkColor4f_vec(void *color) {
-    return static_cast<SkColor4f *>(color)->vec();
+const float *SkColor4f_vec(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 
-float * SkColor4f_vec_2(void *color) {
-    return static_cast<SkColor4f *>(color)->vec();
+float *SkColor4f_vec_2(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 
 // TODO
@@ -56,41 +57,41 @@ float * SkColor4f_vec_2(void *color) {
 //     return static_cast<SkColor4f *>(color)->array();
 // }
 
-bool SkColor4f_isOpaque (void *color) {
-    return static_cast<SkColor4f *>(color)->isOpaque();
+bool SkColor4f_isOpaque(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->isOpaque();
 }
 
-bool SkColor4f_fitsInBytes (void *color) {
-    return static_cast<SkColor4f *>(color)->fitsInBytes();
+bool SkColor4f_fitsInBytes(reskia_color_4f_t *color) {
+    return reinterpret_cast<SkColor4f *>(color)->fitsInBytes();
 }
 
-unsigned int SkColor4f_toSkColor (void *color) {
-    return static_cast<SkColor4f *>(color)->toSkColor();
+reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color) {
+    return static_cast<reskia_color_t>(reinterpret_cast<SkColor4f *>(color)->toSkColor());
 }
 
 // TODO
 //SkRGBA4f< kPremul_SkAlphaType > premul (SkColor4f *color);
 //SkRGBA4f< kUnpremul_SkAlphaType > unpremul (SkColor4f *color);
 
-unsigned int SkColor4f_toBytes_RGBA (void *color) {
-    return static_cast<SkColor4f *>(color)->toBytes_RGBA();
+reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color) {
+    return static_cast<reskia_u32_t>(reinterpret_cast<SkColor4f *>(color)->toBytes_RGBA());
 }
 
-int SkColor4f_makeOpaque(void *color) {
-    return static_sk_color_4f_make(static_cast<SkColor4f *>(color)->makeOpaque());
+int SkColor4f_makeOpaque(reskia_color_4f_t *color) {
+    return static_sk_color_4f_make(reinterpret_cast<SkColor4f *>(color)->makeOpaque());
 }
 
 // static
 
-static int SkColor4f_FromColor (unsigned int color) {
-    return static_sk_color_4f_make(SkColor4f::FromColor(color));
+int SkColor4f_FromColor(reskia_color_t color) {
+    return static_sk_color_4f_make(SkColor4f::FromColor(static_cast<SkColor>(color)));
 }
 
-static int SkColor4f_FromPMColor (unsigned int color) {
-    return static_sk_color_4f_make(SkColor4f::FromPMColor(color));
+int SkColor4f_FromPMColor(reskia_pmcolor_t color) {
+    return static_sk_color_4f_make(SkColor4f::FromColor(SkUnPreMultiply::PMColorToColor(static_cast<SkPMColor>(color))));
 }
 
-static int SkColor4f_FromBytes_RGBA (unsigned int color) {
+int SkColor4f_FromBytes_RGBA(reskia_u32_t color) {
     return static_sk_color_4f_make(SkColor4f::FromBytes_RGBA(color));
 }
 
