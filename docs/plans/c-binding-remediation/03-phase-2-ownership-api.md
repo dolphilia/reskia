@@ -27,8 +27,7 @@
 - ヘッダコメントに所有権を明示:
   - `owned`, `borrowed`, `retained`.
 
-3. `void*` APIの型情報補強
-- 互換維持のため ABI は維持しつつ、型付き typedef を追加。
+1. `void*` APIの型情報補強
 - 連番関数名（`_2`, `_3`）には `note` で置換予定名を記録。
 - Cプリミティブ型の正規化方針を追加:
   - `unsigned long`（`size_t` 代用）や `unsigned int`（`uint32_t` 代用）を段階的に型エイリアスへ統一。
@@ -40,15 +39,13 @@
     - 併設する新シグネチャでは enum 意味型 typedef（例: `reskia_alpha_type_t`, `reskia_color_type_t`, `reskia_blend_mode_t`）を使用。
     - 旧関数は新関数への thin wrapper 化し、`note` に旧名/新名/削除予定を記録。
     - 実装側では `static_cast<Sk...>` を一箇所に閉じ込め、呼び出し側の生 `int` 依存を段階的に解消。
-  - 方針: ABI 互換期間は旧シグネチャを残し、新typedef版APIを併設して段階移行する。
-  - 移行初期は ABI 互換を優先し、既存シグネチャは残したまま新typedef版を併設。
   - 対象マニフェスト:
     - `docs/plans/c-binding-remediation/manifests/phase2-step3-voidptr-headers.txt`（111件）
     - `docs/plans/c-binding-remediation/manifests/phase2-step3-suffix-headers.txt`（87件）
     - `docs/plans/c-binding-remediation/manifests/phase2-step3-priority-headers.txt`（66件）
     - `docs/plans/c-binding-remediation/manifests/phase2-step3-primitive-headers.txt`（75件）
 
-4. IN/OUT引数規約の統一
+1. IN/OUT引数規約の統一
 - `out*` は必ず `reskia_status_t` 戻り値へ段階移行。
 - NULL許容/非許容をコメントで統一記載。
 - `*_in` / `*_out` 変数名依存を廃止し、シグネチャで方向性を表現:
@@ -67,7 +64,7 @@
   - `SkFontMgr_matchFamily(int sk_font_style_set_out, void *font_mgr, const char familyName[])`
   - `SkExecutor_add(int function_void_void_key_in, void *executor)`
 
-5. フェーズ2検証
+1. フェーズ2検証
 
 ```bash
 rg -n "delete static_cast<Sk.*>" skia/binding/*.cpp
