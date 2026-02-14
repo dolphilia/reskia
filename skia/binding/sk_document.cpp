@@ -9,8 +9,7 @@
 extern "C" {
 
 void SkDocument_delete(void *document) {
-    const SkDocument* doc = static_cast<SkDocument*>(document);
-    delete &doc;
+    static_cast<SkDocument *>(document)->unref();
 }
 
 void * SkDocument_beginPage(void * document, float width, float height, const void *content) {

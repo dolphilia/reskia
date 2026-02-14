@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkColorTable_delete(void *color_table) {
-    delete static_cast<SkColorTable *>(color_table);
+    static_cast<SkColorTable *>(color_table)->unref();
 }
 
 const void * SkColorTable_alphaTable(void *color_table) {

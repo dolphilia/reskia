@@ -13,8 +13,7 @@
 extern "C" {
 
 void SkData_delete(void *sk_data) {
-    const SkData *data = static_cast<SkData *>(sk_data);
-    delete &data;
+    static_cast<SkData *>(sk_data)->unref();
 }
 
 size_t SkData_size(void *sk_data) {

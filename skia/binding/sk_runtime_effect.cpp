@@ -39,7 +39,7 @@
 extern "C" {
 
 void SkRuntimeEffect_delete(void *runtime_effect) {
-    delete static_cast<SkRuntimeEffect *>(runtime_effect);
+    static_cast<SkRuntimeEffect *>(runtime_effect)->unref();
 }
 
 sk_shader_t SkRuntimeEffect_makeShader(void *runtime_effect, sk_data_t data, void * children, size_t childCount, const void *localMatrix) {

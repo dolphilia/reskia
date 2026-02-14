@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkMaskFilter_delete(void *maskFilter); // (SkMaskFilter *maskFilter)
+void SkMaskFilter_delete(void *maskFilter); // owned: caller が保持する参照を release する (SkMaskFilter *maskFilter)
 int SkMaskFilter_approximateFilteredBounds(void *mask_filter, const void *src); // (SkMaskFilter *mask_filter, const SkRect *src) -> sk_rect_t
 int SkMaskFilter_getFactory(void *mask_filter); // (SkMaskFilter *mask_filter) -> sk_flattenable_factory_t
 const char *SkMaskFilter_getTypeName(void *mask_filter); // (SkMaskFilter *mask_filter) -> const char *
@@ -18,8 +18,8 @@ int SkMaskFilter_getFlattenableType(void *mask_filter); // (SkMaskFilter *mask_f
 int SkMaskFilter_serialize(void *mask_filter, const void *procs); // (SkMaskFilter *mask_filter, const SkSerialProcs *procs) -> sk_data_t
 unsigned long SkMaskFilter_serialize_2(void *mask_filter, void *memory, unsigned long memory_size, const void *procs); // (SkMaskFilter *mask_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
 bool SkMaskFilter_unique(void *mask_filter); // (SkMaskFilter *mask_filter) -> bool
-void SkMaskFilter_ref(void *mask_filter); // (SkMaskFilter *mask_filter)
-void SkMaskFilter_unref(void *mask_filter); // (SkMaskFilter *mask_filter)
+void SkMaskFilter_ref(void *mask_filter); // retained: 参照カウントを増やす (SkMaskFilter *mask_filter)
+void SkMaskFilter_unref(void *mask_filter); // owned: 参照カウントを減らす (SkMaskFilter *mask_filter)
 
 // static
 

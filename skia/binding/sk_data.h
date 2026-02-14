@@ -9,17 +9,17 @@
 extern "C" {
 #endif
 
-void SkData_delete(void *sk_data); // (SkData *sk_data)
+void SkData_delete(void *sk_data); // owned: caller が保持する参照を release する (SkData *sk_data)
 unsigned long SkData_size(void *sk_data); // (SkData *sk_data) -> size_t
 bool SkData_isEmpty(void *sk_data); // (SkData *sk_data) -> bool
-const void * SkData_data(void *sk_data); // (SkData *sk_data) -> const void *
-const unsigned char * SkData_bytes(void *sk_data); // (SkData *sk_data) -> const uint8_t *
-void * SkData_writable_data(void *sk_data); // (SkData *sk_data) -> void *
+const void * SkData_data(void *sk_data); // borrowed: 解放不要の借用ポインタ (SkData *sk_data) -> const void *
+const unsigned char * SkData_bytes(void *sk_data); // borrowed: 解放不要の借用ポインタ (SkData *sk_data) -> const uint8_t *
+void * SkData_writable_data(void *sk_data); // borrowed: 解放不要の借用ポインタ (SkData *sk_data) -> void *
 unsigned long SkData_copyRange(void *sk_data, unsigned long offset, unsigned long length, void *buffer); // (SkData *sk_data, size_t offset, size_t length, void *buffer) -> size_t
 bool SkData_equals(void *sk_data, const void *other); // (SkData *sk_data, const SkData *other) -> bool
 bool SkData_unique(void *sk_data); // (SkData *sk_data) -> bool
-void SkData_ref(void *sk_data); // (SkData *sk_data)
-void SkData_unref(void *sk_data); // (SkData *sk_data)
+void SkData_ref(void *sk_data); // retained: 参照カウントを増やす (SkData *sk_data)
+void SkData_unref(void *sk_data); // owned: 参照カウントを減らす (SkData *sk_data)
 void SkData_deref(void *sk_data); // (SkData *sk_data)
 bool SkData_refCntGreaterThan(void *sk_data, unsigned int threadIsolatedTestCnt); // (SkData *sk_data, int32_t threadIsolatedTestCnt) -> bool
 

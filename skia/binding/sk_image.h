@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkImage_delete(void *image); // (SkImage *image)
+void SkImage_delete(void *image); // owned: caller が保持する参照を release する (SkImage *image)
 
 // TODO
 // const void *SkImage_imageInfo(void *image); // (SkImage *image) -> const SkImageInfo *
@@ -20,7 +20,7 @@ int SkImage_bounds(void *image); // (SkImage *image) -> sk_i_rect_t
 unsigned int SkImage_uniqueID(void *image); // (SkImage *image) -> uint32_t
 int SkImage_alphaType(void *image); // (SkImage *image) -> SkAlphaType
 int SkImage_colorType(void *image); // (SkImage *image) -> SkColorType
-void *SkImage_colorSpace(void *image); // (SkImage *image) -> SkColorSpace *
+void *SkImage_colorSpace(void *image); // borrowed: 解放不要の借用ポインタ (SkImage *image) -> SkColorSpace *
 int SkImage_refColorSpace(void *image); // (SkImage *image) -> sk_color_space_t
 bool SkImage_isAlphaOnly(void *image); // (SkImage *image) -> bool
 bool SkImage_isOpaque(void *image); // (SkImage *image) -> bool
@@ -63,8 +63,8 @@ int SkImage_makeColorTypeAndColorSpace(void *image, void *direct, int targetColo
 int SkImage_makeColorTypeAndColorSpace_2(void *image, void *recorder, int targetColorType, int color_space, int properties); // (SkImage *image, skgpu::graphite::Recorder *recorder, SkColorType targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) -> sk_image_t
 int SkImage_reinterpretColorSpace(void *image, int color_space); // (SkImage *image, sk_color_space_t color_space) -> sk_image_t
 bool SkImage_unique(void *image); // (SkImage *image) -> bool
-void SkImage_ref(void *image); // (SkImage *image)
-void SkImage_unref(void *image); // (SkImage *image)
+void SkImage_ref(void *image); // retained: 参照カウントを増やす (SkImage *image)
+void SkImage_unref(void *image); // owned: 参照カウントを減らす (SkImage *image)
 
 #ifdef __cplusplus
 }

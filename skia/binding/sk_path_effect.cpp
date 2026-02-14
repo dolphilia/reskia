@@ -17,7 +17,7 @@
 extern "C" {
 
 void SkPathEffect_delete(void * pathEffect) {
-    delete static_cast<SkPathEffect *>(pathEffect);
+    static_cast<SkPathEffect *>(pathEffect)->unref();
 }
 
 int SkPathEffect_asADash(void *path_effect, void *info) {

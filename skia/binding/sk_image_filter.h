@@ -9,13 +9,13 @@
 extern "C" {
 #endif
 
-void SkImageFilter_delete(void *image_filter); // (SkImageFilter *image_filter)
+void SkImageFilter_delete(void *image_filter); // owned: caller が保持する参照を release する (SkImageFilter *image_filter)
 int SkImageFilter_filterBounds(void *image_filter, const void *src, const void *ctm, int direction, const void *inputRect); // (SkImageFilter *image_filter, const SkIRect *src, const SkMatrix *ctm, SkImageFilter::MapDirection direction, const SkIRect *inputRect) -> sk_i_rect_t
 bool SkImageFilter_isColorFilterNode(void *image_filter, void **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
 bool SkImageFilter_asColorFilter(void *image_filter, void **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
 bool SkImageFilter_asAColorFilter(void *image_filter, void **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
 int SkImageFilter_countInputs(void *image_filter); // (SkImageFilter *image_filter) -> int
-const void *SkImageFilter_getInput(void *image_filter, int i); // (SkImageFilter *image_filter, int i) -> const SkImageFilter *
+const void *SkImageFilter_getInput(void *image_filter, int i); // borrowed: 解放不要の借用ポインタ (SkImageFilter *image_filter, int i) -> const SkImageFilter *
 int SkImageFilter_computeFastBounds(void *image_filter, const void *bounds); // (SkImageFilter *image_filter, const SkRect *bounds) -> sk_rect_t
 bool SkImageFilter_canComputeFastBounds(void *image_filter); // (SkImageFilter *image_filter) -> bool
 int SkImageFilter_makeWithLocalMatrix(void *image_filter, const void *matrix); // (SkImageFilter *image_filter, const SkMatrix *matrix) -> sk_image_filter_t
@@ -26,8 +26,8 @@ int SkImageFilter_getFlattenableType(void *image_filter); // (SkImageFilter *ima
 int SkImageFilter_serialize(void *image_filter, const void *procs); // (SkImageFilter *image_filter, const SkSerialProcs *procs) -> sk_data_t
 unsigned long SkImageFilter_serialize_2(void *image_filter, void *memory, unsigned long memory_size, const void *procs); // (SkImageFilter *image_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
 bool SkImageFilter_unique(void *image_filter); // (SkImageFilter *image_filter) -> bool
-void SkImageFilter_ref(void *image_filter); // (SkImageFilter *image_filter)
-void SkImageFilter_unref(void *image_filter); // (SkImageFilter *image_filter)
+void SkImageFilter_ref(void *image_filter); // retained: 参照カウントを増やす (SkImageFilter *image_filter)
+void SkImageFilter_unref(void *image_filter); // owned: 参照カウントを減らす (SkImageFilter *image_filter)
 
 // static
 

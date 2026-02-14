@@ -21,7 +21,7 @@
 extern "C" {
 
 void SkColorFilter_delete(void *color_filter) {
-    delete static_cast<SkColorFilter *>(color_filter);
+    static_cast<SkColorFilter *>(color_filter)->unref();
 }
 
 bool SkColorFilter_asAColorMode(void *color_filter, void *color, void *mode) {

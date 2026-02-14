@@ -23,7 +23,7 @@
 extern "C" {
 
 void SkFontMgr_delete(void *font_mgr) {
-    delete static_cast<SkFontMgr *>(font_mgr);
+    static_cast<SkFontMgr *>(font_mgr)->unref();
 }
 
 int SkFontMgr_countFamilies(void *font_mgr) {

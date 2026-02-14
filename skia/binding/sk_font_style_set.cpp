@@ -15,7 +15,7 @@
 extern "C" {
 
 void SkFontStyleSet_delete(void *font_style_set) {
-    delete static_cast<SkFontStyleSet *>(font_style_set);
+    static_cast<SkFontStyleSet *>(font_style_set)->unref();
 }
 
 int SkFontStyleSet_count(void *font_style_set) {

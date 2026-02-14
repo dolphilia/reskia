@@ -9,15 +9,15 @@
 extern "C" {
 #endif
 
-void SkColorTable_delete(void *color_table); // (SkColorTable *color_table)
-const void * SkColorTable_alphaTable(void *color_table); // (SkColorTable *color_table) -> const uint8_t *
-const void * SkColorTable_redTable(void *color_table); // (SkColorTable *color_table) -> const uint8_t *
-const void * SkColorTable_greenTable(void *color_table); // (SkColorTable *color_table) -> const uint8_t *
-const void * SkColorTable_blueTable(void *color_table); // (SkColorTable *color_table) -> const uint8_t *
+void SkColorTable_delete(void *color_table); // owned: caller が保持する参照を release する (SkColorTable *color_table)
+const void * SkColorTable_alphaTable(void *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
+const void * SkColorTable_redTable(void *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
+const void * SkColorTable_greenTable(void *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
+const void * SkColorTable_blueTable(void *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
 void SkColorTable_flatten(void *color_table, void *buffer); // (SkColorTable *color_table, SkWriteBuffer *buffer)
 bool SkColorTable_unique(void *color_table); // (SkColorTable *color_table) -> bool
-void SkColorTable_ref(void *color_table); // (SkColorTable *color_table)
-void SkColorTable_unref(void *color_table); // (SkColorTable *color_table)
+void SkColorTable_ref(void *color_table); // retained: 参照カウントを増やす (SkColorTable *color_table)
+void SkColorTable_unref(void *color_table); // owned: 参照カウントを減らす (SkColorTable *color_table)
 
 // static
 

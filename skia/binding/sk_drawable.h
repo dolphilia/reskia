@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkDrawable_delete(void *drawable); // (SkDrawable *drawable)
+void SkDrawable_delete(void *drawable); // owned: caller が保持する参照を release する (SkDrawable *drawable)
 void SkDrawable_draw(void *drawable, void * canvas, const void * matrix); // (SkDrawable *drawable, SkCanvas *canvas, const SkMatrix *matrix)
 void SkDrawable_draw_2(void *drawable, void *canvas, float x, float y); // (SkDrawable *drawable, SkCanvas *canvas, SkScalar x, SkScalar y)
 int SkDrawable_snapGpuDrawHandler(void *drawable, int backendApi, const void *matrix, const void *clipBounds, const void *bufferInfo); // (SkDrawable *drawable, GrBackendApi backendApi, const SkMatrix *matrix, const SkIRect *clipBounds, const SkImageInfo *bufferInfo) -> sk_drawable_gpu_draw_handler_t
@@ -25,8 +25,8 @@ void SkDrawable_flatten(void *drawable, void *write_buffer); // (SkDrawable *dra
 int SkDrawable_serialize(void *drawable, const void *serial_procs); // (SkDrawable *drawable, const SkSerialProcs *serial_procs) -> sk_data_t
 unsigned long SkDrawable_serialize_2(void *drawable, void *memory, unsigned long memory_size, const void *serial_procs); // (SkDrawable *drawable, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkDrawable_unique(void *drawable); // (SkDrawable *drawable) -> bool
-void SkDrawable_ref(void *drawable); // (SkDrawable *drawable)
-void SkDrawable_unref(void *drawable); // (SkDrawable *drawable)
+void SkDrawable_ref(void *drawable); // retained: 参照カウントを増やす (SkDrawable *drawable)
+void SkDrawable_unref(void *drawable); // owned: 参照カウントを減らす (SkDrawable *drawable)
 
 // static
 

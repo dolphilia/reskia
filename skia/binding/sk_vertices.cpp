@@ -13,8 +13,7 @@
 extern "C" {
 
 void SkVertices_delete(void * vertices) {
-    const SkVertices * v = static_cast<SkVertices *>(vertices);
-    delete &v;
+    static_cast<SkVertices *>(vertices)->unref();
 }
 
 uint32_t SkVertices_uniqueID(void *vertices) {

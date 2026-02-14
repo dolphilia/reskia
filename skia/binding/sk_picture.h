@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkPicture_delete(void *picture); // (SkPicture *picture)
+void SkPicture_delete(void *picture); // owned: caller が保持する参照を release する (SkPicture *picture)
 void SkPicture_playback(void *picture, void *canvas, void *callback); // (SkPicture *picture, SkCanvas *canvas, SkPicture::AbortCallback *callback)
 int SkPicture_cullRect(void *picture); // (SkPicture *picture) -> sk_rect_t
 unsigned int SkPicture_uniqueID(void *picture); // (SkPicture *picture) -> uint32_t
@@ -20,8 +20,8 @@ unsigned long SkPicture_approximateBytesUsed(void *picture); // (SkPicture *pict
 int SkPicture_makeShader(void *picture, int tmx, int tmy, int mode, const void *localMatrix, const void *tileRect); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode, const SkMatrix *localMatrix, const SkRect *tileRect) -> sk_shader_t
 int SkPicture_makeShader_2(void *picture, int tmx, int tmy, int mode); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode) -> sk_shader_t
 bool SkPicture_unique(void *picture); // (SkPicture *picture) -> bool
-void SkPicture_ref(void *picture); // (SkPicture *picture)
-void SkPicture_unref(void *picture); // (SkPicture *picture)
+void SkPicture_ref(void *picture); // retained: 参照カウントを増やす (SkPicture *picture)
+void SkPicture_unref(void *picture); // owned: 参照カウントを減らす (SkPicture *picture)
 
 // static
 

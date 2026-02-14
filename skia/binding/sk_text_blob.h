@@ -9,15 +9,15 @@
 extern "C" {
 #endif
 
-void SkTextBlob_delete(void *text_blob); // (SkTextBlob *text_blob)
-const void * SkTextBlob_bounds(void *text_blob); // (SkTextBlob *text_blob) -> const SkRect *
+void SkTextBlob_delete(void *text_blob); // owned: caller が保持する参照を release する (SkTextBlob *text_blob)
+const void * SkTextBlob_bounds(void *text_blob); // borrowed: 解放不要の借用ポインタ (SkTextBlob *text_blob) -> const SkRect *
 unsigned int SkTextBlob_uniqueID(void *text_blob); // (SkTextBlob *text_blob) -> uint32_t
 int SkTextBlob_getIntercepts(void *text_blob, const void * bounds, void * intervals, const void *paint); // (SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) -> int
 unsigned long SkTextBlob_serialize(void *text_blob, const void *procs, void *memory, unsigned long memory_size); // (SkTextBlob *text_blob, const SkSerialProcs *procs, void *memory, size_t memory_size) -> size_t
 int SkTextBlob_serialize_2(void *text_blob, const void *procs); // (SkTextBlob *text_blob, const SkSerialProcs *procs) -> sk_data_t
 bool SkTextBlob_unique(void *text_blob); // (SkTextBlob *text_blob) -> bool
-void SkTextBlob_ref(void *text_blob); // (SkTextBlob *text_blob)
-void SkTextBlob_unref(void *text_blob); // (SkTextBlob *text_blob)
+void SkTextBlob_ref(void *text_blob); // retained: 参照カウントを増やす (SkTextBlob *text_blob)
+void SkTextBlob_unref(void *text_blob); // owned: 参照カウントを減らす (SkTextBlob *text_blob)
 void SkTextBlob_deref(void *text_blob); // (SkTextBlob *text_blob)
 bool SkTextBlob_refCntGreaterThan(void *text_blob, int threadIsolatedTestCnt); // (SkTextBlob *text_blob, int32_t threadIsolatedTestCnt) -> bool
 

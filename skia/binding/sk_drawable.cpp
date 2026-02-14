@@ -23,7 +23,7 @@
 extern "C" {
 
 void SkDrawable_delete(void *drawable) {
-    delete static_cast<SkDrawable *>(drawable);
+    static_cast<SkDrawable *>(drawable)->unref();
 }
 
 void SkDrawable_draw(void *drawable, void * canvas, const void * matrix) {

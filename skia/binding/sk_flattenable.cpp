@@ -17,7 +17,7 @@
 extern "C" {
 
 void SkFlattenable_delete(void *flattenable) {
-    delete static_cast<SkFlattenable *>(flattenable);
+    static_cast<SkFlattenable *>(flattenable)->unref();
 }
 
 sk_flattenable_factory_t SkFlattenable_getFactory(void *flattenable) {

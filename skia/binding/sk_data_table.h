@@ -9,15 +9,15 @@
 extern "C" {
 #endif
 
-void SkDataTable_delete(void *data_table); // (SkDataTable *data_table)
+void SkDataTable_delete(void *data_table); // owned: caller が保持する参照を release する (SkDataTable *data_table)
 bool SkDataTable_isEmpty(void *data_table); // (SkDataTable *data_table) -> bool
 int SkDataTable_count(void *data_table); // (SkDataTable *data_table) -> int
 unsigned long SkDataTable_atSize(void *data_table, int index); // (SkDataTable *data_table, int index) -> size_t
-const void * SkDataTable_at(void *data_table, int index, void *size); // (SkDataTable *data_table, int index, size_t *size) -> const void *
-const char * SkDataTable_atStr(void *data_table, int index); // (SkDataTable *data_table, int index) -> const char *
+const void * SkDataTable_at(void *data_table, int index, void *size); // borrowed: 解放不要の借用ポインタ (SkDataTable *data_table, int index, size_t *size) -> const void *
+const char * SkDataTable_atStr(void *data_table, int index); // borrowed: 解放不要の借用ポインタ (SkDataTable *data_table, int index) -> const char *
 bool SkDataTable_unique(void *data_table); // (SkDataTable *data_table) -> bool
-void SkDataTable_ref(void *data_table); // (SkDataTable *data_table)
-void SkDataTable_unref(void *data_table); // (SkDataTable *data_table)
+void SkDataTable_ref(void *data_table); // retained: 参照カウントを増やす (SkDataTable *data_table)
+void SkDataTable_unref(void *data_table); // owned: 参照カウントを減らす (SkDataTable *data_table)
 
 // static
 

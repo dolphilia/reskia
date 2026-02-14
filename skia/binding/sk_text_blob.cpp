@@ -15,8 +15,7 @@
 extern "C" {
 
 void SkTextBlob_delete(void *text_blob) {
-    const SkTextBlob *t = static_cast<SkTextBlob *>(text_blob);
-    delete &t;
+    static_cast<SkTextBlob *>(text_blob)->unref();
 }
 
 const void * SkTextBlob_bounds(void *text_blob) {

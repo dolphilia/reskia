@@ -22,7 +22,7 @@
 extern "C" {
 
 void SkImageFilter_delete(void *image_filter) {
-    delete static_cast<SkImageFilter *>(image_filter);
+    static_cast<SkImageFilter *>(image_filter)->unref();
 }
 
 sk_i_rect_t SkImageFilter_filterBounds(void *image_filter, const void *src, const void *ctm, int direction, const void *inputRect) {

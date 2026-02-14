@@ -9,14 +9,14 @@
 extern "C" {
 #endif
 
-void SkFontStyleSet_delete(void *font_style_set); // (SkFontStyleSet *font_style_set)
+void SkFontStyleSet_delete(void *font_style_set); // owned: caller が保持する参照を release する (SkFontStyleSet *font_style_set)
 int SkFontStyleSet_count(void *font_style_set); // (SkFontStyleSet *font_style_set) -> int
 void SkFontStyleSet_getStyle(void *font_style_set, int index, void *font_style, void *style); // (SkFontStyleSet *font_style_set, int index, SkFontStyle *font_style, SkString *style)
 int SkFontStyleSet_createTypeface(void *font_style_set, int index); // (SkFontStyleSet *font_style_set, int index) -> sk_typeface_t
 int SkFontStyleSet_matchStyle(void *font_style_set, const void *pattern); // (SkFontStyleSet *font_style_set, const SkFontStyle *pattern) -> sk_typeface_t
 bool SkFontStyleSet_unique(void *font_style_set); // (SkFontStyleSet *font_style_set) -> bool
-void SkFontStyleSet_ref(void *font_style_set); // (SkFontStyleSet *font_style_set)
-void SkFontStyleSet_unref(void *font_style_set); // (SkFontStyleSet *font_style_set)
+void SkFontStyleSet_ref(void *font_style_set); // retained: 参照カウントを増やす (SkFontStyleSet *font_style_set)
+void SkFontStyleSet_unref(void *font_style_set); // owned: 参照カウントを減らす (SkFontStyleSet *font_style_set)
 
 // static
 

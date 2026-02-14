@@ -25,7 +25,7 @@
 extern "C" {
 
 void SkShader_delete(void *shader) {
-    delete static_cast<SkShader *>(shader);
+    static_cast<SkShader *>(shader)->unref();
 }
 
 bool SkShader_isOpaque(void *shader) {

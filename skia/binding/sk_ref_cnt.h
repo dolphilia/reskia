@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-void SkRefCnt_delete(void * refCnt); // (SkRefCnt* refCnt)
+void SkRefCnt_delete(void * refCnt); // owned: caller が保持する参照を release する (SkRefCnt* refCnt)
 bool SkRefCnt_unique(void * ref_cnt); // (SkRefCnt* ref_cnt) -> bool
-void SkRefCnt_ref(void * ref_cnt); // (SkRefCnt* ref_cnt)
-void SkRefCnt_unref(void * ref_cnt); // (SkRefCnt* ref_cnt)
+void SkRefCnt_ref(void * ref_cnt); // retained: 参照カウントを増やす (SkRefCnt* ref_cnt)
+void SkRefCnt_unref(void * ref_cnt); // owned: 参照カウントを減らす (SkRefCnt* ref_cnt)
 
 #ifdef __cplusplus
 }

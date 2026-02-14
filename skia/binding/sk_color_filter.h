@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkColorFilter_delete(void *color_filter); // (SkColorFilter *color_filter)
+void SkColorFilter_delete(void *color_filter); // owned: caller が保持する参照を release する (SkColorFilter *color_filter)
 bool SkColorFilter_asAColorMode(void *color_filter, void *color, void *mode); // (SkColorFilter *color_filter, SkColor *color, SkBlendMode *mode) -> bool
 bool SkColorFilter_asAColorMatrix(void *color_filter, float matrix[20]); // (SkColorFilter *color_filter, float matrix[20]) -> bool
 bool SkColorFilter_isAlphaUnchanged(void *color_filter); // (SkColorFilter *color_filter) -> bool
@@ -24,8 +24,8 @@ int SkColorFilter_getFlattenableType(void *color_filter); // (SkColorFilter *col
 int SkColorFilter_serialize(void *color_filter, const void *serial_procs); // (SkColorFilter *color_filter, const SkSerialProcs *serial_procs) -> sk_data_t
 unsigned long SkColorFilter_serialize_2(void *color_filter, void *memory, unsigned long memory_size, const void *serial_procs); // (SkColorFilter *color_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkColorFilter_unique(void *color_filter); // (SkColorFilter *color_filter) -> bool
-void SkColorFilter_ref(void *color_filter); // (SkColorFilter *color_filter)
-void SkColorFilter_unref(void *color_filter); // (SkColorFilter *color_filter)
+void SkColorFilter_ref(void *color_filter); // retained: 参照カウントを増やす (SkColorFilter *color_filter)
+void SkColorFilter_unref(void *color_filter); // owned: 参照カウントを減らす (SkColorFilter *color_filter)
 
 // static
 

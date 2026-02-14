@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkPathEffect_delete(void * pathEffect);
+void SkPathEffect_delete(void * pathEffect); // owned: caller が保持する参照を release する
 int SkPathEffect_asADash(void *path_effect, void *info);
 bool SkPathEffect_filterPath(void *path_effect, void *dst, const void *src, void *rec, const void *cullR);
 bool SkPathEffect_filterPath_2(void *path_effect, void *dst, const void *src, void *rec, const void *cullR, const void *ctm);
@@ -21,8 +21,8 @@ int SkPathEffect_getFlattenableType(void *path_effect);
 int SkPathEffect_serialize(void *path_effect, const void *procs);
 unsigned long SkPathEffect_serialize_2(void *path_effect, void *memory, unsigned long memory_size, const void *procs);
 bool SkPathEffect_unique(void *path_effect);
-void SkPathEffect_ref(void *path_effect);
-void SkPathEffect_unref(void *path_effect);
+void SkPathEffect_ref(void *path_effect); // retained: 参照カウントを増やす
+void SkPathEffect_unref(void *path_effect); // owned: 参照カウントを減らす
 
 // static
 

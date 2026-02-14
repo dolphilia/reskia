@@ -13,7 +13,7 @@ void *SkRefCntBase_new() {
 }
 
 void SkRefCntBase_delete(void *ref_cnt_base) {
-    delete static_cast<SkRefCntBase *>(ref_cnt_base);
+    static_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 
 bool SkRefCntBase_unique(void *ref_cnt_base) {

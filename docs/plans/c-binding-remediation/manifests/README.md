@@ -4,6 +4,14 @@
 
 - `binding-files.txt`
 - `static-files.txt`
+- `phase2-step3-voidptr-headers.txt`
+- `phase2-step3-voidptr-cpp.txt`
+- `phase2-step3-suffix-headers.txt`
+- `phase2-step3-suffix-cpp.txt`
+- `phase2-step3-priority-headers.txt`
+- `phase2-step3-priority-cpp.txt`
+- `phase2-step3-primitive-headers.txt`
+- `phase2-step3-primitive-cpp.txt`
 
 更新タイミング:
 

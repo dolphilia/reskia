@@ -9,7 +9,7 @@
 extern "C" {
 
 void SkRefCnt_delete(void * refCnt) {
-    delete static_cast<SkRefCnt *>(refCnt);
+    static_cast<SkRefCnt *>(refCnt)->unref();
 }
 
 bool SkRefCnt_unique(void * ref_cnt) {

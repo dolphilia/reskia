@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkBBoxHierarchy_delete(void *b_box_hierarchy) {
-    delete static_cast<SkBBoxHierarchy *>(b_box_hierarchy);
+    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 
 void SkBBoxHierarchy_insert(void *b_box_hierarchy, const void *rect, int N) {

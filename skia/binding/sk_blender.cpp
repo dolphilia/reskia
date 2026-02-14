@@ -19,7 +19,7 @@
 extern "C" {
 
 void SkBlender_delete(void *blender) {
-    delete static_cast<SkBlender *>(blender);
+    static_cast<SkBlender *>(blender)->unref();
 }
 
 sk_flattenable_factory_t SkBlender_getFactory(void *blender) {

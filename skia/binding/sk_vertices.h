@@ -9,17 +9,17 @@
 extern "C" {
 #endif
 
-void SkVertices_delete(void *vertices); // (SkVertices *vertices)
+void SkVertices_delete(void *vertices); // owned: caller が保持する参照を release する (SkVertices *vertices)
 unsigned int SkVertices_uniqueID(void *vertices); // (SkVertices *vertices) -> uint32_t
-const void * SkVertices_bounds(void *vertices); // (SkVertices *vertices) -> const SkRect *
+const void * SkVertices_bounds(void *vertices); // borrowed: 解放不要の借用ポインタ (SkVertices *vertices) -> const SkRect *
 unsigned long SkVertices_approximateSize(void *vertices); // (SkVertices *vertices) -> size_t
 
 // SkVerticesPriv SkVertices_priv(SkVertices *vertices); // (SkVertices *vertices) -> SkVerticesPriv
 // const SkVerticesPriv SkVertices_priv_2(SkVertices *vertices); // (SkVertices *vertices) -> const SkVerticesPriv
 
 bool SkVertices_unique(void *vertices); // (SkVertices *vertices) -> bool
-void SkVertices_ref(void *vertices); // (SkVertices *vertices)
-void SkVertices_unref(void *vertices); // (SkVertices *vertices)
+void SkVertices_ref(void *vertices); // retained: 参照カウントを増やす (SkVertices *vertices)
+void SkVertices_unref(void *vertices); // owned: 参照カウントを減らす (SkVertices *vertices)
 void SkVertices_deref(void *vertices); // (SkVertices *vertices)
 bool SkVertices_refCntGreaterThan(void *vertices, int threadIsolatedTestCnt); // (SkVertices *vertices, int32_t threadIsolatedTestCnt) -> bool
 

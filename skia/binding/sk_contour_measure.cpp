@@ -9,8 +9,7 @@
 extern "C" {
 
 void SkContourMeasure_delete(void *contour_measure) {
-    const SkContourMeasure *p = static_cast<SkContourMeasure *>(contour_measure);
-    delete &p;
+    static_cast<SkContourMeasure *>(contour_measure)->unref();
 }
 
 float SkContourMeasure_length(void *contour_measure) {

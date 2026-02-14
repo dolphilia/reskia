@@ -13,8 +13,7 @@
 extern "C" {
 
 void SkDataTable_delete(void *data_table) {
-    const SkDataTable *table = static_cast<SkDataTable *>(data_table);
-    delete &table;
+    static_cast<SkDataTable *>(data_table)->unref();
 }
 
 bool SkDataTable_isEmpty(void *data_table) {

@@ -20,7 +20,7 @@ void *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes) {
 }
 
 void SkPixelRef_delete(void *pixel_ref) {
-    delete static_cast<SkPixelRef *>(pixel_ref);
+    static_cast<SkPixelRef *>(pixel_ref)->unref();
 }
 
 sk_i_size_t SkPixelRef_dimensions(void *pixel_ref) {

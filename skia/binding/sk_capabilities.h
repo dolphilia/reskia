@@ -9,11 +9,11 @@
 extern "C" {
 #endif
 
-void SkCapabilities_delete(void * capabilities); // (SkCapabilities *capabilities)
-void SkCapabilities_ref(void * capabilities); // (SkCapabilities *capabilities)
+void SkCapabilities_delete(void * capabilities); // owned: caller が保持する参照を release する (SkCapabilities *capabilities)
+void SkCapabilities_ref(void * capabilities); // retained: 参照カウントを増やす (SkCapabilities *capabilities)
 int SkCapabilities_skslVersion(void * capabilities); // (SkCapabilities *capabilities) -> SkSL::Version
 bool SkCapabilities_unique(void * capabilities); // (SkCapabilities *capabilities) -> bool
-void SkCapabilities_unref(void * capabilities); // (SkCapabilities *capabilities)
+void SkCapabilities_unref(void * capabilities); // owned: 参照カウントを減らす (SkCapabilities *capabilities)
 
 // static
 

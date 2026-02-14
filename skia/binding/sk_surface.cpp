@@ -23,7 +23,7 @@
 extern "C" {
 
 void SkSurface_delete(void *surface) {
-    delete static_cast<SkSurface *>(surface);
+    static_cast<SkSurface *>(surface)->unref();
 }
 
 bool SkSurface_isCompatible(void *surface, const void *characterization) {

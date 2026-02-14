@@ -25,7 +25,7 @@
 extern "C" {
 
 void SkImage_delete(void *image) {
-    delete static_cast<SkImage *>(image);
+    static_cast<SkImage *>(image)->unref();
 }
 
 // TODO

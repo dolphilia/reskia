@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkColorSpace_delete(void *color_space); // (SkColorSpace *color_space)
+void SkColorSpace_delete(void *color_space); // owned: caller が保持する参照を release する (SkColorSpace *color_space)
 void SkColorSpace_toProfile(void *color_space, void *profile); // (SkColorSpace *color_space, skcms_ICCProfile *profile)
 bool SkColorSpace_gammaCloseToSRGB(void *color_space); // (SkColorSpace *color_space) -> bool
 bool SkColorSpace_gammaIsLinear(void *color_space); // (SkColorSpace *color_space) -> bool
@@ -29,8 +29,8 @@ void SkColorSpace_gamutTransformTo(void *color_space, const void *dst, void *src
 unsigned int SkColorSpace_transferFnHash(void *color_space); // (SkColorSpace *color_space) -> uint32_t
 unsigned long long SkColorSpace_hash(void *color_space); // (SkColorSpace *color_space) -> uint64_t
 bool SkColorSpace_unique(void *color_space); // (SkColorSpace *color_space) -> bool
-void SkColorSpace_ref(void *color_space); // (SkColorSpace *color_space)
-void SkColorSpace_unref(void *color_space); // (SkColorSpace *color_space)
+void SkColorSpace_ref(void *color_space); // retained: 参照カウントを増やす (SkColorSpace *color_space)
+void SkColorSpace_unref(void *color_space); // owned: 参照カウントを減らす (SkColorSpace *color_space)
 void SkColorSpace_deref(void *color_space); // (SkColorSpace *color_space)
 bool SkColorSpace_refCntGreaterThan(void *color_space, int threadIsolatedTestCnt); // (SkColorSpace *color_space, int32_t threadIsolatedTestCnt) -> bool
 

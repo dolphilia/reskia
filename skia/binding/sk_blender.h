@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkBlender_delete(void *blender); // (SkBlender *blender)
+void SkBlender_delete(void *blender); // owned: caller が保持する参照を release する (SkBlender *blender)
 int SkBlender_getFactory(void *blender); // (SkBlender *blender) -> sk_flattenable_factory_t
 const char *SkBlender_getTypeName(void *blender); // (SkBlender *blender) -> const char *
 void SkBlender_flatten(void *blender, void *write_buffer); // (SkBlender *blender, SkWriteBuffer *write_buffer)
@@ -17,8 +17,8 @@ int SkBlender_getFlattenableType(void *blender); // (SkBlender *blender) -> SkBl
 int SkBlender_serialize(void *blender, const void *serial_procs); // (SkBlender *blender, const SkSerialProcs *serial_procs) -> sk_data_t
 unsigned long SkBlender_serialize_2(void *blender, void *memory, unsigned long memory_size, const void *serial_procs); // (SkBlender *blender, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkBlender_unique(void *blender); // (SkBlender *blender) -> bool
-void SkBlender_ref(void *blender); // (SkBlender *blender)
-void SkBlender_unref(void *blender); // (SkBlender *blender)
+void SkBlender_ref(void *blender); // retained: 参照カウントを増やす (SkBlender *blender)
+void SkBlender_unref(void *blender); // owned: 参照カウントを減らす (SkBlender *blender)
 
 // static
 

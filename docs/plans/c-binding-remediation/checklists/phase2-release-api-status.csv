@@ -1,29 +1,29 @@
 type,header,implementation,status,owner,note
-SkBBoxHierarchy,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,todo,,delete を release/unref へ統一
-SkBlender,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,todo,,delete を release/unref へ統一
-SkCapabilities,skia/binding/sk_capabilities.h,skia/binding/sk_capabilities.cpp,todo,,delete を release/unref へ統一
-SkColorFilter,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,todo,,delete を release/unref へ統一
-SkColorMatrixFilter,skia/binding/sk_color_matrix_filter.h,skia/binding/sk_color_matrix_filter.cpp,todo,,delete を release/unref へ統一
-SkColorSpace,skia/binding/sk_color_space.h,skia/binding/sk_color_space.cpp,todo,,delete を release/unref へ統一
-SkColorTable,skia/binding/sk_color_table.h,skia/binding/sk_color_table.cpp,todo,,delete を release/unref へ統一
-SkContourMeasure,skia/binding/sk_contour_measure.h,skia/binding/sk_contour_measure.cpp,todo,,delete を release/unref へ統一
-SkData,skia/binding/sk_data.h,skia/binding/sk_data.cpp,todo,,delete を release/unref へ統一
-SkDataTable,skia/binding/sk_data_table.h,skia/binding/sk_data_table.cpp,todo,,delete を release/unref へ統一
-SkDocument,skia/binding/sk_document.h,skia/binding/sk_document.cpp,todo,,delete を release/unref へ統一
-SkDrawable,skia/binding/sk_drawable.h,skia/binding/sk_drawable.cpp,todo,,delete を release/unref へ統一
-SkFlattenable,skia/binding/sk_flattenable.h,skia/binding/sk_flattenable.cpp,todo,,delete を release/unref へ統一
-SkFontMgr,skia/binding/sk_font_mgr.h,skia/binding/sk_font_mgr.cpp,todo,,delete を release/unref へ統一
-SkFontStyleSet,skia/binding/sk_font_style_set.h,skia/binding/sk_font_style_set.cpp,todo,,delete を release/unref へ統一
-SkImage,skia/binding/sk_image.h,skia/binding/sk_image.cpp,todo,,delete を release/unref へ統一
-SkImageFilter,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,todo,,delete を release/unref へ統一
-SkMaskFilter,skia/binding/sk_mask_filter.h,skia/binding/sk_mask_filter.cpp,todo,,delete を release/unref へ統一
-SkPathEffect,skia/binding/sk_path_effect.h,skia/binding/sk_path_effect.cpp,todo,,delete を release/unref へ統一
-SkPicture,skia/binding/sk_picture.h,skia/binding/sk_picture.cpp,todo,,delete を release/unref へ統一
-SkPixelRef,skia/binding/sk_pixel_ref.h,skia/binding/sk_pixel_ref.cpp,todo,,delete を release/unref へ統一
-SkRefCnt,skia/binding/sk_ref_cnt.h,skia/binding/sk_ref_cnt.cpp,todo,,delete を release/unref へ統一
-SkRefCntBase,skia/binding/sk_ref_cnt_base.h,skia/binding/sk_ref_cnt_base.cpp,todo,,delete を release/unref へ統一
-SkRuntimeEffect,skia/binding/sk_runtime_effect.h,skia/binding/sk_runtime_effect.cpp,todo,,delete を release/unref へ統一
-SkShader,skia/binding/sk_shader.h,skia/binding/sk_shader.cpp,todo,,delete を release/unref へ統一
-SkSurface,skia/binding/sk_surface.h,skia/binding/sk_surface.cpp,todo,,delete を release/unref へ統一
-SkTextBlob,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,todo,,delete を release/unref へ統一
-SkVertices,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,todo,,delete を release/unref へ統一
+SkBBoxHierarchy,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkBlender,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkCapabilities,skia/binding/sk_capabilities.h,skia/binding/sk_capabilities.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkColorFilter,skia/binding/sk_color_filter.h,skia/binding/sk_color_filter.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkColorMatrixFilter,skia/binding/sk_color_matrix_filter.h,skia/binding/sk_color_matrix_filter.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkColorSpace,skia/binding/sk_color_space.h,skia/binding/sk_color_space.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkColorTable,skia/binding/sk_color_table.h,skia/binding/sk_color_table.cpp,done,codex,step2 batch1: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkContourMeasure,skia/binding/sk_contour_measure.h,skia/binding/sk_contour_measure.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkData,skia/binding/sk_data.h,skia/binding/sk_data.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkDataTable,skia/binding/sk_data_table.h,skia/binding/sk_data_table.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkDocument,skia/binding/sk_document.h,skia/binding/sk_document.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkDrawable,skia/binding/sk_drawable.h,skia/binding/sk_drawable.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkFlattenable,skia/binding/sk_flattenable.h,skia/binding/sk_flattenable.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkFontMgr,skia/binding/sk_font_mgr.h,skia/binding/sk_font_mgr.cpp,done,codex,step2 batch2: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkFontStyleSet,skia/binding/sk_font_style_set.h,skia/binding/sk_font_style_set.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkImage,skia/binding/sk_image.h,skia/binding/sk_image.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkImageFilter,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkMaskFilter,skia/binding/sk_mask_filter.h,skia/binding/sk_mask_filter.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkPathEffect,skia/binding/sk_path_effect.h,skia/binding/sk_path_effect.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkPicture,skia/binding/sk_picture.h,skia/binding/sk_picture.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkPixelRef,skia/binding/sk_pixel_ref.h,skia/binding/sk_pixel_ref.cpp,done,codex,step2 batch3: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkRefCnt,skia/binding/sk_ref_cnt.h,skia/binding/sk_ref_cnt.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkRefCntBase,skia/binding/sk_ref_cnt_base.h,skia/binding/sk_ref_cnt_base.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkRuntimeEffect,skia/binding/sk_runtime_effect.h,skia/binding/sk_runtime_effect.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkShader,skia/binding/sk_shader.h,skia/binding/sk_shader.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkSurface,skia/binding/sk_surface.h,skia/binding/sk_surface.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkTextBlob,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)
+SkVertices,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,done,codex,step2 batch4: delete 実装を unref へ置換; ヘッダ ownership コメント追加(owned/retained/borrowed)

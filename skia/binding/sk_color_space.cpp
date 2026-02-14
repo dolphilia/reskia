@@ -15,7 +15,7 @@
 extern "C" {
 
 void SkColorSpace_delete(void *color_space) {
-    delete static_cast<SkColorSpace *>(color_space);
+    static_cast<SkColorSpace *>(color_space)->unref();
 }
 
 void SkColorSpace_toProfile(void *color_space, void *profile) {

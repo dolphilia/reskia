@@ -19,7 +19,7 @@
 extern "C" {
 
 void SkPicture_delete(void *picture) {
-    delete static_cast<SkPicture *>(picture);
+    static_cast<SkPicture *>(picture)->unref();
 }
 
 void SkPicture_playback(void *picture, void *canvas, void *callback) {

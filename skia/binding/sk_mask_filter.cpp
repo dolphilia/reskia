@@ -21,7 +21,7 @@
 extern "C" {
 
 void SkMaskFilter_delete(void *maskFilter) {
-    delete static_cast<SkMaskFilter *>(maskFilter);
+    static_cast<SkMaskFilter *>(maskFilter)->unref();
 }
 
 sk_rect_t SkMaskFilter_approximateFilteredBounds(void *mask_filter, const void *src) {

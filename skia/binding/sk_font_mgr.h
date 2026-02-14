@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkFontMgr_delete(void *font_mgr); // (SkFontMgr *font_mgr)
+void SkFontMgr_delete(void *font_mgr); // owned: caller が保持する参照を release する (SkFontMgr *font_mgr)
 int SkFontMgr_countFamilies(void *font_mgr); // (SkFontMgr *font_mgr) -> int
 void SkFontMgr_getFamilyName(void *font_mgr, int index, void *familyName); // (SkFontMgr *font_mgr, int index, SkString *familyName)
 void SkFontMgr_createStyleSet(int sk_font_style_set_out, void *font_mgr, int index); // (int sk_font_style_set_out, SkFontMgr *font_mgr, int index)
@@ -22,8 +22,8 @@ int SkFontMgr_makeFromStream_2(void *font_mgr, int stream_asset, const void *fon
 int SkFontMgr_makeFromFile(void *font_mgr, const char path[], int ttcIndex); // (SkFontMgr *font_mgr, const char path[], int ttcIndex) -> sk_typeface_t
 int SkFontMgr_legacyMakeTypeface(void *font_mgr, const char familyName[], int style); // (SkFontMgr *font_mgr, const char familyName[], sk_font_style_t style) -> sk_typeface_t
 bool SkFontMgr_unique(void *font_mgr); // (SkFontMgr *font_mgr) -> bool
-void SkFontMgr_ref(void *font_mgr); // (SkFontMgr *font_mgr)
-void SkFontMgr_unref(void *font_mgr); // (SkFontMgr *font_mgr)
+void SkFontMgr_ref(void *font_mgr); // retained: 参照カウントを増やす (SkFontMgr *font_mgr)
+void SkFontMgr_unref(void *font_mgr); // owned: 参照カウントを減らす (SkFontMgr *font_mgr)
 // static
 int SkFontMgr_RefEmpty(); // () -> sk_font_mgr_t
 #if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)

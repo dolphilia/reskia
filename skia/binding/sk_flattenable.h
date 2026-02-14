@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void SkFlattenable_delete(void *flattenable); // (SkFlattenable *flattenable)
+void SkFlattenable_delete(void *flattenable); // owned: caller が保持する参照を release する (SkFlattenable *flattenable)
 int SkFlattenable_getFactory(void *flattenable); // (SkFlattenable *flattenable) -> sk_flattenable_factory_t
 const char * SkFlattenable_getTypeName(void *flattenable); // (SkFlattenable *flattenable) -> const char *
 void SkFlattenable_flatten(void *flattenable, void *write_buffer); // (SkFlattenable *flattenable, SkWriteBuffer *write_buffer)
@@ -17,8 +17,8 @@ int SkFlattenable_getFlattenableType(void *flattenable); // (SkFlattenable *flat
 int SkFlattenable_serialize(void *flattenable, const void * serial_procs); // (SkFlattenable *flattenable, const SkSerialProcs *serial_procs) -> sk_data_t
 unsigned long SkFlattenable_serialize_2(void *flattenable, void *memory, unsigned long memory_size, const void * serial_procs); // (SkFlattenable *flattenable, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkFlattenable_unique(void *flattenable); // (SkFlattenable *flattenable) -> bool
-void SkFlattenable_ref(void *flattenable); // (SkFlattenable *flattenable)
-void SkFlattenable_unref(void *flattenable); // (SkFlattenable *flattenable)
+void SkFlattenable_ref(void *flattenable); // retained: 参照カウントを増やす (SkFlattenable *flattenable)
+void SkFlattenable_unref(void *flattenable); // owned: 参照カウントを減らす (SkFlattenable *flattenable)
 
 // static
 
