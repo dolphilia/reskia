@@ -89,9 +89,26 @@ cmake --build skia/cmake-build-local -j 8
 - [ ] 3. `void*` APIの型情報補強
   - 追加: `docs/plans/c-binding-remediation/checklists/phase2-type-hardening-status.csv`（Step3 専用）
   - 追加: `docs/plans/c-binding-remediation/checklists/phase2-enum-int-status.csv`（enum/int 露出改善専用）
+  - 実施済みセット:
+    - `skia/binding/sk_annotation.h` + `skia/binding/sk_annotation.cpp`（3/3 関数 `done`）
+    - 変更内容: `void*` 引数を `reskia_canvas_t` / `reskia_rect_t` / `reskia_point_t` / `reskia_data_t` の不透明型ポインタへ置換
+    - `skia/binding/sk_android_codec.h` + `skia/binding/sk_android_codec.cpp`（18/18 関数 `done`）
+    - 変更内容: `SkAndroidCodec` 系シグネチャの `void*` を不透明型ポインタへ置換し、`rowBytes` を `size_t` へ正規化
+    - `skia/binding/sk_b_box_hierarchy.h` + `skia/binding/sk_b_box_hierarchy.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkBBoxHierarchy` 系シグネチャの `void*` を不透明型ポインタへ置換し、`bytesUsed` 戻り値を `size_t` へ正規化
+    - `skia/binding/sk_bitmap.h` + `skia/binding/sk_bitmap.cpp`（84/84 関数 `done`）
+    - 変更内容: `SkBitmap` 系シグネチャの `void*` を不透明型ポインタへ置換し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
+    - `skia/binding/sk_blender.h` + `skia/binding/sk_blender.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkBlender` 系シグネチャの `void*` を不透明型ポインタへ置換し、`serialize/deserialize` で `size_t` 正規化を実施
+    - `skia/binding/sk_bmp_decoder.h` + `skia/binding/sk_bmp_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkBmpDecoder` 系シグネチャで入力バッファを `const uint8_t* + size_t` に正規化し、`result/decodeContext` を不透明型ポインタ化
+    - `skia/binding/sk_canvas.h` + `skia/binding/sk_canvas.cpp`（126/126 関数 `done`）
+    - 変更内容: 全APIで `canvas` 受け口を `reskia_canvas_t*` に型強化し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
+  - 進捗:
+    - `phase2-type-hardening-status.csv`: 253 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

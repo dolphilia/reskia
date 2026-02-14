@@ -11,16 +11,16 @@
 extern "C" {
 #endif
 
-void SkAnnotation_SkAnnotateLinkToDestination(void * canvas, const void * rect, void * data) {
-    SkAnnotateLinkToDestination(static_cast<SkCanvas *>(canvas), * static_cast<const SkRect *>(rect), static_cast<SkData *>(data));
+void SkAnnotation_SkAnnotateLinkToDestination(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data) {
+    SkAnnotateLinkToDestination(reinterpret_cast<SkCanvas *>(canvas), *reinterpret_cast<const SkRect *>(rect), reinterpret_cast<SkData *>(data));
 }
 
-void SkAnnotation_SkAnnotateNamedDestination(void * canvas, const void * point, void * data) {
-    SkAnnotateNamedDestination(static_cast<SkCanvas *>(canvas), * static_cast<const SkPoint *>(point), static_cast<SkData *>(data));
+void SkAnnotation_SkAnnotateNamedDestination(reskia_canvas_t *canvas, const reskia_point_t *point, reskia_data_t *data) {
+    SkAnnotateNamedDestination(reinterpret_cast<SkCanvas *>(canvas), *reinterpret_cast<const SkPoint *>(point), reinterpret_cast<SkData *>(data));
 }
 
-void SkAnnotation_SkAnnotateRectWithURL(void * canvas, const void * rect, void * data) {
-    SkAnnotateRectWithURL(static_cast<SkCanvas *>(canvas), * static_cast<const SkRect *>(rect), static_cast<SkData *>(data));
+void SkAnnotation_SkAnnotateRectWithURL(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data) {
+    SkAnnotateRectWithURL(reinterpret_cast<SkCanvas *>(canvas), *reinterpret_cast<const SkRect *>(rect), reinterpret_cast<SkData *>(data));
 }
 
 #ifdef __cplusplus

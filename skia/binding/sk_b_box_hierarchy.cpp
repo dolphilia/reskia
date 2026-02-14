@@ -12,36 +12,36 @@
 
 extern "C" {
 
-void SkBBoxHierarchy_delete(void *b_box_hierarchy) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
+void SkBBoxHierarchy_delete(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 
-void SkBBoxHierarchy_insert(void *b_box_hierarchy, const void *rect, int N) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(static_cast<const SkRect *>(rect), N);
+void SkBBoxHierarchy_insert(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, int N) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(reinterpret_cast<const SkRect *>(rect), N);
 }
 
-void SkBBoxHierarchy_insert_2(void *b_box_hierarchy, const void *rect, const void * metadata, int N) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(static_cast<const SkRect *>(rect), static_cast<const SkBBoxHierarchy::Metadata *>(metadata), N);
+void SkBBoxHierarchy_insert_2(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, const reskia_b_box_hierarchy_metadata_t *metadata, int N) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkBBoxHierarchy::Metadata *>(metadata), N);
 }
 
-void SkBBoxHierarchy_search(void *b_box_hierarchy, const void *query, vector_int_ptr_t results) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->search(* static_cast<const SkRect *>(query), static_int_vector_ptr_get_entity(results));
+void SkBBoxHierarchy_search(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *query, int results) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->search(*reinterpret_cast<const SkRect *>(query), static_int_vector_ptr_get_entity(results));
 }
 
-size_t SkBBoxHierarchy_bytesUsed(void *b_box_hierarchy) {
-    return static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->bytesUsed();
+size_t SkBBoxHierarchy_bytesUsed(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+    return reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->bytesUsed();
 }
 
-bool SkBBoxHierarchy_unique(void *b_box_hierarchy) {
-    return static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unique();
+bool SkBBoxHierarchy_unique(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+    return reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unique();
 }
 
-void SkBBoxHierarchy_ref(void *b_box_hierarchy) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->ref();
+void SkBBoxHierarchy_ref(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->ref();
 }
 
-void SkBBoxHierarchy_unref(void *b_box_hierarchy) {
-    static_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
+void SkBBoxHierarchy_unref(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+    reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 
 }

@@ -24,68 +24,68 @@
 extern "C" {
 #endif
 
-void SkAndroidCodec_delete(void * androidCodec) {
-    delete static_cast<SkAndroidCodec *>(androidCodec);
+void SkAndroidCodec_delete(reskia_android_codec_t *androidCodec) {
+    delete reinterpret_cast<SkAndroidCodec *>(androidCodec);
 }
 
-const void * SkAndroidCodec_getInfo(void * androidCodec) {
-    return const_cast<SkImageInfo *>(&static_cast<SkAndroidCodec *>(androidCodec)->getInfo());
+const reskia_image_info_t *SkAndroidCodec_getInfo(reskia_android_codec_t *androidCodec) {
+    return reinterpret_cast<const reskia_image_info_t *>(&reinterpret_cast<SkAndroidCodec *>(androidCodec)->getInfo());
 }
 
-const void * SkAndroidCodec_getICCProfile(void * androidCodec) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getICCProfile();
+const void *SkAndroidCodec_getICCProfile(reskia_android_codec_t *androidCodec) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getICCProfile();
 }
 
-int SkAndroidCodec_getEncodedFormat(void * androidCodec) {
-    return static_cast<int>(static_cast<SkAndroidCodec *>(androidCodec)->getEncodedFormat());
+int SkAndroidCodec_getEncodedFormat(reskia_android_codec_t *androidCodec) {
+    return static_cast<int>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getEncodedFormat());
 }
 
-int SkAndroidCodec_computeOutputColorType(void * androidCodec, int requestedColorType) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorType(static_cast<SkColorType>(requestedColorType));
+int SkAndroidCodec_computeOutputColorType(reskia_android_codec_t *androidCodec, int requestedColorType) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorType(static_cast<SkColorType>(requestedColorType));
 }
 
-int SkAndroidCodec_computeOutputAlphaType(void * androidCodec, bool requestedUnpremul) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->computeOutputAlphaType(requestedUnpremul);
+int SkAndroidCodec_computeOutputAlphaType(reskia_android_codec_t *androidCodec, bool requestedUnpremul) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputAlphaType(requestedUnpremul);
 }
 
-sk_color_space_t SkAndroidCodec_computeOutputColorSpace(void * androidCodec, int outputColorType, sk_color_space_t prefColorSpace) {
-    return static_sk_color_space_make(static_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorSpace(static_cast<SkColorType>(outputColorType), static_sk_color_space_get_entity(prefColorSpace)));
+sk_color_space_t SkAndroidCodec_computeOutputColorSpace(reskia_android_codec_t *androidCodec, int outputColorType, sk_color_space_t prefColorSpace) {
+    return static_sk_color_space_make(reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorSpace(static_cast<SkColorType>(outputColorType), static_sk_color_space_get_entity(prefColorSpace)));
 }
 
-int SkAndroidCodec_computeSampleSize(void * androidCodec, void * size) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->computeSampleSize(static_cast<SkISize *>(size));
+int SkAndroidCodec_computeSampleSize(reskia_android_codec_t *androidCodec, reskia_i_size_t *size) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeSampleSize(reinterpret_cast<SkISize *>(size));
 }
 
-sk_i_size_t SkAndroidCodec_getSampledDimensions(void * androidCodec, int sampleSize) {
-    return static_sk_i_size_make(static_cast<SkAndroidCodec *>(androidCodec)->getSampledDimensions(sampleSize));
+sk_i_size_t SkAndroidCodec_getSampledDimensions(reskia_android_codec_t *androidCodec, int sampleSize) {
+    return static_sk_i_size_make(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getSampledDimensions(sampleSize));
 }
 
-bool SkAndroidCodec_getSupportedSubset(void * androidCodec, void * desiredSubset) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getSupportedSubset(static_cast<SkIRect *>(desiredSubset));
+bool SkAndroidCodec_getSupportedSubset(reskia_android_codec_t *androidCodec, reskia_i_rect_t *desiredSubset) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getSupportedSubset(reinterpret_cast<SkIRect *>(desiredSubset));
 }
 
-sk_i_size_t SkAndroidCodec_getSampledSubsetDimensions(void * androidCodec, int sampleSize, const void * subset) {
-    return static_sk_i_size_make(static_cast<SkAndroidCodec *>(androidCodec)->getSampledSubsetDimensions(sampleSize, * static_cast<const SkIRect *>(subset)));
+sk_i_size_t SkAndroidCodec_getSampledSubsetDimensions(reskia_android_codec_t *androidCodec, int sampleSize, const reskia_i_rect_t *subset) {
+    return static_sk_i_size_make(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getSampledSubsetDimensions(sampleSize, *reinterpret_cast<const SkIRect *>(subset)));
 }
 
-int SkAndroidCodec_getAndroidPixels(void * androidCodec, const void * info, void* pixels, size_t rowBytes, const void * options) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes, static_cast<const SkAndroidCodec::AndroidOptions *>(options));
+int SkAndroidCodec_getAndroidPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_android_options_t *options) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkAndroidCodec::AndroidOptions *>(options));
 }
 
-int SkAndroidCodec_getAndroidPixels_2(void * androidCodec, const void * info, void* pixels, size_t rowBytes) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes);
+int SkAndroidCodec_getAndroidPixels_2(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-int SkAndroidCodec_getPixels(void * androidCodec, const void * info, void* pixels, size_t rowBytes) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes);
+int SkAndroidCodec_getPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-void * SkAndroidCodec_codec(void * androidCodec) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->codec();
+reskia_codec_t *SkAndroidCodec_codec(reskia_android_codec_t *androidCodec) {
+    return reinterpret_cast<reskia_codec_t *>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->codec());
 }
 
-bool SkAndroidCodec_getAndroidGainmap(void *androidCodec, void *outInfo, sk_stream_ptr_t outGainmapImageStream) {
-    return static_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(static_cast<SkGainmapInfo *>(outInfo), static_sk_stream_ptr_get_entity(outGainmapImageStream));
+bool SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *outInfo, sk_stream_ptr_t outGainmapImageStream) {
+    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(reinterpret_cast<SkGainmapInfo *>(outInfo), static_sk_stream_ptr_get_entity(outGainmapImageStream));
 }
 
 // static
@@ -94,12 +94,12 @@ sk_android_codec_t SkAndroidCodec_MakeFromCodec(sk_codec_t codec) {
     return static_sk_android_codec_make(SkAndroidCodec::MakeFromCodec(static_sk_codec_take_entity(codec)));
 }
 
-sk_android_codec_t SkAndroidCodec_MakeFromStream(sk_codec_t codec, void * pngChunkReader) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_take_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
+sk_android_codec_t SkAndroidCodec_MakeFromStream(sk_codec_t codec, reskia_png_chunk_reader_t *pngChunkReader) {
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromStream(static_sk_stream_take_entity(codec), reinterpret_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
-sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, void * pngChunkReader) {
-    return static_sk_android_codec_make(SkAndroidCodec::MakeFromData(static_sk_data_get_entity(codec), static_cast<SkPngChunkReader *>(pngChunkReader)));
+sk_android_codec_t SkAndroidCodec_MakeFromData(sk_codec_t codec, reskia_png_chunk_reader_t *pngChunkReader) {
+    return static_sk_android_codec_make(SkAndroidCodec::MakeFromData(static_sk_data_get_entity(codec), reinterpret_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
 #ifdef __cplusplus

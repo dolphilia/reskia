@@ -18,44 +18,44 @@
 
 extern "C" {
 
-void SkBlender_delete(void *blender) {
-    static_cast<SkBlender *>(blender)->unref();
+void SkBlender_delete(reskia_blender_t *blender) {
+    reinterpret_cast<SkBlender *>(blender)->unref();
 }
 
-sk_flattenable_factory_t SkBlender_getFactory(void *blender) {
-    return static_sk_flattenable_factory_make(static_cast<SkBlender *>(blender)->getFactory());
+sk_flattenable_factory_t SkBlender_getFactory(reskia_blender_t *blender) {
+    return static_sk_flattenable_factory_make(reinterpret_cast<SkBlender *>(blender)->getFactory());
 }
 
-const char *SkBlender_getTypeName(void *blender) {
-    return static_cast<SkBlender *>(blender)->getTypeName();
+const char *SkBlender_getTypeName(reskia_blender_t *blender) {
+    return reinterpret_cast<SkBlender *>(blender)->getTypeName();
 }
 
-void SkBlender_flatten(void *blender, void *write_buffer) {
-    static_cast<SkBlender *>(blender)->flatten(* static_cast<SkWriteBuffer *>(write_buffer));
+void SkBlender_flatten(reskia_blender_t *blender, reskia_write_buffer_t *write_buffer) {
+    reinterpret_cast<SkBlender *>(blender)->flatten(*reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-int SkBlender_getFlattenableType(void *blender) {
-    return static_cast<SkBlender *>(blender)->getFlattenableType();
+int SkBlender_getFlattenableType(reskia_blender_t *blender) {
+    return reinterpret_cast<SkBlender *>(blender)->getFlattenableType();
 }
 
-sk_data_t SkBlender_serialize(void *blender, const void *serial_procs) {
-    return static_sk_data_make(static_cast<SkBlender *>(blender)->serialize(static_cast<const SkSerialProcs *>(serial_procs)));
+sk_data_t SkBlender_serialize(reskia_blender_t *blender, const reskia_serial_procs_t *serial_procs) {
+    return static_sk_data_make(reinterpret_cast<SkBlender *>(blender)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkBlender_serialize_2(void *blender, void *memory, size_t memory_size, const void *serial_procs) {
-    return static_cast<SkBlender *>(blender)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(serial_procs));
+size_t SkBlender_serialize_2(reskia_blender_t *blender, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+    return reinterpret_cast<SkBlender *>(blender)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 
-bool SkBlender_unique(void *blender) {
-    return static_cast<SkBlender *>(blender)->unique();
+bool SkBlender_unique(reskia_blender_t *blender) {
+    return reinterpret_cast<SkBlender *>(blender)->unique();
 }
 
-void SkBlender_ref(void *blender) {
-    static_cast<SkBlender *>(blender)->ref();
+void SkBlender_ref(reskia_blender_t *blender) {
+    reinterpret_cast<SkBlender *>(blender)->ref();
 }
 
-void SkBlender_unref(void *blender) {
-    static_cast<SkBlender *>(blender)->unref();
+void SkBlender_unref(reskia_blender_t *blender) {
+    reinterpret_cast<SkBlender *>(blender)->unref();
 }
 
 // static
@@ -76,8 +76,8 @@ void SkBlender_Register(const char * name, sk_flattenable_factory_t factory) {
     SkBlender::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
-sk_flattenable_t SkBlender_Deserialize(int type, const void *data, size_t length, const void *procs) {
-    return static_sk_flattenable_make(SkBlender::Deserialize(static_cast<SkBlender::Type>(type), data, length, static_cast<const SkDeserialProcs *>(procs)));
+sk_flattenable_t SkBlender_Deserialize(int type, const void *data, size_t length, const reskia_deserial_procs_t *procs) {
+    return static_sk_flattenable_make(SkBlender::Deserialize(static_cast<SkBlender::Type>(type), data, length, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

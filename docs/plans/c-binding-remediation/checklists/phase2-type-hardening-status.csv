@@ -1,257 +1,257 @@
 category,header,implementation,function,line,status,owner,note
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getInfo,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getICCProfile,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getEncodedFormat,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputColorType,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputAlphaType,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputColorSpace,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeSampleSize,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSampledDimensions,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSupportedSubset,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSampledSubsetDimensions,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidPixels,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidPixels_2,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getPixels,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_codec,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidGainmap,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_MakeFromStream,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_MakeFromData,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateLinkToDestination,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateNamedDestination,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateRectWithURL,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_insert,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_insert_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_search,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_bytesUsed,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_unique,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_ref,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_unref,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_new,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_new_2,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_delete,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocN32Pixels,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_2,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_3,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_4,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixelsFlags,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_alphaType,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_asImage,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_bounds,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_bytesPerPixel,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_colorSpace,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_colorType,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_computeByteSize,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_dimensions,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_drawsNothing,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_empty,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_erase,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_erase_2,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseArea,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseARGB,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseColor,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseColor_2,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha_2,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha_3,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractSubset,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr16,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr32,43,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr8,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAlphaf,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getBounds,46,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getBounds2,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getColor,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getColor4f,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getGenerationID,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getPixels,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getSubset,52,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_height,53,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_info,54,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installMaskPixels,55,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels,56,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels_2,57,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels_3,58,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isImmutable,59,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isNull,60,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isOpaque,61,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader,62,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_2,63,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_3,64,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_4,65,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_notifyPixelsChanged,66,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_peekPixels,67,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixelRef,68,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixelRefOrigin,69,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixmap,70,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels,71,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels_2,72,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels_3,73,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readyToDraw,74,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_refColorSpace,75,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_reset,76,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_rowBytes,77,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_rowBytesAsPixels,78,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setAlphaType,79,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setImmutable,80,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setInfo,81,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setPixelRef,82,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setPixels,83,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_shiftPerPixel,84,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_swap,85,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocN32Pixels,86,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels,87,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_2,88,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_3,89,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_4,90,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixelsFlags,91,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_width,92,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_writePixels,93,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_writePixels_2,94,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_ComputeIsOpaque,96,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getFactory,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getTypeName,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_flatten,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getFlattenableType,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_serialize,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_serialize_2,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_unique,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_ref,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_unref,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_Deserialize,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_IsBmp,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_Decode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_Decode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_2,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_3,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_4,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_delete,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_accessTopLayerPixels,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_accessTopRasterHandle,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_androidFramework_setDeviceClipRestriction,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clear,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clear_2,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipIRect,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath_2,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath_3,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect_2,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect_3,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRegion,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect_2,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect_3,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipShader,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_concat,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_concat_2,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_discard,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAnnotation,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAnnotation_2,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawArc,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAtlas,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawCircle,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawCircle_2,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawColor,43,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawColor_2,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDrawable,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDrawable_2,46,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDRRect,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs_2,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs_3,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_2,52,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_3,53,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_4,54,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageLattice,55,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageLattice_2,56,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageNine,57,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect,58,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_2,59,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_3,60,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_4,61,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawIRect,62,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawLine,63,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawLine_2,64,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawMesh,65,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawOval,66,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPaint,67,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPatch,68,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPath,69,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture,70,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_2,71,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_3,72,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_4,73,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoint,74,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoint_2,75,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoints,76,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRect,77,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRegion,78,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRoundRect,79,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRRect,80,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawSimpleText,81,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawString,82,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawString_2,83,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawTextBlob,84,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawTextBlob_2,85,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawVertices,86,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawVertices_2,87,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAImageSet,88,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAQuad,89,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAQuad_2,90,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getBaseLayerSize,91,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getBaseProps,92,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getDeviceClipBounds,93,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getDeviceClipBounds_2,94,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalClipBounds,95,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalClipBounds_2,96,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalToDevice,97,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalToDeviceAs3x3,98,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getProps,99,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getSaveCount,100,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getSurface,101,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getTopProps,102,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getTotalMatrix,103,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_imageInfo,104,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_isClipEmpty,105,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_isClipRect,106,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_makeSurface,107,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_peekPixels,108,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_private_draw_shadow_rec,109,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_quickReject,110,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_quickReject_2,111,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels,112,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels_2,113,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels_3,114,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_recorder,115,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_recordingContext,116,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_resetMatrix,117,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_restore,118,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_restoreToCount,119,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_rotate,120,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_rotate_2,121,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_save,122,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer,123,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer_2,124,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer_3,125,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayerAlpha,126,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayerAlphaf,127,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_scale,128,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_setMatrix,129,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_setMatrix_2,130,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_skew,131,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_temporary_internal_getRgnClip,132,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_translate,133,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixels,134,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixels_2,135,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirect,137,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirectN32,138,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_delete,12,done,,typed opaque pointer aliases introduced for SkAndroidCodec API surface
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getInfo,13,done,,typed opaque pointer aliases introduced for SkImageInfo return
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getICCProfile,14,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getEncodedFormat,15,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputColorType,16,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputAlphaType,17,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeOutputColorSpace,18,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_computeSampleSize,19,done,,typed opaque pointer aliases introduced for SkISize inout parameter
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSampledDimensions,20,done,,typed opaque pointer aliases introduced for codec receiver
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSupportedSubset,21,done,,typed opaque pointer aliases introduced for SkIRect inout parameter
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getSampledSubsetDimensions,22,done,,typed opaque pointer aliases introduced for subset parameter
+void_ptr|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidPixels,23,done,,typed opaque pointer aliases introduced and rowBytes normalized to size_t
+void_ptr|suffix|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidPixels_2,24,done,,typed opaque pointer aliases introduced; replacement planned name: SkAndroidCodec_getAndroidPixelsWithDefaultOptions
+void_ptr|primitive,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getPixels,25,done,,typed opaque pointer aliases introduced and rowBytes normalized to size_t
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_codec,26,done,,typed opaque pointer aliases introduced for SkCodec return
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_getAndroidGainmap,27,done,,typed opaque pointer aliases introduced for gainmap out parameter
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_MakeFromStream,32,done,,typed opaque pointer aliases introduced for SkPngChunkReader
+void_ptr,skia/binding/sk_android_codec.h,skia/binding/sk_android_codec.cpp,SkAndroidCodec_MakeFromData,33,done,,typed opaque pointer aliases introduced for SkPngChunkReader
+void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateLinkToDestination,12,done,,typed opaque pointer aliases introduced: reskia_canvas_t/reskia_rect_t/reskia_data_t
+void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateNamedDestination,13,done,,typed opaque pointer aliases introduced: reskia_canvas_t/reskia_point_t/reskia_data_t
+void_ptr,skia/binding/sk_annotation.h,skia/binding/sk_annotation.cpp,SkAnnotation_SkAnnotateRectWithURL,14,done,,typed opaque pointer aliases introduced: reskia_canvas_t/reskia_rect_t/reskia_data_t
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_delete,12,done,,typed opaque pointer aliases introduced for SkBBoxHierarchy API surface
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_insert,13,done,,typed opaque pointer aliases introduced for SkRect parameter
+void_ptr|suffix,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_insert_2,14,done,,typed opaque pointer aliases introduced; replacement planned name: SkBBoxHierarchy_insertWithMetadata
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_search,15,done,,typed opaque pointer aliases introduced for hierarchy/query parameters
+void_ptr|primitive,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_bytesUsed,16,done,,return type normalized from unsigned long to size_t
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_unique,17,done,,typed opaque pointer aliases introduced for hierarchy receiver
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_ref,18,done,,typed opaque pointer aliases introduced for hierarchy receiver
+void_ptr,skia/binding/sk_b_box_hierarchy.h,skia/binding/sk_b_box_hierarchy.cpp,SkBBoxHierarchy_unref,19,done,,typed opaque pointer aliases introduced for hierarchy receiver
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_new,12,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_new_2,13,done,,replacement planned name: SkBitmap_clone
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_delete,14,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocN32Pixels,15,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels,16,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_2,17,done,,replacement planned name: SkBitmap_allocPixelsWithAllocator
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_3,18,done,,replacement planned name: SkBitmap_allocPixelsWithInfo
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixels_4,19,done,,replacement planned name: SkBitmap_allocPixelsWithInfoAndRowBytes
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_allocPixelsFlags,20,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_alphaType,21,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_asImage,22,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_bounds,23,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_bytesPerPixel,24,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_colorSpace,25,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_colorType,26,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_computeByteSize,27,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_dimensions,28,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_drawsNothing,29,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_empty,30,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_erase,31,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_erase_2,32,done,,replacement planned name: SkBitmap_eraseColor4fInArea
+void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseArea,33,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseARGB,34,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseColor,35,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_eraseColor_2,36,done,,replacement planned name: SkBitmap_eraseColor4f
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha,37,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha_2,38,done,,replacement planned name: SkBitmap_extractAlphaWithPaintAllocatorOffset
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractAlpha_3,39,done,,replacement planned name: SkBitmap_extractAlphaWithPaintOffset
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_extractSubset,40,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr,41,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr16,42,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr32,43,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAddr8,44,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getAlphaf,45,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getBounds,46,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getBounds2,47,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive|semantic,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getColor,48,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getColor4f,49,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getGenerationID,50,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getPixels,51,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_getSubset,52,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_height,53,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_info,54,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installMaskPixels,55,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels,56,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels_2,57,done,,replacement planned name: SkBitmap_installPixelsWithReleaseProc
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_installPixels_3,58,done,,replacement planned name: SkBitmap_installPixelsFromPixmap
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isImmutable,59,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isNull,60,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_isOpaque,61,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader,62,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_2,63,done,,replacement planned name: SkBitmap_makeShaderWithOptionalLocalMatrix
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_3,64,done,,replacement planned name: SkBitmap_makeShaderWithTileModesAndOptionalLocalMatrix
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_makeShader_4,65,done,,replacement planned name: SkBitmap_makeShaderWithTileModesAndLocalMatrix
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_notifyPixelsChanged,66,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_peekPixels,67,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixelRef,68,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixelRefOrigin,69,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_pixmap,70,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels,71,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels_2,72,done,,replacement planned name: SkBitmap_readPixelsFromPixmap
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readPixels_3,73,done,,replacement planned name: SkBitmap_readPixelsFromPixmapAt
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_readyToDraw,74,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_refColorSpace,75,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_reset,76,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_rowBytes,77,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_rowBytesAsPixels,78,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setAlphaType,79,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setImmutable,80,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setInfo,81,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setPixelRef,82,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_setPixels,83,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_shiftPerPixel,84,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_swap,85,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocN32Pixels,86,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels,87,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_2,88,done,,replacement planned name: SkBitmap_tryAllocPixelsWithAllocator
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_3,89,done,,replacement planned name: SkBitmap_tryAllocPixelsWithInfo
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixels_4,90,done,,replacement planned name: SkBitmap_tryAllocPixelsWithInfoAndRowBytes
+void_ptr|primitive,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_tryAllocPixelsFlags,91,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_width,92,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_writePixels,93,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr|suffix,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_writePixels_2,94,done,,replacement planned name: SkBitmap_writePixelsAt
+void_ptr,skia/binding/sk_bitmap.h,skia/binding/sk_bitmap.cpp,SkBitmap_ComputeIsOpaque,96,done,,typed opaque pointer aliases introduced for SkBitmap API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_delete,12,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getFactory,13,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getTypeName,14,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_flatten,15,done,,typed opaque pointer aliases introduced for SkWriteBuffer parameter
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_getFlattenableType,16,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_serialize,17,done,,typed opaque pointer aliases introduced for serial procs parameter
+void_ptr|suffix|primitive,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_serialize_2,18,done,,replacement planned name: SkBlender_serializeToMemory
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_unique,19,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_ref,20,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_unref,21,done,,typed opaque pointer aliases introduced for SkBlender API surface
+void_ptr|primitive,skia/binding/sk_blender.h,skia/binding/sk_blender.cpp,SkBlender_Deserialize,29,done,,typed opaque pointer aliases introduced and length normalized to size_t
+void_ptr|primitive,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_IsBmp,12,done,,typed byte pointer + size_t introduced for input buffer
+void_ptr,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_Decode,13,done,,typed opaque pointer aliases introduced for result/decodeContext
+void_ptr|suffix,skia/binding/sk_bmp_decoder.h,skia/binding/sk_bmp_decoder.cpp,SkBmpDecoder_Decode_2,14,done,,replacement planned name: SkBmpDecoder_DecodeFromData
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new,12,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_2,13,done,,replacement planned name: SkCanvas_newWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_3,14,done,,replacement planned name: SkCanvas_newWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_new_4,15,done,,replacement planned name: SkCanvas_newWithVariant4
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_delete,16,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_accessTopLayerPixels,17,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_accessTopRasterHandle,18,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_androidFramework_setDeviceClipRestriction,19,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clear,20,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clear_2,21,done,,replacement planned name: SkCanvas_clearWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipIRect,22,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath,23,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath_2,24,done,,replacement planned name: SkCanvas_clipPathWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipPath_3,25,done,,replacement planned name: SkCanvas_clipPathWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect,26,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect_2,27,done,,replacement planned name: SkCanvas_clipRectWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRect_3,28,done,,replacement planned name: SkCanvas_clipRectWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRegion,29,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect,30,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect_2,31,done,,replacement planned name: SkCanvas_clipRRectWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipRRect_3,32,done,,replacement planned name: SkCanvas_clipRRectWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_clipShader,33,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_concat,34,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_concat_2,35,done,,replacement planned name: SkCanvas_concatWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_discard,36,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAnnotation,37,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAnnotation_2,38,done,,replacement planned name: SkCanvas_drawAnnotationWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawArc,39,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawAtlas,40,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawCircle,41,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawCircle_2,42,done,,replacement planned name: SkCanvas_drawCircleWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawColor,43,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawColor_2,44,done,,replacement planned name: SkCanvas_drawColorWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDrawable,45,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDrawable_2,46,done,,replacement planned name: SkCanvas_drawDrawableWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawDRRect,47,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs,48,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs_2,49,done,,replacement planned name: SkCanvas_drawGlyphsWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawGlyphs_3,50,done,,replacement planned name: SkCanvas_drawGlyphsWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage,51,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_2,52,done,,replacement planned name: SkCanvas_drawImageWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_3,53,done,,replacement planned name: SkCanvas_drawImageWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImage_4,54,done,,replacement planned name: SkCanvas_drawImageWithVariant4
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageLattice,55,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageLattice_2,56,done,,replacement planned name: SkCanvas_drawImageLatticeWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageNine,57,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect,58,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_2,59,done,,replacement planned name: SkCanvas_drawImageRectWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_3,60,done,,replacement planned name: SkCanvas_drawImageRectWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawImageRect_4,61,done,,replacement planned name: SkCanvas_drawImageRectWithVariant4
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawIRect,62,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawLine,63,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawLine_2,64,done,,replacement planned name: SkCanvas_drawLineWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawMesh,65,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawOval,66,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPaint,67,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPatch,68,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPath,69,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture,70,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_2,71,done,,replacement planned name: SkCanvas_drawPictureWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_3,72,done,,replacement planned name: SkCanvas_drawPictureWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPicture_4,73,done,,replacement planned name: SkCanvas_drawPictureWithVariant4
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoint,74,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoint_2,75,done,,replacement planned name: SkCanvas_drawPointWithVariant2
+void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawPoints,76,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRect,77,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRegion,78,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRoundRect,79,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawRRect,80,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawSimpleText,81,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawString,82,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawString_2,83,done,,replacement planned name: SkCanvas_drawStringWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawTextBlob,84,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawTextBlob_2,85,done,,replacement planned name: SkCanvas_drawTextBlobWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawVertices,86,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_drawVertices_2,87,done,,replacement planned name: SkCanvas_drawVerticesWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAImageSet,88,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAQuad,89,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_experimental_DrawEdgeAAQuad_2,90,done,,replacement planned name: SkCanvas_experimental_DrawEdgeAAQuadWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getBaseLayerSize,91,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getBaseProps,92,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getDeviceClipBounds,93,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getDeviceClipBounds_2,94,done,,replacement planned name: SkCanvas_getDeviceClipBoundsWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalClipBounds,95,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalClipBounds_2,96,done,,replacement planned name: SkCanvas_getLocalClipBoundsWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalToDevice,97,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getLocalToDeviceAs3x3,98,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getProps,99,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getSaveCount,100,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getSurface,101,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getTopProps,102,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_getTotalMatrix,103,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_imageInfo,104,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_isClipEmpty,105,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_isClipRect,106,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_makeSurface,107,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_peekPixels,108,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_private_draw_shadow_rec,109,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_quickReject,110,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_quickReject_2,111,done,,replacement planned name: SkCanvas_quickRejectWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels,112,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels_2,113,done,,replacement planned name: SkCanvas_readPixelsWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_readPixels_3,114,done,,replacement planned name: SkCanvas_readPixelsWithVariant3
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_recorder,115,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_recordingContext,116,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_resetMatrix,117,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_restore,118,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_restoreToCount,119,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_rotate,120,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_rotate_2,121,done,,replacement planned name: SkCanvas_rotateWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_save,122,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer,123,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer_2,124,done,,replacement planned name: SkCanvas_saveLayerWithVariant2
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayer_3,125,done,,replacement planned name: SkCanvas_saveLayerWithVariant3
+void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayerAlpha,126,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_saveLayerAlphaf,127,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_scale,128,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_setMatrix,129,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_setMatrix_2,130,done,,replacement planned name: SkCanvas_setMatrixWithVariant2
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_skew,131,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_temporary_internal_getRgnClip,132,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_translate,133,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixels,134,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|suffix|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixels_2,135,done,,replacement planned name: SkCanvas_writePixelsWithVariant2
+void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirect,137,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
+void_ptr|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirectN32,138,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
 void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getInfo,13,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_dimensions,14,todo,,from step3 manifests: function declaration requires typed-API review
