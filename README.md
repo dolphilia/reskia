@@ -8,14 +8,33 @@ Reskia は、Google Skia を CMake ベースで扱いやすく再構成し、C �
 
 ## ベースSkia
 
-Reskia が基準としている upstream Skia のコミット:
+Reskia が基準としている Skia コミットは `vendor/skia-source.lock` で固定管理します。
 
-- `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
-- URL: <https://github.com/dolphilia/skia/commit/0d49b661d75adbb8ac8cf88f7d527b1587be2c63>
+- lock: `vendor/skia-source.lock`
+- fixed ref: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
 
-比較・参照用の upstream クローンは以下に隔離配置されます。
+比較・参照用の実クローンは以下に隔離配置します。
 
-- `vendor/skia-upstream`（`.gitignore` で追跡対象外）
+- working clone: `vendor/skia-upstream`（`.gitignore` で追跡対象外）
+
+取得・同期:
+
+```bash
+scripts/fetch_skia_upstream.sh
+```
+
+デフォルトは `google/skia`（upstream）を取得元にし、必要時のみ fork を選択します。
+
+```bash
+scripts/fetch_skia_upstream.sh --remote fork
+```
+
+履歴比較・追従の基準:
+
+- upstream: <https://github.com/google/skia>
+- fork: <https://github.com/dolphilia/skia>
+
+運用上は「upstream を正本、fork は補助（比較・一時回避）」とします。
 
 ## ディレクトリ構成
 
@@ -24,7 +43,11 @@ Reskia が基準としている upstream Skia のコミット:
 - `skpath/`: `skcms` 相当の補助プロジェクト（`../skcms/src` フォールバックあり）
 - `skresources/`: `skresources` 静的ライブラリ
 - `svg/`: `svg`, `skshaper`, `skunicode`
-- `docs/`: 調査・ビルド検証メモ
+- `vendor/`: 比較・参照用Skia管理（lock は追跡、実クローンは追跡外）
+- `docs/`: ドキュメントルート
+  - `docs/notes/`: 調査結果・検証メモ
+  - `docs/guides/`: ガイド文書
+  - `docs/plans/`: 計画書
 
 ## ビルド要件
 
@@ -91,7 +114,10 @@ cmake --build skia/cmake-build-source-local -j 8
 - AVIF を有効にする場合:
   - 依存ビルド: `scripts/build_third_party.sh --with-avif`
   - Reskia 側: `-DRESKIA_ENABLE_AVIF=ON`
-- 2026-02-14 時点では `source` モードで `reskia` 最終リンク時に `skcms` 解決が環境依存で失敗する場合があります（内部ライブラリ連携は別途整理中）。
+- ICU / ICU4X を導入する場合:
+  - `scripts/build_third_party.sh --with-icu --with-icu4x`
+  - `--with-icu4x` には Rust ツールチェーン（`cargo`）が必要です。
+- `source` モードでは `skia/CMakeLists.txt` から `skcms`（および Apple では `skresources/svg`）を `add_subdirectory` 連携してビルドします。
 
 ### skia（reskia）`RESKIA_BUILD_TESTS=ON` 検証手順
 
@@ -142,7 +168,8 @@ cmake --build svg/cmake-build-local -j 8
 
 ## ドキュメント
 
-- 構造調査: `docs/repository-structure.md`
-- `skia/CMakeLists.txt` ビルド検証: `docs/skia-cmakelists-build-report-2026-02-13.md`
-- 依存管理方針の実施結果: `docs/dependency-management-report-2026-02-14.md`
-- `third_party` サブモジュール化と自動ビルド: `docs/third-party-submodule-automation-2026-02-14.md`
+- 構造調査ガイド: `docs/guides/repository-structure.md`
+- `skia/CMakeLists.txt` ビルド検証: `docs/notes/skia-cmakelists-build-report-2026-02-13.md`
+- 依存管理方針の実施結果: `docs/notes/dependency-management-report-2026-02-14.md`
+- `third_party` サブモジュール化と自動ビルド: `docs/notes/third-party-submodule-automation-2026-02-14.md`
+- `vendor` 比較Skia管理の実装: `docs/notes/vendor-skia-management-2026-02-14.md`

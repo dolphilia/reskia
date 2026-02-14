@@ -41,6 +41,8 @@
     - `--with-avif`
     - `--with-harfbuzz`
     - `--with-libgrapheme`
+    - `--with-icu`
+    - `--with-icu4x`
   - `--clean`, `--jobs`, `--build-type` をサポート
 
 ### 1.3 `source` モード依存解決の修正
@@ -73,14 +75,20 @@ cmake -S skia -B skia/cmake-build-source-local -DRESKIA_DEPS_MODE=source -DCMAKE
 cmake --build skia/cmake-build-source-local -j 8
 ```
 
-結果:
+結果（2026-02-14 更新）:
 
 - configure: 成功
-- build: 最終リンクで失敗
-  - `ld: library 'skcms' not found`
+- build: 成功（`Built target reskia`）
+- 対応:
+  - `skia/CMakeLists.txt` で `RESKIA_DEPS_MODE=source` 時に
+    - `skcms`
+    - （Apple）`skresources`, `svg`
+    を `add_subdirectory` 連携するよう修正。
 
 ## 3. 制約
 
-- 現時点の自動化対象は third-party 依存のみで、`skcms/skresources/svg` など Reskia 内部ライブラリの連携は別途。
+- third-party 自動化と `skcms/skresources/svg` の `source` 連携は実施済み。
 - `--with-avif` は codec 依存取得が必要で、ネットワーク・外部取得に依存。
-- `icu` / `icu4x` はサブモジュール化済みだが、ビルド自動化は未実装。
+- `--with-icu4x` は Rust ツールチェーン（`cargo`）に依存。
+- `svg/modules/skunicode/src/SkUnicode_icu4x.cpp` が期待する `ICU4X*.hpp` と、
+  最新 ICU4X C++ binding の型名には差異があるため、ICU4X 連携を有効化するには追加の互換調整が必要。

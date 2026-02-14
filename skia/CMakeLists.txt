@@ -12,6 +12,21 @@ reskia_resolve_third_party("${RESKIA_ROOT_DIR}" RESKIA_DEP_LINK_DIRS RESKIA_DEP_
 if(RESKIA_DEP_LINK_DIRS)
     link_directories(${RESKIA_DEP_LINK_DIRS})
 endif()
+string(TOLOWER "${RESKIA_DEPS_MODE}" RESKIA_DEPS_MODE_LOWER)
+
+if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+    if(NOT TARGET skcms)
+        add_subdirectory("${RESKIA_ROOT_DIR}/skcms" "${CMAKE_BINARY_DIR}/_deps/skcms")
+    endif()
+    if(APPLE)
+        if(NOT TARGET skresources)
+            add_subdirectory("${RESKIA_ROOT_DIR}/skresources" "${CMAKE_BINARY_DIR}/_deps/skresources")
+        endif()
+        if(NOT TARGET svg)
+            add_subdirectory("${RESKIA_ROOT_DIR}/svg" "${CMAKE_BINARY_DIR}/_deps/svg")
+        endif()
+    endif()
+endif()
 
 set(SOURCE_FILES reskia.cpp)
 

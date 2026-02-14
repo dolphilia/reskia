@@ -35,5 +35,5 @@ Next step:
   scripts/build_third_party.sh --build-type Release
 
 Optional builds:
-  scripts/build_third_party.sh --with-avif --with-harfbuzz --with-libgrapheme
+  scripts/build_third_party.sh --with-avif --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x
 OUT

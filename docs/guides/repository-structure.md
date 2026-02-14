@@ -125,7 +125,7 @@
 - 最終的に `cmake --build ...` で `Built target reskia` を確認。
 
 詳細は以下を参照:
-- `/Users/dolphilia/github/reskia/docs/skia-cmakelists-build-report-2026-02-13.md`
+- `/Users/dolphilia/github/reskia/docs/notes/skia-cmakelists-build-report-2026-02-13.md`
 
 ## 9. 非`skia` CMake修正メモ（2026-02-14）
 
@@ -226,7 +226,7 @@
 - `prebuilt` は従来互換を優先し、`skia/lib` 依存を維持している。
 
 詳細ログは以下を参照:
-- `/Users/dolphilia/github/reskia/docs/dependency-management-report-2026-02-14.md`
+- `/Users/dolphilia/github/reskia/docs/notes/dependency-management-report-2026-02-14.md`
 
 ## 11. `third_party/src` サブモジュール化と自動ビルド（2026-02-14）
 
@@ -249,14 +249,43 @@
 - `scripts/bootstrap_third_party.sh`: 成功
 - `scripts/build_third_party.sh --build-type Release --clean`: 成功
 - `cmake -S skia -B ... -DRESKIA_DEPS_MODE=source`: configure 成功
-- `cmake --build`:
-  - 最終リンクで `ld: library 'skcms' not found`
+- `cmake --build`: 成功（`Built target reskia`）
+- `source` モード連携:
+  - `skia/CMakeLists.txt` から `skcms` を `add_subdirectory` 連携
+  - Apple では `skresources` / `svg` も `add_subdirectory` 連携
 
 ### 11.3 現時点の制約
 
-- third-party は自動化済みだが、`skcms/skresources/svg` の内部連携は未自動化。
-- `icu/icu4x` はサブモジュール化のみで、ビルド自動化対象外。
+- third-party と `skcms/skresources/svg` の `source` 連携は自動化済み。
+- `icu/icu4x` は `scripts/build_third_party.sh --with-icu --with-icu4x` でビルド可能。
+- ただし ICU4X は Skia 側 `SkUnicode_icu4x.cpp` との API 名差異があり、利用有効化には追加調整が必要。
 - AVIF は `RESKIA_ENABLE_AVIF=ON` かつ `--with-avif` を前提とする拡張扱い。
 
 詳細ログ:
-- `/Users/dolphilia/github/reskia/docs/third-party-submodule-automation-2026-02-14.md`
+- `/Users/dolphilia/github/reskia/docs/notes/third-party-submodule-automation-2026-02-14.md`
+
+## 12. `vendor/skia-upstream` 管理方針の実装（2026-02-14）
+
+比較・参照用 Skia の管理を、必須サブモジュール方式ではなく「lock + fetch スクリプト」方式へ統一した。
+
+### 12.1 方針
+
+- `vendor/skia-upstream` は実作業用クローンとして `.gitignore` 管理（追跡対象外）
+- 固定バージョンは追跡対象の lock ファイルで管理
+- 取得元は `google/skia` を正本、`dolphilia/skia` は補助
+
+### 12.2 追加ファイル
+
+- 追加: `/Users/dolphilia/github/reskia/vendor/skia-source.lock`
+  - `SKIA_UPSTREAM_URL`, `SKIA_FORK_URL`, `SKIA_REF` を管理
+- 追加: `/Users/dolphilia/github/reskia/vendor/README.md`
+- 追加: `/Users/dolphilia/github/reskia/scripts/fetch_skia_upstream.sh`
+  - lock を読み込んで `vendor/skia-upstream` を clone/fetch
+  - `--remote upstream|fork` で取得元切替
+  - `--ref` で一時検証用 ref 指定
+
+### 12.3 期待効果
+
+- Reskia 本体リポジトリと比較クローンを明確に分離できる。
+- lock を更新するだけで「どの Skia を比較対象にしたか」を履歴化できる。
+- 将来の段階アップグレード（commit 単位での追従、CMake 化拡張）を小さい差分で進めやすい。

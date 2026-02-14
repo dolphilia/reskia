@@ -13,6 +13,8 @@ CLEAN=0
 WITH_AVIF=0
 WITH_HARFBUZZ=0
 WITH_LIBGRAPHEME=0
+WITH_ICU=0
+WITH_ICU4X=0
 
 usage() {
   cat <<USAGE
@@ -25,6 +27,8 @@ Options:
   --with-avif                   Build and install libavif (experimental)
   --with-harfbuzz               Build and install harfbuzz (minimal feature set)
   --with-libgrapheme            Build and install libgrapheme
+  --with-icu                    Build and install ICU4C (icu/icu4c/source)
+  --with-icu4x                  Build and install ICU4X C API staticlib + C/C++ headers
   -h, --help                    Show this help
 USAGE
 }
@@ -55,6 +59,14 @@ while [[ $# -gt 0 ]]; do
       WITH_LIBGRAPHEME=1
       shift
       ;;
+    --with-icu)
+      WITH_ICU=1
+      shift
+      ;;
+    --with-icu4x)
+      WITH_ICU4X=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -76,6 +88,39 @@ if [[ -z "${JOBS}" ]]; then
     JOBS=4
   fi
 fi
+
+make_build_install() {
+  local name="$1"
+  local build_dir="$2"
+  local configure_cmd="$3"
+  local configure_stamp="${build_dir}/.configured"
+
+  if [[ ${CLEAN} -eq 1 ]]; then
+    rm -rf "${build_dir}"
+  fi
+  mkdir -p "${build_dir}"
+
+  if [[ ! -f "${configure_stamp}" ]]; then
+    (
+      cd "${build_dir}"
+      eval "${configure_cmd}"
+    )
+    touch "${configure_stamp}"
+  fi
+
+  (
+    cd "${build_dir}"
+    make -j "${JOBS}"
+    make install
+  )
+}
+
+copy_tree() {
+  local src="$1"
+  local dst="$2"
+  mkdir -p "${dst}"
+  cp -R "${src}/." "${dst}/"
+}
 
 mkdir -p "${BUILD_DIR}" "${INSTALL_DIR}"
 
@@ -179,6 +224,47 @@ if [[ ${WITH_LIBGRAPHEME} -eq 1 ]]; then
     make -j "${JOBS}"
     make install PREFIX="${INSTALL_DIR}"
   )
+fi
+
+if [[ ${WITH_ICU} -eq 1 ]]; then
+  ICU_SRC_DIR="${SRC_DIR}/icu/icu4c/source"
+  require_dir "${ICU_SRC_DIR}"
+  ICU_BUILD_DIR="${BUILD_DIR}/icu"
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    ICU_CONFIGURE_CMD="\"${ICU_SRC_DIR}/runConfigureICU\" MacOSX --prefix=\"${INSTALL_DIR}\" --disable-shared --enable-static --disable-tests --disable-samples"
+  else
+    ICU_CONFIGURE_CMD="\"${ICU_SRC_DIR}/configure\" --prefix=\"${INSTALL_DIR}\" --disable-shared --enable-static --disable-tests --disable-samples"
+  fi
+
+  make_build_install icu "${ICU_BUILD_DIR}" "${ICU_CONFIGURE_CMD}"
+fi
+
+if [[ ${WITH_ICU4X} -eq 1 ]]; then
+  ICU4X_SRC_DIR="${SRC_DIR}/icu4x"
+  ICU4X_CAPI_DIR="${ICU4X_SRC_DIR}/ffi/capi"
+  require_dir "${ICU4X_CAPI_DIR}"
+
+  if ! command -v cargo >/dev/null 2>&1; then
+    echo "cargo is required for --with-icu4x" >&2
+    exit 1
+  fi
+
+  if [[ ${CLEAN} -eq 1 ]]; then
+    rm -rf "${ICU4X_SRC_DIR}/target"
+  fi
+
+  (
+    cd "${ICU4X_SRC_DIR}"
+    cargo rustc --manifest-path "${ICU4X_CAPI_DIR}/Cargo.toml" -p icu_capi --crate-type staticlib --release
+  )
+
+  mkdir -p "${INSTALL_DIR}/lib" "${INSTALL_DIR}/include"
+  cp "${ICU4X_SRC_DIR}/target/release/libicu_capi.a" "${INSTALL_DIR}/lib/"
+
+  rm -rf "${INSTALL_DIR}/include/icu4x" "${INSTALL_DIR}/include/icu4x-c"
+  copy_tree "${ICU4X_CAPI_DIR}/bindings/cpp/icu4x" "${INSTALL_DIR}/include/icu4x"
+  copy_tree "${ICU4X_CAPI_DIR}/bindings/c" "${INSTALL_DIR}/include/icu4x-c"
 fi
 
 cat <<OUT

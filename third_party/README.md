@@ -40,10 +40,10 @@ scripts/build_third_party.sh --build-type Release --clean
 オプション依存:
 
 ```bash
-scripts/build_third_party.sh --with-avif --with-harfbuzz --with-libgrapheme
+scripts/build_third_party.sh --with-avif --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x
 ```
 
 ## 注意
 
 - `--with-avif` はコーデック依存を外部取得するため、ネットワーク環境に依存します。
-- `icu` / `icu4x` は現時点で自動ビルド対象外です（手動統合が必要）。
+- `--with-icu4x` は Rust ツールチェーン（`cargo`）が必要です。

@@ -1,0 +1,7 @@
+# Reskia vendor Skia source lock
+# This file is sourced by scripts/fetch_skia_upstream.sh.
+
+SKIA_UPSTREAM_URL="https://github.com/google/skia.git"
+SKIA_FORK_URL="https://github.com/dolphilia/skia.git"
+SKIA_REF="0d49b661d75adbb8ac8cf88f7d527b1587be2c63"
+SKIA_BASELINE_DATE="2026-02-14"
