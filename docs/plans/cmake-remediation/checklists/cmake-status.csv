@@ -3,8 +3,9 @@ cmake/deps/ReskiaDeps.cmake,todo,,,
 cmake/reskia/sources-binding.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-core.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-static.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
+cmake/reskia/tests.cmake,done,phase2,,step3(テスト分離)で新規追加: 2026-02-14
 skcms/CMakeLists.txt,todo,,,
-skia/CMakeLists.txt,doing,phase2,,step1(ソース列挙の移設)完了: 2026-02-14
+skia/CMakeLists.txt,done,phase2,,step1-4完了(ソース列挙移設・ターゲット定義明確化・テスト分離・回帰検証): 2026-02-14
 skpath/CMakeLists.txt,todo,,,
 skresources/CMakeLists.txt,todo,,,
 svg/CMakeLists.txt,todo,,,

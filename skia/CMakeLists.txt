@@ -1,17 +1,9 @@
 cmake_minimum_required(VERSION 3.26.4)
 project(reskia)
 
-include_directories(${PROJECT_SOURCE_DIR}/)
-include_directories(${PROJECT_SOURCE_DIR}/_include)
-
-set(CMAKE_CXX_STANDARD 17)
-
 set(RESKIA_ROOT_DIR "${PROJECT_SOURCE_DIR}/..")
 include("${RESKIA_ROOT_DIR}/cmake/deps/ReskiaDeps.cmake")
 reskia_resolve_third_party("${RESKIA_ROOT_DIR}" RESKIA_DEP_LINK_DIRS RESKIA_DEP_LIBS)
-if(RESKIA_DEP_LINK_DIRS)
-    link_directories(${RESKIA_DEP_LINK_DIRS})
-endif()
 string(TOLOWER "${RESKIA_DEPS_MODE}" RESKIA_DEPS_MODE_LOWER)
 
 if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
@@ -75,6 +67,15 @@ elseif (UNIX)
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
+target_compile_features(reskia PRIVATE cxx_std_17)
+target_include_directories(reskia
+    PRIVATE
+        "${PROJECT_SOURCE_DIR}"
+        "${PROJECT_SOURCE_DIR}/_include"
+)
+if(RESKIA_DEP_LINK_DIRS)
+    target_link_directories(reskia PRIVATE ${RESKIA_DEP_LINK_DIRS})
+endif()
 target_compile_definitions(reskia PRIVATE SK_ENABLE_OPTIMIZE_SIZE)
 
 if(WIN32)
@@ -90,16 +91,4 @@ if(WIN32)
 endif()
 
 # TEST
-option(RESKIA_BUILD_TESTS "Build test_c_skia target" OFF)
-if(RESKIA_BUILD_TESTS)
-    enable_testing()
-    add_executable(test_c_skia test/test.cpp )
-    if(APPLE)
-        find_library(CORE_FOUNDATION CoreFoundation)
-        find_library(CORE_TEXT CoreText)
-        target_link_libraries(test_c_skia reskia "-framework CoreFoundation" "-framework CoreText" ${CORE_FOUNDATION} ${CORE_TEXT} fontconfig)
-    elseif (WIN32)
-        target_link_libraries(test_c_skia reskia)
-    endif ()
-    add_test(NAME c_skia_test COMMAND test_c_skia)
-endif()
+include("${RESKIA_ROOT_DIR}/cmake/reskia/tests.cmake")

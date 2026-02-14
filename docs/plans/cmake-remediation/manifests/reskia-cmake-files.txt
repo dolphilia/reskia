@@ -2,6 +2,7 @@ cmake/deps/ReskiaDeps.cmake
 cmake/reskia/sources-binding.cmake
 cmake/reskia/sources-core.cmake
 cmake/reskia/sources-static.cmake
+cmake/reskia/tests.cmake
 skcms/CMakeLists.txt
 skia/CMakeLists.txt
 skpath/CMakeLists.txt
