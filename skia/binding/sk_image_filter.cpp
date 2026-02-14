@@ -21,86 +21,95 @@
 
 extern "C" {
 
-void SkImageFilter_delete(void *image_filter) {
-    static_cast<SkImageFilter *>(image_filter)->unref();
+void SkImageFilter_delete(reskia_image_filter_t *image_filter) {
+    reinterpret_cast<SkImageFilter *>(image_filter)->unref();
 }
 
-sk_i_rect_t SkImageFilter_filterBounds(void *image_filter, const void *src, const void *ctm, int direction, const void *inputRect) {
-    return static_sk_i_rect_make(static_cast<SkImageFilter *>(image_filter)->filterBounds(* static_cast<const SkIRect *>(src), * static_cast<const SkMatrix *>(ctm), static_cast<SkImageFilter::MapDirection>(direction), static_cast<const SkIRect *>(inputRect)));
+sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, int direction, const reskia_i_rect_t *inputRect) {
+    return static_sk_i_rect_make(reinterpret_cast<SkImageFilter *>(image_filter)->filterBounds(
+        *reinterpret_cast<const SkIRect *>(src),
+        *reinterpret_cast<const SkMatrix *>(ctm),
+        static_cast<SkImageFilter::MapDirection>(direction),
+        reinterpret_cast<const SkIRect *>(inputRect)));
 }
 
-bool SkImageFilter_isColorFilterNode(void *image_filter, void **filterPtr) {
-    return static_cast<SkImageFilter *>(image_filter)->isColorFilterNode(reinterpret_cast<SkColorFilter **>(filterPtr));
+bool SkImageFilter_isColorFilterNode(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->isColorFilterNode(reinterpret_cast<SkColorFilter **>(filterPtr));
 }
 
-bool SkImageFilter_asColorFilter(void *image_filter, void **filterPtr) {
-    return static_cast<SkImageFilter *>(image_filter)->asColorFilter(reinterpret_cast<SkColorFilter **>(filterPtr));
+bool SkImageFilter_asColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->asColorFilter(reinterpret_cast<SkColorFilter **>(filterPtr));
 }
 
-bool SkImageFilter_asAColorFilter(void *image_filter, void **filterPtr) {
-    return static_cast<SkImageFilter *>(image_filter)->asAColorFilter(reinterpret_cast<SkColorFilter **>(filterPtr));
+bool SkImageFilter_asAColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->asAColorFilter(reinterpret_cast<SkColorFilter **>(filterPtr));
 }
 
-int SkImageFilter_countInputs(void *image_filter) {
-    return static_cast<SkImageFilter *>(image_filter)->countInputs();
+int SkImageFilter_countInputs(reskia_image_filter_t *image_filter) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->countInputs();
 }
 
-const void * SkImageFilter_getInput(void *image_filter, int i) {
-    return static_cast<SkImageFilter *>(image_filter)->getInput(i);
+const reskia_image_filter_t *SkImageFilter_getInput(reskia_image_filter_t *image_filter, int i) {
+    return reinterpret_cast<const reskia_image_filter_t *>(reinterpret_cast<SkImageFilter *>(image_filter)->getInput(i));
 }
 
-sk_rect_t SkImageFilter_computeFastBounds(void *image_filter, const void *bounds) {
-    return static_sk_rect_make(static_cast<SkImageFilter *>(image_filter)->computeFastBounds(* static_cast<const SkRect *>(bounds)));
+sk_rect_t SkImageFilter_computeFastBounds(reskia_image_filter_t *image_filter, const reskia_rect_t *bounds) {
+    return static_sk_rect_make(reinterpret_cast<SkImageFilter *>(image_filter)->computeFastBounds(
+        *reinterpret_cast<const SkRect *>(bounds)));
 }
 
-bool SkImageFilter_canComputeFastBounds(void *image_filter) {
-    return static_cast<SkImageFilter *>(image_filter)->canComputeFastBounds();
+bool SkImageFilter_canComputeFastBounds(reskia_image_filter_t *image_filter) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->canComputeFastBounds();
 }
 
-sk_image_filter_t SkImageFilter_makeWithLocalMatrix(void *image_filter, const void *matrix) {
-    return static_sk_image_filter_make(static_cast<SkImageFilter *>(image_filter)->makeWithLocalMatrix(* static_cast<const SkMatrix *>(matrix)));
+sk_image_filter_t SkImageFilter_makeWithLocalMatrix(reskia_image_filter_t *image_filter, const reskia_matrix_t *matrix) {
+    return static_sk_image_filter_make(reinterpret_cast<SkImageFilter *>(image_filter)->makeWithLocalMatrix(
+        *reinterpret_cast<const SkMatrix *>(matrix)));
 }
 
-sk_flattenable_factory_t SkImageFilter_getFactory(void *image_filter) {
-    return static_sk_flattenable_factory_make(static_cast<SkImageFilter *>(image_filter)->getFactory());
+sk_flattenable_factory_t SkImageFilter_getFactory(reskia_image_filter_t *image_filter) {
+    return static_sk_flattenable_factory_make(reinterpret_cast<SkImageFilter *>(image_filter)->getFactory());
 }
 
-const char * SkImageFilter_getTypeName(void *image_filter) {
-    return static_cast<SkImageFilter *>(image_filter)->getTypeName();
+const char *SkImageFilter_getTypeName(reskia_image_filter_t *image_filter) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->getTypeName();
 }
 
-void SkImageFilter_flatten(void *image_filter, void *buffer) {
-    static_cast<SkImageFilter *>(image_filter)->flatten(* static_cast<SkWriteBuffer *>(buffer));
+void SkImageFilter_flatten(reskia_image_filter_t *image_filter, reskia_write_buffer_t *buffer) {
+    reinterpret_cast<SkImageFilter *>(image_filter)->flatten(*reinterpret_cast<SkWriteBuffer *>(buffer));
 }
 
-int SkImageFilter_getFlattenableType(void *image_filter) {
-    return static_cast<SkImageFilter *>(image_filter)->getFlattenableType();
+int SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->getFlattenableType();
 }
 
-sk_data_t SkImageFilter_serialize(void *image_filter, const void *procs) {
-    return static_sk_data_make(static_cast<SkImageFilter *>(image_filter)->serialize(static_cast<const SkSerialProcs *>(procs)));
+sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const reskia_serial_procs_t *procs) {
+    return static_sk_data_make(reinterpret_cast<SkImageFilter *>(image_filter)->serialize(
+        reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkImageFilter_serialize_2(void *image_filter, void *memory, size_t memory_size, const void *procs) {
-    return static_cast<SkImageFilter *>(image_filter)->serialize(memory, memory_size, static_cast<const SkSerialProcs *>(procs));
+size_t SkImageFilter_serialize_2(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->serialize(
+        memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
 }
 
-bool SkImageFilter_unique(void *image_filter) {
-    return static_cast<SkImageFilter *>(image_filter)->unique();
+bool SkImageFilter_unique(reskia_image_filter_t *image_filter) {
+    return reinterpret_cast<SkImageFilter *>(image_filter)->unique();
 }
 
-void SkImageFilter_ref(void *image_filter) {
-    static_cast<SkImageFilter *>(image_filter)->ref();
+void SkImageFilter_ref(reskia_image_filter_t *image_filter) {
+    reinterpret_cast<SkImageFilter *>(image_filter)->ref();
 }
 
-void SkImageFilter_unref(void *image_filter) {
-    static_cast<SkImageFilter *>(image_filter)->unref();
+void SkImageFilter_unref(reskia_image_filter_t *image_filter) {
+    reinterpret_cast<SkImageFilter *>(image_filter)->unref();
 }
 
 // static
 
-sk_image_filter_t SkImageFilter_Deserialize(const void *data, size_t size, const void *procs) {
-    return static_sk_image_filter_make(SkImageFilter::Deserialize(data, size, static_cast<const SkDeserialProcs *>(procs)));
+sk_image_filter_t SkImageFilter_Deserialize(const void *data, size_t size, const reskia_deserial_procs_t *procs) {
+    return static_sk_image_filter_make(SkImageFilter::Deserialize(
+        data, size, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 sk_flattenable_factory_t SkImageFilter_NameToFactory(const char name[]) {

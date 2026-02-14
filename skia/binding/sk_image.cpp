@@ -24,8 +24,8 @@
 
 extern "C" {
 
-void SkImage_delete(void *image) {
-    static_cast<SkImage *>(image)->unref();
+void SkImage_delete(reskia_image_t *image) {
+    reinterpret_cast<SkImage *>(image)->unref();
 }
 
 // TODO
@@ -34,206 +34,206 @@ void SkImage_delete(void *image) {
 //     return &info->imageInfo();
 // }
 
-int SkImage_width(void *image) {
-    return static_cast<SkImage *>(image)->width();
+int SkImage_width(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->width();
 }
 
-int SkImage_height(void *image) {
-    return static_cast<SkImage *>(image)->height();
+int SkImage_height(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->height();
 }
 
-sk_i_size_t SkImage_dimensions(void *image) {
-    return static_sk_i_size_make(static_cast<SkImage *>(image)->dimensions());
+sk_i_size_t SkImage_dimensions(reskia_image_t *image) {
+    return static_sk_i_size_make(reinterpret_cast<SkImage *>(image)->dimensions());
 }
 
-sk_i_rect_t SkImage_bounds(void *image) {
-    return static_sk_i_rect_make(static_cast<SkImage *>(image)->bounds());
+sk_i_rect_t SkImage_bounds(reskia_image_t *image) {
+    return static_sk_i_rect_make(reinterpret_cast<SkImage *>(image)->bounds());
 }
 
-uint32_t SkImage_uniqueID(void *image) {
-    return static_cast<SkImage *>(image)->uniqueID();
+reskia_u32_t SkImage_uniqueID(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->uniqueID();
 }
 
-int SkImage_alphaType(void *image) {
-    return static_cast<SkImage *>(image)->alphaType();
+int SkImage_alphaType(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->alphaType();
 }
 
-int SkImage_colorType(void *image) {
-    return static_cast<SkImage *>(image)->colorType();
+int SkImage_colorType(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->colorType();
 }
 
-void * SkImage_colorSpace(void *image) {
-    return static_cast<SkImage *>(image)->colorSpace();
+reskia_color_space_t *SkImage_colorSpace(reskia_image_t *image) {
+    return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkImage *>(image)->colorSpace());
 }
 
-sk_color_space_t SkImage_refColorSpace(void *image) {
-    return static_sk_color_space_make(static_cast<SkImage *>(image)->refColorSpace());
+sk_color_space_t SkImage_refColorSpace(reskia_image_t *image) {
+    return static_sk_color_space_make(reinterpret_cast<SkImage *>(image)->refColorSpace());
 }
 
-bool SkImage_isAlphaOnly(void *image) {
-    return static_cast<SkImage *>(image)->isAlphaOnly();
+bool SkImage_isAlphaOnly(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->isAlphaOnly();
 }
 
-bool SkImage_isOpaque(void *image) {
-    return static_cast<SkImage *>(image)->isOpaque();
+bool SkImage_isOpaque(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->isOpaque();
 }
 
-sk_shader_t SkImage_makeShader(void *image, int tmx, int tmy, const void *sampling, const void *localMatrix) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkMatrix *>(localMatrix)));
+sk_shader_t SkImage_makeShader(reskia_image_t *image, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkImage_makeShader_2(void *image, int tmx, int tmy, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * static_cast<const SkSamplingOptions *>(sampling), * static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeShader_2(reskia_image_t *image, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkImage_makeShader_3(void *image, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeShader(* static_cast<const SkSamplingOptions *>(sampling), * static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeShader_3(reskia_image_t *image, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkImage_makeShader_4(void *image, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeShader(* static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeShader_4(reskia_image_t *image, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkImage_makeRawShader(void *image, int tmx, int tmy, const void * sampling, const void *localMatrix) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkMatrix *>(localMatrix)));
+sk_shader_t SkImage_makeRawShader(reskia_image_t *image, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkImage_makeRawShader_2(void *image, int tmx, int tmy, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * static_cast<const SkSamplingOptions *>(sampling), * static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeRawShader_2(reskia_image_t *image, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkImage_makeRawShader_3(void *image, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeRawShader(* static_cast<const SkSamplingOptions *>(sampling), * static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeRawShader_3(reskia_image_t *image, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkImage_makeRawShader_4(void *image, const void *sampling, const void *lm) {
-    return static_sk_shader_make(static_cast<SkImage *>(image)->makeRawShader(* static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkMatrix *>(lm)));
+sk_shader_t SkImage_makeRawShader_4(reskia_image_t *image, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-bool SkImage_peekPixels(void *image, void *pixmap) {
-    return static_cast<SkImage *>(image)->peekPixels(static_cast<SkPixmap *>(pixmap));
+bool SkImage_peekPixels(reskia_image_t *image, reskia_pixmap_t *pixmap) {
+    return reinterpret_cast<SkImage *>(image)->peekPixels(reinterpret_cast<SkPixmap *>(pixmap));
 }
 
-bool SkImage_isTextureBacked(void *image) {
-    return static_cast<SkImage *>(image)->isTextureBacked();
+bool SkImage_isTextureBacked(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->isTextureBacked();
 }
 
-size_t SkImage_textureSize(void *image) {
-    return static_cast<SkImage *>(image)->textureSize();
+size_t SkImage_textureSize(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->textureSize();
 }
 
-bool SkImage_isValid(void *image, void *context) {
-    return static_cast<SkImage *>(image)->isValid(static_cast<GrRecordingContext *>(context));
+bool SkImage_isValid(reskia_image_t *image, reskia_recording_context_t *context) {
+    return reinterpret_cast<SkImage *>(image)->isValid(reinterpret_cast<GrRecordingContext *>(context));
 }
 
-bool SkImage_readPixels(void *image, void *context, const void *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, int cachingHint) {
-    return static_cast<SkImage *>(image)->readPixels(static_cast<GrDirectContext *>(context), * static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
+bool SkImage_readPixels(reskia_image_t *image, reskia_direct_context_t *context, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, int cachingHint) {
+    return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-bool SkImage_readPixels_2(void *image, void *context, const void *dst, int srcX, int srcY, int cachingHint) {
-    return static_cast<SkImage *>(image)->readPixels(static_cast<GrDirectContext *>(context), * static_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
+bool SkImage_readPixels_2(reskia_image_t *image, reskia_direct_context_t *context, const reskia_pixmap_t *dst, int srcX, int srcY, int cachingHint) {
+    return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-bool SkImage_readPixels_3(void *image, const void *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, int cachingHint) {
-    return static_cast<SkImage *>(image)->readPixels(* static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
+bool SkImage_readPixels_3(reskia_image_t *image, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, int cachingHint) {
+    return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-bool SkImage_readPixels_4(void *image, const void *dst, int srcX, int srcY, int cachingHint) {
-    return static_cast<SkImage *>(image)->readPixels(* static_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
+bool SkImage_readPixels_4(reskia_image_t *image, const reskia_pixmap_t *dst, int srcX, int srcY, int cachingHint) {
+    return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
 // TODO
 //
 // void SkImage_asyncRescaleAndReadPixels(void *image, const void *info, const void *srcRect, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     static_cast<SkImage *>(image)->asyncRescaleAndReadPixels(* static_cast<const SkImageInfo *>(info), * static_cast<const SkIRect *>(srcRect), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
+//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixels(* reinterpret_cast<const SkImageInfo *>(info), * reinterpret_cast<const SkIRect *>(srcRect), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
 // }
 //
 // void SkImage_asyncRescaleAndReadPixelsYUV420(void *image, int yuvColorSpace, sk_color_space_t color_space, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     static_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
+//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * reinterpret_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
 // }
 //
 // void SkImage_asyncRescaleAndReadPixelsYUVA420(void *image, int yuvColorSpace, sk_color_space_t color_space, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     static_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * static_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
+//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * reinterpret_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
 // }
 
-bool SkImage_scalePixels(void *image, const void *dst, const void *sampling, int cachingHint) {
-    return static_cast<SkImage *>(image)->scalePixels(* static_cast<const SkPixmap *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));
+bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, const reskia_sampling_options_t *sampling, int cachingHint) {
+    return reinterpret_cast<SkImage *>(image)->scalePixels(* reinterpret_cast<const SkPixmap *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-sk_data_t SkImage_refEncodedData(void *image) {
-    return static_sk_data_make(static_cast<SkImage *>(image)->refEncodedData());
+sk_data_t SkImage_refEncodedData(reskia_image_t *image) {
+    return static_sk_data_make(reinterpret_cast<SkImage *>(image)->refEncodedData());
 }
 
-sk_image_t SkImage_makeSubset(void *image, void *direct, const void *subset) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeSubset(static_cast<GrDirectContext *>(direct), * static_cast<const SkIRect *>(subset)));
+sk_image_t SkImage_makeSubset(reskia_image_t *image, reskia_direct_context_t *direct, const reskia_i_rect_t *subset) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<GrDirectContext *>(direct), * reinterpret_cast<const SkIRect *>(subset)));
 }
 
-sk_image_t SkImage_makeSubset_2(void *image, void *recorder, const void *subset, sk_image_required_properties_t properties) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeSubset(static_cast<skgpu::graphite::Recorder *>(recorder), * static_cast<const SkIRect *>(subset), static_sk_image_required_properties_get_entity(properties)));
+sk_image_t SkImage_makeSubset_2(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_i_rect_t *subset, sk_image_required_properties_t properties) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), * reinterpret_cast<const SkIRect *>(subset), static_sk_image_required_properties_get_entity(properties)));
 }
 
-bool SkImage_hasMipmaps(void *image) {
-    return static_cast<SkImage *>(image)->hasMipmaps();
+bool SkImage_hasMipmaps(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->hasMipmaps();
 }
 
-bool SkImage_isProtected(void *image) {
-    return static_cast<SkImage *>(image)->isProtected();
+bool SkImage_isProtected(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->isProtected();
 }
 
-sk_image_t SkImage_withDefaultMipmaps(void *image) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->withDefaultMipmaps());
+sk_image_t SkImage_withDefaultMipmaps(reskia_image_t *image) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->withDefaultMipmaps());
 }
 
-sk_image_t SkImage_makeNonTextureImage(void *image, void *context) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeNonTextureImage(static_cast<GrDirectContext *>(context)));
+sk_image_t SkImage_makeNonTextureImage(reskia_image_t *image, reskia_direct_context_t *context) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeNonTextureImage(reinterpret_cast<GrDirectContext *>(context)));
 }
 
-sk_image_t SkImage_makeRasterImage(void *image, void *context, int cachingHint) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeRasterImage(static_cast<GrDirectContext *>(context), static_cast<SkImage::CachingHint>(cachingHint)));
+sk_image_t SkImage_makeRasterImage(reskia_image_t *image, reskia_direct_context_t *context, int cachingHint) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeRasterImage(reinterpret_cast<GrDirectContext *>(context), static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
-sk_image_t SkImage_makeRasterImage_2(void *image, int cachingHint) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeRasterImage(static_cast<SkImage::CachingHint>(cachingHint)));
+sk_image_t SkImage_makeRasterImage_2(reskia_image_t *image, int cachingHint) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeRasterImage(static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
-bool SkImage_asLegacyBitmap(void *image, void *bitmap, int legacyBitmapMode) {
-    return static_cast<SkImage *>(image)->asLegacyBitmap(static_cast<SkBitmap *>(bitmap), static_cast<SkImage::LegacyBitmapMode>(legacyBitmapMode));
+bool SkImage_asLegacyBitmap(reskia_image_t *image, reskia_bitmap_t *bitmap, int legacyBitmapMode) {
+    return reinterpret_cast<SkImage *>(image)->asLegacyBitmap(reinterpret_cast<SkBitmap *>(bitmap), static_cast<SkImage::LegacyBitmapMode>(legacyBitmapMode));
 }
 
-bool SkImage_isLazyGenerated(void *image) {
-    return static_cast<SkImage *>(image)->isLazyGenerated();
+bool SkImage_isLazyGenerated(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->isLazyGenerated();
 }
 
-sk_image_t SkImage_makeColorSpace(void *image, void *direct, sk_color_space_t color_space) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeColorSpace(static_cast<GrDirectContext *>(direct), static_sk_color_space_get_entity(color_space)));
+sk_image_t SkImage_makeColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, sk_color_space_t color_space) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_t SkImage_makeColorSpace_2(void *image, void *recorder, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeColorSpace(static_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+sk_image_t SkImage_makeColorSpace_2(reskia_image_t *image, reskia_graphite_recorder_t *recorder, sk_color_space_t color_space, sk_image_required_properties_t properties) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
-sk_image_t SkImage_makeColorTypeAndColorSpace(void *image, void *direct, int targetColorType, sk_color_space_t color_space) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeColorTypeAndColorSpace(static_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
+sk_image_t SkImage_makeColorTypeAndColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, int targetColorType, sk_color_space_t color_space) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_t SkImage_makeColorTypeAndColorSpace_2(void *image, void *recorder, int targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->makeColorTypeAndColorSpace(static_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+sk_image_t SkImage_makeColorTypeAndColorSpace_2(reskia_image_t *image, reskia_graphite_recorder_t *recorder, int targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
-sk_image_t SkImage_reinterpretColorSpace(void *image, sk_color_space_t color_space) {
-    return static_sk_image_make(static_cast<SkImage *>(image)->reinterpretColorSpace(static_sk_color_space_get_entity(color_space)));
+sk_image_t SkImage_reinterpretColorSpace(reskia_image_t *image, sk_color_space_t color_space) {
+    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->reinterpretColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
-bool SkImage_unique(void *image) {
-    return static_cast<SkImage *>(image)->unique();
+bool SkImage_unique(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->unique();
 }
 
-void SkImage_ref(void *image) {
-    return static_cast<SkImage *>(image)->ref();
+void SkImage_ref(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->ref();
 }
 
-void SkImage_unref(void *image) {
-    return static_cast<SkImage *>(image)->unref();
+void SkImage_unref(reskia_image_t *image) {
+    return reinterpret_cast<SkImage *>(image)->unref();
 }
 
 }

@@ -14,48 +14,48 @@
 
 extern "C" {
 
-void SkImageGenerator_delete(void *image_generator) {
-    delete static_cast<SkImageGenerator *>(image_generator);
+void SkImageGenerator_delete(reskia_image_generator_t *image_generator) {
+    delete reinterpret_cast<SkImageGenerator *>(image_generator);
 }
 
-uint32_t SkImageGenerator_uniqueID(void *image_generator) {
-    return static_cast<SkImageGenerator *>(image_generator)->uniqueID();
+reskia_u32_t SkImageGenerator_uniqueID(reskia_image_generator_t *image_generator) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->uniqueID();
 }
 
-sk_data_t SkImageGenerator_refEncodedData(void *image_generator) {
-    return static_sk_data_make(static_cast<SkImageGenerator *>(image_generator)->refEncodedData());
+sk_data_t SkImageGenerator_refEncodedData(reskia_image_generator_t *image_generator) {
+    return static_sk_data_make(reinterpret_cast<SkImageGenerator *>(image_generator)->refEncodedData());
 }
 
-sk_image_info_t SkImageGenerator_getInfo(void *image_generator) {
-    return static_sk_image_info_make(static_cast<SkImageGenerator *>(image_generator)->getInfo());
+sk_image_info_t SkImageGenerator_getInfo(reskia_image_generator_t *image_generator) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageGenerator *>(image_generator)->getInfo());
 }
 
-bool SkImageGenerator_isValid(void *image_generator, void *context) {
-    return static_cast<SkImageGenerator *>(image_generator)->isValid(static_cast<GrRecordingContext *>(context));
+bool SkImageGenerator_isValid(reskia_image_generator_t *image_generator, reskia_recording_context_t *context) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->isValid(reinterpret_cast<GrRecordingContext *>(context));
 }
 
-bool SkImageGenerator_isProtected(void *image_generator) {
-    return static_cast<SkImageGenerator *>(image_generator)->isProtected();
+bool SkImageGenerator_isProtected(reskia_image_generator_t *image_generator) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->isProtected();
 }
 
-bool SkImageGenerator_getPixels(void *image_generator, const void *info, void *pixels, size_t rowBytes) {
-    return static_cast<SkImageGenerator *>(image_generator)->getPixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes);
+bool SkImageGenerator_getPixels(reskia_image_generator_t *image_generator, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-bool SkImageGenerator_getPixels_2(void *image_generator, const void *pm) {
-    return static_cast<SkImageGenerator *>(image_generator)->getPixels(* static_cast<const SkPixmap *>(pm));
+bool SkImageGenerator_getPixels_2(reskia_image_generator_t *image_generator, const reskia_pixmap_t *pm) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->getPixels(* reinterpret_cast<const SkPixmap *>(pm));
 }
 
-bool SkImageGenerator_queryYUVAInfo(void *image_generator, const void *supportedDataTypes, void *yuvaPixmapInfo) {
-    return static_cast<SkImageGenerator *>(image_generator)->queryYUVAInfo(* static_cast<const SkYUVAPixmapInfo::SupportedDataTypes *>(supportedDataTypes), static_cast<SkYUVAPixmapInfo *>(yuvaPixmapInfo));
+bool SkImageGenerator_queryYUVAInfo(reskia_image_generator_t *image_generator, const reskia_supported_data_types_t *supportedDataTypes, reskia_yuva_pixmap_info_t *yuvaPixmapInfo) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->queryYUVAInfo(* reinterpret_cast<const SkYUVAPixmapInfo::SupportedDataTypes *>(supportedDataTypes), reinterpret_cast<SkYUVAPixmapInfo *>(yuvaPixmapInfo));
 }
 
-bool SkImageGenerator_getYUVAPlanes(void *image_generator, const void *yuvaPixmaps) {
-    return static_cast<SkImageGenerator *>(image_generator)->getYUVAPlanes(* static_cast<const SkYUVAPixmaps *>(yuvaPixmaps));
+bool SkImageGenerator_getYUVAPlanes(reskia_image_generator_t *image_generator, const reskia_yuva_pixmaps_t *yuvaPixmaps) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->getYUVAPlanes(* reinterpret_cast<const SkYUVAPixmaps *>(yuvaPixmaps));
 }
 
-bool SkImageGenerator_isTextureGenerator(void *image_generator) {
-    return static_cast<SkImageGenerator *>(image_generator)->isTextureGenerator();
+bool SkImageGenerator_isTextureGenerator(reskia_image_generator_t *image_generator) {
+    return reinterpret_cast<SkImageGenerator *>(image_generator)->isTextureGenerator();
 }
 
 }

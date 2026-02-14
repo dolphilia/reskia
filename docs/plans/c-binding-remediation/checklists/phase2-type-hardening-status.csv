@@ -785,159 +785,159 @@ void_ptr,skia/binding/sk_icc.h,skia/binding/sk_icc.cpp,SkICC_SkICCFloatToTable16
 void_ptr|primitive,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_IsIco,12,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
 void_ptr,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_Decode,13,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
 void_ptr|suffix,skia/binding/sk_ico_decoder.h,skia/binding/sk_ico_decoder.cpp,SkIcoDecoder_Decode_2,14,done,,typed buffer/result/decode-context pointers introduced for SkIcoDecoder API; typo path corrected to sk_ico_decoder
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_width,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_height,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_dimensions,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_bounds,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_uniqueID,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_alphaType,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_colorType,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_colorSpace,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_refColorSpace,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isAlphaOnly,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isOpaque,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_2,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_3,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_4,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_2,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_3,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_4,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_peekPixels,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isTextureBacked,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_textureSize,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isValid,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_2,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_3,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_4,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_scalePixels,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_refEncodedData,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeSubset,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeSubset_2,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_hasMipmaps,52,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isProtected,53,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_withDefaultMipmaps,54,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeNonTextureImage,55,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRasterImage,56,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRasterImage_2,57,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_asLegacyBitmap,58,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isLazyGenerated,59,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorSpace,60,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorSpace_2,61,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorTypeAndColorSpace,62,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorTypeAndColorSpace_2,63,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_reinterpretColorSpace,64,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_unique,65,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_ref,66,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_unref,67,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_filterBounds,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_isColorFilterNode,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_asColorFilter,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_asAColorFilter,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_countInputs,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getInput,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_computeFastBounds,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_canComputeFastBounds,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_makeWithLocalMatrix,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getFactory,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getTypeName,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_flatten,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getFlattenableType,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_serialize,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_serialize_2,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_unique,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_ref,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_unref,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_Deserialize,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Arithmetic,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blend,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blend_2,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blur,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blur_2,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_ColorFilter,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Crop,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Crop_2,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DisplacementMap,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DropShadow,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DropShadowOnly,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Image,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Image_2,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Magnifier,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_MatrixConvolution,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_MatrixTransform,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Merge,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Merge_2,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Offset,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Picture,37,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Picture_2,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_2,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_3,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_4,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Shader,43,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Shader_2,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Tile,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Dilate,46,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Erode,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DistantLitDiffuse,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_PointLitDiffuse,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_SpotLitDiffuse,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DistantLitSpecular,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_PointLitSpecular,52,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_SpotLitSpecular,53,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_uniqueID,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_refEncodedData,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getInfo,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isValid,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isProtected,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getPixels,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getPixels_2,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_queryYUVAInfo,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getYUVAPlanes,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isTextureGenerator,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_new,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_delete,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_width,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_height,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorType,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_alphaType,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorSpace,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_refColorSpace,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_isEmpty,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorInfo,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_isOpaque,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_dimensions,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_bounds,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_gammaCloseToSRGB,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeWH,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeDimensions,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeAlphaType,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeColorType,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeColorSpace,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_bytesPerPixel,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_shiftPerPixel,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_minRowBytes64,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_minRowBytes,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeOffset,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeByteSize,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeMinByteSize,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_validRowBytes,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_reset,41,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_2,46,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_3,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_5,49,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32_2,51,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32Premul_2,54,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32Premul_3,55,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeA8_2,58,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeUnknown_2,60,todo,,from step3 manifests: function declaration requires typed-API review
-primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_ByteSizeOverflowed,61,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_delete,12,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_width,16,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_height,17,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_dimensions,18,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_bounds,19,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_uniqueID,20,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_alphaType,21,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_colorType,22,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_colorSpace,23,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_refColorSpace,24,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isAlphaOnly,25,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isOpaque,26,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader,27,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_2,28,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_3,29,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeShader_4,30,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader,31,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_2,32,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_3,33,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRawShader_4,34,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_peekPixels,35,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isTextureBacked,36,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_textureSize,37,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isValid,38,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels,39,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_2,40,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix|primitive,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_3,41,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_readPixels_4,42,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_scalePixels,48,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_refEncodedData,49,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeSubset,50,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeSubset_2,51,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_hasMipmaps,52,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isProtected,53,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_withDefaultMipmaps,54,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeNonTextureImage,55,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRasterImage,56,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeRasterImage_2,57,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_asLegacyBitmap,58,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_isLazyGenerated,59,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorSpace,60,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorSpace_2,61,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorTypeAndColorSpace,62,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_makeColorTypeAndColorSpace_2,63,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_reinterpretColorSpace,64,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_unique,65,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_ref,66,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image.h,skia/binding/sk_image.cpp,SkImage_unref,67,done,,typed opaque pointer aliases introduced for SkImage API; size_t/sampling/matrix/pixmap/context pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_delete,12,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_filterBounds,13,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_isColorFilterNode,14,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_asColorFilter,15,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_asAColorFilter,16,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_countInputs,17,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getInput,18,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_computeFastBounds,19,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_canComputeFastBounds,20,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_makeWithLocalMatrix,21,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getFactory,22,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getTypeName,23,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_flatten,24,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_getFlattenableType,25,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_serialize,26,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr|suffix|primitive,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_serialize_2,27,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_unique,28,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_ref,29,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_unref,30,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr|primitive,skia/binding/sk_image_filter.h,skia/binding/sk_image_filter.cpp,SkImageFilter_Deserialize,34,done,,typed opaque pointer aliases introduced for SkImageFilter API; matrix/rect/color-filter/procs pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_delete,12,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Arithmetic,16,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blend,17,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blend_2,18,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blur,19,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Blur_2,20,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_ColorFilter,21,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Crop,23,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Crop_2,24,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DisplacementMap,25,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DropShadow,26,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DropShadowOnly,27,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Image,29,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Image_2,30,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Magnifier,31,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_MatrixConvolution,32,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_MatrixTransform,33,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Merge,34,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Merge_2,35,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Offset,36,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Picture,37,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Picture_2,38,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader,39,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_2,40,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_3,41,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_RuntimeShader_4,42,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Shader,43,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|suffix,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Shader_2,44,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Tile,45,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Dilate,46,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_Erode,47,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DistantLitDiffuse,48,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_PointLitDiffuse,49,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_SpotLitDiffuse,50,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_DistantLitSpecular,51,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_PointLitSpecular,52,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr|primitive|semantic,skia/binding/sk_image_filters.h,skia/binding/sk_image_filters.cpp,SkImageFilters_SpotLitSpecular,53,done,,typed opaque pointer aliases introduced for SkImageFilters API; crop/rect/sampling/runtime-shader pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_delete,12,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr|primitive,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_uniqueID,13,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_refEncodedData,14,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getInfo,15,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isValid,16,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isProtected,17,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr|primitive,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getPixels,18,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr|suffix,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getPixels_2,19,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_queryYUVAInfo,20,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_getYUVAPlanes,21,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_generator.h,skia/binding/sk_image_generator.cpp,SkImageGenerator_isTextureGenerator,22,done,,typed opaque pointer aliases introduced for SkImageGenerator API; image/pixmap/YUVA/context pointers normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_new,14,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_delete,15,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_width,16,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_height,17,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorType,18,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_alphaType,19,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorSpace,20,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_refColorSpace,21,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_isEmpty,22,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_colorInfo,23,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_isOpaque,24,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_dimensions,25,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_bounds,26,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_gammaCloseToSRGB,27,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeWH,28,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeDimensions,29,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeAlphaType,30,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeColorType,31,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_makeColorSpace,32,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_bytesPerPixel,33,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_shiftPerPixel,34,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_minRowBytes64,35,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_minRowBytes,36,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeOffset,37,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeByteSize,38,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_computeMinByteSize,39,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr|primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_validRowBytes,40,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_reset,41,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_2,46,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_3,47,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+void_ptr,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_Make_5,49,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32_2,51,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32Premul_2,54,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeN32Premul_3,55,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeA8_2,58,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+suffix,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_MakeUnknown_2,60,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
+primitive,skia/binding/sk_image_info.h,skia/binding/sk_image_info.cpp,SkImageInfo_ByteSizeOverflowed,61,done,,typed opaque pointer aliases introduced for SkImageInfo API; color-info/size/byte-size signatures normalized
 void_ptr,skia/binding/sk_images.h,skia/binding/sk_images.cpp,SkImages_RasterFromBitmap,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_images.h,skia/binding/sk_images.cpp,SkImages_DeferredFromPicture,16,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix,skia/binding/sk_images.h,skia/binding/sk_images.cpp,SkImages_DeferredFromPicture_2,17,todo,,from step3 manifests: function declaration requires typed-API review

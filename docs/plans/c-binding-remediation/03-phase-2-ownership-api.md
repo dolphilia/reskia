@@ -186,11 +186,21 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkICC` API の `void*` を `reskia_transfer_function_t*` / `reskia_matrix3x3_t*` / `reskia_icc_profile_t*` と `uint8_t*` バッファへ置換
     - `skia/binding/sk_ico_decoder.h` + `skia/binding/sk_ico_decoder.cpp`（3/3 関数 `done`）
     - 変更内容: ファイル名 typo（`sk_ico_cecoder`）を `sk_ico_decoder` に修正し、`SkIcoDecoder` API の `void*` を `uint8_t*` / 不透明型ポインタへ置換
+    - `skia/binding/sk_image.h` + `skia/binding/sk_image.cpp`（48/48 関数 `done`）
+    - 変更内容: `SkImage` API の `void*` を不透明型ポインタへ置換し、`unsigned long` を `size_t`、`sampling/matrix/pixmap/context` 引数を型強化
+    - `skia/binding/sk_image_filter.h` + `skia/binding/sk_image_filter.cpp`（20/20 関数 `done`）
+    - 変更内容: `SkImageFilter` API の `void*` を不透明型ポインタへ置換し、`matrix/rect/color-filter/procs` 引数と `size_t` シグネチャを正規化
+    - `skia/binding/sk_image_filters.h` + `skia/binding/sk_image_filters.cpp`（37/37 関数 `done`）
+    - 変更内容: `SkImageFilters` API の `void*` を不透明型ポインタへ置換し、`crop/rect/sampling/runtime-shader` 引数を型強化
+    - `skia/binding/sk_image_generator.h` + `skia/binding/sk_image_generator.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkImageGenerator` API の `void*` を不透明型ポインタへ置換し、`image/pixmap/YUVA/context` 引数と `uint32_t/size_t` シグネチャを正規化
+    - `skia/binding/sk_image_info.h` + `skia/binding/sk_image_info.cpp`（37/37 関数 `done`）
+    - 変更内容: `SkImageInfo` API の `void*` を不透明型ポインタへ置換し、`SkColorInfo`/`SkColorSpace` 引数と `size_t/uint64_t` シグネチャを正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 786 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 939 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

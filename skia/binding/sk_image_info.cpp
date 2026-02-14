@@ -23,116 +23,116 @@ extern "C" {
 //bool operator==(const SkImageInfo &other)
 //bool operator!=(const SkImageInfo &other)
 
-void *SkImageInfo_new() {
-    return new SkImageInfo();
+reskia_image_info_t *SkImageInfo_new() {
+    return reinterpret_cast<reskia_image_info_t *>(new SkImageInfo());
 }
 
-void SkImageInfo_delete(void *image_info) {
-    delete static_cast<SkImageInfo *>(image_info);
+void SkImageInfo_delete(reskia_image_info_t *image_info) {
+    delete reinterpret_cast<SkImageInfo *>(image_info);
 }
 
-int SkImageInfo_width(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->width();
+int SkImageInfo_width(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->width();
 }
 
-int SkImageInfo_height(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->height();
+int SkImageInfo_height(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->height();
 }
 
-int SkImageInfo_colorType(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->colorType();
+int SkImageInfo_colorType(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->colorType();
 }
 
-int SkImageInfo_alphaType(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->alphaType();
+int SkImageInfo_alphaType(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->alphaType();
 }
 
-void * SkImageInfo_colorSpace(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->colorSpace();
+reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info) {
+    return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkImageInfo *>(image_info)->colorSpace());
 }
 
-sk_color_space_t SkImageInfo_refColorSpace(void *image_info) {
-    return static_sk_color_space_make(static_cast<SkImageInfo *>(image_info)->refColorSpace());
+sk_color_space_t SkImageInfo_refColorSpace(reskia_image_info_t *image_info) {
+    return static_sk_color_space_make(reinterpret_cast<SkImageInfo *>(image_info)->refColorSpace());
 }
 
-bool SkImageInfo_isEmpty(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->isEmpty();
+bool SkImageInfo_isEmpty(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->isEmpty();
 }
 
-sk_color_info_t SkImageInfo_colorInfo(void *image_info) {
-    return static_sk_color_info_make(static_cast<SkImageInfo *>(image_info)->colorInfo());
+sk_color_info_t SkImageInfo_colorInfo(reskia_image_info_t *image_info) {
+    return static_sk_color_info_make(reinterpret_cast<SkImageInfo *>(image_info)->colorInfo());
 }
 
-bool SkImageInfo_isOpaque(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->isOpaque();
+bool SkImageInfo_isOpaque(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->isOpaque();
 }
 
-sk_i_size_t SkImageInfo_dimensions(void *image_info) {
-    return static_sk_i_size_make(static_cast<SkImageInfo *>(image_info)->dimensions());
+sk_i_size_t SkImageInfo_dimensions(reskia_image_info_t *image_info) {
+    return static_sk_i_size_make(reinterpret_cast<SkImageInfo *>(image_info)->dimensions());
 }
 
-sk_i_rect_t SkImageInfo_bounds(void *image_info) {
-    return static_sk_i_rect_make(static_cast<SkImageInfo *>(image_info)->bounds());
+sk_i_rect_t SkImageInfo_bounds(reskia_image_info_t *image_info) {
+    return static_sk_i_rect_make(reinterpret_cast<SkImageInfo *>(image_info)->bounds());
 }
 
-bool SkImageInfo_gammaCloseToSRGB(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->gammaCloseToSRGB();
+bool SkImageInfo_gammaCloseToSRGB(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->gammaCloseToSRGB();
 }
 
-sk_image_info_t SkImageInfo_makeWH(void *image_info, int newWidth, int newHeight) {
-    return static_sk_image_info_make(static_cast<SkImageInfo *>(image_info)->makeWH(newWidth, newHeight));
+sk_image_info_t SkImageInfo_makeWH(reskia_image_info_t *image_info, int newWidth, int newHeight) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeWH(newWidth, newHeight));
 }
 
-sk_image_info_t SkImageInfo_makeDimensions(void *image_info, sk_i_size_t newSize) {
-    return static_sk_image_info_make(static_cast<SkImageInfo *>(image_info)->makeDimensions(static_sk_i_size_get_entity(newSize)));
+sk_image_info_t SkImageInfo_makeDimensions(reskia_image_info_t *image_info, sk_i_size_t newSize) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeDimensions(static_sk_i_size_get_entity(newSize)));
 }
 
-sk_image_info_t SkImageInfo_makeAlphaType(void *image_info, int newAlphaType) {
-    return static_sk_image_info_make(static_cast<SkImageInfo *>(image_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
+sk_image_info_t SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, int newAlphaType) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
 }
 
-sk_image_info_t SkImageInfo_makeColorType(void *image_info, int newColorType) {
-    return static_sk_image_info_make(static_cast<SkImageInfo *>(image_info)->makeColorType(static_cast<SkColorType>(newColorType)));
+sk_image_info_t SkImageInfo_makeColorType(reskia_image_info_t *image_info, int newColorType) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeColorType(static_cast<SkColorType>(newColorType)));
 }
 
-sk_image_info_t SkImageInfo_makeColorSpace(void *image_info, sk_color_space_t color_space) {
-    return static_sk_image_info_make(static_cast<SkImageInfo *>(image_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
+sk_image_info_t SkImageInfo_makeColorSpace(reskia_image_info_t *image_info, sk_color_space_t color_space) {
+    return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
-int SkImageInfo_bytesPerPixel(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->bytesPerPixel();
+int SkImageInfo_bytesPerPixel(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->bytesPerPixel();
 }
 
-int SkImageInfo_shiftPerPixel(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->shiftPerPixel();
+int SkImageInfo_shiftPerPixel(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->shiftPerPixel();
 }
 
-uint64_t SkImageInfo_minRowBytes64(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->minRowBytes64();
+reskia_u64_t SkImageInfo_minRowBytes64(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->minRowBytes64();
 }
 
-size_t SkImageInfo_minRowBytes(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->minRowBytes();
+size_t SkImageInfo_minRowBytes(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->minRowBytes();
 }
 
-size_t SkImageInfo_computeOffset(void *image_info, int x, int y, size_t rowBytes) {
-    return static_cast<SkImageInfo *>(image_info)->computeOffset(x, y, rowBytes);
+size_t SkImageInfo_computeOffset(reskia_image_info_t *image_info, int x, int y, size_t rowBytes) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->computeOffset(x, y, rowBytes);
 }
 
-size_t SkImageInfo_computeByteSize(void *image_info, size_t rowBytes) {
-    return static_cast<SkImageInfo *>(image_info)->computeByteSize(rowBytes);
+size_t SkImageInfo_computeByteSize(reskia_image_info_t *image_info, size_t rowBytes) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->computeByteSize(rowBytes);
 }
 
-size_t SkImageInfo_computeMinByteSize(void *image_info) {
-    return static_cast<SkImageInfo *>(image_info)->computeMinByteSize();
+size_t SkImageInfo_computeMinByteSize(reskia_image_info_t *image_info) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->computeMinByteSize();
 }
 
-bool SkImageInfo_validRowBytes(void *image_info, size_t rowBytes) {
-    return static_cast<SkImageInfo *>(image_info)->validRowBytes(rowBytes);
+bool SkImageInfo_validRowBytes(reskia_image_info_t *image_info, size_t rowBytes) {
+    return reinterpret_cast<SkImageInfo *>(image_info)->validRowBytes(rowBytes);
 }
 
-void SkImageInfo_reset(void *image_info) {
-    static_cast<SkImageInfo *>(image_info)->reset();
+void SkImageInfo_reset(reskia_image_info_t *image_info) {
+    reinterpret_cast<SkImageInfo *>(image_info)->reset();
 }
 
 // static
@@ -153,8 +153,8 @@ sk_image_info_t SkImageInfo_Make_4(sk_i_size_t dimensions, int ct, int at, sk_co
     return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const void *colorInfo) {
-    return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), * static_cast<const SkColorInfo *>(colorInfo)));
+sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo) {
+    return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), * reinterpret_cast<const SkColorInfo *>(colorInfo)));
 }
 
 
