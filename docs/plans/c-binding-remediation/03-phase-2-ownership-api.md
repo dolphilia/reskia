@@ -35,6 +35,11 @@
   - 例: `reskia_size_t`, `reskia_u32_t`, `reskia_u64_t`（内部は `<stddef.h>/<stdint.h>` 由来）。
   - Skia独自意味型を C 側で明示する typedef を追加し、素の `unsigned int`/`int` 露出を削減。
   - 例: `reskia_color_t` (`SkColor`), `reskia_pmcolor_t` (`SkPMColor`), `reskia_typeface_id_t` (`SkTypefaceID`), `reskia_font_table_tag_t` (`SkFontTableTag`)
+  - enum 戻り値/引数（例: `SkAlphaType`, `SkColorType`, `SkBlendMode`）の正規化方針:
+    - 互換期間は ABI 互換を優先し、既存 `int` シグネチャは維持。
+    - 併設する新シグネチャでは enum 意味型 typedef（例: `reskia_alpha_type_t`, `reskia_color_type_t`, `reskia_blend_mode_t`）を使用。
+    - 旧関数は新関数への thin wrapper 化し、`note` に旧名/新名/削除予定を記録。
+    - 実装側では `static_cast<Sk...>` を一箇所に閉じ込め、呼び出し側の生 `int` 依存を段階的に解消。
   - 方針: ABI 互換期間は旧シグネチャを残し、新typedef版APIを併設して段階移行する。
   - 移行初期は ABI 互換を優先し、既存シグネチャは残したまま新typedef版を併設。
   - 対象マニフェスト:
@@ -86,9 +91,14 @@ cmake --build skia/cmake-build-local -j 8
   - 進捗: 28/28 完了（`phase2-release-api-status.csv` 全件 `done`）
 - [ ] 3. `void*` APIの型情報補強
   - 追加: `docs/plans/c-binding-remediation/checklists/phase2-type-hardening-status.csv`（Step3 専用）
+  - 追加: `docs/plans/c-binding-remediation/checklists/phase2-enum-int-status.csv`（enum/int 露出改善専用）
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
+  - enum/int 露出チェックリスト規模:
+    - 対象関数: 263
+    - `enum_int_return`: 71
+    - `enum_int_param`: 196
   - カテゴリ内訳（関数宣言ベース）:
     - `void_ptr`: 2365
     - `suffix`: 341
