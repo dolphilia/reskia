@@ -252,39 +252,39 @@ void_ptr,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixel
 void_ptr|suffix|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_writePixels_2,135,done,,replacement planned name: SkCanvas_writePixelsWithVariant2
 void_ptr|primitive,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirect,137,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
 void_ptr|primitive|semantic,skia/binding/sk_canvas.h,skia/binding/sk_canvas.cpp,SkCanvas_MakeRasterDirectN32,138,done,,typed canvas handle (reskia_canvas_t*) introduced; primitive widths normalized (size_t/uint32_t)
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getInfo,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_dimensions,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_bounds,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getICCProfile,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getOrigin,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScaledDimensions,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getValidSubset,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getEncodedFormat,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels_2,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels_3,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getImage,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getImage_2,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_queryYUVAInfo,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getYUVAPlanes,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startIncrementalDecode,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startIncrementalDecode_2,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_incrementalDecode,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startScanlineDecode,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startScanlineDecode_2,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScanlines,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_skipScanlines,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScanlineOrder,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_nextScanline,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_outputScanline,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameCount,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameInfo,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameInfo_2,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getRepetitionCount,41,todo,,from step3 manifests: function declaration requires typed-API review
-primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MinBufferedBytesNeeded,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromStream,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromData,48,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_delete,12,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getInfo,13,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_dimensions,14,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_bounds,15,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getICCProfile,16,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getOrigin,17,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScaledDimensions,18,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getValidSubset,19,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getEncodedFormat,20,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels,21,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|suffix|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels_2,22,done,,replacement planned name: SkCodec_getPixelsWithVariant2
+void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getPixels_3,23,done,,replacement planned name: SkCodec_getPixelsWithVariant3
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getImage,24,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getImage_2,25,done,,replacement planned name: SkCodec_getImageWithVariant2
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_queryYUVAInfo,26,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getYUVAPlanes,27,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startIncrementalDecode,28,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|suffix|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startIncrementalDecode_2,29,done,,replacement planned name: SkCodec_startIncrementalDecodeWithVariant2
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_incrementalDecode,30,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startScanlineDecode,31,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_startScanlineDecode_2,32,done,,replacement planned name: SkCodec_startScanlineDecodeWithVariant2
+void_ptr|primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScanlines,33,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_skipScanlines,34,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getScanlineOrder,35,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_nextScanline,36,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_outputScanline,37,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameCount,38,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameInfo,39,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr|suffix,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getFrameInfo_2,40,done,,replacement planned name: SkCodec_getFrameInfoWithVariant2
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_getRepetitionCount,41,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+primitive,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MinBufferedBytesNeeded,45,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromStream,47,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
+void_ptr,skia/binding/sk_codec.h,skia/binding/sk_codec.cpp,SkCodec_MakeFromData,48,done,,typed opaque pointer aliases introduced for SkCodec API surface; size_t normalization applied
 primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetA,12,todo,,from step3 manifests: function declaration requires typed-API review
 primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorSetARGB,13,todo,,from step3 manifests: function declaration requires typed-API review
 primitive|semantic,skia/binding/sk_color.h,skia/binding/sk_color.cpp,SkColor_SkColorToHSV,14,todo,,from step3 manifests: function declaration requires typed-API review

@@ -104,11 +104,13 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkBmpDecoder` 系シグネチャで入力バッファを `const uint8_t* + size_t` に正規化し、`result/decodeContext` を不透明型ポインタ化
     - `skia/binding/sk_canvas.h` + `skia/binding/sk_canvas.cpp`（126/126 関数 `done`）
     - 変更内容: 全APIで `canvas` 受け口を `reskia_canvas_t*` に型強化し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
+    - `skia/binding/sk_codec.h` + `skia/binding/sk_codec.cpp`（33/33 関数 `done`）
+    - 変更内容: `SkCodec` 系シグネチャの `void*` を不透明型ポインタへ置換し、`rowBytes/length` を `size_t` に正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 253 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 286 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71
