@@ -268,11 +268,19 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkRasterHandleAllocator` API の `void*` を `reskia_raster_handle_allocator_t*` / `reskia_raster_handle_allocator_rec_t*` / `reskia_image_info_t*` / `reskia_matrix_t*` / `reskia_i_rect_t*` へ置換し、`handle` を `reskia_raster_handle_t` で明示
     - `skia/binding/sk_raw_decoder.h` + `skia/binding/sk_raw_decoder.cpp`（2/2 関数 `done`）
     - 変更内容: `SkRawDecoder` API で C ヘッダから `SkCodec::Result` / `SkCodecs::DecodeContext` の具象露出を除去し、`uint8_t*` / `size_t` / 不透明型ポインタへ正規化
+    - `skia/binding/sk_read_buffer.h` + `skia/binding/sk_read_buffer.cpp`（66/66 関数 `done`）
+    - 変更内容: `SkReadBuffer` API の `void*` を `reskia_read_buffer_t*` を中心に不透明型ポインタ（`reskia_string_t*` / `reskia_color_4f_t*` / `reskia_point_t*` / `reskia_matrix_t*` / `reskia_deserial_procs_t*` など）へ置換し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
+    - `skia/binding/sk_rect.h` + `skia/binding/sk_rect.cpp`（61/61 関数 `done`）
+    - 変更内容: `SkRect` API の `void*` を `reskia_rect_t*` / `reskia_point_t*` / `reskia_i_rect_t*` / `reskia_i_size_t*` / `reskia_size_t*` へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_ref_cnt_base.h` + `skia/binding/sk_ref_cnt_base.cpp`（5/5 関数 `done`）
+    - 変更内容: `SkRefCntBase` API の `void*` を `reskia_ref_cnt_base_t*` へ置換し、`new/ref/unref/unique` のシグネチャを型付きハンドルへ正規化
+    - `skia/binding/sk_region.h` + `skia/binding/sk_region.cpp`（34/34 関数 `done`）
+    - 変更内容: `SkRegion` API の `void*` を `reskia_region_t*` / `reskia_i_rect_t*` / `reskia_path_t*` へ置換し、`write/readFromMemory` の `unsigned long` を `size_t` に正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1663 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1829 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

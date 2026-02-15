@@ -8,24 +8,24 @@
 
 extern "C" {
 
-void *SkRefCntBase_new() {
-    return new SkRefCntBase();
+reskia_ref_cnt_base_t *SkRefCntBase_new() {
+    return reinterpret_cast<reskia_ref_cnt_base_t *>(new SkRefCntBase());
 }
 
-void SkRefCntBase_delete(void *ref_cnt_base) {
-    static_cast<SkRefCntBase *>(ref_cnt_base)->unref();
+void SkRefCntBase_delete(reskia_ref_cnt_base_t *ref_cnt_base) {
+    reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 
-bool SkRefCntBase_unique(void *ref_cnt_base) {
-    return static_cast<SkRefCntBase *>(ref_cnt_base)->unique();
+bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base) {
+    return reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unique();
 }
 
-void SkRefCntBase_ref(void *ref_cnt_base) {
-    static_cast<SkRefCntBase *>(ref_cnt_base)->ref();
+void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base) {
+    reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->ref();
 }
 
-void SkRefCntBase_unref(void *ref_cnt_base) {
-    static_cast<SkRefCntBase *>(ref_cnt_base)->unref();
+void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base) {
+    reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 
 }

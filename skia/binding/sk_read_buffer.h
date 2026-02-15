@@ -5,92 +5,110 @@
 #ifndef SK_READ_BUFFER_H
 #define SK_READ_BUFFER_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+typedef struct reskia_color_4f_t reskia_color_4f_t;
+typedef struct reskia_deserial_procs_t reskia_deserial_procs_t;
+typedef struct reskia_flattenable_t reskia_flattenable_t;
+typedef struct reskia_i_rect_t reskia_i_rect_t;
+typedef struct reskia_m_44_t reskia_m_44_t;
+typedef struct reskia_matrix_t reskia_matrix_t;
+typedef struct reskia_path_t reskia_path_t;
+typedef struct reskia_point_3_t reskia_point_3_t;
+typedef struct reskia_point_t reskia_point_t;
+typedef struct reskia_r_rect_t reskia_r_rect_t;
+typedef struct reskia_read_buffer_t reskia_read_buffer_t;
+typedef struct reskia_rect_t reskia_rect_t;
+typedef struct reskia_region_t reskia_region_t;
+typedef struct reskia_string_t reskia_string_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void * SkReadBuffer_new(); // () -> SkReadBuffer*
-void * SkReadBuffer_new_2(const void* data, unsigned long size); // (const void* data, size_t size) -> SkReadBuffer*
-void SkReadBuffer_delete(void * rect); // (SkReadBuffer* rect)
-void SkReadBuffer_setMemory(void * buffer, const void* data, unsigned long size); // (SkReadBuffer* buffer, const void* data, size_t size)
-bool SkReadBuffer_isVersionLT(void * buffer, int targetVersion); // (SkReadBuffer* buffer, SkPicturePriv::Version targetVersion) -> bool
-unsigned int SkReadBuffer_getVersion(void * buffer); // (SkReadBuffer* buffer) -> uint32_t
-void SkReadBuffer_setVersion(void * buffer, int version); // (SkReadBuffer* buffer, int version)
-unsigned long SkReadBuffer_size(void * buffer); // (SkReadBuffer* buffer) -> size_t
-unsigned long SkReadBuffer_offset(void * buffer); // (SkReadBuffer* buffer) -> size_t
-bool SkReadBuffer_eof(void * buffer); // (SkReadBuffer* buffer) -> bool
-const void* SkReadBuffer_skip(void * buffer, unsigned long size); // (SkReadBuffer* buffer, size_t size) -> const void*
-const void* SkReadBuffer_skip_2(void * buffer, unsigned long count, unsigned long size); // (SkReadBuffer* buffer, size_t count, size_t size) -> const void*
-unsigned long SkReadBuffer_available(void * buffer); // (SkReadBuffer* buffer) -> size_t
+reskia_read_buffer_t *SkReadBuffer_new(); // () -> SkReadBuffer*
+reskia_read_buffer_t *SkReadBuffer_new_2(const void* data, size_t size); // (const void* data, size_t size) -> SkReadBuffer*
+void SkReadBuffer_delete(reskia_read_buffer_t *rect); // (SkReadBuffer* rect)
+void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size_t size); // (SkReadBuffer* buffer, const void* data, size_t size)
+bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, int targetVersion); // (SkReadBuffer* buffer, SkPicturePriv::Version targetVersion) -> bool
+uint32_t SkReadBuffer_getVersion(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> uint32_t
+void SkReadBuffer_setVersion(reskia_read_buffer_t *buffer, int version); // (SkReadBuffer* buffer, int version)
+size_t SkReadBuffer_size(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
+size_t SkReadBuffer_offset(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
+bool SkReadBuffer_eof(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> bool
+const void* SkReadBuffer_skip(reskia_read_buffer_t *buffer, size_t size); // (SkReadBuffer* buffer, size_t size) -> const void*
+const void* SkReadBuffer_skip_2(reskia_read_buffer_t *buffer, size_t count, size_t size); // (SkReadBuffer* buffer, size_t count, size_t size) -> const void*
+size_t SkReadBuffer_available(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
 
 // template <typename T> const T* skipT()
 // template <typename T> const T* skipT(size_t count)
 
-bool SkReadBuffer_readBool(void * buffer); // (SkReadBuffer* buffer) -> bool
-unsigned int SkReadBuffer_readColor(void * buffer); // (SkReadBuffer* buffer) -> SkColor
-int SkReadBuffer_readInt(void * buffer); // (SkReadBuffer* buffer) -> int32_t
-float SkReadBuffer_readScalar(void * buffer); // (SkReadBuffer* buffer) -> SkScalar
-unsigned int SkReadBuffer_readUInt(void * buffer); // (SkReadBuffer* buffer) -> uint32_t
-int SkReadBuffer_read32(void * buffer); // (SkReadBuffer* buffer) -> int32_t
+bool SkReadBuffer_readBool(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> bool
+uint32_t SkReadBuffer_readColor(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkColor
+int32_t SkReadBuffer_readInt(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> int32_t
+float SkReadBuffer_readScalar(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkScalar
+uint32_t SkReadBuffer_readUInt(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> uint32_t
+int32_t SkReadBuffer_read32(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> int32_t
 
 // template <typename T> T read32LE(T max)
 
-unsigned char SkReadBuffer_peekByte(void * buffer); // (SkReadBuffer* buffer) -> uint8_t
-void SkReadBuffer_readString(void * buffer, void * string); // (SkReadBuffer* buffer, SkString* string)
-void SkReadBuffer_readColor4f(void * buffer, void * color); // (SkReadBuffer* buffer, SkColor4f* color)
-void SkReadBuffer_readPoint(void * buffer, void * point); // (SkReadBuffer* buffer, SkPoint* point)
-int SkReadBuffer_readPoint_2(void * buffer); // (SkReadBuffer* buffer) -> sk_point_t
-void SkReadBuffer_readPoint3(void * buffer, void * point); // (SkReadBuffer* buffer, SkPoint3* point)
-void SkReadBuffer_read(void * buffer, void * m44); // (SkReadBuffer* buffer, SkM44* m44)
-void SkReadBuffer_readMatrix(void * buffer, void * matrix); // (SkReadBuffer* buffer, SkMatrix* matrix)
-void SkReadBuffer_readIRect(void * buffer, void * rect); // (SkReadBuffer* buffer, SkIRect* rect)
-void SkReadBuffer_readRect(void * buffer, void * rect); // (SkReadBuffer* buffer, SkRect* rect)
-int SkReadBuffer_readRect_2(void * buffer); // (SkReadBuffer* buffer) -> sk_rect_t
-void SkReadBuffer_readRRect(void * buffer, void * rrect); // (SkReadBuffer* buffer, SkRRect* rrect)
-void SkReadBuffer_readRegion(void * buffer, void * region); // (SkReadBuffer* buffer, SkRegion* region)
-void SkReadBuffer_readPath(void * buffer, void * path); // (SkReadBuffer* buffer, SkPath* path)
-int SkReadBuffer_readPaint(void * buffer); // (SkReadBuffer* buffer) -> sk_paint_t
-void * SkReadBuffer_readRawFlattenable(void * buffer); // (SkReadBuffer* buffer) -> SkFlattenable*
-void * SkReadBuffer_readFlattenable(void * buffer, int type); // (SkReadBuffer* buffer, SkFlattenable::Type type) -> SkFlattenable*
+uint8_t SkReadBuffer_peekByte(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> uint8_t
+void SkReadBuffer_readString(reskia_read_buffer_t *buffer, reskia_string_t *string); // (SkReadBuffer* buffer, SkString* string)
+void SkReadBuffer_readColor4f(reskia_read_buffer_t *buffer, reskia_color_4f_t *color); // (SkReadBuffer* buffer, SkColor4f* color)
+void SkReadBuffer_readPoint(reskia_read_buffer_t *buffer, reskia_point_t *point); // (SkReadBuffer* buffer, SkPoint* point)
+int SkReadBuffer_readPoint_2(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_point_t
+void SkReadBuffer_readPoint3(reskia_read_buffer_t *buffer, reskia_point_3_t *point); // (SkReadBuffer* buffer, SkPoint3* point)
+void SkReadBuffer_read(reskia_read_buffer_t *buffer, reskia_m_44_t *m44); // (SkReadBuffer* buffer, SkM44* m44)
+void SkReadBuffer_readMatrix(reskia_read_buffer_t *buffer, reskia_matrix_t *matrix); // (SkReadBuffer* buffer, SkMatrix* matrix)
+void SkReadBuffer_readIRect(reskia_read_buffer_t *buffer, reskia_i_rect_t *rect); // (SkReadBuffer* buffer, SkIRect* rect)
+void SkReadBuffer_readRect(reskia_read_buffer_t *buffer, reskia_rect_t *rect); // (SkReadBuffer* buffer, SkRect* rect)
+int SkReadBuffer_readRect_2(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_rect_t
+void SkReadBuffer_readRRect(reskia_read_buffer_t *buffer, reskia_r_rect_t *rrect); // (SkReadBuffer* buffer, SkRRect* rrect)
+void SkReadBuffer_readRegion(reskia_read_buffer_t *buffer, reskia_region_t *region); // (SkReadBuffer* buffer, SkRegion* region)
+void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path); // (SkReadBuffer* buffer, SkPath* path)
+int SkReadBuffer_readPaint(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_paint_t
+reskia_flattenable_t *SkReadBuffer_readRawFlattenable(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkFlattenable*
+reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, int type); // (SkReadBuffer* buffer, SkFlattenable::Type type) -> SkFlattenable*
 
 // template <typename T> sk_sp<T> readFlattenable()
 
-int SkReadBuffer_readColorFilter(void * buffer); // (SkReadBuffer* buffer) -> sk_color_filter_t
-int SkReadBuffer_readImageFilter(void * buffer); // (SkReadBuffer* buffer) -> sk_image_filter_t
-int SkReadBuffer_readBlender(void * buffer); // (SkReadBuffer* buffer) -> sk_blender_t
-int SkReadBuffer_readMaskFilter(void * buffer); // (SkReadBuffer* buffer) -> sk_mask_filter_t
-int SkReadBuffer_readPathEffect(void * buffer); // (SkReadBuffer* buffer) -> sk_path_effect_t
-int SkReadBuffer_readShader(void * buffer); // (SkReadBuffer* buffer) -> sk_shader_t
-bool SkReadBuffer_readPad32(void * readBuffer, void * buffer, unsigned long bytes); // (SkReadBuffer* readBuffer, void* buffer, size_t bytes) -> bool
-bool SkReadBuffer_readByteArray(void * buffer, void * value, unsigned long size); // (SkReadBuffer* buffer, void* value, size_t size) -> bool
-bool SkReadBuffer_readColorArray(void * buffer, void * colors, unsigned long size); // (SkReadBuffer* buffer, SkColor* colors, size_t size) -> bool
-bool SkReadBuffer_readColor4fArray(void * buffer, void * colors, unsigned long size); // (SkReadBuffer* buffer, SkColor4f* colors, size_t size) -> bool
-bool SkReadBuffer_readIntArray(void * buffer, void * values, unsigned long size); // (SkReadBuffer* buffer, int32_t* values, size_t size) -> bool
-bool SkReadBuffer_readPointArray(void * buffer, void * points, unsigned long size); // (SkReadBuffer* buffer, SkPoint* points, size_t size) -> bool
-bool SkReadBuffer_readScalarArray(void * buffer, void * values, unsigned long size); // (SkReadBuffer* buffer, SkScalar* values, size_t size) -> bool
-const void* SkReadBuffer_skipByteArray(void * buffer, void * size); // (SkReadBuffer* buffer, size_t* size) -> const void*
-int SkReadBuffer_readByteArrayAsData(void * buffer); // (SkReadBuffer* buffer) -> sk_data_t
-unsigned int SkReadBuffer_getArrayCount(void * buffer); // (SkReadBuffer* buffer) -> uint32_t
-int SkReadBuffer_readImage(void * buffer); // (SkReadBuffer* buffer) -> sk_image_t
-int SkReadBuffer_readTypeface(void * buffer); // (SkReadBuffer* buffer) -> sk_typeface_t
-void SkReadBuffer_setTypefaceArray(void * buffer, void * array, int count); // (SkReadBuffer* buffer, sk_sp<SkTypeface>* array, int count)
-void SkReadBuffer_setFactoryPlayback(void * buffer, void * array, int count); // (SkReadBuffer* buffer, SkFlattenable::Factory* array, int count)
-void SkReadBuffer_setDeserialProcs(void * buffer, const void * procs); // (SkReadBuffer* buffer, const SkDeserialProcs* procs)
-const void * SkReadBuffer_getDeserialProcs(void * buffer); // (SkReadBuffer* buffer) -> const SkDeserialProcs*
-bool SkReadBuffer_allowSkSL(void * buffer); // (SkReadBuffer* buffer) -> bool
-void SkReadBuffer_setAllowSkSL(void * buffer, bool allow); // (SkReadBuffer* buffer, bool allow)
-bool SkReadBuffer_validate(void * buffer, bool isValid); // (SkReadBuffer* buffer, bool isValid) -> bool
+int SkReadBuffer_readColorFilter(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_color_filter_t
+int SkReadBuffer_readImageFilter(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_image_filter_t
+int SkReadBuffer_readBlender(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_blender_t
+int SkReadBuffer_readMaskFilter(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_mask_filter_t
+int SkReadBuffer_readPathEffect(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_path_effect_t
+int SkReadBuffer_readShader(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_shader_t
+bool SkReadBuffer_readPad32(reskia_read_buffer_t *readBuffer, void *buffer, size_t bytes); // (SkReadBuffer* readBuffer, void* buffer, size_t bytes) -> bool
+bool SkReadBuffer_readByteArray(reskia_read_buffer_t *buffer, void *value, size_t size); // (SkReadBuffer* buffer, void* value, size_t size) -> bool
+bool SkReadBuffer_readColorArray(reskia_read_buffer_t *buffer, uint32_t *colors, size_t size); // (SkReadBuffer* buffer, SkColor* colors, size_t size) -> bool
+bool SkReadBuffer_readColor4fArray(reskia_read_buffer_t *buffer, reskia_color_4f_t *colors, size_t size); // (SkReadBuffer* buffer, SkColor4f* colors, size_t size) -> bool
+bool SkReadBuffer_readIntArray(reskia_read_buffer_t *buffer, int32_t *values, size_t size); // (SkReadBuffer* buffer, int32_t* values, size_t size) -> bool
+bool SkReadBuffer_readPointArray(reskia_read_buffer_t *buffer, reskia_point_t *points, size_t size); // (SkReadBuffer* buffer, SkPoint* points, size_t size) -> bool
+bool SkReadBuffer_readScalarArray(reskia_read_buffer_t *buffer, float *values, size_t size); // (SkReadBuffer* buffer, SkScalar* values, size_t size) -> bool
+const void* SkReadBuffer_skipByteArray(reskia_read_buffer_t *buffer, size_t *size); // (SkReadBuffer* buffer, size_t* size) -> const void*
+int SkReadBuffer_readByteArrayAsData(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_data_t
+uint32_t SkReadBuffer_getArrayCount(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> uint32_t
+int SkReadBuffer_readImage(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_image_t
+int SkReadBuffer_readTypeface(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_typeface_t
+void SkReadBuffer_setTypefaceArray(reskia_read_buffer_t *buffer, void * array, int count); // (SkReadBuffer* buffer, sk_sp<SkTypeface>* array, int count)
+void SkReadBuffer_setFactoryPlayback(reskia_read_buffer_t *buffer, void * array, int count); // (SkReadBuffer* buffer, SkFlattenable::Factory* array, int count)
+void SkReadBuffer_setDeserialProcs(reskia_read_buffer_t *buffer, const reskia_deserial_procs_t *procs); // (SkReadBuffer* buffer, const SkDeserialProcs* procs)
+const reskia_deserial_procs_t *SkReadBuffer_getDeserialProcs(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> const SkDeserialProcs*
+bool SkReadBuffer_allowSkSL(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> bool
+void SkReadBuffer_setAllowSkSL(reskia_read_buffer_t *buffer, bool allow); // (SkReadBuffer* buffer, bool allow)
+bool SkReadBuffer_validate(reskia_read_buffer_t *buffer, bool isValid); // (SkReadBuffer* buffer, bool isValid) -> bool
 
 // template <typename T> bool validateCanReadN(size_t n)
 
-bool SkReadBuffer_isValid(void * buffer); // (SkReadBuffer* buffer) -> bool
-bool SkReadBuffer_validateIndex(void * buffer, int index, int count); // (SkReadBuffer* buffer, int index, int count) -> bool
-int SkReadBuffer_checkInt(void * buffer, int min, int max); // (SkReadBuffer* buffer, int min, int max) -> int32_t
+bool SkReadBuffer_isValid(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> bool
+bool SkReadBuffer_validateIndex(reskia_read_buffer_t *buffer, int index, int count); // (SkReadBuffer* buffer, int index, int count) -> bool
+int SkReadBuffer_checkInt(reskia_read_buffer_t *buffer, int min, int max); // (SkReadBuffer* buffer, int min, int max) -> int32_t
 
 // template <typename T> T checkRange(T min, T max)
 
-int SkReadBuffer_checkFilterQuality(void * buffer); // (SkReadBuffer* buffer) -> SkLegacyFQ
-int SkReadBuffer_readSampling(void * buffer); // (SkReadBuffer* buffer) -> sk_sampling_options_t
+int SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkLegacyFQ
+int SkReadBuffer_readSampling(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_sampling_options_t
 
 #ifdef __cplusplus
 }

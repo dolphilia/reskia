@@ -38,280 +38,283 @@
 
 extern "C" {
 
-void * SkReadBuffer_new() {
-    return new SkReadBuffer();
+reskia_read_buffer_t *SkReadBuffer_new() {
+    return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer());
 }
 
-void * SkReadBuffer_new_2(const void* data, size_t size) {
-    return new SkReadBuffer(data, size);
+reskia_read_buffer_t *SkReadBuffer_new_2(const void* data, size_t size) {
+    return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer(data, size));
 }
 
-void SkReadBuffer_delete(void * buffer) {
-    delete static_cast<SkReadBuffer *>(buffer);
+void SkReadBuffer_delete(reskia_read_buffer_t *buffer) {
+    delete reinterpret_cast<SkReadBuffer *>(buffer);
 }
 
-void SkReadBuffer_setMemory(void * buffer, const void* data, size_t size) {
-    static_cast<SkReadBuffer *>(buffer)->setMemory(data, size);
+void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size_t size) {
+    reinterpret_cast<SkReadBuffer *>(buffer)->setMemory(data, size);
 }
 
-bool SkReadBuffer_isVersionLT(void * buffer, int targetVersion) {
-    return static_cast<SkReadBuffer *>(buffer)->isVersionLT(static_cast<SkPicturePriv::Version>(targetVersion));
+bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, int targetVersion) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->isVersionLT(static_cast<SkPicturePriv::Version>(targetVersion));
 }
 
-uint32_t SkReadBuffer_getVersion(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->getVersion();
+uint32_t SkReadBuffer_getVersion(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->getVersion();
 }
 
-void SkReadBuffer_setVersion(void * buffer, int version) {
-    return static_cast<SkReadBuffer *>(buffer)->setVersion(version);
+void SkReadBuffer_setVersion(reskia_read_buffer_t *buffer, int version) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->setVersion(version);
 }
 
-size_t SkReadBuffer_size(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->size();
+size_t SkReadBuffer_size(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->size();
 }
 
-size_t SkReadBuffer_offset(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->offset();
+size_t SkReadBuffer_offset(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->offset();
 }
 
-bool SkReadBuffer_eof(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->eof();
+bool SkReadBuffer_eof(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->eof();
 }
 
-const void* SkReadBuffer_skip(void * buffer, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->skip(size);
+const void* SkReadBuffer_skip(reskia_read_buffer_t *buffer, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->skip(size);
 }
 
-const void* SkReadBuffer_skip_2(void * buffer, size_t count, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->skip(count, size);
+const void* SkReadBuffer_skip_2(reskia_read_buffer_t *buffer, size_t count, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->skip(count, size);
 }
 
-size_t SkReadBuffer_available(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->available();
+size_t SkReadBuffer_available(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->available();
 }
 
 // template <typename T> const T* skipT()
 // template <typename T> const T* skipT(size_t count)
 
-bool SkReadBuffer_readBool(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readBool();
+bool SkReadBuffer_readBool(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readBool();
 }
 
-SkColor SkReadBuffer_readColor(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readColor();
+SkColor SkReadBuffer_readColor(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readColor();
 }
 
-int32_t SkReadBuffer_readInt(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readInt();
+int32_t SkReadBuffer_readInt(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readInt();
 }
 
-SkScalar SkReadBuffer_readScalar(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readScalar();
+SkScalar SkReadBuffer_readScalar(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readScalar();
 }
 
-uint32_t SkReadBuffer_readUInt(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readUInt();
+uint32_t SkReadBuffer_readUInt(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readUInt();
 }
 
-int32_t SkReadBuffer_read32(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->read32();
+int32_t SkReadBuffer_read32(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->read32();
 }
 
 // template <typename T> T read32LE(T max)
 
-uint8_t SkReadBuffer_peekByte(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->peekByte();
+uint8_t SkReadBuffer_peekByte(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->peekByte();
 }
 
-void SkReadBuffer_readString(void * buffer, void * string) {
-    static_cast<SkReadBuffer *>(buffer)->readString(static_cast<SkString *>(string));
+void SkReadBuffer_readString(reskia_read_buffer_t *buffer, reskia_string_t *string) {
+    reinterpret_cast<SkReadBuffer *>(buffer)->readString(reinterpret_cast<SkString *>(string));
 }
 
-void SkReadBuffer_readColor4f(void * buffer, void * color) {
-    static_cast<SkReadBuffer *>(buffer)->readColor4f(static_cast<SkColor4f *>(color));
+void SkReadBuffer_readColor4f(reskia_read_buffer_t *buffer, reskia_color_4f_t *color) {
+    reinterpret_cast<SkReadBuffer *>(buffer)->readColor4f(reinterpret_cast<SkColor4f *>(color));
 }
 
-void SkReadBuffer_readPoint(void * buffer, void * point) {
-    static_cast<SkReadBuffer *>(buffer)->readPoint(static_cast<SkPoint *>(point));
+void SkReadBuffer_readPoint(reskia_read_buffer_t *buffer, reskia_point_t *point) {
+    reinterpret_cast<SkReadBuffer *>(buffer)->readPoint(reinterpret_cast<SkPoint *>(point));
 }
 
-sk_point_t SkReadBuffer_readPoint_2(void * buffer) {
-    return static_sk_point_make(static_cast<SkReadBuffer *>(buffer)->readPoint());
+sk_point_t SkReadBuffer_readPoint_2(reskia_read_buffer_t *buffer) {
+    return static_sk_point_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPoint());
 }
 
-void SkReadBuffer_readPoint3(void * buffer, void * point) {
-    return static_cast<SkReadBuffer *>(buffer)->readPoint3(static_cast<SkPoint3 *>(point));
+void SkReadBuffer_readPoint3(reskia_read_buffer_t *buffer, reskia_point_3_t *point) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readPoint3(reinterpret_cast<SkPoint3 *>(point));
 }
 
-void SkReadBuffer_read(void * buffer, void * m44) {
-    return static_cast<SkReadBuffer *>(buffer)->read(static_cast<SkM44 *>(m44));
+void SkReadBuffer_read(reskia_read_buffer_t *buffer, reskia_m_44_t *m44) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->read(reinterpret_cast<SkM44 *>(m44));
 }
 
-void SkReadBuffer_readMatrix(void * buffer, void * matrix) {
-    return static_cast<SkReadBuffer *>(buffer)->readMatrix(static_cast<SkMatrix *>(matrix));
+void SkReadBuffer_readMatrix(reskia_read_buffer_t *buffer, reskia_matrix_t *matrix) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readMatrix(reinterpret_cast<SkMatrix *>(matrix));
 }
 
-void SkReadBuffer_readIRect(void * buffer, void * rect) {
-    return static_cast<SkReadBuffer *>(buffer)->readIRect(static_cast<SkIRect *>(rect));
+void SkReadBuffer_readIRect(reskia_read_buffer_t *buffer, reskia_i_rect_t *rect) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readIRect(reinterpret_cast<SkIRect *>(rect));
 }
 
-void SkReadBuffer_readRect(void * buffer, void * rect) {
-    return static_cast<SkReadBuffer *>(buffer)->readRect(static_cast<SkRect *>(rect));
+void SkReadBuffer_readRect(reskia_read_buffer_t *buffer, reskia_rect_t *rect) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readRect(reinterpret_cast<SkRect *>(rect));
 }
 
-sk_rect_t SkReadBuffer_readRect_2(void * buffer) {
-    return static_sk_rect_make(static_cast<SkReadBuffer *>(buffer)->readRect());
+sk_rect_t SkReadBuffer_readRect_2(reskia_read_buffer_t *buffer) {
+    return static_sk_rect_make(reinterpret_cast<SkReadBuffer *>(buffer)->readRect());
 }
 
-void SkReadBuffer_readRRect(void * buffer, void * rrect) {
-    return static_cast<SkReadBuffer *>(buffer)->readRRect(static_cast<SkRRect *>(rrect));
+void SkReadBuffer_readRRect(reskia_read_buffer_t *buffer, reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readRRect(reinterpret_cast<SkRRect *>(rrect));
 }
 
-void SkReadBuffer_readRegion(void * buffer, void * region) {
-    return static_cast<SkReadBuffer *>(buffer)->readRegion(static_cast<SkRegion *>(region));
+void SkReadBuffer_readRegion(reskia_read_buffer_t *buffer, reskia_region_t *region) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readRegion(reinterpret_cast<SkRegion *>(region));
 }
 
-void SkReadBuffer_readPath(void * buffer, void * path) {
-      return static_cast<SkReadBuffer *>(buffer)->readPath(static_cast<SkPath *>(path));
+void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path) {
+      return reinterpret_cast<SkReadBuffer *>(buffer)->readPath(reinterpret_cast<SkPath *>(path));
 }
 
-sk_paint_t SkReadBuffer_readPaint(void * buffer) {
-    return static_sk_paint_make(static_cast<SkReadBuffer *>(buffer)->readPaint());
+sk_paint_t SkReadBuffer_readPaint(reskia_read_buffer_t *buffer) {
+    return static_sk_paint_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPaint());
 }
 
-void * SkReadBuffer_readRawFlattenable(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->readRawFlattenable();
+reskia_flattenable_t *SkReadBuffer_readRawFlattenable(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<reskia_flattenable_t *>(
+            reinterpret_cast<SkReadBuffer *>(buffer)->readRawFlattenable());
 }
 
-void * SkReadBuffer_readFlattenable(void * buffer, int type) {
-    return static_cast<SkReadBuffer *>(buffer)->readFlattenable(static_cast<SkFlattenable::Type>(type));
+reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, int type) {
+    return reinterpret_cast<reskia_flattenable_t *>(
+            reinterpret_cast<SkReadBuffer *>(buffer)->readFlattenable(static_cast<SkFlattenable::Type>(type)));
 }
 
 // template <typename T> sk_sp<T> readFlattenable()
 
-sk_color_filter_t SkReadBuffer_readColorFilter(void * buffer) {
-    return static_sk_color_filter_make(static_cast<SkReadBuffer *>(buffer)->readColorFilter());
+sk_color_filter_t SkReadBuffer_readColorFilter(reskia_read_buffer_t *buffer) {
+    return static_sk_color_filter_make(reinterpret_cast<SkReadBuffer *>(buffer)->readColorFilter());
 }
 
-sk_image_filter_t SkReadBuffer_readImageFilter(void * buffer) {
-    return static_sk_image_filter_make(static_cast<SkReadBuffer *>(buffer)->readImageFilter());
+sk_image_filter_t SkReadBuffer_readImageFilter(reskia_read_buffer_t *buffer) {
+    return static_sk_image_filter_make(reinterpret_cast<SkReadBuffer *>(buffer)->readImageFilter());
 }
 
-sk_blender_t SkReadBuffer_readBlender(void * buffer) {
-    return static_sk_blender_make(static_cast<SkReadBuffer *>(buffer)->readBlender());
+sk_blender_t SkReadBuffer_readBlender(reskia_read_buffer_t *buffer) {
+    return static_sk_blender_make(reinterpret_cast<SkReadBuffer *>(buffer)->readBlender());
 }
 
-sk_mask_filter_t SkReadBuffer_readMaskFilter(void * buffer) {
-    return static_sk_mask_filter_make(static_cast<SkReadBuffer *>(buffer)->readMaskFilter());
+sk_mask_filter_t SkReadBuffer_readMaskFilter(reskia_read_buffer_t *buffer) {
+    return static_sk_mask_filter_make(reinterpret_cast<SkReadBuffer *>(buffer)->readMaskFilter());
 }
 
-sk_path_effect_t SkReadBuffer_readPathEffect(void * buffer) {
-    return static_sk_path_effect_make(static_cast<SkReadBuffer *>(buffer)->readPathEffect());
+sk_path_effect_t SkReadBuffer_readPathEffect(reskia_read_buffer_t *buffer) {
+    return static_sk_path_effect_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPathEffect());
 }
 
-sk_shader_t SkReadBuffer_readShader(void * buffer) {
-    return static_sk_shader_make(static_cast<SkReadBuffer *>(buffer)->readShader());
+sk_shader_t SkReadBuffer_readShader(reskia_read_buffer_t *buffer) {
+    return static_sk_shader_make(reinterpret_cast<SkReadBuffer *>(buffer)->readShader());
 }
 
-bool SkReadBuffer_readPad32(void * readBuffer, void * buffer, size_t bytes) {
-    return static_cast<SkReadBuffer *>(readBuffer)->readPad32(buffer, bytes);
+bool SkReadBuffer_readPad32(reskia_read_buffer_t *readBuffer, void *buffer, size_t bytes) {
+    return reinterpret_cast<SkReadBuffer *>(readBuffer)->readPad32(buffer, bytes);
 }
 
-bool SkReadBuffer_readByteArray(void * buffer, void * value, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readByteArray(value, size);
+bool SkReadBuffer_readByteArray(reskia_read_buffer_t *buffer, void * value, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readByteArray(value, size);
 }
 
-bool SkReadBuffer_readColorArray(void * buffer, void * colors, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readColorArray(static_cast<SkColor *>(colors), size);
+bool SkReadBuffer_readColorArray(reskia_read_buffer_t *buffer, uint32_t *colors, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readColorArray(reinterpret_cast<SkColor *>(colors), size);
 }
 
-bool SkReadBuffer_readColor4fArray(void * buffer, void * colors, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readColor4fArray(static_cast<SkColor4f *>(colors), size);
+bool SkReadBuffer_readColor4fArray(reskia_read_buffer_t *buffer, reskia_color_4f_t *colors, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readColor4fArray(reinterpret_cast<SkColor4f *>(colors), size);
 }
 
-bool SkReadBuffer_readIntArray(void * buffer, void * values, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readIntArray(static_cast<int32_t *>(values), size);
+bool SkReadBuffer_readIntArray(reskia_read_buffer_t *buffer, int32_t *values, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readIntArray(reinterpret_cast<int32_t *>(values), size);
 }
 
-bool SkReadBuffer_readPointArray(void * buffer, void * points, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readPointArray(static_cast<SkPoint *>(points), size);
+bool SkReadBuffer_readPointArray(reskia_read_buffer_t *buffer, reskia_point_t *points, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readPointArray(reinterpret_cast<SkPoint *>(points), size);
 }
 
-bool SkReadBuffer_readScalarArray(void * buffer, void * values, size_t size) {
-    return static_cast<SkReadBuffer *>(buffer)->readScalarArray(static_cast<SkScalar *>(values), size);
+bool SkReadBuffer_readScalarArray(reskia_read_buffer_t *buffer, float *values, size_t size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->readScalarArray(reinterpret_cast<SkScalar *>(values), size);
 }
 
-const void* SkReadBuffer_skipByteArray(void * buffer, void * size) {
-    return static_cast<SkReadBuffer *>(buffer)->skipByteArray(static_cast<size_t *>(size));
+const void* SkReadBuffer_skipByteArray(reskia_read_buffer_t *buffer, size_t *size) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->skipByteArray(reinterpret_cast<size_t *>(size));
 }
 
-sk_data_t SkReadBuffer_readByteArrayAsData(void * buffer) {
-    return static_sk_data_make(static_cast<SkReadBuffer *>(buffer)->readByteArrayAsData());
+sk_data_t SkReadBuffer_readByteArrayAsData(reskia_read_buffer_t *buffer) {
+    return static_sk_data_make(reinterpret_cast<SkReadBuffer *>(buffer)->readByteArrayAsData());
 }
 
-uint32_t SkReadBuffer_getArrayCount(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->getArrayCount();
+uint32_t SkReadBuffer_getArrayCount(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->getArrayCount();
 }
 
-sk_image_t SkReadBuffer_readImage(void * buffer) {
-    return static_sk_image_make(static_cast<SkReadBuffer *>(buffer)->readImage());
+sk_image_t SkReadBuffer_readImage(reskia_read_buffer_t *buffer) {
+    return static_sk_image_make(reinterpret_cast<SkReadBuffer *>(buffer)->readImage());
 }
 
-sk_typeface_t SkReadBuffer_readTypeface(void * buffer) {
-    return static_sk_typeface_make(static_cast<SkReadBuffer *>(buffer)->readTypeface());
+sk_typeface_t SkReadBuffer_readTypeface(reskia_read_buffer_t *buffer) {
+    return static_sk_typeface_make(reinterpret_cast<SkReadBuffer *>(buffer)->readTypeface());
 }
 
-void SkReadBuffer_setTypefaceArray(void * buffer, void * array, int count) {
-    return static_cast<SkReadBuffer *>(buffer)->setTypefaceArray(static_cast<sk_sp<SkTypeface> *>(array), count);
+void SkReadBuffer_setTypefaceArray(reskia_read_buffer_t *buffer, void * array, int count) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->setTypefaceArray(static_cast<sk_sp<SkTypeface> *>(array), count);
 }
 
-void SkReadBuffer_setFactoryPlayback(void * buffer, void * array, int count) {
-    return static_cast<SkReadBuffer *>(buffer)->setFactoryPlayback(static_cast<SkFlattenable::Factory *>(array), count);
+void SkReadBuffer_setFactoryPlayback(reskia_read_buffer_t *buffer, void * array, int count) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->setFactoryPlayback(reinterpret_cast<SkFlattenable::Factory *>(array), count);
 }
 
-void SkReadBuffer_setDeserialProcs(void * buffer, const void * procs) {
-    return static_cast<SkReadBuffer *>(buffer)->setDeserialProcs(* static_cast<const SkDeserialProcs *>(procs));
+void SkReadBuffer_setDeserialProcs(reskia_read_buffer_t *buffer, const reskia_deserial_procs_t *procs) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->setDeserialProcs(* reinterpret_cast<const SkDeserialProcs *>(procs));
 }
 
-const void * SkReadBuffer_getDeserialProcs(void * buffer) {
-    return &static_cast<SkReadBuffer *>(buffer)->getDeserialProcs();
+const reskia_deserial_procs_t *SkReadBuffer_getDeserialProcs(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<const reskia_deserial_procs_t *>(
+            &reinterpret_cast<SkReadBuffer *>(buffer)->getDeserialProcs());
 }
 
-bool SkReadBuffer_allowSkSL(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->allowSkSL();
+bool SkReadBuffer_allowSkSL(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->allowSkSL();
 }
 
-void SkReadBuffer_setAllowSkSL(void * buffer, bool allow) {
-    return static_cast<SkReadBuffer *>(buffer)->setAllowSkSL(allow);
+void SkReadBuffer_setAllowSkSL(reskia_read_buffer_t *buffer, bool allow) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->setAllowSkSL(allow);
 }
 
-bool SkReadBuffer_validate(void * buffer, bool isValid) {
-    return static_cast<SkReadBuffer *>(buffer)->validate(isValid);
+bool SkReadBuffer_validate(reskia_read_buffer_t *buffer, bool isValid) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->validate(isValid);
 }
 
 
 // template <typename T> bool validateCanReadN(size_t n)
 
-bool SkReadBuffer_isValid(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->isValid();
+bool SkReadBuffer_isValid(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->isValid();
 }
 
-bool SkReadBuffer_validateIndex(void * buffer, int index, int count) {
-    return static_cast<SkReadBuffer *>(buffer)->validateIndex(index, count);
+bool SkReadBuffer_validateIndex(reskia_read_buffer_t *buffer, int index, int count) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->validateIndex(index, count);
 }
 
-int32_t SkReadBuffer_checkInt(void * buffer, int min, int max) {
-    return static_cast<SkReadBuffer *>(buffer)->checkInt(min, max);
+int32_t SkReadBuffer_checkInt(reskia_read_buffer_t *buffer, int min, int max) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->checkInt(min, max);
 }
 
 // template <typename T> T checkRange(T min, T max)
 
-int SkReadBuffer_checkFilterQuality(void * buffer) {
-    return static_cast<SkReadBuffer *>(buffer)->checkFilterQuality();
+int SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer) {
+    return reinterpret_cast<SkReadBuffer *>(buffer)->checkFilterQuality();
 }
 
-sk_sampling_options_t SkReadBuffer_readSampling(void * buffer) {
-    return static_sk_sampling_options_make(static_cast<SkReadBuffer *>(buffer)->readSampling());
+sk_sampling_options_t SkReadBuffer_readSampling(reskia_read_buffer_t *buffer) {
+    return static_sk_sampling_options_make(reinterpret_cast<SkReadBuffer *>(buffer)->readSampling());
 }
 
 }
