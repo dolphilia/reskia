@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_V4_H
 #define RAIA_SKIA_SK_V4_H
 
+typedef struct reskia_v4_t reskia_v4_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,18 +20,18 @@ extern "C" {
 // float operator[](int i)
 // float & operator[](int i)
 
-void SkV4_delete(void *v4); // (SkV4 *v4)
-float SkV4_lengthSquared(void *v4); // (SkV4 *v4) -> SkScalar
-float SkV4_length(void *v4); // (SkV4 *v4) -> SkScalar
-float SkV4_dot(void *v4, const void *v); // (SkV4 *v4, const SkV4 *v) -> SkScalar
-int SkV4_normalize(void *v4); // (SkV4 *v4) -> sk_v4_t
-const void * SkV4_ptr(void *v4); // (SkV4 *v4) -> const float *
-float * SkV4_ptr_2(void *v4); // (SkV4 *v4) -> float *
+void SkV4_delete(reskia_v4_t *v4); // (SkV4 *v4)
+float SkV4_lengthSquared(reskia_v4_t *v4); // (SkV4 *v4) -> SkScalar
+float SkV4_length(reskia_v4_t *v4); // (SkV4 *v4) -> SkScalar
+float SkV4_dot(reskia_v4_t *v4, const reskia_v4_t *v); // (SkV4 *v4, const SkV4 *v) -> SkScalar
+int SkV4_normalize(reskia_v4_t *v4); // (SkV4 *v4) -> sk_v4_t
+const float *SkV4_ptr(reskia_v4_t *v4); // (SkV4 *v4) -> const float *
+float *SkV4_ptr_2(reskia_v4_t *v4); // (SkV4 *v4) -> float *
 
 // static
 
-float SkV4_Dot(const void *a, const void *b); // (const SkV4 *a, const SkV4 *b) -> SkScalar
-int SkV4_Normalize(const void *v); // (const SkV4 *v) -> sk_v4_t
+float SkV4_Dot(const reskia_v4_t *a, const reskia_v4_t *b); // (const SkV4 *a, const SkV4 *b) -> SkScalar
+int SkV4_Normalize(const reskia_v4_t *v); // (const SkV4 *v) -> sk_v4_t
 
 #ifdef __cplusplus
 }

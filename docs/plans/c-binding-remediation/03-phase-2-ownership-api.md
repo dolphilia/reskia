@@ -334,11 +334,27 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkTypeface_mac` API の `void*` を `reskia_ct_font_t*` / `reskia_typeface_t*` へ置換し、CoreText 連携引数を不透明型で型強化
     - `skia/binding/sk_un_pre_multiply.h` + `skia/binding/sk_un_pre_multiply.cpp`（5/5 関数 `done`）
     - 変更内容: `SkUnPreMultiply` API の `void*` を `reskia_un_pre_multiply_t*` へ置換し、`Scale`/`SkColor`/`SkPMColor` を `uint32_t` 系 alias に正規化、static API 前提で delete を no-op 化
+    - `skia/binding/sk_v2.h` + `skia/binding/sk_v2.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkV2` API の `void*` を `reskia_v2_t*` へ置換し、`ptr` 戻り値を `const float*` / `float*` に型強化、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_v3.h` + `skia/binding/sk_v3.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkV3` API の `void*` を `reskia_v3_t*` へ置換し、インスタンス/静的演算の引数型を統一、`ptr` 戻り値を `const float*` / `float*` に型強化
+    - `skia/binding/sk_v4.h` + `skia/binding/sk_v4.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkV4` API の `void*` を `reskia_v4_t*` へ置換し、インスタンス/静的演算の引数型を統一、`ptr` 戻り値を `const float*` / `float*` に型強化
+    - `skia/binding/sk_vertices.h` + `skia/binding/sk_vertices.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkVertices` API の `void*` を `reskia_vertices_t*` と関連不透明型（point/rect）へ置換し、色・インデックス配列を `uint32_t` / `uint16_t` に正規化
+    - `skia/binding/sk_w_stream.h` + `skia/binding/sk_w_stream.cpp`（18/18 関数 `done`）
+    - 変更内容: `SkWStream` API の `void*` を `reskia_w_stream_t*` / `reskia_stream_t*` へ置換し、`size_t`・`uint32_t`・`int32_t`・`int64_t` へ整数/サイズ型を正規化
+    - `skia/binding/sk_wbmp_decoder.h` + `skia/binding/sk_wbmp_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkWbmpDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、デコーダ引数型を PNG/JPEG 系と整合化
+    - `skia/binding/sk_webp_decoder.h` + `skia/binding/sk_webp_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkWebpDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、デコーダ引数型を PNG/JPEG/WBMP 系と整合化
+    - `skia/binding/sk_webp_encoder.h` + `skia/binding/sk_webp_encoder.cpp`（1/1 関数 `done`）
+    - 変更内容: `SkWebpEncoder` API の C++ 具体型引数を `reskia_*` 不透明型へ置換し、`Encode_2` を `reskia_direct_context_t*` / `reskia_image_t*` / `reskia_webp_encoder_options_t*` で型強化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 2281 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 2345 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

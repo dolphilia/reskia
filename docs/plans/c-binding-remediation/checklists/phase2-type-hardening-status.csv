@@ -2279,70 +2279,70 @@ void_ptr,skia/binding/sk_un_pre_multiply.h,skia/binding/sk_un_pre_multiply.cpp,S
 primitive,skia/binding/sk_un_pre_multiply.h,skia/binding/sk_un_pre_multiply.cpp,SkUnPreMultiply_GetScale,17,done,,typed aliases introduced for SkUnPreMultiply API; opaque handle and fixed-width scale/color types hardened with static-only ownership semantics
 primitive,skia/binding/sk_un_pre_multiply.h,skia/binding/sk_un_pre_multiply.cpp,SkUnPreMultiply_ApplyScale,18,done,,typed aliases introduced for SkUnPreMultiply API; opaque handle and fixed-width scale/color types hardened with static-only ownership semantics
 primitive|semantic,skia/binding/sk_un_pre_multiply.h,skia/binding/sk_un_pre_multiply.cpp,SkUnPreMultiply_PMColorToColor,19,done,,typed aliases introduced for SkUnPreMultiply API; opaque handle and fixed-width scale/color types hardened with static-only ownership semantics
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_delete,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_lengthSquared,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_length,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_dot,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_cross,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_normalize,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_ptr,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_ptr_2,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_delete,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_lengthSquared,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_length,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_dot,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_cross,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_normalize,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_ptr,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_ptr_2,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Dot,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Cross,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Normalize,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_delete,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_lengthSquared,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_length,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_dot,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_normalize,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_ptr,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_ptr_2,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Dot,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Normalize,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_uniqueID,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_bounds,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_approximateSize,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_unique,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_ref,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_unref,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_deref,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_refCntGreaterThan,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|semantic,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix|semantic,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy_2,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_flush,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_bytesWritten,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write8,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write16,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write32,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeText,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_newline,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeDecAsText,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeBigDecAsText,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeHexAsText,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeScalarAsText,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeBool,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeScalar,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writePackedUInt,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeStream,28,todo,,from step3 manifests: function declaration requires typed-API review
-primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_SizeOfPackedUInt,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_IsWbmp,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_IsWbmp,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_webp_encoder.h,skia/binding/sk_webp_encoder.cpp,SkWebpEncoder_Encode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_delete,24,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_lengthSquared,25,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_length,26,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_dot,27,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_cross,28,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_normalize,29,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_ptr,30,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr|suffix,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_ptr_2,31,done,,typed opaque alias introduced for SkV2 API; vector pointer entrypoints hardened to reskia_v2_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_delete,23,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_lengthSquared,24,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_length,25,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_dot,26,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_cross,27,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_normalize,28,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_ptr,29,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr|suffix,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_ptr_2,30,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Dot,34,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Cross,35,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Normalize,36,done,,typed opaque alias introduced for SkV3 API; instance/static vector pointer entrypoints hardened to reskia_v3_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_delete,21,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_lengthSquared,22,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_length,23,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_dot,24,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_normalize,25,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_ptr,26,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr|suffix,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_ptr_2,27,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Dot,31,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Normalize,32,done,,typed opaque alias introduced for SkV4 API; instance/static vector pointer entrypoints hardened to reskia_v4_t with typed float pointer returns
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_delete,12,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr|primitive,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_uniqueID,13,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_bounds,14,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr|primitive,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_approximateSize,15,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_unique,20,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_ref,21,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_unref,22,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_deref,23,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_refCntGreaterThan,24,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr|semantic,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy,28,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr|suffix|semantic,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy_2,29,done,,typed opaque aliases introduced for SkVertices API; vertices/point/rect buffers hardened with uint32_t color and uint16_t index arrays
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_delete,12,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write,13,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_flush,14,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_bytesWritten,15,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write8,16,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write16,17,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_write32,18,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeText,19,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_newline,20,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeDecAsText,21,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeBigDecAsText,22,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeHexAsText,23,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeScalarAsText,24,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeBool,25,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeScalar,26,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writePackedUInt,27,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_writeStream,28,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+primitive,skia/binding/sk_w_stream.h,skia/binding/sk_w_stream.cpp,SkWStream_SizeOfPackedUInt,32,done,,typed opaque aliases introduced for SkWStream API; stream handles and size/integer parameters normalized to reskia_w_stream_t/reskia_stream_t and fixed-width types
+void_ptr|primitive,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_IsWbmp,12,done,,typed aliases introduced for SkWbmpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+void_ptr,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode,13,done,,typed aliases introduced for SkWbmpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+void_ptr|suffix,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode_2,14,done,,typed aliases introduced for SkWbmpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+void_ptr|primitive,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_IsWbmp,12,done,,typed aliases introduced for SkWebpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+void_ptr,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode,13,done,,typed aliases introduced for SkWebpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+void_ptr|suffix,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode_2,14,done,,typed aliases introduced for SkWebpDecoder API; input bytes and codec result/decode-context pointers hardened with uint8_t and opaque decode structs
+suffix,skia/binding/sk_webp_encoder.h,skia/binding/sk_webp_encoder.cpp,SkWebpEncoder_Encode_2,14,done,,typed opaque aliases introduced for SkWebpEncoder API; stream/pixmap/image/options arguments hardened to reskia opaque pointers
 void_ptr,skia/binding/sk_write_buffer.h,skia/binding/sk_write_buffer.cpp,SkWriteBuffer_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|primitive,skia/binding/sk_write_buffer.h,skia/binding/sk_write_buffer.cpp,SkWriteBuffer_writePad32,13,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|primitive,skia/binding/sk_write_buffer.h,skia/binding/sk_write_buffer.cpp,SkWriteBuffer_writeByteArray,14,todo,,from step3 manifests: function declaration requires typed-API review

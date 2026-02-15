@@ -24,36 +24,36 @@ extern "C" {
 // void operator*=(SkScalar s)
 // void operator/=(SkScalar s)
 
-void SkV2_delete(void *v2) {
-    delete static_cast<SkV2 *>(v2);
+void SkV2_delete(reskia_v2_t *v2) {
+    delete reinterpret_cast<SkV2 *>(v2);
 }
 
-float SkV2_lengthSquared(void *v2) {
-    return static_cast<SkV2 *>(v2)->lengthSquared();
+float SkV2_lengthSquared(reskia_v2_t *v2) {
+    return reinterpret_cast<SkV2 *>(v2)->lengthSquared();
 }
 
-float SkV2_length(void *v2) {
-    return static_cast<SkV2 *>(v2)->length();
+float SkV2_length(reskia_v2_t *v2) {
+    return reinterpret_cast<SkV2 *>(v2)->length();
 }
 
-float SkV2_dot(void *v2, sk_v2_t v) {
-    return static_cast<SkV2 *>(v2)->dot(static_sk_v2_get_entity(v));
+float SkV2_dot(reskia_v2_t *v2, sk_v2_t v) {
+    return reinterpret_cast<SkV2 *>(v2)->dot(static_sk_v2_get_entity(v));
 }
 
-float SkV2_cross(void *v2, sk_v2_t v) {
-    return static_cast<SkV2 *>(v2)->cross(static_sk_v2_get_entity(v));
+float SkV2_cross(reskia_v2_t *v2, sk_v2_t v) {
+    return reinterpret_cast<SkV2 *>(v2)->cross(static_sk_v2_get_entity(v));
 }
 
-sk_v2_t SkV2_normalize(void *v2) {
-    return static_sk_v2_make(static_cast<SkV2 *>(v2)->normalize());
+sk_v2_t SkV2_normalize(reskia_v2_t *v2) {
+    return static_sk_v2_make(reinterpret_cast<SkV2 *>(v2)->normalize());
 }
 
-const void * SkV2_ptr(void *v2) {
-    return static_cast<SkV2 *>(v2)->ptr();
+const float *SkV2_ptr(reskia_v2_t *v2) {
+    return reinterpret_cast<SkV2 *>(v2)->ptr();
 }
 
-float * SkV2_ptr_2(void *v2) {
-    return static_cast<SkV2 *>(v2)->ptr();
+float *SkV2_ptr_2(reskia_v2_t *v2) {
+    return reinterpret_cast<SkV2 *>(v2)->ptr();
 }
 
 // static

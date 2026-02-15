@@ -54,50 +54,50 @@ extern "C" {
 // void operator*=(SkV3 v)
 // void operator*=(SkScalar s)
 
-void SkV3_delete(void *v3) {
-    delete static_cast<SkV3 *>(v3);
+void SkV3_delete(reskia_v3_t *v3) {
+    delete reinterpret_cast<SkV3 *>(v3);
 }
 
-float SkV3_lengthSquared(void *v3) {
-    return static_cast<SkV3 *>(v3)->lengthSquared();
+float SkV3_lengthSquared(reskia_v3_t *v3) {
+    return reinterpret_cast<SkV3 *>(v3)->lengthSquared();
 }
 
-float SkV3_length(void *v3) {
-    return static_cast<SkV3 *>(v3)->length();
+float SkV3_length(reskia_v3_t *v3) {
+    return reinterpret_cast<SkV3 *>(v3)->length();
 }
 
-float SkV3_dot(void *v3, const void *v) {
-    return static_cast<SkV3 *>(v3)->dot(* static_cast<const SkV3 *>(v));
+float SkV3_dot(reskia_v3_t *v3, const reskia_v3_t *v) {
+    return reinterpret_cast<SkV3 *>(v3)->dot(* reinterpret_cast<const SkV3 *>(v));
 }
 
-sk_v3_t SkV3_cross(void *v3, const void *v) {
-    return static_sk_v3_make(static_cast<SkV3 *>(v3)->cross(* static_cast<const SkV3 *>(v)));
+sk_v3_t SkV3_cross(reskia_v3_t *v3, const reskia_v3_t *v) {
+    return static_sk_v3_make(reinterpret_cast<SkV3 *>(v3)->cross(* reinterpret_cast<const SkV3 *>(v)));
 }
 
-sk_v3_t SkV3_normalize(void *v3) {
-    return static_sk_v3_make(static_cast<SkV3 *>(v3)->normalize());
+sk_v3_t SkV3_normalize(reskia_v3_t *v3) {
+    return static_sk_v3_make(reinterpret_cast<SkV3 *>(v3)->normalize());
 }
 
-const void * SkV3_ptr(void *v3) {
-    return static_cast<SkV3 *>(v3)->ptr();
+const float *SkV3_ptr(reskia_v3_t *v3) {
+    return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 
-float * SkV3_ptr_2(void *v3) {
-    return static_cast<SkV3 *>(v3)->ptr();
+float *SkV3_ptr_2(reskia_v3_t *v3) {
+    return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 
 // static
 
-float SkV3_Dot(const void *a, const void *b) {
-    return SkV3::Dot(* static_cast<const SkV3 *>(a), * static_cast<const SkV3 *>(b));
+float SkV3_Dot(const reskia_v3_t *a, const reskia_v3_t *b) {
+    return SkV3::Dot(* reinterpret_cast<const SkV3 *>(a), * reinterpret_cast<const SkV3 *>(b));
 }
 
-sk_v3_t SkV3_Cross(const void *a, const void *b) {
-    return static_sk_v3_make(SkV3::Cross(* static_cast<const SkV3 *>(a), * static_cast<const SkV3 *>(b)));
+sk_v3_t SkV3_Cross(const reskia_v3_t *a, const reskia_v3_t *b) {
+    return static_sk_v3_make(SkV3::Cross(* reinterpret_cast<const SkV3 *>(a), * reinterpret_cast<const SkV3 *>(b)));
 }
 
-sk_v3_t SkV3_Normalize(const void *v) {
-    return static_sk_v3_make(SkV3::Normalize(* static_cast<const SkV3 *>(v)));
+sk_v3_t SkV3_Normalize(const reskia_v3_t *v) {
+    return static_sk_v3_make(SkV3::Normalize(* reinterpret_cast<const SkV3 *>(v)));
 }
 
 }
