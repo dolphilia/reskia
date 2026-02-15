@@ -5,15 +5,18 @@
 #ifndef RAIA_SKIA_SK_PATH_1D_PATH_EFFECT_H
 #define RAIA_SKIA_SK_PATH_1D_PATH_EFFECT_H
 
+typedef struct reskia_path_1d_path_effect_t reskia_path_1d_path_effect_t;
+typedef struct reskia_path_t reskia_path_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void SkPath1DPathEffect_delete(void *path1DPathEffect); // (SkPath1DPathEffect *path1DPathEffect)
+void SkPath1DPathEffect_delete(reskia_path_1d_path_effect_t *path1DPathEffect); // (SkPath1DPathEffect *path1DPathEffect)
 
 // static
 
-int SkPath1DPathEffect_Make(const void *path, float advance, float phase, int style); // (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
+int SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, int style); // (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
 void SkPath1DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus
