@@ -312,11 +312,21 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkString` API の `void*` を `reskia_string_t*`（`std::string` 入力は `reskia_std_string_t*`）へ置換し、`size_t`/`uint32_t`/`uint64_t` シグネチャへ正規化
     - `skia/binding/sk_stroke_rec.h` + `skia/binding/sk_stroke_rec.cpp`（24/24 関数 `done`）
     - 変更内容: `SkStrokeRec` API の `void*` を `reskia_stroke_rec_t*` へ置換し、`SkPaint`/`SkPath` 引数を `reskia_paint_t*`/`reskia_path_t*` へ型強化
+    - `skia/binding/sk_surface.h` + `skia/binding/sk_surface.cpp`（30/30 関数 `done`）
+    - 変更内容: `SkSurface` API の `void*` を `reskia_surface_t*` と関連不透明型（canvas/pixmap/image-info/context/backend）へ置換し、`unsigned int`/`unsigned long` を `uint32_t`/`size_t` へ正規化
+    - `skia/binding/sk_surface_props.h` + `skia/binding/sk_surface_props.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkSurfaceProps` API の `void*` を `reskia_surface_props_t*` へ置換し、`flags` を `uint32_t` に正規化
+    - `skia/binding/sk_surfaces.h` + `skia/binding/sk_surfaces.cpp`（5/5 関数 `done`）
+    - 変更内容: `SkSurfaces` API の `void*` を `reskia_image_info_t*` / `reskia_pixmap_t*` / `reskia_surface_props_t*` へ置換し、`rowBytes` を `size_t` に正規化
+    - `skia/binding/sk_table_mask_filter.h` + `skia/binding/sk_table_mask_filter.cpp`（6/6 関数 `done`）
+    - 変更内容: `SkTableMaskFilter` API の `void*` を `reskia_table_mask_filter_t*` / `reskia_mask_filter_t*` と `uint8_t*` テーブル引数へ置換
+    - `skia/binding/sk_text_blob.h` + `skia/binding/sk_text_blob.cpp`（17/17 関数 `done`）
+    - 変更内容: `SkTextBlob` API の `void*` を `reskia_text_blob_t*` と関連不透明型（font/paint/rect/point/(de)serial_procs）へ置換し、テキスト/バイト列を `uint8_t*` + `size_t` へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 2145 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 2212 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

@@ -16,40 +16,40 @@ extern "C" {
 // bool operator==(const SkSurfaceProps &that)
 // bool operator!=(const SkSurfaceProps &that)
 
-void *SkSurfaceProps_new() {
-    return new SkSurfaceProps();
+reskia_surface_props_t *SkSurfaceProps_new() {
+    return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps());
 }
 
-void *SkSurfaceProps_new_2(uint32_t flags, int geometry) {
-    return new SkSurfaceProps(flags, static_cast<SkPixelGeometry>(geometry));
+reskia_surface_props_t *SkSurfaceProps_new_2(uint32_t flags, int geometry) {
+    return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps(flags, static_cast<SkPixelGeometry>(geometry)));
 }
 
-void *SkSurfaceProps_new_3(const void *props) {
-    return new SkSurfaceProps(* static_cast<const SkSurfaceProps *>(props));
+reskia_surface_props_t *SkSurfaceProps_new_3(const reskia_surface_props_t *props) {
+    return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps(* reinterpret_cast<const SkSurfaceProps *>(props)));
 }
 
-void SkSurfaceProps_delete(void *surface_props) {
-    delete static_cast<SkSurfaceProps *>(surface_props);
+void SkSurfaceProps_delete(reskia_surface_props_t *surface_props) {
+    delete reinterpret_cast<SkSurfaceProps *>(surface_props);
 }
 
-sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(void *surface_props, int newPixelGeometry) {
-    return static_sk_surface_props_make(static_cast<SkSurfaceProps *>(surface_props)->cloneWithPixelGeometry(static_cast<SkPixelGeometry>(newPixelGeometry)));
+sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(reskia_surface_props_t *surface_props, int newPixelGeometry) {
+    return static_sk_surface_props_make(reinterpret_cast<SkSurfaceProps *>(surface_props)->cloneWithPixelGeometry(static_cast<SkPixelGeometry>(newPixelGeometry)));
 }
 
-uint32_t SkSurfaceProps_flags(void *surface_props) {
-    return static_cast<SkSurfaceProps *>(surface_props)->flags();
+uint32_t SkSurfaceProps_flags(reskia_surface_props_t *surface_props) {
+    return reinterpret_cast<SkSurfaceProps *>(surface_props)->flags();
 }
 
-int SkSurfaceProps_pixelGeometry(void *surface_props) {
-    return static_cast<SkSurfaceProps *>(surface_props)->pixelGeometry();
+int SkSurfaceProps_pixelGeometry(reskia_surface_props_t *surface_props) {
+    return reinterpret_cast<SkSurfaceProps *>(surface_props)->pixelGeometry();
 }
 
-bool SkSurfaceProps_isUseDeviceIndependentFonts(void *surface_props) {
-    return static_cast<SkSurfaceProps *>(surface_props)->isUseDeviceIndependentFonts();
+bool SkSurfaceProps_isUseDeviceIndependentFonts(reskia_surface_props_t *surface_props) {
+    return reinterpret_cast<SkSurfaceProps *>(surface_props)->isUseDeviceIndependentFonts();
 }
 
-bool SkSurfaceProps_isAlwaysDither(void *surface_props) {
-    return static_cast<SkSurfaceProps *>(surface_props)->isAlwaysDither();
+bool SkSurfaceProps_isAlwaysDither(reskia_surface_props_t *surface_props) {
+    return reinterpret_cast<SkSurfaceProps *>(surface_props)->isAlwaysDither();
 }
 
 }

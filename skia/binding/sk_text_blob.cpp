@@ -14,75 +14,75 @@
 
 extern "C" {
 
-void SkTextBlob_delete(void *text_blob) {
-    static_cast<SkTextBlob *>(text_blob)->unref();
+void SkTextBlob_delete(reskia_text_blob_t *text_blob) {
+    reinterpret_cast<SkTextBlob *>(text_blob)->unref();
 }
 
-const void * SkTextBlob_bounds(void *text_blob) {
-    const SkTextBlob *t = static_cast<SkTextBlob *>(text_blob);
-    return &t->bounds();
+const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob) {
+    const SkTextBlob *t = reinterpret_cast<SkTextBlob *>(text_blob);
+    return reinterpret_cast<const reskia_rect_t *>(&t->bounds());
 }
 
-uint32_t SkTextBlob_uniqueID(void *text_blob) {
-    return static_cast<SkTextBlob *>(text_blob)->uniqueID();
+uint32_t SkTextBlob_uniqueID(reskia_text_blob_t *text_blob) {
+    return reinterpret_cast<SkTextBlob *>(text_blob)->uniqueID();
 }
 
-int SkTextBlob_getIntercepts(void *text_blob, const void * bounds, void * intervals, const void *paint) {
-    return static_cast<SkTextBlob *>(text_blob)->getIntercepts(static_cast<const SkScalar *>(bounds), static_cast<SkScalar *>(intervals), static_cast<const SkPaint *>(paint));
+int SkTextBlob_getIntercepts(reskia_text_blob_t *text_blob, const float *bounds, float *intervals, const reskia_paint_t *paint) {
+    return reinterpret_cast<SkTextBlob *>(text_blob)->getIntercepts(bounds, intervals, reinterpret_cast<const SkPaint *>(paint));
 }
 
-size_t SkTextBlob_serialize(void *text_blob, const void *procs, void *memory, size_t memory_size) {
-    return static_cast<SkTextBlob *>(text_blob)->serialize(* static_cast<const SkSerialProcs *>(procs), memory, memory_size);
+size_t SkTextBlob_serialize(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs, void *memory, size_t memory_size) {
+    return reinterpret_cast<SkTextBlob *>(text_blob)->serialize(* reinterpret_cast<const SkSerialProcs *>(procs), memory, memory_size);
 }
 
-sk_data_t SkTextBlob_serialize_2(void *text_blob, const void *procs) {
-    return static_sk_data_make(static_cast<SkTextBlob *>(text_blob)->serialize(* static_cast<const SkSerialProcs *>(procs)));
+sk_data_t SkTextBlob_serialize_2(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs) {
+    return static_sk_data_make(reinterpret_cast<SkTextBlob *>(text_blob)->serialize(* reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-bool SkTextBlob_unique(void *text_blob) {
-    return static_cast<SkTextBlob *>(text_blob)->unique();
+bool SkTextBlob_unique(reskia_text_blob_t *text_blob) {
+    return reinterpret_cast<SkTextBlob *>(text_blob)->unique();
 }
 
-void SkTextBlob_ref(void *text_blob) {
-    static_cast<SkTextBlob *>(text_blob)->ref();
+void SkTextBlob_ref(reskia_text_blob_t *text_blob) {
+    reinterpret_cast<SkTextBlob *>(text_blob)->ref();
 }
 
-void SkTextBlob_unref(void *text_blob) {
-    static_cast<SkTextBlob *>(text_blob)->unref();
+void SkTextBlob_unref(reskia_text_blob_t *text_blob) {
+    reinterpret_cast<SkTextBlob *>(text_blob)->unref();
 }
 
-void SkTextBlob_deref(void *text_blob) {
-    static_cast<SkTextBlob *>(text_blob)->deref();
+void SkTextBlob_deref(reskia_text_blob_t *text_blob) {
+    reinterpret_cast<SkTextBlob *>(text_blob)->deref();
 }
 
-bool SkTextBlob_refCntGreaterThan(void *text_blob, int32_t threadIsolatedTestCnt) {
-    return static_cast<SkTextBlob *>(text_blob)->refCntGreaterThan(threadIsolatedTestCnt);
+bool SkTextBlob_refCntGreaterThan(reskia_text_blob_t *text_blob, int32_t threadIsolatedTestCnt) {
+    return reinterpret_cast<SkTextBlob *>(text_blob)->refCntGreaterThan(threadIsolatedTestCnt);
 }
 
 // static
 
-sk_text_blob_t SkTextBlob_MakeFromText(const void *text, size_t byteLength, const void *font, int encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromText(text, byteLength, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
+sk_text_blob_t SkTextBlob_MakeFromText(const uint8_t *text, size_t byteLength, const reskia_font_t *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromText(text, byteLength, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const void *font, int encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromString(string, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
+sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const reskia_font_t *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromString(string, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosTextH(const void *text, size_t byteLength, const void * xpos, float constY, const void *font, int encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromPosTextH(text, byteLength, static_cast<const SkScalar *>(xpos), constY, * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
+sk_text_blob_t SkTextBlob_MakeFromPosTextH(const uint8_t *text, size_t byteLength, const float *xpos, float constY, const reskia_font_t *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromPosTextH(text, byteLength, xpos, constY, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosText(const void *text, size_t byteLength, const void * pos, const void *font, int encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromPosText(text, byteLength, static_cast<const SkPoint *>(pos), * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
+sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength, const reskia_point_t *pos, const reskia_font_t *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromPosText(text, byteLength, reinterpret_cast<const SkPoint *>(pos), * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromRSXform(const void *text, size_t byteLength, const void * xform, const void *font, int encoding) {
-    return static_sk_text_blob_make(SkTextBlob::MakeFromRSXform(text, byteLength, static_cast<const SkRSXform *>(xform), * static_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
+sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, int encoding) {
+    return static_sk_text_blob_make(SkTextBlob::MakeFromRSXform(text, byteLength, reinterpret_cast<const SkRSXform *>(xform), * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_Deserialize(const void *data, size_t size, const void *procs) {
-    return static_sk_text_blob_make(SkTextBlob::Deserialize(data, size, * static_cast<const SkDeserialProcs *>(procs)));
+sk_text_blob_t SkTextBlob_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs) {
+    return static_sk_text_blob_make(SkTextBlob::Deserialize(data, size, * reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 }

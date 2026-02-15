@@ -5,30 +5,42 @@
 #ifndef RAIA_SKIA_SK_TEXT_BLOB_H
 #define RAIA_SKIA_SK_TEXT_BLOB_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+typedef struct reskia_deserial_procs_t reskia_deserial_procs_t;
+typedef struct reskia_font_t reskia_font_t;
+typedef struct reskia_paint_t reskia_paint_t;
+typedef struct reskia_point_t reskia_point_t;
+typedef struct reskia_rect_t reskia_rect_t;
+typedef struct reskia_rsxform_t reskia_rsxform_t;
+typedef struct reskia_serial_procs_t reskia_serial_procs_t;
+typedef struct reskia_text_blob_t reskia_text_blob_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void SkTextBlob_delete(void *text_blob); // owned: caller が保持する参照を release する (SkTextBlob *text_blob)
-const void * SkTextBlob_bounds(void *text_blob); // borrowed: 解放不要の借用ポインタ (SkTextBlob *text_blob) -> const SkRect *
-unsigned int SkTextBlob_uniqueID(void *text_blob); // (SkTextBlob *text_blob) -> uint32_t
-int SkTextBlob_getIntercepts(void *text_blob, const void * bounds, void * intervals, const void *paint); // (SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) -> int
-unsigned long SkTextBlob_serialize(void *text_blob, const void *procs, void *memory, unsigned long memory_size); // (SkTextBlob *text_blob, const SkSerialProcs *procs, void *memory, size_t memory_size) -> size_t
-int SkTextBlob_serialize_2(void *text_blob, const void *procs); // (SkTextBlob *text_blob, const SkSerialProcs *procs) -> sk_data_t
-bool SkTextBlob_unique(void *text_blob); // (SkTextBlob *text_blob) -> bool
-void SkTextBlob_ref(void *text_blob); // retained: 参照カウントを増やす (SkTextBlob *text_blob)
-void SkTextBlob_unref(void *text_blob); // owned: 参照カウントを減らす (SkTextBlob *text_blob)
-void SkTextBlob_deref(void *text_blob); // (SkTextBlob *text_blob)
-bool SkTextBlob_refCntGreaterThan(void *text_blob, int threadIsolatedTestCnt); // (SkTextBlob *text_blob, int32_t threadIsolatedTestCnt) -> bool
+void SkTextBlob_delete(reskia_text_blob_t *text_blob); // owned: caller が保持する参照を release する (SkTextBlob *text_blob)
+const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob); // borrowed: 解放不要の借用ポインタ (SkTextBlob *text_blob) -> const SkRect *
+uint32_t SkTextBlob_uniqueID(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> uint32_t
+int SkTextBlob_getIntercepts(reskia_text_blob_t *text_blob, const float *bounds, float *intervals, const reskia_paint_t *paint); // (SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) -> int
+size_t SkTextBlob_serialize(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs, void *memory, size_t memory_size); // (SkTextBlob *text_blob, const SkSerialProcs *procs, void *memory, size_t memory_size) -> size_t
+int SkTextBlob_serialize_2(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs); // (SkTextBlob *text_blob, const SkSerialProcs *procs) -> sk_data_t
+bool SkTextBlob_unique(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> bool
+void SkTextBlob_ref(reskia_text_blob_t *text_blob); // retained: 参照カウントを増やす (SkTextBlob *text_blob)
+void SkTextBlob_unref(reskia_text_blob_t *text_blob); // owned: 参照カウントを減らす (SkTextBlob *text_blob)
+void SkTextBlob_deref(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob)
+bool SkTextBlob_refCntGreaterThan(reskia_text_blob_t *text_blob, int threadIsolatedTestCnt); // (SkTextBlob *text_blob, int32_t threadIsolatedTestCnt) -> bool
 
 // static
 
-int SkTextBlob_MakeFromText(const void *text, unsigned long byteLength, const void *font, int encoding); // (const void *text, size_t byteLength, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
-int SkTextBlob_MakeFromString(const char *string, const void *font, int encoding); // (const char *string, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
-int SkTextBlob_MakeFromPosTextH(const void *text, unsigned long byteLength, const void * xpos, float constY, const void *font, int encoding); // (const void *text, size_t byteLength, const SkScalar xpos[], SkScalar constY, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
-int SkTextBlob_MakeFromPosText(const void *text, unsigned long byteLength, const void * pos, const void *font, int encoding); // (const void *text, size_t byteLength, const SkPoint pos[], const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
-int SkTextBlob_MakeFromRSXform(const void *text, unsigned long byteLength, const void * xform, const void *font, int encoding); // (const void *text, size_t byteLength, const SkRSXform xform[], const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
-int SkTextBlob_Deserialize(const void *data, unsigned long size, const void *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_text_blob_t
+int SkTextBlob_MakeFromText(const uint8_t *text, size_t byteLength, const reskia_font_t *font, int encoding); // (const void *text, size_t byteLength, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
+int SkTextBlob_MakeFromString(const char *string, const reskia_font_t *font, int encoding); // (const char *string, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
+int SkTextBlob_MakeFromPosTextH(const uint8_t *text, size_t byteLength, const float *xpos, float constY, const reskia_font_t *font, int encoding); // (const void *text, size_t byteLength, const SkScalar xpos[], SkScalar constY, const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
+int SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength, const reskia_point_t *pos, const reskia_font_t *font, int encoding); // (const void *text, size_t byteLength, const SkPoint pos[], const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
+int SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, int encoding); // (const void *text, size_t byteLength, const SkRSXform xform[], const SkFont *font, SkTextEncoding encoding) -> sk_text_blob_t
+int SkTextBlob_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_text_blob_t
 
 #ifdef __cplusplus
 }
