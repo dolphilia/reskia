@@ -9,11 +9,13 @@
 extern "C" {
 #endif
 
+#include "../static/static_sk_color_filter.h"
+
 void SkLumaColorFilter_delete(void * lumaColorFilter); // (SkLumaColorFilter * lumaColorFilter)
 
 // static
 
-int SkLumaColorFilter_Make(); // () -> sk_color_filter_t
+sk_color_filter_t SkLumaColorFilter_Make(); // () -> sk_color_filter_t
 
 #ifdef __cplusplus
 }

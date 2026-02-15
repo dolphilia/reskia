@@ -11,10 +11,13 @@
 extern "C" {
 #endif
 
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_pixel_ref.h"
+
 typedef struct reskia_image_info_t reskia_image_info_t;
 
-int SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes); // (const SkImageInfo *imageInfo, size_t rowBytes) -> sk_pixel_ref_t
-int SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, int data); // (const SkImageInfo &imageInfo, size_t rowBytes, sk_data_t data) -> sk_pixel_ref_t
+sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes); // (const SkImageInfo *imageInfo, size_t rowBytes) -> sk_pixel_ref_t
+sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, sk_data_t data); // (const SkImageInfo &imageInfo, size_t rowBytes, sk_data_t data) -> sk_pixel_ref_t
 
 #ifdef __cplusplus
 }

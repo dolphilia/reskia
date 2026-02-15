@@ -9,6 +9,8 @@ typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_path_2d_path_effect_t reskia_path_2d_path_effect_t;
 
+#include "../static/static_sk_path_effect.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +19,7 @@ void SkPath2DPathEffect_delete(reskia_path_2d_path_effect_t *path2DPathEffect); 
 
 // static
 
-int SkPath2DPathEffect_Make(const reskia_matrix_t *matrix, const reskia_path_t *path); // (const SkMatrix *matrix, const SkPath *path) -> sk_path_effect_t
+sk_path_effect_t SkPath2DPathEffect_Make(const reskia_matrix_t *matrix, const reskia_path_t *path); // (const SkMatrix *matrix, const SkPath *path) -> sk_path_effect_t
 void SkPath2DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

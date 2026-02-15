@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#include "../static/static_sk_mask_builder.h"
+
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_mask_builder_t reskia_mask_builder_t;
 typedef struct reskia_mask_t reskia_mask_t;
@@ -31,7 +33,7 @@ void *SkMaskBuilder_getAddr(reskia_mask_builder_t *maskBuilder, int x, int y); /
 // static
 uint8_t *SkMaskBuilder_AllocImage(size_t bytes, int alloc); // (size_t bytes, SkMaskBuilder::AllocType alloc) -> uint8_t*
 void SkMaskBuilder_FreeImage(void *image); // (void* image)
-int SkMaskBuilder_PrepareDestination(int radiusX, int radiusY, const reskia_mask_t *src); // (int radiusX, int radiusY, const SkMask * src) -> sk_mask_builder_t
+sk_mask_builder_t SkMaskBuilder_PrepareDestination(int radiusX, int radiusY, const reskia_mask_t *src); // (int radiusX, int radiusY, const SkMask * src) -> sk_mask_builder_t
 
 #ifdef __cplusplus
 }

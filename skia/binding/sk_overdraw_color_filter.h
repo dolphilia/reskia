@@ -9,11 +9,13 @@
 extern "C" {
 #endif
 
+#include "../static/static_sk_color_filter.h"
+
 void SkOverdrawColorFilter_delete(void * overdrawColorFilter); // (SkOverdrawColorFilter *overdrawColorFilter)
 
 // static
 
-int SkOverdrawColorFilter_MakeWithSkColors(const void * color); // (const SkColor color[SkOverdrawColorFilter::kNumColors]) -> sk_color_filter_t
+sk_color_filter_t SkOverdrawColorFilter_MakeWithSkColors(const void * color); // (const SkColor color[SkOverdrawColorFilter::kNumColors]) -> sk_color_filter_t
 
 #ifdef __cplusplus
 }

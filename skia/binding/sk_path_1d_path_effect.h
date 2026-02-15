@@ -8,6 +8,8 @@
 typedef struct reskia_path_1d_path_effect_t reskia_path_1d_path_effect_t;
 typedef struct reskia_path_t reskia_path_t;
 
+#include "../static/static_sk_path_effect.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,7 +18,7 @@ void SkPath1DPathEffect_delete(reskia_path_1d_path_effect_t *path1DPathEffect); 
 
 // static
 
-int SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, int style); // (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
+sk_path_effect_t SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, int style); // (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
 void SkPath1DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

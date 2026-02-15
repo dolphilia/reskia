@@ -99,7 +99,7 @@ cmake --build skia/cmake-build-local -j 8
     - 対象関数: 691
     - `handle_key_return`: 624
     - `handle_key_param`: 192
-    - 進捗: 302/691 `done`（`phase2-handle-key-typing-status.csv`）
+    - 進捗: 485/691 `done`（`phase2-handle-key-typing-status.csv`）
   - 実施済みセット:
     - `skia/binding/sk_annotation.h` + `skia/binding/sk_annotation.cpp`（3/3 関数 `done`）
     - 変更内容: `void*` 引数を `reskia_canvas_t` / `reskia_rect_t` / `reskia_point_t` / `reskia_data_t` の不透明型ポインタへ置換
@@ -258,46 +258,68 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容（handle key typing）: `SkImageInfo_refColorSpace` / `SkImageInfo_colorInfo` / `SkImageInfo_dimensions` / `SkImageInfo_bounds` / `SkImageInfo_makeWH` / `SkImageInfo_makeDimensions` / `SkImageInfo_makeAlphaType` / `SkImageInfo_makeColorType` / `SkImageInfo_makeColorSpace` / `SkImageInfo_Make` / `SkImageInfo_Make_2` / `SkImageInfo_Make_3` / `SkImageInfo_Make_4` / `SkImageInfo_Make_5` / `SkImageInfo_MakeN32` / `SkImageInfo_MakeN32_2` / `SkImageInfo_MakeS32` / `SkImageInfo_MakeN32Premul` / `SkImageInfo_MakeN32Premul_2` / `SkImageInfo_MakeN32Premul_3` / `SkImageInfo_MakeN32Premul_4` / `SkImageInfo_MakeA8` / `SkImageInfo_MakeA8_2` / `SkImageInfo_MakeUnknown` / `SkImageInfo_MakeUnknown_2` の `int` 露出を `sk_*_t` へ更新
     - `skia/binding/sk_images.h` + `skia/binding/sk_images.cpp`（7/7 関数 `done`）
     - 変更内容: `SkImages` API の `void*` を不透明型ポインタへ置換し、`SkBitmap`/`SkPixmap`/`SkImageInfo`/`SkIRect`/`SkMatrix`/`SkPaint` 引数と `size_t` シグネチャを正規化
+    - 変更内容（handle key typing）: `SkImages_RasterFromBitmap` / `SkImages_RasterFromCompressedTextureData` / `SkImages_DeferredFromEncodedData` / `SkImages_DeferredFromGenerator` / `SkImages_DeferredFromPicture` / `SkImages_DeferredFromPicture_2` / `SkImages_RasterFromPixmapCopy` / `SkImages_RasterFromPixmap` / `SkImages_RasterFromData` / `SkImages_MakeWithFilter` の `int` 露出を `sk_*_t` へ更新
     - `skia/binding/sk_jpeg_decoder.h` + `skia/binding/sk_jpeg_decoder.cpp`（3/3 関数 `done`）
     - 変更内容: `SkJpegDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、入力サイズを `size_t` へ正規化
+    - 変更内容（handle key typing）: `SkJpegDecoder_Decode` / `SkJpegDecoder_Decode_2` / `SkJpegDecoder_Decoder` の戻り値 `int` 露出を `sk_codec_t` / `sk_codecs_decoder_t` へ更新
     - `skia/binding/sk_jpeg_encoder.h` + `skia/binding/sk_jpeg_encoder.cpp`（3/3 関数 `done`）
     - 変更内容: `SkJpegEncoder` API の suffix 関数で `SkYUVAPixmaps`/`SkColorSpace`/`GrDirectContext`/`SkImage`/`SkJpegEncoder::Options` 引数を不透明型ポインタへ正規化
     - `skia/binding/sk_line_2d_path_effect.h` + `skia/binding/sk_line_2d_path_effect.cpp`（2/2 関数 `done`）
     - 変更内容: `SkLine2DPathEffect` API の `void*` を `reskia_line_2d_path_effect_t*` / `reskia_matrix_t*` へ置換
+    - 変更内容（handle key typing）: `SkLine2DPathEffect_Make` の戻り値 `int` 露出を `sk_path_effect_t` へ更新
+    - `skia/binding/sk_luma_color_filter.h` + `skia/binding/sk_luma_color_filter.cpp`（2/2 関数 `done`）
+    - 変更内容（handle key typing）: `SkLumaColorFilter_Make` の戻り値 `int` 露出を `sk_color_filter_t` へ更新
     - `skia/binding/sk_m_44.h` + `skia/binding/sk_m_44.cpp`（41/41 関数 `done`）
     - 変更内容: `SkM44` API の `void*` を `reskia_m_44_t*`/`reskia_matrix_t*`/`reskia_v3_t*`/`reskia_v4_t*`/`reskia_rect_t*` へ置換し、列・行メジャ配列を `float*` へ正規化
+    - 変更内容（handle key typing）: `SkM44_row` / `SkM44_col` / `SkM44_setIdentity` / `SkM44_setTranslate` / `SkM44_setScale` / `SkM44_setRotateUnitSinCos` / `SkM44_setRotateUnit` / `SkM44_setRotate` / `SkM44_setConcat` / `SkM44_preConcat` / `SkM44_preConcat_2` / `SkM44_postConcat` / `SkM44_transpose` / `SkM44_map` / `SkM44_asM33` / `SkM44_preTranslate` / `SkM44_postTranslate` / `SkM44_preScale` / `SkM44_preScale_2` / `SkM44_Rows` / `SkM44_Cols` / `SkM44_RowMajor` / `SkM44_ColMajor` / `SkM44_Translate` / `SkM44_Scale` / `SkM44_Rotate` / `SkM44_RectToRect` / `SkM44_LookAt` / `SkM44_Perspective` の `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_malloc_pixel_ref.h` + `skia/binding/sk_malloc_pixel_ref.cpp`（2/2 関数 `done`）
     - 変更内容: `SkMallocPixelRef` API の `void*` を `reskia_image_info_t*` へ置換し、`rowBytes` を `size_t` へ正規化
+    - 変更内容（handle key typing）: `SkMallocPixelRef_MakeAllocate` / `SkMallocPixelRef_MakeWithData` の `int` 露出を `sk_pixel_ref_t` 戻り値と `sk_data_t` 引数へ更新
     - `skia/binding/sk_mask.h` + `skia/binding/sk_mask.cpp`（15/15 関数 `done`）
     - 変更内容: `SkMask` API の `void*` を `reskia_mask_t*`/`reskia_i_rect_t*` と型付き画素ポインタ（`uint8_t*`/`uint16_t*`/`uint32_t*`）へ置換し、`size_t`/`uint8_t` シグネチャを正規化
+    - 変更内容（handle key typing）: `SkMask_new` / `SkMask_fBounds` の戻り値 `int` 露出を `sk_mask_t` / `sk_i_rect_t` へ更新
     - `skia/binding/sk_mask_builder.h` + `skia/binding/sk_mask_builder.cpp`（15/15 関数 `done`）
     - 変更内容: `SkMaskBuilder` API の `void*` を `reskia_mask_builder_t*`/`reskia_mask_t*`/`reskia_i_rect_t*` と型付き画素ポインタへ置換し、`AllocImage` を `size_t` + `uint8_t*` へ正規化
+    - 変更内容（handle key typing）: `SkMaskBuilder_PrepareDestination` の戻り値 `int` 露出を `sk_mask_builder_t` へ更新
     - `skia/binding/sk_mask_filter.h` + `skia/binding/sk_mask_filter.cpp`（12/12 関数 `done`）
     - 変更内容: `SkMaskFilter` API の `void*` を `reskia_mask_filter_t*`/`reskia_rect_t*`/`reskia_write_buffer_t*`/`reskia_(de)serial_procs_t*` へ置換し、`serialize` の `size_t` シグネチャを正規化
+    - 変更内容（handle key typing）: `SkMaskFilter_approximateFilteredBounds` / `SkMaskFilter_getFactory` / `SkMaskFilter_serialize` / `SkMaskFilter_MakeBlur` / `SkMaskFilter_Deserialize` / `SkMaskFilter_NameToFactory` の戻り値 `int` 露出と、`SkMaskFilter_Register` の引数 `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_matrix.h` + `skia/binding/sk_matrix.cpp`（102/102 関数 `done`）
     - 変更内容: `SkMatrix` API の `void*` を `reskia_matrix_t*`/`reskia_point_t*`/`reskia_point3_t*`/`reskia_rect_t*`/`reskia_vector_t*`/`reskia_size_t*`/`reskia_rsxform_t*` へ置換し、`SkScalar[]` 入出力を `float*`/`const float*` へ正規化
+    - 変更内容（handle key typing）: `SkMatrix_set` / `SkMatrix_setScaleX` / `SkMatrix_setScaleY` / `SkMatrix_setSkewY` / `SkMatrix_setSkewX` / `SkMatrix_setTranslateX` / `SkMatrix_setTranslateY` / `SkMatrix_setPerspX` / `SkMatrix_setPerspY` / `SkMatrix_setAll` / `SkMatrix_set9` / `SkMatrix_reset` / `SkMatrix_setIdentity` / `SkMatrix_setTranslate` / `SkMatrix_setTranslate_2` / `SkMatrix_setScale` / `SkMatrix_setScale_2` / `SkMatrix_setRotate` / `SkMatrix_setRotate_2` / `SkMatrix_setSinCos` / `SkMatrix_setSinCos_2` / `SkMatrix_setRSXform` / `SkMatrix_setSkew` / `SkMatrix_setSkew_2` / `SkMatrix_setConcat` / `SkMatrix_preTranslate` / `SkMatrix_preScale` / `SkMatrix_preScale_2` / `SkMatrix_preRotate` / `SkMatrix_preRotate_2` / `SkMatrix_preSkew` / `SkMatrix_preSkew_2` / `SkMatrix_preConcat` / `SkMatrix_postTranslate` / `SkMatrix_postScale` / `SkMatrix_postScale_2` / `SkMatrix_postRotate` / `SkMatrix_postRotate_2` / `SkMatrix_postSkew` / `SkMatrix_postSkew_2` / `SkMatrix_postConcat` / `SkMatrix_setAffine` / `SkMatrix_mapPoint` / `SkMatrix_mapXY_2` / `SkMatrix_mapOrigin` / `SkMatrix_mapVector_2` / `SkMatrix_mapRect_3` / `SkMatrix_Scale` / `SkMatrix_Translate` / `SkMatrix_Translate_2` / `SkMatrix_Translate_3` / `SkMatrix_RotateDeg` / `SkMatrix_RotateDeg_2` / `SkMatrix_RotateRad` / `SkMatrix_Skew` / `SkMatrix_RectToRect` / `SkMatrix_MakeAll` / `SkMatrix_MakeRectToRect` / `SkMatrix_I` / `SkMatrix_InvalidMatrix` / `SkMatrix_Concat` の `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_memory_stream.h` + `skia/binding/sk_memory_stream.cpp`（36/36 関数 `done`）
     - 変更内容: `SkMemoryStream` API の `void*` を `reskia_memory_stream_t*`/`reskia_data_t*` へ置換し、バッファ入出力を `uint8_t*`、スカラ out 引数を `float*`/`size_t*` へ正規化
+    - 変更内容（handle key typing）: `SkMemoryStream_asData` / `SkMemoryStream_duplicate` / `SkMemoryStream_fork` / `SkMemoryStream_MakeCopy` / `SkMemoryStream_MakeDirect` / `SkMemoryStream_Make` の戻り値 `int` 露出と、`SkMemoryStream_setData` / `SkMemoryStream_Make` / `SkMemoryStream_new_4` の引数 `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_mesh.h` + `skia/binding/sk_mesh.cpp`（19/19 関数 `done`）
     - 変更内容: `SkMesh` API の `void*` を `reskia_mesh_t*`/`reskia_mesh_specification_t*`/`reskia_mesh_(vertex|index)_buffer_t*`/`reskia_data_t*`/`reskia_rect_t*` へ置換し、`size_t` シグネチャを正規化
+    - 変更内容（handle key typing）: `SkMesh_refSpec` / `SkMesh_refVertexBuffer` / `SkMesh_refIndexBuffer` / `SkMesh_bounds` の戻り値 `int` 露出と、`SkMesh_Make` / `SkMesh_MakeIndexed` の戻り値・handle 引数 `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_mesh_specification.h` + `skia/binding/sk_mesh_specification.cpp`（12/12 関数 `done`）
     - 変更内容: `SkMeshSpecification` API の `void*` を `reskia_mesh_specification_t*`/`reskia_string_view_t*`/`reskia_runtime_effect_(uniform|child)_t*`/`reskia_color_space_sp_t*` へ置換し、`size_t` シグネチャを正規化
+    - 変更内容（handle key typing）: `SkMeshSpecification_attributes` / `SkMeshSpecification_Make` / `SkMeshSpecification_Make_2` / `SkMeshSpecification_Make_3` の戻り値 `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_meshes.h` + `skia/binding/sk_meshes.cpp`（4/4 関数 `done`）
     - 変更内容: `SkMeshes` API の `void*` を `reskia_mesh_(index|vertex)_buffer_sp_t*` へ置換し、バイト列入力を `const uint8_t* + size_t` へ正規化
+    - 変更内容（handle key typing）: `SkMeshes_MakeIndexBuffer` / `SkMeshes_CopyIndexBuffer` / `SkMeshes_MakeVertexBuffer` / `SkMeshes_CopyVertexBuffer` の戻り値 `int` 露出を `sk_mesh_(index|vertex)_buffer_t` へ更新
     - `skia/binding/sk_op_builder.h` + `skia/binding/sk_op_builder.cpp`（3/3 関数 `done`）
     - 変更内容: `SkOpBuilder` API の `void*` を `reskia_op_builder_t*`/`reskia_path_t*` へ置換し、path 入出力シグネチャを型強化
     - `skia/binding/sk_overdraw_canvas.h` + `skia/binding/sk_overdraw_canvas.cpp`（25/25 関数 `done`）
     - 変更内容: `SkOverdrawCanvas` API の `void*` を `reskia_overdraw_canvas_t*` と描画関連不透明型（paint/path/image/rect/matrix など）へ置換し、`onDrawPoints` 件数を `size_t` へ正規化
+    - `skia/binding/sk_overdraw_color_filter.h` + `skia/binding/sk_overdraw_color_filter.cpp`（2/2 関数 `done`）
+    - 変更内容（handle key typing）: `SkOverdrawColorFilter_MakeWithSkColors` の戻り値 `int` 露出を `sk_color_filter_t` へ更新
     - `skia/binding/sk_paint.h` + `skia/binding/sk_paint.cpp`（57/57 関数 `done`）
     - 変更内容: `SkPaint` API の `void*` を `reskia_paint_t*` と shader/filter/blender/path-effect 系不透明型へ置換し、色・アルファ・bounds rect シグネチャを正規化
+    - 変更内容（handle key typing）: `SkPaint_getColor4f` / `SkPaint_refShader` / `SkPaint_setShader` / `SkPaint_refColorFilter` / `SkPaint_setColorFilter` / `SkPaint_refBlender` / `SkPaint_setBlender` / `SkPaint_refPathEffect` / `SkPaint_setPathEffect` / `SkPaint_refMaskFilter` / `SkPaint_setMaskFilter` / `SkPaint_refImageFilter` / `SkPaint_setImageFilter` の `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_path.h` + `skia/binding/sk_path.cpp`（106/106 関数 `done`）
     - 変更内容: `SkPath` API の `void*` を `reskia_path_t*` と幾何型不透明ポインタ（`reskia_rect_t*` / `reskia_r_rect_t*` / `reskia_point_t*` / `reskia_matrix_t*` / `reskia_w_stream_t*`）へ置換し、`unsigned long` を `size_t` に正規化
+    - 変更内容（handle key typing）: `SkPath_getPoint` / `SkPath_computeTightBounds` / `SkPath_makeTransform` / `SkPath_makeScale` / `SkPath_serialize` / `SkPath_Make` / `SkPath_Rect` / `SkPath_Oval` / `SkPath_Oval_2` / `SkPath_Circle` / `SkPath_RRect` / `SkPath_RRect_2` / `SkPath_RRect_3` / `SkPath_Polygon` / `SkPath_Polygon_2` / `SkPath_Line` の `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_path_1d_path_effect.h` + `skia/binding/sk_path_1d_path_effect.cpp`（2/2 関数 `done`）
     - 変更内容: `SkPath1DPathEffect` API の `void*` を `reskia_path_1d_path_effect_t*` / `reskia_path_t*` へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkPath1DPathEffect_Make` の戻り値 `int` 露出を `sk_path_effect_t` へ更新
     - `skia/binding/sk_path_2d_path_effect.h` + `skia/binding/sk_path_2d_path_effect.cpp`（2/2 関数 `done`）
     - 変更内容: `SkPath2DPathEffect` API の `void*` を `reskia_path_2d_path_effect_t*` / `reskia_matrix_t*` / `reskia_path_t*` へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkPath2DPathEffect_Make` の戻り値 `int` 露出を `sk_path_effect_t` へ更新
     - `skia/binding/sk_path_builder.h` + `skia/binding/sk_path_builder.cpp`（54/54 関数 `done`）
     - 変更内容: `SkPathBuilder` API の `void*` を `reskia_path_builder_t*` と幾何型不透明ポインタ（`reskia_path_t*` / `reskia_rect_t*` / `reskia_r_rect_t*` / `reskia_point_t*`）へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkPathBuilder_computeBounds` / `SkPathBuilder_snapshot` / `SkPathBuilder_detach` の戻り値 `int` 露出を `sk_rect_t` / `sk_path_t` へ更新
     - `skia/binding/sk_path_effect.h` + `skia/binding/sk_path_effect.cpp`（15/15 関数 `done`）
     - 変更内容: `SkPathEffect` API の `void*` を `reskia_path_effect_t*` と path/stroke/rect/matrix/procs 向け不透明型へ置換し、`serialize/deserialize` サイズを `size_t` へ正規化
     - `skia/binding/sk_path_measure.h` + `skia/binding/sk_path_measure.cpp`（10/10 関数 `done`）
@@ -306,8 +328,10 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkPDF` API の C++ 具象型露出を `reskia_canvas_t*` / `reskia_w_stream_t*` / `reskia_pdf_metadata_t*` へ置換し、`_2` シグネチャを型付き不透明ポインタへ正規化
     - `skia/binding/sk_perlin_noise_shader.h` + `skia/binding/sk_perlin_noise_shader.cpp`（2/2 関数 `done`）
     - 変更内容: `SkPerlinNoiseShader` API の `tileSize` 引数を `const reskia_i_size_t*` へ型強化し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkPerlinNoiseShader_MakeFractalNoise` / `SkPerlinNoiseShader_MakeTurbulence` の戻り値 `int` 露出を `sk_shader_t` へ更新
     - `skia/binding/sk_picture.h` + `skia/binding/sk_picture.cpp`（16/16 関数 `done`）
     - 変更内容: `SkPicture` API の `void*` を `reskia_picture_t*` と canvas/stream/data/procs 向け不透明型へ置換し、`size_t`/`uint32_t` を明示型へ正規化
+    - 変更内容（handle key typing）: `SkPicture_cullRect` / `SkPicture_serialize` / `SkPicture_makeShader` / `SkPicture_makeShader_2` / `SkPicture_MakeFromStream` / `SkPicture_MakeFromData` / `SkPicture_MakeFromData_2` / `SkPicture_MakePlaceholder` の `int` 露出を `sk_*_t` シグネチャへ更新
     - `skia/binding/sk_picture_recorder.h` + `skia/binding/sk_picture_recorder.cpp`（9/9 関数 `done`）
     - 変更内容: `SkPictureRecorder` API の `void*` を `reskia_picture_recorder_t*` と `reskia_canvas_t*`/`reskia_rect_t*`/`reskia_bbh_factory_t*` へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
     - `skia/binding/sk_pixel_ref.h` + `skia/binding/sk_pixel_ref.cpp`（17/17 関数 `done`）
