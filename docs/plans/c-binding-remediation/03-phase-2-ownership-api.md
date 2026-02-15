@@ -230,11 +230,13 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkOverdrawCanvas` API の `void*` を `reskia_overdraw_canvas_t*` と描画関連不透明型（paint/path/image/rect/matrix など）へ置換し、`onDrawPoints` 件数を `size_t` へ正規化
     - `skia/binding/sk_paint.h` + `skia/binding/sk_paint.cpp`（57/57 関数 `done`）
     - 変更内容: `SkPaint` API の `void*` を `reskia_paint_t*` と shader/filter/blender/path-effect 系不透明型へ置換し、色・アルファ・bounds rect シグネチャを正規化
+    - `skia/binding/sk_path.h` + `skia/binding/sk_path.cpp`（106/106 関数 `done`）
+    - 変更内容: `SkPath` API の `void*` を `reskia_path_t*` と幾何型不透明ポインタ（`reskia_rect_t*` / `reskia_r_rect_t*` / `reskia_point_t*` / `reskia_matrix_t*` / `reskia_w_stream_t*`）へ置換し、`unsigned long` を `size_t` に正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1297 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1403 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

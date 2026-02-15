@@ -1296,112 +1296,112 @@ void_ptr,skia/binding/sk_paint.h,skia/binding/sk_paint.cpp,SkPaint_canComputeFas
 void_ptr,skia/binding/sk_paint.h,skia/binding/sk_paint.cpp,SkPaint_computeFastBounds,69,done,,typed SkPaint API with opaque paint/shader/filter/blender/path-effect aliases; normalized color/alpha primitives and rect bounds pointers
 void_ptr,skia/binding/sk_paint.h,skia/binding/sk_paint.cpp,SkPaint_computeFastStrokeBounds,70,done,,typed SkPaint API with opaque paint/shader/filter/blender/path-effect aliases; normalized color/alpha primitives and rect bounds pointers
 void_ptr,skia/binding/sk_paint.h,skia/binding/sk_paint.cpp,SkPaint_doComputeFastBounds,71,done,,typed SkPaint API with opaque paint/shader/filter/blender/path-effect aliases; normalized color/alpha primitives and rect bounds pointers
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_new,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_new_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_delete,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isInterpolatable,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_interpolate,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getFillType,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setFillType,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isInverseFillType,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_toggleInverseFillType,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isConvex,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isOval,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isRRect,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_reset,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rewind,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isEmpty,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isLastContourClosed,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isFinite,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isVolatile,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setIsVolatile,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isLine,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_countPoints,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getPoint,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getPoints,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_countVerbs,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getVerbs,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_approximateBytesUsed,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_swap,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getBounds,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_updateBoundsCache,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_computeTightBounds,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conservativelyContainsRect,43,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_incReserve,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_moveTo,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_moveTo_2,46,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rMoveTo,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_lineTo,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_lineTo_2,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rLineTo,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_quadTo,51,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_quadTo_2,52,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rQuadTo,53,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conicTo,54,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conicTo_2,55,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rConicTo,56,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_cubicTo,57,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_cubicTo_2,58,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rCubicTo,59,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo,60,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_2,61,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_3,62,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_4,63,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_5,64,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rArcTo,65,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_close,66,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isRect,67,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect,68,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect_2,69,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect_3,70,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addOval,71,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addOval_2,72,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addCircle,73,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addArc,74,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRoundRect,75,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRoundRect_2,76,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRRect,77,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRRect_2,78,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPoly,79,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPoly_2,80,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath,81,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath_2,82,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath_3,83,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_reverseAddPath,84,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_offset,85,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_offset_2,86,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_transform,87,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_transform_2,88,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_makeTransform,89,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_makeScale,90,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getLastPt,91,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setLastPt,92,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setLastPt_2,93,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getSegmentMasks,94,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_contains,95,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dump,96,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dump_2,97,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpHex,98,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpArrays,99,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpArrays_2,100,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_writeToMemory,101,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_serialize,102,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_readFromMemory,103,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getGenerationID,104,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isValid,105,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Make,109,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Rect,110,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Oval,111,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Oval_2,112,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect,114,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect_2,115,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect_3,116,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Polygon,117,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Polygon_2,118,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsLineDegenerate,120,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsQuadDegenerate,121,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsCubicDegenerate,122,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_ConvertConicToQuads,123,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_new,13,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_new_2,14,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_delete,15,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isInterpolatable,16,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_interpolate,17,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getFillType,18,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setFillType,19,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isInverseFillType,20,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_toggleInverseFillType,21,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isConvex,22,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isOval,23,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isRRect,24,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_reset,25,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rewind,26,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isEmpty,27,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isLastContourClosed,28,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isFinite,29,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isVolatile,30,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setIsVolatile,31,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isLine,32,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_countPoints,33,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getPoint,34,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getPoints,35,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_countVerbs,36,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getVerbs,37,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_approximateBytesUsed,38,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_swap,39,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getBounds,40,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_updateBoundsCache,41,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_computeTightBounds,42,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conservativelyContainsRect,43,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_incReserve,44,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_moveTo,45,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_moveTo_2,46,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rMoveTo,47,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_lineTo,48,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_lineTo_2,49,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rLineTo,50,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_quadTo,51,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_quadTo_2,52,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rQuadTo,53,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conicTo,54,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_conicTo_2,55,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rConicTo,56,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_cubicTo,57,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_cubicTo_2,58,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rCubicTo,59,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo,60,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_2,61,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_3,62,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_4,63,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_arcTo_5,64,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_rArcTo,65,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_close,66,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isRect,67,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect,68,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect_2,69,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRect_3,70,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addOval,71,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addOval_2,72,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addCircle,73,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addArc,74,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRoundRect,75,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRoundRect_2,76,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRRect,77,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addRRect_2,78,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPoly,79,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPoly_2,80,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath,81,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath_2,82,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_addPath_3,83,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_reverseAddPath,84,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_offset,85,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_offset_2,86,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_transform,87,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_transform_2,88,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_makeTransform,89,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_makeScale,90,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getLastPt,91,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setLastPt,92,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_setLastPt_2,93,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getSegmentMasks,94,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_contains,95,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dump,96,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dump_2,97,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpHex,98,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpArrays,99,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_dumpArrays_2,100,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_writeToMemory,101,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_serialize,102,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_readFromMemory,103,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|primitive,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_getGenerationID,104,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_isValid,105,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Make,109,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Rect,110,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Oval,111,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Oval_2,112,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect,114,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect_2,115,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_RRect_3,116,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Polygon,117,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr|suffix,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_Polygon_2,118,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsLineDegenerate,120,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsQuadDegenerate,121,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_IsCubicDegenerate,122,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
+void_ptr,skia/binding/sk_path.h,skia/binding/sk_path.cpp,SkPath_ConvertConicToQuads,123,done,,typed opaque aliases applied for SkPath API; normalized size_t and replaced pointer casts with reinterpret_cast
 void_ptr,skia/binding/sk_path_1d_path_effect.h,skia/binding/sk_path_1d_path_effect.cpp,SkPath1DPathEffect_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_path_1d_path_effect.h,skia/binding/sk_path_1d_path_effect.cpp,SkPath1DPathEffect_Make,16,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_path_2d_path_effect.h,skia/binding/sk_path_2d_path_effect.cpp,SkPath2DPathEffect_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
