@@ -8,6 +8,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_vertices.h"
+
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_vertices_t reskia_vertices_t;
@@ -33,8 +35,8 @@ bool SkVertices_refCntGreaterThan(reskia_vertices_t *vertices, int32_t threadIso
 
 // static
 
-int SkVertices_MakeCopy(int mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors, int indexCount, const uint16_t *indices); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[], int indexCount, const uint16_t indices[]) -> sk_vertices_t
-int SkVertices_MakeCopy_2(int mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[]) -> sk_vertices_t
+sk_vertices_t SkVertices_MakeCopy(int mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors, int indexCount, const uint16_t *indices); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[], int indexCount, const uint16_t indices[]) -> sk_vertices_t
+sk_vertices_t SkVertices_MakeCopy_2(int mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[]) -> sk_vertices_t
 
 #ifdef __cplusplus
 }

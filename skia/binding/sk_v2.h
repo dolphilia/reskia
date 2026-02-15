@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_V2_H
 #define RAIA_SKIA_SK_V2_H
 
+#include "../static/static_sk_v2.h"
+
 typedef struct reskia_v2_t reskia_v2_t;
 
 #ifdef __cplusplus
@@ -26,17 +28,17 @@ extern "C" {
 void SkV2_delete(reskia_v2_t *v2); // (SkV2 *v2)
 float SkV2_lengthSquared(reskia_v2_t *v2); // (SkV2 *v2) -> SkScalar
 float SkV2_length(reskia_v2_t *v2); // (SkV2 *v2) -> SkScalar
-float SkV2_dot(reskia_v2_t *v2, int v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
-float SkV2_cross(reskia_v2_t *v2, int v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
-int SkV2_normalize(reskia_v2_t *v2); // (SkV2 *v2) -> sk_v2_t
+float SkV2_dot(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
+float SkV2_cross(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
+sk_v2_t SkV2_normalize(reskia_v2_t *v2); // (SkV2 *v2) -> sk_v2_t
 const float *SkV2_ptr(reskia_v2_t *v2); // (SkV2 *v2) -> const float *
 float *SkV2_ptr_2(reskia_v2_t *v2); // (SkV2 *v2) -> float *
 
 // static
 
-float SkV2_Dot(int a, int b); // (sk_v2_t a, sk_v2_t b) -> SkScalar
-float SkV2_Cross(int a, int b); // (sk_v2_t a, sk_v2_t b) -> SkScalar
-int SkV2_Normalize(int v); // (sk_v2_t v) -> sk_v2_t
+float SkV2_Dot(sk_v2_t a, sk_v2_t b); // (sk_v2_t a, sk_v2_t b) -> SkScalar
+float SkV2_Cross(sk_v2_t a, sk_v2_t b); // (sk_v2_t a, sk_v2_t b) -> SkScalar
+sk_v2_t SkV2_Normalize(sk_v2_t v); // (sk_v2_t v) -> sk_v2_t
 
 #ifdef __cplusplus
 }

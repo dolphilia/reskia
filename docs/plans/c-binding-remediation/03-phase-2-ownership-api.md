@@ -99,7 +99,7 @@ cmake --build skia/cmake-build-local -j 8
     - 対象関数: 691
     - `handle_key_return`: 624
     - `handle_key_param`: 192
-    - 進捗: 635/691 `done`（`phase2-handle-key-typing-status.csv`）
+    - 進捗: 691/691 `done`（`phase2-handle-key-typing-status.csv`）
   - 実施済みセット:
     - `skia/binding/sk_annotation.h` + `skia/binding/sk_annotation.cpp`（3/3 関数 `done`）
     - 変更内容: `void*` 引数を `reskia_canvas_t` / `reskia_rect_t` / `reskia_point_t` / `reskia_data_t` の不透明型ポインタへ置換
@@ -437,42 +437,56 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkTableMaskFilter` API の `void*` を `reskia_table_mask_filter_t*` / `reskia_mask_filter_t*` と `uint8_t*` テーブル引数へ置換
     - `skia/binding/sk_text_blob.h` + `skia/binding/sk_text_blob.cpp`（17/17 関数 `done`）
     - 変更内容: `SkTextBlob` API の `void*` を `reskia_text_blob_t*` と関連不透明型（font/paint/rect/point/(de)serial_procs）へ置換し、テキスト/バイト列を `uint8_t*` + `size_t` へ正規化
+    - 変更内容（handle key typing）: `SkTextBlob_serialize_2` / `SkTextBlob_MakeFromText` / `SkTextBlob_MakeFromString` / `SkTextBlob_MakeFromPosTextH` / `SkTextBlob_MakeFromPosText` / `SkTextBlob_MakeFromRSXform` / `SkTextBlob_Deserialize` の戻り値 `int` 露出を `sk_data_t` / `sk_text_blob_t` へ更新
     - `skia/binding/sk_text_blob_builder.h` + `skia/binding/sk_text_blob_builder.cpp`（11/11 関数 `done`）
     - 変更内容: `SkTextBlobBuilder` API の `void*` を `reskia_text_blob_builder_t*` と関連不透明型（font/rect/run-buffer）へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkTextBlobBuilder_make` の戻り値 `int` 露出を `sk_text_blob_t` へ更新
     - `skia/binding/sk_tiled_image_utils.h` + `skia/binding/sk_tiled_image_utils.cpp`（7/7 関数 `done`）
     - 変更内容: `SkTiledImageUtils` API の `void*` を `reskia_canvas_t*` / `reskia_image_t*` / `reskia_image_sp_t*` / `reskia_rect_t*` / `reskia_sampling_options_t*` / `reskia_paint_t*` へ置換し、キー出力を `uint32_t*` へ正規化
+    - `skia/binding/sk_trim_path_effect.h` + `skia/binding/sk_trim_path_effect.cpp`（2/2 関数 `done`）
+    - 変更内容（handle key typing）: `SkTrimPathEffect_Make` の戻り値 `int` 露出を `sk_path_effect_t` へ更新
     - `skia/binding/sk_trace_memory_dump.h` + `skia/binding/sk_trace_memory_dump.cpp`（10/10 関数 `done`）
     - 変更内容: `SkTraceMemoryDump` API の `void*` を `reskia_trace_memory_dump_t*` / `reskia_discardable_memory_t*` へ置換し、`uint64_t` 型正規化と `reinterpret_cast` 統一、非所有インターフェースに合わせて `delete` を no-op 化
     - `skia/binding/sk_typeface.h` + `skia/binding/sk_typeface.cpp`（34/34 関数 `done`）
     - 変更内容: `SkTypeface` API の `void*` を `reskia_typeface_t*` と関連不透明型（stream/string/font-args/font-descriptor/scaler-rec）へ置換し、glyph/table 引数を `uint16_t`/`uint32_t`/`size_t` に正規化
+    - 変更内容（handle key typing）: `SkTypeface_fontStyle` / `SkTypeface_makeClone` / `SkTypeface_serialize_2` / `SkTypeface_copyTableData` / `SkTypeface_openStream` / `SkTypeface_openExistingStream` / `SkTypeface_getBounds` / `SkTypeface_MakeEmpty` / `SkTypeface_MakeDeserialize` / `SkTypeface_MakeDefault` / `SkTypeface_MakeFromName` / `SkTypeface_MakeFromFile` / `SkTypeface_MakeFromStream` / `SkTypeface_MakeFromData` / `SkTypeface_MakeDeserialize_2` の `int` 露出を `sk_*_t` へ更新
     - `skia/binding/sk_typeface_mac.h` + `skia/binding/sk_typeface_mac.cpp`（2/2 関数 `done`）
     - 変更内容: `SkTypeface_mac` API の `void*` を `reskia_ct_font_t*` / `reskia_typeface_t*` へ置換し、CoreText 連携引数を不透明型で型強化
+    - 変更内容（handle key typing）: `Mac_SkMakeTypefaceFromCTFont` の戻り値 `int` 露出を `sk_typeface_t` へ更新
     - `skia/binding/sk_un_pre_multiply.h` + `skia/binding/sk_un_pre_multiply.cpp`（5/5 関数 `done`）
     - 変更内容: `SkUnPreMultiply` API の `void*` を `reskia_un_pre_multiply_t*` へ置換し、`Scale`/`SkColor`/`SkPMColor` を `uint32_t` 系 alias に正規化、static API 前提で delete を no-op 化
     - `skia/binding/sk_v2.h` + `skia/binding/sk_v2.cpp`（8/8 関数 `done`）
     - 変更内容: `SkV2` API の `void*` を `reskia_v2_t*` へ置換し、`ptr` 戻り値を `const float*` / `float*` に型強化、実装側ポインタ変換を `reinterpret_cast` に統一
+    - 変更内容（handle key typing）: `SkV2_dot` / `SkV2_cross` / `SkV2_normalize` / `SkV2_Dot` / `SkV2_Cross` / `SkV2_Normalize` の `int` 露出を `sk_v2_t` へ更新
     - `skia/binding/sk_v3.h` + `skia/binding/sk_v3.cpp`（11/11 関数 `done`）
     - 変更内容: `SkV3` API の `void*` を `reskia_v3_t*` へ置換し、インスタンス/静的演算の引数型を統一、`ptr` 戻り値を `const float*` / `float*` に型強化
+    - 変更内容（handle key typing）: `SkV3_cross` / `SkV3_normalize` / `SkV3_Cross` / `SkV3_Normalize` の戻り値 `int` 露出を `sk_v3_t` へ更新
     - `skia/binding/sk_v4.h` + `skia/binding/sk_v4.cpp`（9/9 関数 `done`）
     - 変更内容: `SkV4` API の `void*` を `reskia_v4_t*` へ置換し、インスタンス/静的演算の引数型を統一、`ptr` 戻り値を `const float*` / `float*` に型強化
+    - 変更内容（handle key typing）: `SkV4_normalize` / `SkV4_Normalize` の戻り値 `int` 露出を `sk_v4_t` へ更新
     - `skia/binding/sk_vertices.h` + `skia/binding/sk_vertices.cpp`（11/11 関数 `done`）
     - 変更内容: `SkVertices` API の `void*` を `reskia_vertices_t*` と関連不透明型（point/rect）へ置換し、色・インデックス配列を `uint32_t` / `uint16_t` に正規化
+    - 変更内容（handle key typing）: `SkVertices_MakeCopy` / `SkVertices_MakeCopy_2` の戻り値 `int` 露出を `sk_vertices_t` へ更新
     - `skia/binding/sk_w_stream.h` + `skia/binding/sk_w_stream.cpp`（18/18 関数 `done`）
     - 変更内容: `SkWStream` API の `void*` を `reskia_w_stream_t*` / `reskia_stream_t*` へ置換し、`size_t`・`uint32_t`・`int32_t`・`int64_t` へ整数/サイズ型を正規化
     - `skia/binding/sk_wbmp_decoder.h` + `skia/binding/sk_wbmp_decoder.cpp`（3/3 関数 `done`）
     - 変更内容: `SkWbmpDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、デコーダ引数型を PNG/JPEG 系と整合化
+    - 変更内容（handle key typing）: `SkWbmpDecoder_Decode` / `SkWbmpDecoder_Decode_2` / `SkWbmpDecoder_Decoder` の戻り値 `int` 露出を `sk_codec_t` / `sk_codecs_decoder_t` へ更新
     - `skia/binding/sk_webp_decoder.h` + `skia/binding/sk_webp_decoder.cpp`（3/3 関数 `done`）
     - 変更内容: `SkWebpDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、デコーダ引数型を PNG/JPEG/WBMP 系と整合化
+    - 変更内容（handle key typing）: `SkWebpDecoder_Decode` / `SkWebpDecoder_Decode_2` / `SkWebpDecoder_Decoder` の戻り値 `int` 露出を `sk_codec_t` / `sk_codecs_decoder_t` へ更新
     - `skia/binding/sk_webp_encoder.h` + `skia/binding/sk_webp_encoder.cpp`（1/1 関数 `done`）
     - 変更内容: `SkWebpEncoder` API の C++ 具体型引数を `reskia_*` 不透明型へ置換し、`Encode_2` を `reskia_direct_context_t*` / `reskia_image_t*` / `reskia_webp_encoder_options_t*` で型強化
     - `skia/binding/sk_write_buffer.h` + `skia/binding/sk_write_buffer.cpp`（32/32 関数 `done`）
     - 変更内容: `SkWriteBuffer` API の `void*` を `reskia_write_buffer_t*` と関連不透明型（data/flattenable/color4f/point/matrix/region/path/image/typeface/paint/stream/serial_procs）へ置換し、配列長・整数を `size_t`/`uint32_t`/`int32_t`/`int64_t` へ正規化
     - `skia/binding/sk_yuva_info.h` + `skia/binding/sk_yuva_info.cpp`（24/24 関数 `done`）
     - 変更内容: `SkYUVAInfo` API の `void*` を `reskia_yuva_info_t*` と `reskia_i_size_t*` へ置換し、`computeTotalBytes` の行サイズ/出力配列を `size_t*` に型正規化
+    - 変更内容（handle key typing）: `SkYUVAInfo_dimensions` / `SkYUVAInfo_originMatrix` / `SkYUVAInfo_makeSubsampling` / `SkYUVAInfo_makeDimensions` / `SkYUVAInfo_PlaneDimensions` の `int` 露出を `sk_i_size_t` / `sk_matrix_t` / `sk_yuva_info_t` へ更新
     - `skia/binding/sk_yuva_pixmap_info.h` + `skia/binding/sk_yuva_pixmap_info.cpp`（15/15 関数 `done`）
     - 変更内容: `SkYUVAPixmapInfo` API の `void*` を `reskia_yuva_pixmap_info_t*` と関連不透明型（yuva_info/image_info/pixmap/supported_data_types）へ置換し、row-bytes/plane-size 配列を `size_t*` に正規化
     - `skia/binding/sk_yuva_pixmaps.h` + `skia/binding/sk_yuva_pixmaps.cpp`（16/16 関数 `done`）
     - 変更内容: `SkYUVAPixmaps` API の `void*` を `reskia_yuva_pixmaps_t*` と関連不透明型（yuva_info/yuva_pixmap_info/pixmap）へ置換し、`planes`/`plane` を typed pixmap pointer 返却へ型強化
+    - 変更内容（handle key typing）: `SkYUVAPixmaps_pixmapsInfo` / `SkYUVAPixmaps_Allocate` / `SkYUVAPixmaps_FromData` / `SkYUVAPixmaps_MakeCopy` / `SkYUVAPixmaps_FromExternalMemory` / `SkYUVAPixmaps_FromExternalPixmaps` の `int` 露出を `sk_yuva_pixmap_info_t` / `sk_yuva_pixmaps_t` / `sk_data_t` へ更新
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431

@@ -5,6 +5,10 @@
 #ifndef RAIA_SKIA_SK_YUVA_PIXMAPS_H
 #define RAIA_SKIA_SK_YUVA_PIXMAPS_H
 
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_yuva_pixmap_info.h"
+#include "../static/static_sk_yuva_pixmaps.h"
+
 typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_yuva_info_t reskia_yuva_info_t;
 typedef struct reskia_yuva_pixmap_info_t reskia_yuva_pixmap_info_t;
@@ -23,7 +27,7 @@ void SkYUVAPixmaps_delete(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmap
 bool SkYUVAPixmaps_isValid(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> bool
 const reskia_yuva_info_t *SkYUVAPixmaps_yuvaInfo(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> const SkYUVAInfo *
 int SkYUVAPixmaps_dataType(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> SkYUVAPixmaps::DataType
-int SkYUVAPixmaps_pixmapsInfo(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> sk_yuva_pixmap_info_t
+sk_yuva_pixmap_info_t SkYUVAPixmaps_pixmapsInfo(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> sk_yuva_pixmap_info_t
 int SkYUVAPixmaps_numPlanes(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> int
 const reskia_pixmap_t *SkYUVAPixmaps_planes(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> const SkPixmap *
 const reskia_pixmap_t *SkYUVAPixmaps_plane(reskia_yuva_pixmaps_t *yuva_pixmaps, int i); // (SkYUVAPixmaps *yuva_pixmaps, int i) -> const SkPixmap *
@@ -33,11 +37,11 @@ bool SkYUVAPixmaps_ownsStorage(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAP
 // static
 
 int SkYUVAPixmaps_RecommendedRGBAColorType(int type); // (SkYUVAPixmaps::DataType type) -> SkColorType
-int SkYUVAPixmaps_Allocate(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // (const SkYUVAPixmapInfo *yuvaPixmapInfo) -> sk_yuva_pixmaps_t
-int SkYUVAPixmaps_FromData(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo, int data); // (const SkYUVAPixmapInfo *yuvaPixmapInfo, sk_data_t data) -> sk_yuva_pixmaps_t
-int SkYUVAPixmaps_MakeCopy(const reskia_yuva_pixmaps_t *src); // (const SkYUVAPixmaps *src) -> sk_yuva_pixmaps_t
-int SkYUVAPixmaps_FromExternalMemory(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo, void *memory); // (const SkYUVAPixmapInfo *yuvaPixmapInfo, void *memory) -> sk_yuva_pixmaps_t
-int SkYUVAPixmaps_FromExternalPixmaps(const reskia_yuva_info_t *yuvaInfo, const reskia_pixmap_t *pixmaps); // (const SkYUVAInfo *yuvaInfo, const SkPixmap pixmaps[4]) -> sk_yuva_pixmaps_t
+sk_yuva_pixmaps_t SkYUVAPixmaps_Allocate(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // (const SkYUVAPixmapInfo *yuvaPixmapInfo) -> sk_yuva_pixmaps_t
+sk_yuva_pixmaps_t SkYUVAPixmaps_FromData(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo, sk_data_t data); // (const SkYUVAPixmapInfo *yuvaPixmapInfo, sk_data_t data) -> sk_yuva_pixmaps_t
+sk_yuva_pixmaps_t SkYUVAPixmaps_MakeCopy(const reskia_yuva_pixmaps_t *src); // (const SkYUVAPixmaps *src) -> sk_yuva_pixmaps_t
+sk_yuva_pixmaps_t SkYUVAPixmaps_FromExternalMemory(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo, void *memory); // (const SkYUVAPixmapInfo *yuvaPixmapInfo, void *memory) -> sk_yuva_pixmaps_t
+sk_yuva_pixmaps_t SkYUVAPixmaps_FromExternalPixmaps(const reskia_yuva_info_t *yuvaInfo, const reskia_pixmap_t *pixmaps); // (const SkYUVAInfo *yuvaInfo, const SkPixmap pixmaps[4]) -> sk_yuva_pixmaps_t
 
 #ifdef __cplusplus
 }

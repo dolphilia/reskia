@@ -634,59 +634,59 @@ handle_key_return,skia/binding/sk_surfaces.h,skia/binding/sk_surfaces.cpp,SkSurf
 handle_key_return,skia/binding/sk_surfaces.h,skia/binding/sk_surfaces.cpp,SkSurfaces_WrapPixels,21,done,,header handle key return/param migrated int -> typed sk_*_t
 handle_key_return,skia/binding/sk_surfaces.h,skia/binding/sk_surfaces.cpp,SkSurfaces_WrapPixels_2,22,done,,header handle key return/param migrated int -> typed sk_*_t
 handle_key_return,skia/binding/sk_surfaces.h,skia/binding/sk_surfaces.cpp,SkSurfaces_WrapPixels_3,23,done,,header handle key return/param migrated int -> typed sk_*_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_serialize_2,29,todo,,static handle key exposed as int; return:sk_data_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromText,38,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromString,39,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromPosTextH,40,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromPosText,41,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromRSXform,42,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_Deserialize,43,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_text_blob_builder.h,skia/binding/sk_text_blob_builder.cpp,SkTextBlobBuilder_make,19,todo,,static handle key exposed as int; return:sk_text_blob_t
-handle_key_return,skia/binding/sk_trim_path_effect.h,skia/binding/sk_trim_path_effect.cpp,SkTrimPathEffect_Make,16,todo,,static handle key exposed as int; return:sk_path_effect_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_fontStyle,28,todo,,static handle key exposed as int; return:sk_font_style_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_makeClone,35,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_serialize_2,37,todo,,static handle key exposed as int; return:sk_data_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_copyTableData,46,todo,,static handle key exposed as int; return:sk_data_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_openStream,52,todo,,static handle key exposed as int; return:sk_stream_asset_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_openExistingStream,53,todo,,static handle key exposed as int; return:sk_stream_asset_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_getBounds,58,todo,,static handle key exposed as int; return:sk_rect_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeEmpty,66,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDeserialize,67,todo,,static handle key exposed as int; return:sk_typeface_t; params:font_mgr:sk_font_mgr_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDefault,74,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromName,75,todo,,static handle key exposed as int; return:sk_typeface_t; params:fontStyle:sk_font_style_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromFile,76,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromStream,77,todo,,static handle key exposed as int; return:sk_typeface_t; params:stream_asset:sk_stream_asset_t
-handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromData,78,todo,,static handle key exposed as int; return:sk_typeface_t; params:data:sk_data_t
-handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDeserialize_2,79,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_return,skia/binding/sk_typeface_mac.h,skia/binding/sk_typeface_mac.cpp,Mac_SkMakeTypefaceFromCTFont,18,todo,,static handle key exposed as int; return:sk_typeface_t
-handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_dot,29,todo,,static handle key exposed as int; params:v:sk_v2_t
-handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_cross,30,todo,,static handle key exposed as int; params:v:sk_v2_t
-handle_key_return,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_normalize,31,todo,,static handle key exposed as int; return:sk_v2_t
-handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Dot,37,todo,,static handle key exposed as int; params:a:sk_v2_t|b:sk_v2_t
-handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Cross,38,todo,,static handle key exposed as int; params:a:sk_v2_t|b:sk_v2_t
-handle_key_return|handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Normalize,39,todo,,static handle key exposed as int; return:sk_v2_t; params:v:sk_v2_t
-handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_cross,29,todo,,static handle key exposed as int; return:sk_v3_t
-handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_normalize,30,todo,,static handle key exposed as int; return:sk_v3_t
-handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Cross,37,todo,,static handle key exposed as int; return:sk_v3_t
-handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Normalize,38,todo,,static handle key exposed as int; return:sk_v3_t
-handle_key_return,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_normalize,27,todo,,static handle key exposed as int; return:sk_v4_t
-handle_key_return,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Normalize,34,todo,,static handle key exposed as int; return:sk_v4_t
-handle_key_return,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy,36,todo,,static handle key exposed as int; return:sk_vertices_t
-handle_key_return,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy_2,37,todo,,static handle key exposed as int; return:sk_vertices_t
-handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode,19,todo,,static handle key exposed as int; return:sk_codec_t
-handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode_2,20,todo,,static handle key exposed as int; return:sk_codec_t
-handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decoder,21,todo,,static handle key exposed as int; return:sk_codecs_decoder_t
-handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode,19,todo,,static handle key exposed as int; return:sk_codec_t
-handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode_2,20,todo,,static handle key exposed as int; return:sk_codec_t
-handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decoder,21,todo,,static handle key exposed as int; return:sk_codecs_decoder_t
-handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_dimensions,28,todo,,static handle key exposed as int; return:sk_i_size_t
-handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_originMatrix,35,todo,,static handle key exposed as int; return:sk_matrix_t
-handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_makeSubsampling,42,todo,,static handle key exposed as int; return:sk_yuva_info_t
-handle_key_return|handle_key_param,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_makeDimensions,43,todo,,static handle key exposed as int; return:sk_yuva_info_t; params:size:sk_i_size_t
-handle_key_param,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_PlaneDimensions,50,todo,,static handle key exposed as int; params:imageDimensions:sk_i_size_t
-handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_pixmapsInfo,26,todo,,static handle key exposed as int; return:sk_yuva_pixmap_info_t
-handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_Allocate,36,todo,,static handle key exposed as int; return:sk_yuva_pixmaps_t
-handle_key_return|handle_key_param,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromData,37,todo,,static handle key exposed as int; return:sk_yuva_pixmaps_t; params:data:sk_data_t
-handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_MakeCopy,38,todo,,static handle key exposed as int; return:sk_yuva_pixmaps_t
-handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromExternalMemory,39,todo,,static handle key exposed as int; return:sk_yuva_pixmaps_t
-handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromExternalPixmaps,40,todo,,static handle key exposed as int; return:sk_yuva_pixmaps_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_serialize_2,29,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromText,38,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromString,39,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromPosTextH,40,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromPosText,41,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_MakeFromRSXform,42,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob.h,skia/binding/sk_text_blob.cpp,SkTextBlob_Deserialize,43,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_text_blob_builder.h,skia/binding/sk_text_blob_builder.cpp,SkTextBlobBuilder_make,19,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_trim_path_effect.h,skia/binding/sk_trim_path_effect.cpp,SkTrimPathEffect_Make,16,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_fontStyle,28,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_makeClone,35,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_serialize_2,37,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_copyTableData,46,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_openStream,52,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_openExistingStream,53,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_getBounds,58,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeEmpty,66,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDeserialize,67,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDefault,74,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromName,75,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromFile,76,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromStream,77,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeFromData,78,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface.h,skia/binding/sk_typeface.cpp,SkTypeface_MakeDeserialize_2,79,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_typeface_mac.h,skia/binding/sk_typeface_mac.cpp,Mac_SkMakeTypefaceFromCTFont,18,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_dot,29,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_cross,30,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_normalize,31,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Dot,37,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Cross,38,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_v2.h,skia/binding/sk_v2.cpp,SkV2_Normalize,39,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_cross,29,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_normalize,30,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Cross,37,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v3.h,skia/binding/sk_v3.cpp,SkV3_Normalize,38,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_normalize,27,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_v4.h,skia/binding/sk_v4.cpp,SkV4_Normalize,34,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy,36,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_vertices.h,skia/binding/sk_vertices.cpp,SkVertices_MakeCopy_2,37,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode,19,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decode_2,20,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_wbmp_decoder.h,skia/binding/sk_wbmp_decoder.cpp,SkWbmpDecoder_Decoder,21,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode,19,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decode_2,20,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_webp_decoder.h,skia/binding/sk_webp_decoder.cpp,SkWebpDecoder_Decoder,21,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_dimensions,28,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_originMatrix,35,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_makeSubsampling,42,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_makeDimensions,43,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_param,skia/binding/sk_yuva_info.h,skia/binding/sk_yuva_info.cpp,SkYUVAInfo_PlaneDimensions,50,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_pixmapsInfo,26,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_Allocate,36,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return|handle_key_param,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromData,37,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_MakeCopy,38,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromExternalMemory,39,done,,header handle key return/param migrated int -> typed sk_*_t
+handle_key_return,skia/binding/sk_yuva_pixmaps.h,skia/binding/sk_yuva_pixmaps.cpp,SkYUVAPixmaps_FromExternalPixmaps,40,done,,header handle key return/param migrated int -> typed sk_*_t
