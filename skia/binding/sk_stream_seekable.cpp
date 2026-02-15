@@ -14,100 +14,100 @@
 
 extern "C" {
 
-void SkStreamSeekable_delete(void *stream_seekable) {
-    delete static_cast<SkStreamSeekable *>(stream_seekable);
+void SkStreamSeekable_delete(reskia_stream_seekable_t *stream_seekable) {
+    delete reinterpret_cast<SkStreamSeekable *>(stream_seekable);
 }
 
-sk_stream_seekable_t SkStreamSeekable_duplicate(void *stream_seekable) {
-    return static_sk_stream_seekable_make(static_cast<SkStreamSeekable *>(stream_seekable)->duplicate());
+sk_stream_seekable_t SkStreamSeekable_duplicate(reskia_stream_seekable_t *stream_seekable) {
+    return static_sk_stream_seekable_make(reinterpret_cast<SkStreamSeekable *>(stream_seekable)->duplicate());
 }
 
-bool SkStreamSeekable_hasPosition(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->hasPosition();
+bool SkStreamSeekable_hasPosition(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->hasPosition();
 }
 
-size_t SkStreamSeekable_getPosition(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->getPosition();
+size_t SkStreamSeekable_getPosition(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->getPosition();
 }
 
-bool SkStreamSeekable_seek(void *stream_seekable, size_t position) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->seek(position);
+bool SkStreamSeekable_seek(reskia_stream_seekable_t *stream_seekable, size_t position) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->seek(position);
 }
 
-bool SkStreamSeekable_move(void *stream_seekable, long offset) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->move(offset);
+bool SkStreamSeekable_move(reskia_stream_seekable_t *stream_seekable, long offset) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->move(offset);
 }
 
-sk_stream_seekable_t SkStreamSeekable_fork(void *stream_seekable) {
-    return static_sk_stream_seekable_make(static_cast<SkStreamSeekable *>(stream_seekable)->fork());
+sk_stream_seekable_t SkStreamSeekable_fork(reskia_stream_seekable_t *stream_seekable) {
+    return static_sk_stream_seekable_make(reinterpret_cast<SkStreamSeekable *>(stream_seekable)->fork());
 }
 
-bool SkStreamSeekable_rewind(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->rewind();
+bool SkStreamSeekable_rewind(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->rewind();
 }
 
-size_t SkStreamSeekable_read(void *stream_seekable, void *buffer, size_t size) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->read(buffer, size);
+size_t SkStreamSeekable_read(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->read(buffer, size);
 }
 
-size_t SkStreamSeekable_skip(void *stream_seekable, size_t size) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->skip(size);
+size_t SkStreamSeekable_skip(reskia_stream_seekable_t *stream_seekable, size_t size) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->skip(size);
 }
 
-size_t SkStreamSeekable_peek(void *stream_seekable, void *buffer, size_t size) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->peek(buffer, size);
+size_t SkStreamSeekable_peek(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->peek(buffer, size);
 }
 
-bool SkStreamSeekable_isAtEnd(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->isAtEnd();
+bool SkStreamSeekable_isAtEnd(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->isAtEnd();
 }
 
-bool SkStreamSeekable_readS8(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readS8(static_cast<int8_t *>(i));
+bool SkStreamSeekable_readS8(reskia_stream_seekable_t *stream_seekable, int8_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readS8(i);
 }
 
-bool SkStreamSeekable_readS16(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readS16(static_cast<int16_t *>(i));
+bool SkStreamSeekable_readS16(reskia_stream_seekable_t *stream_seekable, int16_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readS16(i);
 }
 
-bool SkStreamSeekable_readS32(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readS32(static_cast<int32_t *>(i));
+bool SkStreamSeekable_readS32(reskia_stream_seekable_t *stream_seekable, int32_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readS32(i);
 }
 
-bool SkStreamSeekable_readU8(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readU8(static_cast<uint8_t *>(i));
+bool SkStreamSeekable_readU8(reskia_stream_seekable_t *stream_seekable, uint8_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readU8(i);
 }
 
-bool SkStreamSeekable_readU16(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readU16(static_cast<uint16_t *>(i));
+bool SkStreamSeekable_readU16(reskia_stream_seekable_t *stream_seekable, uint16_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readU16(i);
 }
 
-bool SkStreamSeekable_readU32(void *stream_seekable, void *i) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readU32(static_cast<uint32_t *>(i));
+bool SkStreamSeekable_readU32(reskia_stream_seekable_t *stream_seekable, uint32_t *i) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readU32(i);
 }
 
-bool SkStreamSeekable_readBool(void *stream_seekable, void *b) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readBool(static_cast<bool *>(b));
+bool SkStreamSeekable_readBool(reskia_stream_seekable_t *stream_seekable, bool *b) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readBool(b);
 }
 
-bool SkStreamSeekable_readScalar(void *stream_seekable, void *v) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readScalar(static_cast<SkScalar *>(v));
+bool SkStreamSeekable_readScalar(reskia_stream_seekable_t *stream_seekable, float *v) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readScalar(v);
 }
 
-bool SkStreamSeekable_readPackedUInt(void *stream_seekable, void *size) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->readPackedUInt(static_cast<size_t *>(size));
+bool SkStreamSeekable_readPackedUInt(reskia_stream_seekable_t *stream_seekable, size_t *size) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->readPackedUInt(size);
 }
 
-bool SkStreamSeekable_hasLength(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->hasLength();
+bool SkStreamSeekable_hasLength(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->hasLength();
 }
 
-size_t SkStreamSeekable_getLength(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->getLength();
+size_t SkStreamSeekable_getLength(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->getLength();
 }
 
-const void * SkStreamSeekable_getMemoryBase(void *stream_seekable) {
-    return static_cast<SkStreamSeekable *>(stream_seekable)->getMemoryBase();
+const void * SkStreamSeekable_getMemoryBase(reskia_stream_seekable_t *stream_seekable) {
+    return reinterpret_cast<SkStreamSeekable *>(stream_seekable)->getMemoryBase();
 }
 
 // static

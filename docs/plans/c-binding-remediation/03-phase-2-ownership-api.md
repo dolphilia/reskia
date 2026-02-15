@@ -302,11 +302,21 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkStream` API の `void*` を `reskia_stream_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
     - `skia/binding/sk_stream_asset.h` + `skia/binding/sk_stream_asset.cpp`（24/24 関数 `done`）
     - 変更内容: `SkStreamAsset` API の `void*` を `reskia_stream_asset_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
+    - `skia/binding/sk_stream_memory.h` + `skia/binding/sk_stream_memory.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStreamMemory` API の `void*` を `reskia_stream_memory_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
+    - `skia/binding/sk_stream_rewindable.h` + `skia/binding/sk_stream_rewindable.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStreamRewindable` API の `void*` を `reskia_stream_rewindable_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
+    - `skia/binding/sk_stream_seekable.h` + `skia/binding/sk_stream_seekable.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStreamSeekable` API の `void*` を `reskia_stream_seekable_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
+    - `skia/binding/sk_string.h` + `skia/binding/sk_string.cpp`（67/67 関数 `done`）
+    - 変更内容: `SkString` API の `void*` を `reskia_string_t*`（`std::string` 入力は `reskia_std_string_t*`）へ置換し、`size_t`/`uint32_t`/`uint64_t` シグネチャへ正規化
+    - `skia/binding/sk_stroke_rec.h` + `skia/binding/sk_stroke_rec.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStrokeRec` API の `void*` を `reskia_stroke_rec_t*` へ置換し、`SkPaint`/`SkPath` 引数を `reskia_paint_t*`/`reskia_path_t*` へ型強化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1982 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 2145 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71
