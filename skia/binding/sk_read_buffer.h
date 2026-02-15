@@ -36,6 +36,9 @@ typedef struct reskia_read_buffer_t reskia_read_buffer_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_region_t reskia_region_t;
 typedef struct reskia_string_t reskia_string_t;
+typedef int32_t reskia_read_buffer_version_t;
+typedef int32_t reskia_read_buffer_flattenable_type_t;
+typedef int32_t reskia_read_buffer_legacy_fq_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,7 +48,7 @@ reskia_read_buffer_t *SkReadBuffer_new(); // () -> SkReadBuffer*
 reskia_read_buffer_t *SkReadBuffer_new_2(const void* data, size_t size); // (const void* data, size_t size) -> SkReadBuffer*
 void SkReadBuffer_delete(reskia_read_buffer_t *rect); // (SkReadBuffer* rect)
 void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size_t size); // (SkReadBuffer* buffer, const void* data, size_t size)
-bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, int targetVersion); // (SkReadBuffer* buffer, SkPicturePriv::Version targetVersion) -> bool
+bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, reskia_read_buffer_version_t targetVersion); // (SkReadBuffer* buffer, SkPicturePriv::Version targetVersion) -> bool
 uint32_t SkReadBuffer_getVersion(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> uint32_t
 void SkReadBuffer_setVersion(reskia_read_buffer_t *buffer, int version); // (SkReadBuffer* buffer, int version)
 size_t SkReadBuffer_size(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
@@ -83,7 +86,7 @@ void SkReadBuffer_readRegion(reskia_read_buffer_t *buffer, reskia_region_t *regi
 void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path); // (SkReadBuffer* buffer, SkPath* path)
 sk_paint_t SkReadBuffer_readPaint(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_paint_t
 reskia_flattenable_t *SkReadBuffer_readRawFlattenable(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkFlattenable*
-reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, int type); // (SkReadBuffer* buffer, SkFlattenable::Type type) -> SkFlattenable*
+reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, reskia_read_buffer_flattenable_type_t type); // (SkReadBuffer* buffer, SkFlattenable::Type type) -> SkFlattenable*
 
 // template <typename T> sk_sp<T> readFlattenable()
 
@@ -121,7 +124,7 @@ int SkReadBuffer_checkInt(reskia_read_buffer_t *buffer, int min, int max); // (S
 
 // template <typename T> T checkRange(T min, T max)
 
-int SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkLegacyFQ
+reskia_read_buffer_legacy_fq_t SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> SkLegacyFQ
 sk_sampling_options_t SkReadBuffer_readSampling(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_sampling_options_t
 
 #ifdef __cplusplus

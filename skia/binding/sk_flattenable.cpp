@@ -32,8 +32,8 @@ void SkFlattenable_flatten(reskia_flattenable_t *flattenable, reskia_write_buffe
     reinterpret_cast<SkFlattenable *>(flattenable)->flatten(* reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-int SkFlattenable_getFlattenableType(reskia_flattenable_t *flattenable) {
-    return reinterpret_cast<SkFlattenable *>(flattenable)->getFlattenableType();
+reskia_flattenable_type_t SkFlattenable_getFlattenableType(reskia_flattenable_t *flattenable) {
+    return static_cast<reskia_flattenable_type_t>(reinterpret_cast<SkFlattenable *>(flattenable)->getFlattenableType());
 }
 
 sk_data_t SkFlattenable_serialize(reskia_flattenable_t *flattenable, const reskia_serial_procs_t *serial_procs) {
@@ -70,7 +70,7 @@ void SkFlattenable_Register(const char name[], sk_flattenable_factory_t factory)
     SkFlattenable::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
-sk_flattenable_t SkFlattenable_Deserialize(int type, const uint8_t *data, size_t length, const reskia_deserial_procs_t *procs) {
+sk_flattenable_t SkFlattenable_Deserialize(reskia_flattenable_type_t type, const uint8_t *data, size_t length, const reskia_deserial_procs_t *procs) {
     return static_sk_flattenable_make(SkFlattenable::Deserialize(static_cast<SkFlattenable::Type>(type), data, length, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 

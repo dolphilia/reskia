@@ -20,7 +20,7 @@ bool SkContourMeasure_getPosTan(reskia_contour_measure_t *contour_measure, float
     return reinterpret_cast<SkContourMeasure *>(contour_measure)->getPosTan(distance, reinterpret_cast<SkPoint *>(position), reinterpret_cast<SkVector *>(tangent));
 }
 
-bool SkContourMeasure_getMatrix(reskia_contour_measure_t *contour_measure, float distance, reskia_matrix_t *matrix, int flags) {
+bool SkContourMeasure_getMatrix(reskia_contour_measure_t *contour_measure, float distance, reskia_matrix_t *matrix, reskia_contour_measure_matrix_flags_t flags) {
     return reinterpret_cast<SkContourMeasure *>(contour_measure)->getMatrix(distance, reinterpret_cast<SkMatrix *>(matrix), static_cast<SkContourMeasure::MatrixFlags>(flags));
 }
 

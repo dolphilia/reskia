@@ -22,11 +22,11 @@ void SkColorFilters_delete(reskia_color_filters_t *colorFilters) {
 
 // static
 
-sk_color_filter_t SkColorFilters_Blend(const reskia_color_4f_t *c, sk_color_space_t color_space, int mode) {
+sk_color_filter_t SkColorFilters_Blend(const reskia_color_4f_t *c, sk_color_space_t color_space, reskia_blend_mode_t mode) {
     return static_sk_color_filter_make(SkColorFilters::Blend(*reinterpret_cast<const SkColor4f *>(c), static_sk_color_space_get_entity(color_space), static_cast<SkBlendMode>(mode)));
 }
 
-sk_color_filter_t SkColorFilters_Blend_2(reskia_color_t c, int mode) {
+sk_color_filter_t SkColorFilters_Blend_2(reskia_color_t c, reskia_blend_mode_t mode) {
     return static_sk_color_filter_make(SkColorFilters::Blend(static_cast<SkColor>(c), static_cast<SkBlendMode>(mode)));
 }
 

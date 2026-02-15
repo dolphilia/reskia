@@ -18,7 +18,7 @@ void SkTrimPathEffect_delete(void * trimPathEffect) {
 
 // static
 
-sk_path_effect_t SkTrimPathEffect_Make(float startT, float stopT, int mode) {
+sk_path_effect_t SkTrimPathEffect_Make(float startT, float stopT, reskia_trim_path_effect_mode_t mode) {
     return static_sk_path_effect_make(SkTrimPathEffect::Make(startT, stopT, static_cast<SkTrimPathEffect::Mode>(mode)));
 }
 

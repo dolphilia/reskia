@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "sk_alpha_type.h"
 #include "../static/static_sk_color_4f.h"
 #include "../static/static_sk_color_space.h"
 #include "../static/static_sk_i_point.h"
@@ -34,6 +35,8 @@ typedef struct reskia_pixel_ref_t reskia_pixel_ref_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_sampling_options_t reskia_sampling_options_t;
+typedef int32_t reskia_bitmap_color_type_t;
+typedef int32_t reskia_bitmap_tile_mode_t;
 
 reskia_bitmap_t *SkBitmap_new(void); // () -> SkBitmap *
 reskia_bitmap_t *SkBitmap_new_2(const reskia_bitmap_t *src); // (const SkBitmap *src) -> SkBitmap *
@@ -44,12 +47,12 @@ void SkBitmap_allocPixels_2(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *
 void SkBitmap_allocPixels_3(reskia_bitmap_t *bitmap, const reskia_image_info_t *info); // (SkBitmap *bitmap, const SkImageInfo *info)
 void SkBitmap_allocPixels_4(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes); // (SkBitmap *bitmap, const SkImageInfo *info, size_t rowBytes)
 void SkBitmap_allocPixelsFlags(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, uint32_t flags); // (SkBitmap *bitmap, const SkImageInfo *info, uint32_t flags)
-int SkBitmap_alphaType(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkAlphaType
+reskia_alpha_type_t SkBitmap_alphaType(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkAlphaType
 sk_image_t SkBitmap_asImage(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_image_t
 sk_i_rect_t SkBitmap_bounds(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_i_rect_t
 int SkBitmap_bytesPerPixel(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
 reskia_color_space_t *SkBitmap_colorSpace(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkColorSpace *
-int SkBitmap_colorType(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkColorType
+reskia_bitmap_color_type_t SkBitmap_colorType(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkColorType
 size_t SkBitmap_computeByteSize(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> size_t
 sk_i_size_t SkBitmap_dimensions(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_i_size_t
 bool SkBitmap_drawsNothing(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
@@ -87,8 +90,8 @@ bool SkBitmap_isNull(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
 bool SkBitmap_isOpaque(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
 sk_shader_t SkBitmap_makeShader(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm); // (SkBitmap *bitmap, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t
 sk_shader_t SkBitmap_makeShader_2(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm); // (SkBitmap *bitmap, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t
-sk_shader_t SkBitmap_makeShader_3(reskia_bitmap_t *bitmap, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix); // (SkBitmap *bitmap, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *localMatrix) -> sk_shader_t
-sk_shader_t SkBitmap_makeShader_4(reskia_bitmap_t *bitmap, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm); // (SkBitmap *bitmap, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t
+sk_shader_t SkBitmap_makeShader_3(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix); // (SkBitmap *bitmap, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *localMatrix) -> sk_shader_t
+sk_shader_t SkBitmap_makeShader_4(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm); // (SkBitmap *bitmap, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t
 void SkBitmap_notifyPixelsChanged(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 bool SkBitmap_peekPixels(reskia_bitmap_t *bitmap, reskia_pixmap_t *pixmap); // (SkBitmap *bitmap, SkPixmap *pixmap) -> bool
 reskia_pixel_ref_t *SkBitmap_pixelRef(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkPixelRef *
@@ -102,7 +105,7 @@ sk_color_space_t SkBitmap_refColorSpace(reskia_bitmap_t *bitmap); // (SkBitmap *
 void SkBitmap_reset(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 size_t SkBitmap_rowBytes(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> size_t
 int SkBitmap_rowBytesAsPixels(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
-bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, int alphaType); // (SkBitmap *bitmap, SkAlphaType alphaType) -> bool
+bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaType); // (SkBitmap *bitmap, SkAlphaType alphaType) -> bool
 void SkBitmap_setImmutable(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 bool SkBitmap_setInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *imageInfo, size_t rowBytes); // (SkBitmap *bitmap, const SkImageInfo *imageInfo, size_t rowBytes) -> bool
 void SkBitmap_setPixelRef(reskia_bitmap_t *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy); // (SkBitmap *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy)

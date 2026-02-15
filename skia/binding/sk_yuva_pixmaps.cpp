@@ -39,8 +39,8 @@ const reskia_yuva_info_t *SkYUVAPixmaps_yuvaInfo(reskia_yuva_pixmaps_t *yuva_pix
     return reinterpret_cast<const reskia_yuva_info_t *>(&reinterpret_cast<SkYUVAPixmaps *>(yuva_pixmaps)->yuvaInfo());
 }
 
-int SkYUVAPixmaps_dataType(reskia_yuva_pixmaps_t *yuva_pixmaps) {
-    return static_cast<int>(reinterpret_cast<SkYUVAPixmaps *>(yuva_pixmaps)->dataType());
+reskia_yuva_pixmaps_data_type_t SkYUVAPixmaps_dataType(reskia_yuva_pixmaps_t *yuva_pixmaps) {
+    return static_cast<reskia_yuva_pixmaps_data_type_t>(reinterpret_cast<SkYUVAPixmaps *>(yuva_pixmaps)->dataType());
 }
 
 sk_yuva_pixmap_info_t SkYUVAPixmaps_pixmapsInfo(reskia_yuva_pixmaps_t *yuva_pixmaps) {
@@ -69,8 +69,9 @@ bool SkYUVAPixmaps_ownsStorage(reskia_yuva_pixmaps_t *yuva_pixmaps) {
 
 // static
 
-int SkYUVAPixmaps_RecommendedRGBAColorType(int type) {
-    return SkYUVAPixmaps::RecommendedRGBAColorType(static_cast<SkYUVAPixmaps::DataType>(type));
+reskia_yuva_pixmaps_color_type_t SkYUVAPixmaps_RecommendedRGBAColorType(reskia_yuva_pixmaps_data_type_t type) {
+    return static_cast<reskia_yuva_pixmaps_color_type_t>(
+            SkYUVAPixmaps::RecommendedRGBAColorType(static_cast<SkYUVAPixmaps::DataType>(type)));
 }
 
 sk_yuva_pixmaps_t SkYUVAPixmaps_Allocate(const reskia_yuva_pixmap_info_t *yuvaPixmapInfo) {

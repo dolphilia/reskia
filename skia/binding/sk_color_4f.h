@@ -6,6 +6,7 @@
 #define SK_COLOR4F_H
 
 #include <stdint.h>
+#include "../static/static_sk_color_4f.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +50,7 @@ reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color); // (SkColor4f *col
 //SkRGBA4f< kUnpremul_SkAlphaType > unpremul (SkColor4f *color);
 
 reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color); // (SkColor4f *color) -> uint32_t
-int SkColor4f_makeOpaque(reskia_color_4f_t *color); //  (SkColor4f *color) -> SkColor4f
+sk_color_4f_t SkColor4f_makeOpaque(reskia_color_4f_t *color); //  (SkColor4f *color) -> SkColor4f
 
 // static
 

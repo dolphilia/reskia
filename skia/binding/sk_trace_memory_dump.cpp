@@ -28,8 +28,9 @@ void SkTraceMemoryDump_setDiscardableMemoryBacking(reskia_trace_memory_dump_t *t
     reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump)->setDiscardableMemoryBacking(dumpName, * reinterpret_cast<const SkDiscardableMemory *>(discardableMemoryObject));
 }
 
-int SkTraceMemoryDump_getRequestedDetails(reskia_trace_memory_dump_t *trace_memory_dump) {
-    return reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump)->getRequestedDetails();
+reskia_trace_memory_dump_level_of_detail_t SkTraceMemoryDump_getRequestedDetails(reskia_trace_memory_dump_t *trace_memory_dump) {
+    return static_cast<reskia_trace_memory_dump_level_of_detail_t>(
+            reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump)->getRequestedDetails());
 }
 
 bool SkTraceMemoryDump_shouldDumpWrappedObjects(reskia_trace_memory_dump_t *trace_memory_dump) {

@@ -20,6 +20,9 @@ typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_r_rect_t reskia_r_rect_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
+typedef int32_t reskia_path_fill_type_t;
+typedef int32_t reskia_path_direction_t;
+typedef int32_t reskia_path_perspective_clip_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,8 +34,8 @@ reskia_path_t *SkPath_new_2(const reskia_path_t *path); // (const SkPath *path) 
 void SkPath_delete(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isInterpolatable(reskia_path_t *path, const reskia_path_t *compare); // (SkPath *path, const SkPath *compare) -> bool
 bool SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out); // (SkPath *path, const SkPath *ending, SkScalar weight, SkPath *out) -> bool
-int SkPath_getFillType(reskia_path_t *path); // (SkPath *path) -> SkPathFillType
-void SkPath_setFillType(reskia_path_t *path, int ft); // (SkPath *path, SkPathFillType ft)
+reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path); // (SkPath *path) -> SkPathFillType
+void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft); // (SkPath *path, SkPathFillType ft)
 bool SkPath_isInverseFillType(reskia_path_t *path); // (SkPath *path) -> bool
 void SkPath_toggleInverseFillType(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isConvex(reskia_path_t *path); // (SkPath *path) -> bool
@@ -100,9 +103,9 @@ reskia_path_t *SkPath_addPath_3(reskia_path_t *path, const reskia_path_t *src, c
 reskia_path_t *SkPath_reverseAddPath(reskia_path_t *path, const reskia_path_t *src); // (SkPath *path, const SkPath *src) -> SkPath *
 void SkPath_offset(reskia_path_t *path, float dx, float dy, reskia_path_t *dst); // (SkPath *path, SkScalar dx, SkScalar dy, SkPath *dst)
 void SkPath_offset_2(reskia_path_t *path, float dx, float dy); // (SkPath *path, SkScalar dx, SkScalar dy)
-void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, int pc); // (SkPath *path, const SkMatrix *matrix, SkPath *dst, SkApplyPerspectiveClip pc)
-void SkPath_transform_2(reskia_path_t *path, const reskia_matrix_t *matrix, int pc); // (SkPath *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc)
-sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, int pc); // (SkPath *path, const SkMatrix *m, SkApplyPerspectiveClip pc) -> sk_path_t
+void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkPath *dst, SkApplyPerspectiveClip pc)
+void SkPath_transform_2(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc)
+sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *m, SkApplyPerspectiveClip pc) -> sk_path_t
 sk_path_t SkPath_makeScale(reskia_path_t *path, float sx, float sy); // (SkPath *path, SkScalar sx, SkScalar sy) -> sk_path_t
 bool SkPath_getLastPt(reskia_path_t *path, reskia_point_t *lastPt); // (SkPath *path, SkPoint *lastPt) -> bool
 void SkPath_setLastPt(reskia_path_t *path, float x, float y); // (SkPath *path, SkScalar x, SkScalar y)
@@ -122,16 +125,16 @@ bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
 
 // static
 
-sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, int type, bool isVolatile); // (const SkPoint point[], int pointCount, const uint8_t i[], int verbCount, const SkScalar v[], int conicWeightCount, SkPathFillType type, bool isVolatile) -> sk_path_t
-sk_path_t SkPath_Rect(const reskia_rect_t *rect, int dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
-sk_path_t SkPath_Oval(const reskia_rect_t *rect, int dir); // (const SkRect *rect, SkPathDirection dir) -> sk_path_t
-sk_path_t SkPath_Oval_2(const reskia_rect_t *rect, int dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
-sk_path_t SkPath_Circle(float center_x, float center_y, float radius, int dir); // (SkScalar center_x, SkScalar center_y, SkScalar radius, SkPathDirection dir) -> sk_path_t
-sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, int dir); // (const SkRRect *rrect, SkPathDirection dir) -> sk_path_t
-sk_path_t SkPath_RRect_2(const reskia_r_rect_t *rrect, int dir, unsigned startIndex); // (const SkRRect *rrect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
-sk_path_t SkPath_RRect_3(const reskia_rect_t *bounds, float rx, float ry, int dir); // (const SkRect *bounds, SkScalar rx, SkScalar ry, SkPathDirection dir) -> sk_path_t
-sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, int type, bool isVolatile); // (const SkPoint pts[], int count, bool isClosed, SkPathFillType type, bool isVolatile) -> sk_path_t
-sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, int fillType, bool isVolatile); // (const std::initializer_list<SkPoint> *list, bool isClosed, SkPathFillType fillType, bool isVolatile) -> sk_path_t
+sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile); // (const SkPoint point[], int pointCount, const uint8_t i[], int verbCount, const SkScalar v[], int conicWeightCount, SkPathFillType type, bool isVolatile) -> sk_path_t
+sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
+sk_path_t SkPath_Oval(const reskia_rect_t *rect, reskia_path_direction_t dir); // (const SkRect *rect, SkPathDirection dir) -> sk_path_t
+sk_path_t SkPath_Oval_2(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
+sk_path_t SkPath_Circle(float center_x, float center_y, float radius, reskia_path_direction_t dir); // (SkScalar center_x, SkScalar center_y, SkScalar radius, SkPathDirection dir) -> sk_path_t
+sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, reskia_path_direction_t dir); // (const SkRRect *rrect, SkPathDirection dir) -> sk_path_t
+sk_path_t SkPath_RRect_2(const reskia_r_rect_t *rrect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRRect *rrect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
+sk_path_t SkPath_RRect_3(const reskia_rect_t *bounds, float rx, float ry, reskia_path_direction_t dir); // (const SkRect *bounds, SkScalar rx, SkScalar ry, SkPathDirection dir) -> sk_path_t
+sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, reskia_path_fill_type_t type, bool isVolatile); // (const SkPoint pts[], int count, bool isClosed, SkPathFillType type, bool isVolatile) -> sk_path_t
+sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile); // (const std::initializer_list<SkPoint> *list, bool isClosed, SkPathFillType fillType, bool isVolatile) -> sk_path_t
 sk_path_t SkPath_Line(sk_point_t a, sk_point_t b); // (sk_point_t a, sk_point_t b) -> sk_path_t
 bool SkPath_IsLineDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, bool exact); // (const SkPoint *p1, const SkPoint *p2, bool exact) -> bool
 bool SkPath_IsQuadDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, bool exact) -> bool

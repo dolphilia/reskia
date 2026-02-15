@@ -10,6 +10,7 @@
 
 typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_std_string_t reskia_std_string_t;
+typedef int32_t reskia_string_unichar_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +63,7 @@ void SkString_insert(reskia_string_t *string, size_t offset, const char text[]);
 void SkString_insert_2(reskia_string_t *string, size_t offset, const char text[], size_t len); // (SkString *string, size_t offset, const char text[], size_t len)
 void SkString_insert_3(reskia_string_t *string, size_t offset, const reskia_string_t *str); // (SkString *string, size_t offset, const SkString *str)
 void SkString_insert_4(reskia_string_t *string, size_t offset, int str); // (SkString *string, size_t offset, string_view_t str)
-void SkString_insertUnichar(reskia_string_t *string, size_t offset, int unichar); // (SkString *string, size_t offset, SkUnichar unichar)
+void SkString_insertUnichar(reskia_string_t *string, size_t offset, reskia_string_unichar_t unichar); // (SkString *string, size_t offset, SkUnichar unichar)
 void SkString_insertS32(reskia_string_t *string, size_t offset, int value); // (SkString *string, size_t offset, int32_t value)
 void SkString_insertS64(reskia_string_t *string, size_t offset, long long value, int minDigits); // (SkString *string, size_t offset, int64_t value, int minDigits)
 void SkString_insertU32(reskia_string_t *string, size_t offset, uint32_t value); // (SkString *string, size_t offset, uint32_t value)
@@ -73,7 +74,7 @@ void SkString_append(reskia_string_t *string, const char text[]); // (SkString *
 void SkString_append_2(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
 void SkString_append_3(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
 void SkString_append_4(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
-void SkString_appendUnichar(reskia_string_t *string, int uni); // (SkString *string, SkUnichar uni)
+void SkString_appendUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_appendS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_appendS64(reskia_string_t *string, long long value, int minDigits); // (SkString *string, int64_t value, int minDigits)
 void SkString_appendU32(reskia_string_t *string, uint32_t value); // (SkString *string, uint32_t value)
@@ -84,7 +85,7 @@ void SkString_prepend(reskia_string_t *string, const char text[]); // (SkString 
 void SkString_prepend_2(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
 void SkString_prepend_3(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
 void SkString_prepend_4(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
-void SkString_prependUnichar(reskia_string_t *string, int uni); // (SkString *string, SkUnichar uni)
+void SkString_prependUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_prependS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_prependS64(reskia_string_t *string, int value, int minDigits); // (SkString *string, int32_t value, int minDigits)
 void SkString_prependHex(reskia_string_t *string, uint32_t value, int minDigits); // (SkString *string, uint32_t value, int minDigits)

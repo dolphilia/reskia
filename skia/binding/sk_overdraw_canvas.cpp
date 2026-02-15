@@ -20,7 +20,7 @@ void SkOverdrawCanvas_onDrawGlyphRunList(reskia_overdraw_canvas_t *overdraw_canv
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawGlyphRunList(* reinterpret_cast<const sktext::GlyphRunList *>(glyphRunList), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPatch(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_point_t * point1, const reskia_color_t * color, const reskia_point_t * point2, int mode, const reskia_paint_t *paint) {
+void SkOverdrawCanvas_onDrawPatch(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_point_t * point1, const reskia_color_t * color, const reskia_point_t * point2, reskia_overdraw_canvas_blend_mode_t mode, const reskia_paint_t *paint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPatch(reinterpret_cast<const SkPoint *>(point1), reinterpret_cast<const SkColor *>(color), reinterpret_cast<const SkPoint *>(point2), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
 }
 
@@ -56,11 +56,11 @@ void SkOverdrawCanvas_onDrawRRect(reskia_overdraw_canvas_t *overdraw_canvas, con
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRRect(* reinterpret_cast<const SkRRect *>(rect), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPoints(reskia_overdraw_canvas_t *overdraw_canvas, int mode, size_t size, const reskia_point_t * point, const reskia_paint_t *paint) {
+void SkOverdrawCanvas_onDrawPoints(reskia_overdraw_canvas_t *overdraw_canvas, reskia_overdraw_canvas_point_mode_t mode, size_t size, const reskia_point_t * point, const reskia_paint_t *paint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPoints(static_cast<SkOverdrawCanvas::PointMode>(mode), size, reinterpret_cast<const SkPoint *>(point), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawVerticesObject(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_vertices_t *vertices, int mode, const reskia_paint_t *paint) {
+void SkOverdrawCanvas_onDrawVerticesObject(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_vertices_t *vertices, reskia_overdraw_canvas_blend_mode_t mode, const reskia_paint_t *paint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawVerticesObject(reinterpret_cast<const SkVertices *>(vertices), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
 }
 
@@ -72,15 +72,15 @@ void SkOverdrawCanvas_onDrawImage2(reskia_overdraw_canvas_t *overdraw_canvas, co
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImage2(reinterpret_cast<const SkImage *>(image), scalar1, scalar2, * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawImageRect2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_rect_t *rect1, const reskia_rect_t *rect2, const reskia_sampling_options_t *options, const reskia_paint_t *paint, int constraint) {
+void SkOverdrawCanvas_onDrawImageRect2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_rect_t *rect1, const reskia_rect_t *rect2, const reskia_sampling_options_t *options, const reskia_paint_t *paint, reskia_overdraw_canvas_src_rect_constraint_t constraint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageRect2(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkRect *>(rect1), * reinterpret_cast<const SkRect *>(rect2), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkOverdrawCanvas_onDrawImageLattice2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_lattice_t *lattice, const reskia_rect_t *rect, int mode, const reskia_paint_t *paint) {
+void SkOverdrawCanvas_onDrawImageLattice2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_lattice_t *lattice, const reskia_rect_t *rect, reskia_overdraw_canvas_filter_mode_t mode, const reskia_paint_t *paint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageLattice2(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkOverdrawCanvas::Lattice *>(lattice), * reinterpret_cast<const SkRect *>(rect), static_cast<SkFilterMode>(mode), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawAtlas2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t * image, const reskia_rsxform_t * form, const reskia_rect_t * rect1, const reskia_color_t * color, int v, int mode, const reskia_sampling_options_t *options, const reskia_rect_t *rect2, const reskia_paint_t *paint) {
+void SkOverdrawCanvas_onDrawAtlas2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t * image, const reskia_rsxform_t * form, const reskia_rect_t * rect1, const reskia_color_t * color, int v, reskia_overdraw_canvas_blend_mode_t mode, const reskia_sampling_options_t *options, const reskia_rect_t *rect2, const reskia_paint_t *paint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawAtlas2(reinterpret_cast<const SkImage *>(image), reinterpret_cast<const SkRSXform *>(form), reinterpret_cast<const SkRect *>(rect1), reinterpret_cast<const SkColor *>(color), v, static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkRect *>(rect2), reinterpret_cast<const SkPaint *>(paint));
 }
 
@@ -100,11 +100,11 @@ void SkOverdrawCanvas_onDrawShadowRec(reskia_overdraw_canvas_t *overdraw_canvas,
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawShadowRec(* reinterpret_cast<const SkPath *>(path), * reinterpret_cast<const SkDrawShadowRec *>(rec));
 }
 
-void SkOverdrawCanvas_onDrawEdgeAAQuad(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const reskia_point_t * point, int flags, const reskia_color_4f_t *color, int mode) {
+void SkOverdrawCanvas_onDrawEdgeAAQuad(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const reskia_point_t * point, reskia_overdraw_canvas_quad_aa_flags_t flags, const reskia_color_4f_t *color, reskia_overdraw_canvas_blend_mode_t mode) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(point), static_cast<SkCanvas::QuadAAFlags>(flags), * reinterpret_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
-void SkOverdrawCanvas_onDrawEdgeAAImageSet2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_set_entry_t * entry, int count, const reskia_point_t * point, const reskia_matrix_t * matrix, const reskia_sampling_options_t *options, const reskia_paint_t *paint, int constraint) {
+void SkOverdrawCanvas_onDrawEdgeAAImageSet2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_set_entry_t * entry, int count, const reskia_point_t * point, const reskia_matrix_t * matrix, const reskia_sampling_options_t *options, const reskia_paint_t *paint, reskia_overdraw_canvas_src_rect_constraint_t constraint) {
     reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAImageSet2(reinterpret_cast<const SkOverdrawCanvas::ImageSetEntry *>(entry), count, reinterpret_cast<const SkPoint *>(point), reinterpret_cast<const SkMatrix *>(matrix), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
 }
 

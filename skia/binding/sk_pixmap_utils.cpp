@@ -12,7 +12,7 @@
 
 extern "C" {
 
-bool SkPixmapUtils_Orient(const void * dst, const void * src, int origin) {
+bool SkPixmapUtils_Orient(const void * dst, const void * src, reskia_pixmap_utils_encoded_origin_t origin) {
     return SkPixmapUtils::Orient(* static_cast<const SkPixmap *>(dst), * static_cast<const SkPixmap *>(src), static_cast<SkEncodedOrigin>(origin));
 }
 

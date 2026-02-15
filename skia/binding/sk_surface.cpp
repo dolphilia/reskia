@@ -46,7 +46,7 @@ uint32_t SkSurface_generationID(reskia_surface_t *surface) {
     return reinterpret_cast<SkSurface *>(surface)->generationID();
 }
 
-void SkSurface_notifyContentWillChange(reskia_surface_t *surface, int mode) {
+void SkSurface_notifyContentWillChange(reskia_surface_t *surface, reskia_surface_content_change_mode_t mode) {
     reinterpret_cast<SkSurface *>(surface)->notifyContentWillChange(static_cast<SkSurface::ContentChangeMode>(mode));
 }
 
@@ -58,7 +58,7 @@ reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface) {
     return reinterpret_cast<reskia_graphite_recorder_t *>(reinterpret_cast<SkSurface *>(surface)->recorder());
 }
 
-bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, int mode, void(* proc)(void *), void * context) {
+bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, reskia_surface_content_change_mode_t mode, void(* proc)(void *), void * context) {
     return reinterpret_cast<SkSurface *>(surface)->replaceBackendTexture(* reinterpret_cast<const GrBackendTexture *>(backendTexture), static_cast<GrSurfaceOrigin>(origin), static_cast<SkSurface::ContentChangeMode>(mode), proc, context);
 }
 

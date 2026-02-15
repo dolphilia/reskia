@@ -39,12 +39,12 @@ int SkImageInfo_height(reskia_image_info_t *image_info) {
     return reinterpret_cast<SkImageInfo *>(image_info)->height();
 }
 
-int SkImageInfo_colorType(reskia_image_info_t *image_info) {
-    return reinterpret_cast<SkImageInfo *>(image_info)->colorType();
+reskia_image_info_color_type_t SkImageInfo_colorType(reskia_image_info_t *image_info) {
+    return static_cast<reskia_image_info_color_type_t>(reinterpret_cast<SkImageInfo *>(image_info)->colorType());
 }
 
-int SkImageInfo_alphaType(reskia_image_info_t *image_info) {
-    return reinterpret_cast<SkImageInfo *>(image_info)->alphaType();
+reskia_image_info_alpha_type_t SkImageInfo_alphaType(reskia_image_info_t *image_info) {
+    return static_cast<reskia_image_info_alpha_type_t>(reinterpret_cast<SkImageInfo *>(image_info)->alphaType());
 }
 
 reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info) {
@@ -87,11 +87,11 @@ sk_image_info_t SkImageInfo_makeDimensions(reskia_image_info_t *image_info, sk_i
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeDimensions(static_sk_i_size_get_entity(newSize)));
 }
 
-sk_image_info_t SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, int newAlphaType) {
+sk_image_info_t SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, reskia_image_info_alpha_type_t newAlphaType) {
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
 }
 
-sk_image_info_t SkImageInfo_makeColorType(reskia_image_info_t *image_info, int newColorType) {
+sk_image_info_t SkImageInfo_makeColorType(reskia_image_info_t *image_info, reskia_image_info_color_type_t newColorType) {
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeColorType(static_cast<SkColorType>(newColorType)));
 }
 
@@ -137,19 +137,19 @@ void SkImageInfo_reset(reskia_image_info_t *image_info) {
 
 // static
 
-sk_image_info_t SkImageInfo_Make(int width, int height, int ct, int at) {
+sk_image_info_t SkImageInfo_Make(int width, int height, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at) {
     return static_sk_image_info_make(SkImageInfo::Make(width, height, static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at)));
 }
 
-sk_image_info_t SkImageInfo_Make_2(int width, int height, int ct, int at, sk_color_space_t color_space) {
+sk_image_info_t SkImageInfo_Make_2(int width, int height, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at, sk_color_space_t color_space) {
     return static_sk_image_info_make(SkImageInfo::Make(width, height, static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_info_t SkImageInfo_Make_3(sk_i_size_t dimensions, int ct, int at) {
+sk_image_info_t SkImageInfo_Make_3(sk_i_size_t dimensions, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at) {
     return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at)));
 }
 
-sk_image_info_t SkImageInfo_Make_4(sk_i_size_t dimensions, int ct, int at, sk_color_space_t color_space) {
+sk_image_info_t SkImageInfo_Make_4(sk_i_size_t dimensions, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at, sk_color_space_t color_space) {
     return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
@@ -158,15 +158,15 @@ sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_in
 }
 
 
-sk_image_info_t SkImageInfo_MakeN32(int width, int height, int at) {
+sk_image_info_t SkImageInfo_MakeN32(int width, int height, reskia_image_info_alpha_type_t at) {
     return static_sk_image_info_make(SkImageInfo::MakeN32(width, height, static_cast<SkAlphaType>(at)));
 }
 
-sk_image_info_t SkImageInfo_MakeN32_2(int width, int height, int at, sk_color_space_t color_space) {
+sk_image_info_t SkImageInfo_MakeN32_2(int width, int height, reskia_image_info_alpha_type_t at, sk_color_space_t color_space) {
     return static_sk_image_info_make(SkImageInfo::MakeN32(width, height, static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_info_t SkImageInfo_MakeS32(int width, int height, int at) {
+sk_image_info_t SkImageInfo_MakeS32(int width, int height, reskia_image_info_alpha_type_t at) {
     return static_sk_image_info_make(SkImageInfo::MakeS32(width, height, static_cast<SkAlphaType>(at)));
 }
 

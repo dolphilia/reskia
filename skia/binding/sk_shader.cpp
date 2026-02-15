@@ -64,8 +64,8 @@ void SkShader_flatten(reskia_shader_t *shader, reskia_write_buffer_t *buffer) {
     reinterpret_cast<SkShader *>(shader)->flatten(*reinterpret_cast<SkWriteBuffer *>(buffer));
 }
 
-int SkShader_getFlattenableType(reskia_shader_t *shader) {
-    return reinterpret_cast<SkShader *>(shader)->getFlattenableType();
+reskia_shader_type_t SkShader_getFlattenableType(reskia_shader_t *shader) {
+    return static_cast<reskia_shader_type_t>(reinterpret_cast<SkShader *>(shader)->getFlattenableType());
 }
 
 sk_data_t SkShader_serialize(reskia_shader_t *shader, const reskia_serial_procs_t *procs) {
@@ -102,7 +102,7 @@ void SkShader_Register(const char name[], sk_flattenable_factory_t factory) {
     SkShader::Register(name, static_sk_flattenable_factory_get_entity(factory));
 }
 
-sk_flattenable_t SkShader_Deserialize(int type, const void *data, size_t length, const reskia_deserial_procs_t *procs) {
+sk_flattenable_t SkShader_Deserialize(reskia_shader_type_t type, const void *data, size_t length, const reskia_deserial_procs_t *procs) {
     return static_sk_flattenable_make(SkShader::Deserialize(static_cast<SkShader::Type>(type), data, length, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 

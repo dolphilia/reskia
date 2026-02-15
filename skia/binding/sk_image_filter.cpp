@@ -25,7 +25,7 @@ void SkImageFilter_delete(reskia_image_filter_t *image_filter) {
     reinterpret_cast<SkImageFilter *>(image_filter)->unref();
 }
 
-sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, int direction, const reskia_i_rect_t *inputRect) {
+sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, reskia_image_filter_map_direction_t direction, const reskia_i_rect_t *inputRect) {
     return static_sk_i_rect_make(reinterpret_cast<SkImageFilter *>(image_filter)->filterBounds(
         *reinterpret_cast<const SkIRect *>(src),
         *reinterpret_cast<const SkMatrix *>(ctm),
@@ -79,8 +79,8 @@ void SkImageFilter_flatten(reskia_image_filter_t *image_filter, reskia_write_buf
     reinterpret_cast<SkImageFilter *>(image_filter)->flatten(*reinterpret_cast<SkWriteBuffer *>(buffer));
 }
 
-int SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter) {
-    return reinterpret_cast<SkImageFilter *>(image_filter)->getFlattenableType();
+reskia_image_filter_type_t SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter) {
+    return static_cast<reskia_image_filter_type_t>(reinterpret_cast<SkImageFilter *>(image_filter)->getFlattenableType());
 }
 
 sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const reskia_serial_procs_t *procs) {

@@ -37,7 +37,7 @@ bool SkPathMeasure_getPosTan(reskia_path_measure_t *path_measure, float distance
         reinterpret_cast<SkVector *>(tangent));
 }
 
-bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance, reskia_matrix_t *matrix, int flags) {
+bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance, reskia_matrix_t *matrix, reskia_path_measure_matrix_flags_t flags) {
     return reinterpret_cast<SkPathMeasure *>(path_measure)->getMatrix(
         distance,
         reinterpret_cast<SkMatrix *>(matrix),

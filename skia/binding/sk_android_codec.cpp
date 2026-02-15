@@ -36,19 +36,19 @@ const void *SkAndroidCodec_getICCProfile(reskia_android_codec_t *androidCodec) {
     return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getICCProfile();
 }
 
-int SkAndroidCodec_getEncodedFormat(reskia_android_codec_t *androidCodec) {
-    return static_cast<int>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getEncodedFormat());
+reskia_encoded_image_format_t SkAndroidCodec_getEncodedFormat(reskia_android_codec_t *androidCodec) {
+    return static_cast<reskia_encoded_image_format_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getEncodedFormat());
 }
 
-int SkAndroidCodec_computeOutputColorType(reskia_android_codec_t *androidCodec, int requestedColorType) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorType(static_cast<SkColorType>(requestedColorType));
+reskia_color_type_t SkAndroidCodec_computeOutputColorType(reskia_android_codec_t *androidCodec, reskia_color_type_t requestedColorType) {
+    return static_cast<reskia_color_type_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorType(static_cast<SkColorType>(requestedColorType)));
 }
 
-int SkAndroidCodec_computeOutputAlphaType(reskia_android_codec_t *androidCodec, bool requestedUnpremul) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputAlphaType(requestedUnpremul);
+reskia_alpha_type_t SkAndroidCodec_computeOutputAlphaType(reskia_android_codec_t *androidCodec, bool requestedUnpremul) {
+    return static_cast<reskia_alpha_type_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputAlphaType(requestedUnpremul));
 }
 
-sk_color_space_t SkAndroidCodec_computeOutputColorSpace(reskia_android_codec_t *androidCodec, int outputColorType, sk_color_space_t prefColorSpace) {
+sk_color_space_t SkAndroidCodec_computeOutputColorSpace(reskia_android_codec_t *androidCodec, reskia_color_type_t outputColorType, sk_color_space_t prefColorSpace) {
     return static_sk_color_space_make(reinterpret_cast<SkAndroidCodec *>(androidCodec)->computeOutputColorSpace(static_cast<SkColorType>(outputColorType), static_sk_color_space_get_entity(prefColorSpace)));
 }
 
@@ -68,16 +68,16 @@ sk_i_size_t SkAndroidCodec_getSampledSubsetDimensions(reskia_android_codec_t *an
     return static_sk_i_size_make(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getSampledSubsetDimensions(sampleSize, *reinterpret_cast<const SkIRect *>(subset)));
 }
 
-int SkAndroidCodec_getAndroidPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_android_options_t *options) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkAndroidCodec::AndroidOptions *>(options));
+reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_android_options_t *options) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkAndroidCodec::AndroidOptions *>(options)));
 }
 
-int SkAndroidCodec_getAndroidPixels_2(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
+reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels_2(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes));
 }
 
-int SkAndroidCodec_getPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
+reskia_codec_result_code_t SkAndroidCodec_getPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes));
 }
 
 reskia_codec_t *SkAndroidCodec_codec(reskia_android_codec_t *androidCodec) {

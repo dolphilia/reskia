@@ -54,7 +54,7 @@ void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size
     reinterpret_cast<SkReadBuffer *>(buffer)->setMemory(data, size);
 }
 
-bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, int targetVersion) {
+bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, reskia_read_buffer_version_t targetVersion) {
     return reinterpret_cast<SkReadBuffer *>(buffer)->isVersionLT(static_cast<SkPicturePriv::Version>(targetVersion));
 }
 
@@ -184,7 +184,7 @@ reskia_flattenable_t *SkReadBuffer_readRawFlattenable(reskia_read_buffer_t *buff
             reinterpret_cast<SkReadBuffer *>(buffer)->readRawFlattenable());
 }
 
-reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, int type) {
+reskia_flattenable_t *SkReadBuffer_readFlattenable(reskia_read_buffer_t *buffer, reskia_read_buffer_flattenable_type_t type) {
     return reinterpret_cast<reskia_flattenable_t *>(
             reinterpret_cast<SkReadBuffer *>(buffer)->readFlattenable(static_cast<SkFlattenable::Type>(type)));
 }
@@ -309,8 +309,8 @@ int32_t SkReadBuffer_checkInt(reskia_read_buffer_t *buffer, int min, int max) {
 
 // template <typename T> T checkRange(T min, T max)
 
-int SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->checkFilterQuality();
+reskia_read_buffer_legacy_fq_t SkReadBuffer_checkFilterQuality(reskia_read_buffer_t *buffer) {
+    return static_cast<reskia_read_buffer_legacy_fq_t>(reinterpret_cast<SkReadBuffer *>(buffer)->checkFilterQuality());
 }
 
 sk_sampling_options_t SkReadBuffer_readSampling(reskia_read_buffer_t *buffer) {

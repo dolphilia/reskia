@@ -30,6 +30,10 @@ typedef struct reskia_paint_t reskia_paint_t;
 typedef struct reskia_path_effect_t reskia_path_effect_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_shader_t reskia_shader_t;
+typedef int32_t reskia_paint_style_t;
+typedef int32_t reskia_paint_cap_t;
+typedef int32_t reskia_paint_join_t;
+typedef int32_t reskia_paint_blend_mode_t;
 
 //SkPaint & operator=(const SkPaint &paint)
 //SkPaint & operator=(SkPaint &&paint)
@@ -43,8 +47,8 @@ bool SkPaint_isAntiAlias(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 void SkPaint_setAntiAlias(reskia_paint_t *paint, bool aa); // (SkPaint *paint, bool aa)
 bool SkPaint_isDither(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 void SkPaint_setDither(reskia_paint_t *paint, bool dither); // (SkPaint *paint, bool dither)
-int SkPaint_getStyle(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Style
-void SkPaint_setStyle(reskia_paint_t *paint, int style); // (SkPaint *paint, SkPaint::Style style)
+reskia_paint_style_t SkPaint_getStyle(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Style
+void SkPaint_setStyle(reskia_paint_t *paint, reskia_paint_style_t style); // (SkPaint *paint, SkPaint::Style style)
 void SkPaint_setStroke(reskia_paint_t *paint, bool v); // (SkPaint *paint, bool v)
 reskia_color_t SkPaint_getColor(reskia_paint_t *paint); // (SkPaint *paint) -> SkColor
 sk_color_4f_t SkPaint_getColor4f(reskia_paint_t *paint); // (SkPaint *paint) -> sk_color_4f_t
@@ -60,10 +64,10 @@ float SkPaint_getStrokeWidth(reskia_paint_t *paint); // (SkPaint *paint) -> SkSc
 void SkPaint_setStrokeWidth(reskia_paint_t *paint, float width); // (SkPaint *paint, SkScalar width)
 float SkPaint_getStrokeMiter(reskia_paint_t *paint); // (SkPaint *paint) -> SkScalar
 void SkPaint_setStrokeMiter(reskia_paint_t *paint, float miter); // (SkPaint *paint, SkScalar miter)
-int SkPaint_getStrokeCap(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Cap
-void SkPaint_setStrokeCap(reskia_paint_t *paint, int cap); // (SkPaint *paint, SkPaint::Cap cap)
-int SkPaint_getStrokeJoin(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Join
-void SkPaint_setStrokeJoin(reskia_paint_t *paint, int join); // (SkPaint *paint, SkPaint::Join join)
+reskia_paint_cap_t SkPaint_getStrokeCap(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Cap
+void SkPaint_setStrokeCap(reskia_paint_t *paint, reskia_paint_cap_t cap); // (SkPaint *paint, SkPaint::Cap cap)
+reskia_paint_join_t SkPaint_getStrokeJoin(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Join
+void SkPaint_setStrokeJoin(reskia_paint_t *paint, reskia_paint_join_t join); // (SkPaint *paint, SkPaint::Join join)
 reskia_shader_t * SkPaint_getShader(reskia_paint_t *paint); // (SkPaint *paint) -> SkShader *
 sk_shader_t SkPaint_refShader(reskia_paint_t *paint); // (SkPaint *paint) -> sk_shader_t
 void SkPaint_setShader(reskia_paint_t *paint, sk_shader_t shader); // (SkPaint *paint, sk_shader_t shader)
@@ -71,9 +75,9 @@ reskia_color_filter_t * SkPaint_getColorFilter(reskia_paint_t *paint); // (SkPai
 sk_color_filter_t SkPaint_refColorFilter(reskia_paint_t *paint); // (SkPaint *paint) -> sk_color_filter_t
 void SkPaint_setColorFilter(reskia_paint_t *paint, sk_color_filter_t color_filter); // (SkPaint *paint, sk_color_filter_t color_filter)
 int SkPaint_asBlendMode(reskia_paint_t *paint); // (SkPaint *paint) -> int
-int SkPaint_getBlendMode_or(reskia_paint_t *paint, int defaultMode); // (SkPaint *paint, SkBlendMode defaultMode) -> SkBlendMode
+reskia_paint_blend_mode_t SkPaint_getBlendMode_or(reskia_paint_t *paint, reskia_paint_blend_mode_t defaultMode); // (SkPaint *paint, SkBlendMode defaultMode) -> SkBlendMode
 bool SkPaint_isSrcOver(reskia_paint_t *paint); // (SkPaint *paint) -> bool
-void SkPaint_setBlendMode(reskia_paint_t *paint, int mode); // (SkPaint *paint, SkBlendMode mode)
+void SkPaint_setBlendMode(reskia_paint_t *paint, reskia_paint_blend_mode_t mode); // (SkPaint *paint, SkBlendMode mode)
 reskia_blender_t * SkPaint_getBlender(reskia_paint_t *paint); // (SkPaint *paint) -> SkBlender *
 sk_blender_t SkPaint_refBlender(reskia_paint_t *paint); // (SkPaint *paint) -> sk_blender_t
 void SkPaint_setBlender(reskia_paint_t *paint, sk_blender_t blender); // (SkPaint *paint, sk_blender_t blender)
@@ -90,7 +94,7 @@ bool SkPaint_nothingToDraw(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 bool SkPaint_canComputeFastBounds(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 const reskia_rect_t * SkPaint_computeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage); // (SkPaint *paint, const SkRect *orig, SkRect *storage) -> const SkRect *
 const reskia_rect_t * SkPaint_computeFastStrokeBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage); // (SkPaint *paint, const SkRect *orig, SkRect *storage) -> const SkRect *
-const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, int style); // (SkPaint *paint, const SkRect *orig, SkRect *storage, SkPaint::Style style) -> const SkRect *
+const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, reskia_paint_style_t style); // (SkPaint *paint, const SkRect *orig, SkRect *storage, SkPaint::Style style) -> const SkRect *
 
 #ifdef __cplusplus
 }

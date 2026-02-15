@@ -24,6 +24,7 @@ typedef struct reskia_deserial_procs_t reskia_deserial_procs_t;
 typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef uint32_t reskia_color_t;
+typedef int32_t reskia_color_matrix_filter_type_t;
 
 void SkColorMatrixFilter_delete(reskia_color_matrix_filter_t *color_matrix_filter); // owned: caller が保持する参照を release する (SkColorMatrixFilter *color_matrix_filter)
 bool SkColorMatrixFilter_asAColorMode(reskia_color_matrix_filter_t *color_matrix_filter, reskia_color_t *color, int *mode); // (SkColorMatrixFilter *color_matrix_filter, SkColor *color, SkBlendMode *mode) -> bool
@@ -36,7 +37,7 @@ sk_color_filter_t SkColorMatrixFilter_makeWithWorkingColorSpace(reskia_color_mat
 sk_flattenable_factory_t SkColorMatrixFilter_getFactory(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> sk_flattenable_factory_t
 const char *SkColorMatrixFilter_getTypeName(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> const char *
 void SkColorMatrixFilter_flatten(reskia_color_matrix_filter_t *color_matrix_filter, reskia_write_buffer_t *write_buffer); // (SkColorMatrixFilter *color_matrix_filter, SkWriteBuffer * write_buffer)
-int SkColorMatrixFilter_getFlattenableType(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> SkColorMatrixFilter::Type
+reskia_color_matrix_filter_type_t SkColorMatrixFilter_getFlattenableType(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> SkColorMatrixFilter::Type
 sk_data_t SkColorMatrixFilter_serialize(reskia_color_matrix_filter_t *color_matrix_filter, const reskia_serial_procs_t *serial_procs); // (SkColorMatrixFilter *color_matrix_filter, const SkSerialProcs *serial_procs) -> sk_data_t
 size_t SkColorMatrixFilter_serialize_2(reskia_color_matrix_filter_t *color_matrix_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkColorMatrixFilter *color_matrix_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkColorMatrixFilter_unique(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> bool

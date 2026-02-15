@@ -29,8 +29,8 @@ void SkMatrix_delete(reskia_matrix_t *matrix) {
     delete reinterpret_cast<SkMatrix *>(matrix);
 }
 
-int SkMatrix_getType(reskia_matrix_t *matrix) {
-    return reinterpret_cast<SkMatrix *>(matrix)->getType();
+reskia_matrix_type_mask_t SkMatrix_getType(reskia_matrix_t *matrix) {
+    return static_cast<reskia_matrix_type_mask_t>(reinterpret_cast<SkMatrix *>(matrix)->getType());
 }
 
 bool SkMatrix_isIdentity(reskia_matrix_t *matrix) {
@@ -273,7 +273,7 @@ sk_matrix_t SkMatrix_postConcat(reskia_matrix_t *matrix, const reskia_matrix_t *
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postConcat(*reinterpret_cast<const SkMatrix *>(other)));
 }
 
-bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, int stf) {
+bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf) {
     return reinterpret_cast<SkMatrix *>(matrix)->setRectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf));
 }
 
@@ -345,15 +345,15 @@ sk_point_t SkMatrix_mapVector_2(reskia_matrix_t *matrix, float dx, float dy) {
     return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapVector(dx, dy));
 }
 
-bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, int pc) {
+bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
     return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-bool SkMatrix_mapRect_2(reskia_matrix_t *matrix, reskia_rect_t *rect, int pc) {
+bool SkMatrix_mapRect_2(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc) {
     return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-sk_rect_t SkMatrix_mapRect_3(reskia_matrix_t *matrix, const reskia_rect_t *src, int pc) {
+sk_rect_t SkMatrix_mapRect_3(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
     return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc)));
 }
 
@@ -436,7 +436,7 @@ sk_matrix_t SkMatrix_Skew(float kx, float ky) {
     return static_sk_matrix_make(SkMatrix::Skew(kx, ky));
 }
 
-sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, int mode) {
+sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode) {
     return static_sk_matrix_make(SkMatrix::RectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(mode)));
 }
 
@@ -444,7 +444,7 @@ sk_matrix_t SkMatrix_MakeAll(float scaleX, float skewX, float transX, float skew
     return static_sk_matrix_make(SkMatrix::MakeAll(scaleX, skewX, transX, skewY, scaleY, transY, pers0, pers1, pers2));
 }
 
-sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, int stf) {
+sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf) {
     return static_sk_matrix_make(SkMatrix::MakeRectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf)));
 }
 

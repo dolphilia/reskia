@@ -65,11 +65,11 @@ void SkPaint_setDither(reskia_paint_t *paint, bool dither) {
     reinterpret_cast<SkPaint *>(paint)->setDither(dither);
 }
 
-int SkPaint_getStyle(reskia_paint_t *paint) {
-    return reinterpret_cast<SkPaint *>(paint)->getStyle();
+reskia_paint_style_t SkPaint_getStyle(reskia_paint_t *paint) {
+    return static_cast<reskia_paint_style_t>(reinterpret_cast<SkPaint *>(paint)->getStyle());
 }
 
-void SkPaint_setStyle(reskia_paint_t *paint, int style) {
+void SkPaint_setStyle(reskia_paint_t *paint, reskia_paint_style_t style) {
     reinterpret_cast<SkPaint *>(paint)->setStyle(static_cast<SkPaint::Style>(style));
 }
 
@@ -133,19 +133,19 @@ void SkPaint_setStrokeMiter(reskia_paint_t *paint, float miter) {
     reinterpret_cast<SkPaint *>(paint)->setStrokeMiter(miter);
 }
 
-int SkPaint_getStrokeCap(reskia_paint_t *paint) {
-    return reinterpret_cast<SkPaint *>(paint)->getStrokeCap();
+reskia_paint_cap_t SkPaint_getStrokeCap(reskia_paint_t *paint) {
+    return static_cast<reskia_paint_cap_t>(reinterpret_cast<SkPaint *>(paint)->getStrokeCap());
 }
 
-void SkPaint_setStrokeCap(reskia_paint_t *paint, int cap) {
+void SkPaint_setStrokeCap(reskia_paint_t *paint, reskia_paint_cap_t cap) {
     reinterpret_cast<SkPaint *>(paint)->setStrokeCap(static_cast<SkPaint::Cap>(cap));
 }
 
-int SkPaint_getStrokeJoin(reskia_paint_t *paint) {
-    return reinterpret_cast<SkPaint *>(paint)->getStrokeJoin();
+reskia_paint_join_t SkPaint_getStrokeJoin(reskia_paint_t *paint) {
+    return static_cast<reskia_paint_join_t>(reinterpret_cast<SkPaint *>(paint)->getStrokeJoin());
 }
 
-void SkPaint_setStrokeJoin(reskia_paint_t *paint, int join) {
+void SkPaint_setStrokeJoin(reskia_paint_t *paint, reskia_paint_join_t join) {
     reinterpret_cast<SkPaint *>(paint)->setStrokeJoin(static_cast<SkPaint::Join>(join));
 }
 
@@ -177,15 +177,15 @@ optional_sk_blend_mode_t SkPaint_asBlendMode(reskia_paint_t *paint) {
     return static_optional_sk_blend_mode_make(reinterpret_cast<SkPaint *>(paint)->asBlendMode());
 }
 
-int SkPaint_getBlendMode_or(reskia_paint_t *paint, int defaultMode) {
-    return static_cast<int>(reinterpret_cast<SkPaint *>(paint)->getBlendMode_or(static_cast<SkBlendMode>(defaultMode)));
+reskia_paint_blend_mode_t SkPaint_getBlendMode_or(reskia_paint_t *paint, reskia_paint_blend_mode_t defaultMode) {
+    return static_cast<reskia_paint_blend_mode_t>(reinterpret_cast<SkPaint *>(paint)->getBlendMode_or(static_cast<SkBlendMode>(defaultMode)));
 }
 
 bool SkPaint_isSrcOver(reskia_paint_t *paint) {
     return reinterpret_cast<SkPaint *>(paint)->isSrcOver();
 }
 
-void SkPaint_setBlendMode(reskia_paint_t *paint, int mode) {
+void SkPaint_setBlendMode(reskia_paint_t *paint, reskia_paint_blend_mode_t mode) {
     reinterpret_cast<SkPaint *>(paint)->setBlendMode(static_cast<SkBlendMode>(mode));
 }
 
@@ -253,7 +253,7 @@ const reskia_rect_t * SkPaint_computeFastStrokeBounds(reskia_paint_t *paint, con
     return reinterpret_cast<const reskia_rect_t *>(&reinterpret_cast<SkPaint *>(paint)->computeFastStrokeBounds(* reinterpret_cast<const SkRect *>(orig), reinterpret_cast<SkRect *>(storage)));
 }
 
-const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, int style) {
+const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, reskia_paint_style_t style) {
     return reinterpret_cast<const reskia_rect_t *>(&reinterpret_cast<SkPaint *>(paint)->doComputeFastBounds(* reinterpret_cast<const SkRect *>(orig), reinterpret_cast<SkRect *>(storage), static_cast<SkPaint::Style>(style)));
 }
 

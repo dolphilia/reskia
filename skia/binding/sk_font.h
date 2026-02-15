@@ -22,6 +22,10 @@ typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_typeface_t reskia_typeface_t;
+typedef int32_t reskia_font_edging_t;
+typedef int32_t reskia_font_hinting_t;
+typedef int32_t reskia_font_text_encoding_t;
+typedef int32_t reskia_unichar_t;
 
 reskia_font_t *SkFont_new(); // () -> SkFont *
 reskia_font_t *SkFont_new_2(int typeface, float size); // (sk_typeface_t typeface, SkScalar size) -> SkFont *
@@ -40,10 +44,10 @@ void SkFont_setSubpixel(reskia_font_t *font, bool subpixel); // (SkFont *font, b
 void SkFont_setLinearMetrics(reskia_font_t *font, bool linearMetrics); // (SkFont *font, bool linearMetrics)
 void SkFont_setEmbolden(reskia_font_t *font, bool embolden); // (SkFont *font, bool embolden)
 void SkFont_setBaselineSnap(reskia_font_t *font, bool baselineSnap); // (SkFont *font, bool baselineSnap)
-int SkFont_getEdging(reskia_font_t *font); // (SkFont *font) -> SkFont::Edging
-void SkFont_setEdging(reskia_font_t *font, int edging); // (SkFont *font, SkFont::Edging edging)
-void SkFont_setHinting(reskia_font_t *font, int hintingLevel); // (SkFont *font, SkFontHinting hintingLevel)
-int SkFont_getHinting(reskia_font_t *font); // (SkFont *font) -> SkFontHinting
+reskia_font_edging_t SkFont_getEdging(reskia_font_t *font); // (SkFont *font) -> SkFont::Edging
+void SkFont_setEdging(reskia_font_t *font, reskia_font_edging_t edging); // (SkFont *font, SkFont::Edging edging)
+void SkFont_setHinting(reskia_font_t *font, reskia_font_hinting_t hintingLevel); // (SkFont *font, SkFontHinting hintingLevel)
+reskia_font_hinting_t SkFont_getHinting(reskia_font_t *font); // (SkFont *font) -> SkFontHinting
 sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size); // (SkFont *font, SkScalar size) -> sk_font_t
 reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font); // (SkFont *font) -> SkTypeface *
 float SkFont_getSize(reskia_font_t *font); // (SkFont *font) -> SkScalar
@@ -56,12 +60,12 @@ sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // (SkFont *font) -> sk_t
 void SkFont_setSize(reskia_font_t *font, float textSize); // (SkFont *font, SkScalar textSize)
 void SkFont_setScaleX(reskia_font_t *font, float scaleX); // (SkFont *font, SkScalar scaleX)
 void SkFont_setSkewX(reskia_font_t *font, float skewX); // (SkFont *font, SkScalar skewX)
-int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, int encoding, uint16_t *glyphs, int maxGlyphCount); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
-uint16_t SkFont_unicharToGlyph(reskia_font_t *font, int uni); // (SkFont *font, SkUnichar uni) -> SkGlyphID
+int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
+uint16_t SkFont_unicharToGlyph(reskia_font_t *font, reskia_unichar_t uni); // (SkFont *font, SkUnichar uni) -> SkGlyphID
 void SkFont_unicharsToGlyphs(reskia_font_t *font, const int32_t *uni, int count, uint16_t *glyphs); // (SkFont *font, const SkUnichar uni[], int count, SkGlyphID glyphs[])
-int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, int encoding); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding) -> int
-float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, int encoding, reskia_rect_t *bounds); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkRect *bounds) -> SkScalar
-float SkFont_measureText_2(reskia_font_t *font, const uint8_t *text, size_t byteLength, int encoding, reskia_rect_t *bounds, const reskia_paint_t *paint); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkRect *bounds, const SkPaint *paint) -> SkScalar
+int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding) -> int
+float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkRect *bounds) -> SkScalar
+float SkFont_measureText_2(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint); // (SkFont *font, const void *text, size_t byteLength, SkTextEncoding encoding, SkRect *bounds, const SkPaint *paint) -> SkScalar
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar widths[], SkRect bounds[])
 
 // TODO

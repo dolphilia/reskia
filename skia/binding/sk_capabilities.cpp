@@ -20,8 +20,8 @@ void SkCapabilities_ref(void * capabilities) {
     static_cast<SkCapabilities *>(capabilities)->ref();
 }
 
-int SkCapabilities_skslVersion(void * capabilities) {
-    return static_cast<int>(static_cast<SkCapabilities *>(capabilities)->skslVersion());
+reskia_sksl_version_t SkCapabilities_skslVersion(void * capabilities) {
+    return static_cast<reskia_sksl_version_t>(static_cast<SkCapabilities *>(capabilities)->skslVersion());
 }
 
 bool SkCapabilities_unique(void * capabilities) {

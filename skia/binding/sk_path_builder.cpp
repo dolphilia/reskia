@@ -39,8 +39,8 @@ void SkPathBuilder_delete(reskia_path_builder_t *path_builder) {
     delete reinterpret_cast<SkPathBuilder *>(path_builder);
 }
 
-int SkPathBuilder_fillType(reskia_path_builder_t *path_builder) {
-    return static_cast<int>(reinterpret_cast<SkPathBuilder *>(path_builder)->fillType());
+reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder) {
+    return static_cast<reskia_path_builder_fill_type_t>(reinterpret_cast<SkPathBuilder *>(path_builder)->fillType());
 }
 
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder) {

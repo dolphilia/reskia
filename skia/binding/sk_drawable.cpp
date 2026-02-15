@@ -58,8 +58,8 @@ void SkDrawable_notifyDrawingChanged(reskia_drawable_t *drawable) {
     reinterpret_cast<SkDrawable *>(drawable)->notifyDrawingChanged();
 }
 
-int SkDrawable_getFlattenableType(reskia_drawable_t *drawable) {
-    return reinterpret_cast<SkDrawable *>(drawable)->getFlattenableType();
+reskia_drawable_flattenable_type_t SkDrawable_getFlattenableType(reskia_drawable_t *drawable) {
+    return static_cast<reskia_drawable_flattenable_type_t>(reinterpret_cast<SkDrawable *>(drawable)->getFlattenableType());
 }
 
 sk_flattenable_factory_t SkDrawable_getFactory(reskia_drawable_t *drawable) {
@@ -96,8 +96,8 @@ void SkDrawable_unref(reskia_drawable_t *drawable) {
 
 // static
 
-int SkDrawable_GetFlattenableType() {
-    return SkDrawable::GetFlattenableType();
+reskia_drawable_flattenable_type_t SkDrawable_GetFlattenableType() {
+    return static_cast<reskia_drawable_flattenable_type_t>(SkDrawable::GetFlattenableType());
 }
 
 sk_drawable_t SkDrawable_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs) {

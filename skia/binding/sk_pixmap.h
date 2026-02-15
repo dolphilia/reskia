@@ -21,6 +21,8 @@ typedef struct reskia_image_info_t reskia_image_info_t;
 typedef struct reskia_mask_t reskia_mask_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_sampling_options_t reskia_sampling_options_t;
+typedef int32_t reskia_pixmap_color_type_t;
+typedef int32_t reskia_pixmap_alpha_type_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,8 +42,8 @@ const void *SkPixmap_addr(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> con
 int SkPixmap_width(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> int
 int SkPixmap_height(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> int
 sk_i_size_t SkPixmap_dimensions(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> sk_i_size_t
-int SkPixmap_colorType(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> SkColorType
-int SkPixmap_alphaType(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> SkAlphaType
+reskia_pixmap_color_type_t SkPixmap_colorType(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> SkColorType
+reskia_pixmap_alpha_type_t SkPixmap_alphaType(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> SkAlphaType
 reskia_color_space_t *SkPixmap_colorSpace(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> SkColorSpace *
 sk_color_space_t SkPixmap_refColorSpace(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> sk_color_space_t
 bool SkPixmap_isOpaque(reskia_pixmap_t *pixmap); // (SkPixmap *pixmap) -> bool

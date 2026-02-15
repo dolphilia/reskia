@@ -14,11 +14,11 @@ extern "C" {
 
 // static
 
-sk_matrix_t SkEncodedOrigin_SkEncodedOriginToMatrix(int origin, int w, int h) {
+sk_matrix_t SkEncodedOrigin_SkEncodedOriginToMatrix(reskia_encoded_origin_t origin, int w, int h) {
     return static_sk_matrix_make(SkEncodedOriginToMatrix(static_cast<SkEncodedOrigin>(origin), w, h));
 }
 
-bool SkEncodedOrigin_SkEncodedOriginSwapsWidthHeight(int origin) {
+bool SkEncodedOrigin_SkEncodedOriginSwapsWidthHeight(reskia_encoded_origin_t origin) {
     return SkEncodedOriginSwapsWidthHeight(static_cast<SkEncodedOrigin>(origin));
 }
 

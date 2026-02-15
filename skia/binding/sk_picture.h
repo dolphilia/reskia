@@ -23,6 +23,8 @@ typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_stream_t reskia_stream_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
+typedef int32_t reskia_picture_tile_mode_t;
+typedef int32_t reskia_picture_filter_mode_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,8 +38,8 @@ sk_data_t SkPicture_serialize(reskia_picture_t *picture, const reskia_serial_pro
 void SkPicture_serialize_2(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs); // (SkPicture *picture, SkWStream *stream, const SkSerialProcs *procs)
 size_t SkPicture_approximateOpCount(reskia_picture_t *picture); // (SkPicture *picture) -> size_t
 size_t SkPicture_approximateBytesUsed(reskia_picture_t *picture); // (SkPicture *picture) -> size_t
-sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, int tmx, int tmy, int mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode, const SkMatrix *localMatrix, const SkRect *tileRect) -> sk_shader_t
-sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, int tmx, int tmy, int mode); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode) -> sk_shader_t
+sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode, const SkMatrix *localMatrix, const SkRect *tileRect) -> sk_shader_t
+sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode) -> sk_shader_t
 bool SkPicture_unique(reskia_picture_t *picture); // (SkPicture *picture) -> bool
 void SkPicture_ref(reskia_picture_t *picture); // retained: 参照カウントを増やす (SkPicture *picture)
 void SkPicture_unref(reskia_picture_t *picture); // owned: 参照カウントを減らす (SkPicture *picture)

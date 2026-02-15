@@ -68,8 +68,8 @@ void SkBitmap_allocPixelsFlags(reskia_bitmap_t *bitmap, const reskia_image_info_
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixelsFlags(* reinterpret_cast<const SkImageInfo *>(info), flags);
 }
 
-int SkBitmap_alphaType(reskia_bitmap_t *bitmap) { // inline
-    return reinterpret_cast<SkBitmap *>(bitmap)->alphaType();
+reskia_alpha_type_t SkBitmap_alphaType(reskia_bitmap_t *bitmap) { // inline
+    return static_cast<reskia_alpha_type_t>(reinterpret_cast<SkBitmap *>(bitmap)->alphaType());
 }
 
 sk_image_t SkBitmap_asImage(reskia_bitmap_t *bitmap) {
@@ -88,8 +88,8 @@ reskia_color_space_t *SkBitmap_colorSpace(reskia_bitmap_t *bitmap) {
     return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkBitmap *>(bitmap)->colorSpace());
 }
 
-int SkBitmap_colorType(reskia_bitmap_t *bitmap) { // inline
-    return reinterpret_cast<SkBitmap *>(bitmap)->colorType();
+reskia_bitmap_color_type_t SkBitmap_colorType(reskia_bitmap_t *bitmap) { // inline
+    return static_cast<reskia_bitmap_color_type_t>(reinterpret_cast<SkBitmap *>(bitmap)->colorType());
 }
 
 size_t SkBitmap_computeByteSize(reskia_bitmap_t *bitmap) { // inline
@@ -240,11 +240,11 @@ sk_shader_t SkBitmap_makeShader_2(reskia_bitmap_t *bitmap, const reskia_sampling
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkBitmap_makeShader_3(reskia_bitmap_t *bitmap, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkBitmap_makeShader_3(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkBitmap_makeShader_4(reskia_bitmap_t *bitmap, int tmx, int tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+sk_shader_t SkBitmap_makeShader_4(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
@@ -300,7 +300,7 @@ int SkBitmap_rowBytesAsPixels(reskia_bitmap_t *bitmap) { // inline
     return reinterpret_cast<SkBitmap *>(bitmap)->rowBytesAsPixels();
 }
 
-bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, int alphaType) {
+bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaType) {
     return reinterpret_cast<SkBitmap *>(bitmap)->setAlphaType(static_cast<SkAlphaType>(alphaType));
 }
 

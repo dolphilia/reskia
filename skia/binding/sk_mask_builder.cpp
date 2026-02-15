@@ -21,7 +21,7 @@ reskia_mask_builder_t *SkMaskBuilder_new() {
     return reinterpret_cast<reskia_mask_builder_t *>(new SkMaskBuilder());
 }
 
-reskia_mask_builder_t *SkMaskBuilder_new_2(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, int format) {
+reskia_mask_builder_t *SkMaskBuilder_new_2(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format) {
     return reinterpret_cast<reskia_mask_builder_t *>(new SkMaskBuilder(img, *reinterpret_cast<const SkIRect *>(bounds), rowBytes, static_cast<SkMask::Format>(format)));
 }
 
@@ -41,8 +41,8 @@ uint32_t SkMaskBuilder_rowBytes(reskia_mask_builder_t *maskBuilder) {
     return reinterpret_cast<SkMaskBuilder *>(maskBuilder)->rowBytes();
 }
 
-int SkMaskBuilder_format(reskia_mask_builder_t *maskBuilder) {
-    return reinterpret_cast<SkMaskBuilder *>(maskBuilder)->format();
+reskia_mask_builder_format_t SkMaskBuilder_format(reskia_mask_builder_t *maskBuilder) {
+    return static_cast<reskia_mask_builder_format_t>(reinterpret_cast<SkMaskBuilder *>(maskBuilder)->format());
 }
 
 uint8_t *SkMaskBuilder_getAddr1(reskia_mask_builder_t *maskBuilder, int x, int y) {
@@ -67,7 +67,7 @@ void *SkMaskBuilder_getAddr(reskia_mask_builder_t *maskBuilder, int x, int y) {
 
 // static
 
-uint8_t *SkMaskBuilder_AllocImage(size_t bytes, int alloc) {
+uint8_t *SkMaskBuilder_AllocImage(size_t bytes, reskia_mask_builder_alloc_type_t alloc) {
     return SkMaskBuilder::AllocImage(bytes, static_cast<SkMaskBuilder::AllocType>(alloc));
 }
 

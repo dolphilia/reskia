@@ -30,12 +30,12 @@ void SkRRect_delete(reskia_r_rect_t *rrect) {
     delete reinterpret_cast<SkRRect *>(rrect);
 }
 
-int SkRRect_getType(reskia_r_rect_t *rrect) {
-    return reinterpret_cast<SkRRect *>(rrect)->getType();
+reskia_r_rect_type_t SkRRect_getType(reskia_r_rect_t *rrect) {
+    return static_cast<reskia_r_rect_type_t>(reinterpret_cast<SkRRect *>(rrect)->getType());
 }
 
-int SkRRect_type(reskia_r_rect_t *rrect) {
-    return reinterpret_cast<SkRRect *>(rrect)->type();
+reskia_r_rect_type_t SkRRect_type(reskia_r_rect_t *rrect) {
+    return static_cast<reskia_r_rect_type_t>(reinterpret_cast<SkRRect *>(rrect)->type());
 }
 
 bool SkRRect_isEmpty(reskia_r_rect_t *rrect) {
@@ -103,7 +103,7 @@ const reskia_rect_t *SkRRect_rect(reskia_r_rect_t *rrect) {
             &reinterpret_cast<SkRRect *>(rrect)->rect());
 }
 
-sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, int corner) {
+sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, reskia_r_rect_corner_t corner) {
     return static_sk_point_make(reinterpret_cast<SkRRect *>(rrect)->radii(static_cast<SkRRect::Corner>(corner)));
 }
 

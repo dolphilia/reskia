@@ -62,11 +62,11 @@ void SkColorMatrix_getRowMajor(reskia_color_matrix_t *color_matrix, float dst[20
 
 // static
 
-sk_color_matrix_t SkColorMatrix_RGBtoYUV(int color_space) {
+sk_color_matrix_t SkColorMatrix_RGBtoYUV(reskia_color_matrix_yuv_color_space_t color_space) {
     return static_sk_color_matrix_make(SkColorMatrix::RGBtoYUV(static_cast<SkYUVColorSpace>(color_space)));
 }
 
-sk_color_matrix_t SkColorMatrix_YUVtoRGB(int color_space) {
+sk_color_matrix_t SkColorMatrix_YUVtoRGB(reskia_color_matrix_yuv_color_space_t color_space) {
     return static_sk_color_matrix_make(SkColorMatrix::YUVtoRGB(static_cast<SkYUVColorSpace>(color_space)));
 }
 

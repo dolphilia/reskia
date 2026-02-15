@@ -40,8 +40,8 @@ void SkMaskFilter_flatten(reskia_mask_filter_t *mask_filter, reskia_write_buffer
     return reinterpret_cast<SkMaskFilter *>(mask_filter)->flatten(*reinterpret_cast<SkWriteBuffer *>(buffer));
 }
 
-int SkMaskFilter_getFlattenableType(reskia_mask_filter_t *mask_filter) {
-    return reinterpret_cast<SkMaskFilter *>(mask_filter)->getFlattenableType();
+reskia_mask_filter_type_t SkMaskFilter_getFlattenableType(reskia_mask_filter_t *mask_filter) {
+    return static_cast<reskia_mask_filter_type_t>(reinterpret_cast<SkMaskFilter *>(mask_filter)->getFlattenableType());
 }
 
 sk_data_t SkMaskFilter_serialize(reskia_mask_filter_t *mask_filter, const reskia_serial_procs_t *procs) {
@@ -67,7 +67,7 @@ void SkMaskFilter_unref(reskia_mask_filter_t *mask_filter) {
 
 // static
 
-sk_mask_filter_t SkMaskFilter_MakeBlur(int style, float sigma, bool respectCTM) {
+sk_mask_filter_t SkMaskFilter_MakeBlur(reskia_mask_filter_blur_style_t style, float sigma, bool respectCTM) {
     return static_sk_mask_filter_make(SkMaskFilter::MakeBlur(static_cast<SkBlurStyle>(style), sigma, respectCTM));
 }
 

@@ -61,23 +61,23 @@ bool SkTextBlob_refCntGreaterThan(reskia_text_blob_t *text_blob, int32_t threadI
 
 // static
 
-sk_text_blob_t SkTextBlob_MakeFromText(const uint8_t *text, size_t byteLength, const reskia_font_t *font, int encoding) {
+sk_text_blob_t SkTextBlob_MakeFromText(const uint8_t *text, size_t byteLength, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
     return static_sk_text_blob_make(SkTextBlob::MakeFromText(text, byteLength, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const reskia_font_t *font, int encoding) {
+sk_text_blob_t SkTextBlob_MakeFromString(const char *string, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
     return static_sk_text_blob_make(SkTextBlob::MakeFromString(string, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosTextH(const uint8_t *text, size_t byteLength, const float *xpos, float constY, const reskia_font_t *font, int encoding) {
+sk_text_blob_t SkTextBlob_MakeFromPosTextH(const uint8_t *text, size_t byteLength, const float *xpos, float constY, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
     return static_sk_text_blob_make(SkTextBlob::MakeFromPosTextH(text, byteLength, xpos, constY, * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength, const reskia_point_t *pos, const reskia_font_t *font, int encoding) {
+sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength, const reskia_point_t *pos, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
     return static_sk_text_blob_make(SkTextBlob::MakeFromPosText(text, byteLength, reinterpret_cast<const SkPoint *>(pos), * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 
-sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, int encoding) {
+sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
     return static_sk_text_blob_make(SkTextBlob::MakeFromRSXform(text, byteLength, reinterpret_cast<const SkRSXform *>(xform), * reinterpret_cast<const SkFont *>(font), static_cast<SkTextEncoding>(encoding)));
 }
 

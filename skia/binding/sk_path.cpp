@@ -40,11 +40,11 @@ bool SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float 
     return reinterpret_cast<SkPath *>(path)->interpolate(* reinterpret_cast<const SkPath *>(ending), weight, reinterpret_cast<SkPath *>(out));
 }
 
-int SkPath_getFillType(reskia_path_t *path) {
-    return static_cast<int>(reinterpret_cast<SkPath *>(path)->getFillType());
+reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path) {
+    return static_cast<reskia_path_fill_type_t>(reinterpret_cast<SkPath *>(path)->getFillType());
 }
 
-void SkPath_setFillType(reskia_path_t *path, int ft) {
+void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft) {
     reinterpret_cast<SkPath *>(path)->setFillType(static_cast<SkPathFillType>(ft));
 }
 
@@ -362,15 +362,15 @@ void SkPath_offset_2(reskia_path_t *path, float dx, float dy) {
     reinterpret_cast<SkPath *>(path)->offset(dx, dy);
 }
 
-void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, int pc) {
+void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, reskia_path_perspective_clip_t pc) {
     reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<SkPath *>(dst), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-void SkPath_transform_2(reskia_path_t *path, const reskia_matrix_t *matrix, int pc) {
+void SkPath_transform_2(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc) {
     reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, int pc) {
+sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc) {
     return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeTransform(* reinterpret_cast<const SkMatrix *>(m), static_cast<SkApplyPerspectiveClip>(pc)));
 }
 
@@ -441,43 +441,43 @@ bool SkPath_isValid(reskia_path_t *path) {
 
 // static
 
-sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, int type, bool isVolatile) {
+sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile) {
     return static_sk_path_make(SkPath::Make(reinterpret_cast<const SkPoint *>(point), pointCount, reinterpret_cast<const uint8_t *>(i), verbCount, reinterpret_cast<const SkScalar *>(v), conicWeightCount, static_cast<SkPathFillType>(type), isVolatile));
 }
 
-sk_path_t SkPath_Rect(const reskia_rect_t *rect, int dir, unsigned startIndex) {
+sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
     return static_sk_path_make(SkPath::Rect(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_Oval(const reskia_rect_t *rect, int dir) {
+sk_path_t SkPath_Oval(const reskia_rect_t *rect, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::Oval(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_Oval_2(const reskia_rect_t *rect, int dir, unsigned startIndex) {
+sk_path_t SkPath_Oval_2(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
     return static_sk_path_make(SkPath::Oval(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_Circle(float center_x, float center_y, float radius, int dir) {
+sk_path_t SkPath_Circle(float center_x, float center_y, float radius, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::Circle(center_x, center_y, radius, static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, int dir) {
+sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_RRect_2(const reskia_r_rect_t *rrect, int dir, unsigned startIndex) {
+sk_path_t SkPath_RRect_2(const reskia_r_rect_t *rrect, reskia_path_direction_t dir, unsigned startIndex) {
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_RRect_3(const reskia_rect_t *bounds, float rx, float ry, int dir) {
+sk_path_t SkPath_RRect_3(const reskia_rect_t *bounds, float rx, float ry, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRect *>(bounds), rx, ry, static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, int type, bool isVolatile) {
+sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, reskia_path_fill_type_t type, bool isVolatile) {
     return static_sk_path_make(SkPath::Polygon(reinterpret_cast<const SkPoint *>(pts), count, isClosed, static_cast<SkPathFillType>(type), isVolatile));
 }
 
-sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, int fillType, bool isVolatile) {
+sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile) {
     return static_sk_path_make(SkPath::Polygon(* reinterpret_cast<const std::initializer_list<SkPoint> *>(list), isClosed, static_cast<SkPathFillType>(fillType), isVolatile));
 }
 

@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_MATRIX_H
 #define RAIA_SKIA_SK_MATRIX_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,13 +23,16 @@ typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_rsxform_t reskia_rsxform_t;
 typedef struct reskia_size_t reskia_size_t;
 typedef struct reskia_vector_t reskia_vector_t;
+typedef int32_t reskia_matrix_type_mask_t;
+typedef int32_t reskia_matrix_scale_to_fit_t;
+typedef int32_t reskia_matrix_apply_perspective_clip_t;
 
 // SkScalar operator[](int index)
 // SkScalar & operator[](int index)
 
 reskia_matrix_t *SkMatrix_new(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> SkMatrix *
 void SkMatrix_delete(reskia_matrix_t *matrix); // (SkMatrix *matrix)
-int SkMatrix_getType(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> SkMatrix::TypeMask
+reskia_matrix_type_mask_t SkMatrix_getType(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> SkMatrix::TypeMask
 bool SkMatrix_isIdentity(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> bool
 bool SkMatrix_isScaleTranslate(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> bool
 bool SkMatrix_isTranslate(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> bool
@@ -88,7 +93,7 @@ sk_matrix_t SkMatrix_postRotate_2(reskia_matrix_t *matrix, float degrees); // (S
 sk_matrix_t SkMatrix_postSkew(reskia_matrix_t *matrix, float kx, float ky, float px, float py); // (SkMatrix *matrix, SkScalar kx, SkScalar ky, SkScalar px, SkScalar py) -> sk_matrix_t
 sk_matrix_t SkMatrix_postSkew_2(reskia_matrix_t *matrix, float kx, float ky); // (SkMatrix *matrix, SkScalar kx, SkScalar ky) -> sk_matrix_t
 sk_matrix_t SkMatrix_postConcat(reskia_matrix_t *matrix, const reskia_matrix_t *other); // (SkMatrix *matrix, const SkMatrix *other) -> sk_matrix_t
-bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, int stf); // (SkMatrix *matrix, const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit stf) -> bool
+bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf); // (SkMatrix *matrix, const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit stf) -> bool
 bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, const reskia_point_t *dst, int count); // (SkMatrix *matrix, const SkPoint src[], const SkPoint dst[], int count) -> bool
 bool SkMatrix_invert(reskia_matrix_t *matrix, reskia_matrix_t *inverse); // (SkMatrix *matrix, SkMatrix *inverse) -> bool
 bool SkMatrix_asAffine(reskia_matrix_t *matrix, float *affine); // (SkMatrix *matrix, SkScalar affine[6]) -> bool
@@ -106,9 +111,9 @@ void SkMatrix_mapVectors(reskia_matrix_t *matrix, reskia_vector_t *dst, const re
 void SkMatrix_mapVectors_2(reskia_matrix_t *matrix, reskia_vector_t *vecs, int count); // (SkMatrix *matrix, SkVector vecs[], int count)
 void SkMatrix_mapVector(reskia_matrix_t *matrix, float dx, float dy, reskia_vector_t *result); // (SkMatrix *matrix, SkScalar dx, SkScalar dy, SkVector *result)
 sk_point_t SkMatrix_mapVector_2(reskia_matrix_t *matrix, float dx, float dy); // (SkMatrix *matrix, SkScalar dx, SkScalar dy) -> sk_point_t
-bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, int pc); // (SkMatrix *matrix, SkRect *dst, const SkRect *src, SkApplyPerspectiveClip pc) -> bool
-bool SkMatrix_mapRect_2(reskia_matrix_t *matrix, reskia_rect_t *rect, int pc); // (SkMatrix *matrix, SkRect *rect, SkApplyPerspectiveClip pc) -> bool
-sk_rect_t SkMatrix_mapRect_3(reskia_matrix_t *matrix, const reskia_rect_t *src, int pc); // (SkMatrix *matrix, const SkRect *src, SkApplyPerspectiveClip pc) -> sk_rect_t
+bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc); // (SkMatrix *matrix, SkRect *dst, const SkRect *src, SkApplyPerspectiveClip pc) -> bool
+bool SkMatrix_mapRect_2(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc); // (SkMatrix *matrix, SkRect *rect, SkApplyPerspectiveClip pc) -> bool
+sk_rect_t SkMatrix_mapRect_3(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc); // (SkMatrix *matrix, const SkRect *src, SkApplyPerspectiveClip pc) -> sk_rect_t
 void SkMatrix_mapRectToQuad(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_rect_t *rect); // (SkMatrix *matrix, SkPoint dst[4], const SkRect *rect)
 void SkMatrix_mapRectScaleTranslate(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src); // (SkMatrix *matrix, SkRect *dst, const SkRect *src)
 float SkMatrix_mapRadius(reskia_matrix_t *matrix, float radius); // (SkMatrix *matrix, SkScalar radius) -> SkScalar
@@ -131,9 +136,9 @@ sk_matrix_t SkMatrix_RotateDeg(float deg); // (SkScalar deg) -> sk_matrix_t
 sk_matrix_t SkMatrix_RotateDeg_2(float deg, sk_point_t pt); // (SkScalar deg, sk_point_t pt) -> sk_matrix_t
 sk_matrix_t SkMatrix_RotateRad(float rad); // (SkScalar rad) -> sk_matrix_t
 sk_matrix_t SkMatrix_Skew(float kx, float ky); // (SkScalar kx, SkScalar ky) -> sk_matrix_t
-sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, int mode); // (const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit mode) -> sk_matrix_t
+sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode); // (const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit mode) -> sk_matrix_t
 sk_matrix_t SkMatrix_MakeAll(float scaleX, float skewX, float transX, float skewY, float scaleY, float transY, float pers0, float pers1, float pers2); // (SkScalar scaleX, SkScalar skewX, SkScalar transX, SkScalar skewY, SkScalar scaleY, SkScalar transY, SkScalar pers0, SkScalar pers1, SkScalar pers2) -> sk_matrix_t
-sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, int stf); // (const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit stf) -> sk_matrix_t
+sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf); // (const SkRect *src, const SkRect *dst, SkMatrix::ScaleToFit stf) -> sk_matrix_t
 void SkMatrix_SetAffineIdentity(float *affine); // (SkScalar affine[6])
 sk_matrix_t SkMatrix_I(); // () -> sk_matrix_t
 sk_matrix_t SkMatrix_InvalidMatrix(); // () -> sk_matrix_t

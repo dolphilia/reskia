@@ -20,8 +20,8 @@ int SkFontStyle_width(reskia_font_style_t *font_style) {
     return reinterpret_cast<SkFontStyle *>(font_style)->width();
 }
 
-int SkFontStyle_slant(reskia_font_style_t *font_style) {
-    return reinterpret_cast<SkFontStyle *>(font_style)->slant();
+reskia_font_style_slant_t SkFontStyle_slant(reskia_font_style_t *font_style) {
+    return static_cast<reskia_font_style_slant_t>(reinterpret_cast<SkFontStyle *>(font_style)->slant());
 }
 
 }

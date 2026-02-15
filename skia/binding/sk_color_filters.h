@@ -6,6 +6,7 @@
 #define RAIA_SKIA_SK_COLOR_FILTERS_H
 
 #include <stdint.h>
+#include "sk_blend_mode.h"
 #include "../static/static_sk_color_filter.h"
 #include "../static/static_sk_color_space.h"
 #include "../static/static_sk_color_table.h"
@@ -23,8 +24,8 @@ void SkColorFilters_delete(reskia_color_filters_t *colorFilters); // (SkColorFil
 
 // static
 
-sk_color_filter_t SkColorFilters_Blend(const reskia_color_4f_t *c, sk_color_space_t color_space, int mode); // (const SkColor4f *c, sk_color_space_t color_space, SkBlendMode mode) -> sk_color_filter_t
-sk_color_filter_t SkColorFilters_Blend_2(reskia_color_t c, int mode); // (SkColor c, SkBlendMode mode) -> sk_color_filter_t
+sk_color_filter_t SkColorFilters_Blend(const reskia_color_4f_t *c, sk_color_space_t color_space, reskia_blend_mode_t mode); // (const SkColor4f *c, sk_color_space_t color_space, SkBlendMode mode) -> sk_color_filter_t
+sk_color_filter_t SkColorFilters_Blend_2(reskia_color_t c, reskia_blend_mode_t mode); // (SkColor c, SkBlendMode mode) -> sk_color_filter_t
 sk_color_filter_t SkColorFilters_Compose(sk_color_filter_t color_filter1, sk_color_filter_t color_filter2); // (sk_color_filter_t color_filter1, sk_color_filter_t color_filter2) -> sk_color_filter_t
 sk_color_filter_t SkColorFilters_HSLAMatrix(const float rowMajor[20]); // (const float rowMajor[20]) -> sk_color_filter_t
 sk_color_filter_t SkColorFilters_HSLAMatrix_2(const reskia_color_matrix_t *matrix); // (const SkColorMatrix *matrix) -> sk_color_filter_t

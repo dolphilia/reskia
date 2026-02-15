@@ -6,6 +6,7 @@
 #define RAIA_SKIA_SK_R_RECT_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include "../static/static_sk_point.h"
 #include "../static/static_sk_r_rect.h"
@@ -16,6 +17,8 @@ typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_r_rect_t reskia_r_rect_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_vector_t reskia_vector_t;
+typedef int32_t reskia_r_rect_type_t;
+typedef int32_t reskia_r_rect_corner_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,8 +28,8 @@ extern "C" {
 reskia_r_rect_t *SkRRect_new(); // () -> SkRRect *
 reskia_r_rect_t *SkRRect_new_2(const reskia_r_rect_t *rrect); // (const SkRRect *rrect) -> SkRRect *
 void SkRRect_delete(reskia_r_rect_t *rrect); // (SkRRect *rrect)
-int SkRRect_getType(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> SkRRect::Type
-int SkRRect_type(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> SkRRect::Type
+reskia_r_rect_type_t SkRRect_getType(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> SkRRect::Type
+reskia_r_rect_type_t SkRRect_type(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> SkRRect::Type
 bool SkRRect_isEmpty(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> bool
 bool SkRRect_isRect(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> bool
 bool SkRRect_isOval(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> bool
@@ -43,7 +46,7 @@ void SkRRect_setRectXY(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float 
 void SkRRect_setNinePatch(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float leftRad, float topRad, float rightRad, float bottomRad); // (SkRRect *rrect, const SkRect *rect, SkScalar leftRad, SkScalar topRad, SkScalar rightRad, SkScalar bottomRad)
 void SkRRect_setRectRadii(reskia_r_rect_t *rrect, const reskia_rect_t *rect, const reskia_vector_t *radii); // (SkRRect *rrect, const SkRect *rect, const SkVector radii[4])
 const reskia_rect_t *SkRRect_rect(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> const SkRect *
-sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, int corner); // (SkRRect *rrect, SkRRect::Corner corner) -> sk_point_t
+sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, reskia_r_rect_corner_t corner); // (SkRRect *rrect, SkRRect::Corner corner) -> sk_point_t
 const reskia_rect_t *SkRRect_getBounds(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> const SkRect *
 void SkRRect_inset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *dst); // (SkRRect *rrect, SkScalar dx, SkScalar dy, SkRRect *dst)
 void SkRRect_inset_2(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy)

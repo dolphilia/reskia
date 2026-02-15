@@ -14,7 +14,7 @@
 
 extern "C" {
 
-sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, int format) {
+sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_format_t format) {
     return static_sk_mask_make(SkMask(img, *reinterpret_cast<const SkIRect *>(bounds), rowBytes, static_cast<SkMask::Format>(format)));
 }
 
@@ -36,8 +36,8 @@ uint32_t SkMask_fRowBytes(reskia_mask_t *mask) {
     return reinterpret_cast<SkMask *>(mask)->fRowBytes;
 }
 
-int SkMask_fFormat(reskia_mask_t *mask) {
-    return reinterpret_cast<SkMask *>(mask)->fFormat;
+reskia_mask_format_t SkMask_fFormat(reskia_mask_t *mask) {
+    return static_cast<reskia_mask_format_t>(reinterpret_cast<SkMask *>(mask)->fFormat);
 }
 
 // Method

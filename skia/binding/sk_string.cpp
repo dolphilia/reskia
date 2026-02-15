@@ -156,7 +156,7 @@ void SkString_insert_4(reskia_string_t *string, size_t offset, string_view_t str
     reinterpret_cast<SkString *>(string)->insert(offset, static_string_view_get_entity(str));
 }
 
-void SkString_insertUnichar(reskia_string_t *string, size_t offset, int unichar) {
+void SkString_insertUnichar(reskia_string_t *string, size_t offset, reskia_string_unichar_t unichar) {
     reinterpret_cast<SkString *>(string)->insertUnichar(offset, unichar);
 }
 
@@ -200,7 +200,7 @@ void SkString_append_4(reskia_string_t *string, string_view_t str) {
     reinterpret_cast<SkString *>(string)->append(static_string_view_get_entity(str));
 }
 
-void SkString_appendUnichar(reskia_string_t *string, int uni) {
+void SkString_appendUnichar(reskia_string_t *string, reskia_string_unichar_t uni) {
     reinterpret_cast<SkString *>(string)->appendUnichar(uni);
 }
 
@@ -244,7 +244,7 @@ void SkString_prepend_4(reskia_string_t *string, string_view_t str) {
     reinterpret_cast<SkString *>(string)->prepend(static_string_view_get_entity(str));
 }
 
-void SkString_prependUnichar(reskia_string_t *string, int uni) {
+void SkString_prependUnichar(reskia_string_t *string, reskia_string_unichar_t uni) {
     reinterpret_cast<SkString *>(string)->prependUnichar(uni);
 }
 

@@ -123,23 +123,23 @@ void SkRegion_translate_2(reskia_region_t *region, int dx, int dy, reskia_region
     reinterpret_cast<SkRegion *>(region)->translate(dx, dy, reinterpret_cast<SkRegion *>(dst));
 }
 
-bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, int op) {
+bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkIRect *>(rect), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_2(reskia_region_t *region, const reskia_region_t *rgn, int op) {
+bool SkRegion_op_2(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkRegion *>(rgn), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_3(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, int op) {
+bool SkRegion_op_3(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkIRect *>(rect), * reinterpret_cast<const SkRegion *>(rgn), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_4(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, int op) {
+bool SkRegion_op_4(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkRegion *>(rgn), * reinterpret_cast<const SkIRect *>(rect), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, int op) {
+bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkRegion *>(rgna), * reinterpret_cast<const SkRegion *>(rgnb), static_cast<SkRegion::Op>(op));
 }
 

@@ -6,10 +6,12 @@
 #define RAIA_SKIA_SK_REGION_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_region_t reskia_region_t;
+typedef int32_t reskia_region_op_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,11 +48,11 @@ bool SkRegion_quickReject(reskia_region_t *region, const reskia_i_rect_t *rect);
 bool SkRegion_quickReject_2(reskia_region_t *region, const reskia_region_t *rgn); // (SkRegion *region, const SkRegion *rgn) -> bool
 void SkRegion_translate(reskia_region_t *region, int dx, int dy); // (SkRegion *region, int dx, int dy)
 void SkRegion_translate_2(reskia_region_t *region, int dx, int dy, reskia_region_t *dst); // (SkRegion *region, int dx, int dy, SkRegion *dst)
-bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, int op); // (SkRegion *region, const SkIRect *rect, SkRegion::Op op) -> bool
-bool SkRegion_op_2(reskia_region_t *region, const reskia_region_t *rgn, int op); // (SkRegion *region, const SkRegion *rgn, SkRegion::Op op) -> bool
-bool SkRegion_op_3(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, int op); // (SkRegion *region, const SkIRect *rect, const SkRegion *rgn, SkRegion::Op op) -> bool
-bool SkRegion_op_4(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, int op); // (SkRegion *region, const SkRegion *rgn, const SkIRect *rect, SkRegion::Op op) -> bool
-bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, int op); // (SkRegion *region, const SkRegion *rgna, const SkRegion *rgnb, SkRegion::Op op) -> bool
+bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, reskia_region_op_t op); // (SkRegion *region, const SkIRect *rect, SkRegion::Op op) -> bool
+bool SkRegion_op_2(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgn, SkRegion::Op op) -> bool
+bool SkRegion_op_3(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkIRect *rect, const SkRegion *rgn, SkRegion::Op op) -> bool
+bool SkRegion_op_4(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgn, const SkIRect *rect, SkRegion::Op op) -> bool
+bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgna, const SkRegion *rgnb, SkRegion::Op op) -> bool
 size_t SkRegion_writeToMemory(reskia_region_t *region, void *buffer); // (SkRegion *region, void *buffer) -> size_t
 size_t SkRegion_readFromMemory(reskia_region_t *region, const void *buffer, size_t length); // (SkRegion *region, const void *buffer, size_t length) -> size_t
 

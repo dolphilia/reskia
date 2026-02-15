@@ -46,8 +46,8 @@ sk_typeface_t SkFontMgr_matchFamilyStyle(reskia_font_mgr_t *font_mgr, const char
     return static_sk_typeface_make(reinterpret_cast<SkFontMgr *>(font_mgr)->matchFamilyStyle(familyName, * reinterpret_cast<const SkFontStyle *>(font_style)));
 }
 
-sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style, const char *bcp47[], int bcp47Count, int character) {
-    return static_sk_typeface_make(reinterpret_cast<SkFontMgr *>(font_mgr)->matchFamilyStyleCharacter(familyName, * reinterpret_cast<const SkFontStyle *>(font_style), bcp47, bcp47Count, character));
+sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style, const char *bcp47[], int bcp47Count, reskia_font_mgr_unichar_t character) {
+    return static_sk_typeface_make(reinterpret_cast<SkFontMgr *>(font_mgr)->matchFamilyStyleCharacter(familyName, * reinterpret_cast<const SkFontStyle *>(font_style), bcp47, bcp47Count, static_cast<SkUnichar>(character)));
 }
 
 sk_typeface_t SkFontMgr_makeFromData(reskia_font_mgr_t *font_mgr, sk_data_t data, int ttcIndex) {

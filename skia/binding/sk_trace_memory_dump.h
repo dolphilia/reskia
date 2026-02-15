@@ -9,6 +9,7 @@
 
 typedef struct reskia_discardable_memory_t reskia_discardable_memory_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
+typedef int32_t reskia_trace_memory_dump_level_of_detail_t; // SkTraceMemoryDump::LevelOfDetail
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,7 +20,7 @@ void SkTraceMemoryDump_dumpNumericValue(reskia_trace_memory_dump_t *trace_memory
 void SkTraceMemoryDump_dumpStringValue(reskia_trace_memory_dump_t *trace_memory_dump, const char *dumpName, const char *str1, const char *str2); // (SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const char *str1, const char *str2)
 void SkTraceMemoryDump_setMemoryBacking(reskia_trace_memory_dump_t *trace_memory_dump, const char *dumpName, const char *backingType, const char *backingObjectId); // (SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const char *backingType, const char *backingObjectId)
 void SkTraceMemoryDump_setDiscardableMemoryBacking(reskia_trace_memory_dump_t *trace_memory_dump, const char *dumpName, const reskia_discardable_memory_t *discardableMemoryObject); // (SkTraceMemoryDump *trace_memory_dump, const char *dumpName, const SkDiscardableMemory *discardableMemoryObject)
-int SkTraceMemoryDump_getRequestedDetails(reskia_trace_memory_dump_t *trace_memory_dump); // (SkTraceMemoryDump *trace_memory_dump) -> SkTraceMemoryDump::LevelOfDetail
+reskia_trace_memory_dump_level_of_detail_t SkTraceMemoryDump_getRequestedDetails(reskia_trace_memory_dump_t *trace_memory_dump); // (SkTraceMemoryDump *trace_memory_dump) -> SkTraceMemoryDump::LevelOfDetail
 bool SkTraceMemoryDump_shouldDumpWrappedObjects(reskia_trace_memory_dump_t *trace_memory_dump); // (SkTraceMemoryDump *trace_memory_dump) -> bool
 void SkTraceMemoryDump_dumpWrappedState(reskia_trace_memory_dump_t *trace_memory_dump, const char *str, bool b); // (SkTraceMemoryDump *trace_memory_dump, const char *str, bool b)
 bool SkTraceMemoryDump_shouldDumpUnbudgetedObjects(reskia_trace_memory_dump_t *trace_memory_dump); // (SkTraceMemoryDump *trace_memory_dump) -> bool

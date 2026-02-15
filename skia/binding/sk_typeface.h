@@ -26,6 +26,9 @@ typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_typeface_localized_strings_t reskia_typeface_localized_strings_t;
 typedef struct reskia_typeface_t reskia_typeface_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
+typedef int32_t reskia_typeface_serialize_behavior_t; // SkTypeface::SerializeBehavior
+typedef int32_t reskia_typeface_text_encoding_t; // SkTextEncoding
+typedef int32_t reskia_typeface_unichar_t; // SkUnichar
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,11 +43,11 @@ int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_fo
 int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount); // (SkTypeface *typeface, SkFontParameters::Variation::Axis parameters[], int parameterCount) -> int
 uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> SkTypefaceID
 sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_font_arguments_t *arguments); // (SkTypeface *typeface, const SkFontArguments *arguments) -> sk_typeface_t
-void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, int behavior); // (SkTypeface *typeface, SkWStream *stream, SkTypeface::SerializeBehavior behavior)
-sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, int behavior); // (SkTypeface *typeface, SkTypeface::SerializeBehavior behavior) -> sk_data_t
+void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkWStream *stream, SkTypeface::SerializeBehavior behavior)
+sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkTypeface::SerializeBehavior behavior) -> sk_data_t
 void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs); // (SkTypeface *typeface, const SkUnichar uni[], int count, SkGlyphID glyphs[])
-int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, int encoding, uint16_t *glyphs, int maxGlyphCount); // (SkTypeface *typeface, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
-uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, int32_t unichar); // (SkTypeface *typeface, SkUnichar unichar) -> SkGlyphID
+int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // (SkTypeface *typeface, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
+uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar); // (SkTypeface *typeface, SkUnichar unichar) -> SkGlyphID
 int SkTypeface_countGlyphs(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> int
 int SkTypeface_countTables(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> int
 int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags); // (SkTypeface *typeface, SkFontTableTag tags[]) -> int

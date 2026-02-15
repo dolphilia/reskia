@@ -17,8 +17,9 @@ extern "C" {
 
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_mask_t reskia_mask_t;
+typedef int32_t reskia_mask_format_t;
 
-sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, int format); // (const uint8_t* img, const SkIRect * bounds, uint32_t rowBytes, SkMask::Format format) -> sk_mask_t
+sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_format_t format); // (const uint8_t* img, const SkIRect * bounds, uint32_t rowBytes, SkMask::Format format) -> sk_mask_t
 void SkMask_delete(reskia_mask_t *mask);
 
 // member
@@ -26,7 +27,7 @@ void SkMask_delete(reskia_mask_t *mask);
 const uint8_t *SkMask_fImage(reskia_mask_t *mask); // (SkMask *mask) -> const uint8_t *
 sk_i_rect_t SkMask_fBounds(reskia_mask_t *mask); // (SkMask *mask) -> sk_i_rect_t
 uint32_t SkMask_fRowBytes(reskia_mask_t *mask); // (SkMask *mask) -> uint32_t
-int SkMask_fFormat(reskia_mask_t *mask); // (SkMask *mask) -> SkMask::Format
+reskia_mask_format_t SkMask_fFormat(reskia_mask_t *mask); // (SkMask *mask) -> SkMask::Format
 
 // Method
 bool SkMask_isEmpty(reskia_mask_t *mask); // (SkMask *mask) -> bool

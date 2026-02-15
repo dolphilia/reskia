@@ -24,7 +24,7 @@ reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_2(const reskia_yuva_info_t *info
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo(*reinterpret_cast<const SkYUVAInfo *>(info), reinterpret_cast<const SkColorType *>(type), rowBytes));
 }
 
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_3(const reskia_yuva_info_t *info, int type, const size_t *rowBytes) {
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_3(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes) {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo(*reinterpret_cast<const SkYUVAInfo *>(info), static_cast<SkYUVAPixmapInfo::DataType>(type), rowBytes));
 }
 
@@ -40,16 +40,16 @@ const reskia_yuva_info_t *SkYUVAPixmapInfo_yuvaInfo(reskia_yuva_pixmap_info_t *y
     return reinterpret_cast<const reskia_yuva_info_t *>(&reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->yuvaInfo());
 }
 
-int SkYUVAPixmapInfo_yuvColorSpace(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {
-    return reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->yuvColorSpace();
+reskia_yuva_pixmap_info_yuv_color_space_t SkYUVAPixmapInfo_yuvColorSpace(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {
+    return static_cast<reskia_yuva_pixmap_info_yuv_color_space_t>(reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->yuvColorSpace());
 }
 
 int SkYUVAPixmapInfo_numPlanes(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {
     return reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->numPlanes();
 }
 
-int SkYUVAPixmapInfo_dataType(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {
-    return static_cast<int>(reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->dataType());
+reskia_yuva_pixmap_info_data_type_t SkYUVAPixmapInfo_dataType(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {
+    return static_cast<reskia_yuva_pixmap_info_data_type_t>(reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info)->dataType());
 }
 
 size_t SkYUVAPixmapInfo_rowBytes(reskia_yuva_pixmap_info_t *yuva_pixmap_info, int i) {
@@ -78,11 +78,12 @@ bool SkYUVAPixmapInfo_isSupported(reskia_yuva_pixmap_info_t *yuva_pixmap_info, c
 
 // static
 
-int SkYUVAPixmapInfo_DefaultColorTypeForDataType(int dataType, int numChannels) {
-    return SkYUVAPixmapInfo::DefaultColorTypeForDataType(static_cast<SkYUVAPixmapInfo::DataType>(dataType), numChannels);
+reskia_yuva_pixmap_info_color_type_t SkYUVAPixmapInfo_DefaultColorTypeForDataType(reskia_yuva_pixmap_info_data_type_t dataType, int numChannels) {
+    return static_cast<reskia_yuva_pixmap_info_color_type_t>(
+            SkYUVAPixmapInfo::DefaultColorTypeForDataType(static_cast<SkYUVAPixmapInfo::DataType>(dataType), numChannels));
 }
 
-tuple_int_sk_yuva_pixmap_info_data_type_t SkYUVAPixmapInfo_NumChannelsAndDataType(int type) {
+tuple_int_sk_yuva_pixmap_info_data_type_t SkYUVAPixmapInfo_NumChannelsAndDataType(reskia_yuva_pixmap_info_color_type_t type) {
     return static_tuple_int_sk_yuva_pixmap_info_data_type_make(SkYUVAPixmapInfo::NumChannelsAndDataType(static_cast<SkColorType>(type)));
 }
 

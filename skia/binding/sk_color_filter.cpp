@@ -69,8 +69,8 @@ void SkColorFilter_flatten(reskia_color_filter_t *color_filter, reskia_write_buf
     reinterpret_cast<SkColorFilter *>(color_filter)->flatten(*reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-int SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter) {
-    return reinterpret_cast<SkColorFilter *>(color_filter)->getFlattenableType();
+reskia_color_filter_type_t SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter) {
+    return static_cast<reskia_color_filter_type_t>(reinterpret_cast<SkColorFilter *>(color_filter)->getFlattenableType());
 }
 
 sk_data_t SkColorFilter_serialize(reskia_color_filter_t *color_filter, const reskia_serial_procs_t *serial_procs) {

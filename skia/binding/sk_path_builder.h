@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_PATH_BUILDER_H
 #define RAIA_SKIA_SK_PATH_BUILDER_H
 
+#include <stdint.h>
+
 #include "../static/static_sk_path.h"
 #include "../static/static_sk_rect.h"
 
@@ -13,6 +15,7 @@ typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_r_rect_t reskia_r_rect_t;
 typedef struct reskia_rect_t reskia_rect_t;
+typedef int32_t reskia_path_builder_fill_type_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,7 +29,7 @@ reskia_path_builder_t *SkPathBuilder_new_2(int type); // (SkPathFillType type) -
 reskia_path_builder_t *SkPathBuilder_new_3(const reskia_path_t *path); // (const SkPath *path) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_new_4(const reskia_path_builder_t *builder); // (const SkPathBuilder *builder) -> SkPathBuilder *
 void SkPathBuilder_delete(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder)
-int SkPathBuilder_fillType(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> SkPathFillType
+reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> SkPathFillType
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> sk_rect_t
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> sk_path_t
 sk_path_t SkPathBuilder_detach(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> sk_path_t

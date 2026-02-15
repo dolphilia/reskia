@@ -69,8 +69,8 @@ void SkColorMatrixFilter_flatten(reskia_color_matrix_filter_t *color_matrix_filt
     reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->flatten(*reinterpret_cast<SkWriteBuffer *>(write_buffer));
 }
 
-int SkColorMatrixFilter_getFlattenableType(reskia_color_matrix_filter_t *color_matrix_filter) {
-    return reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->getFlattenableType();
+reskia_color_matrix_filter_type_t SkColorMatrixFilter_getFlattenableType(reskia_color_matrix_filter_t *color_matrix_filter) {
+    return static_cast<reskia_color_matrix_filter_type_t>(reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->getFlattenableType());
 }
 
 sk_data_t SkColorMatrixFilter_serialize(reskia_color_matrix_filter_t *color_matrix_filter, const reskia_serial_procs_t *serial_procs) {

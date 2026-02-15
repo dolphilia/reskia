@@ -77,7 +77,7 @@ reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color) {
     return static_cast<reskia_u32_t>(reinterpret_cast<SkColor4f *>(color)->toBytes_RGBA());
 }
 
-int SkColor4f_makeOpaque(reskia_color_4f_t *color) {
+sk_color_4f_t SkColor4f_makeOpaque(reskia_color_4f_t *color) {
     return static_sk_color_4f_make(reinterpret_cast<SkColor4f *>(color)->makeOpaque());
 }
 

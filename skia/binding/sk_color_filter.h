@@ -24,6 +24,7 @@ typedef struct reskia_deserial_procs_t reskia_deserial_procs_t;
 typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef uint32_t reskia_color_t;
+typedef int32_t reskia_color_filter_type_t;
 
 void SkColorFilter_delete(reskia_color_filter_t *color_filter); // owned: caller が保持する参照を release する (SkColorFilter *color_filter)
 bool SkColorFilter_asAColorMode(reskia_color_filter_t *color_filter, reskia_color_t *color, int *mode); // (SkColorFilter *color_filter, SkColor *color, SkBlendMode *mode) -> bool
@@ -36,7 +37,7 @@ sk_color_filter_t SkColorFilter_makeWithWorkingColorSpace(reskia_color_filter_t 
 sk_flattenable_factory_t SkColorFilter_getFactory(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> sk_flattenable_factory_t
 const char *SkColorFilter_getTypeName(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> const char *
 void SkColorFilter_flatten(reskia_color_filter_t *color_filter, reskia_write_buffer_t *write_buffer); // (SkColorFilter *color_filter, SkWriteBuffer *write_buffer)
-int SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> SkColorFilter::Type
+reskia_color_filter_type_t SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> SkColorFilter::Type
 sk_data_t SkColorFilter_serialize(reskia_color_filter_t *color_filter, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, const SkSerialProcs *serial_procs) -> sk_data_t
 size_t SkColorFilter_serialize_2(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkColorFilter_unique(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> bool

@@ -27,6 +27,7 @@ typedef struct reskia_sampling_options_t reskia_sampling_options_t;
 typedef struct reskia_surface_characterization_t reskia_surface_characterization_t;
 typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_surface_t reskia_surface_t;
+typedef int32_t reskia_surface_content_change_mode_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,10 +39,10 @@ int SkSurface_width(reskia_surface_t *surface); // (SkSurface *surface) -> int
 int SkSurface_height(reskia_surface_t *surface); // (SkSurface *surface) -> int
 sk_image_info_t SkSurface_imageInfo(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_info_t
 uint32_t SkSurface_generationID(reskia_surface_t *surface); // (SkSurface *surface) -> uint32_t
-void SkSurface_notifyContentWillChange(reskia_surface_t *surface, int mode); // (SkSurface *surface, SkSurface::ContentChangeMode mode)
+void SkSurface_notifyContentWillChange(reskia_surface_t *surface, reskia_surface_content_change_mode_t mode); // (SkSurface *surface, SkSurface::ContentChangeMode mode)
 reskia_recording_context_t *SkSurface_recordingContext(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> GrRecordingContext *
 reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> skgpu::graphite::Recorder *
-bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, int mode, void(* proc)(void *), void * context); // (SkSurface *surface, const GrBackendTexture *backendTexture, GrSurfaceOrigin origin, SkSurface::ContentChangeMode mode, SkSurface::TextureReleaseProc proc, SkSurface::ReleaseContext context) -> bool
+bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, reskia_surface_content_change_mode_t mode, void(* proc)(void *), void * context); // (SkSurface *surface, const GrBackendTexture *backendTexture, GrSurfaceOrigin origin, SkSurface::ContentChangeMode mode, SkSurface::TextureReleaseProc proc, SkSurface::ReleaseContext context) -> bool
 reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> SkCanvas *
 int SkSurface_capabilities(reskia_surface_t *surface); // (SkSurface *surface) -> const_sk_capabilities_t
 sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo); // (SkSurface *surface, const SkImageInfo *imageInfo) -> sk_surface_t

@@ -16,20 +16,20 @@ void SkStrokeRec_delete(reskia_stroke_rec_t *stroke_rec) {
     delete reinterpret_cast<SkStrokeRec *>(stroke_rec);
 }
 
-int SkStrokeRec_static(int style) {
+sk_stroke_rec_t SkStrokeRec_static(reskia_stroke_rec_init_style_t style) {
     return static_sk_stroke_rec_make(SkStrokeRec(static_cast<SkStrokeRec::InitStyle>(style)));
 }
 
-int SkStrokeRec_static_2(const reskia_paint_t *paint, int style, float resScale) {
+sk_stroke_rec_t SkStrokeRec_static_2(const reskia_paint_t *paint, reskia_stroke_rec_paint_style_t style, float resScale) {
     return static_sk_stroke_rec_make(SkStrokeRec(* reinterpret_cast<const SkPaint *>(paint), static_cast<SkPaint::Style>(style), resScale));
 }
 
-int SkStrokeRec_static_3(const reskia_paint_t *paint, float resScale) {
+sk_stroke_rec_t SkStrokeRec_static_3(const reskia_paint_t *paint, float resScale) {
     return static_sk_stroke_rec_make(SkStrokeRec(* reinterpret_cast<const SkPaint *>(paint), resScale));
 }
 
-int SkStrokeRec_getStyle(reskia_stroke_rec_t *stroke_rec) {
-    return reinterpret_cast<SkStrokeRec *>(stroke_rec)->getStyle();
+reskia_stroke_rec_style_t SkStrokeRec_getStyle(reskia_stroke_rec_t *stroke_rec) {
+    return static_cast<reskia_stroke_rec_style_t>(reinterpret_cast<SkStrokeRec *>(stroke_rec)->getStyle());
 }
 
 float SkStrokeRec_getWidth(reskia_stroke_rec_t *stroke_rec) {
@@ -40,12 +40,12 @@ float SkStrokeRec_getMiter(reskia_stroke_rec_t *stroke_rec) {
     return reinterpret_cast<SkStrokeRec *>(stroke_rec)->getMiter();
 }
 
-int SkStrokeRec_getCap(reskia_stroke_rec_t *stroke_rec) {
-    return reinterpret_cast<SkStrokeRec *>(stroke_rec)->getCap();
+reskia_stroke_rec_cap_t SkStrokeRec_getCap(reskia_stroke_rec_t *stroke_rec) {
+    return static_cast<reskia_stroke_rec_cap_t>(reinterpret_cast<SkStrokeRec *>(stroke_rec)->getCap());
 }
 
-int SkStrokeRec_getJoin(reskia_stroke_rec_t *stroke_rec) {
-    return reinterpret_cast<SkStrokeRec *>(stroke_rec)->getJoin();
+reskia_stroke_rec_join_t SkStrokeRec_getJoin(reskia_stroke_rec_t *stroke_rec) {
+    return static_cast<reskia_stroke_rec_join_t>(reinterpret_cast<SkStrokeRec *>(stroke_rec)->getJoin());
 }
 
 bool SkStrokeRec_isHairlineStyle(reskia_stroke_rec_t *stroke_rec) {
@@ -68,7 +68,7 @@ void SkStrokeRec_setStrokeStyle(reskia_stroke_rec_t *stroke_rec, float width, bo
     return reinterpret_cast<SkStrokeRec *>(stroke_rec)->setStrokeStyle(width, strokeAndFill);
 }
 
-void SkStrokeRec_setStrokeParams(reskia_stroke_rec_t *stroke_rec, int cap, int join, float miterLimit) {
+void SkStrokeRec_setStrokeParams(reskia_stroke_rec_t *stroke_rec, reskia_stroke_rec_cap_t cap, reskia_stroke_rec_join_t join, float miterLimit) {
     return reinterpret_cast<SkStrokeRec *>(stroke_rec)->setStrokeParams(static_cast<SkPaint::Cap>(cap), static_cast<SkPaint::Join>(join), miterLimit);
 }
 
@@ -102,11 +102,11 @@ bool SkStrokeRec_hasEqualEffect(reskia_stroke_rec_t *stroke_rec, const reskia_st
 
 // static
 
-float SkStrokeRec_GetInflationRadius(const reskia_paint_t *paint, int style) {
+float SkStrokeRec_GetInflationRadius(const reskia_paint_t *paint, reskia_stroke_rec_paint_style_t style) {
     return SkStrokeRec::GetInflationRadius(* reinterpret_cast<const SkPaint *>(paint), static_cast<SkPaint::Style>(style));
 }
 
-float SkStrokeRec_GetInflationRadius_2(int join, float miterLimit, int cap, float strokeWidth) {
+float SkStrokeRec_GetInflationRadius_2(reskia_stroke_rec_join_t join, float miterLimit, reskia_stroke_rec_cap_t cap, float strokeWidth) {
     return SkStrokeRec::GetInflationRadius(static_cast<SkPaint::Join>(join), miterLimit, static_cast<SkPaint::Cap>(cap), strokeWidth);
 }
 

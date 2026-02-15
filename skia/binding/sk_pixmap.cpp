@@ -77,12 +77,12 @@ sk_i_size_t SkPixmap_dimensions(reskia_pixmap_t *pixmap) {
     return static_sk_i_size_make(reinterpret_cast<SkPixmap *>(pixmap)->dimensions());
 }
 
-int SkPixmap_colorType(reskia_pixmap_t *pixmap) {
-    return reinterpret_cast<SkPixmap *>(pixmap)->colorType();
+reskia_pixmap_color_type_t SkPixmap_colorType(reskia_pixmap_t *pixmap) {
+    return static_cast<reskia_pixmap_color_type_t>(reinterpret_cast<SkPixmap *>(pixmap)->colorType());
 }
 
-int SkPixmap_alphaType(reskia_pixmap_t *pixmap) {
-    return reinterpret_cast<SkPixmap *>(pixmap)->alphaType();
+reskia_pixmap_alpha_type_t SkPixmap_alphaType(reskia_pixmap_t *pixmap) {
+    return static_cast<reskia_pixmap_alpha_type_t>(reinterpret_cast<SkPixmap *>(pixmap)->alphaType());
 }
 
 reskia_color_space_t *SkPixmap_colorSpace(reskia_pixmap_t *pixmap) {

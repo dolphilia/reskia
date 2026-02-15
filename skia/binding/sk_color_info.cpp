@@ -31,8 +31,8 @@ void SkColorInfo_delete(reskia_color_info_t *color_info) {
     delete reinterpret_cast<SkColorInfo *>(color_info);
 }
 
-int SkColorInfo_alphaType(reskia_color_info_t *color_info) {
-    return reinterpret_cast<SkColorInfo *>(color_info)->alphaType();
+reskia_alpha_type_t SkColorInfo_alphaType(reskia_color_info_t *color_info) {
+    return static_cast<reskia_alpha_type_t>(reinterpret_cast<SkColorInfo *>(color_info)->alphaType());
 }
 
 int SkColorInfo_bytesPerPixel(reskia_color_info_t *color_info) {
@@ -43,8 +43,8 @@ reskia_color_space_t *SkColorInfo_colorSpace(reskia_color_info_t *color_info) {
     return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkColorInfo *>(color_info)->colorSpace());
 }
 
-int SkColorInfo_colorType(reskia_color_info_t *color_info) {
-    return reinterpret_cast<SkColorInfo *>(color_info)->colorType();
+reskia_color_info_color_type_t SkColorInfo_colorType(reskia_color_info_t *color_info) {
+    return static_cast<reskia_color_info_color_type_t>(reinterpret_cast<SkColorInfo *>(color_info)->colorType());
 }
 
 bool SkColorInfo_gammaCloseToSRGB(reskia_color_info_t *color_info) {
@@ -55,7 +55,7 @@ bool SkColorInfo_isOpaque(reskia_color_info_t *color_info) {
     return reinterpret_cast<SkColorInfo *>(color_info)->isOpaque();
 }
 
-sk_color_info_t SkColorInfo_makeAlphaType(reskia_color_info_t *color_info, int newAlphaType) {
+sk_color_info_t SkColorInfo_makeAlphaType(reskia_color_info_t *color_info, reskia_alpha_type_t newAlphaType) {
     return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
 }
 
@@ -63,7 +63,7 @@ sk_color_info_t SkColorInfo_makeColorSpace(reskia_color_info_t *color_info, sk_c
     return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
-sk_color_info_t SkColorInfo_makeColorType(reskia_color_info_t *color_info, int newColorType) {
+sk_color_info_t SkColorInfo_makeColorType(reskia_color_info_t *color_info, reskia_color_info_color_type_t newColorType) {
     return static_sk_color_info_make(reinterpret_cast<SkColorInfo *>(color_info)->makeColorType(static_cast<SkColorType>(newColorType)));
 }
 

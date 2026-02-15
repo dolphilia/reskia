@@ -54,7 +54,7 @@ size_t SkPicture_approximateBytesUsed(reskia_picture_t *picture) { //, SkPicture
     return reinterpret_cast<SkPicture *>(picture)->approximateBytesUsed();
 }
 
-sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, int tmx, int tmy, int mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect) {
+sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect) {
     return static_sk_shader_make(reinterpret_cast<SkPicture *>(picture)->makeShader(
         static_cast<SkTileMode>(tmx),
         static_cast<SkTileMode>(tmy),
@@ -63,7 +63,7 @@ sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, int tmx, int tmy, in
         reinterpret_cast<const SkRect *>(tileRect)));
 }
 
-sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, int tmx, int tmy, int mode) {
+sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode) {
     return static_sk_shader_make(reinterpret_cast<SkPicture *>(picture)->makeShader(
         static_cast<SkTileMode>(tmx),
         static_cast<SkTileMode>(tmy),

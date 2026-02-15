@@ -38,12 +38,12 @@ void SkYUVAInfo_delete(reskia_yuva_info_t *yuvaInfo) {
     delete reinterpret_cast<SkYUVAInfo *>(yuvaInfo);
 }
 
-int SkYUVAInfo_planeConfig(reskia_yuva_info_t *yuva_info) {
-    return static_cast<int>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->planeConfig());
+reskia_yuva_info_plane_config_t SkYUVAInfo_planeConfig(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_plane_config_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->planeConfig());
 }
 
-int SkYUVAInfo_subsampling(reskia_yuva_info_t *yuva_info) {
-    return static_cast<int>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->subsampling());
+reskia_yuva_info_subsampling_t SkYUVAInfo_subsampling(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_subsampling_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->subsampling());
 }
 
 tuple_int_int_t SkYUVAInfo_planeSubsamplingFactors(reskia_yuva_info_t *yuva_info, int planeIdx) {
@@ -62,20 +62,20 @@ int SkYUVAInfo_height(reskia_yuva_info_t *yuva_info) {
     return reinterpret_cast<SkYUVAInfo *>(yuva_info)->height();
 }
 
-int SkYUVAInfo_yuvColorSpace(reskia_yuva_info_t *yuva_info) {
-    return reinterpret_cast<SkYUVAInfo *>(yuva_info)->yuvColorSpace();
+reskia_yuva_info_yuv_color_space_t SkYUVAInfo_yuvColorSpace(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_yuv_color_space_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->yuvColorSpace());
 }
 
-int SkYUVAInfo_sitingX(reskia_yuva_info_t *yuva_info) {
-    return static_cast<int>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->sitingX());
+reskia_yuva_info_siting_t SkYUVAInfo_sitingX(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_siting_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->sitingX());
 }
 
-int SkYUVAInfo_sitingY(reskia_yuva_info_t *yuva_info) {
-    return static_cast<int>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->sitingY());
+reskia_yuva_info_siting_t SkYUVAInfo_sitingY(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_siting_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->sitingY());
 }
 
-int SkYUVAInfo_origin(reskia_yuva_info_t *yuva_info) {
-    return reinterpret_cast<SkYUVAInfo *>(yuva_info)->origin();
+reskia_yuva_info_encoded_origin_t SkYUVAInfo_origin(reskia_yuva_info_t *yuva_info) {
+    return static_cast<reskia_yuva_info_encoded_origin_t>(reinterpret_cast<SkYUVAInfo *>(yuva_info)->origin());
 }
 
 sk_matrix_t SkYUVAInfo_originMatrix(reskia_yuva_info_t *yuva_info) {
@@ -106,7 +106,7 @@ int SkYUVAInfo_numChannelsInPlane(reskia_yuva_info_t *yuva_info, int i) {
 //    return yuva_info->toYUVALocations(channelFlags);
 //}
 
-sk_yuva_info_t SkYUVAInfo_makeSubsampling(reskia_yuva_info_t *yuva_info, int subsampling) {
+sk_yuva_info_t SkYUVAInfo_makeSubsampling(reskia_yuva_info_t *yuva_info, reskia_yuva_info_subsampling_t subsampling) {
     return static_sk_yuva_info_make(reinterpret_cast<SkYUVAInfo *>(yuva_info)->makeSubsampling(static_cast<SkYUVAInfo::Subsampling>(subsampling)));
 }
 
@@ -120,23 +120,23 @@ bool SkYUVAInfo_isValid(reskia_yuva_info_t *yuva_info) {
 
 // static
 
-tuple_int_int_t SkYUVAInfo_SubsamplingFactors(int subsampling) {
+tuple_int_int_t SkYUVAInfo_SubsamplingFactors(reskia_yuva_info_subsampling_t subsampling) {
     return static_tuple_int_int_make(SkYUVAInfo::SubsamplingFactors(static_cast<SkYUVAInfo::Subsampling>(subsampling)));
 }
 
-tuple_int_int_t SkYUVAInfo_PlaneSubsamplingFactors(int config, int subsampling, int planeIdx) {
+tuple_int_int_t SkYUVAInfo_PlaneSubsamplingFactors(reskia_yuva_info_plane_config_t config, reskia_yuva_info_subsampling_t subsampling, int planeIdx) {
     return static_tuple_int_int_make(SkYUVAInfo::PlaneSubsamplingFactors(static_cast<SkYUVAInfo::PlaneConfig>(config), static_cast<SkYUVAInfo::Subsampling>(subsampling), planeIdx));
 }
 
-int SkYUVAInfo_PlaneDimensions(sk_i_size_t imageDimensions, int plane, int subsampling, int origin, reskia_i_size_t *planeDimensions) {
+int SkYUVAInfo_PlaneDimensions(sk_i_size_t imageDimensions, reskia_yuva_info_plane_config_t plane, reskia_yuva_info_subsampling_t subsampling, reskia_yuva_info_encoded_origin_t origin, reskia_i_size_t *planeDimensions) {
     return SkYUVAInfo::PlaneDimensions(static_sk_i_size_get_entity(imageDimensions), static_cast<SkYUVAInfo::PlaneConfig>(plane), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkEncodedOrigin>(origin), reinterpret_cast<SkISize *>(planeDimensions));
 }
 
-int SkYUVAInfo_NumPlanes(int config) {
+int SkYUVAInfo_NumPlanes(reskia_yuva_info_plane_config_t config) {
     return SkYUVAInfo::NumPlanes(static_cast<SkYUVAInfo::PlaneConfig>(config));
 }
 
-int SkYUVAInfo_NumChannelsInPlane(int config, int i) {
+int SkYUVAInfo_NumChannelsInPlane(reskia_yuva_info_plane_config_t config, int i) {
     return SkYUVAInfo::NumChannelsInPlane(static_cast<SkYUVAInfo::PlaneConfig>(config), i);
 }
 
@@ -144,7 +144,7 @@ int SkYUVAInfo_NumChannelsInPlane(int config, int i) {
 //     return SkYUVAInfo::GetYUVALocations(config, planeChannelFlags);
 // }
 
-bool SkYUVAInfo_HasAlpha(int config) {
+bool SkYUVAInfo_HasAlpha(reskia_yuva_info_plane_config_t config) {
     return SkYUVAInfo::HasAlpha(static_cast<SkYUVAInfo::PlaneConfig>(config));
 }
 

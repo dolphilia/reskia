@@ -61,11 +61,11 @@ sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_fon
     return static_sk_typeface_make(reinterpret_cast<SkTypeface *>(typeface)->makeClone(* reinterpret_cast<const SkFontArguments *>(arguments)));
 }
 
-void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, int behavior) {
+void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior) {
     reinterpret_cast<SkTypeface *>(typeface)->serialize(reinterpret_cast<SkWStream *>(stream), static_cast<SkTypeface::SerializeBehavior>(behavior));
 }
 
-sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, int behavior) {
+sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior) {
     return static_sk_data_make(reinterpret_cast<SkTypeface *>(typeface)->serialize(static_cast<SkTypeface::SerializeBehavior>(behavior)));
 }
 
@@ -73,11 +73,11 @@ void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni
     reinterpret_cast<SkTypeface *>(typeface)->unicharsToGlyphs(reinterpret_cast<const SkUnichar *>(uni), count, reinterpret_cast<SkGlyphID *>(glyphs));
 }
 
-int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, int encoding, uint16_t *glyphs, int maxGlyphCount) {
+int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount) {
     return reinterpret_cast<SkTypeface *>(typeface)->textToGlyphs(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkGlyphID *>(glyphs), maxGlyphCount);
 }
 
-uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, int32_t unichar) {
+uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar) {
     return reinterpret_cast<SkTypeface *>(typeface)->unicharToGlyph(static_cast<SkUnichar>(unichar));
 }
 

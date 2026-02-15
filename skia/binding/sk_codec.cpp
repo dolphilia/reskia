@@ -46,8 +46,8 @@ const void *SkCodec_getICCProfile(reskia_codec_t *codec) {
     return reinterpret_cast<SkCodec *>(codec)->getICCProfile();
 }
 
-int SkCodec_getOrigin(reskia_codec_t *codec) {
-    return reinterpret_cast<SkCodec *>(codec)->getOrigin();
+reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec) {
+    return static_cast<reskia_codec_encoded_origin_t>(reinterpret_cast<SkCodec *>(codec)->getOrigin());
 }
 
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale) {
@@ -58,20 +58,20 @@ bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubse
     return reinterpret_cast<SkCodec *>(codec)->getValidSubset(reinterpret_cast<SkIRect *>(desiredSubset));
 }
 
-int SkCodec_getEncodedFormat(reskia_codec_t *codec) {
-    return static_cast<int>(reinterpret_cast<SkCodec *>(codec)->getEncodedFormat());
+reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *codec) {
+    return static_cast<reskia_codec_encoded_image_format_t>(reinterpret_cast<SkCodec *>(codec)->getEncodedFormat());
 }
 
-int SkCodec_getPixels(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes, const reskia_codec_options_t *options) {
-    return reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkCodec::Options *>(options));
+reskia_codec_result_code_t SkCodec_getPixels(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes, const reskia_codec_options_t *options) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkCodec::Options *>(options)));
 }
 
-int SkCodec_getPixels_2(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes) {
-    return reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
+reskia_codec_result_code_t SkCodec_getPixels_2(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes));
 }
 
-int SkCodec_getPixels_3(reskia_codec_t *codec, const reskia_pixmap_t *pm, const reskia_codec_options_t *opts) {
-    return reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkPixmap *>(pm), reinterpret_cast<const SkCodec::Options *>(opts));
+reskia_codec_result_code_t SkCodec_getPixels_3(reskia_codec_t *codec, const reskia_pixmap_t *pm, const reskia_codec_options_t *opts) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->getPixels(* reinterpret_cast<const SkPixmap *>(pm), reinterpret_cast<const SkCodec::Options *>(opts)));
 }
 
 tuple_sk_image_sk_codec_result_t SkCodec_getImage(reskia_codec_t *codec, const reskia_image_info_t *info, const reskia_codec_options_t *opts) {
@@ -86,28 +86,28 @@ bool SkCodec_queryYUVAInfo(reskia_codec_t *codec, const reskia_supported_data_ty
     return reinterpret_cast<SkCodec *>(codec)->queryYUVAInfo(* reinterpret_cast<const SkYUVAPixmapInfo::SupportedDataTypes *>(supportedDataTypes), reinterpret_cast<SkYUVAPixmapInfo *>(yuvaPixmapInfo));
 }
 
-int SkCodec_getYUVAPlanes(reskia_codec_t *codec, const reskia_codec_yuva_pixmaps_t *yuvaPixmaps) {
-    return reinterpret_cast<SkCodec *>(codec)->getYUVAPlanes(* reinterpret_cast<const SkYUVAPixmaps *>(yuvaPixmaps));
+reskia_codec_result_code_t SkCodec_getYUVAPlanes(reskia_codec_t *codec, const reskia_codec_yuva_pixmaps_t *yuvaPixmaps) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->getYUVAPlanes(* reinterpret_cast<const SkYUVAPixmaps *>(yuvaPixmaps)));
 }
 
-int SkCodec_startIncrementalDecode(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, void* dst, size_t rowBytes, const reskia_codec_options_t *options) {
-    return reinterpret_cast<SkCodec *>(codec)->startIncrementalDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), dst, rowBytes, reinterpret_cast<const SkCodec::Options *>(options));
+reskia_codec_result_code_t SkCodec_startIncrementalDecode(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, void* dst, size_t rowBytes, const reskia_codec_options_t *options) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->startIncrementalDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), dst, rowBytes, reinterpret_cast<const SkCodec::Options *>(options)));
 }
 
-int SkCodec_startIncrementalDecode_2(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, void* dst, size_t rowBytes) {
-    return reinterpret_cast<SkCodec *>(codec)->startIncrementalDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), dst, rowBytes);
+reskia_codec_result_code_t SkCodec_startIncrementalDecode_2(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, void* dst, size_t rowBytes) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->startIncrementalDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), dst, rowBytes));
 }
 
-int SkCodec_incrementalDecode(reskia_codec_t *codec, int* rowsDecoded) {
-    return reinterpret_cast<SkCodec *>(codec)->incrementalDecode(rowsDecoded);
+reskia_codec_result_code_t SkCodec_incrementalDecode(reskia_codec_t *codec, int* rowsDecoded) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->incrementalDecode(rowsDecoded));
 }
 
-int SkCodec_startScanlineDecode(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, const reskia_codec_options_t *options) {
-    return reinterpret_cast<SkCodec *>(codec)->startScanlineDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), reinterpret_cast<const SkCodec::Options *>(options));
+reskia_codec_result_code_t SkCodec_startScanlineDecode(reskia_codec_t *codec, const reskia_image_info_t *dstInfo, const reskia_codec_options_t *options) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->startScanlineDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo), reinterpret_cast<const SkCodec::Options *>(options)));
 }
 
-int SkCodec_startScanlineDecode_2(reskia_codec_t *codec, const reskia_image_info_t *dstInfo) {
-    return reinterpret_cast<SkCodec *>(codec)->startScanlineDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo));
+reskia_codec_result_code_t SkCodec_startScanlineDecode_2(reskia_codec_t *codec, const reskia_image_info_t *dstInfo) {
+    return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkCodec *>(codec)->startScanlineDecode(* reinterpret_cast<const SkImageInfo *>(dstInfo)));
 }
 
 int SkCodec_getScanlines(reskia_codec_t *codec, void* dst, int countLines, size_t rowBytes) {
@@ -118,8 +118,8 @@ bool SkCodec_skipScanlines(reskia_codec_t *codec, int countLines) {
     return reinterpret_cast<SkCodec *>(codec)->skipScanlines(countLines);
 }
 
-int SkCodec_getScanlineOrder(reskia_codec_t *codec) {
-    return reinterpret_cast<SkCodec *>(codec)->getScanlineOrder();
+reskia_codec_scanline_order_t SkCodec_getScanlineOrder(reskia_codec_t *codec) {
+    return static_cast<reskia_codec_scanline_order_t>(reinterpret_cast<SkCodec *>(codec)->getScanlineOrder());
 }
 
 int SkCodec_nextScanline(reskia_codec_t *codec) {
@@ -152,11 +152,11 @@ size_t SkCodec_MinBufferedBytesNeeded() {
     return SkCodec::MinBufferedBytesNeeded();
 }
 
-const char* SkCodec_ResultToString(int result) {
+const char* SkCodec_ResultToString(reskia_codec_result_code_t result) {
     return SkCodec::ResultToString(static_cast<SkCodec::Result>(result));
 }
 
-sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, reskia_codec_result_t *result, reskia_png_chunk_reader_t *pngChunkReader, int selectionPolicy) {
+sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, reskia_codec_result_t *result, reskia_png_chunk_reader_t *pngChunkReader, reskia_codec_selection_policy_t selectionPolicy) {
     return static_sk_codec_make(SkCodec::MakeFromStream(static_sk_stream_take_entity(stream), reinterpret_cast<SkCodec::Result *>(result), reinterpret_cast<SkPngChunkReader *>(pngChunkReader), static_cast<SkCodec::SelectionPolicy>(selectionPolicy)));
 }
 

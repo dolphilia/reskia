@@ -28,6 +28,7 @@ typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
+typedef int32_t reskia_drawable_flattenable_type_t;
 
 void SkDrawable_delete(reskia_drawable_t *drawable); // owned: caller が保持する参照を release する (SkDrawable *drawable)
 void SkDrawable_draw(reskia_drawable_t *drawable, reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // (SkDrawable *drawable, SkCanvas *canvas, const SkMatrix *matrix)
@@ -38,7 +39,7 @@ uint32_t SkDrawable_getGenerationID(reskia_drawable_t *drawable); // (SkDrawable
 sk_rect_t SkDrawable_getBounds(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_rect_t
 size_t SkDrawable_approximateBytesUsed(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> size_t
 void SkDrawable_notifyDrawingChanged(reskia_drawable_t *drawable); // (SkDrawable *drawable)
-int SkDrawable_getFlattenableType(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> SkFlattenable::Type
+reskia_drawable_flattenable_type_t SkDrawable_getFlattenableType(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> SkFlattenable::Type
 sk_flattenable_factory_t SkDrawable_getFactory(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_flattenable_factory_t
 const char * SkDrawable_getTypeName(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> const char *
 void SkDrawable_flatten(reskia_drawable_t *drawable, reskia_write_buffer_t *write_buffer); // (SkDrawable *drawable, SkWriteBuffer *write_buffer)
@@ -50,7 +51,7 @@ void SkDrawable_unref(reskia_drawable_t *drawable); // owned: 参照カウント
 
 // static
 
-int SkDrawable_GetFlattenableType(); // () -> SkFlattenable::Type
+reskia_drawable_flattenable_type_t SkDrawable_GetFlattenableType(); // () -> SkFlattenable::Type
 sk_drawable_t SkDrawable_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_drawable_t
 sk_flattenable_factory_t SkDrawable_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
 const char * SkDrawable_FactoryToName(sk_flattenable_factory_t factory); // (sk_flattenable_factory_t factory) -> const char *

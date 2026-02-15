@@ -11,7 +11,7 @@ extern "C" {
 
 // static
 
-bool SkAlphaType_SkAlphaTypeIsOpaque(int at) {
+bool SkAlphaType_SkAlphaTypeIsOpaque(reskia_alpha_type_t at) {
     return SkAlphaTypeIsOpaque(static_cast<SkAlphaType>(at));
 }
 

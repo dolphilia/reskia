@@ -27,7 +27,7 @@ sk_image_t SkImages_RasterFromBitmap(const reskia_bitmap_t *bitmap) {
     return static_sk_image_make(SkImages::RasterFromBitmap(*reinterpret_cast<const SkBitmap *>(bitmap)));
 }
 
-sk_image_t SkImages_RasterFromCompressedTextureData(sk_data_t data, int width, int height, int type) {
+sk_image_t SkImages_RasterFromCompressedTextureData(sk_data_t data, int width, int height, reskia_images_texture_compression_type_t type) {
     return static_sk_image_make(SkImages::RasterFromCompressedTextureData(static_sk_data_get_entity(data), width, height, static_cast<SkTextureCompressionType>(type)));
 }
 
@@ -39,11 +39,11 @@ sk_image_t SkImages_DeferredFromGenerator(sk_image_generator_t image_generator) 
     return static_sk_image_make(SkImages::DeferredFromGenerator(static_sk_image_generator_take_entity(image_generator)));
 }
 
-sk_image_t SkImages_DeferredFromPicture(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, int bitDepth, sk_color_space_t color_space, sk_surface_props_t props) {
+sk_image_t SkImages_DeferredFromPicture(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, reskia_images_bit_depth_t bitDepth, sk_color_space_t color_space, sk_surface_props_t props) {
     return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), *reinterpret_cast<const SkISize *>(dimensions), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space), static_sk_surface_props_get_entity(props)));
 }
 
-sk_image_t SkImages_DeferredFromPicture_2(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, int bitDepth, sk_color_space_t color_space) {
+sk_image_t SkImages_DeferredFromPicture_2(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, reskia_images_bit_depth_t bitDepth, sk_color_space_t color_space) {
     return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), *reinterpret_cast<const SkISize *>(dimensions), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space)));
 }
 
