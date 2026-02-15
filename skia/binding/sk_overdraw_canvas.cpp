@@ -8,104 +8,104 @@
 
 extern "C" {
 
-void SkOverdrawCanvas_delete(void *overdraw_canvas) {
-    delete static_cast<SkOverdrawCanvas *>(overdraw_canvas);
+void SkOverdrawCanvas_delete(reskia_overdraw_canvas_t *overdraw_canvas) {
+    delete reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas);
 }
 
-void SkOverdrawCanvas_onDrawTextBlob(void *overdraw_canvas, const void *blob, SkScalar scalar1, SkScalar scalar2, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawTextBlob(static_cast<const SkTextBlob *>(blob), scalar1, scalar2, * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawTextBlob(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_text_blob_t *blob, SkScalar scalar1, SkScalar scalar2, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawTextBlob(reinterpret_cast<const SkTextBlob *>(blob), scalar1, scalar2, * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawGlyphRunList(void *overdraw_canvas, const void *glyphRunList, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawGlyphRunList(* static_cast<const sktext::GlyphRunList *>(glyphRunList), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawGlyphRunList(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_glyph_run_list_t *glyphRunList, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawGlyphRunList(* reinterpret_cast<const sktext::GlyphRunList *>(glyphRunList), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPatch(void *overdraw_canvas, const void * point1, const void * color, const void * point2, int mode, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPatch(static_cast<const SkPoint *>(point1), static_cast<const SkColor *>(color), static_cast<const SkPoint *>(point2), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawPatch(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_point_t * point1, const reskia_color_t * color, const reskia_point_t * point2, int mode, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPatch(reinterpret_cast<const SkPoint *>(point1), reinterpret_cast<const SkColor *>(color), reinterpret_cast<const SkPoint *>(point2), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPaint(void *overdraw_canvas, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPaint(* static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawPaint(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPaint(* reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawBehind(void *overdraw_canvas, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawBehind(* static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawBehind(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawBehind(* reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawRect(void *overdraw_canvas, const void *rect, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRect(* static_cast<const SkRect *>(rect), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawRect(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRect(* reinterpret_cast<const SkRect *>(rect), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawRegion(void *overdraw_canvas, const void *region, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRegion(* static_cast<const SkRegion *>(region), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawRegion(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_region_t *region, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRegion(* reinterpret_cast<const SkRegion *>(region), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawOval(void *overdraw_canvas, const void *rect, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawOval(* static_cast<const SkRect *>(rect), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawOval(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawOval(* reinterpret_cast<const SkRect *>(rect), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawArc(void *overdraw_canvas, const void *rect, float scalar1, float scalar2, bool v, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawArc(* static_cast<const SkRect *>(rect), scalar1, scalar2, v, * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawArc(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, float scalar1, float scalar2, bool v, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawArc(* reinterpret_cast<const SkRect *>(rect), scalar1, scalar2, v, * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawDRRect(void *overdraw_canvas, const void *rect1, const void *rect2, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawDRRect(* static_cast<const SkRRect *>(rect1), * static_cast<const SkRRect *>(rect2), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawDRRect(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_r_rect_t *rect1, const reskia_r_rect_t *rect2, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawDRRect(* reinterpret_cast<const SkRRect *>(rect1), * reinterpret_cast<const SkRRect *>(rect2), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawRRect(void *overdraw_canvas, const void *rect, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRRect(* static_cast<const SkRRect *>(rect), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawRRect(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_r_rect_t *rect, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawRRect(* reinterpret_cast<const SkRRect *>(rect), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPoints(void *overdraw_canvas, int mode, size_t size, const void * point, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPoints(static_cast<SkOverdrawCanvas::PointMode>(mode), size, static_cast<const SkPoint *>(point), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawPoints(reskia_overdraw_canvas_t *overdraw_canvas, int mode, size_t size, const reskia_point_t * point, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPoints(static_cast<SkOverdrawCanvas::PointMode>(mode), size, reinterpret_cast<const SkPoint *>(point), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawVerticesObject(void *overdraw_canvas, const void *vertices, int mode, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawVerticesObject(static_cast<const SkVertices *>(vertices), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawVerticesObject(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_vertices_t *vertices, int mode, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawVerticesObject(reinterpret_cast<const SkVertices *>(vertices), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawPath(void *overdraw_canvas, const void *path, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPath(* static_cast<const SkPath *>(path), * static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawPath(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_path_t *path, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPath(* reinterpret_cast<const SkPath *>(path), * reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawImage2(void *overdraw_canvas, const void *image, float scalar1, float scalar2, const void *options, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImage2(static_cast<const SkImage *>(image), scalar1, scalar2, * static_cast<const SkSamplingOptions *>(options), static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawImage2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, float scalar1, float scalar2, const reskia_sampling_options_t *options, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImage2(reinterpret_cast<const SkImage *>(image), scalar1, scalar2, * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawImageRect2(void *overdraw_canvas, const void *image, const void *rect1, const void *rect2, const void *options, const void *paint, int constraint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageRect2(static_cast<const SkImage *>(image), * static_cast<const SkRect *>(rect1), * static_cast<const SkRect *>(rect2), * static_cast<const SkSamplingOptions *>(options), static_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
+void SkOverdrawCanvas_onDrawImageRect2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_rect_t *rect1, const reskia_rect_t *rect2, const reskia_sampling_options_t *options, const reskia_paint_t *paint, int constraint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageRect2(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkRect *>(rect1), * reinterpret_cast<const SkRect *>(rect2), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkOverdrawCanvas_onDrawImageLattice2(void *overdraw_canvas, const void *image, const void *lattice, const void *rect, int mode, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageLattice2(static_cast<const SkImage *>(image), * static_cast<const SkOverdrawCanvas::Lattice *>(lattice), * static_cast<const SkRect *>(rect), static_cast<SkFilterMode>(mode), static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawImageLattice2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t *image, const reskia_lattice_t *lattice, const reskia_rect_t *rect, int mode, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawImageLattice2(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkOverdrawCanvas::Lattice *>(lattice), * reinterpret_cast<const SkRect *>(rect), static_cast<SkFilterMode>(mode), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawAtlas2(void *overdraw_canvas, const void * image, const void * form, const void * rect1, const void * color, int v, int mode, const void *options, const void *rect2, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawAtlas2(static_cast<const SkImage *>(image), static_cast<const SkRSXform *>(form), static_cast<const SkRect *>(rect1), static_cast<const SkColor *>(color), v, static_cast<SkBlendMode>(mode), * static_cast<const SkSamplingOptions *>(options), static_cast<const SkRect *>(rect2), static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawAtlas2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_t * image, const reskia_rsxform_t * form, const reskia_rect_t * rect1, const reskia_color_t * color, int v, int mode, const reskia_sampling_options_t *options, const reskia_rect_t *rect2, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawAtlas2(reinterpret_cast<const SkImage *>(image), reinterpret_cast<const SkRSXform *>(form), reinterpret_cast<const SkRect *>(rect1), reinterpret_cast<const SkColor *>(color), v, static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkRect *>(rect2), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawDrawable(void *overdraw_canvas, void *drawable, const void *matrix) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawDrawable(static_cast<SkDrawable *>(drawable), static_cast<const SkMatrix *>(matrix));
+void SkOverdrawCanvas_onDrawDrawable(reskia_overdraw_canvas_t *overdraw_canvas, reskia_drawable_t *drawable, const reskia_matrix_t *matrix) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawDrawable(reinterpret_cast<SkDrawable *>(drawable), reinterpret_cast<const SkMatrix *>(matrix));
 }
 
-void SkOverdrawCanvas_onDrawPicture(void *overdraw_canvas, const void *picture, const void *matrix, const void *paint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPicture(static_cast<const SkPicture *>(picture), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint));
+void SkOverdrawCanvas_onDrawPicture(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_picture_t *picture, const reskia_matrix_t *matrix, const reskia_paint_t *paint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawPicture(reinterpret_cast<const SkPicture *>(picture), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkOverdrawCanvas_onDrawAnnotation(void *overdraw_canvas, const void *rect, const char key[], void *value) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawAnnotation(* static_cast<const SkRect *>(rect), key, static_cast<SkData *>(value));
+void SkOverdrawCanvas_onDrawAnnotation(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const char key[], reskia_data_t *value) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawAnnotation(* reinterpret_cast<const SkRect *>(rect), key, reinterpret_cast<SkData *>(value));
 }
 
-void SkOverdrawCanvas_onDrawShadowRec(void *overdraw_canvas, const void *path, const void *rec) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawShadowRec(* static_cast<const SkPath *>(path), * static_cast<const SkDrawShadowRec *>(rec));
+void SkOverdrawCanvas_onDrawShadowRec(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_path_t *path, const reskia_draw_shadow_rec_t *rec) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawShadowRec(* reinterpret_cast<const SkPath *>(path), * reinterpret_cast<const SkDrawShadowRec *>(rec));
 }
 
-void SkOverdrawCanvas_onDrawEdgeAAQuad(void *overdraw_canvas, const void *rect, const void * point, int flags, const void *color, int mode) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAQuad(* static_cast<const SkRect *>(rect), static_cast<const SkPoint *>(point), static_cast<SkCanvas::QuadAAFlags>(flags), * static_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
+void SkOverdrawCanvas_onDrawEdgeAAQuad(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_rect_t *rect, const reskia_point_t * point, int flags, const reskia_color_4f_t *color, int mode) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(point), static_cast<SkCanvas::QuadAAFlags>(flags), * reinterpret_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
-void SkOverdrawCanvas_onDrawEdgeAAImageSet2(void *overdraw_canvas, const void * entry, int count, const void * point, const void * matrix, const void *options, const void *paint, int constraint) {
-    static_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAImageSet2(static_cast<const SkOverdrawCanvas::ImageSetEntry *>(entry), count, static_cast<const SkPoint *>(point), static_cast<const SkMatrix *>(matrix), * static_cast<const SkSamplingOptions *>(options), static_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
+void SkOverdrawCanvas_onDrawEdgeAAImageSet2(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_image_set_entry_t * entry, int count, const reskia_point_t * point, const reskia_matrix_t * matrix, const reskia_sampling_options_t *options, const reskia_paint_t *paint, int constraint) {
+    reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas)->onDrawEdgeAAImageSet2(reinterpret_cast<const SkOverdrawCanvas::ImageSetEntry *>(entry), count, reinterpret_cast<const SkPoint *>(point), reinterpret_cast<const SkMatrix *>(matrix), * reinterpret_cast<const SkSamplingOptions *>(options), reinterpret_cast<const SkPaint *>(paint), static_cast<SkOverdrawCanvas::SrcRectConstraint>(constraint));
 }
 
 }

@@ -8,16 +8,16 @@
 
 extern "C" {
 
-void SkOpBuilder_delete(void *opBuilder) {
-    delete static_cast<SkOpBuilder *>(opBuilder);
+void SkOpBuilder_delete(reskia_op_builder_t *op_builder) {
+    delete reinterpret_cast<SkOpBuilder *>(op_builder);
 }
 
-void SkOpBuilder_add(void *op_builder, const void *path, int path_operator) {
-    static_cast<SkOpBuilder *>(op_builder)->add(* static_cast<const SkPath *>(path), static_cast<SkPathOp>(path_operator));
+void SkOpBuilder_add(reskia_op_builder_t *op_builder, const reskia_path_t *path, int path_operator) {
+    reinterpret_cast<SkOpBuilder *>(op_builder)->add(* reinterpret_cast<const SkPath *>(path), static_cast<SkPathOp>(path_operator));
 }
 
-bool SkOpBuilder_resolve(void *op_builder, void *result) {
-    return static_cast<SkOpBuilder *>(op_builder)->resolve(static_cast<SkPath *>(result));
+bool SkOpBuilder_resolve(reskia_op_builder_t *op_builder, reskia_path_t *result) {
+    return reinterpret_cast<SkOpBuilder *>(op_builder)->resolve(reinterpret_cast<SkPath *>(result));
 }
 
 }

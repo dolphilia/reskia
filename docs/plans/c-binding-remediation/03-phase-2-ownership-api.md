@@ -218,11 +218,23 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkMatrix` API の `void*` を `reskia_matrix_t*`/`reskia_point_t*`/`reskia_point3_t*`/`reskia_rect_t*`/`reskia_vector_t*`/`reskia_size_t*`/`reskia_rsxform_t*` へ置換し、`SkScalar[]` 入出力を `float*`/`const float*` へ正規化
     - `skia/binding/sk_memory_stream.h` + `skia/binding/sk_memory_stream.cpp`（36/36 関数 `done`）
     - 変更内容: `SkMemoryStream` API の `void*` を `reskia_memory_stream_t*`/`reskia_data_t*` へ置換し、バッファ入出力を `uint8_t*`、スカラ out 引数を `float*`/`size_t*` へ正規化
+    - `skia/binding/sk_mesh.h` + `skia/binding/sk_mesh.cpp`（19/19 関数 `done`）
+    - 変更内容: `SkMesh` API の `void*` を `reskia_mesh_t*`/`reskia_mesh_specification_t*`/`reskia_mesh_(vertex|index)_buffer_t*`/`reskia_data_t*`/`reskia_rect_t*` へ置換し、`size_t` シグネチャを正規化
+    - `skia/binding/sk_mesh_specification.h` + `skia/binding/sk_mesh_specification.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkMeshSpecification` API の `void*` を `reskia_mesh_specification_t*`/`reskia_string_view_t*`/`reskia_runtime_effect_(uniform|child)_t*`/`reskia_color_space_sp_t*` へ置換し、`size_t` シグネチャを正規化
+    - `skia/binding/sk_meshes.h` + `skia/binding/sk_meshes.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkMeshes` API の `void*` を `reskia_mesh_(index|vertex)_buffer_sp_t*` へ置換し、バイト列入力を `const uint8_t* + size_t` へ正規化
+    - `skia/binding/sk_op_builder.h` + `skia/binding/sk_op_builder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkOpBuilder` API の `void*` を `reskia_op_builder_t*`/`reskia_path_t*` へ置換し、path 入出力シグネチャを型強化
+    - `skia/binding/sk_overdraw_canvas.h` + `skia/binding/sk_overdraw_canvas.cpp`（25/25 関数 `done`）
+    - 変更内容: `SkOverdrawCanvas` API の `void*` を `reskia_overdraw_canvas_t*` と描画関連不透明型（paint/path/image/rect/matrix など）へ置換し、`onDrawPoints` 件数を `size_t` へ正規化
+    - `skia/binding/sk_paint.h` + `skia/binding/sk_paint.cpp`（57/57 関数 `done`）
+    - 変更内容: `SkPaint` API の `void*` を `reskia_paint_t*` と shader/filter/blender/path-effect 系不透明型へ置換し、色・アルファ・bounds rect シグネチャを正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1177 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1297 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

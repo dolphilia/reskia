@@ -19,58 +19,58 @@
 
 extern "C" {
 
-void SkMeshSpecification_delete(void* spec) {
-    delete static_cast<SkMeshSpecification *>(spec);
+void SkMeshSpecification_delete(reskia_mesh_specification_t* spec) {
+    delete reinterpret_cast<SkMeshSpecification *>(spec);
 }
 
-sk_mesh_specification_attribute_t SkMeshSpecification_attributes(void* spec) {
-    return static_sk_mesh_specification_attribute_make(static_cast<SkMeshSpecification *>(spec)->attributes());
+sk_mesh_specification_attribute_t SkMeshSpecification_attributes(reskia_mesh_specification_t* spec) {
+    return static_sk_mesh_specification_attribute_make(reinterpret_cast<SkMeshSpecification *>(spec)->attributes());
 }
 
-size_t SkMeshSpecification_uniformSize(void* spec) {
-    return static_cast<SkMeshSpecification *>(spec)->uniformSize();
+size_t SkMeshSpecification_uniformSize(reskia_mesh_specification_t* spec) {
+    return reinterpret_cast<SkMeshSpecification *>(spec)->uniformSize();
 }
 
-const_sk_runtime_effect_uniform_t SkMeshSpecification_uniforms(void* spec) {
-    return static_const_sk_runtime_effect_uniform_make(static_cast<SkMeshSpecification *>(spec)->uniforms());
+const_sk_runtime_effect_uniform_t SkMeshSpecification_uniforms(reskia_mesh_specification_t* spec) {
+    return static_const_sk_runtime_effect_uniform_make(reinterpret_cast<SkMeshSpecification *>(spec)->uniforms());
 }
 
-const_sk_runtime_effect_child_t SkMeshSpecification_children(void* spec) {
-    return static_const_sk_runtime_effect_child_make(static_cast<SkMeshSpecification *>(spec)->children());
+const_sk_runtime_effect_child_t SkMeshSpecification_children(reskia_mesh_specification_t* spec) {
+    return static_const_sk_runtime_effect_child_make(reinterpret_cast<SkMeshSpecification *>(spec)->children());
 }
 
-const void * SkMeshSpecification_findChild(void* spec, void * name) {
-    return static_cast<SkMeshSpecification *>(spec)->findChild(* static_cast<std::string_view *>(name));
+const reskia_runtime_effect_child_t * SkMeshSpecification_findChild(reskia_mesh_specification_t* spec, const reskia_string_view_t * name) {
+    return reinterpret_cast<const reskia_runtime_effect_child_t *>(reinterpret_cast<SkMeshSpecification *>(spec)->findChild(* reinterpret_cast<const std::string_view *>(name)));
 }
 
-const void * SkMeshSpecification_findUniform(void* spec, void * name) {
-    return static_cast<SkMeshSpecification *>(spec)->findUniform(*static_cast<std::string_view *>(name));
+const reskia_runtime_effect_uniform_t * SkMeshSpecification_findUniform(reskia_mesh_specification_t* spec, const reskia_string_view_t * name) {
+    return reinterpret_cast<const reskia_runtime_effect_uniform_t *>(reinterpret_cast<SkMeshSpecification *>(spec)->findUniform(*reinterpret_cast<const std::string_view *>(name)));
 }
 
-const void * SkMeshSpecification_findAttribute(void* spec, void * name) {
-    return static_cast<SkMeshSpecification *>(spec)->findAttribute(*static_cast<std::string_view *>(name));
+const reskia_mesh_specification_attribute_t * SkMeshSpecification_findAttribute(reskia_mesh_specification_t* spec, const reskia_string_view_t * name) {
+    return reinterpret_cast<const reskia_mesh_specification_attribute_t *>(reinterpret_cast<SkMeshSpecification *>(spec)->findAttribute(*reinterpret_cast<const std::string_view *>(name)));
 }
 
-const void * SkMeshSpecification_findVarying(void* spec, void * name) {
-    return static_cast<SkMeshSpecification *>(spec)->findVarying(*static_cast<std::string_view *>(name));
+const reskia_mesh_specification_varying_t * SkMeshSpecification_findVarying(reskia_mesh_specification_t* spec, const reskia_string_view_t * name) {
+    return reinterpret_cast<const reskia_mesh_specification_varying_t *>(reinterpret_cast<SkMeshSpecification *>(spec)->findVarying(*reinterpret_cast<const std::string_view *>(name)));
 }
 
-size_t SkMeshSpecification_stride(void* spec) {
-    return static_cast<SkMeshSpecification *>(spec)->stride();
+size_t SkMeshSpecification_stride(reskia_mesh_specification_t* spec) {
+    return reinterpret_cast<SkMeshSpecification *>(spec)->stride();
 }
 
 // static
 
-sk_mesh_specification_result_t SkMeshSpecification_Make(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs) {
-    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs)));
+sk_mesh_specification_result_t SkMeshSpecification_Make(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs)));
 }
 
-sk_mesh_specification_result_t SkMeshSpecification_Make_2(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs, void * cs) {
-    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs), * static_cast<sk_sp<SkColorSpace> *>(cs)));
+sk_mesh_specification_result_t SkMeshSpecification_Make_2(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs), * reinterpret_cast<sk_sp<SkColorSpace> *>(cs)));
 }
 
-sk_mesh_specification_result_t SkMeshSpecification_Make_3(void * attributes, size_t vertexStride, void * varyings, const void * vs, const void * fs, void * cs, int at) {
-    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* static_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * static_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * static_cast<const SkString *>(vs), * static_cast<const SkString *>(fs), * static_cast<sk_sp<SkColorSpace> *>(cs), static_cast<SkAlphaType>(at)));
+sk_mesh_specification_result_t SkMeshSpecification_Make_3(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs, int at) {
+    return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs), * reinterpret_cast<sk_sp<SkColorSpace> *>(cs), static_cast<SkAlphaType>(at)));
 }
 
 }
