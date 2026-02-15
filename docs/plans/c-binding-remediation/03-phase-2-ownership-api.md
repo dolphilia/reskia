@@ -294,11 +294,19 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkShader` API の `void*` を `reskia_shader_t*` と関連不透明型（`reskia_image_t*` / `reskia_matrix_t*` / `reskia_write_buffer_t*` / `reskia_(de)serial_procs_t*`）へ置換し、`unsigned long` を `size_t` へ正規化
     - `skia/binding/sk_shader_mask_filter.h` + `skia/binding/sk_shader_mask_filter.cpp`（1/1 関数 `done`）
     - 変更内容: `SkShaderMaskFilter` API の `delete` 受け口を `reskia_shader_mask_filter_t*` へ型強化し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_shaders.h` + `skia/binding/sk_shaders.cpp`（4/4 関数 `done`）
+    - 変更内容: `SkShaders` API の `void*` を `reskia_color_4f_t*` / `reskia_rect_t*` へ置換し、`SkColor`/`sk_blender_t` を `reskia_color_t` / `reskia_blender_t` の意味型で正規化
+    - `skia/binding/sk_size.h` + `skia/binding/sk_size.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkSize` API の `void*` を `reskia_size_t*` / `reskia_i_size_t*` へ置換し、`Make_2` の入力シグネチャを型付き不透明ポインタへ正規化
+    - `skia/binding/sk_stream.h` + `skia/binding/sk_stream.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStream` API の `void*` を `reskia_stream_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
+    - `skia/binding/sk_stream_asset.h` + `skia/binding/sk_stream_asset.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkStreamAsset` API の `void*` を `reskia_stream_asset_t*` へ置換し、`readS/U*`/`readBool`/`readScalar`/`readPackedUInt` の out 引数を明示型へ正規化、`unsigned long` を `size_t` へ統一
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1918 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1982 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

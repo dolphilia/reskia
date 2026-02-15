@@ -5,34 +5,39 @@
 #ifndef RAIA_SKIA_SK_STREAM_ASSET_H
 #define RAIA_SKIA_SK_STREAM_ASSET_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+typedef struct reskia_stream_asset_t reskia_stream_asset_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void SkStreamAsset_delete(void *stream_asset); // (SkStreamAsset *stream_asset)
-bool SkStreamAsset_hasLength(void *stream_asset); // (SkStreamAsset *stream_asset) -> bool
-unsigned long SkStreamAsset_getLength(void *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
-int SkStreamAsset_duplicate(void *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
-int SkStreamAsset_fork(void *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
-bool SkStreamAsset_hasPosition(void *stream_asset); // (SkStreamAsset *stream_asset) -> bool
-unsigned long SkStreamAsset_getPosition(void *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
-bool SkStreamAsset_seek(void *stream_asset, unsigned long position); // (SkStreamAsset *stream_asset, size_t position) -> bool
-bool SkStreamAsset_move(void *stream_asset, long offset); // (SkStreamAsset *stream_asset, long offset) -> bool
-bool SkStreamAsset_rewind(void *stream_asset); // (SkStreamAsset *stream_asset) -> bool
-unsigned long SkStreamAsset_read(void *stream_asset, void *buffer, unsigned long size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
-unsigned long SkStreamAsset_skip(void *stream_asset, unsigned long size); // (SkStreamAsset *stream_asset, size_t size) -> size_t
-unsigned long SkStreamAsset_peek(void *stream_asset, void *buffer, unsigned long size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
-bool SkStreamAsset_isAtEnd(void *stream_asset); // (SkStreamAsset *stream_asset) -> bool
-bool SkStreamAsset_readS8(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, int8_t *i) -> bool
-bool SkStreamAsset_readS16(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, int16_t *i) -> bool
-bool SkStreamAsset_readS32(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, int32_t *i) -> bool
-bool SkStreamAsset_readU8(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, uint8_t *i) -> bool
-bool SkStreamAsset_readU16(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, uint16_t *i) -> bool
-bool SkStreamAsset_readU32(void *stream_asset, void *i); // (SkStreamAsset *stream_asset, uint32_t *i) -> bool
-bool SkStreamAsset_readBool(void *stream_asset, void *b); // (SkStreamAsset *stream_asset, bool *b) -> bool
-bool SkStreamAsset_readScalar(void *stream_asset, void *v); // (SkStreamAsset *stream_asset, SkScalar *v) -> bool
-bool SkStreamAsset_readPackedUInt(void *stream_asset, void *size); // (SkStreamAsset *stream_asset, size_t *size) -> bool
-const void *SkStreamAsset_getMemoryBase(void *stream_asset); // (SkStreamAsset *stream_asset) -> const void *
+void SkStreamAsset_delete(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset)
+bool SkStreamAsset_hasLength(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
+size_t SkStreamAsset_getLength(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
+int SkStreamAsset_duplicate(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
+int SkStreamAsset_fork(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
+bool SkStreamAsset_hasPosition(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
+size_t SkStreamAsset_getPosition(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
+bool SkStreamAsset_seek(reskia_stream_asset_t *stream_asset, size_t position); // (SkStreamAsset *stream_asset, size_t position) -> bool
+bool SkStreamAsset_move(reskia_stream_asset_t *stream_asset, long offset); // (SkStreamAsset *stream_asset, long offset) -> bool
+bool SkStreamAsset_rewind(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
+size_t SkStreamAsset_read(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
+size_t SkStreamAsset_skip(reskia_stream_asset_t *stream_asset, size_t size); // (SkStreamAsset *stream_asset, size_t size) -> size_t
+size_t SkStreamAsset_peek(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
+bool SkStreamAsset_isAtEnd(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
+bool SkStreamAsset_readS8(reskia_stream_asset_t *stream_asset, int8_t *i); // (SkStreamAsset *stream_asset, int8_t *i) -> bool
+bool SkStreamAsset_readS16(reskia_stream_asset_t *stream_asset, int16_t *i); // (SkStreamAsset *stream_asset, int16_t *i) -> bool
+bool SkStreamAsset_readS32(reskia_stream_asset_t *stream_asset, int32_t *i); // (SkStreamAsset *stream_asset, int32_t *i) -> bool
+bool SkStreamAsset_readU8(reskia_stream_asset_t *stream_asset, uint8_t *i); // (SkStreamAsset *stream_asset, uint8_t *i) -> bool
+bool SkStreamAsset_readU16(reskia_stream_asset_t *stream_asset, uint16_t *i); // (SkStreamAsset *stream_asset, uint16_t *i) -> bool
+bool SkStreamAsset_readU32(reskia_stream_asset_t *stream_asset, uint32_t *i); // (SkStreamAsset *stream_asset, uint32_t *i) -> bool
+bool SkStreamAsset_readBool(reskia_stream_asset_t *stream_asset, bool *b); // (SkStreamAsset *stream_asset, bool *b) -> bool
+bool SkStreamAsset_readScalar(reskia_stream_asset_t *stream_asset, float *v); // (SkStreamAsset *stream_asset, SkScalar *v) -> bool
+bool SkStreamAsset_readPackedUInt(reskia_stream_asset_t *stream_asset, size_t *size); // (SkStreamAsset *stream_asset, size_t *size) -> bool
+const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> const void *
 
 // static
 

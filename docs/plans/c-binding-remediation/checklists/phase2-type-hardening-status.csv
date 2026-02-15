@@ -1917,70 +1917,70 @@ void_ptr,skia/binding/sk_shader.h,skia/binding/sk_shader.cpp,SkShader_ref,26,don
 void_ptr,skia/binding/sk_shader.h,skia/binding/sk_shader.cpp,SkShader_unref,27,done,,typed opaque aliases introduced for SkShader API; shader/image/matrix/write-buffer/procs handles hardened with size_t normalization
 void_ptr|primitive,skia/binding/sk_shader.h,skia/binding/sk_shader.cpp,SkShader_Deserialize,34,done,,typed opaque aliases introduced for SkShader API; shader/image/matrix/write-buffer/procs handles hardened with size_t normalization
 void_ptr,skia/binding/sk_shader_mask_filter.h,skia/binding/sk_shader_mask_filter.cpp,SkShaderMaskFilter_delete,12,done,,typed opaque alias introduced for SkShaderMaskFilter delete API; shader-mask-filter handle hardened
-primitive|semantic,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Color,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Color_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Blend_2,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_CoordClamp,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_set,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_isZero,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_isEmpty,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_setEmpty,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_width,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_height,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_equals,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toRound,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toCeil,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toFloor,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_Make_2,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_read,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_skip,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_peek,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_isAtEnd,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS8,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS16,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS32,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU8,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU16,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU32,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readBool,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readScalar,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readPackedUInt,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_rewind,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_duplicate,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_fork,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_hasPosition,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getPosition,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_seek,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_move,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_hasLength,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getLength,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getMemoryBase,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_hasLength,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getLength,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_duplicate,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_fork,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_hasPosition,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getPosition,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_seek,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_move,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_rewind,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_read,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_skip,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_peek,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_isAtEnd,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS8,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS16,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS32,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU8,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU16,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU32,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readBool,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readScalar,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readPackedUInt,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getMemoryBase,35,todo,,from step3 manifests: function declaration requires typed-API review
+primitive|semantic,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Color,13,done,,semantic color typedef introduced (`reskia_color_t`) for SkShaders color factory
+void_ptr|suffix,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Color_2,14,done,,typed opaque aliases introduced for SkShaders API; color4f/rect handles hardened
+suffix,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_Blend_2,16,done,,semantic blender typedef introduced (`reskia_blender_t`) for overload clarity
+void_ptr,skia/binding/sk_shaders.h,skia/binding/sk_shaders.cpp,SkShaders_CoordClamp,17,done,,typed opaque aliases introduced for SkShaders API; color4f/rect handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_delete,12,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_set,13,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_isZero,14,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_isEmpty,15,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_setEmpty,16,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_width,17,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_height,18,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_equals,19,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toRound,20,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toCeil,21,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_toFloor,22,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr|suffix,skia/binding/sk_size.h,skia/binding/sk_size.cpp,SkSize_Make_2,27,done,,typed opaque aliases introduced for SkSize API; size/i-size handles hardened
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_delete,12,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_read,13,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_skip,14,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_peek,15,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_isAtEnd,16,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS8,17,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS16,18,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readS32,19,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU8,20,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU16,21,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readU32,22,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readBool,23,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readScalar,24,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_readPackedUInt,25,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_rewind,26,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_duplicate,27,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_fork,28,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_hasPosition,29,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getPosition,30,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_seek,31,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_move,32,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_hasLength,33,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getLength,34,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream.h,skia/binding/sk_stream.cpp,SkStream_getMemoryBase,35,done,,typed opaque aliases introduced for SkStream API; stream + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_delete,12,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_hasLength,13,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getLength,14,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_duplicate,15,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_fork,16,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_hasPosition,17,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getPosition,18,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_seek,19,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_move,20,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_rewind,21,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_read,22,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_skip,23,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr|primitive,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_peek,24,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_isAtEnd,25,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS8,26,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS16,27,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readS32,28,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU8,29,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU16,30,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readU32,31,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readBool,32,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readScalar,33,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_readPackedUInt,34,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
+void_ptr,skia/binding/sk_stream_asset.h,skia/binding/sk_stream_asset.cpp,SkStreamAsset_getMemoryBase,35,done,,typed opaque aliases introduced for SkStreamAsset API; stream-asset + scalar out pointers hardened with size_t normalization
 void_ptr,skia/binding/sk_stream_memory.h,skia/binding/sk_stream_memory.cpp,SkStreamMemory_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_stream_memory.h,skia/binding/sk_stream_memory.cpp,SkStreamMemory_getMemoryBase,13,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_stream_memory.h,skia/binding/sk_stream_memory.cpp,SkStreamMemory_duplicate,14,todo,,from step3 manifests: function declaration requires typed-API review
