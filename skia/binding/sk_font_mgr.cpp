@@ -4,6 +4,8 @@
 
 #include "sk_font_mgr.h"
 
+#include <utility>
+
 #include "include/core/SkFontMgr.h"
 
 #include "../static/static_sk_font_mgr.h"
@@ -34,12 +36,30 @@ void SkFontMgr_getFamilyName(reskia_font_mgr_t *font_mgr, int index, reskia_stri
     reinterpret_cast<SkFontMgr *>(font_mgr)->getFamilyName(index, reinterpret_cast<SkString *>(familyName));
 }
 
-void SkFontMgr_createStyleSet(int sk_font_style_set_out, reskia_font_mgr_t *font_mgr, int index) {
-    static_sk_font_style_set_set(sk_font_style_set_out, reinterpret_cast<SkFontMgr *>(font_mgr)->createStyleSet(index));
+reskia_status_t SkFontMgr_createStyleSet(reskia_font_mgr_t *font_mgr, int index, sk_font_style_set_t *out_style_set) {
+    if (font_mgr == nullptr || out_style_set == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    sk_sp<SkFontStyleSet> style_set = reinterpret_cast<SkFontMgr *>(font_mgr)->createStyleSet(index);
+    if (style_set == nullptr) {
+        *out_style_set = 0;
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    *out_style_set = static_sk_font_style_set_make(std::move(style_set));
+    return RESKIA_STATUS_OK;
 }
 
-void SkFontMgr_matchFamily(int sk_font_style_set_out, reskia_font_mgr_t *font_mgr, const char familyName[]) {
-    static_sk_font_style_set_set(sk_font_style_set_out, reinterpret_cast<SkFontMgr *>(font_mgr)->matchFamily(familyName));
+reskia_status_t SkFontMgr_matchFamily(reskia_font_mgr_t *font_mgr, const char familyName[], sk_font_style_set_t *out_style_set) {
+    if (font_mgr == nullptr || out_style_set == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    sk_sp<SkFontStyleSet> style_set = reinterpret_cast<SkFontMgr *>(font_mgr)->matchFamily(familyName);
+    if (style_set == nullptr) {
+        *out_style_set = 0;
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    *out_style_set = static_sk_font_style_set_make(std::move(style_set));
+    return RESKIA_STATUS_OK;
 }
 
 sk_typeface_t SkFontMgr_matchFamilyStyle(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style) {

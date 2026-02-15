@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "reskia_status.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_path.h"
 #include "../static/static_sk_point.h"
@@ -33,7 +34,7 @@ reskia_path_t *SkPath_new(); // () -> SkPath *
 reskia_path_t *SkPath_new_2(const reskia_path_t *path); // (const SkPath *path) -> SkPath *
 void SkPath_delete(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isInterpolatable(reskia_path_t *path, const reskia_path_t *compare); // (SkPath *path, const SkPath *compare) -> bool
-bool SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out); // (SkPath *path, const SkPath *ending, SkScalar weight, SkPath *out) -> bool
+reskia_status_t SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out_path); // out_path: non-null
 reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path); // (SkPath *path) -> SkPathFillType
 void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft); // (SkPath *path, SkPathFillType ft)
 bool SkPath_isInverseFillType(reskia_path_t *path); // (SkPath *path) -> bool

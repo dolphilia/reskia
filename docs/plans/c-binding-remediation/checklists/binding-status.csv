@@ -1,12 +1,12 @@
 file,status,phase,owner,note
 skia/binding/sk_alpha_type.cpp,todo,P2,,
 skia/binding/sk_alpha_type.h,todo,P2,,
-skia/binding/sk_android_codec.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
-skia/binding/sk_android_codec.h,todo,P2,,
+skia/binding/sk_android_codec.cpp,done,P2,codex,"step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）"
+skia/binding/sk_android_codec.h,done,P2,codex,"step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一"
 skia/binding/sk_annotation.cpp,todo,P2,,
 skia/binding/sk_annotation.h,todo,P2,,
-skia/binding/sk_auto_canvas_restore.cpp,todo,P2,,
-skia/binding/sk_auto_canvas_restore.h,todo,P2,,
+skia/binding/sk_auto_canvas_restore.cpp,done,P2,codex,"step5: non-ref型 delete 維持、delete static_cast を除去"
+skia/binding/sk_auto_canvas_restore.h,done,P2,codex,"step5: non-ref型 delete 規約確認（実装側 cast 修正）"
 skia/binding/sk_avif_decoder.cpp,todo,P2,,
 skia/binding/sk_avif_decoder.h,todo,P2,,
 skia/binding/sk_b_box_hierarchy.cpp,todo,P2,,
@@ -55,14 +55,14 @@ skia/binding/sk_contour_measure.cpp,todo,P2,,
 skia/binding/sk_contour_measure.h,todo,P2,,
 skia/binding/sk_contour_measure_iter.cpp,todo,P2,,
 skia/binding/sk_contour_measure_iter.h,todo,P2,,
-skia/binding/sk_corner_path_effect.cpp,todo,P2,,
-skia/binding/sk_corner_path_effect.h,todo,P2,,
+skia/binding/sk_corner_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_corner_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
 skia/binding/sk_cubic_map.cpp,todo,P2,,
 skia/binding/sk_cubic_map.h,todo,P2,,
 skia/binding/sk_cubic_resampler.cpp,todo,P2,,
 skia/binding/sk_cubic_resampler.h,todo,P2,,
-skia/binding/sk_dash_path_effect.cpp,todo,P2,,
-skia/binding/sk_dash_path_effect.h,todo,P2,,
+skia/binding/sk_dash_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_dash_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
 skia/binding/sk_data.cpp,todo,P2,,
 skia/binding/sk_data.h,todo,P2,,
 skia/binding/sk_data_table.cpp,todo,P2,,
@@ -79,8 +79,8 @@ skia/binding/sk_encoded_origin.cpp,todo,P2,,
 skia/binding/sk_encoded_origin.h,todo,P2,,
 skia/binding/sk_encoder.cpp,todo,P2,,
 skia/binding/sk_encoder.h,todo,P2,,
-skia/binding/sk_executor.cpp,todo,P2,,
-skia/binding/sk_executor.h,todo,P2,,
+skia/binding/sk_executor.cpp,done,P2,codex,"step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一"
+skia/binding/sk_executor.h,done,P2,codex,"step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一"
 skia/binding/sk_file_stream.cpp,todo,P2,,
 skia/binding/sk_file_stream.h,todo,P2,,
 skia/binding/sk_file_w_stream.cpp,todo,P2,,
@@ -93,8 +93,8 @@ skia/binding/sk_font_arguments.cpp,todo,P2,,
 skia/binding/sk_font_arguments.h,todo,P2,,
 skia/binding/sk_font_metrics.cpp,todo,P2,,
 skia/binding/sk_font_metrics.h,todo,P2,,
-skia/binding/sk_font_mgr.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
-skia/binding/sk_font_mgr.h,todo,P2,,
+skia/binding/sk_font_mgr.cpp,done,P2,codex,"step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一（phase1 step2 実施済み）"
+skia/binding/sk_font_mgr.h,done,P2,codex,"step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一"
 skia/binding/sk_font_mgr_fontconfig.cpp,todo,P2,,
 skia/binding/sk_font_mgr_fontconfig.h,todo,P2,,
 skia/binding/sk_font_style.cpp,todo,P2,,
@@ -109,10 +109,10 @@ skia/binding/sk_graphics.cpp,todo,P2,,
 skia/binding/sk_graphics.h,todo,P2,,
 skia/binding/sk_high_contrast_config.cpp,todo,P2,,
 skia/binding/sk_high_contrast_config.h,todo,P2,,
-skia/binding/sk_high_contrast_filter.cpp,todo,P2,,
-skia/binding/sk_high_contrast_filter.h,todo,P2,,
-skia/binding/sk_i_point.cpp,todo,P2,,
-skia/binding/sk_i_point.h,todo,P2,,
+skia/binding/sk_high_contrast_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_high_contrast_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
+skia/binding/sk_i_point.cpp,done,P2,codex,"step5: non-ref型 delete 維持、delete static_cast を除去"
+skia/binding/sk_i_point.h,done,P2,codex,"step5: non-ref型 delete 規約確認（実装側 cast 修正）"
 skia/binding/sk_i_rect.cpp,todo,P2,,
 skia/binding/sk_i_rect.h,todo,P2,,
 skia/binding/sk_i_size.cpp,todo,P2,,
@@ -131,8 +131,8 @@ skia/binding/sk_image_generator.cpp,todo,P2,,
 skia/binding/sk_image_generator.h,todo,P2,,
 skia/binding/sk_image_info.cpp,todo,P2,,
 skia/binding/sk_image_info.h,todo,P2,,
-skia/binding/sk_images.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
-skia/binding/sk_images.h,todo,P2,,
+skia/binding/sk_images.cpp,done,P2,codex,"step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）"
+skia/binding/sk_images.h,done,P2,codex,"step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一"
 skia/binding/sk_jpeg_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
 skia/binding/sk_jpeg_decoder.h,todo,P2,,
 skia/binding/sk_jpeg_encoder.cpp,todo,P2,,
@@ -141,8 +141,8 @@ skia/binding/sk_jpegxl_decoder.cpp,todo,P2,,
 skia/binding/sk_jpegxl_decoder.h,todo,P2,,
 skia/binding/sk_line_2d_path_effect.cpp,todo,P2,,
 skia/binding/sk_line_2d_path_effect.h,todo,P2,,
-skia/binding/sk_luma_color_filter.cpp,todo,P2,,
-skia/binding/sk_luma_color_filter.h,todo,P2,,
+skia/binding/sk_luma_color_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_luma_color_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
 skia/binding/sk_m_44.cpp,todo,P2,,
 skia/binding/sk_m_44.h,todo,P2,,
 skia/binding/sk_malloc_pixel_ref.cpp,todo,P2,,
@@ -169,12 +169,12 @@ skia/binding/sk_open_type_svg_decoder.cpp,todo,P2,,
 skia/binding/sk_open_type_svg_decoder.h,todo,P2,,
 skia/binding/sk_overdraw_canvas.cpp,todo,P2,,
 skia/binding/sk_overdraw_canvas.h,todo,P2,,
-skia/binding/sk_overdraw_color_filter.cpp,todo,P2,,
-skia/binding/sk_overdraw_color_filter.h,todo,P2,,
+skia/binding/sk_overdraw_color_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_overdraw_color_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
 skia/binding/sk_paint.cpp,todo,P2,,
 skia/binding/sk_paint.h,todo,P2,,
-skia/binding/sk_path.cpp,todo,P2,,
-skia/binding/sk_path.h,todo,P2,,
+skia/binding/sk_path.cpp,done,P2,codex,"step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一"
+skia/binding/sk_path.h,done,P2,codex,"step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一"
 skia/binding/sk_path_1d_path_effect.cpp,todo,P2,,
 skia/binding/sk_path_1d_path_effect.h,todo,P2,,
 skia/binding/sk_path_2d_path_effect.cpp,todo,P2,,
@@ -277,8 +277,8 @@ skia/binding/sk_tiled_image_utils.cpp,todo,P2,,
 skia/binding/sk_tiled_image_utils.h,todo,P2,,
 skia/binding/sk_trace_memory_dump.cpp,todo,P2,,
 skia/binding/sk_trace_memory_dump.h,todo,P2,,
-skia/binding/sk_trim_path_effect.cpp,todo,P2,,
-skia/binding/sk_trim_path_effect.h,todo,P2,,
+skia/binding/sk_trim_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
+skia/binding/sk_trim_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
 skia/binding/sk_typeface.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
 skia/binding/sk_typeface.h,todo,P2,,
 skia/binding/sk_typeface_mac.cpp,todo,P2,,

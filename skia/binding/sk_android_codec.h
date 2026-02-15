@@ -9,10 +9,12 @@
 #include <stdint.h>
 
 #include "sk_alpha_type.h"
+#include "reskia_status.h"
 #include "../static/static_sk_android_codec.h"
 #include "../static/static_sk_codec.h"
 #include "../static/static_sk_color_space.h"
 #include "../static/static_sk_i_size.h"
+#include "../static/static_sk_stream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,7 +48,7 @@ reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels(reskia_android_codec_
 reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels_2(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // (SkAndroidCodec *androidCodec, const SkImageInfo* info, void* pixels, size_t rowBytes) -> SkCodec::Result
 reskia_codec_result_code_t SkAndroidCodec_getPixels(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // (SkAndroidCodec *androidCodec, const SkImageInfo* info, void* pixels, size_t rowBytes) -> SkCodec::Result
 reskia_codec_t *SkAndroidCodec_codec(reskia_android_codec_t *androidCodec); // borrowed: returns borrowed codec pointer (SkAndroidCodec *androidCodec) -> SkCodec *
-bool SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *outInfo, int outGainmapImageStream); // borrowed: outInfo is mutable output (SkAndroidCodec *androidCodec, SkGainmapInfo* outInfo, std::unique_ptr<SkStream>* outGainmapImageStream) -> bool
+reskia_status_t SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *out_info, sk_stream_t *out_gainmap_image_stream); // out_info/out_gainmap_image_stream: non-null
 
 // static
 

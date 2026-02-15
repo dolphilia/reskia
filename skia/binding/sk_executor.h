@@ -5,7 +5,9 @@
 #ifndef RAIA_SKIA_SK_EXECUTOR_H
 #define RAIA_SKIA_SK_EXECUTOR_H
 
+#include "reskia_status.h"
 #include "../static/static_sk_executor.h"
+#include "../static/static_std_function_void_void.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +16,7 @@ extern "C" {
 typedef struct reskia_executor_t reskia_executor_t;
 
 void SkExecutor_delete(reskia_executor_t *executor); // (SkExecutor *executor)
-void SkExecutor_add(int function_void_void_key_in, reskia_executor_t *executor); // (int function_void_void_key_in, SkExecutor *executor)
+reskia_status_t SkExecutor_add(reskia_executor_t *executor, function_void_void_t function_key); // executor: non-null, function_key: 有効キー必須
 void SkExecutor_borrow(reskia_executor_t *executor); // (SkExecutor *executor)
 
 // static

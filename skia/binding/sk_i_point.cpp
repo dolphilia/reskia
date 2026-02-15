@@ -13,27 +13,27 @@
 extern "C" {
 
 void SkIPoint_delete(void * i_point) {
-    delete static_cast<SkIPoint *>(i_point);
+    delete reinterpret_cast<SkIPoint *>(i_point);
 }
 
 int32_t SkIPoint_x(void * i_point) {
-    return static_cast<SkIPoint *>(i_point)->x();
+    return reinterpret_cast<SkIPoint *>(i_point)->x();
 }
 
 int32_t SkIPoint_y(void * i_point) {
-    return static_cast<SkIPoint *>(i_point)->y();
+    return reinterpret_cast<SkIPoint *>(i_point)->y();
 }
 
 bool SkIPoint_isZero(void * i_point) {
-    return static_cast<SkIPoint *>(i_point)->isZero();
+    return reinterpret_cast<SkIPoint *>(i_point)->isZero();
 }
 
 void SkIPoint_set(void *  i_point, int32_t x, int32_t y) {
-    static_cast<SkIPoint *>(i_point)->set(x, y);
+    reinterpret_cast<SkIPoint *>(i_point)->set(x, y);
 }
 
 bool SkIPoint_equals(void * i_point, int32_t x, int32_t y) {
-    return static_cast<SkIPoint *>(i_point)->equals(x, y);
+    return reinterpret_cast<SkIPoint *>(i_point)->equals(x, y);
 }
 
 // static

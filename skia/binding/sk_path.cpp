@@ -36,8 +36,16 @@ bool SkPath_isInterpolatable(reskia_path_t *path, const reskia_path_t *compare) 
     return reinterpret_cast<SkPath *>(path)->isInterpolatable(* reinterpret_cast<const SkPath *>(compare));
 }
 
-bool SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out) {
-    return reinterpret_cast<SkPath *>(path)->interpolate(* reinterpret_cast<const SkPath *>(ending), weight, reinterpret_cast<SkPath *>(out));
+reskia_status_t SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out_path) {
+    if (path == nullptr || ending == nullptr || out_path == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    const bool ok = reinterpret_cast<SkPath *>(path)->interpolate(
+        *reinterpret_cast<const SkPath *>(ending),
+        weight,
+        reinterpret_cast<SkPath *>(out_path)
+    );
+    return ok ? RESKIA_STATUS_OK : RESKIA_STATUS_INTERNAL_ERROR;
 }
 
 reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path) {

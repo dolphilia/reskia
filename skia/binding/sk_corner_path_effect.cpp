@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkCornerPathEffect_delete(void * cornerPathEffect) {
-    delete static_cast<SkCornerPathEffect *>(cornerPathEffect);
+    reinterpret_cast<SkPathEffect *>(cornerPathEffect)->unref();
 }
 
 // static

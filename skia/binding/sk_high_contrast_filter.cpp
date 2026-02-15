@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkHighContrastFilter_delete(void * highContrastFilter) {
-    delete static_cast<SkHighContrastFilter *>(highContrastFilter);
+    reinterpret_cast<SkColorFilter *>(highContrastFilter)->unref();
 }
 
 // static

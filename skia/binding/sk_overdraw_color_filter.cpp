@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkOverdrawColorFilter_delete(void * overdrawColorFilter) {
-    delete static_cast<SkOverdrawColorFilter *>(overdrawColorFilter);
+    reinterpret_cast<SkColorFilter *>(overdrawColorFilter)->unref();
 }
 
 // static

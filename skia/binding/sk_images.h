@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+
+#include "reskia_status.h"
 #include "../static/static_sk_color_space.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_image.h"
@@ -39,7 +41,7 @@ sk_image_t SkImages_DeferredFromPicture_2(sk_picture_t picture, const reskia_i_s
 sk_image_t SkImages_RasterFromPixmapCopy(const reskia_pixmap_t *pixmap); // (const SkPixmap *pixmap) -> sk_image_t
 sk_image_t SkImages_RasterFromPixmap(const reskia_pixmap_t *pixmap, void (*rasterReleaseProc)(const void *, void *), void *releaseContext); // (const SkPixmap *pixmap, SkImages::RasterReleaseProc rasterReleaseProc, SkImages::ReleaseContext releaseContext) -> sk_image_t
 sk_image_t SkImages_RasterFromData(const reskia_image_info_t *info, sk_data_t data, size_t rowBytes); // (const SkImageInfo *info, sk_data_t data, size_t rowBytes) -> sk_image_t
-sk_image_t SkImages_MakeWithFilter(sk_image_t image, const reskia_image_filter_t *filter, const reskia_i_rect_t *subset, const reskia_i_rect_t *clipBounds, reskia_i_rect_t *outSubset, reskia_i_point_t *offset); // (sk_image_t image, const SkImageFilter *filter, const SkIRect *subset, const SkIRect *clipBounds, SkIRect *outSubset, SkIPoint *offset) -> sk_image_t
+reskia_status_t SkImages_MakeWithFilter(sk_image_t image, const reskia_image_filter_t *filter, const reskia_i_rect_t *subset, const reskia_i_rect_t *clip_bounds, reskia_i_rect_t *out_subset, reskia_i_point_t *out_offset, sk_image_t *out_image); // out_subset/out_offset/out_image: non-null
 
 #ifdef __cplusplus
 }

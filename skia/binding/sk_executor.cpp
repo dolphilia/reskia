@@ -4,6 +4,9 @@
 
 #include "sk_executor.h"
 
+#include <functional>
+#include <utility>
+
 #include "include/core/SkExecutor.h"
 
 #include "../static/static_sk_executor.h"
@@ -18,8 +21,16 @@ void SkExecutor_delete(reskia_executor_t *executor) {
     delete reinterpret_cast<SkExecutor *>(executor);
 }
 
-void SkExecutor_add(int function_void_void_key_in, reskia_executor_t *executor) {
-    reinterpret_cast<SkExecutor *>(executor)->add(static_function_void_void_get_entity(function_void_void_key_in));
+reskia_status_t SkExecutor_add(reskia_executor_t *executor, function_void_void_t function_key) {
+    if (executor == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    std::function<void(void)> task = static_function_void_void_get_entity(function_key);
+    if (!task) {
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    reinterpret_cast<SkExecutor *>(executor)->add(std::move(task));
+    return RESKIA_STATUS_OK;
 }
 
 void SkExecutor_borrow(reskia_executor_t *executor) {

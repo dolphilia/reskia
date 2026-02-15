@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkDashPathEffect_delete(void * dashPathEffect) {
-    delete static_cast<SkDashPathEffect *>(dashPathEffect);
+    reinterpret_cast<SkPathEffect *>(dashPathEffect)->unref();
 }
 
 // static

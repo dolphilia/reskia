@@ -575,10 +575,43 @@ cmake --build skia/cmake-build-local -j 8
     - `unsigned long` を含むヘッダ: 64件
     - `unsigned int` を含むヘッダ: 36件
     - いずれかを含むヘッダ: 75件
-- [ ] 4. IN/OUT引数規約の統一
-  - 設計方針を追加（`*_in/*_out` 廃止、`reskia_status_t + typed out pointer` へ移行）
-  - 優先対象3関数（`SkFontMgr_createStyleSet`, `SkFontMgr_matchFamily`, `SkExecutor_add`）から着手
-- [ ] 5. フェーズ2検証
+- [x] 4. IN/OUT引数規約の統一
+  - 実施日: 2026-02-16
+  - 追加: `skia/binding/reskia_status.h`（`reskia_status_t` と `RESKIA_STATUS_*` を定義）
+  - 実装:
+    - `SkFontMgr_createStyleSet` を `reskia_status_t` 戻り値 + `sk_font_style_set_t* out_style_set` に変更
+    - `SkFontMgr_matchFamily` を `reskia_status_t` 戻り値 + `sk_font_style_set_t* out_style_set` に変更
+    - `SkExecutor_add` を `reskia_status_t` 戻り値 + `function_void_void_t function_key` に変更
+    - `SkAndroidCodec_getAndroidGainmap` を `reskia_status_t` 戻り値 + `out_info/out_gainmap_image_stream` へ変更
+    - `SkImages_MakeWithFilter` を `reskia_status_t` 戻り値 + `out_subset/out_offset/out_image` へ変更
+    - `SkPath_interpolate` を `reskia_status_t` 戻り値 + `out_path` へ変更
+  - 規約統一:
+    - `in`: 値引数/`const` ポインタ
+    - `out`: 末尾 `*_t* out_...`
+    - 返却: `RESKIA_STATUS_OK` / `RESKIA_STATUS_INVALID_ARGUMENT` / `RESKIA_STATUS_NOT_FOUND`
+  - NULL許容/非許容:
+    - `out_style_set` は non-null 必須
+    - `font_mgr` / `executor` は non-null 必須
+    - `familyName` は nullable として許容
+- [x] 5. フェーズ2検証
+  - 初回実施日: 2026-02-16 07:27:59 JST
+  - 実行コマンド:
+    - `rg -n "delete static_cast<Sk.*>" skia/binding/*.cpp`
+    - `rg -n "\bref\(|\bunref\(" skia/binding/*.cpp`
+    - `cmake --build skia/cmake-build-local -j 8`
+  - 初回結果:
+    - `delete static_cast<Sk.*>`: 8件ヒット（`sk_auto_canvas_restore.cpp`, `sk_corner_path_effect.cpp`, `sk_dash_path_effect.cpp`, `sk_i_point.cpp`, `sk_high_contrast_filter.cpp`, `sk_overdraw_color_filter.cpp`, `sk_luma_color_filter.cpp`, `sk_trim_path_effect.cpp`）
+    - `ref()/unref()`: 複数ヒット（RefCounted API の retain/release 運用として継続中）
+    - ビルド: `Built target reskia`
+  - 再実施日: 2026-02-16 07:30:20 JST
+  - 修正:
+    - RefCounted型の `*_delete` を `unref()` 委譲へ変更（`SkCornerPathEffect`, `SkDashPathEffect`, `SkTrimPathEffect`, `SkHighContrastFilter`, `SkOverdrawColorFilter`, `SkLumaColorFilter`）
+    - 非RefCounted型（`SkAutoCanvasRestore`, `SkIPoint`）は `delete` 維持で `static_cast` を `reinterpret_cast` へ置換
+  - 再実施結果:
+    - `delete static_cast<Sk.*>`: 0件
+    - `ref()/unref()`: 複数ヒット（RefCounted API の retain/release 運用として継続）
+    - ビルド: `Built target reskia`
+  - 判定: Step 5 完了
 
 ## 完了条件
 

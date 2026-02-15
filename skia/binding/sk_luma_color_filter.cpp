@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkLumaColorFilter_delete(void * lumaColorFilter) {
-    delete static_cast<SkLumaColorFilter *>(lumaColorFilter);
+    reinterpret_cast<SkColorFilter *>(lumaColorFilter)->unref();
 }
 
 // static

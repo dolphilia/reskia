@@ -6,9 +6,11 @@
 #define RAIA_SKIA_SK_FONT_MGR_H
 
 #include <stdint.h>
+#include "reskia_status.h"
 #include "../static/static_sk_data.h"
 #include "../static/static_sk_font_mgr.h"
 #include "../static/static_sk_font_style.h"
+#include "../static/static_sk_font_style_set.h"
 #include "../static/static_sk_stream_asset.h"
 #include "../static/static_sk_typeface.h"
 
@@ -25,8 +27,8 @@ typedef int32_t reskia_font_mgr_unichar_t;
 void SkFontMgr_delete(reskia_font_mgr_t *font_mgr); // owned: caller が保持する参照を release する (SkFontMgr *font_mgr)
 int SkFontMgr_countFamilies(reskia_font_mgr_t *font_mgr); // (SkFontMgr *font_mgr) -> int
 void SkFontMgr_getFamilyName(reskia_font_mgr_t *font_mgr, int index, reskia_string_t *familyName); // (SkFontMgr *font_mgr, int index, SkString *familyName)
-void SkFontMgr_createStyleSet(int sk_font_style_set_out, reskia_font_mgr_t *font_mgr, int index); // (int sk_font_style_set_out, SkFontMgr *font_mgr, int index)
-void SkFontMgr_matchFamily(int sk_font_style_set_out, reskia_font_mgr_t *font_mgr, const char familyName[]); // (int sk_font_style_set_out, SkFontMgr *font_mgr, const char familyName[])
+reskia_status_t SkFontMgr_createStyleSet(reskia_font_mgr_t *font_mgr, int index, sk_font_style_set_t *out_style_set); // out_style_set: non-null, 書き込み先
+reskia_status_t SkFontMgr_matchFamily(reskia_font_mgr_t *font_mgr, const char familyName[], sk_font_style_set_t *out_style_set); // familyName: nullable, out_style_set: non-null
 sk_typeface_t SkFontMgr_matchFamilyStyle(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style); // (SkFontMgr *font_mgr, const char familyName[], const SkFontStyle *font_style) -> sk_typeface_t
 sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style, const char *bcp47[], int bcp47Count, reskia_font_mgr_unichar_t character); // (SkFontMgr *font_mgr, const char familyName[], const SkFontStyle *font_style, const char *bcp47[], int bcp47Count, SkUnichar character) -> sk_typeface_t
 sk_typeface_t SkFontMgr_makeFromData(reskia_font_mgr_t *font_mgr, sk_data_t data, int ttcIndex); // (SkFontMgr *font_mgr, sk_data_t data, int ttcIndex) -> sk_typeface_t

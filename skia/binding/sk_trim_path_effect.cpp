@@ -13,7 +13,7 @@
 extern "C" {
 
 void SkTrimPathEffect_delete(void * trimPathEffect) {
-    delete static_cast<SkTrimPathEffect *>(trimPathEffect);
+    reinterpret_cast<SkPathEffect *>(trimPathEffect)->unref();
 }
 
 // static

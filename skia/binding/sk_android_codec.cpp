@@ -4,6 +4,8 @@
 
 #include "sk_android_codec.h"
 
+#include <utility>
+
 #include "include/codec/SkAndroidCodec.h"
 
 #include "../static/static_sk_color_space.h"
@@ -84,8 +86,21 @@ reskia_codec_t *SkAndroidCodec_codec(reskia_android_codec_t *androidCodec) {
     return reinterpret_cast<reskia_codec_t *>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->codec());
 }
 
-bool SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *outInfo, sk_stream_ptr_t outGainmapImageStream) {
-    return reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(reinterpret_cast<SkGainmapInfo *>(outInfo), static_sk_stream_ptr_get_entity(outGainmapImageStream));
+reskia_status_t SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *out_info, sk_stream_t *out_gainmap_image_stream) {
+    if (androidCodec == nullptr || out_info == nullptr || out_gainmap_image_stream == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    std::unique_ptr<SkStream> gainmap_stream;
+    const bool ok = reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidGainmap(
+        reinterpret_cast<SkGainmapInfo *>(out_info),
+        &gainmap_stream
+    );
+    if (!ok || gainmap_stream == nullptr) {
+        *out_gainmap_image_stream = 0;
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    *out_gainmap_image_stream = static_sk_stream_make(std::move(gainmap_stream));
+    return RESKIA_STATUS_OK;
 }
 
 // static

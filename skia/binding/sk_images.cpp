@@ -4,6 +4,8 @@
 
 #include "sk_images.h"
 
+#include <utility>
+
 #include "include/core/SkImage.h"
 #include "include/core/SkSurfaceProps.h"
 
@@ -59,8 +61,24 @@ sk_image_t SkImages_RasterFromData(const reskia_image_info_t *info, sk_data_t da
     return static_sk_image_make(SkImages::RasterFromData(*reinterpret_cast<const SkImageInfo *>(info), static_sk_data_get_entity(data), rowBytes));
 }
 
-sk_image_t SkImages_MakeWithFilter(sk_image_t image, const reskia_image_filter_t *filter, const reskia_i_rect_t *subset, const reskia_i_rect_t *clipBounds, reskia_i_rect_t *outSubset, reskia_i_point_t *offset) {
-    return static_sk_image_make(SkImages::MakeWithFilter(static_sk_image_get_entity(image), reinterpret_cast<const SkImageFilter *>(filter), *reinterpret_cast<const SkIRect *>(subset), *reinterpret_cast<const SkIRect *>(clipBounds), reinterpret_cast<SkIRect *>(outSubset), reinterpret_cast<SkIPoint *>(offset)));
+reskia_status_t SkImages_MakeWithFilter(sk_image_t image, const reskia_image_filter_t *filter, const reskia_i_rect_t *subset, const reskia_i_rect_t *clip_bounds, reskia_i_rect_t *out_subset, reskia_i_point_t *out_offset, sk_image_t *out_image) {
+    if (subset == nullptr || clip_bounds == nullptr || out_subset == nullptr || out_offset == nullptr || out_image == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    sk_sp<SkImage> image_with_filter = SkImages::MakeWithFilter(
+        static_sk_image_get_entity(image),
+        reinterpret_cast<const SkImageFilter *>(filter),
+        *reinterpret_cast<const SkIRect *>(subset),
+        *reinterpret_cast<const SkIRect *>(clip_bounds),
+        reinterpret_cast<SkIRect *>(out_subset),
+        reinterpret_cast<SkIPoint *>(out_offset)
+    );
+    if (image_with_filter == nullptr) {
+        *out_image = 0;
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    *out_image = static_sk_image_make(std::move(image_with_filter));
+    return RESKIA_STATUS_OK;
 }
 
 }
