@@ -14,8 +14,8 @@
 
 extern "C" {
 
-void SkShaderMaskFilter_delete(void *shaderMaskFilter) {
-    delete static_cast<SkShaderMaskFilter *>(shaderMaskFilter);
+void SkShaderMaskFilter_delete(reskia_shader_mask_filter_t *shaderMaskFilter) {
+    delete reinterpret_cast<SkShaderMaskFilter *>(shaderMaskFilter);
 }
 
 // static

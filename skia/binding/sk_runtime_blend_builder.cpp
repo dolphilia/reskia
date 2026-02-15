@@ -27,36 +27,36 @@ extern "C" {
 //SkRuntimeBlendBuilder(const SkRuntimeBlendBuilder &)=delete
 //SkRuntimeBlendBuilder & operator=(const SkRuntimeBlendBuilder &)=delete
 
-void *SkRuntimeBlendBuilder_new(sk_runtime_effect_t runtime_effect) {
-    return new SkRuntimeBlendBuilder(static_sk_runtime_effect_get_entity(runtime_effect));
+reskia_runtime_blend_builder_t *SkRuntimeBlendBuilder_new(sk_runtime_effect_t runtime_effect) {
+    return reinterpret_cast<reskia_runtime_blend_builder_t *>(new SkRuntimeBlendBuilder(static_sk_runtime_effect_get_entity(runtime_effect)));
 }
 
-void SkRuntimeBlendBuilder_delete(void *runtime_blend_builder) {
-    delete static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder);
+void SkRuntimeBlendBuilder_delete(reskia_runtime_blend_builder_t *runtime_blend_builder) {
+    delete reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder);
 }
 
-sk_blender_t SkRuntimeBlendBuilder_makeBlender(void *runtime_blend_builder) {
-    return static_sk_blender_make(static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->makeBlender());
+sk_blender_t SkRuntimeBlendBuilder_makeBlender(reskia_runtime_blend_builder_t *runtime_blend_builder) {
+    return static_sk_blender_make(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->makeBlender());
 }
 
-const void * SkRuntimeBlendBuilder_effect(void *runtime_blend_builder) {
-    return static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->effect();
+const reskia_runtime_effect_t *SkRuntimeBlendBuilder_effect(reskia_runtime_blend_builder_t *runtime_blend_builder) {
+    return reinterpret_cast<const reskia_runtime_effect_t *>(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->effect());
 }
 
-sk_runtime_effect_builder_builder_uniform_t SkRuntimeBlendBuilder_uniform(void *runtime_blend_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->uniform(static_string_view_get_entity(name)));
+sk_runtime_effect_builder_builder_uniform_t SkRuntimeBlendBuilder_uniform(reskia_runtime_blend_builder_t *runtime_blend_builder, string_view_t name) {
+    return static_sk_runtime_effect_builder_builder_uniform_make(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->uniform(static_string_view_get_entity(name)));
 }
 
-sk_runtime_effect_builder_builder_child_t SkRuntimeBlendBuilder_child(void *runtime_blend_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->child(static_string_view_get_entity(name)));
+sk_runtime_effect_builder_builder_child_t SkRuntimeBlendBuilder_child(reskia_runtime_blend_builder_t *runtime_blend_builder, string_view_t name) {
+    return static_sk_runtime_effect_builder_builder_child_make(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->child(static_string_view_get_entity(name)));
 }
 
-const_sk_data_t SkRuntimeBlendBuilder_uniforms(void *runtime_blend_builder) {
-    return static_const_sk_data_make(static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->uniforms());
+const_sk_data_t SkRuntimeBlendBuilder_uniforms(reskia_runtime_blend_builder_t *runtime_blend_builder) {
+    return static_const_sk_data_make(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->uniforms());
 }
 
-const_sk_runtime_effect_child_ptr_t SkRuntimeBlendBuilder_children(void *runtime_blend_builder) {
-    return static_const_sk_runtime_effect_child_ptr_make(static_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->children());
+const_sk_runtime_effect_child_ptr_t SkRuntimeBlendBuilder_children(reskia_runtime_blend_builder_t *runtime_blend_builder) {
+    return static_const_sk_runtime_effect_child_ptr_make(reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder)->children());
 }
 
 }

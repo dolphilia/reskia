@@ -276,11 +276,29 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkRefCntBase` API の `void*` を `reskia_ref_cnt_base_t*` へ置換し、`new/ref/unref/unique` のシグネチャを型付きハンドルへ正規化
     - `skia/binding/sk_region.h` + `skia/binding/sk_region.cpp`（34/34 関数 `done`）
     - 変更内容: `SkRegion` API の `void*` を `reskia_region_t*` / `reskia_i_rect_t*` / `reskia_path_t*` へ置換し、`write/readFromMemory` の `unsigned long` を `size_t` に正規化
+    - `skia/binding/sk_rsx_form.h` + `skia/binding/sk_rsx_form.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkRSXform` API の `void*` を `reskia_rsxform_t*` / `reskia_size_t*` / `reskia_point_t*` へ置換し、`toQuad/toTriStrip` 出力配列の型情報を強化
+    - `skia/binding/sk_runtime_blend_builder.h` + `skia/binding/sk_runtime_blend_builder.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkRuntimeBlendBuilder` API の `void*` / `const void*` を `reskia_runtime_blend_builder_t*` / `const reskia_runtime_effect_t*` へ置換し、builder/effect ハンドルの型情報を強化
+    - `skia/binding/sk_runtime_color_filter_builder.h` + `skia/binding/sk_runtime_color_filter_builder.cpp`（8/8 関数 `done`）
+    - 変更内容: `SkRuntimeColorFilterBuilder` API の `void*` / `const void*` を `reskia_runtime_color_filter_builder_t*` / `const reskia_runtime_effect_t*` へ置換し、builder/effect ハンドルの型情報を強化
+    - `skia/binding/sk_runtime_effect.h` + `skia/binding/sk_runtime_effect.cpp`（26/26 関数 `done`）
+    - 変更内容: `SkRuntimeEffect` API の `void*` / `const void*` を `reskia_runtime_effect_t*` と関連不透明型（`reskia_runtime_effect_options_t*` / `reskia_matrix_t*` / `reskia_i_point_t*` / `reskia_runtime_effect_(uniform|child)_t*`）へ置換し、`unsigned long` を `size_t` へ正規化
+    - `skia/binding/sk_runtime_effect_builder.h` + `skia/binding/sk_runtime_effect_builder.cpp`（6/6 関数 `done`）
+    - 変更内容: `SkRuntimeEffectBuilder` API の `void*` / `const void*` を `reskia_runtime_effect_builder_t*` / `const reskia_runtime_effect_t*` へ置換し、builder/effect ハンドルの型情報を強化
+    - `skia/binding/sk_runtime_shader_builder.h` + `skia/binding/sk_runtime_shader_builder.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkRuntimeShaderBuilder` API の `void*` / `const void*` を `reskia_runtime_shader_builder_t*` / `const reskia_runtime_effect_t*` / `const reskia_matrix_t*` へ置換し、copy-ctor/new 系を含む builder ハンドルの型情報を強化
+    - `skia/binding/sk_sampling_options.h` + `skia/binding/sk_sampling_options.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkSamplingOptions` API の `void*` を `reskia_sampling_options_t*` / `reskia_cubic_resampler_t*` へ置換し、new/copy/delete/isAniso のシグネチャを型付きハンドルへ正規化
+    - `skia/binding/sk_shader.h` + `skia/binding/sk_shader.cpp`（17/17 関数 `done`）
+    - 変更内容: `SkShader` API の `void*` を `reskia_shader_t*` と関連不透明型（`reskia_image_t*` / `reskia_matrix_t*` / `reskia_write_buffer_t*` / `reskia_(de)serial_procs_t*`）へ置換し、`unsigned long` を `size_t` へ正規化
+    - `skia/binding/sk_shader_mask_filter.h` + `skia/binding/sk_shader_mask_filter.cpp`（1/1 関数 `done`）
+    - 変更内容: `SkShaderMaskFilter` API の `delete` 受け口を `reskia_shader_mask_filter_t*` へ型強化し、実装側ポインタ変換を `reinterpret_cast` に統一
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1829 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1918 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

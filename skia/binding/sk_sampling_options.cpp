@@ -18,32 +18,32 @@ extern "C" {
 //    return new SkSamplingOptions();
 //}
 
-void *SkSamplingOptions_new() {
-    return new SkSamplingOptions();
+reskia_sampling_options_t *SkSamplingOptions_new() {
+    return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions());
 }
 
-void *SkSamplingOptions_new_2(const void *options) {
-    return new SkSamplingOptions(* static_cast<const SkSamplingOptions *>(options));
+reskia_sampling_options_t *SkSamplingOptions_new_2(const reskia_sampling_options_t *options) {
+    return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions(*reinterpret_cast<const SkSamplingOptions *>(options)));
 }
 
-void *SkSamplingOptions_new_3(int fm, int mm) {
-    return new SkSamplingOptions(static_cast<SkFilterMode>(fm), static_cast<SkMipmapMode>(mm));
+reskia_sampling_options_t *SkSamplingOptions_new_3(int fm, int mm) {
+    return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions(static_cast<SkFilterMode>(fm), static_cast<SkMipmapMode>(mm)));
 }
 
-void *SkSamplingOptions_new_4(int fm) {
-    return new SkSamplingOptions(static_cast<SkFilterMode>(fm));
+reskia_sampling_options_t *SkSamplingOptions_new_4(int fm) {
+    return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions(static_cast<SkFilterMode>(fm)));
 }
 
-void *SkSamplingOptions_new_5(const void *c) {
-    return new SkSamplingOptions(* static_cast<const SkCubicResampler *>(c));
+reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_t *c) {
+    return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions(*reinterpret_cast<const SkCubicResampler *>(c)));
 }
 
-void SkSamplingOptions_delete(void *sampling_options) {
-    delete static_cast<SkSamplingOptions *>(sampling_options);
+void SkSamplingOptions_delete(reskia_sampling_options_t *sampling_options) {
+    delete reinterpret_cast<SkSamplingOptions *>(sampling_options);
 }
 
-bool SkSamplingOptions_isAniso(void *sampling_options) {
-    return static_cast<SkSamplingOptions *>(sampling_options)->isAniso();
+bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options) {
+    return reinterpret_cast<SkSamplingOptions *>(sampling_options)->isAniso();
 }
 
 // static
