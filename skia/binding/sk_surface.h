@@ -8,6 +8,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_image.h"
+#include "../static/static_sk_image_info.h"
+#include "../static/static_sk_surface.h"
+
 typedef struct reskia_backend_semaphore_t reskia_backend_semaphore_t;
 typedef struct reskia_backend_texture_t reskia_backend_texture_t;
 typedef struct reskia_bitmap_t reskia_bitmap_t;
@@ -32,7 +36,7 @@ void SkSurface_delete(reskia_surface_t *surface); // owned: caller が保持す�
 bool SkSurface_isCompatible(reskia_surface_t *surface, const reskia_surface_characterization_t *characterization); // (SkSurface *surface, const GrSurfaceCharacterization *characterization) -> bool
 int SkSurface_width(reskia_surface_t *surface); // (SkSurface *surface) -> int
 int SkSurface_height(reskia_surface_t *surface); // (SkSurface *surface) -> int
-int SkSurface_imageInfo(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_info_t
+sk_image_info_t SkSurface_imageInfo(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_info_t
 uint32_t SkSurface_generationID(reskia_surface_t *surface); // (SkSurface *surface) -> uint32_t
 void SkSurface_notifyContentWillChange(reskia_surface_t *surface, int mode); // (SkSurface *surface, SkSurface::ContentChangeMode mode)
 reskia_recording_context_t *SkSurface_recordingContext(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> GrRecordingContext *
@@ -40,10 +44,10 @@ reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface); // bo
 bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, int mode, void(* proc)(void *), void * context); // (SkSurface *surface, const GrBackendTexture *backendTexture, GrSurfaceOrigin origin, SkSurface::ContentChangeMode mode, SkSurface::TextureReleaseProc proc, SkSurface::ReleaseContext context) -> bool
 reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> SkCanvas *
 int SkSurface_capabilities(reskia_surface_t *surface); // (SkSurface *surface) -> const_sk_capabilities_t
-int SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo); // (SkSurface *surface, const SkImageInfo *imageInfo) -> sk_surface_t
-int SkSurface_makeSurface_2(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
-int SkSurface_makeImageSnapshot(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_t
-int SkSurface_makeImageSnapshot_2(reskia_surface_t *surface, const reskia_i_rect_t *bounds); // (SkSurface *surface, const SkIRect *bounds) -> sk_image_t
+sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo); // (SkSurface *surface, const SkImageInfo *imageInfo) -> sk_surface_t
+sk_surface_t SkSurface_makeSurface_2(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
+sk_image_t SkSurface_makeImageSnapshot(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_t
+sk_image_t SkSurface_makeImageSnapshot_2(reskia_surface_t *surface, const reskia_i_rect_t *bounds); // (SkSurface *surface, const SkIRect *bounds) -> sk_image_t
 void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint)
 void SkSurface_draw_2(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkPaint *paint)
 bool SkSurface_peekPixels(reskia_surface_t *surface, reskia_pixmap_t *pixmap); // (SkSurface *surface, SkPixmap *pixmap) -> bool

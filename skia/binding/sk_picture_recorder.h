@@ -7,6 +7,9 @@
 
 #include <stdint.h>
 
+#include "../static/static_sk_drawable.h"
+#include "../static/static_sk_picture.h"
+
 typedef struct reskia_bbh_factory_t reskia_bbh_factory_t;
 typedef struct reskia_canvas_t reskia_canvas_t;
 typedef struct reskia_picture_recorder_t reskia_picture_recorder_t;
@@ -22,9 +25,9 @@ reskia_canvas_t *SkPictureRecorder_beginRecording(reskia_picture_recorder_t *pic
 reskia_canvas_t *SkPictureRecorder_beginRecording_2(reskia_picture_recorder_t *picture_recorder, const reskia_rect_t *bounds, reskia_bbh_factory_t *bbhFactory); // (SkPictureRecorder *picture_recorder, const SkRect *bounds, SkBBHFactory *bbhFactory) -> SkCanvas *
 reskia_canvas_t *SkPictureRecorder_beginRecording_3(reskia_picture_recorder_t *picture_recorder, float width, float height, reskia_bbh_factory_t *bbhFactory); // (SkPictureRecorder *picture_recorder, SkScalar width, SkScalar height, SkBBHFactory *bbhFactory) -> SkCanvas *
 reskia_canvas_t *SkPictureRecorder_getRecordingCanvas(reskia_picture_recorder_t *picture_recorder); // (SkPictureRecorder *picture_recorder) -> SkCanvas *
-int SkPictureRecorder_finishRecordingAsPicture(reskia_picture_recorder_t *picture_recorder); // (SkPictureRecorder *picture_recorder) -> sk_picture_t
-int SkPictureRecorder_finishRecordingAsPictureWithCull(reskia_picture_recorder_t *picture_recorder, const reskia_rect_t *cullRect); // (SkPictureRecorder *picture_recorder, const SkRect *cullRect) -> sk_picture_t
-int SkPictureRecorder_finishRecordingAsDrawable(reskia_picture_recorder_t *picture_recorder); // (SkPictureRecorder *picture_recorder) -> sk_drawable_t
+sk_picture_t SkPictureRecorder_finishRecordingAsPicture(reskia_picture_recorder_t *picture_recorder); // (SkPictureRecorder *picture_recorder) -> sk_picture_t
+sk_picture_t SkPictureRecorder_finishRecordingAsPictureWithCull(reskia_picture_recorder_t *picture_recorder, const reskia_rect_t *cullRect); // (SkPictureRecorder *picture_recorder, const SkRect *cullRect) -> sk_picture_t
+sk_drawable_t SkPictureRecorder_finishRecordingAsDrawable(reskia_picture_recorder_t *picture_recorder); // (SkPictureRecorder *picture_recorder) -> sk_drawable_t
 
 #ifdef __cplusplus
 }

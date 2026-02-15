@@ -7,6 +7,17 @@
 
 #include <stddef.h>
 
+#include "../static/static_sk_blender.h"
+#include "../static/static_sk_color_filter.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_runtime_effect_child.h"
+#include "../static/static_sk_runtime_effect_child_ptr.h"
+#include "../static/static_sk_runtime_effect_result.h"
+#include "../static/static_sk_runtime_effect_traced_shader.h"
+#include "../static/static_sk_runtime_effect_uniform.h"
+#include "../static/static_sk_shader.h"
+#include "../static/static_sk_string.h"
+
 typedef struct reskia_color_filter_sp_t reskia_color_filter_sp_t;
 typedef struct reskia_i_point_t reskia_i_point_t;
 typedef struct reskia_matrix_t reskia_matrix_t;
@@ -22,12 +33,12 @@ extern "C" {
 #endif
 
 void SkRuntimeEffect_delete(reskia_runtime_effect_t *runtime_effect); // owned: caller が保持する参照を release する (SkRuntimeEffect *runtime_effect)
-int SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, int data, reskia_shader_sp_t *children, size_t childCount, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkShader> children[], size_t childCount, const SkMatrix *localMatrix) -> sk_shader_t
-int SkRuntimeEffect_makeShader_2(reskia_runtime_effect_t *runtime_effect, int data, int runtime_effect_child_ptr, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const SkMatrix *localMatrix) -> sk_shader_t
-int SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runtime_effect, int data); // (SkRuntimeEffect *runtime_effect, sk_data_t data) -> sk_color_filter_t
-int SkRuntimeEffect_makeColorFilter_2(reskia_runtime_effect_t *runtime_effect, int data, reskia_color_filter_sp_t *children, size_t childCount); // (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkColorFilter> children[], size_t childCount) -> sk_color_filter_t
-int SkRuntimeEffect_makeColorFilter_3(reskia_runtime_effect_t *runtime_effect, int data, int runtime_effect_child_ptr); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_color_filter_t
-int SkRuntimeEffect_makeBlender(reskia_runtime_effect_t *runtime_effect, int data, int runtime_effect_child_ptr); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_blender_t
+sk_shader_t SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_shader_sp_t *children, size_t childCount, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkShader> children[], size_t childCount, const SkMatrix *localMatrix) -> sk_shader_t
+sk_shader_t SkRuntimeEffect_makeShader_2(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const SkMatrix *localMatrix) -> sk_shader_t
+sk_color_filter_t SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runtime_effect, sk_data_t data); // (SkRuntimeEffect *runtime_effect, sk_data_t data) -> sk_color_filter_t
+sk_color_filter_t SkRuntimeEffect_makeColorFilter_2(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_color_filter_sp_t *children, size_t childCount); // (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkColorFilter> children[], size_t childCount) -> sk_color_filter_t
+sk_color_filter_t SkRuntimeEffect_makeColorFilter_3(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_color_filter_t
+sk_blender_t SkRuntimeEffect_makeBlender(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_blender_t
 const reskia_std_string_t *SkRuntimeEffect_source(reskia_runtime_effect_t *runtime_effect); // borrowed: 解放不要の借用ポインタ (SkRuntimeEffect *runtime_effect) -> const std::string *
 size_t SkRuntimeEffect_uniformSize(reskia_runtime_effect_t *runtime_effect); // (SkRuntimeEffect *runtime_effect) -> size_t
 int SkRuntimeEffect_uniforms(reskia_runtime_effect_t *runtime_effect); // (SkRuntimeEffect *runtime_effect) -> int
@@ -43,13 +54,13 @@ void SkRuntimeEffect_unref(reskia_runtime_effect_t *runtime_effect); // owned: �
 
 // static
 
-int SkRuntimeEffect_MakeForColorFilter(int string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeForColorFilter_2(int string); // (sk_string_t string) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeForShader(int string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeForShader_2(int string); // (sk_string_t string) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeForBlender(int string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeForBlender_2(int string); // (sk_string_t string) -> sk_runtime_effect_result_t
-int SkRuntimeEffect_MakeTraced(int shader, const reskia_i_point_t *traceCoord); // (sk_shader_t shader, const SkIPoint *traceCoord) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter(sk_string_t string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter_2(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader(sk_string_t string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader_2(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender(sk_string_t string, const reskia_runtime_effect_options_t *options); // (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender_2(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_traced_shader_t SkRuntimeEffect_MakeTraced(sk_shader_t shader, const reskia_i_point_t *traceCoord); // (sk_shader_t shader, const SkIPoint *traceCoord) -> sk_runtime_effect_traced_shader_t
 void SkRuntimeEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

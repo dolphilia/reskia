@@ -5,6 +5,9 @@
 #ifndef RAIA_SKIA_SK_SHADER_MASK_FILTER_H
 #define RAIA_SKIA_SK_SHADER_MASK_FILTER_H
 
+#include "../static/static_sk_mask_filter.h"
+#include "../static/static_sk_shader.h"
+
 typedef struct reskia_shader_mask_filter_t reskia_shader_mask_filter_t;
 
 #ifdef __cplusplus
@@ -15,7 +18,7 @@ void SkShaderMaskFilter_delete(reskia_shader_mask_filter_t *shaderMaskFilter); /
 
 // static
 
-int SkShaderMaskFilter_Make(int shader); // (sk_shader_t shader) -> sk_mask_filter_t
+sk_mask_filter_t SkShaderMaskFilter_Make(sk_shader_t shader); // (sk_shader_t shader) -> sk_mask_filter_t
 
 #ifdef __cplusplus
 }

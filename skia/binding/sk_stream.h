@@ -8,6 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_stream_asset.h"
+
 typedef struct reskia_stream_t reskia_stream_t;
 
 #ifdef __cplusplus
@@ -29,8 +32,8 @@ bool SkStream_readBool(reskia_stream_t *stream, bool *b); // (SkStream *stream, 
 bool SkStream_readScalar(reskia_stream_t *stream, float *v); // (SkStream *stream, SkScalar *v) -> bool
 bool SkStream_readPackedUInt(reskia_stream_t *stream, size_t *size); // (SkStream *stream, size_t *size) -> bool
 bool SkStream_rewind(reskia_stream_t *stream); // (SkStream *stream) -> bool
-int SkStream_duplicate(reskia_stream_t *stream); // (SkStream *stream) -> sk_stream_t
-int SkStream_fork(reskia_stream_t *stream); // (SkStream *stream) -> sk_stream_t
+sk_stream_t SkStream_duplicate(reskia_stream_t *stream); // (SkStream *stream) -> sk_stream_t
+sk_stream_t SkStream_fork(reskia_stream_t *stream); // (SkStream *stream) -> sk_stream_t
 bool SkStream_hasPosition(reskia_stream_t *stream); // (SkStream *stream) -> bool
 size_t SkStream_getPosition(reskia_stream_t *stream); // (SkStream *stream) -> size_t
 bool SkStream_seek(reskia_stream_t *stream, size_t size); // (SkStream *stream, size_t size) -> bool
@@ -41,7 +44,7 @@ const void * SkStream_getMemoryBase(reskia_stream_t *stream); // (SkStream *stre
 
 // static
 
-int SkStream_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStream_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
 
 #ifdef __cplusplus
 }

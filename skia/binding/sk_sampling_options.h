@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_SAMPLING_OPTIONS_H
 #define RAIA_SKIA_SK_SAMPLING_OPTIONS_H
 
+#include "../static/static_sk_sampling_options.h"
+
 typedef struct reskia_cubic_resampler_t reskia_cubic_resampler_t;
 typedef struct reskia_sampling_options_t reskia_sampling_options_t;
 
@@ -26,7 +28,7 @@ bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options); // 
 
 // static
 
-int SkSamplingOptions_Aniso(int maxAniso); // (int maxAniso) -> sk_sampling_options_t
+sk_sampling_options_t SkSamplingOptions_Aniso(int maxAniso); // (int maxAniso) -> sk_sampling_options_t
 
 #ifdef __cplusplus
 }

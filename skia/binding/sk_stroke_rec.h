@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_STROKE_REC_H
 #define RAIA_SKIA_SK_STROKE_REC_H
 
+#include "../static/static_sk_stroke_rec.h"
+
 typedef struct reskia_paint_t reskia_paint_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_stroke_rec_t reskia_stroke_rec_t;
@@ -14,9 +16,9 @@ extern "C" {
 #endif
 
 void SkStrokeRec_delete(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec)
-int SkStrokeRec_static(int style); // (SkStrokeRec::InitStyle style) -> sk_stroke_rec_t
-int SkStrokeRec_static_2(const reskia_paint_t *paint, int style, float resScale); // (const SkPaint *paint, SkPaint::Style style, SkScalar resScale) -> sk_stroke_rec_t
-int SkStrokeRec_static_3(const reskia_paint_t *paint, float resScale); // (const SkPaint *paint, SkScalar resScale) -> sk_stroke_rec_t
+sk_stroke_rec_t SkStrokeRec_static(int style); // (SkStrokeRec::InitStyle style) -> sk_stroke_rec_t
+sk_stroke_rec_t SkStrokeRec_static_2(const reskia_paint_t *paint, int style, float resScale); // (const SkPaint *paint, SkPaint::Style style, SkScalar resScale) -> sk_stroke_rec_t
+sk_stroke_rec_t SkStrokeRec_static_3(const reskia_paint_t *paint, float resScale); // (const SkPaint *paint, SkScalar resScale) -> sk_stroke_rec_t
 int SkStrokeRec_getStyle(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkStrokeRec::Style
 float SkStrokeRec_getWidth(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkScalar
 float SkStrokeRec_getMiter(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkScalar

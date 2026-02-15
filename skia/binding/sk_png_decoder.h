@@ -8,6 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_codecs_decoder.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,9 +19,9 @@ typedef struct reskia_codec_result_t reskia_codec_result_t;
 typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
 bool SkPngDecoder_IsPng(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
-int SkPngDecoder_Decode(int static_stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-int SkPngDecoder_Decode_2(int static_data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-int SkPngDecoder_Decoder(); // () -> sk_codecs_decoder_t
+sk_codec_t SkPngDecoder_Decode(int static_stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codec_t SkPngDecoder_Decode_2(int static_data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codecs_decoder_t SkPngDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
 #ifdef __cplusplus
 }

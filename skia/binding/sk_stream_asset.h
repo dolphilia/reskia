@@ -8,6 +8,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_stream_asset.h"
+
 typedef struct reskia_stream_asset_t reskia_stream_asset_t;
 
 #ifdef __cplusplus
@@ -17,8 +19,8 @@ extern "C" {
 void SkStreamAsset_delete(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset)
 bool SkStreamAsset_hasLength(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
 size_t SkStreamAsset_getLength(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
-int SkStreamAsset_duplicate(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
-int SkStreamAsset_fork(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamAsset_duplicate(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamAsset_fork(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> sk_stream_asset_t
 bool SkStreamAsset_hasPosition(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
 size_t SkStreamAsset_getPosition(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> size_t
 bool SkStreamAsset_seek(reskia_stream_asset_t *stream_asset, size_t position); // (SkStreamAsset *stream_asset, size_t position) -> bool
@@ -41,7 +43,7 @@ const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset); //
 
 // static
 
-int SkStreamAsset_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamAsset_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
 
 #ifdef __cplusplus
 }

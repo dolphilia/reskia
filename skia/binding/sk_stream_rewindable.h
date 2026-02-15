@@ -8,6 +8,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_stream.h"
+#include "../static/static_sk_stream_asset.h"
+#include "../static/static_sk_stream_rewindable.h"
+
 typedef struct reskia_stream_rewindable_t reskia_stream_rewindable_t;
 
 #ifdef __cplusplus
@@ -16,7 +20,7 @@ extern "C" {
 
 void SkStreamRewindable_delete(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable)
 bool SkStreamRewindable_rewind(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> bool
-int SkStreamRewindable_duplicate(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> sk_stream_rewindable_t
+sk_stream_rewindable_t SkStreamRewindable_duplicate(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> sk_stream_rewindable_t
 size_t SkStreamRewindable_read(reskia_stream_rewindable_t *stream_rewindable, void *buffer, size_t size); // (SkStreamRewindable *stream_rewindable, void *buffer, size_t size) -> size_t
 size_t SkStreamRewindable_skip(reskia_stream_rewindable_t *stream_rewindable, size_t size); // (SkStreamRewindable *stream_rewindable, size_t size) -> size_t
 size_t SkStreamRewindable_peek(reskia_stream_rewindable_t *stream_rewindable, void *buffer, size_t size); // (SkStreamRewindable *stream_rewindable, void *buffer, size_t size) -> size_t
@@ -30,7 +34,7 @@ bool SkStreamRewindable_readU32(reskia_stream_rewindable_t *stream_rewindable, u
 bool SkStreamRewindable_readBool(reskia_stream_rewindable_t *stream_rewindable, bool *b); // (SkStreamRewindable *stream_rewindable, bool *b) -> bool
 bool SkStreamRewindable_readScalar(reskia_stream_rewindable_t *stream_rewindable, float *v); // (SkStreamRewindable *stream_rewindable, SkScalar *v) -> bool
 bool SkStreamRewindable_readPackedUInt(reskia_stream_rewindable_t *stream_rewindable, size_t *size); // (SkStreamRewindable *stream_rewindable, size_t *size) -> bool
-int SkStreamRewindable_fork(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> sk_stream_t
+sk_stream_t SkStreamRewindable_fork(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> sk_stream_t
 bool SkStreamRewindable_hasPosition(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> bool
 size_t SkStreamRewindable_getPosition(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> size_t
 bool SkStreamRewindable_seek(reskia_stream_rewindable_t *stream_rewindable, size_t size); // (SkStreamRewindable *stream_rewindable, size_t size) -> bool
@@ -41,7 +45,7 @@ const void *SkStreamRewindable_getMemoryBase(reskia_stream_rewindable_t *stream_
 
 // static
 
-int SkStreamRewindable_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamRewindable_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
 
 #ifdef __cplusplus
 }

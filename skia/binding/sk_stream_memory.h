@@ -8,6 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../static/static_sk_stream_asset.h"
+#include "../static/static_sk_stream_memory.h"
+
 typedef struct reskia_stream_memory_t reskia_stream_memory_t;
 
 #ifdef __cplusplus
@@ -16,8 +19,8 @@ extern "C" {
 
 void SkStreamMemory_delete(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory)
 const void *SkStreamMemory_getMemoryBase(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> const void *
-int SkStreamMemory_duplicate(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
-int SkStreamMemory_fork(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
+sk_stream_memory_t SkStreamMemory_duplicate(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
+sk_stream_memory_t SkStreamMemory_fork(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
 bool SkStreamMemory_hasLength(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> bool
 size_t SkStreamMemory_getLength(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> size_t
 bool SkStreamMemory_hasPosition(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> bool
@@ -41,7 +44,7 @@ bool SkStreamMemory_readPackedUInt(reskia_stream_memory_t *stream_memory, size_t
 
 // static
 
-int SkStreamMemory_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamMemory_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
 
 #ifdef __cplusplus
 }
