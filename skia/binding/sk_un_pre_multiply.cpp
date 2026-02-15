@@ -8,25 +8,25 @@
 
 extern "C" {
 
-void SkUnPreMultiply_delete(void * unPreMultiply) {
-    delete static_cast<SkUnPreMultiply *>(unPreMultiply);
+void SkUnPreMultiply_delete(reskia_un_pre_multiply_t *unPreMultiply) {
+    (void)unPreMultiply;
 }
 
 // static
 
-const void * SkUnPreMultiply_GetScaleTable() {
+const reskia_un_pre_multiply_scale_t *SkUnPreMultiply_GetScaleTable() {
     return SkUnPreMultiply::GetScaleTable();
 }
 
-unsigned int SkUnPreMultiply_GetScale(unsigned int alpha) {
+reskia_un_pre_multiply_scale_t SkUnPreMultiply_GetScale(uint32_t alpha) {
     return SkUnPreMultiply::GetScale(alpha);
 }
 
-unsigned int SkUnPreMultiply_ApplyScale(unsigned int scale, unsigned int component) {
+uint32_t SkUnPreMultiply_ApplyScale(reskia_un_pre_multiply_scale_t scale, uint32_t component) {
     return SkUnPreMultiply::ApplyScale(scale, component);
 }
 
-unsigned int SkUnPreMultiply_PMColorToColor(unsigned int c) {
+reskia_color_t SkUnPreMultiply_PMColorToColor(reskia_pmcolor_t c) {
     return SkUnPreMultiply::PMColorToColor(c);
 }
 

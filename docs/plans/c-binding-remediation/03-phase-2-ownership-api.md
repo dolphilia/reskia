@@ -322,11 +322,23 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkTableMaskFilter` API の `void*` を `reskia_table_mask_filter_t*` / `reskia_mask_filter_t*` と `uint8_t*` テーブル引数へ置換
     - `skia/binding/sk_text_blob.h` + `skia/binding/sk_text_blob.cpp`（17/17 関数 `done`）
     - 変更内容: `SkTextBlob` API の `void*` を `reskia_text_blob_t*` と関連不透明型（font/paint/rect/point/(de)serial_procs）へ置換し、テキスト/バイト列を `uint8_t*` + `size_t` へ正規化
+    - `skia/binding/sk_text_blob_builder.h` + `skia/binding/sk_text_blob_builder.cpp`（11/11 関数 `done`）
+    - 変更内容: `SkTextBlobBuilder` API の `void*` を `reskia_text_blob_builder_t*` と関連不透明型（font/rect/run-buffer）へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_tiled_image_utils.h` + `skia/binding/sk_tiled_image_utils.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkTiledImageUtils` API の `void*` を `reskia_canvas_t*` / `reskia_image_t*` / `reskia_image_sp_t*` / `reskia_rect_t*` / `reskia_sampling_options_t*` / `reskia_paint_t*` へ置換し、キー出力を `uint32_t*` へ正規化
+    - `skia/binding/sk_trace_memory_dump.h` + `skia/binding/sk_trace_memory_dump.cpp`（10/10 関数 `done`）
+    - 変更内容: `SkTraceMemoryDump` API の `void*` を `reskia_trace_memory_dump_t*` / `reskia_discardable_memory_t*` へ置換し、`uint64_t` 型正規化と `reinterpret_cast` 統一、非所有インターフェースに合わせて `delete` を no-op 化
+    - `skia/binding/sk_typeface.h` + `skia/binding/sk_typeface.cpp`（34/34 関数 `done`）
+    - 変更内容: `SkTypeface` API の `void*` を `reskia_typeface_t*` と関連不透明型（stream/string/font-args/font-descriptor/scaler-rec）へ置換し、glyph/table 引数を `uint16_t`/`uint32_t`/`size_t` に正規化
+    - `skia/binding/sk_typeface_mac.h` + `skia/binding/sk_typeface_mac.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkTypeface_mac` API の `void*` を `reskia_ct_font_t*` / `reskia_typeface_t*` へ置換し、CoreText 連携引数を不透明型で型強化
+    - `skia/binding/sk_un_pre_multiply.h` + `skia/binding/sk_un_pre_multiply.cpp`（5/5 関数 `done`）
+    - 変更内容: `SkUnPreMultiply` API の `void*` を `reskia_un_pre_multiply_t*` へ置換し、`Scale`/`SkColor`/`SkPMColor` を `uint32_t` 系 alias に正規化、static API 前提で delete を no-op 化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 2212 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 2281 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71

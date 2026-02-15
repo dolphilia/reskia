@@ -8,12 +8,15 @@
 #ifdef __APPLE__
 #ifdef TARGET_OS_MAC
 
+typedef struct reskia_ct_font_t reskia_ct_font_t;
+typedef struct reskia_typeface_t reskia_typeface_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int Mac_SkMakeTypefaceFromCTFont(void * fontRef); // (CTFontRef fontRef) -> sk_typeface_t
-const void * Mac_SkTypeface_GetCTFontRef(const void *face); // (const SkTypeface *face) -> CTFontRef
+int Mac_SkMakeTypefaceFromCTFont(const reskia_ct_font_t *fontRef); // (CTFontRef fontRef) -> sk_typeface_t
+const reskia_ct_font_t *Mac_SkTypeface_GetCTFontRef(const reskia_typeface_t *face); // (const SkTypeface *face) -> CTFontRef
 
 #ifdef __cplusplus
 }

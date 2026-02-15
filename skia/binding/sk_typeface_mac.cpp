@@ -16,12 +16,12 @@
 
 extern "C" {
 
-sk_typeface_t Mac_SkMakeTypefaceFromCTFont(void * fontRef) {
-    return static_sk_typeface_make(SkMakeTypefaceFromCTFont(static_cast<CTFontRef>(fontRef)));
+sk_typeface_t Mac_SkMakeTypefaceFromCTFont(const reskia_ct_font_t *fontRef) {
+    return static_sk_typeface_make(SkMakeTypefaceFromCTFont(reinterpret_cast<CTFontRef>(fontRef)));
 }
 
-const void * Mac_SkTypeface_GetCTFontRef(const void *face) {
-    return SkTypeface_GetCTFontRef(static_cast<const SkTypeface *>(face));
+const reskia_ct_font_t *Mac_SkTypeface_GetCTFontRef(const reskia_typeface_t *face) {
+    return reinterpret_cast<const reskia_ct_font_t *>(SkTypeface_GetCTFontRef(reinterpret_cast<const SkTypeface *>(face)));
 }
 
 }
