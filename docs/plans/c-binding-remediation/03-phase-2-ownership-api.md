@@ -350,11 +350,19 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkWebpDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、デコーダ引数型を PNG/JPEG/WBMP 系と整合化
     - `skia/binding/sk_webp_encoder.h` + `skia/binding/sk_webp_encoder.cpp`（1/1 関数 `done`）
     - 変更内容: `SkWebpEncoder` API の C++ 具体型引数を `reskia_*` 不透明型へ置換し、`Encode_2` を `reskia_direct_context_t*` / `reskia_image_t*` / `reskia_webp_encoder_options_t*` で型強化
+    - `skia/binding/sk_write_buffer.h` + `skia/binding/sk_write_buffer.cpp`（32/32 関数 `done`）
+    - 変更内容: `SkWriteBuffer` API の `void*` を `reskia_write_buffer_t*` と関連不透明型（data/flattenable/color4f/point/matrix/region/path/image/typeface/paint/stream/serial_procs）へ置換し、配列長・整数を `size_t`/`uint32_t`/`int32_t`/`int64_t` へ正規化
+    - `skia/binding/sk_yuva_info.h` + `skia/binding/sk_yuva_info.cpp`（24/24 関数 `done`）
+    - 変更内容: `SkYUVAInfo` API の `void*` を `reskia_yuva_info_t*` と `reskia_i_size_t*` へ置換し、`computeTotalBytes` の行サイズ/出力配列を `size_t*` に型正規化
+    - `skia/binding/sk_yuva_pixmap_info.h` + `skia/binding/sk_yuva_pixmap_info.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkYUVAPixmapInfo` API の `void*` を `reskia_yuva_pixmap_info_t*` と関連不透明型（yuva_info/image_info/pixmap/supported_data_types）へ置換し、row-bytes/plane-size 配列を `size_t*` に正規化
+    - `skia/binding/sk_yuva_pixmaps.h` + `skia/binding/sk_yuva_pixmaps.cpp`（16/16 関数 `done`）
+    - 変更内容: `SkYUVAPixmaps` API の `void*` を `reskia_yuva_pixmaps_t*` と関連不透明型（yuva_info/yuva_pixmap_info/pixmap）へ置換し、`planes`/`plane` を typed pixmap pointer 返却へ型強化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 2345 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 2431 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71
