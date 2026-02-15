@@ -18,70 +18,86 @@
 
 extern "C" {
 
-void SkPicture_delete(void *picture) {
-    static_cast<SkPicture *>(picture)->unref();
+void SkPicture_delete(reskia_picture_t *picture) {
+    reinterpret_cast<SkPicture *>(picture)->unref();
 }
 
-void SkPicture_playback(void *picture, void *canvas, void *callback) {
-    static_cast<SkPicture *>(picture)->playback(static_cast<SkCanvas *>(canvas), static_cast<SkPicture::AbortCallback *>(callback));
+void SkPicture_playback(reskia_picture_t *picture, reskia_canvas_t *canvas, reskia_picture_abort_callback_t *callback) {
+    reinterpret_cast<SkPicture *>(picture)->playback(
+        reinterpret_cast<SkCanvas *>(canvas),
+        reinterpret_cast<SkPicture::AbortCallback *>(callback));
 }
 
-sk_rect_t SkPicture_cullRect(void *picture) {
-    return static_sk_rect_make(static_cast<SkPicture *>(picture)->cullRect());
+sk_rect_t SkPicture_cullRect(reskia_picture_t *picture) {
+    return static_sk_rect_make(reinterpret_cast<SkPicture *>(picture)->cullRect());
 }
 
-uint32_t SkPicture_uniqueID(void *picture) {
-    return static_cast<SkPicture *>(picture)->uniqueID();
+uint32_t SkPicture_uniqueID(reskia_picture_t *picture) {
+    return reinterpret_cast<SkPicture *>(picture)->uniqueID();
 }
 
-sk_data_t SkPicture_serialize(void *picture, const void *procs) {
-    return static_sk_data_make(static_cast<SkPicture *>(picture)->serialize(static_cast<const SkSerialProcs *>(procs)));
+sk_data_t SkPicture_serialize(reskia_picture_t *picture, const reskia_serial_procs_t *procs) {
+    return static_sk_data_make(reinterpret_cast<SkPicture *>(picture)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-void SkPicture_serialize_2(void *picture, void *stream, const void *procs) {
-    static_cast<SkPicture *>(picture)->serialize(static_cast<SkWStream *>(stream), static_cast<const SkSerialProcs *>(procs));
+void SkPicture_serialize_2(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs) {
+    reinterpret_cast<SkPicture *>(picture)->serialize(
+        reinterpret_cast<SkWStream *>(stream),
+        reinterpret_cast<const SkSerialProcs *>(procs));
 }
 
-size_t SkPicture_approximateOpCount(void *picture) { //, bool nested
-    return static_cast<SkPicture *>(picture)->approximateBytesUsed();
+size_t SkPicture_approximateOpCount(reskia_picture_t *picture) { //, bool nested
+    return reinterpret_cast<SkPicture *>(picture)->approximateOpCount();
 }
 
-size_t SkPicture_approximateBytesUsed(void *picture) { //, SkPicture *picture_2
-    return static_cast<SkPicture *>(picture)->approximateBytesUsed();
+size_t SkPicture_approximateBytesUsed(reskia_picture_t *picture) { //, SkPicture *picture_2
+    return reinterpret_cast<SkPicture *>(picture)->approximateBytesUsed();
 }
 
-sk_shader_t SkPicture_makeShader(void *picture, int tmx, int tmy, int mode, const void *localMatrix, const void *tileRect) {
-    return static_sk_shader_make(static_cast<SkPicture *>(picture)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), static_cast<SkFilterMode>(mode), static_cast<const SkMatrix *>(localMatrix), static_cast<const SkRect *>(tileRect)));
+sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, int tmx, int tmy, int mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect) {
+    return static_sk_shader_make(reinterpret_cast<SkPicture *>(picture)->makeShader(
+        static_cast<SkTileMode>(tmx),
+        static_cast<SkTileMode>(tmy),
+        static_cast<SkFilterMode>(mode),
+        reinterpret_cast<const SkMatrix *>(localMatrix),
+        reinterpret_cast<const SkRect *>(tileRect)));
 }
 
-sk_shader_t SkPicture_makeShader_2(void *picture, int tmx, int tmy, int mode) {
-    return static_sk_shader_make(static_cast<SkPicture *>(picture)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), static_cast<SkFilterMode>(mode)));
+sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, int tmx, int tmy, int mode) {
+    return static_sk_shader_make(reinterpret_cast<SkPicture *>(picture)->makeShader(
+        static_cast<SkTileMode>(tmx),
+        static_cast<SkTileMode>(tmy),
+        static_cast<SkFilterMode>(mode)));
 }
 
-bool SkPicture_unique(void *picture) {
-    return static_cast<SkPicture *>(picture)->unique();
+bool SkPicture_unique(reskia_picture_t *picture) {
+    return reinterpret_cast<SkPicture *>(picture)->unique();
 }
 
-void SkPicture_ref(void *picture) {
-    static_cast<SkPicture *>(picture)->ref();
+void SkPicture_ref(reskia_picture_t *picture) {
+    reinterpret_cast<SkPicture *>(picture)->ref();
 }
 
-void SkPicture_unref(void *picture) {
-    static_cast<SkPicture *>(picture)->unref();
+void SkPicture_unref(reskia_picture_t *picture) {
+    reinterpret_cast<SkPicture *>(picture)->unref();
 }
 
 // static
 
-sk_picture_t SkPicture_MakeFromStream(void *stream, const void *procs) {
-    return static_sk_picture_make(SkPicture::MakeFromStream(static_cast<SkStream *>(stream), static_cast<const SkDeserialProcs *>(procs)));
+sk_picture_t SkPicture_MakeFromStream(reskia_stream_t *stream, const reskia_deserial_procs_t *procs) {
+    return static_sk_picture_make(SkPicture::MakeFromStream(
+        reinterpret_cast<SkStream *>(stream),
+        reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
-sk_picture_t SkPicture_MakeFromData(const void *data, const void *procs) {
-    return static_sk_picture_make(SkPicture::MakeFromData(static_cast<const SkData *>(data), static_cast<const SkDeserialProcs *>(procs)));
+sk_picture_t SkPicture_MakeFromData(const reskia_data_t *data, const reskia_deserial_procs_t *procs) {
+    return static_sk_picture_make(SkPicture::MakeFromData(
+        reinterpret_cast<const SkData *>(data),
+        reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
-sk_picture_t SkPicture_MakeFromData_2(const void *data, size_t size, const void *procs) {
-    return static_sk_picture_make(SkPicture::MakeFromData(data, size, static_cast<const SkDeserialProcs *>(procs)));
+sk_picture_t SkPicture_MakeFromData_2(const void *data, size_t size, const reskia_deserial_procs_t *procs) {
+    return static_sk_picture_make(SkPicture::MakeFromData(data, size, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
 sk_picture_t SkPicture_MakePlaceholder(sk_rect_t cull) {

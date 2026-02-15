@@ -242,11 +242,23 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkPathEffect` API の `void*` を `reskia_path_effect_t*` と path/stroke/rect/matrix/procs 向け不透明型へ置換し、`serialize/deserialize` サイズを `size_t` へ正規化
     - `skia/binding/sk_path_measure.h` + `skia/binding/sk_path_measure.cpp`（10/10 関数 `done`）
     - 変更内容: `SkPathMeasure` API の `void*` を `reskia_path_measure_t*` と path/point/vector/matrix 向け不透明型へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_pdf.h` + `skia/binding/sk_pdf.cpp`（1/1 関数 `done`）
+    - 変更内容: `SkPDF` API の C++ 具象型露出を `reskia_canvas_t*` / `reskia_w_stream_t*` / `reskia_pdf_metadata_t*` へ置換し、`_2` シグネチャを型付き不透明ポインタへ正規化
+    - `skia/binding/sk_perlin_noise_shader.h` + `skia/binding/sk_perlin_noise_shader.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkPerlinNoiseShader` API の `tileSize` 引数を `const reskia_i_size_t*` へ型強化し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_picture.h` + `skia/binding/sk_picture.cpp`（16/16 関数 `done`）
+    - 変更内容: `SkPicture` API の `void*` を `reskia_picture_t*` と canvas/stream/data/procs 向け不透明型へ置換し、`size_t`/`uint32_t` を明示型へ正規化
+    - `skia/binding/sk_picture_recorder.h` + `skia/binding/sk_picture_recorder.cpp`（9/9 関数 `done`）
+    - 変更内容: `SkPictureRecorder` API の `void*` を `reskia_picture_recorder_t*` と `reskia_canvas_t*`/`reskia_rect_t*`/`reskia_bbh_factory_t*` へ置換し、実装側ポインタ変換を `reinterpret_cast` に統一
+    - `skia/binding/sk_pixel_ref.h` + `skia/binding/sk_pixel_ref.cpp`（17/17 関数 `done`）
+    - 変更内容: `SkPixelRef` API の `void*` を `reskia_pixel_ref_t*`（および `reskia_discardable_memory_t*`）へ置換し、`rowBytes/getGenerationID` を `size_t/uint32_t` へ正規化
+    - `skia/binding/sk_pixmap.h` + `skia/binding/sk_pixmap.cpp`（53/53 関数 `done`）
+    - 変更内容: `SkPixmap` API の `void*` を `reskia_pixmap_t*` と関連不透明型（`reskia_image_info_t*` / `reskia_color_space_t*` / `reskia_i_rect_t*` / `reskia_mask_t*` / `reskia_sampling_options_t*`）へ置換し、`unsigned long/unsigned int` を `size_t/uint32_t` へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 1486 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1584 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71
