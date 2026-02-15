@@ -7,6 +7,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_font.h"
+#include "../static/static_sk_point.h"
+#include "../static/static_sk_typeface.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,12 +44,12 @@ int SkFont_getEdging(reskia_font_t *font); // (SkFont *font) -> SkFont::Edging
 void SkFont_setEdging(reskia_font_t *font, int edging); // (SkFont *font, SkFont::Edging edging)
 void SkFont_setHinting(reskia_font_t *font, int hintingLevel); // (SkFont *font, SkFontHinting hintingLevel)
 int SkFont_getHinting(reskia_font_t *font); // (SkFont *font) -> SkFontHinting
-int SkFont_makeWithSize(reskia_font_t *font, float size); // (SkFont *font, SkScalar size) -> sk_font_t
+sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size); // (SkFont *font, SkScalar size) -> sk_font_t
 reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font); // (SkFont *font) -> SkTypeface *
 float SkFont_getSize(reskia_font_t *font); // (SkFont *font) -> SkScalar
 float SkFont_getScaleX(reskia_font_t *font); // (SkFont *font) -> SkScalar
 float SkFont_getSkewX(reskia_font_t *font); // (SkFont *font) -> SkScalar
-int SkFont_refTypeface(reskia_font_t *font); // (SkFont *font) -> sk_typeface_t
+sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // (SkFont *font) -> sk_typeface_t
 
 // TODO
 //void SkFont_setTypeface(void *font, sk_typeface_t typeface); // (SkFont *font, sk_typeface_t typeface)
@@ -66,7 +69,7 @@ void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, fl
 void SkFont_getWidths_3(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar widths[])
 void SkFont_getWidthsBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds, const reskia_paint_t *paint); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar widths[], SkRect bounds[], const SkPaint *paint)
 void SkFont_getBounds(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_rect_t *bounds, const reskia_paint_t *paint); // (SkFont *font, const SkGlyphID glyphs[], int count, SkRect bounds[], const SkPaint *paint)
-void SkFont_getPos(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_point_t *pos, int origin); // (SkFont *font, const SkGlyphID glyphs[], int count, SkPoint pos[], sk_point_t origin)
+void SkFont_getPos(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_point_t *pos, sk_point_t origin); // (SkFont *font, const SkGlyphID glyphs[], int count, SkPoint pos[], sk_point_t origin)
 void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, float *xpos, float origin); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar xpos[], SkScalar origin)
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint); // (SkFont *font, const SkGlyphID glyphs[], int count, const SkPoint pos[], SkScalar top, SkScalar bottom, const SkPaint *paint) -> int
 bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path); // (SkFont *font, SkGlyphID glyphID, SkPath *path) -> bool

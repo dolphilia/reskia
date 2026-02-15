@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_HIGH_CONTRAST_FILTER_H
 #define RAIA_SKIA_SK_HIGH_CONTRAST_FILTER_H
 
+#include "../static/static_sk_color_filter.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,7 +15,7 @@ void SkHighContrastFilter_delete(void * highContrastFilter); // (SkHighContrastF
 
 // static
 
-int SkHighContrastFilter_Make(const void * config); // (const SkHighContrastConfig * config) -> sk_color_filter_t
+sk_color_filter_t SkHighContrastFilter_Make(const void * config); // (const SkHighContrastConfig * config) -> sk_color_filter_t
 
 #ifdef __cplusplus
 }

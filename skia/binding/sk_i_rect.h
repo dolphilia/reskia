@@ -6,6 +6,9 @@
 #define RAIA_SKIA_SK_I_RECT_H
 
 #include <stdint.h>
+#include "../static/static_sk_i_point.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_sk_i_size.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,10 +26,10 @@ int SkIRect_right(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
 int SkIRect_bottom(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
 int SkIRect_x(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
 int SkIRect_y(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
-int SkIRect_topLeft(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_point_t
+sk_i_point_t SkIRect_topLeft(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_point_t
 int SkIRect_width(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
 int SkIRect_height(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int32_t
-int SkIRect_size(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_size_t
+sk_i_size_t SkIRect_size(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_size_t
 int64_t SkIRect_width64(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int64_t
 int64_t SkIRect_height64(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> int64_t
 bool SkIRect_isEmpty64(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> bool
@@ -35,11 +38,11 @@ void SkIRect_setEmpty(reskia_i_rect_t *i_rect); // (SkIRect *i_rect)
 void SkIRect_setLTRB(reskia_i_rect_t *i_rect, int left, int top, int right, int bottom); // (SkIRect *i_rect, int32_t left, int32_t top, int32_t right, int32_t bottom)
 void SkIRect_setXYWH(reskia_i_rect_t *i_rect, int x, int y, int width, int height); // (SkIRect *i_rect, int32_t x, int32_t y, int32_t width, int32_t height)
 void SkIRect_setWH(reskia_i_rect_t *i_rect, int width, int height); // (SkIRect *i_rect, int32_t width, int32_t height)
-void SkIRect_setSize(reskia_i_rect_t *i_rect, int size); // (SkIRect *i_rect, sk_i_size_t size)
-int SkIRect_makeOffset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
-int SkIRect_makeOffset_2(reskia_i_rect_t *i_rect, int offset); // (SkIRect *i_rect, sk_i_point_t offset) -> sk_i_rect_t
-int SkIRect_makeInset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
-int SkIRect_makeOutset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
+void SkIRect_setSize(reskia_i_rect_t *i_rect, sk_i_size_t size); // (SkIRect *i_rect, sk_i_size_t size)
+sk_i_rect_t SkIRect_makeOffset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
+sk_i_rect_t SkIRect_makeOffset_2(reskia_i_rect_t *i_rect, sk_i_point_t offset); // (SkIRect *i_rect, sk_i_point_t offset) -> sk_i_rect_t
+sk_i_rect_t SkIRect_makeInset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
+sk_i_rect_t SkIRect_makeOutset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
 void SkIRect_offset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy)
 void SkIRect_offset_2(reskia_i_rect_t *i_rect, const reskia_i_point_t *delta); // (SkIRect *i_rect, const SkIPoint *delta)
 void SkIRect_offsetTo(reskia_i_rect_t *i_rect, int newX, int newY); // (SkIRect *i_rect, int32_t newX, int32_t newY)
@@ -54,16 +57,16 @@ bool SkIRect_intersect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (S
 bool SkIRect_intersect_2(reskia_i_rect_t *i_rect, const reskia_i_rect_t *a, const reskia_i_rect_t *b); // (SkIRect *i_rect, const SkIRect *a, const SkIRect *b) -> bool
 void SkIRect_join(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r)
 void SkIRect_sort(reskia_i_rect_t *i_rect); // (SkIRect *i_rect)
-int SkIRect_makeSorted(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_rect_t
+sk_i_rect_t SkIRect_makeSorted(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_rect_t
 
 // static
 
-int SkIRect_MakeEmpty(); // () -> sk_i_rect_t
-int SkIRect_MakeWH(int w, int h); // (int32_t w, int32_t h) -> sk_i_rect_t
-int SkIRect_MakeSize(const reskia_i_size_t *size); // (const SkISize *size) -> sk_i_rect_t
-int SkIRect_MakePtSize(int pt, int size); // (sk_i_point_t pt, sk_i_size_t size) -> sk_i_rect_t
-int SkIRect_MakeLTRB(int l, int t, int r, int b); // (int32_t l, int32_t t, int32_t r, int32_t b) -> sk_i_rect_t
-int SkIRect_MakeXYWH(int x, int y, int w, int h); // (int32_t x, int32_t y, int32_t w, int32_t h) -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakeEmpty(); // () -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakeWH(int w, int h); // (int32_t w, int32_t h) -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakeSize(const reskia_i_size_t *size); // (const SkISize *size) -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakePtSize(sk_i_point_t pt, sk_i_size_t size); // (sk_i_point_t pt, sk_i_size_t size) -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakeLTRB(int l, int t, int r, int b); // (int32_t l, int32_t t, int32_t r, int32_t b) -> sk_i_rect_t
+sk_i_rect_t SkIRect_MakeXYWH(int x, int y, int w, int h); // (int32_t x, int32_t y, int32_t w, int32_t h) -> sk_i_rect_t
 bool SkIRect_Intersects(const reskia_i_rect_t *a, const reskia_i_rect_t *b); // (const SkIRect *a, const SkIRect *b) -> bool
 
 #ifdef __cplusplus

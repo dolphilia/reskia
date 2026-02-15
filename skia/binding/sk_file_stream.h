@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_file_stream.h"
+#include "../static/static_sk_stream_asset.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,11 +26,11 @@ void SkFILEStream_close(reskia_file_stream_t *file_stream); // (SkFILEStream *fi
 size_t SkFILEStream_read(reskia_file_stream_t *file_stream, uint8_t *buffer, size_t size); // (SkFILEStream *file_stream, void *buffer, size_t size) -> size_t
 bool SkFILEStream_isAtEnd(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> bool
 bool SkFILEStream_rewind(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> bool
-int SkFILEStream_duplicate(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> sk_stream_asset_t
+sk_stream_asset_t SkFILEStream_duplicate(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> sk_stream_asset_t
 size_t SkFILEStream_getPosition(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> size_t
 bool SkFILEStream_seek(reskia_file_stream_t *file_stream, size_t position); // (SkFILEStream *file_stream, size_t position) -> bool
 bool SkFILEStream_move(reskia_file_stream_t *file_stream, long offset); // (SkFILEStream *file_stream, long offset) -> bool
-int SkFILEStream_fork(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> sk_stream_asset_t
+sk_stream_asset_t SkFILEStream_fork(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> sk_stream_asset_t
 size_t SkFILEStream_getLength(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> size_t
 bool SkFILEStream_hasLength(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> bool
 bool SkFILEStream_hasPosition(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> bool
@@ -47,7 +49,7 @@ const uint8_t * SkFILEStream_getMemoryBase(reskia_file_stream_t *file_stream); /
 
 // static
 
-int SkFILEStream_Make(const char path[]); // (const char path[]) -> sk_file_stream_t
+sk_file_stream_t SkFILEStream_Make(const char path[]); // (const char path[]) -> sk_file_stream_t
 
 #ifdef __cplusplus
 }

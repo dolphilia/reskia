@@ -7,6 +7,11 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_color_info.h"
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_sk_i_size.h"
+#include "../static/static_sk_image_info.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,18 +33,18 @@ int SkImageInfo_height(reskia_image_info_t *image_info); // (SkImageInfo *image_
 int SkImageInfo_colorType(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkColorType
 int SkImageInfo_alphaType(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkAlphaType
 reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkColorSpace *
-int SkImageInfo_refColorSpace(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_color_space_t
+sk_color_space_t SkImageInfo_refColorSpace(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_color_space_t
 bool SkImageInfo_isEmpty(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> bool
-int SkImageInfo_colorInfo(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_color_info_t
+sk_color_info_t SkImageInfo_colorInfo(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_color_info_t
 bool SkImageInfo_isOpaque(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> bool
-int SkImageInfo_dimensions(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_i_size_t
-int SkImageInfo_bounds(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_i_rect_t
+sk_i_size_t SkImageInfo_dimensions(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_i_size_t
+sk_i_rect_t SkImageInfo_bounds(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_i_rect_t
 bool SkImageInfo_gammaCloseToSRGB(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> bool
-int SkImageInfo_makeWH(reskia_image_info_t *image_info, int newWidth, int newHeight); // (SkImageInfo *image_info, int newWidth, int newHeight) -> sk_image_info_t
-int SkImageInfo_makeDimensions(reskia_image_info_t *image_info, int newSize); // (SkImageInfo *image_info, sk_i_size_t newSize) -> sk_image_info_t
-int SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, int newAlphaType); // (SkImageInfo *image_info, SkAlphaType newAlphaType) -> sk_image_info_t
-int SkImageInfo_makeColorType(reskia_image_info_t *image_info, int newColorType); // (SkImageInfo *image_info, SkColorType newColorType) -> sk_image_info_t
-int SkImageInfo_makeColorSpace(reskia_image_info_t *image_info, int color_space); // (SkImageInfo *image_info, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_makeWH(reskia_image_info_t *image_info, int newWidth, int newHeight); // (SkImageInfo *image_info, int newWidth, int newHeight) -> sk_image_info_t
+sk_image_info_t SkImageInfo_makeDimensions(reskia_image_info_t *image_info, sk_i_size_t newSize); // (SkImageInfo *image_info, sk_i_size_t newSize) -> sk_image_info_t
+sk_image_info_t SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, int newAlphaType); // (SkImageInfo *image_info, SkAlphaType newAlphaType) -> sk_image_info_t
+sk_image_info_t SkImageInfo_makeColorType(reskia_image_info_t *image_info, int newColorType); // (SkImageInfo *image_info, SkColorType newColorType) -> sk_image_info_t
+sk_image_info_t SkImageInfo_makeColorSpace(reskia_image_info_t *image_info, sk_color_space_t color_space); // (SkImageInfo *image_info, sk_color_space_t color_space) -> sk_image_info_t
 int SkImageInfo_bytesPerPixel(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 int SkImageInfo_shiftPerPixel(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 reskia_u64_t SkImageInfo_minRowBytes64(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> uint64_t
@@ -52,22 +57,22 @@ void SkImageInfo_reset(reskia_image_info_t *image_info); // (SkImageInfo *image_
 
 // static
 
-int SkImageInfo_Make(int width, int height, int ct, int at); // (int width, int height, SkColorType ct, SkAlphaType at) -> sk_image_info_t
-int SkImageInfo_Make_2(int width, int height, int ct, int at, int color_space); // (int width, int height, SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
-int SkImageInfo_Make_3(int dimensions, int ct, int at); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at) -> sk_image_info_t
-int SkImageInfo_Make_4(int dimensions, int ct, int at, int color_space); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
-int SkImageInfo_Make_5(int dimensions, const reskia_color_info_t *colorInfo); // (sk_i_size_t dimensions, const SkColorInfo *colorInfo) -> sk_image_info_t
-int SkImageInfo_MakeN32(int width, int height, int at); // (int width, int height, SkAlphaType at) -> sk_image_info_t
-int SkImageInfo_MakeN32_2(int width, int height, int at, int color_space); // (int width, int height, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
-int SkImageInfo_MakeS32(int width, int height, int at); // (int width, int height, SkAlphaType at) -> sk_image_info_t
-int SkImageInfo_MakeN32Premul(int width, int height); // (int width, int height) -> sk_image_info_t
-int SkImageInfo_MakeN32Premul_2(int width, int height, int color_space); // (int width, int height, sk_color_space_t color_space) -> sk_image_info_t
-int SkImageInfo_MakeN32Premul_3(int dimensions); // (sk_i_size_t dimensions) -> sk_image_info_t
-int SkImageInfo_MakeN32Premul_4(int dimensions, int color_space); // (sk_i_size_t dimensions, sk_color_space_t color_space) -> sk_image_info_t
-int SkImageInfo_MakeA8(int width, int height); // (int width, int height) -> sk_image_info_t
-int SkImageInfo_MakeA8_2(int dimensions); // (sk_i_size_t dimensions) -> sk_image_info_t
-int SkImageInfo_MakeUnknown(int width, int height); // (int width, int height) -> sk_image_info_t
-int SkImageInfo_MakeUnknown_2(); // () -> sk_image_info_t
+sk_image_info_t SkImageInfo_Make(int width, int height, int ct, int at); // (int width, int height, SkColorType ct, SkAlphaType at) -> sk_image_info_t
+sk_image_info_t SkImageInfo_Make_2(int width, int height, int ct, int at, sk_color_space_t color_space); // (int width, int height, SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_Make_3(sk_i_size_t dimensions, int ct, int at); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at) -> sk_image_info_t
+sk_image_info_t SkImageInfo_Make_4(sk_i_size_t dimensions, int ct, int at, sk_color_space_t color_space); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo); // (sk_i_size_t dimensions, const SkColorInfo *colorInfo) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32(int width, int height, int at); // (int width, int height, SkAlphaType at) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32_2(int width, int height, int at, sk_color_space_t color_space); // (int width, int height, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeS32(int width, int height, int at); // (int width, int height, SkAlphaType at) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32Premul(int width, int height); // (int width, int height) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32Premul_2(int width, int height, sk_color_space_t color_space); // (int width, int height, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32Premul_3(sk_i_size_t dimensions); // (sk_i_size_t dimensions) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeN32Premul_4(sk_i_size_t dimensions, sk_color_space_t color_space); // (sk_i_size_t dimensions, sk_color_space_t color_space) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeA8(int width, int height); // (int width, int height) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeA8_2(sk_i_size_t dimensions); // (sk_i_size_t dimensions) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeUnknown(int width, int height); // (int width, int height) -> sk_image_info_t
+sk_image_info_t SkImageInfo_MakeUnknown_2(); // () -> sk_image_info_t
 bool SkImageInfo_ByteSizeOverflowed(size_t byteSize); // (size_t byteSize) -> bool
 
 #ifdef __cplusplus

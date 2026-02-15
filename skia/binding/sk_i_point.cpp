@@ -38,7 +38,7 @@ bool SkIPoint_equals(void * i_point, int32_t x, int32_t y) {
 
 // static
 
-int SkIPoint_Make(int x, int y) {
+sk_i_point_t SkIPoint_Make(int x, int y) {
   return static_sk_i_point_make(SkIPoint::Make(x, y));
 }
 

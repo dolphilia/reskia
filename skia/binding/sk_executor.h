@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_EXECUTOR_H
 #define RAIA_SKIA_SK_EXECUTOR_H
 
+#include "../static/static_sk_executor.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,8 +19,8 @@ void SkExecutor_borrow(reskia_executor_t *executor); // (SkExecutor *executor)
 
 // static
 
-int SkExecutor_MakeFIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
-int SkExecutor_MakeLIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
+sk_executor_t SkExecutor_MakeFIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
+sk_executor_t SkExecutor_MakeLIFOThreadPool(int threads, bool allowBorrowing); // (int threads, bool allowBorrowing) -> sk_executor_t
 reskia_executor_t *SkExecutor_GetDefault(); // () -> SkExecutor *
 void SkExecutor_SetDefault(reskia_executor_t *executor); // (SkExecutor *executor)
 

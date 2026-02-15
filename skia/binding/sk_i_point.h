@@ -5,6 +5,8 @@
 #ifndef SK_I_POINT_H
 #define SK_I_POINT_H
 
+#include "../static/static_sk_i_point.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,7 +24,7 @@ bool SkIPoint_equals(void * i_point, int x, int y); // (int32_t x, int32_t y)
 
 // static
 
-int SkIPoint_Make(int x, int y); // (int x, int y) -> sk_i_point_t
+sk_i_point_t SkIPoint_Make(int x, int y); // (int x, int y) -> sk_i_point_t
 
 #ifdef __cplusplus
 }

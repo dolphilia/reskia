@@ -5,12 +5,14 @@
 #ifndef RAIA_SKIA_SK_ENCODED_ORIGIN_H
 #define RAIA_SKIA_SK_ENCODED_ORIGIN_H
 
+#include "../static/static_sk_matrix.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // static
-int SkEncodedOrigin_SkEncodedOriginToMatrix(int origin, int w, int h); // (SkEncodedOrigin origin, int w, int h) -> sk_matrix_t
+sk_matrix_t SkEncodedOrigin_SkEncodedOriginToMatrix(int origin, int w, int h); // (SkEncodedOrigin origin, int w, int h) -> sk_matrix_t
 bool SkEncodedOrigin_SkEncodedOriginSwapsWidthHeight(int origin); // (SkEncodedOrigin origin) -> bool
 
 #ifdef __cplusplus

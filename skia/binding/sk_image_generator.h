@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_image_info.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,8 +25,8 @@ typedef uint32_t reskia_u32_t;
 
 void SkImageGenerator_delete(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator)
 reskia_u32_t SkImageGenerator_uniqueID(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> uint32_t
-int SkImageGenerator_refEncodedData(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_data_t
-int SkImageGenerator_getInfo(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_image_info_t
+sk_data_t SkImageGenerator_refEncodedData(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_data_t
+sk_image_info_t SkImageGenerator_getInfo(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_image_info_t
 bool SkImageGenerator_isValid(reskia_image_generator_t *image_generator, reskia_recording_context_t *context); // (SkImageGenerator *image_generator, GrRecordingContext *context) -> bool
 bool SkImageGenerator_isProtected(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> bool
 bool SkImageGenerator_getPixels(reskia_image_generator_t *image_generator, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // (SkImageGenerator *image_generator, const SkImageInfo *info, void *pixels, size_t rowBytes) -> bool

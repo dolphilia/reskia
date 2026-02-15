@@ -6,6 +6,7 @@
 #define RAIA_SKIA_SK_I_SIZE_H
 
 #include <stdint.h>
+#include "../static/static_sk_i_size.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,8 +26,8 @@ bool SkISize_equals(reskia_i_size_t *i_size, int w, int h); // (SkISize *i_size,
 
 // static
 
-int SkISize_Make(int w, int h); // (int32_t w, int32_t h) -> sk_i_size_t
-int SkISize_MakeEmpty(); // () -> sk_i_size_t
+sk_i_size_t SkISize_Make(int w, int h); // (int32_t w, int32_t h) -> sk_i_size_t
+sk_i_size_t SkISize_MakeEmpty(); // () -> sk_i_size_t
 
 #ifdef __cplusplus
 }

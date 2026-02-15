@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_stream_asset.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,8 +32,8 @@ void SkDynamicMemoryWStream_copyToAndReset(reskia_dynamic_memory_w_stream_t *dyn
 bool SkDynamicMemoryWStream_writeToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkWStream *dst) -> bool
 bool SkDynamicMemoryWStream_writeToAndReset_2(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst) -> bool
 void SkDynamicMemoryWStream_prependToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst)
-int SkDynamicMemoryWStream_detachAsData(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_data_t
-int SkDynamicMemoryWStream_detachAsStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_stream_asset_t
+sk_data_t SkDynamicMemoryWStream_detachAsData(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_data_t
+sk_stream_asset_t SkDynamicMemoryWStream_detachAsStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_stream_asset_t
 void SkDynamicMemoryWStream_reset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)
 void SkDynamicMemoryWStream_padToAlign4(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)
 void SkDynamicMemoryWStream_flush(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)
