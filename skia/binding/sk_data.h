@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_data.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,19 +33,19 @@ bool SkData_refCntGreaterThan(reskia_data_t *sk_data, int32_t threadIsolatedTest
 
 // static
 
-int SkData_MakeWithCopy(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
-int SkData_MakeUninitialized(size_t length); // (size_t length) -> sk_data_t
-int SkData_MakeZeroInitialized(size_t length); // (size_t length) -> sk_data_t
-int SkData_MakeWithCString(const char cstr[]); // (const char cstr[]) -> sk_data_t
-int SkData_MakeWithProc(const uint8_t *ptr, size_t length, void(*proc)(const void *ptr, void *context), void *ctx); // (const void *ptr, size_t length, SkData::ReleaseProc proc, void *ctx) -> sk_data_t
-int SkData_MakeWithoutCopy(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
-int SkData_MakeFromMalloc(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
-int SkData_MakeFromFileName(const char path[]); // (const char path[]) -> sk_data_t
-int SkData_MakeFromFILE(reskia_file_t *f); // (FILE *f) -> sk_data_t
-int SkData_MakeFromFD(int fd); // (int fd) -> sk_data_t
-int SkData_MakeFromStream(reskia_stream_t *stream, size_t size); // (SkStream *stream, size_t size) -> sk_data_t
-int SkData_MakeSubset(const reskia_data_t *src, size_t offset, size_t length); // (const SkData *src, size_t offset, size_t length) -> sk_data_t
-int SkData_MakeEmpty(); // () -> sk_data_t
+sk_data_t SkData_MakeWithCopy(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
+sk_data_t SkData_MakeUninitialized(size_t length); // (size_t length) -> sk_data_t
+sk_data_t SkData_MakeZeroInitialized(size_t length); // (size_t length) -> sk_data_t
+sk_data_t SkData_MakeWithCString(const char cstr[]); // (const char cstr[]) -> sk_data_t
+sk_data_t SkData_MakeWithProc(const uint8_t *ptr, size_t length, void(*proc)(const void *ptr, void *context), void *ctx); // (const void *ptr, size_t length, SkData::ReleaseProc proc, void *ctx) -> sk_data_t
+sk_data_t SkData_MakeWithoutCopy(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
+sk_data_t SkData_MakeFromMalloc(const uint8_t *data, size_t length); // (const void *data, size_t length) -> sk_data_t
+sk_data_t SkData_MakeFromFileName(const char path[]); // (const char path[]) -> sk_data_t
+sk_data_t SkData_MakeFromFILE(reskia_file_t *f); // (FILE *f) -> sk_data_t
+sk_data_t SkData_MakeFromFD(int fd); // (int fd) -> sk_data_t
+sk_data_t SkData_MakeFromStream(reskia_stream_t *stream, size_t size); // (SkStream *stream, size_t size) -> sk_data_t
+sk_data_t SkData_MakeSubset(const reskia_data_t *src, size_t offset, size_t length); // (const SkData *src, size_t offset, size_t length) -> sk_data_t
+sk_data_t SkData_MakeEmpty(); // () -> sk_data_t
 
 #ifdef __cplusplus
 }

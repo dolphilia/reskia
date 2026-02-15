@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_CORNER_PATH_EFFECT_H
 #define RAIA_SKIA_SK_CORNER_PATH_EFFECT_H
 
+#include "../static/static_sk_path_effect.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,7 +15,7 @@ void SkCornerPathEffect_delete(void * cornerPathEffect); // (SkCornerPathEffect 
 
 // static
 
-int SkCornerPathEffect_Make(float radius); // (SkScalar radius) -> sk_path_effect_t
+sk_path_effect_t SkCornerPathEffect_Make(float radius); // (SkScalar radius) -> sk_path_effect_t
 void SkCornerPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

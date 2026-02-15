@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_COLOR_MATRIX_H
 #define RAIA_SKIA_SK_COLOR_MATRIX_H
 
+#include "../static/static_sk_color_matrix.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,8 +28,8 @@ void SkColorMatrix_getRowMajor(reskia_color_matrix_t *color_matrix, float dst[20
 
 // static
 
-int SkColorMatrix_RGBtoYUV(int color_space); // (SkYUVColorSpace color_space) -> sk_color_matrix_t
-int SkColorMatrix_YUVtoRGB(int color_space); // (SkYUVColorSpace color_space) -> sk_color_matrix_t
+sk_color_matrix_t SkColorMatrix_RGBtoYUV(int color_space); // (SkYUVColorSpace color_space) -> sk_color_matrix_t
+sk_color_matrix_t SkColorMatrix_YUVtoRGB(int color_space); // (SkYUVColorSpace color_space) -> sk_color_matrix_t
 
 #ifdef __cplusplus
 }

@@ -8,6 +8,7 @@
 - `phase2-release-api-status.csv`（Phase 2 Step2 の解放API統一専用チェックリスト）
 - `phase2-type-hardening-status.csv`（Phase 2 Step3 の型情報補強専用チェックリスト）
 - `phase2-enum-int-status.csv`（Phase 2 Step3 の enum/int 露出改善専用チェックリスト）
+- `phase2-handle-key-typing-status.csv`（Phase 2 Step3 の static handle key の int 露出改善専用チェックリスト）
 
 更新ルール:
 

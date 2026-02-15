@@ -5,6 +5,8 @@
 #ifndef RAIA_SKIA_SK_CONTOUR_MEASURE_ITER_H
 #define RAIA_SKIA_SK_CONTOUR_MEASURE_ITER_H
 
+#include "../static/static_sk_contour_measure.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,7 +18,7 @@ reskia_contour_measure_iter_t *SkContourMeasureIter_new(); // () -> SkContourMea
 reskia_contour_measure_iter_t *SkContourMeasureIter_new_2(const reskia_path_t *path, bool forceClosed, float resScale); // (const SkPath *path, bool forceClosed, SkScalar resScale) -> SkContourMeasureIter *
 void SkContourMeasureIter_delete(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter)
 void SkContourMeasureIter_reset(reskia_contour_measure_iter_t *contour_measure_iter, const reskia_path_t *path, bool forceClosed, float resScale); // (SkContourMeasureIter *contour_measure_iter, const SkPath *path, bool forceClosed, SkScalar resScale)
-int SkContourMeasureIter_next(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter) -> sk_contour_measure_t
+sk_contour_measure_t SkContourMeasureIter_next(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter) -> sk_contour_measure_t
 
 #ifdef __cplusplus
 }

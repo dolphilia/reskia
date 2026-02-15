@@ -7,6 +7,12 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_drawable.h"
+#include "../static/static_sk_drawable_gpu_draw_handler.h"
+#include "../static/static_sk_flattenable_factory.h"
+#include "../static/static_sk_picture.h"
+#include "../static/static_sk_rect.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,17 +32,17 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 void SkDrawable_delete(reskia_drawable_t *drawable); // owned: caller が保持する参照を release する (SkDrawable *drawable)
 void SkDrawable_draw(reskia_drawable_t *drawable, reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // (SkDrawable *drawable, SkCanvas *canvas, const SkMatrix *matrix)
 void SkDrawable_draw_2(reskia_drawable_t *drawable, reskia_canvas_t *canvas, float x, float y); // (SkDrawable *drawable, SkCanvas *canvas, SkScalar x, SkScalar y)
-int SkDrawable_snapGpuDrawHandler(reskia_drawable_t *drawable, int backendApi, const reskia_matrix_t *matrix, const reskia_i_rect_t *clipBounds, const reskia_image_info_t *bufferInfo); // (SkDrawable *drawable, GrBackendApi backendApi, const SkMatrix *matrix, const SkIRect *clipBounds, const SkImageInfo *bufferInfo) -> sk_drawable_gpu_draw_handler_t
-int SkDrawable_makePictureSnapshot(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_picture_t
+sk_drawable_gpu_draw_handler_t SkDrawable_snapGpuDrawHandler(reskia_drawable_t *drawable, int backendApi, const reskia_matrix_t *matrix, const reskia_i_rect_t *clipBounds, const reskia_image_info_t *bufferInfo); // (SkDrawable *drawable, GrBackendApi backendApi, const SkMatrix *matrix, const SkIRect *clipBounds, const SkImageInfo *bufferInfo) -> sk_drawable_gpu_draw_handler_t
+sk_picture_t SkDrawable_makePictureSnapshot(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_picture_t
 uint32_t SkDrawable_getGenerationID(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> uint32_t
-int SkDrawable_getBounds(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_rect_t
+sk_rect_t SkDrawable_getBounds(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_rect_t
 size_t SkDrawable_approximateBytesUsed(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> size_t
 void SkDrawable_notifyDrawingChanged(reskia_drawable_t *drawable); // (SkDrawable *drawable)
 int SkDrawable_getFlattenableType(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> SkFlattenable::Type
-int SkDrawable_getFactory(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_flattenable_factory_t
+sk_flattenable_factory_t SkDrawable_getFactory(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> sk_flattenable_factory_t
 const char * SkDrawable_getTypeName(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> const char *
 void SkDrawable_flatten(reskia_drawable_t *drawable, reskia_write_buffer_t *write_buffer); // (SkDrawable *drawable, SkWriteBuffer *write_buffer)
-int SkDrawable_serialize(reskia_drawable_t *drawable, const reskia_serial_procs_t *serial_procs); // (SkDrawable *drawable, const SkSerialProcs *serial_procs) -> sk_data_t
+sk_data_t SkDrawable_serialize(reskia_drawable_t *drawable, const reskia_serial_procs_t *serial_procs); // (SkDrawable *drawable, const SkSerialProcs *serial_procs) -> sk_data_t
 size_t SkDrawable_serialize_2(reskia_drawable_t *drawable, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkDrawable *drawable, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkDrawable_unique(reskia_drawable_t *drawable); // (SkDrawable *drawable) -> bool
 void SkDrawable_ref(reskia_drawable_t *drawable); // retained: 参照カウントを増やす (SkDrawable *drawable)
@@ -45,10 +51,10 @@ void SkDrawable_unref(reskia_drawable_t *drawable); // owned: 参照カウント
 // static
 
 int SkDrawable_GetFlattenableType(); // () -> SkFlattenable::Type
-int SkDrawable_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_drawable_t
-int SkDrawable_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
-const char * SkDrawable_FactoryToName(int factory); // (sk_flattenable_factory_t factory) -> const char *
-void SkDrawable_Register(const char name[], int factory); // (const char name[], sk_flattenable_factory_t factory)
+sk_drawable_t SkDrawable_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_drawable_t
+sk_flattenable_factory_t SkDrawable_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
+const char * SkDrawable_FactoryToName(sk_flattenable_factory_t factory); // (sk_flattenable_factory_t factory) -> const char *
+void SkDrawable_Register(const char name[], sk_flattenable_factory_t factory); // (const char name[], sk_flattenable_factory_t factory)
 
 #ifdef __cplusplus
 }

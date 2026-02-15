@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_data.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,11 +26,11 @@ bool SkColorSpace_gammaIsLinear(reskia_color_space_t *color_space); // (SkColorS
 bool SkColorSpace_isNumericalTransferFn(reskia_color_space_t *color_space, reskia_transfer_function_t *fn); // (SkColorSpace *color_space, skcms_TransferFunction *fn) -> bool
 bool SkColorSpace_toXYZD50(reskia_color_space_t *color_space, reskia_matrix3x3_t *toXYZD50); // (SkColorSpace *color_space, skcms_Matrix3x3 *toXYZD50) -> bool
 uint32_t SkColorSpace_toXYZD50Hash(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> uint32_t
-int SkColorSpace_makeLinearGamma(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
-int SkColorSpace_makeSRGBGamma(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
-int SkColorSpace_makeColorSpin(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
+sk_color_space_t SkColorSpace_makeLinearGamma(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
+sk_color_space_t SkColorSpace_makeSRGBGamma(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
+sk_color_space_t SkColorSpace_makeColorSpin(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_color_space_t
 bool SkColorSpace_isSRGB(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> bool
-int SkColorSpace_serialize(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_data_t
+sk_data_t SkColorSpace_serialize(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_data_t
 size_t SkColorSpace_writeToMemory(reskia_color_space_t *color_space, void *memory); // (SkColorSpace *color_space, void *memory) -> size_t
 void SkColorSpace_transferFn(reskia_color_space_t *color_space, float gabcdef[7]); // (SkColorSpace *color_space, float gabcdef[7])
 void SkColorSpace_transferFn_2(reskia_color_space_t *color_space, reskia_transfer_function_t *fn); // (SkColorSpace *color_space, skcms_TransferFunction *fn)
@@ -44,11 +46,11 @@ bool SkColorSpace_refCntGreaterThan(reskia_color_space_t *color_space, int32_t t
 
 // static
 
-int SkColorSpace_MakeSRGB(); // () -> sk_color_space_t
-int SkColorSpace_MakeSRGBLinear(); // () -> sk_color_space_t
-int SkColorSpace_MakeRGB(const reskia_transfer_function_t *transferFn, const reskia_matrix3x3_t *toXYZ); // (const skcms_TransferFunction *transferFn, const skcms_Matrix3x3 *toXYZ) -> sk_color_space_t
-int SkColorSpace_Make(const reskia_icc_profile_t *profile); // (const skcms_ICCProfile *profile) -> sk_color_space_t
-int SkColorSpace_Deserialize(const void *data, size_t length); // (const void *data, size_t length) -> sk_color_space_t
+sk_color_space_t SkColorSpace_MakeSRGB(); // () -> sk_color_space_t
+sk_color_space_t SkColorSpace_MakeSRGBLinear(); // () -> sk_color_space_t
+sk_color_space_t SkColorSpace_MakeRGB(const reskia_transfer_function_t *transferFn, const reskia_matrix3x3_t *toXYZ); // (const skcms_TransferFunction *transferFn, const skcms_Matrix3x3 *toXYZ) -> sk_color_space_t
+sk_color_space_t SkColorSpace_Make(const reskia_icc_profile_t *profile); // (const skcms_ICCProfile *profile) -> sk_color_space_t
+sk_color_space_t SkColorSpace_Deserialize(const void *data, size_t length); // (const void *data, size_t length) -> sk_color_space_t
 bool SkColorSpace_Equals(reskia_color_space_t *color_space_1, const reskia_color_space_t *color_space_2); // (SkColorSpace *color_space_1, const SkColorSpace *color_space_2) -> bool
 
 #ifdef __cplusplus

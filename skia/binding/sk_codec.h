@@ -6,6 +6,11 @@
 #define RAIA_SKIA_SK_CODEC_H
 
 #include <stddef.h>
+#include "../static/static_sk_codec.h"
+#include "../static/static_sk_i_rect.h"
+#include "../static/static_sk_i_size.h"
+#include "../static/static_sk_image_info.h"
+#include "../static/static_sk_stream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,12 +29,12 @@ typedef struct reskia_png_chunk_reader_t reskia_png_chunk_reader_t;
 typedef struct reskia_supported_data_types_t reskia_supported_data_types_t;
 
 void SkCodec_delete(reskia_codec_t *codec); // (SkCodec* codec)
-int SkCodec_getInfo(reskia_codec_t *codec); // (SkCodec* codec) -> sk_image_info_t
-int SkCodec_dimensions(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_size_t
-int SkCodec_bounds(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_rect_t
+sk_image_info_t SkCodec_getInfo(reskia_codec_t *codec); // (SkCodec* codec) -> sk_image_info_t
+sk_i_size_t SkCodec_dimensions(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_size_t
+sk_i_rect_t SkCodec_bounds(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_rect_t
 const void * SkCodec_getICCProfile(reskia_codec_t *codec); // (SkCodec* codec) -> const skcms_ICCProfile*
 int SkCodec_getOrigin(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedOrigin
-int SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t
+sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t
 bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubset); // (SkCodec* codec, SkIRect* desiredSubset) -> bool
 int SkCodec_getEncodedFormat(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedImageFormat
 int SkCodec_getPixels(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes, const reskia_codec_options_t *options); // (SkCodec* codec, const SkImageInfo* info, void* pixels, size_t rowBytes, const SkCodec::Options* options) -> SkCodec::Result
@@ -58,8 +63,8 @@ int SkCodec_getRepetitionCount(reskia_codec_t *codec); // (SkCodec* codec) -> in
 
 size_t SkCodec_MinBufferedBytesNeeded(); // () -> size_t
 const char* SkCodec_ResultToString(int result); // (SkCodec::Result result) -> const char*
-int SkCodec_MakeFromStream(int stream, reskia_codec_result_t *result, reskia_png_chunk_reader_t *pngChunkReader, int selectionPolicy); // (sk_stream_t stream, SkCodec::Result* result, SkPngChunkReader* pngChunkReader, SkCodec::SelectionPolicy selectionPolicy) -> sk_codec_t
-int SkCodec_MakeFromData(int stream, reskia_png_chunk_reader_t *pngChunkReader); // (sk_stream_t stream, SkPngChunkReader* pngChunkReader) -> sk_codec_t
+sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, reskia_codec_result_t *result, reskia_png_chunk_reader_t *pngChunkReader, int selectionPolicy); // (sk_stream_t stream, SkCodec::Result* result, SkPngChunkReader* pngChunkReader, SkCodec::SelectionPolicy selectionPolicy) -> sk_codec_t
+sk_codec_t SkCodec_MakeFromData(sk_stream_t stream, reskia_png_chunk_reader_t *pngChunkReader); // (sk_stream_t stream, SkPngChunkReader* pngChunkReader) -> sk_codec_t
 
 //void SkCodec_Register(bool (*peek)(const void*, size_t), std::unique_ptr<SkCodec> (*make)(std::unique_ptr<SkStream>, SkCodec::Result*));
 

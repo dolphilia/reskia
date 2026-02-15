@@ -7,6 +7,11 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "../static/static_sk_color_4f.h"
+#include "../static/static_sk_color_filter.h"
+#include "../static/static_sk_color_space.h"
+#include "../static/static_sk_data.h"
+#include "../static/static_sk_flattenable_factory.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,14 +30,14 @@ bool SkColorFilter_asAColorMode(reskia_color_filter_t *color_filter, reskia_colo
 bool SkColorFilter_asAColorMatrix(reskia_color_filter_t *color_filter, float matrix[20]); // (SkColorFilter *color_filter, float matrix[20]) -> bool
 bool SkColorFilter_isAlphaUnchanged(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> bool
 reskia_color_t SkColorFilter_filterColor(reskia_color_filter_t *color_filter, reskia_color_t color); // (SkColorFilter *color_filter, SkColor color) -> SkColor
-int SkColorFilter_filterColor4f(reskia_color_filter_t *color_filter, const reskia_color_4f_t *srcColor, reskia_color_space_t *srcCS, reskia_color_space_t *dstCS); // (SkColorFilter *color_filter, const SkColor4f *srcColor, SkColorSpace *srcCS, SkColorSpace *dstCS) -> sk_color_4f_t
-int SkColorFilter_makeComposed(reskia_color_filter_t *color_filter, int inner); // (SkColorFilter *color_filter, sk_color_filter_t inner) -> sk_color_filter_t
-int SkColorFilter_makeWithWorkingColorSpace(reskia_color_filter_t *color_filter, int colorSpace); // (SkColorFilter *color_filter, sk_color_space_t colorSpace) -> sk_color_filter_t
-int SkColorFilter_getFactory(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> sk_flattenable_factory_t
+sk_color_4f_t SkColorFilter_filterColor4f(reskia_color_filter_t *color_filter, const reskia_color_4f_t *srcColor, reskia_color_space_t *srcCS, reskia_color_space_t *dstCS); // (SkColorFilter *color_filter, const SkColor4f *srcColor, SkColorSpace *srcCS, SkColorSpace *dstCS) -> sk_color_4f_t
+sk_color_filter_t SkColorFilter_makeComposed(reskia_color_filter_t *color_filter, sk_color_filter_t inner); // (SkColorFilter *color_filter, sk_color_filter_t inner) -> sk_color_filter_t
+sk_color_filter_t SkColorFilter_makeWithWorkingColorSpace(reskia_color_filter_t *color_filter, sk_color_space_t colorSpace); // (SkColorFilter *color_filter, sk_color_space_t colorSpace) -> sk_color_filter_t
+sk_flattenable_factory_t SkColorFilter_getFactory(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> sk_flattenable_factory_t
 const char *SkColorFilter_getTypeName(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> const char *
 void SkColorFilter_flatten(reskia_color_filter_t *color_filter, reskia_write_buffer_t *write_buffer); // (SkColorFilter *color_filter, SkWriteBuffer *write_buffer)
 int SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> SkColorFilter::Type
-int SkColorFilter_serialize(reskia_color_filter_t *color_filter, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, const SkSerialProcs *serial_procs) -> sk_data_t
+sk_data_t SkColorFilter_serialize(reskia_color_filter_t *color_filter, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, const SkSerialProcs *serial_procs) -> sk_data_t
 size_t SkColorFilter_serialize_2(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkColorFilter_unique(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> bool
 void SkColorFilter_ref(reskia_color_filter_t *color_filter); // retained: 参照カウントを増やす (SkColorFilter *color_filter)
@@ -40,10 +45,10 @@ void SkColorFilter_unref(reskia_color_filter_t *color_filter); // owned: 参照�
 
 // static
 
-int SkColorFilter_Deserialize(const void *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_color_filter_t
-int SkColorFilter_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
-const char *SkColorFilter_FactoryToName(int factory); // (sk_flattenable_factory_t factory) -> const char *
-void SkColorFilter_Register(const char name[], int factory); // (const char name[], sk_flattenable_factory_t factory)
+sk_color_filter_t SkColorFilter_Deserialize(const void *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_color_filter_t
+sk_flattenable_factory_t SkColorFilter_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
+const char *SkColorFilter_FactoryToName(sk_flattenable_factory_t factory); // (sk_flattenable_factory_t factory) -> const char *
+void SkColorFilter_Register(const char name[], sk_flattenable_factory_t factory); // (const char name[], sk_flattenable_factory_t factory)
 
 #ifdef __cplusplus
 }
