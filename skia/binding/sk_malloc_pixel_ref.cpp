@@ -17,12 +17,12 @@
 
 extern "C" {
 
-sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const void *imageInfo, size_t rowBytes) {
-    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeAllocate(* static_cast<const SkImageInfo *>(imageInfo), rowBytes));
+sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes) {
+    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeAllocate(*reinterpret_cast<const SkImageInfo *>(imageInfo), rowBytes));
 }
 
-sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const void *imageInfo, size_t rowBytes, sk_data_t data) {
-    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeWithData(* static_cast<const SkImageInfo *>(imageInfo), rowBytes, static_sk_data_get_entity(data)));
+sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, sk_data_t data) {
+    return static_sk_pixel_ref_make(SkMallocPixelRef::MakeWithData(*reinterpret_cast<const SkImageInfo *>(imageInfo), rowBytes, static_sk_data_get_entity(data)));
 }
 
 }

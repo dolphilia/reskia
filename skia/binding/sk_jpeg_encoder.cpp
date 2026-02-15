@@ -4,26 +4,28 @@
 
 #include "sk_jpeg_encoder.h"
 
+#include "include/encode/SkJpegEncoder.h"
+
 extern "C" {
 
-bool SkJpegEncoder_Encode(SkWStream* dst, const SkPixmap* src, const SkJpegEncoder::Options* options) {
-    return SkJpegEncoder::Encode(dst, *src, *options);
+bool SkJpegEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_jpeg_encoder_options_t *options) {
+    return SkJpegEncoder::Encode(reinterpret_cast<SkWStream *>(dst), *reinterpret_cast<const SkPixmap *>(src), *reinterpret_cast<const SkJpegEncoder::Options *>(options));
 }
 
-bool SkJpegEncoder_Encode_2(SkWStream* dst, const SkYUVAPixmaps* src, const SkColorSpace* srcColorSpace, const SkJpegEncoder::Options* options) {
-    return SkJpegEncoder::Encode(dst, *src, srcColorSpace, *options);
+bool SkJpegEncoder_Encode_2(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options) {
+    return SkJpegEncoder::Encode(reinterpret_cast<SkWStream *>(dst), *reinterpret_cast<const SkYUVAPixmaps *>(src), reinterpret_cast<const SkColorSpace *>(srcColorSpace), *reinterpret_cast<const SkJpegEncoder::Options *>(options));
 }
 
-sk_data_t SkJpegEncoder_Encode_3(GrDirectContext* ctx, const SkImage* img, const SkJpegEncoder::Options* options) {
-    return static_sk_data_make(SkJpegEncoder::Encode(ctx, img, *options));
+sk_data_t SkJpegEncoder_Encode_3(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_jpeg_encoder_options_t *options) {
+    return static_sk_data_make(SkJpegEncoder::Encode(reinterpret_cast<GrDirectContext *>(ctx), reinterpret_cast<const SkImage *>(img), *reinterpret_cast<const SkJpegEncoder::Options *>(options)));
 }
 
-sk_encoder_t SkJpegEncoder_Make(SkWStream* dst, const SkPixmap* src, const SkJpegEncoder::Options* options) {
-    return static_sk_encoder_make(SkJpegEncoder::Make(dst, *src, *options));
+sk_encoder_t SkJpegEncoder_Make(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_jpeg_encoder_options_t *options) {
+    return static_sk_encoder_make(SkJpegEncoder::Make(reinterpret_cast<SkWStream *>(dst), *reinterpret_cast<const SkPixmap *>(src), *reinterpret_cast<const SkJpegEncoder::Options *>(options)));
 }
 
-sk_encoder_t SkJpegEncoder_Make_2(SkWStream* dst, const SkYUVAPixmaps* src, const SkColorSpace* srcColorSpace, const SkJpegEncoder::Options *options) {
-    return static_sk_encoder_make(SkJpegEncoder::Make(dst, *src, srcColorSpace, *options));
+sk_encoder_t SkJpegEncoder_Make_2(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options) {
+    return static_sk_encoder_make(SkJpegEncoder::Make(reinterpret_cast<SkWStream *>(dst), *reinterpret_cast<const SkYUVAPixmaps *>(src), reinterpret_cast<const SkColorSpace *>(srcColorSpace), *reinterpret_cast<const SkJpegEncoder::Options *>(options)));
 }
 
 }

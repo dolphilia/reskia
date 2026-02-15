@@ -5,12 +5,16 @@
 #ifndef RAIA_SKIA_SK_MALLOC_PIXEL_REF_H
 #define RAIA_SKIA_SK_MALLOC_PIXEL_REF_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int SkMallocPixelRef_MakeAllocate(const void *imageInfo, unsigned long rowBytes); // (const SkImageInfo *imageInfo, size_t rowBytes) -> sk_pixel_ref_t
-int SkMallocPixelRef_MakeWithData(const void *imageInfo, unsigned long rowBytes, int data); // (const SkImageInfo &imageInfo, size_t rowBytes, sk_data_t data) -> sk_pixel_ref_t
+typedef struct reskia_image_info_t reskia_image_info_t;
+
+int SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes); // (const SkImageInfo *imageInfo, size_t rowBytes) -> sk_pixel_ref_t
+int SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, int data); // (const SkImageInfo &imageInfo, size_t rowBytes, sk_data_t data) -> sk_pixel_ref_t
 
 #ifdef __cplusplus
 }

@@ -9,11 +9,14 @@
 extern "C" {
 #endif
 
-void SkLine2DPathEffect_delete(void * line2DPathEffect); // (SkLine2DPathEffect * line2DPathEffect)
+typedef struct reskia_line_2d_path_effect_t reskia_line_2d_path_effect_t;
+typedef struct reskia_matrix_t reskia_matrix_t;
+
+void SkLine2DPathEffect_delete(reskia_line_2d_path_effect_t *line2DPathEffect); // (SkLine2DPathEffect * line2DPathEffect)
 
 // static
 
-int SkLine2DPathEffect_Make(float width, const void *matrix); // (SkScalar width, const SkMatrix *matrix) -> sk_path_effect_t
+int SkLine2DPathEffect_Make(float width, const reskia_matrix_t *matrix); // (SkScalar width, const SkMatrix *matrix) -> sk_path_effect_t
 void SkLine2DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

@@ -5,32 +5,38 @@
 #ifndef SK_MASK_H
 #define SK_MASK_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int SkMask_new(const void * img, const void * bounds, unsigned int rowBytes, int format); // (const uint8_t* img, const SkIRect * bounds, uint32_t rowBytes, SkMask::Format format) -> sk_mask_t
-void SkMask_delete(void *mask);
+typedef struct reskia_i_rect_t reskia_i_rect_t;
+typedef struct reskia_mask_t reskia_mask_t;
+
+int SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, int format); // (const uint8_t* img, const SkIRect * bounds, uint32_t rowBytes, SkMask::Format format) -> sk_mask_t
+void SkMask_delete(reskia_mask_t *mask);
 
 // member
 
-const void * SkMask_fImage(void *mask); // (SkMask *mask) -> const uint8_t *
-int SkMask_fBounds(void *mask); // (SkMask *mask) -> sk_i_rect_t
-unsigned int SkMask_fRowBytes(void *mask); // (SkMask *mask) -> uint32_t
-int SkMask_fFormat(void *mask); // (SkMask *mask) -> SkMask::Format
+const uint8_t *SkMask_fImage(reskia_mask_t *mask); // (SkMask *mask) -> const uint8_t *
+int SkMask_fBounds(reskia_mask_t *mask); // (SkMask *mask) -> sk_i_rect_t
+uint32_t SkMask_fRowBytes(reskia_mask_t *mask); // (SkMask *mask) -> uint32_t
+int SkMask_fFormat(reskia_mask_t *mask); // (SkMask *mask) -> SkMask::Format
 
 // Method
-bool SkMask_isEmpty(void *mask); // (SkMask *mask) -> bool
-unsigned long SkMask_computeImageSize(void *mask); // (SkMask *mask) -> size_t
-unsigned long SkMask_computeTotalImageSize(void *mask); // (SkMask *mask) -> size_t
-const void* SkMask_getAddr1(void *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint8_t*
-const void* SkMask_getAddr8(void *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint8_t*
-const void* SkMask_getAddrLCD16(void *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint16_t*
-const void* SkMask_getAddr32(void *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint32_t*
-const void* SkMask_getAddr(void *mask, int x, int y); // (SkMask *mask, int x, int y) -> const void*
+bool SkMask_isEmpty(reskia_mask_t *mask); // (SkMask *mask) -> bool
+size_t SkMask_computeImageSize(reskia_mask_t *mask); // (SkMask *mask) -> size_t
+size_t SkMask_computeTotalImageSize(reskia_mask_t *mask); // (SkMask *mask) -> size_t
+const uint8_t *SkMask_getAddr1(reskia_mask_t *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint8_t*
+const uint8_t *SkMask_getAddr8(reskia_mask_t *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint8_t*
+const uint16_t *SkMask_getAddrLCD16(reskia_mask_t *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint16_t*
+const uint32_t *SkMask_getAddr32(reskia_mask_t *mask, int x, int y); // (SkMask *mask, int x, int y) -> const uint32_t*
+const void *SkMask_getAddr(reskia_mask_t *mask, int x, int y); // (SkMask *mask, int x, int y) -> const void*
 
 // static
-static bool SkMask_IsValidFormat(unsigned int format); // (uint8_t format) -> bool
+bool SkMask_IsValidFormat(uint8_t format); // (uint8_t format) -> bool
 
 #ifdef __cplusplus
 }

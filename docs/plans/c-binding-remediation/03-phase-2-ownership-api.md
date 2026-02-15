@@ -196,11 +196,33 @@ cmake --build skia/cmake-build-local -j 8
     - 変更内容: `SkImageGenerator` API の `void*` を不透明型ポインタへ置換し、`image/pixmap/YUVA/context` 引数と `uint32_t/size_t` シグネチャを正規化
     - `skia/binding/sk_image_info.h` + `skia/binding/sk_image_info.cpp`（37/37 関数 `done`）
     - 変更内容: `SkImageInfo` API の `void*` を不透明型ポインタへ置換し、`SkColorInfo`/`SkColorSpace` 引数と `size_t/uint64_t` シグネチャを正規化
+    - `skia/binding/sk_images.h` + `skia/binding/sk_images.cpp`（7/7 関数 `done`）
+    - 変更内容: `SkImages` API の `void*` を不透明型ポインタへ置換し、`SkBitmap`/`SkPixmap`/`SkImageInfo`/`SkIRect`/`SkMatrix`/`SkPaint` 引数と `size_t` シグネチャを正規化
+    - `skia/binding/sk_jpeg_decoder.h` + `skia/binding/sk_jpeg_decoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkJpegDecoder` API の `void*` を `uint8_t*` / `reskia_codec_result_t*` / `reskia_codecs_decode_context_t*` へ置換し、入力サイズを `size_t` へ正規化
+    - `skia/binding/sk_jpeg_encoder.h` + `skia/binding/sk_jpeg_encoder.cpp`（3/3 関数 `done`）
+    - 変更内容: `SkJpegEncoder` API の suffix 関数で `SkYUVAPixmaps`/`SkColorSpace`/`GrDirectContext`/`SkImage`/`SkJpegEncoder::Options` 引数を不透明型ポインタへ正規化
+    - `skia/binding/sk_line_2d_path_effect.h` + `skia/binding/sk_line_2d_path_effect.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkLine2DPathEffect` API の `void*` を `reskia_line_2d_path_effect_t*` / `reskia_matrix_t*` へ置換
+    - `skia/binding/sk_m_44.h` + `skia/binding/sk_m_44.cpp`（41/41 関数 `done`）
+    - 変更内容: `SkM44` API の `void*` を `reskia_m_44_t*`/`reskia_matrix_t*`/`reskia_v3_t*`/`reskia_v4_t*`/`reskia_rect_t*` へ置換し、列・行メジャ配列を `float*` へ正規化
+    - `skia/binding/sk_malloc_pixel_ref.h` + `skia/binding/sk_malloc_pixel_ref.cpp`（2/2 関数 `done`）
+    - 変更内容: `SkMallocPixelRef` API の `void*` を `reskia_image_info_t*` へ置換し、`rowBytes` を `size_t` へ正規化
+    - `skia/binding/sk_mask.h` + `skia/binding/sk_mask.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkMask` API の `void*` を `reskia_mask_t*`/`reskia_i_rect_t*` と型付き画素ポインタ（`uint8_t*`/`uint16_t*`/`uint32_t*`）へ置換し、`size_t`/`uint8_t` シグネチャを正規化
+    - `skia/binding/sk_mask_builder.h` + `skia/binding/sk_mask_builder.cpp`（15/15 関数 `done`）
+    - 変更内容: `SkMaskBuilder` API の `void*` を `reskia_mask_builder_t*`/`reskia_mask_t*`/`reskia_i_rect_t*` と型付き画素ポインタへ置換し、`AllocImage` を `size_t` + `uint8_t*` へ正規化
+    - `skia/binding/sk_mask_filter.h` + `skia/binding/sk_mask_filter.cpp`（12/12 関数 `done`）
+    - 変更内容: `SkMaskFilter` API の `void*` を `reskia_mask_filter_t*`/`reskia_rect_t*`/`reskia_write_buffer_t*`/`reskia_(de)serial_procs_t*` へ置換し、`serialize` の `size_t` シグネチャを正規化
+    - `skia/binding/sk_matrix.h` + `skia/binding/sk_matrix.cpp`（102/102 関数 `done`）
+    - 変更内容: `SkMatrix` API の `void*` を `reskia_matrix_t*`/`reskia_point_t*`/`reskia_point3_t*`/`reskia_rect_t*`/`reskia_vector_t*`/`reskia_size_t*`/`reskia_rsxform_t*` へ置換し、`SkScalar[]` 入出力を `float*`/`const float*` へ正規化
+    - `skia/binding/sk_memory_stream.h` + `skia/binding/sk_memory_stream.cpp`（36/36 関数 `done`）
+    - 変更内容: `SkMemoryStream` API の `void*` を `reskia_memory_stream_t*`/`reskia_data_t*` へ置換し、バッファ入出力を `uint8_t*`、スカラ out 引数を `float*`/`size_t*` へ正規化
   - チェックリスト規模:
     - 対象ヘッダ: 134
     - 対象関数: 2431
   - 進捗:
-    - `phase2-type-hardening-status.csv`: 939 / 2431 `done`
+    - `phase2-type-hardening-status.csv`: 1177 / 2431 `done`
   - enum/int 露出チェックリスト規模:
     - 対象関数: 263
     - `enum_int_return`: 71
