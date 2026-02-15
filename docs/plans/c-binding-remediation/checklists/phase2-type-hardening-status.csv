@@ -1583,85 +1583,85 @@ void_ptr,skia/binding/sk_pixmap.h,skia/binding/sk_pixmap.cpp,SkPixmap_scalePixel
 void_ptr|primitive|semantic,skia/binding/sk_pixmap.h,skia/binding/sk_pixmap.cpp,SkPixmap_erase,62,done,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix|primitive|semantic,skia/binding/sk_pixmap.h,skia/binding/sk_pixmap.cpp,SkPixmap_erase_2,63,done,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix,skia/binding/sk_pixmap.h,skia/binding/sk_pixmap.cpp,SkPixmap_erase_3,64,done,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_IsPng,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_Decode,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_Decode_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Encode,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Encode_2,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Make,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_dot,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_cross,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_scale_2,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_iset,25,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_iset_2,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_setAbs,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Normalize,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_CrossProduct,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_DotProduct,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Distance,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Offset,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Offset_2,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_delete,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_x,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_y,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_z,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_set,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_length,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_normalize,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_makeScale,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_scale,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_isFinite,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_dot,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_cross,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_DotProduct,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_CrossProduct,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_new,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_new_2,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_delete,15,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getType,16,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_type,17,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isEmpty,18,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isRect,19,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isOval,20,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isSimple,21,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isNinePatch,22,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isComplex,23,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_width,24,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_height,25,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getSimpleRadii,26,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setEmpty,27,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRect,28,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setOval,29,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRectXY,30,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setNinePatch,31,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRectRadii,32,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_rect,33,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_radii,34,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getBounds,35,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_inset,36,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_inset_2,37,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_outset,38,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_outset_2,39,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_offset,40,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_makeOffset,41,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_contains,42,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isValid,43,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_writeToMemory,44,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|primitive,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_readFromMemory,45,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_transform,46,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dump,47,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dumpToString,48,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dump_2,49,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dumpHex,50,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeRect,55,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeOval,56,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeRectXY,57,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_delete,12,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_allocHandle,13,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_updateHandle,14,todo,,from step3 manifests: function declaration requires typed-API review
-void_ptr,skia/binding/sk_raw_decoder.h,skia/binding/sk_raw_decoder.cpp,SkRawDecoder_IsRaw,15,todo,,from step3 manifests: function declaration requires typed-API review
-suffix,skia/binding/sk_raw_decoder.h,skia/binding/sk_raw_decoder.cpp,SkRawDecoder_Decode_2,17,todo,,from step3 manifests: function declaration requires typed-API review
+void_ptr|primitive,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_IsPng,12,done,,typed opaque aliases introduced for SkPngDecoder API; input buffer and codec result/decodeContext parameters hardened
+void_ptr,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_Decode,13,done,,typed opaque aliases introduced for SkPngDecoder API; input buffer and codec result/decodeContext parameters hardened
+void_ptr|suffix,skia/binding/sk_png_decoder.h,skia/binding/sk_png_decoder.cpp,SkPngDecoder_Decode_2,14,done,,typed opaque aliases introduced for SkPngDecoder API; input buffer and codec result/decodeContext parameters hardened
+void_ptr,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Encode,12,done,,typed opaque aliases introduced for SkPngEncoder API; stream/pixmap/context/image/options parameters hardened
+void_ptr|suffix,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Encode_2,13,done,,typed opaque aliases introduced for SkPngEncoder API; stream/pixmap/context/image/options parameters hardened
+void_ptr,skia/binding/sk_png_encoder.h,skia/binding/sk_png_encoder.cpp,SkPngEncoder_Make,14,done,,typed opaque aliases introduced for SkPngEncoder API; stream/pixmap/context/image/options parameters hardened
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_delete,12,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_dot,15,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_cross,17,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr|suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_scale_2,22,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_iset,25,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_iset_2,26,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_setAbs,28,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Normalize,35,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_CrossProduct,37,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_DotProduct,38,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Distance,39,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Offset,40,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr|suffix,skia/binding/sk_point.h,skia/binding/sk_point.cpp,SkPoint_Offset_2,41,done,,typed opaque aliases introduced for SkPoint pointer APIs; vector/point/i_point parameters hardened while sk_point_t value-handle API kept
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_delete,15,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_x,16,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_y,17,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_z,18,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_set,19,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_length,20,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_normalize,21,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_makeScale,22,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_scale,23,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_isFinite,24,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_dot,25,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_cross,26,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_DotProduct,32,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_point_3.h,skia/binding/sk_point_3.cpp,SkPoint3_CrossProduct,33,done,,typed opaque alias reskia_point_3_t introduced for SkPoint3 pointer APIs; all pointer params hardened
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_new,13,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_new_2,14,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_delete,15,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getType,16,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_type,17,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isEmpty,18,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isRect,19,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isOval,20,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isSimple,21,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isNinePatch,22,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isComplex,23,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_width,24,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_height,25,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getSimpleRadii,26,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setEmpty,27,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRect,28,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setOval,29,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRectXY,30,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setNinePatch,31,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_setRectRadii,32,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_rect,33,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_radii,34,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_getBounds,35,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_inset,36,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_inset_2,37,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_outset,38,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_outset_2,39,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_offset,40,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_makeOffset,41,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_contains,42,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_isValid,43,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|primitive,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_writeToMemory,44,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|primitive,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_readFromMemory,45,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_transform,46,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dump,47,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dumpToString,48,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr|suffix,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dump_2,49,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_dumpHex,50,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeRect,55,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeOval,56,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_r_rect.h,skia/binding/sk_r_rect.cpp,SkRRect_MakeRectXY,57,done,,typed opaque aliases introduced for SkRRect API; rect/matrix/vector handles hardened and size_t normalization applied
+void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_delete,12,done,,typed opaque aliases introduced for SkRasterHandleAllocator API; handle/info/rec/matrix/irect parameters hardened
+void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_allocHandle,13,done,,typed opaque aliases introduced for SkRasterHandleAllocator API; handle/info/rec/matrix/irect parameters hardened
+void_ptr,skia/binding/sk_raster_handle_allocator.h,skia/binding/sk_raster_handle_allocator.cpp,SkRasterHandleAllocator_updateHandle,14,done,,typed opaque aliases introduced for SkRasterHandleAllocator API; handle/info/rec/matrix/irect parameters hardened
+void_ptr,skia/binding/sk_raw_decoder.h,skia/binding/sk_raw_decoder.cpp,SkRawDecoder_IsRaw,15,done,,typed decoder aliases introduced for SkRawDecoder API; removed C++ concrete types from C header and hardened pointer/size signatures
+suffix,skia/binding/sk_raw_decoder.h,skia/binding/sk_raw_decoder.cpp,SkRawDecoder_Decode_2,17,done,,typed decoder aliases introduced for SkRawDecoder API; removed C++ concrete types from C header and hardened pointer/size signatures
 void_ptr,skia/binding/sk_read_buffer.h,skia/binding/sk_read_buffer.cpp,SkReadBuffer_new,12,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr|suffix|primitive,skia/binding/sk_read_buffer.h,skia/binding/sk_read_buffer.cpp,SkReadBuffer_new_2,13,todo,,from step3 manifests: function declaration requires typed-API review
 void_ptr,skia/binding/sk_read_buffer.h,skia/binding/sk_read_buffer.cpp,SkReadBuffer_delete,14,todo,,from step3 manifests: function declaration requires typed-API review

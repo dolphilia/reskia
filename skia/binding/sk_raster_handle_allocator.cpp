@@ -6,16 +6,21 @@
 
 extern "C" {
 
-void SkRasterHandleAllocator_delete(void *raster_handle_allocator) {
-    delete (SkRasterHandleAllocator *)raster_handle_allocator;
+void SkRasterHandleAllocator_delete(reskia_raster_handle_allocator_t *raster_handle_allocator) {
+    delete reinterpret_cast<SkRasterHandleAllocator *>(raster_handle_allocator);
 }
 
-bool SkRasterHandleAllocator_allocHandle(SkRasterHandleAllocator *raster_handle_allocator, const SkImageInfo *info, SkRasterHandleAllocator::Rec *rec) {
-    return raster_handle_allocator->allocHandle(*info, rec);
+bool SkRasterHandleAllocator_allocHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, const reskia_image_info_t *info, reskia_raster_handle_allocator_rec_t *rec) {
+    return reinterpret_cast<SkRasterHandleAllocator *>(raster_handle_allocator)->allocHandle(
+            *reinterpret_cast<const SkImageInfo *>(info),
+            reinterpret_cast<SkRasterHandleAllocator::Rec *>(rec));
 }
 
-void SkRasterHandleAllocator_updateHandle(SkRasterHandleAllocator *raster_handle_allocator, SkRasterHandleAllocator::Handle handle, const SkMatrix *matrix, const SkIRect *irect) {
-    raster_handle_allocator->updateHandle(handle, *matrix, *irect);
+void SkRasterHandleAllocator_updateHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, reskia_raster_handle_t handle, const reskia_matrix_t *matrix, const reskia_i_rect_t *irect) {
+    reinterpret_cast<SkRasterHandleAllocator *>(raster_handle_allocator)->updateHandle(
+            reinterpret_cast<SkRasterHandleAllocator::Handle>(handle),
+            *reinterpret_cast<const SkMatrix *>(matrix),
+            *reinterpret_cast<const SkIRect *>(irect));
 }
 
 // static

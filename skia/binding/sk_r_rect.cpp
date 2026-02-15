@@ -18,156 +18,158 @@ extern "C" {
 
 //SkRRect & operator=(const SkRRect &rrect)
 
-void *SkRRect_new() {
-    return new SkRRect();
+reskia_r_rect_t *SkRRect_new() {
+    return reinterpret_cast<reskia_r_rect_t *>(new SkRRect());
 }
 
-void *SkRRect_new_2(const void *rrect) {
-    return new SkRRect(* static_cast<const SkRRect *>(rrect));
+reskia_r_rect_t *SkRRect_new_2(const reskia_r_rect_t *rrect) {
+    return reinterpret_cast<reskia_r_rect_t *>(new SkRRect(*reinterpret_cast<const SkRRect *>(rrect)));
 }
 
-void SkRRect_delete(void *rrect) {
-    delete static_cast<SkRRect *>(rrect);
+void SkRRect_delete(reskia_r_rect_t *rrect) {
+    delete reinterpret_cast<SkRRect *>(rrect);
 }
 
-int getType(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->getType();
+int SkRRect_getType(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->getType();
 }
 
-int type(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->type();
+int SkRRect_type(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->type();
 }
 
-bool SkRRect_isEmpty(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isEmpty();
+bool SkRRect_isEmpty(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isEmpty();
 }
 
-bool SkRRect_isRect(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isRect();
+bool SkRRect_isRect(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isRect();
 }
 
-bool SkRRect_isOval(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isOval();
+bool SkRRect_isOval(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isOval();
 }
 
-bool SkRRect_isSimple(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isSimple();
+bool SkRRect_isSimple(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isSimple();
 }
 
-bool SkRRect_isNinePatch(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isNinePatch();
+bool SkRRect_isNinePatch(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isNinePatch();
 }
 
-bool SkRRect_isComplex(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isComplex();
+bool SkRRect_isComplex(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isComplex();
 }
 
-float SkRRect_width(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->width();
+float SkRRect_width(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->width();
 }
 
-float SkRRect_height(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->height();
+float SkRRect_height(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->height();
 }
 
-sk_point_t SkRRect_getSimpleRadii(void *rrect) {
-    return static_sk_point_make(static_cast<SkRRect *>(rrect)->getSimpleRadii());
+sk_point_t SkRRect_getSimpleRadii(reskia_r_rect_t *rrect) {
+    return static_sk_point_make(reinterpret_cast<SkRRect *>(rrect)->getSimpleRadii());
 }
 
-void SkRRect_setEmpty(void *rrect) {
-    static_cast<SkRRect *>(rrect)->setEmpty();
+void SkRRect_setEmpty(reskia_r_rect_t *rrect) {
+    reinterpret_cast<SkRRect *>(rrect)->setEmpty();
 }
 
-void SkRRect_setRect(void *rrect, const void *rect) {
-    static_cast<SkRRect *>(rrect)->setRect(* static_cast<const SkRect *>(rect));
+void SkRRect_setRect(reskia_r_rect_t *rrect, const reskia_rect_t *rect) {
+    reinterpret_cast<SkRRect *>(rrect)->setRect(* reinterpret_cast<const SkRect *>(rect));
 }
 
-void SkRRect_setOval(void *rrect, const void *oval) {
-    static_cast<SkRRect *>(rrect)->setOval(* static_cast<const SkRect *>(oval));
+void SkRRect_setOval(reskia_r_rect_t *rrect, const reskia_rect_t *oval) {
+    reinterpret_cast<SkRRect *>(rrect)->setOval(* reinterpret_cast<const SkRect *>(oval));
 }
 
-void SkRRect_setRectXY(void *rrect, const void *rect, float xRad, float yRad) {
-    static_cast<SkRRect *>(rrect)->setRectXY(* static_cast<const SkRect *>(rect), xRad, yRad);
+void SkRRect_setRectXY(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float xRad, float yRad) {
+    reinterpret_cast<SkRRect *>(rrect)->setRectXY(* reinterpret_cast<const SkRect *>(rect), xRad, yRad);
 }
 
-void SkRRect_setNinePatch(void *rrect, const void *rect, float leftRad, float topRad, float rightRad, float bottomRad) {
-    static_cast<SkRRect *>(rrect)->setNinePatch(* static_cast<const SkRect *>(rect), leftRad, topRad, rightRad, bottomRad);
+void SkRRect_setNinePatch(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float leftRad, float topRad, float rightRad, float bottomRad) {
+    reinterpret_cast<SkRRect *>(rrect)->setNinePatch(* reinterpret_cast<const SkRect *>(rect), leftRad, topRad, rightRad, bottomRad);
 }
 
-void SkRRect_setRectRadii(void *rrect, const void *rect, const void * radii) {
-    static_cast<SkRRect *>(rrect)->setRectRadii(* static_cast<const SkRect *>(rect), static_cast<const SkVector *>(radii));
+void SkRRect_setRectRadii(reskia_r_rect_t *rrect, const reskia_rect_t *rect, const reskia_vector_t *radii) {
+    reinterpret_cast<SkRRect *>(rrect)->setRectRadii(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkVector *>(radii));
 }
 
-const void * SkRRect_rect(void *rrect) {
-    return &static_cast<SkRRect *>(rrect)->rect();
+const reskia_rect_t *SkRRect_rect(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<const reskia_rect_t *>(
+            &reinterpret_cast<SkRRect *>(rrect)->rect());
 }
 
-sk_point_t SkRRect_radii(void *rrect, int corner) {
-    return static_sk_point_make(static_cast<SkRRect *>(rrect)->radii(static_cast<SkRRect::Corner>(corner)));
+sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, int corner) {
+    return static_sk_point_make(reinterpret_cast<SkRRect *>(rrect)->radii(static_cast<SkRRect::Corner>(corner)));
 }
 
-const void * SkRRect_getBounds(void *rrect) {
-    return &static_cast<SkRRect *>(rrect)->getBounds();
+const reskia_rect_t *SkRRect_getBounds(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<const reskia_rect_t *>(
+            &reinterpret_cast<SkRRect *>(rrect)->getBounds());
 }
 
-void SkRRect_inset(void *rrect, float dx, float dy, void *dst) {
-    static_cast<SkRRect *>(rrect)->inset(dx, dy, static_cast<SkRRect *>(dst));
+void SkRRect_inset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *dst) {
+    reinterpret_cast<SkRRect *>(rrect)->inset(dx, dy, reinterpret_cast<SkRRect *>(dst));
 }
 
-void SkRRect_inset_2(void *rrect, float dx, float dy) {
-    static_cast<SkRRect *>(rrect)->inset(dx, dy);
+void SkRRect_inset_2(reskia_r_rect_t *rrect, float dx, float dy) {
+    reinterpret_cast<SkRRect *>(rrect)->inset(dx, dy);
 }
 
-void SkRRect_outset(void *rrect, float dx, float dy, void *dst) {
-    static_cast<SkRRect *>(rrect)->outset(dx, dy, static_cast<SkRRect *>(dst));
+void SkRRect_outset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *dst) {
+    reinterpret_cast<SkRRect *>(rrect)->outset(dx, dy, reinterpret_cast<SkRRect *>(dst));
 }
 
-void SkRRect_outset_2(void *rrect, float dx, float dy) {
-    static_cast<SkRRect *>(rrect)->outset(dx, dy);
+void SkRRect_outset_2(reskia_r_rect_t *rrect, float dx, float dy) {
+    reinterpret_cast<SkRRect *>(rrect)->outset(dx, dy);
 }
 
-void SkRRect_offset(void *rrect, float dx, float dy) {
-    static_cast<SkRRect *>(rrect)->offset(dx, dy);
+void SkRRect_offset(reskia_r_rect_t *rrect, float dx, float dy) {
+    reinterpret_cast<SkRRect *>(rrect)->offset(dx, dy);
 }
 
-sk_r_rect_t SkRRect_makeOffset(void *rrect, float dx, float dy) {
-    return static_sk_r_rect_make(static_cast<SkRRect *>(rrect)->makeOffset(dx, dy));
+sk_r_rect_t SkRRect_makeOffset(reskia_r_rect_t *rrect, float dx, float dy) {
+    return static_sk_r_rect_make(reinterpret_cast<SkRRect *>(rrect)->makeOffset(dx, dy));
 }
 
-bool SkRRect_contains(void *rrect, const void *rect) {
-    return static_cast<SkRRect *>(rrect)->contains(* static_cast<const SkRect *>(rect));
+bool SkRRect_contains(reskia_r_rect_t *rrect, const reskia_rect_t *rect) {
+    return reinterpret_cast<SkRRect *>(rrect)->contains(* reinterpret_cast<const SkRect *>(rect));
 }
 
-bool SkRRect_isValid(void *rrect) {
-    return static_cast<SkRRect *>(rrect)->isValid();
+bool SkRRect_isValid(reskia_r_rect_t *rrect) {
+    return reinterpret_cast<SkRRect *>(rrect)->isValid();
 }
 
-size_t SkRRect_writeToMemory(void *rrect, void *buffer) {
-    return static_cast<SkRRect *>(rrect)->writeToMemory(buffer);
+size_t SkRRect_writeToMemory(reskia_r_rect_t *rrect, void *buffer) {
+    return reinterpret_cast<SkRRect *>(rrect)->writeToMemory(buffer);
 }
 
-size_t SkRRect_readFromMemory(void *rrect, const void *buffer, size_t length) {
-    return static_cast<SkRRect *>(rrect)->readFromMemory(buffer, length);
+size_t SkRRect_readFromMemory(reskia_r_rect_t *rrect, const void *buffer, size_t length) {
+    return reinterpret_cast<SkRRect *>(rrect)->readFromMemory(buffer, length);
 }
 
-bool SkRRect_transform(void *rrect, const void *matrix, void *dst) {
-    return static_cast<SkRRect *>(rrect)->transform(* static_cast<const SkMatrix *>(matrix), static_cast<SkRRect *>(dst));
+bool SkRRect_transform(reskia_r_rect_t *rrect, const reskia_matrix_t *matrix, reskia_r_rect_t *dst) {
+    return reinterpret_cast<SkRRect *>(rrect)->transform(* reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<SkRRect *>(dst));
 }
 
-void SkRRect_dump(void *rrect, bool asHex) {
-    static_cast<SkRRect *>(rrect)->dump(asHex);
+void SkRRect_dump(reskia_r_rect_t *rrect, bool asHex) {
+    reinterpret_cast<SkRRect *>(rrect)->dump(asHex);
 }
 
-sk_string_t SkRRect_dumpToString(void *rrect, bool asHex) {
-    return static_sk_string_make(static_cast<SkRRect *>(rrect)->dumpToString(asHex));
+sk_string_t SkRRect_dumpToString(reskia_r_rect_t *rrect, bool asHex) {
+    return static_sk_string_make(reinterpret_cast<SkRRect *>(rrect)->dumpToString(asHex));
 }
 
-void SkRRect_dump_2(void *rrect) {
-    static_cast<SkRRect *>(rrect)->dump();
+void SkRRect_dump_2(reskia_r_rect_t *rrect) {
+    reinterpret_cast<SkRRect *>(rrect)->dump();
 }
 
-void SkRRect_dumpHex(void *rrect) {
-    static_cast<SkRRect *>(rrect)->dumpHex();
+void SkRRect_dumpHex(reskia_r_rect_t *rrect) {
+    reinterpret_cast<SkRRect *>(rrect)->dumpHex();
 }
 
 // static
@@ -176,16 +178,16 @@ sk_r_rect_t SkRRect_MakeEmpty() {
     return static_sk_r_rect_make(SkRRect::MakeEmpty());
 }
 
-sk_r_rect_t SkRRect_MakeRect(const void *r) {
-    return static_sk_r_rect_make(SkRRect::MakeRect(* static_cast<const SkRect *>(r)));
+sk_r_rect_t SkRRect_MakeRect(const reskia_rect_t *r) {
+    return static_sk_r_rect_make(SkRRect::MakeRect(* reinterpret_cast<const SkRect *>(r)));
 }
 
-sk_r_rect_t SkRRect_MakeOval(const void *oval) {
-    return static_sk_r_rect_make(SkRRect::MakeOval(* static_cast<const SkRect *>(oval)));
+sk_r_rect_t SkRRect_MakeOval(const reskia_rect_t *oval) {
+    return static_sk_r_rect_make(SkRRect::MakeOval(* reinterpret_cast<const SkRect *>(oval)));
 }
 
-sk_r_rect_t SkRRect_MakeRectXY(const void *rect, float xRad, float yRad) {
-    return static_sk_r_rect_make(SkRRect::MakeRectXY(* (const SkRect *)rect, xRad, yRad));
+sk_r_rect_t SkRRect_MakeRectXY(const reskia_rect_t *rect, float xRad, float yRad) {
+    return static_sk_r_rect_make(SkRRect::MakeRectXY(*reinterpret_cast<const SkRect *>(rect), xRad, yRad));
 }
 
 }
