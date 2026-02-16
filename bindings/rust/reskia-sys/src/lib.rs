@@ -28,7 +28,7 @@ unsafe extern "C" {
     pub fn static_sk_image_info_get_ptr(key: sk_image_info_t) -> *mut c_void;
     pub fn static_sk_image_info_delete(key: sk_image_info_t);
 
-    pub fn SkSurfaces_Raster_2(
+    pub fn SkSurfaces_RasterWithoutRowBytes(
         image_info: *const reskia_image_info_t,
         props: *const reskia_surface_props_t,
     ) -> sk_surface_t;

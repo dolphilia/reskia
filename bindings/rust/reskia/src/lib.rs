@@ -387,7 +387,7 @@ mod tests {
         let info_ptr =
             NonNull::new(info_ptr).ok_or(Error::NullReturn("SkImageInfo_MakeN32Premul"))?;
         let surface_handle = unsafe {
-            sys::SkSurfaces_Raster_2(
+            sys::SkSurfaces_RasterWithoutRowBytes(
                 info_ptr.as_ptr().cast::<sys::reskia_image_info_t>(),
                 ptr::null::<sys::reskia_surface_props_t>(),
             )
