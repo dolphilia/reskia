@@ -1,0 +1,325 @@
+file,status,phase,owner,note
+skia/handles/static_sk_android_codec-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_android_codec.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_android_codec.h,todo,,,
+skia/handles/static_sk_b_box_hierarchy-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_b_box_hierarchy.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_b_box_hierarchy.h,todo,,,
+skia/handles/static_sk_blend_mode-internal.h,todo,,,
+skia/handles/static_sk_blend_mode.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_blend_mode.h,todo,,,
+skia/handles/static_sk_blender-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_blender.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_blender.h,todo,,,
+skia/handles/static_sk_canvas-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_canvas.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_canvas.h,todo,,,
+skia/handles/static_sk_capabilities-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_capabilities.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_capabilities.h,todo,,,
+skia/handles/static_sk_codec-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_codec.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_codec.h,todo,,,
+skia/handles/static_sk_codecs_decoder-internal.h,todo,,,
+skia/handles/static_sk_codecs_decoder.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_codecs_decoder.h,todo,,,
+skia/handles/static_sk_color-internal.h,todo,,,
+skia/handles/static_sk_color.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_color.h,todo,,,
+skia/handles/static_sk_color_4f-internal.h,todo,,,
+skia/handles/static_sk_color_4f.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_4f.h,todo,,,
+skia/handles/static_sk_color_filter-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_color_filter.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_filter.h,todo,,,
+skia/handles/static_sk_color_info-internal.h,todo,,,
+skia/handles/static_sk_color_info.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_info.h,todo,,,
+skia/handles/static_sk_color_matrix-internal.h,todo,,,
+skia/handles/static_sk_color_matrix.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_matrix.h,todo,,,
+skia/handles/static_sk_color_space-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_color_space.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_space.h,todo,,,
+skia/handles/static_sk_color_table-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_color_table.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_color_table.h,todo,,,
+skia/handles/static_sk_contour_measure-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_contour_measure.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_contour_measure.h,todo,,,
+skia/handles/static_sk_cubic_resampler-internal.h,todo,,,
+skia/handles/static_sk_cubic_resampler.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_cubic_resampler.h,todo,,,
+skia/handles/static_sk_data-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_data.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_data.h,todo,,,
+skia/handles/static_sk_data_table-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_data_table.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_data_table.h,todo,,,
+skia/handles/static_sk_document-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_document.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_document.h,todo,,,
+skia/handles/static_sk_drawable-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_drawable.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_drawable.h,todo,,,
+skia/handles/static_sk_drawable_gpu_draw_handler-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_drawable_gpu_draw_handler.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_drawable_gpu_draw_handler.h,todo,,,
+skia/handles/static_sk_encoder-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_encoder.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_encoder.h,todo,,,
+skia/handles/static_sk_encoder_frame-internal.h,todo,,,
+skia/handles/static_sk_encoder_frame.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_encoder_frame.h,todo,,,
+skia/handles/static_sk_executor-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_executor.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_executor.h,todo,,,
+skia/handles/static_sk_file_stream-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_file_stream.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_file_stream.h,todo,,,
+skia/handles/static_sk_flattenable-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_flattenable.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_flattenable.h,todo,,,
+skia/handles/static_sk_flattenable_factory-internal.h,todo,,,
+skia/handles/static_sk_flattenable_factory.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_flattenable_factory.h,todo,,,
+skia/handles/static_sk_font-internal.h,todo,,,
+skia/handles/static_sk_font.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_font.h,todo,,,
+skia/handles/static_sk_font_arguments-internal.h,todo,,,
+skia/handles/static_sk_font_arguments.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_font_arguments.h,todo,,,
+skia/handles/static_sk_font_arguments_palette-internal.h,todo,,,
+skia/handles/static_sk_font_arguments_palette.cpp,done,phase1,codex,"step1+step3: handle_table 適用 + set/get_ptr/delete 無効キー統一"
+skia/handles/static_sk_font_arguments_palette.h,todo,,,
+skia/handles/static_sk_font_arguments_variation_position-internal.h,todo,,,
+skia/handles/static_sk_font_arguments_variation_position.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_arguments_variation_position.h,todo,,,
+skia/handles/static_sk_font_mgr-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_mgr.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_mgr.h,todo,,,
+skia/handles/static_sk_font_style-internal.h,todo,,,
+skia/handles/static_sk_font_style.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_style.h,todo,,,
+skia/handles/static_sk_font_style_set-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_style_set.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_font_style_set.h,todo,,,
+skia/handles/static_sk_i_point-internal.h,todo,,,
+skia/handles/static_sk_i_point.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_i_point.h,todo,,,
+skia/handles/static_sk_i_rect-internal.h,todo,,,
+skia/handles/static_sk_i_rect.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_i_rect.h,todo,,,
+skia/handles/static_sk_i_size-internal.h,todo,,,
+skia/handles/static_sk_i_size.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_i_size.h,todo,,,
+skia/handles/static_sk_id_change_listener-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_id_change_listener.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_id_change_listener.h,todo,,,
+skia/handles/static_sk_image-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image.h,todo,,,
+skia/handles/static_sk_image_filter-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_filter.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_filter.h,todo,,,
+skia/handles/static_sk_image_generator-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_generator.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_generator.h,todo,,,
+skia/handles/static_sk_image_info-internal.h,todo,,,
+skia/handles/static_sk_image_info.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_info.h,todo,,,
+skia/handles/static_sk_image_read_pixels_callback-internal.h,todo,,,
+skia/handles/static_sk_image_read_pixels_callback.cpp,na,phase1,codex,実装/API未定義（コメントアウトのみ）
+skia/handles/static_sk_image_read_pixels_callback.h,todo,,,
+skia/handles/static_sk_image_required_properties-internal.h,todo,,,
+skia/handles/static_sk_image_required_properties.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_image_required_properties.h,todo,,,
+skia/handles/static_sk_m_44-internal.h,todo,,,
+skia/handles/static_sk_m_44.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_m_44.h,todo,,,
+skia/handles/static_sk_mask-internal.h,todo,,,
+skia/handles/static_sk_mask.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mask.h,todo,,,
+skia/handles/static_sk_mask_builder-internal.h,todo,,,
+skia/handles/static_sk_mask_builder.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mask_builder.h,todo,,,
+skia/handles/static_sk_mask_filter-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mask_filter.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mask_filter.h,todo,,,
+skia/handles/static_sk_matrix-internal.h,todo,,,
+skia/handles/static_sk_matrix.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_matrix.h,todo,,,
+skia/handles/static_sk_memory_stream-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_memory_stream.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_memory_stream.h,todo,,,
+skia/handles/static_sk_mesh_child_ptr-internal.h,todo,,,
+skia/handles/static_sk_mesh_child_ptr.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_child_ptr.h,todo,,,
+skia/handles/static_sk_mesh_index_buffer-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_index_buffer.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_index_buffer.h,todo,,,
+skia/handles/static_sk_mesh_result-internal.h,todo,,,
+skia/handles/static_sk_mesh_result.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_result.h,todo,,,
+skia/handles/static_sk_mesh_specification-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_specification.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_specification.h,todo,,,
+skia/handles/static_sk_mesh_specification_attribute-internal.h,todo,,,
+skia/handles/static_sk_mesh_specification_attribute.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_specification_attribute.h,todo,,,
+skia/handles/static_sk_mesh_specification_result-internal.h,todo,,,
+skia/handles/static_sk_mesh_specification_result.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_specification_result.h,todo,,,
+skia/handles/static_sk_mesh_vertex_buffer-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_vertex_buffer.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_mesh_vertex_buffer.h,todo,,,
+skia/handles/static_sk_paint-internal.h,todo,,,
+skia/handles/static_sk_paint.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_paint.h,todo,,,
+skia/handles/static_sk_path-internal.h,todo,,,
+skia/handles/static_sk_path.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_path.h,todo,,,
+skia/handles/static_sk_path_effect-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_path_effect.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_path_effect.h,todo,,,
+skia/handles/static_sk_picture-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_picture.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_picture.h,todo,,,
+skia/handles/static_sk_pixel_ref-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_pixel_ref.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_pixel_ref.h,todo,,,
+skia/handles/static_sk_pixmap-internal.h,todo,,,
+skia/handles/static_sk_pixmap.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_pixmap.h,todo,,,
+skia/handles/static_sk_point-internal.h,todo,,,
+skia/handles/static_sk_point.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_point.h,todo,,,
+skia/handles/static_sk_point_3-internal.h,todo,,,
+skia/handles/static_sk_point_3.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_point_3.h,todo,,,
+skia/handles/static_sk_point_two-internal.h,todo,,,
+skia/handles/static_sk_point_two.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_point_two.h,todo,,,
+skia/handles/static_sk_r_rect-internal.h,todo,,,
+skia/handles/static_sk_r_rect.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_r_rect.h,todo,,,
+skia/handles/static_sk_rect-internal.h,todo,,,
+skia/handles/static_sk_rect.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_rect.h,todo,,,
+skia/handles/static_sk_rsx_form-internal.h,todo,,,
+skia/handles/static_sk_rsx_form.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_rsx_form.h,todo,,,
+skia/handles/static_sk_runtime_effect-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect.h,todo,,,
+skia/handles/static_sk_runtime_effect_builder_builder_child-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_builder_builder_child.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_builder_builder_child.h,todo,,,
+skia/handles/static_sk_runtime_effect_builder_builder_uniform-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_builder_builder_uniform.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_builder_builder_uniform.h,todo,,,
+skia/handles/static_sk_runtime_effect_child-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_child.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_child.h,todo,,,
+skia/handles/static_sk_runtime_effect_child_ptr-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_child_ptr.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_child_ptr.h,todo,,,
+skia/handles/static_sk_runtime_effect_result-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_result.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_result.h,todo,,,
+skia/handles/static_sk_runtime_effect_traced_shader-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_traced_shader.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_traced_shader.h,todo,,,
+skia/handles/static_sk_runtime_effect_uniform-internal.h,todo,,,
+skia/handles/static_sk_runtime_effect_uniform.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_runtime_effect_uniform.h,todo,,,
+skia/handles/static_sk_sampling_options-internal.h,todo,,,
+skia/handles/static_sk_sampling_options.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_sampling_options.h,todo,,,
+skia/handles/static_sk_shader-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_shader.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_shader.h,todo,,,
+skia/handles/static_sk_size_t-internal.h,todo,,,
+skia/handles/static_sk_size_t.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_size_t.h,todo,,,
+skia/handles/static_sk_stream-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream.h,todo,,,
+skia/handles/static_sk_stream_asset-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_asset.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_asset.h,todo,,,
+skia/handles/static_sk_stream_memory-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_memory.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_memory.h,todo,,,
+skia/handles/static_sk_stream_rewindable-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_rewindable.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_rewindable.h,todo,,,
+skia/handles/static_sk_stream_seekable-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_seekable.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stream_seekable.h,todo,,,
+skia/handles/static_sk_string-internal.h,todo,,,
+skia/handles/static_sk_string.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_string.h,todo,,,
+skia/handles/static_sk_stroke_rec-internal.h,todo,,,
+skia/handles/static_sk_stroke_rec.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_stroke_rec.h,todo,,,
+skia/handles/static_sk_surface-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_surface.cpp,done,phase1,codex,"step1+step2+step3: handle_table 適用 + get_entity 分離 + set/get_ptr/delete の無効キー処理を統一"
+skia/handles/static_sk_surface.h,todo,,,
+skia/handles/static_sk_surface_props-internal.h,todo,,,
+skia/handles/static_sk_surface_props.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_surface_props.h,todo,,,
+skia/handles/static_sk_text_blob-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_text_blob.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_text_blob.h,todo,,,
+skia/handles/static_sk_typeface-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_typeface.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_typeface.h,todo,,,
+skia/handles/static_sk_v2-internal.h,todo,,,
+skia/handles/static_sk_v2.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_v2.h,todo,,,
+skia/handles/static_sk_v3-internal.h,todo,,,
+skia/handles/static_sk_v3.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_v3.h,todo,,,
+skia/handles/static_sk_v4-internal.h,todo,,,
+skia/handles/static_sk_v4.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_v4.h,todo,,,
+skia/handles/static_sk_vertices-internal.h,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_vertices.cpp,done,phase1,codex,"step2+step3: get_entity 分離 + set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_vertices.h,todo,,,
+skia/handles/static_sk_yuva_info-internal.h,todo,,,
+skia/handles/static_sk_yuva_info.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_yuva_info.h,todo,,,
+skia/handles/static_sk_yuva_pixmap_info-internal.h,todo,,,
+skia/handles/static_sk_yuva_pixmap_info.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_yuva_pixmap_info.h,todo,,,
+skia/handles/static_sk_yuva_pixmaps-internal.h,todo,,,
+skia/handles/static_sk_yuva_pixmaps.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_sk_yuva_pixmaps.h,todo,,,
+skia/handles/static_std_chrono_milliseconds-internal.h,todo,,,
+skia/handles/static_std_chrono_milliseconds.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_chrono_milliseconds.h,todo,,,
+skia/handles/static_std_function_void_void-internal.h,todo,,,
+skia/handles/static_std_function_void_void.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_function_void_void.h,todo,,,
+skia/handles/static_std_string_view-internal.h,todo,,,
+skia/handles/static_std_string_view.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_string_view.h,todo,,,
+skia/handles/static_std_tuple_int_int-internal.h,todo,,,
+skia/handles/static_std_tuple_int_int.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_tuple_int_int.h,todo,,,
+skia/handles/static_std_tuple_int_sk_yuva_pixmap_info_data_type-internal.h,todo,,,
+skia/handles/static_std_tuple_int_sk_yuva_pixmap_info_data_type.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_tuple_int_sk_yuva_pixmap_info_data_type.h,todo,,,
+skia/handles/static_std_tuple_sk_image_sk_codec_result-internal.h,todo,,,
+skia/handles/static_std_tuple_sk_image_sk_codec_result.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_tuple_sk_image_sk_codec_result.h,todo,,,
+skia/handles/static_std_vector_int_ptr-internal.h,todo,,,
+skia/handles/static_std_vector_int_ptr.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_vector_int_ptr.h,todo,,,
+skia/handles/static_std_vector_sk_codec_frame_info-internal.h,todo,,,
+skia/handles/static_std_vector_sk_codec_frame_info.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_vector_sk_codec_frame_info.h,todo,,,
+skia/handles/static_std_vector_sk_scalar-internal.h,todo,,,
+skia/handles/static_std_vector_sk_scalar.cpp,done,phase1,codex,"step3: set/get_ptr/delete の無効キー処理を統一（値型含む）"
+skia/handles/static_std_vector_sk_scalar.h,todo,,,

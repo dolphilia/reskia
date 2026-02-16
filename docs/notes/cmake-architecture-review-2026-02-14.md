@@ -29,7 +29,7 @@ configure確認（2026-02-14）:
 - 依存解決モード切替
 - プラットフォーム分岐
 - 膨大な `SOURCE_FILES` 列挙
-- C binding/static 追加
+- C capi/static 追加
 - テスト定義
 
 影響:

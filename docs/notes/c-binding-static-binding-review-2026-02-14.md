@@ -1,15 +1,15 @@
 # skia Cバインディング設計レビュー（2026-02-14）
 
-対象: `/Users/dolphilia/github/reskia/skia/static`, `/Users/dolphilia/github/reskia/skia/binding`  
+対象: `/Users/dolphilia/github/reskia/skia/handles`, `/Users/dolphilia/github/reskia/skia/capi`  
 確認時刻: 2026-02-14 11:21:24 JST
 
 ## 1. 現状構成の要約
 
-- `binding/`: C公開API。`void*` と `int`（`sk_*_t`）で C++ 型を橋渡し。
-- `static/`: `int` キーを `std::map<int, T>` に紐付けるグローバルレジストリ群。
+- `capi/`: C公開API。`void*` と `int`（`sk_*_t`）で C++ 型を橋渡し。
+- `handles/`: `int` キーを `std::map<int, T>` に紐付けるグローバルレジストリ群。
 - 規模:
-  - `static/*.cpp`: 108
-  - `binding/*.cpp`: 155
+  - `handles/*.cpp`: 108
+  - `capi/*.cpp`: 155
   - `static` の公開ハンドル typedef（`typedef int sk_*_t`）: 92
 
 ## 2. 主要な問題点（優先度順）
@@ -18,25 +18,25 @@
 
 `sk_sp` / `std::unique_ptr` の `get_entity()` が `std::move(map[key])` を返しており、取得時にストアから値が抜ける。
 
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_image.cpp:31`
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_data.cpp:34`
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_data.cpp:71`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_image.cpp:31`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_data.cpp:34`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_data.cpp:71`
 
 影響:
 
 - 「参照だけしたい」呼び出しでも実体が消える。
 - 同じハンドルの再利用時に `null` 化し、後続で不定挙動。
 - `binding` 側で `get_entity()` を多用しており、連鎖的に再現しうる。
-  - 例: `/Users/dolphilia/github/reskia/skia/binding/sk_image_filters.cpp:33`
-  - 例: `/Users/dolphilia/github/reskia/skia/binding/sk_runtime_effect.cpp:45`
+  - 例: `/Users/dolphilia/github/reskia/skia/capi/sk_image_filters.cpp:33`
+  - 例: `/Users/dolphilia/github/reskia/skia/capi/sk_runtime_effect.cpp:45`
 
 ### P0: `map[key]` 乱用による無効キーの黙殺
 
 `get_ptr`, `get_entity`, `delete` で `operator[]` を多用しているため、無効キーでも新規エントリが暗黙生成される。
 
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_surface.cpp:43`
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_color_4f.cpp:40`
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_stream_asset.cpp:41`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_surface.cpp:43`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_color_4f.cpp:40`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_stream_asset.cpp:41`
 
 影響:
 
@@ -47,7 +47,7 @@
 
 キー再利用は `available_keys` の再配布のみで、世代カウンタがない。
 
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_surface.cpp:10`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_surface.cpp:10`
 
 影響:
 
@@ -57,7 +57,7 @@
 ### P1: スレッド安全性がない
 
 `static` グローバル `map/set` をロック無しで更新している。  
-`mutex/atomic/thread_local` は `static/`・`binding/` で未使用。
+`mutex/atomic/thread_local` は `handles/`・`capi/` で未使用。
 
 影響:
 
@@ -68,10 +68,10 @@
 
 同じ型に `delete` と `ref/unref` が共存しており、呼び出し側で責務を誤りやすい。
 
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_image.h:12`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_image.h:66`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_surface.h:12`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_surface.h:46`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_image.h:12`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_image.h:66`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_surface.h:12`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_surface.h:46`
 
 影響:
 
@@ -82,14 +82,14 @@
 `void*` / `int` 主体で、シグネチャだけでは型意味が分かりづらい。  
 コメント依存で補っているが、IDE補完・静的解析・誤用検知に弱い。
 
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_path.h:13`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_path.h:13`
 
 ### P2: C APIに C++ 寄り要素が残る
 
 `std::string_view` / `std::initializer_list` 相当の概念をハンドル化して持ち込んでいる。
 
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_std_string_view.cpp:9`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_path.h:80`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_std_string_view.cpp:9`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_path.h:80`
 
 影響:
 
@@ -98,7 +98,7 @@
 
 ### P2: 命名の意図が伝わりにくい
 
-- `static/` は「静的ストレージ実装」であって公開意図を示しにくい。
+- `handles/` は「静的ストレージ実装」であって公開意図を示しにくい。
 - `*_2`, `*_3` 連番はオーバーロード代替としては機械的で可読性が低い。
 
 ## 3. 改善方針（推奨）
@@ -107,8 +107,8 @@
 
 - `binding` を「公開C API」、`static` を「内部ハンドルレジストリ」と明確化。
 - ディレクトリ名を段階的に以下へ移行:
-  - `static/` -> `handles/` または `registry/`
-  - `binding/` -> `capi/`
+  - `handles/` -> `handles/` または `registry/`
+  - `capi/` -> `capi/`
 
 ### 方針B: ハンドルレジストリ共通化
 
@@ -152,9 +152,9 @@
 
 ## 5. 命名に関する提案
 
-- `static/` は `handles/` が最も意図に一致
+- `handles/` は `handles/` が最も意図に一致
   - 理由: 「静的変数」ではなく「ハンドル管理」が本質
-- `binding/` は `capi/` または `api/c/`
+- `capi/` は `capi/` または `api/c/`
   - 理由: 利用者視点で公開面が明確
 
 ## 6. 提案する移行ステップ
@@ -187,14 +187,14 @@ Rustでは `Drop` による RAII が基本で、所有権規約が API で明示
 
 `SkRefCnt` 系オブジェクトで `delete` と `ref/unref` が同時公開されている。
 
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_image.cpp:27`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_image.cpp:232`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_surface.cpp:25`
-- 例: `/Users/dolphilia/github/reskia/skia/binding/sk_surface.cpp:150`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_image.cpp:27`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_image.cpp:232`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_surface.cpp:25`
+- 例: `/Users/dolphilia/github/reskia/skia/capi/sk_surface.cpp:150`
 
 `static` 側は `sk_sp` 保持だが、`get_entity()` が move 取得になっているため、所有権の一貫性が壊れやすい。
 
-- 例: `/Users/dolphilia/github/reskia/skia/static/static_sk_image.cpp:31`
+- 例: `/Users/dolphilia/github/reskia/skia/handles/static_sk_image.cpp:31`
 
 ### 7.3 Rust向け推奨所有権モデル（C ABI）
 

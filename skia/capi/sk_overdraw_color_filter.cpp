@@ -1,0 +1,24 @@
+//
+// Created by dolphilia on 2024/01/09.
+//
+
+#include "sk_overdraw_color_filter.h"
+
+#include "include/effects/SkOverdrawColorFilter.h"
+
+#include "../handles/static_sk_color_filter.h"
+
+#include "../handles/static_sk_color_filter-internal.h"
+
+extern "C" {
+
+void SkOverdrawColorFilter_delete(void * overdrawColorFilter) {
+    reinterpret_cast<SkColorFilter *>(overdrawColorFilter)->unref();
+}
+
+// static
+sk_color_filter_t SkOverdrawColorFilter_MakeWithSkColors(const void * color) {
+    return static_sk_color_filter_make(SkOverdrawColorFilter::MakeWithSkColors(static_cast<const SkColor *>(color)));
+}
+
+}

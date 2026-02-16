@@ -1,7 +1,7 @@
 # Phase 2 型分類表（Ownership API）
 
 更新日: 2026-02-14
-作成根拠: `skia/binding/*.h` の `*_delete` / `*_ref` / `*_unref` / 借用系API（`borrow` / `peek` / `getCanvas` / `props` / `pixels`）
+作成根拠: `skia/capi/*.h` の `*_delete` / `*_ref` / `*_unref` / 借用系API（`borrow` / `peek` / `getCanvas` / `props` / `pixels`）
 
 ## 分類ルール
 

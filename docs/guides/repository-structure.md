@@ -35,8 +35,8 @@
 
 - `project(reskia)` で `reskia` 共有ライブラリを生成。
 - `SOURCE_FILES` にSkia本体ソース（`src/`）を大量列挙し、加えて:
-  - `binding/*.cpp`（Cラッパー本体）
-  - `static/*.cpp`（整数ハンドル管理レイヤ）
+  - `capi/*.cpp`（Cラッパー本体）
+  - `handles/*.cpp`（整数ハンドル管理レイヤ）
   を組み込む。
 - プラットフォームごとにソースとリンク先を分岐:
   - `WIN32`: `zlib`, `libpng`, `turbojpeg-static`, `avif`, `webp` など
@@ -60,15 +60,15 @@
 
 `skia/` 配下に、主に2種類のC向け公開レイヤがある。
 
-### 3.1 `binding/`（ポインタベースAPI）
+### 3.1 `capi/`（ポインタベースAPI）
 
-- 例: `skia/binding/sk_canvas.h`, `skia/binding/sk_canvas.cpp`
+- 例: `skia/capi/sk_canvas.h`, `skia/capi/sk_canvas.cpp`
 - `extern "C"` で C から呼べる関数を提供し、内部で `SkCanvas*` 等にキャストしてSkia C++ APIを呼ぶ。
 - `void*` と C互換プリミティブを中心にした境界になっている。
 
-### 3.2 `static/`（整数ハンドルベースAPI）
+### 3.2 `handles/`（整数ハンドルベースAPI）
 
-- 例: `skia/static/static_sk_rect.h`, `skia/static/static_sk_rect.cpp`
+- 例: `skia/handles/static_sk_rect.h`, `skia/handles/static_sk_rect.cpp`
 - `typedef int sk_rect_t;` のような整数キーを公開。
 - 内部で `std::map<int, T>` と `std::set<int>` で実体管理し、キー再利用も行う。
 - 他言語バインディング時に「生ポインタを直接渡さない」運用がしやすい設計。
@@ -93,7 +93,7 @@
 ## 6. 現時点での所見
 
 - プロジェクトの主目的（SkiaのCMake化 + Cラッパー提供）は、`skia/` を中心に実装済み。
-- `binding/` と `static/` の二層構造により、他言語バインディングの選択肢（ポインタ方式 / ハンドル方式）が用意されている。
+- `capi/` と `handles/` の二層構造により、他言語バインディングの選択肢（ポインタ方式 / ハンドル方式）が用意されている。
 - 一方で、次の整理余地がある:
   - ルート `CMakeLists.txt` 不在（導入時の入口が分かりにくい）
   - `skpath/` のプロジェクト名・ライブラリ名の不一致
@@ -102,8 +102,8 @@
 ## 7. 主要パス一覧（把握用）
 
 - `/Users/dolphilia/github/reskia/skia/CMakeLists.txt`
-- `/Users/dolphilia/github/reskia/skia/binding/`
-- `/Users/dolphilia/github/reskia/skia/static/`
+- `/Users/dolphilia/github/reskia/skia/capi/`
+- `/Users/dolphilia/github/reskia/skia/handles/`
 - `/Users/dolphilia/github/reskia/skia/test/test.cpp`
 - `/Users/dolphilia/github/reskia/skcms/CMakeLists.txt`
 - `/Users/dolphilia/github/reskia/skpath/CMakeLists.txt`
@@ -290,9 +290,9 @@
 - lock を更新するだけで「どの Skia を比較対象にしたか」を履歴化できる。
 - 将来の段階アップグレード（commit 単位での追従、CMake 化拡張）を小さい差分で進めやすい。
 
-## 13. Cバインディング（`binding/`・`static/`）調査（2026-02-14）
+## 13. Cバインディング（`capi/`・`handles/`）調査（2026-02-14）
 
-`skia` のCバインディング実装方式について、`binding/` と `static/` の設計レビューを実施した。  
+`skia` のCバインディング実装方式について、`capi/` と `handles/` の設計レビューを実施した。  
 主な所見は以下。
 
 - `static_*_get_entity()` の `std::move` により、取得時に所有権が失われる箇所がある。

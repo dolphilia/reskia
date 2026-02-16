@@ -23,8 +23,8 @@ endif()
 set(SOURCE_FILES reskia.cpp)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
-include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-binding.cmake")
-include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-static.cmake")
+include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-capi.cmake")
+include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-handles.cmake")
 
 if (WIN32)
     list(APPEND SOURCE_FILES
@@ -54,7 +54,7 @@ elseif (APPLE)
             src/ports/SkScalerContext_mac_ct.cpp
             src/ports/SkTypeface_mac_ct.cpp
             src/ports/SkOSFile_posix.cpp
-            binding/sk_typeface_mac.cpp
+            capi/sk_typeface_mac.cpp
             src/utils/mac/SkCTFont.cpp
     )
 elseif (UNIX)

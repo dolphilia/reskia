@@ -43,7 +43,7 @@ ctest --test-dir skia/cmake-build-local --output-on-failure
   - 追加: `bindings/rust/reskia`（safe wrapper、`Image/Surface/Paint/Path` の `Clone`/`Drop` と最小エラーハンドリング）
   - 検証: `cargo test -p reskia-sys` / `cargo test -p reskia` 成功
 - 2026-02-16: ステップ2（FFI境界の設計）に着手。
-  - 追加: `skia/binding/reskia_ffi.h` / `skia/binding/reskia_ffi.cpp`
+  - 追加: `skia/capi/reskia_ffi.h` / `skia/capi/reskia_ffi.cpp`
   - 実装: `Image/Surface/Paint/Path` 向け `reskia_*_retain` / `reskia_*_release` / `reskia_*_borrow_from_handle` を新設
   - Rust反映: `reskia-sys` と `reskia` を新命名へ切替し、`borrow_from_handle` を lifetime 付き `unsafe` wrapper として追加
   - 検証: `cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Debug` / `cmake --build skia/cmake-build-local -j 8` / `cargo test -p reskia-sys` / `cargo test -p reskia` 成功

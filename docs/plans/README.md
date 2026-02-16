@@ -4,5 +4,5 @@
 
 ## 一覧
 
-- `docs/plans/c-binding-remediation/`: `skia/binding` と `skia/static` の改善計画一式
+- `docs/plans/c-binding-remediation/`: `skia/capi` と `skia/handles` の改善計画一式
 - `docs/plans/cmake-remediation/`: CMake構成（`skia/CMakeLists.txt` 等）の改善計画一式

@@ -4,7 +4,7 @@ Reskia は、Google Skia を CMake ベースで扱いやすく再構成し、C �
 主に以下を目的としています。
 
 - Skia をモジュール単位の CMake プロジェクトとしてビルド可能にする
-- C API（`skia/binding` と `skia/static`）を通じて他言語連携しやすくする
+- C API（`skia/capi` と `skia/handles`）を通じて他言語連携しやすくする
 
 ## ベースSkia
 

@@ -3,7 +3,7 @@
 対象:
 - `/Users/dolphilia/github/reskia/skia`
 - `/Users/dolphilia/github/reskia/skia/CMakeLists.txt`
-- `/Users/dolphilia/github/reskia/skia/binding`
+- `/Users/dolphilia/github/reskia/skia/capi`
 - `/Users/dolphilia/github/reskia/vendor/skia-upstream`
 
 確認時刻: 2026-02-14 11:47:19 JST
@@ -79,8 +79,8 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 - 状態: 実装ファイルはあるが未有効
 - 根拠:
-  - `skia/binding/sk_pdf.cpp` は存在
-  - `skia/CMakeLists.txt` では `#        binding/sk_pdf.cpp` として無効
+  - `skia/capi/sk_pdf.cpp` は存在
+  - `skia/CMakeLists.txt` では `#        capi/sk_pdf.cpp` として無効
 
 ### 3.8 コーデック拡張（AVIF/JPEGXL/GIF/RAW/OpenType SVG）
 
@@ -94,26 +94,26 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 - 状態: 実装ありだが未有効
 - 根拠:
-  - `binding/sk_jpeg_encoder.cpp`, `binding/sk_webp_encoder.cpp` 存在
+  - `capi/sk_jpeg_encoder.cpp`, `capi/sk_webp_encoder.cpp` 存在
   - `skia/CMakeLists.txt` で両方コメントアウト
 
 ## 4. C binding の有効化状況（件数）
 
-- `skia/binding/*.cpp` 実ファイル数: 155
+- `skia/capi/*.cpp` 実ファイル数: 155
 - `skia/CMakeLists.txt` で有効化: 146
 - `skia/CMakeLists.txt` でコメントアウト: 9
 
 コメントアウト対象:
 
-- `binding/sk_font_mgr_fontconfig.cpp`
-- `binding/sk_gif_decoder.cpp`
-- `binding/sk_jpeg_encoder.cpp`
-- `binding/sk_open_type_svg_decoder.cpp`
-- `binding/sk_pdf.cpp`
-- `binding/sk_raster_handle_allocator.cpp`
-- `binding/sk_raw_decoder.cpp`
-- `binding/sk_text_blob_builder_run_handler.cpp`
-- `binding/sk_webp_encoder.cpp`
+- `capi/sk_font_mgr_fontconfig.cpp`
+- `capi/sk_gif_decoder.cpp`
+- `capi/sk_jpeg_encoder.cpp`
+- `capi/sk_open_type_svg_decoder.cpp`
+- `capi/sk_pdf.cpp`
+- `capi/sk_raster_handle_allocator.cpp`
+- `capi/sk_raw_decoder.cpp`
+- `capi/sk_text_blob_builder_run_handler.cpp`
+- `capi/sk_webp_encoder.cpp`
 
 ## 5. 代表的な未網羅機能（優先候補）
 

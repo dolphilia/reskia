@@ -3,8 +3,8 @@
 ## スコープ
 
 - 対象ディレクトリ:
-  - `skia/static`
-  - `skia/binding`
+  - `skia/handles`
+  - `skia/capi`
 - 非対象:
   - Skia本体アルゴリズム変更
   - レンダリング結果変更（API安全化に伴う副作用を除く）
@@ -22,7 +22,7 @@
 - `SkRefCnt` 系の公開解放は `release` 統一（`delete` は非推奨または内部化）。
 - `static` レジストリで `operator[]` を排除し、無効ハンドルが失敗として返る。
 - ハンドルは世代付きで stale handle を検出できる。
-- `binding/static` の全対象ファイルが `checklists/*.csv` で `done`。
+- `capi/handles` の全対象ファイルが `checklists/*.csv` で `done`。
 - Rust PoC が `Drop` / `Clone` / エラーハンドリングでクラッシュ無し。
 
 ## 制約

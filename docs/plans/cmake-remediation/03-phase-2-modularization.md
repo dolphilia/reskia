@@ -12,8 +12,8 @@
 ## 想定分割
 
 - `cmake/reskia/sources-core.cmake`
-- `cmake/reskia/sources-binding.cmake`
-- `cmake/reskia/sources-static.cmake`
+- `cmake/reskia/sources-capi.cmake`
+- `cmake/reskia/sources-handles.cmake`
 - `cmake/reskia/platform-win32.cmake`
 - `cmake/reskia/platform-apple.cmake`
 - `cmake/reskia/platform-unix.cmake`
@@ -26,8 +26,8 @@
 - 機能差分を起こさないよう、まずは単純移設を優先。
   - 実施内容:
     - `cmake/reskia/sources-core.cmake` を追加し、Skia本体の `SOURCE_FILES` 列挙を移設
-    - `cmake/reskia/sources-binding.cmake` を追加し、`binding/*.cpp` の列挙を移設
-    - `cmake/reskia/sources-static.cmake` を追加し、`static/*.cpp` の列挙を移設
+    - `cmake/reskia/sources-capi.cmake` を追加し、`capi/*.cpp` の列挙を移設
+    - `cmake/reskia/sources-handles.cmake` を追加し、`handles/*.cpp` の列挙を移設
     - `skia/CMakeLists.txt` は `set(SOURCE_FILES reskia.cpp)` 後に上記3ファイルを `include()` する構成へ変更
   - 検証結果:
     - `cmake -S skia -B skia/cmake-build-cmake-review -DCMAKE_BUILD_TYPE=Debug`: 成功

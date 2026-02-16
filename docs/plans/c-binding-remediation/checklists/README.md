@@ -2,8 +2,8 @@
 
 進捗トラッキング用CSVです。
 
-- `binding-status.csv`
-- `static-status.csv`
+- `capi-status.csv`
+- `handles-status.csv`
 - `phase2-type-classification.md`（Phase 2 Step1 の型分類表）
 - `phase2-release-api-status.csv`（Phase 2 Step2 の解放API統一専用チェックリスト）
 - `phase2-type-hardening-status.csv`（Phase 2 Step3 の型情報補強専用チェックリスト）

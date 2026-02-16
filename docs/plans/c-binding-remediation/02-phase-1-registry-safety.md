@@ -1,4 +1,4 @@
-# 02 Phase 1: Registry Safety (`skia/static`)
+# 02 Phase 1: Registry Safety (`skia/handles`)
 
 ## ゴール
 
@@ -7,13 +7,13 @@
 
 ## 対象
 
-- `skia/static/*.cpp`
-- `skia/static/*-internal.h`（必要に応じてAPI分割）
+- `skia/handles/*.cpp`
+- `skia/handles/*-internal.h`（必要に応じてAPI分割）
 
 ## 作業ステップ
 
 1. レジストリ共通ユーティリティ導入
-- 追加: `skia/static/handle_table.hpp`（仮）
+- 追加: `skia/handles/handle_table.hpp`（仮）
 - 機能:
   - `find` ベース取得（`operator[]` 禁止）
   - `create/get_ptr/erase/contains`
@@ -38,22 +38,22 @@
 5. フェーズ1検証
 
 ```bash
-rg -n "return std::move\\(static_.*\\[key\\]\\)" skia/static
-rg -n "static_.*\\[key\\]" skia/static/*.cpp
-rg -n "mutex|shared_mutex" skia/static
+rg -n "return std::move\\(static_.*\\[key\\]\\)" skia/handles
+rg -n "static_.*\\[key\\]" skia/handles/*.cpp
+rg -n "mutex|shared_mutex" skia/handles
 cmake --build skia/cmake-build-local -j 8
 ```
 
 ## 進捗（2026-02-14）
 
 - [x] 1. レジストリ共通ユーティリティ導入
-  - 追加: `skia/static/handle_table.hpp`
+  - 追加: `skia/handles/handle_table.hpp`
   - 実装済み機能: `create` / `get_ptr` / `erase` / `contains` / `set`（strict） / `set_or_insert`（移行用）
   - 実装詳細:
     - `std::mutex` による排他を導入
     - 内部実装を `find` ベースに統一（`operator[]` 不使用）
     - エラー時は `get_ptr -> nullptr`, `erase/set -> false` を返却
-  - 適用開始: `skia/static/static_sk_surface.cpp`
+  - 適用開始: `skia/handles/static_sk_surface.cpp`
   - `handle_table` ロールアウト管理:
     - 進捗チェックリスト: `docs/plans/c-binding-remediation/checklists/static-handle-table-status.csv`
     - 第1バッチ（10件）完了: `static_sk_android_codec`, `static_sk_b_box_hierarchy`, `static_sk_blender`, `static_sk_canvas`, `static_sk_capabilities`, `static_sk_codec`, `static_sk_color_filter`, `static_sk_color_space`, `static_sk_color_table`, `static_sk_contour_measure`
@@ -72,9 +72,9 @@ cmake --build skia/cmake-build-local -j 8
   - `sk_sp` / `unique_ptr` 管理の `static_*_get_entity` を `borrow_entity` / `take_entity` に分離。
   - `sk_sp` 系は `get_entity -> borrow_entity`（非破壊）を既定化。
   - `unique_ptr` 系は `get_entity -> take_entity` を薄い互換ラッパとして維持し、`binding` 側の所有権移譲呼び出しを `take_entity` へ明示置換。
-  - 実装反映: `skia/static/*-internal.h` と `skia/static/*.cpp`（Step2対象88ファイル）、`skia/binding/*.cpp`（`unique_ptr` 移譲呼び出し）。
+  - 実装反映: `skia/handles/*-internal.h` と `skia/handles/*.cpp`（Step2対象88ファイル）、`skia/capi/*.cpp`（`unique_ptr` 移譲呼び出し）。
 - [x] 3. 無効キー処理の統一
-  - `skia/static/*.cpp` の値型レジストリを含む実装で `set/get_ptr/delete` を `find` ベースへ統一。
+  - `skia/handles/*.cpp` の値型レジストリを含む実装で `set/get_ptr/delete` を `find` ベースへ統一。
   - 無効キー時の規約を統一:
     - `set`: 何もしない（`void` API のため no-op）
     - `get_ptr`: `nullptr` を返す
@@ -82,7 +82,7 @@ cmake --build skia/cmake-build-local -j 8
   - `static_sk_stream_ptr_*` も同方針で無効キー処理を追加。
   - `static_sk_surface_set` は `set_or_insert` から strict `set` へ変更し、無効キーで no-op 化。
 - [x] 4. 世代付きハンドル導入（第一段）
-  - `skia/static/handle_table.hpp` を世代付きハンドル方式へ更新（`int` API 互換維持）。
+  - `skia/handles/handle_table.hpp` を世代付きハンドル方式へ更新（`int` API 互換維持）。
   - ハンドル形式:
     - 下位20bit: slot
     - 上位bit: generation（`0` は無効）
@@ -94,19 +94,19 @@ cmake --build skia/cmake-build-local -j 8
     - `cmake --build skia/cmake-build-local -j 8` 成功（`Built target reskia`）
 - [x] 5. フェーズ1検証
   - 実施コマンド:
-    - `rg -n "return std::move\\(static_.*\\[key\\]\\)" skia/static` -> 0件
-    - `rg -n "static_.*\\[key\\]" skia/static/*.cpp` -> コメントアウト実装のみ（`static_sk_color.cpp`, `static_sk_image_read_pixels_callback.cpp`）
-    - `rg -n "mutex|shared_mutex" skia/static` -> `handle_table.hpp` で排他実装を確認
+    - `rg -n "return std::move\\(static_.*\\[key\\]\\)" skia/handles` -> 0件
+    - `rg -n "static_.*\\[key\\]" skia/handles/*.cpp` -> コメントアウト実装のみ（`static_sk_color.cpp`, `static_sk_image_read_pixels_callback.cpp`）
+    - `rg -n "mutex|shared_mutex" skia/handles` -> `handle_table.hpp` で排他実装を確認
     - `cmake --build skia/cmake-build-local -j 8` -> 成功（`Built target reskia`）
   - チェックリスト整合:
     - `checklists/static-handle-table-status.csv` は全対象が `done` または `na`
-    - `checklists/static-status.csv` の `static_sk_image_read_pixels_callback.cpp` を `na` へ更新（実装/API未定義）
+    - `checklists/handles-status.csv` の `static_sk_image_read_pixels_callback.cpp` を `na` へ更新（実装/API未定義）
 
 ## 完了条件
 
-- `skia/static` から `return std::move(static_*[key])` がゼロ。
-- `skia/static/*.cpp` から `map[key]` パターンがゼロ。
-- `checklists/static-status.csv` が Phase 1 対象で `done`。
+- `skia/handles` から `return std::move(static_*[key])` がゼロ。
+- `skia/handles/*.cpp` から `map[key]` パターンがゼロ。
+- `checklists/handles-status.csv` が Phase 1 対象で `done`。
 
 ## リスクと対策
 

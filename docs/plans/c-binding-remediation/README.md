@@ -1,6 +1,6 @@
 # C Binding Remediation Plan
 
-`skia/binding` と `skia/static` の設計改善を、Rust利用前提で段階実施する計画セットです。
+`skia/capi` と `skia/handles` の設計改善を、Rust利用前提で段階実施する計画セットです。
 
 ## 目的
 
@@ -20,10 +20,10 @@
 
 ## 管理ファイル
 
-- `manifests/binding-files.txt`
-- `manifests/static-files.txt`
-- `checklists/binding-status.csv`
-- `checklists/static-status.csv`
+- `manifests/capi-files.txt`
+- `manifests/handles-files.txt`
+- `checklists/capi-status.csv`
+- `checklists/handles-status.csv`
 
 ## 実施順
 

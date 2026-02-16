@@ -2,8 +2,8 @@
 
 対象ファイルの正本一覧です。
 
-- `binding-files.txt`
-- `static-files.txt`
+- `capi-files.txt`
+- `handles-files.txt`
 - `phase2-step3-voidptr-headers.txt`
 - `phase2-step3-voidptr-cpp.txt`
 - `phase2-step3-suffix-headers.txt`
