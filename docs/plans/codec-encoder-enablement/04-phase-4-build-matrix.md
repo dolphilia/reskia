@@ -1,6 +1,6 @@
 # 04 Phase 4: ビルド行列確認
 
-更新日時: 2026-02-16 15:28:35 JST
+更新日時: 2026-02-16 15:43:19 JST
 
 ## 実施結果（最終）
 
@@ -11,22 +11,34 @@
 | `source` / AVIF+JPEGXL=OFF, RAW=ON | `cmake -S skia -B skia/cmake-build-phase4-source-compatible ...` | `cmake --build skia/cmake-build-phase4-source-compatible -j 8` | 成功 (`Built target reskia`) |
 | `system` / 全機能ON | `cmake -S skia -B skia/cmake-build-phase4-system-on ...` | `cmake --build skia/cmake-build-phase4-system-on -j 8` | 成功 (`Built target reskia`) |
 
-## `source` 全機能ONの AVIF/JPEGXL 導入手順
+## `source` 全機能ONの AVIF/JPEGXL 導入手順（サブモジュール前提）
 
 前提:
 
-1. `libavif` と `jpeg-xl` を Homebrew で導入済み。
-2. Homebrew prefix は既定 `/opt/homebrew`（必要なら `HOMEBREW_PREFIX` で上書き）。
+1. `.gitmodules` に以下が登録済みであること:
+   - `third_party/src/aom`
+   - `third_party/src/libjxl`
+   - `third_party/src/highway`
+   - `third_party/src/brotli`
+   - `third_party/src/lcms2`
 
 手順:
 
-1. Homebrew の codec 依存を `third_party/install` へ同期する。
+1. サブモジュールを同期・取得する。
 
 ```bash
-scripts/sync_codec_deps_from_homebrew.sh
+git submodule sync --recursive
+git submodule update --init --recursive
+scripts/bootstrap_third_party.sh
 ```
 
-2. `source` 全機能ONで configure/build を実行する。
+2. `third_party/install` へ AVIF/JPEGXL 依存をソースビルドで導入する。
+
+```bash
+scripts/build_third_party.sh --with-avif --with-jpegxl --build-type Release
+```
+
+3. `source` 全機能ONで configure/build を実行する。
 
 ```bash
 cmake -S skia -B skia/cmake-build-phase4-source-on \
@@ -41,14 +53,18 @@ cmake -S skia -B skia/cmake-build-phase4-source-on \
 cmake --build skia/cmake-build-phase4-source-on -j 8
 ```
 
-同期対象（必須）:
+導入対象（必須）:
 
-- `third_party/install/lib/libavif.dylib`
-- `third_party/install/lib/libjxl.dylib`
-- `third_party/install/lib/libjxl_threads.dylib`
-- `third_party/install/lib/libjxl_cms.dylib`
+- `third_party/install/lib/libavif.a`
+- `third_party/install/lib/libjxl.a`
+- `third_party/install/lib/libjxl_threads.a`
+- `third_party/install/lib/libjxl_cms.a`
 - `third_party/install/include/avif`
 - `third_party/install/include/jxl`
+
+注意:
+
+- 以前に `scripts/sync_codec_deps_from_homebrew.sh` を実行している場合、`third_party/install/include/{avif,jxl,hwy,lcms2.h,lcms2_plugin.h}` の symlink が残っていると install 時に失敗するため、事前に削除してから再実行する。
 
 ## 判定
 
