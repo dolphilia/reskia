@@ -110,6 +110,7 @@ list(APPEND SOURCE_FILES
         binding/sk_rect.cpp
         binding/sk_ref_cnt_base.cpp
         binding/sk_ref_cnt.cpp
+        binding/reskia_ffi.cpp
         binding/sk_region.cpp
         binding/sk_rsx_form.cpp
         binding/sk_runtime_blend_builder.cpp

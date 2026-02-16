@@ -1,0 +1,49 @@
+name: Rust FFI Rollout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rust-ffi-rollout.yml'
+      - 'Cargo.toml'
+      - 'bindings/rust/**'
+      - 'skia/binding/reskia_ffi.h'
+      - 'skia/binding/reskia_ffi.cpp'
+      - 'docs/plans/c-binding-remediation/04-phase-3-rust-ffi-rollout.md'
+  pull_request:
+    paths:
+      - '.github/workflows/rust-ffi-rollout.yml'
+      - 'Cargo.toml'
+      - 'bindings/rust/**'
+      - 'skia/binding/reskia_ffi.h'
+      - 'skia/binding/reskia_ffi.cpp'
+      - 'docs/plans/c-binding-remediation/04-phase-3-rust-ffi-rollout.md'
+  workflow_dispatch:
+
+jobs:
+  ffi-validation:
+    name: FFI Validation (macOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure and build reskia
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
+          cmake --build skia/cmake-build-local -j 8
+
+      - name: Run Rust tests
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cargo test -p reskia-sys
+          cargo test -p reskia
+
+      - name: Run CTest
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ctest --test-dir skia/cmake-build-local --output-on-failure

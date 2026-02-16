@@ -1,0 +1,16 @@
+[package]
+name = "reskia"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+build = "build.rs"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+reskia-sys = { path = "../reskia-sys" }
+
+[lints]
+workspace = true

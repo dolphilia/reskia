@@ -6,23 +6,23 @@
 
 ## 作業ステップ
 
-1. ディレクトリ命名の段階移行
-- `skia/static` -> `skia/handles`（または `skia/registry`）
+1. ディレクトリ命名の移行
+- `skia/static` -> `skia/handles`
 - `skia/binding` -> `skia/capi`
 
-2. 旧API廃止計画
+1. 旧API廃止計画
 - `*_delete`（RefCounted対象）を `deprecated` マクロ化
 - 2リリース後に削除予定としてマイルストーン化
 
-3. 連番関数名の整理
+1. 連番関数名の整理
 - `_2/_3/_4` 形式を意味名へ置換
 - 旧名は互換ラッパで段階削除
 
-4. 自動生成の導入（任意だが推奨）
+1. 自動生成の導入（任意だが推奨）
 - 型定義から header/cpp を生成
 - 手編集面積を縮小し、Skia追従の保守コストを下げる
 
-5. 最終検証
+1. 最終検証
 
 ```bash
 cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Release

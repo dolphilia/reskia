@@ -1,0 +1,14 @@
+[workspace]
+members = [
+  "bindings/rust/reskia-sys",
+  "bindings/rust/reskia",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+authors = ["reskia contributors"]
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "warn"
