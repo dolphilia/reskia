@@ -28,3 +28,12 @@
 [submodule "third_party/src/libgrapheme"]
 	path = third_party/src/libgrapheme
 	url = https://github.com/FRIGN/libgrapheme.git
+[submodule "third_party/src/dng_sdk"]
+	path = third_party/src/dng_sdk
+	url = https://android.googlesource.com/platform/external/dng_sdk
+[submodule "third_party/src/piex"]
+	path = third_party/src/piex
+	url = https://github.com/google/piex.git
+[submodule "third_party/src/wuffs"]
+	path = third_party/src/wuffs
+	url = https://github.com/google/wuffs.git
