@@ -12,3 +12,4 @@
 - `02-phase-2-source-sync.md`
 - `03-phase-3-capi-enable.md`
 - `04-phase-4-build-matrix.md`
+- `05-phase-5-smoke.md`

@@ -8,6 +8,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
+#include "include/core/SkGraphics.h"
 extern "C" {
 #endif
 
@@ -38,8 +39,10 @@ void SkGraphics_PurgeAllCaches(); // ()
 
 // TODO
 //void * SkGraphics_SetImageGeneratorFromEncodedDataFactory(void * factory); // (SkGraphics::ImageGeneratorFromEncodedDataFactory factory) -> SkGraphics::ImageGeneratorFromEncodedDataFactory
-//void * SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory); // (SkGraphics::OpenTypeSVGDecoderFactory factory) -> SkGraphics::OpenTypeSVGDecoderFactory
-//void * SkGraphics_GetOpenTypeSVGDecoderFactory(); // () -> SkGraphics::OpenTypeSVGDecoderFactory
+#ifdef __cplusplus
+SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory); // (SkGraphics::OpenTypeSVGDecoderFactory factory) -> SkGraphics::OpenTypeSVGDecoderFactory
+SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_GetOpenTypeSVGDecoderFactory(); // () -> SkGraphics::OpenTypeSVGDecoderFactory
+#endif
 
 #ifdef __cplusplus
 }

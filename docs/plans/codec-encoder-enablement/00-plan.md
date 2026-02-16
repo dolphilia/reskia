@@ -98,6 +98,8 @@ cmake --build skia/cmake-build-codec-prebuilt -j 8
 
 ### Phase 5: 実行スモーク（最小）
 
+ステータス: 完了（2026-02-16 16:03:40 JST）
+
 1. `skia/test` に codec/encoder スモークを追加（または既存 `test_c_skia` 拡張）。
 2. 最小検証を実施する。
 - Decode: AVIF/JPEGXL/GIF/RAW の `Is*` と `Decode*`
@@ -106,6 +108,13 @@ cmake --build skia/cmake-build-codec-prebuilt -j 8
 
 完了条件:
 - `ctest` または専用テスト実行で 0 exit。
+
+実績:
+- 追加テスト: `/Users/dolphilia/github/reskia/skia/test/test_codec_smoke.cpp`
+- CMake 登録: `/Users/dolphilia/github/reskia/cmake/reskia/tests.cmake`
+- OpenType SVG factory の C API 露出: `/Users/dolphilia/github/reskia/skia/capi/sk_graphics.h`, `/Users/dolphilia/github/reskia/skia/capi/sk_graphics.cpp`
+- 実行結果: `ctest --test-dir skia/cmake-build-phase5-smoke -R c_skia_codec_smoke --output-on-failure` で `100% tests passed, 0 tests failed out of 1`
+- 詳細記録: `/Users/dolphilia/github/reskia/docs/plans/codec-encoder-enablement/05-phase-5-smoke.md`
 
 ## 判定ゲート（途中判断）
 

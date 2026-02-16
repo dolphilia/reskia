@@ -85,12 +85,12 @@ void * SkGraphics_SetImageGeneratorFromEncodedDataFactory(SkGraphics::ImageGener
     return reinterpret_cast<SkGraphics::ImageGeneratorFromEncodedDataFactory *>(SkGraphics::SetImageGeneratorFromEncodedDataFactory(factory));
 }
 
-void * SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory) {
-    return reinterpret_cast<SkGraphics::OpenTypeSVGDecoderFactory *>(SkGraphics::SetOpenTypeSVGDecoderFactory(factory));
+SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory) {
+    return SkGraphics::SetOpenTypeSVGDecoderFactory(factory);
 }
 
-void * SkGraphics_GetOpenTypeSVGDecoderFactory() {
-    return reinterpret_cast<SkGraphics::OpenTypeSVGDecoderFactory *>(SkGraphics::GetOpenTypeSVGDecoderFactory());
+SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_GetOpenTypeSVGDecoderFactory() {
+    return SkGraphics::GetOpenTypeSVGDecoderFactory();
 }
 
 }
