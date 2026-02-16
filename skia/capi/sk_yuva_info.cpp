@@ -26,11 +26,11 @@ reskia_yuva_info_t *SkYUVAInfo_new() {
     return reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo());
 }
 
-reskia_yuva_info_t *SkYUVAInfo_new_2(const reskia_yuva_info_t *info) {
+reskia_yuva_info_t *SkYUVAInfo_newCopy(const reskia_yuva_info_t *info) {
     return reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo(*reinterpret_cast<const SkYUVAInfo *>(info)));
 }
 
-reskia_yuva_info_t *SkYUVAInfo_new_3(sk_i_size_t dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY) {
+reskia_yuva_info_t *SkYUVAInfo_newWithDimensionsConfigSubsamplingSpaceOriginAndSiting(sk_i_size_t dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY) {
     return reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo(static_sk_i_size_get_entity(dimensions), static_cast<SkYUVAInfo::PlaneConfig>(config), static_cast<SkYUVAInfo::Subsampling>(subsampling), static_cast<SkYUVColorSpace>(space), static_cast<SkEncodedOrigin>(origin), static_cast<SkYUVAInfo::Siting>(sitingX), static_cast<SkYUVAInfo::Siting>(sitingY)));
 }
 

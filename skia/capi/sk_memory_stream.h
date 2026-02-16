@@ -19,9 +19,9 @@ typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_memory_stream_t reskia_memory_stream_t;
 
 reskia_memory_stream_t *SkMemoryStream_new(); // () -> SkMemoryStream *
-reskia_memory_stream_t *SkMemoryStream_new_2(size_t length); // (size_t length) -> SkMemoryStream *
-reskia_memory_stream_t *SkMemoryStream_new_3(const uint8_t *data, size_t length, bool copyData); // (const void *data, size_t length, bool copyData) -> SkMemoryStream *
-reskia_memory_stream_t *SkMemoryStream_new_4(sk_data_t data); // (sk_data_t data) -> SkMemoryStream *
+reskia_memory_stream_t *SkMemoryStream_newWithLength(size_t length); // (size_t length) -> SkMemoryStream *
+reskia_memory_stream_t *SkMemoryStream_newWithDataAndCopyFlag(const uint8_t *data, size_t length, bool copyData); // (const void *data, size_t length, bool copyData) -> SkMemoryStream *
+reskia_memory_stream_t *SkMemoryStream_newWithData(sk_data_t data); // (sk_data_t data) -> SkMemoryStream *
 void SkMemoryStream_delete(reskia_memory_stream_t *memory_stream); // (SkMemoryStream *memory_stream)
 void SkMemoryStream_setMemory(reskia_memory_stream_t *memory_stream, const uint8_t *data, size_t length, bool copyData); // (SkMemoryStream *memory_stream, const void *data, size_t length, bool copyData)
 void SkMemoryStream_setMemoryOwned(reskia_memory_stream_t *memory_stream, const uint8_t *data, size_t length); // (SkMemoryStream *memory_stream, const void *data, size_t length)

@@ -32,7 +32,7 @@ float SkV2_dot(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
 float SkV2_cross(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
 sk_v2_t SkV2_normalize(reskia_v2_t *v2); // (SkV2 *v2) -> sk_v2_t
 const float *SkV2_ptr(reskia_v2_t *v2); // (SkV2 *v2) -> const float *
-float *SkV2_ptr_2(reskia_v2_t *v2); // (SkV2 *v2) -> float *
+float *SkV2_ptrMutable(reskia_v2_t *v2); // (SkV2 *v2) -> float *
 
 // static
 

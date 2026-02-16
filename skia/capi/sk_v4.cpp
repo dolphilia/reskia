@@ -44,7 +44,7 @@ const float *SkV4_ptr(reskia_v4_t *v4) {
     return reinterpret_cast<SkV4 *>(v4)->ptr();
 }
 
-float *SkV4_ptr_2(reskia_v4_t *v4) {
+float *SkV4_ptrMutable(reskia_v4_t *v4) {
     return reinterpret_cast<SkV4 *>(v4)->ptr();
 }
 

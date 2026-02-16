@@ -26,9 +26,9 @@ extern "C" {
 // bool operator!=(const SkYUVAPixmapInfo &that)
 
 reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new(); // () -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_2(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes); // (const SkYUVAInfo *info, const SkColorType type[4], const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_3(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes); // (const SkYUVAInfo *info, SkYUVAPixmapInfo::DataType type, const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_4(const reskia_yuva_pixmap_info_t *info); // (const SkYUVAPixmapInfo *info) -> SkYUVAPixmapInfo *
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoColorTypesAndRowBytes(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes); // (const SkYUVAInfo *info, const SkColorType type[4], const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoDataTypeAndRowBytes(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes); // (const SkYUVAInfo *info, SkYUVAPixmapInfo::DataType type, const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newCopy(const reskia_yuva_pixmap_info_t *info); // (const SkYUVAPixmapInfo *info) -> SkYUVAPixmapInfo *
 void SkYUVAPixmapInfo_delete(reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // (SkYUVAPixmapInfo *yuvaPixmapInfo)
 const reskia_yuva_info_t *SkYUVAPixmapInfo_yuvaInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> const SkYUVAInfo *
 reskia_yuva_pixmap_info_yuv_color_space_t SkYUVAPixmapInfo_yuvColorSpace(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> SkYUVColorSpace

@@ -19,7 +19,7 @@ typedef struct reskia_png_encoder_options_t reskia_png_encoder_options_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
 
 bool SkPngEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options); // (SkWStream* dst, const SkPixmap* src, const SkPngEncoder::Options* options) -> bool
-sk_data_t SkPngEncoder_Encode_2(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_png_encoder_options_t *options); // (GrDirectContext* ctx, const SkImage* img, const SkPngEncoder::Options* options) -> sk_data_t
+sk_data_t SkPngEncoder_EncodeFromImage(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_png_encoder_options_t *options); // (GrDirectContext* ctx, const SkImage* img, const SkPngEncoder::Options* options) -> sk_data_t
 sk_encoder_t SkPngEncoder_Make(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options); // (SkWStream* dst, const SkPixmap* src, const SkPngEncoder::Options* options) -> sk_encoder_t
 
 #ifdef __cplusplus

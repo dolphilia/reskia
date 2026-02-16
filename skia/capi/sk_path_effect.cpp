@@ -32,7 +32,7 @@ bool SkPathEffect_filterPath(reskia_path_effect_t *path_effect, reskia_path_t *d
         reinterpret_cast<const SkRect *>(cullR));
 }
 
-bool SkPathEffect_filterPath_2(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR, const reskia_matrix_t *ctm) {
+bool SkPathEffect_filterPathWithCTM(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR, const reskia_matrix_t *ctm) {
     return reinterpret_cast<SkPathEffect *>(path_effect)->filterPath(
         reinterpret_cast<SkPath *>(dst),
         *reinterpret_cast<const SkPath *>(src),
@@ -65,7 +65,7 @@ sk_data_t SkPathEffect_serialize(reskia_path_effect_t *path_effect, const reskia
     return static_sk_data_make(reinterpret_cast<SkPathEffect *>(path_effect)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkPathEffect_serialize_2(reskia_path_effect_t *path_effect, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
+size_t SkPathEffect_serializeToMemory(reskia_path_effect_t *path_effect, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
     return reinterpret_cast<SkPathEffect *>(path_effect)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
 }
 

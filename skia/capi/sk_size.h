@@ -30,7 +30,7 @@ sk_i_size_t SkSize_toFloor(reskia_size_t *size); // (SkSize *size) -> sk_i_size_
 // static
 
 sk_size_t SkSize_Make(float w, float h); // (SkScalar w, SkScalar h) -> sk_size_t
-sk_size_t SkSize_Make_2(const reskia_i_size_t *src); // (const SkISize *src) -> sk_size_t
+sk_size_t SkSize_MakeFromISize(const reskia_i_size_t *src); // (const SkISize *src) -> sk_size_t
 sk_size_t SkSize_MakeEmpty(); // () -> sk_size_t
 
 #ifdef __cplusplus

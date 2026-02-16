@@ -42,7 +42,7 @@ reskia_read_buffer_t *SkReadBuffer_new() {
     return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer());
 }
 
-reskia_read_buffer_t *SkReadBuffer_new_2(const void* data, size_t size) {
+reskia_read_buffer_t *SkReadBuffer_newWithDataAndSize(const void* data, size_t size) {
     return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer(data, size));
 }
 
@@ -82,7 +82,7 @@ const void* SkReadBuffer_skip(reskia_read_buffer_t *buffer, size_t size) {
     return reinterpret_cast<SkReadBuffer *>(buffer)->skip(size);
 }
 
-const void* SkReadBuffer_skip_2(reskia_read_buffer_t *buffer, size_t count, size_t size) {
+const void* SkReadBuffer_skipCount(reskia_read_buffer_t *buffer, size_t count, size_t size) {
     return reinterpret_cast<SkReadBuffer *>(buffer)->skip(count, size);
 }
 
@@ -135,7 +135,7 @@ void SkReadBuffer_readPoint(reskia_read_buffer_t *buffer, reskia_point_t *point)
     reinterpret_cast<SkReadBuffer *>(buffer)->readPoint(reinterpret_cast<SkPoint *>(point));
 }
 
-sk_point_t SkReadBuffer_readPoint_2(reskia_read_buffer_t *buffer) {
+sk_point_t SkReadBuffer_readPointValue(reskia_read_buffer_t *buffer) {
     return static_sk_point_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPoint());
 }
 
@@ -159,7 +159,7 @@ void SkReadBuffer_readRect(reskia_read_buffer_t *buffer, reskia_rect_t *rect) {
     return reinterpret_cast<SkReadBuffer *>(buffer)->readRect(reinterpret_cast<SkRect *>(rect));
 }
 
-sk_rect_t SkReadBuffer_readRect_2(reskia_read_buffer_t *buffer) {
+sk_rect_t SkReadBuffer_readRectValue(reskia_read_buffer_t *buffer) {
     return static_sk_rect_make(reinterpret_cast<SkReadBuffer *>(buffer)->readRect());
 }
 

@@ -28,7 +28,7 @@ float SkV4_length(reskia_v4_t *v4); // (SkV4 *v4) -> SkScalar
 float SkV4_dot(reskia_v4_t *v4, const reskia_v4_t *v); // (SkV4 *v4, const SkV4 *v) -> SkScalar
 sk_v4_t SkV4_normalize(reskia_v4_t *v4); // (SkV4 *v4) -> sk_v4_t
 const float *SkV4_ptr(reskia_v4_t *v4); // (SkV4 *v4) -> const float *
-float *SkV4_ptr_2(reskia_v4_t *v4); // (SkV4 *v4) -> float *
+float *SkV4_ptrMutable(reskia_v4_t *v4); // (SkV4 *v4) -> float *
 
 // static
 

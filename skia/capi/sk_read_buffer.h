@@ -45,7 +45,7 @@ extern "C" {
 #endif
 
 reskia_read_buffer_t *SkReadBuffer_new(); // () -> SkReadBuffer*
-reskia_read_buffer_t *SkReadBuffer_new_2(const void* data, size_t size); // (const void* data, size_t size) -> SkReadBuffer*
+reskia_read_buffer_t *SkReadBuffer_newWithDataAndSize(const void* data, size_t size); // (const void* data, size_t size) -> SkReadBuffer*
 void SkReadBuffer_delete(reskia_read_buffer_t *rect); // (SkReadBuffer* rect)
 void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size_t size); // (SkReadBuffer* buffer, const void* data, size_t size)
 bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, reskia_read_buffer_version_t targetVersion); // (SkReadBuffer* buffer, SkPicturePriv::Version targetVersion) -> bool
@@ -55,7 +55,7 @@ size_t SkReadBuffer_size(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer
 size_t SkReadBuffer_offset(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
 bool SkReadBuffer_eof(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> bool
 const void* SkReadBuffer_skip(reskia_read_buffer_t *buffer, size_t size); // (SkReadBuffer* buffer, size_t size) -> const void*
-const void* SkReadBuffer_skip_2(reskia_read_buffer_t *buffer, size_t count, size_t size); // (SkReadBuffer* buffer, size_t count, size_t size) -> const void*
+const void* SkReadBuffer_skipCount(reskia_read_buffer_t *buffer, size_t count, size_t size); // (SkReadBuffer* buffer, size_t count, size_t size) -> const void*
 size_t SkReadBuffer_available(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> size_t
 
 // template <typename T> const T* skipT()
@@ -74,13 +74,13 @@ uint8_t SkReadBuffer_peekByte(reskia_read_buffer_t *buffer); // (SkReadBuffer* b
 void SkReadBuffer_readString(reskia_read_buffer_t *buffer, reskia_string_t *string); // (SkReadBuffer* buffer, SkString* string)
 void SkReadBuffer_readColor4f(reskia_read_buffer_t *buffer, reskia_color_4f_t *color); // (SkReadBuffer* buffer, SkColor4f* color)
 void SkReadBuffer_readPoint(reskia_read_buffer_t *buffer, reskia_point_t *point); // (SkReadBuffer* buffer, SkPoint* point)
-sk_point_t SkReadBuffer_readPoint_2(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_point_t
+sk_point_t SkReadBuffer_readPointValue(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_point_t
 void SkReadBuffer_readPoint3(reskia_read_buffer_t *buffer, reskia_point_3_t *point); // (SkReadBuffer* buffer, SkPoint3* point)
 void SkReadBuffer_read(reskia_read_buffer_t *buffer, reskia_m_44_t *m44); // (SkReadBuffer* buffer, SkM44* m44)
 void SkReadBuffer_readMatrix(reskia_read_buffer_t *buffer, reskia_matrix_t *matrix); // (SkReadBuffer* buffer, SkMatrix* matrix)
 void SkReadBuffer_readIRect(reskia_read_buffer_t *buffer, reskia_i_rect_t *rect); // (SkReadBuffer* buffer, SkIRect* rect)
 void SkReadBuffer_readRect(reskia_read_buffer_t *buffer, reskia_rect_t *rect); // (SkReadBuffer* buffer, SkRect* rect)
-sk_rect_t SkReadBuffer_readRect_2(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_rect_t
+sk_rect_t SkReadBuffer_readRectValue(reskia_read_buffer_t *buffer); // (SkReadBuffer* buffer) -> sk_rect_t
 void SkReadBuffer_readRRect(reskia_read_buffer_t *buffer, reskia_r_rect_t *rrect); // (SkReadBuffer* buffer, SkRRect* rrect)
 void SkReadBuffer_readRegion(reskia_read_buffer_t *buffer, reskia_region_t *region); // (SkReadBuffer* buffer, SkRegion* region)
 void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path); // (SkReadBuffer* buffer, SkPath* path)

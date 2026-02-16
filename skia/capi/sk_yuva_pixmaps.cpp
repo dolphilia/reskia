@@ -23,7 +23,7 @@ reskia_yuva_pixmaps_t *SkYUVAPixmaps_new() {
     return reinterpret_cast<reskia_yuva_pixmaps_t *>(new SkYUVAPixmaps());
 }
 
-reskia_yuva_pixmaps_t *SkYUVAPixmaps_new_2(const reskia_yuva_pixmaps_t *pixmaps) {
+reskia_yuva_pixmaps_t *SkYUVAPixmaps_newCopy(const reskia_yuva_pixmaps_t *pixmaps) {
     return reinterpret_cast<reskia_yuva_pixmaps_t *>(new SkYUVAPixmaps(*reinterpret_cast<const SkYUVAPixmaps *>(pixmaps)));
 }
 

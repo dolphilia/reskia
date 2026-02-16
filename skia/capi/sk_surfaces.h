@@ -19,10 +19,10 @@ extern "C" {
 
 sk_surface_t SkSurfaces_Null(int width, int height); // (int width, int height) -> sk_surface_t
 sk_surface_t SkSurfaces_Raster(const reskia_image_info_t *imageInfo, size_t rowBytes, const reskia_surface_props_t *surfaceProps); // (const SkImageInfo *imageInfo, size_t rowBytes, const SkSurfaceProps *surfaceProps) -> sk_surface_t
-sk_surface_t SkSurfaces_Raster_2(const reskia_image_info_t *imageInfo, const reskia_surface_props_t *props); // (const SkImageInfo *imageInfo, const SkSurfaceProps *props) -> sk_surface_t
+sk_surface_t SkSurfaces_RasterWithoutRowBytes(const reskia_image_info_t *imageInfo, const reskia_surface_props_t *props); // (const SkImageInfo *imageInfo, const SkSurfaceProps *props) -> sk_surface_t
 sk_surface_t SkSurfaces_WrapPixels(const reskia_image_info_t *imageInfo, void *pixels, size_t rowBytes, const reskia_surface_props_t *surfaceProps); // (const SkImageInfo *imageInfo, void *pixels, size_t rowBytes, const SkSurfaceProps *surfaceProps) -> sk_surface_t
-sk_surface_t SkSurfaces_WrapPixels_2(const reskia_pixmap_t *pm, const reskia_surface_props_t *props); // (const SkPixmap *pm, const SkSurfaceProps *props) -> sk_surface_t
-sk_surface_t SkSurfaces_WrapPixels_3(const reskia_image_info_t *imageInfo, void *pixels, size_t rowBytes, void(* pixelsReleaseProc)(void *, void *), void *context, const reskia_surface_props_t *surfaceProps); // (const SkImageInfo *imageInfo, void *pixels, size_t rowBytes, SkSurfaces::PixelsReleaseProc pixelsReleaseProc, void *context, const SkSurfaceProps *surfaceProps) -> sk_surface_t
+sk_surface_t SkSurfaces_WrapPixelsWithPixmap(const reskia_pixmap_t *pm, const reskia_surface_props_t *props); // (const SkPixmap *pm, const SkSurfaceProps *props) -> sk_surface_t
+sk_surface_t SkSurfaces_WrapPixelsWithReleaseProcAndContext(const reskia_image_info_t *imageInfo, void *pixels, size_t rowBytes, void(* pixelsReleaseProc)(void *, void *), void *context, const reskia_surface_props_t *surfaceProps); // (const SkImageInfo *imageInfo, void *pixels, size_t rowBytes, SkSurfaces::PixelsReleaseProc pixelsReleaseProc, void *context, const SkSurfaceProps *surfaceProps) -> sk_surface_t
 
 #ifdef __cplusplus
 }

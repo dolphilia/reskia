@@ -20,11 +20,11 @@ reskia_surface_props_t *SkSurfaceProps_new() {
     return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps());
 }
 
-reskia_surface_props_t *SkSurfaceProps_new_2(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry) {
+reskia_surface_props_t *SkSurfaceProps_newWithFlagsAndGeometry(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry) {
     return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps(flags, static_cast<SkPixelGeometry>(geometry)));
 }
 
-reskia_surface_props_t *SkSurfaceProps_new_3(const reskia_surface_props_t *props) {
+reskia_surface_props_t *SkSurfaceProps_newCopy(const reskia_surface_props_t *props) {
     return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps(* reinterpret_cast<const SkSurfaceProps *>(props)));
 }
 

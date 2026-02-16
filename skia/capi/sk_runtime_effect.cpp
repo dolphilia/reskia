@@ -46,7 +46,7 @@ sk_shader_t SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, 
     return static_sk_shader_make(reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->makeShader(static_const_sk_data_get_entity(data), reinterpret_cast<sk_sp<SkShader> *>(children), childCount, reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkRuntimeEffect_makeShader_2(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkRuntimeEffect_makeShaderWithChildPtr(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->makeShader(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
@@ -54,11 +54,11 @@ sk_color_filter_t SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runti
     return static_sk_color_filter_make(reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->makeColorFilter(static_const_sk_data_get_entity(data)));
 }
 
-sk_color_filter_t SkRuntimeEffect_makeColorFilter_2(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_color_filter_sp_t *children, size_t childCount) {
+sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildren(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_color_filter_sp_t *children, size_t childCount) {
     return static_sk_color_filter_make(reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->makeColorFilter(static_const_sk_data_get_entity(data), reinterpret_cast<sk_sp<SkColorFilter> *>(children), childCount));
 }
 
-sk_color_filter_t SkRuntimeEffect_makeColorFilter_3(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) {
+sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildPtr(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) {
     return static_sk_color_filter_make(reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->makeColorFilter(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr)));
 }
 
@@ -120,7 +120,7 @@ sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter(sk_string_t string
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options)));
 }
 
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter_2(sk_string_t string) {
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilterDefault(sk_string_t string) {
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string)));
 }
 
@@ -128,7 +128,7 @@ sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader(sk_string_t string, con
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options)));
 }
 
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader_2(sk_string_t string) {
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForShaderDefault(sk_string_t string) {
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string)));
 }
 
@@ -136,7 +136,7 @@ sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender(sk_string_t string, co
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options)));
 }
 
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender_2(sk_string_t string) {
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlenderDefault(sk_string_t string) {
     return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string)));
 }
 

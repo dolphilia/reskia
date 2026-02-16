@@ -26,7 +26,7 @@ extern "C" {
 // SkYUVAPixmaps & operator=(const SkYUVAPixmaps &that)
 
 reskia_yuva_pixmaps_t *SkYUVAPixmaps_new(); // () -> SkYUVAPixmaps *
-reskia_yuva_pixmaps_t *SkYUVAPixmaps_new_2(const reskia_yuva_pixmaps_t *pixmaps); // (const SkYUVAPixmaps *pixmaps) -> SkYUVAPixmaps *
+reskia_yuva_pixmaps_t *SkYUVAPixmaps_newCopy(const reskia_yuva_pixmaps_t *pixmaps); // (const SkYUVAPixmaps *pixmaps) -> SkYUVAPixmaps *
 void SkYUVAPixmaps_delete(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps)
 bool SkYUVAPixmaps_isValid(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> bool
 const reskia_yuva_info_t *SkYUVAPixmaps_yuvaInfo(reskia_yuva_pixmaps_t *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> const SkYUVAInfo *

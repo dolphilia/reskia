@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(int runtime_effect); // (sk_runtime_effect_t runtime_effect) -> SkRuntimeShaderBuilder *
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new_2(const reskia_runtime_shader_builder_t *builder); // (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder); // (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *
 void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder)
 sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix); // (SkRuntimeShaderBuilder *runtime_shader_builder, const SkMatrix *localMatrix) -> sk_shader_t
 const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder) -> const SkRuntimeEffect *

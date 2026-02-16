@@ -16,12 +16,12 @@ reskia_region_t *SkRegion_new() {
     return reinterpret_cast<reskia_region_t *>(new SkRegion());
 }
 
-reskia_region_t *SkRegion_new_2(const reskia_region_t *region) {
+reskia_region_t *SkRegion_newCopy(const reskia_region_t *region) {
     return reinterpret_cast<reskia_region_t *>(
             new SkRegion(*reinterpret_cast<const SkRegion *>(region)));
 }
 
-reskia_region_t *SkRegion_new_3(const reskia_i_rect_t *rect) {
+reskia_region_t *SkRegion_newFromIRect(const reskia_i_rect_t *rect) {
     return reinterpret_cast<reskia_region_t *>(
             new SkRegion(*reinterpret_cast<const SkIRect *>(rect)));
 }
@@ -87,7 +87,7 @@ bool SkRegion_intersects(reskia_region_t *region, const reskia_i_rect_t *rect) {
     return reinterpret_cast<SkRegion *>(region)->intersects(* reinterpret_cast<const SkIRect *>(rect));
 }
 
-bool SkRegion_intersects_2(reskia_region_t *region, const reskia_region_t *other) {
+bool SkRegion_intersectsRegion(reskia_region_t *region, const reskia_region_t *other) {
     return reinterpret_cast<SkRegion *>(region)->intersects(* reinterpret_cast<const SkRegion *>(other));
 }
 
@@ -95,11 +95,11 @@ bool SkRegion_contains(reskia_region_t *region, int32_t x, int32_t y) {
     return reinterpret_cast<SkRegion *>(region)->contains(x, y);
 }
 
-bool SkRegion_contains_2(reskia_region_t *region, const reskia_i_rect_t *other) {
+bool SkRegion_containsIRect(reskia_region_t *region, const reskia_i_rect_t *other) {
     return reinterpret_cast<SkRegion *>(region)->contains(* reinterpret_cast<const SkIRect *>(other));
 }
 
-bool SkRegion_contains_3(reskia_region_t *region, const reskia_region_t *other) {
+bool SkRegion_containsRegion(reskia_region_t *region, const reskia_region_t *other) {
     return reinterpret_cast<SkRegion *>(region)->contains(* reinterpret_cast<const SkRegion *>(other));
 }
 
@@ -111,7 +111,7 @@ bool SkRegion_quickReject(reskia_region_t *region, const reskia_i_rect_t *rect) 
     return reinterpret_cast<SkRegion *>(region)->quickReject(* reinterpret_cast<const SkIRect *>(rect));
 }
 
-bool SkRegion_quickReject_2(reskia_region_t *region, const reskia_region_t *rgn) {
+bool SkRegion_quickRejectRegion(reskia_region_t *region, const reskia_region_t *rgn) {
     return reinterpret_cast<SkRegion *>(region)->quickReject(* reinterpret_cast<const SkRegion *>(rgn));
 }
 
@@ -119,7 +119,7 @@ void SkRegion_translate(reskia_region_t *region, int dx, int dy) {
     reinterpret_cast<SkRegion *>(region)->translate(dx, dy);
 }
 
-void SkRegion_translate_2(reskia_region_t *region, int dx, int dy, reskia_region_t *dst) {
+void SkRegion_translateToRegion(reskia_region_t *region, int dx, int dy, reskia_region_t *dst) {
     reinterpret_cast<SkRegion *>(region)->translate(dx, dy, reinterpret_cast<SkRegion *>(dst));
 }
 
@@ -127,15 +127,15 @@ bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, reskia_re
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkIRect *>(rect), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_2(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op) {
+bool SkRegion_opWithRegion(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkRegion *>(rgn), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_3(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op) {
+bool SkRegion_opWithIRectAndRegion(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkIRect *>(rect), * reinterpret_cast<const SkRegion *>(rgn), static_cast<SkRegion::Op>(op));
 }
 
-bool SkRegion_op_4(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, reskia_region_op_t op) {
+bool SkRegion_opWithRegionAndIRect(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, reskia_region_op_t op) {
     return reinterpret_cast<SkRegion *>(region)->op(* reinterpret_cast<const SkRegion *>(rgn), * reinterpret_cast<const SkIRect *>(rect), static_cast<SkRegion::Op>(op));
 }
 

@@ -29,7 +29,7 @@ reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(sk_runtime_effect_t 
     return reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(static_sk_runtime_effect_get_entity(runtime_effect)));
 }
 
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new_2(const reskia_runtime_shader_builder_t *builder) {
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder) {
     return reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(*reinterpret_cast<const SkRuntimeShaderBuilder *>(builder)));
 }
 

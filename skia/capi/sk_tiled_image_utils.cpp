@@ -12,15 +12,15 @@ void SkTiledImageUtils_DrawImageRect(reskia_canvas_t *canvas, const reskia_image
     SkTiledImageUtils::DrawImageRect(reinterpret_cast<SkCanvas *>(canvas), reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkTiledImageUtils_DrawImageRect_2(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
+void SkTiledImageUtils_DrawImageRectWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
     SkTiledImageUtils::DrawImageRect(reinterpret_cast<SkCanvas *>(canvas), * reinterpret_cast<const sk_sp<SkImage> *>(image), * reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkTiledImageUtils_DrawImageRect_3(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
+void SkTiledImageUtils_DrawImageRectWithDst(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
     SkTiledImageUtils::DrawImageRect(reinterpret_cast<SkCanvas *>(canvas), reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkTiledImageUtils_DrawImageRect_4(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
+void SkTiledImageUtils_DrawImageRectWithImageSpAndDst(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
     SkTiledImageUtils::DrawImageRect(reinterpret_cast<SkCanvas *>(canvas), * reinterpret_cast<const sk_sp<SkImage> *>(image), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
@@ -28,7 +28,7 @@ void SkTiledImageUtils_DrawImage(reskia_canvas_t *canvas, const reskia_image_t *
     SkTiledImageUtils::DrawImage(reinterpret_cast<SkCanvas *>(canvas), reinterpret_cast<const SkImage *>(image), x, y, * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkTiledImageUtils_DrawImage_2(reskia_canvas_t *canvas, const reskia_image_sp_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
+void SkTiledImageUtils_DrawImageWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint) {
     SkTiledImageUtils::DrawImage(reinterpret_cast<SkCanvas *>(canvas), * reinterpret_cast<const sk_sp<SkImage> *>(image), x, y, * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 

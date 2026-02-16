@@ -20,7 +20,7 @@ typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
 bool SkWbmpDecoder_IsWbmp(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
 sk_codec_t SkWbmpDecoder_Decode(int static_stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkWbmpDecoder_Decode_2(int static_data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codec_t SkWbmpDecoder_DecodeFromData(int static_data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
 sk_codecs_decoder_t SkWbmpDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
 #ifdef __cplusplus

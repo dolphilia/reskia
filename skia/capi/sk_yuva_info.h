@@ -29,8 +29,8 @@ extern "C" {
 // bool operator!=(const SkYUVAInfo &that)
 
 reskia_yuva_info_t *SkYUVAInfo_new(); // () -> SkYUVAInfo *
-reskia_yuva_info_t *SkYUVAInfo_new_2(const reskia_yuva_info_t *info); // (const SkYUVAInfo *info) -> SkYUVAInfo *
-reskia_yuva_info_t *SkYUVAInfo_new_3(int dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY); // (sk_i_size_t dimensions, SkYUVAInfo::PlaneConfig config, SkYUVAInfo::Subsampling subsampling, SkYUVColorSpace space, SkEncodedOrigin origin, SkYUVAInfo::Siting sitingX, SkYUVAInfo::Siting sitingY) -> SkYUVAInfo *
+reskia_yuva_info_t *SkYUVAInfo_newCopy(const reskia_yuva_info_t *info); // (const SkYUVAInfo *info) -> SkYUVAInfo *
+reskia_yuva_info_t *SkYUVAInfo_newWithDimensionsConfigSubsamplingSpaceOriginAndSiting(int dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY); // (sk_i_size_t dimensions, SkYUVAInfo::PlaneConfig config, SkYUVAInfo::Subsampling subsampling, SkYUVColorSpace space, SkEncodedOrigin origin, SkYUVAInfo::Siting sitingX, SkYUVAInfo::Siting sitingY) -> SkYUVAInfo *
 void SkYUVAInfo_delete(reskia_yuva_info_t *yuvaInfo); // (SkYUVAInfo *yuvaInfo)
 reskia_yuva_info_plane_config_t SkYUVAInfo_planeConfig(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> SkYUVAInfo::PlaneConfig
 reskia_yuva_info_subsampling_t SkYUVAInfo_subsampling(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> SkYUVAInfo::Subsampling

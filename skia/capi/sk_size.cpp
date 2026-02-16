@@ -64,7 +64,7 @@ sk_size_t SkSize_Make(float w, float h) {
     return static_sk_size_make(SkSize::Make(w, h));
 }
 
-sk_size_t SkSize_Make_2(const reskia_i_size_t *src) {
+sk_size_t SkSize_MakeFromISize(const reskia_i_size_t *src) {
     return static_sk_size_make(SkSize::Make(*reinterpret_cast<const SkISize *>(src)));
 }
 

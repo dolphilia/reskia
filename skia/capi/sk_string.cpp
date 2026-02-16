@@ -25,15 +25,15 @@ reskia_string_t *SkString_new() {
     return reinterpret_cast<reskia_string_t *>(new SkString());
 }
 
-reskia_string_t *SkString_new_2(size_t len) {
+reskia_string_t *SkString_newWithLength(size_t len) {
     return reinterpret_cast<reskia_string_t *>(new SkString(len));
 }
 
-reskia_string_t *SkString_new_3(const char text[]) {
+reskia_string_t *SkString_newFromText(const char text[]) {
     return reinterpret_cast<reskia_string_t *>(new SkString(text));
 }
 
-reskia_string_t *SkString_new_4(const char text[], size_t len) {
+reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len) {
     return reinterpret_cast<reskia_string_t *>(new SkString(text, len));
 }
 
@@ -64,7 +64,7 @@ const char * SkString_data(reskia_string_t *string) {
     return reinterpret_cast<SkString *>(string)->data();
 }
 
-char * SkString_data_2(reskia_string_t *string) {
+char * SkString_dataMutable(reskia_string_t *string) {
     return reinterpret_cast<SkString *>(string)->data();
 }
 
@@ -76,11 +76,11 @@ bool SkString_equals(reskia_string_t *string, const reskia_string_t *str) {
     return reinterpret_cast<SkString *>(string)->equals(* reinterpret_cast<const SkString *>(str));
 }
 
-bool SkString_equals_2(reskia_string_t *string, const char text[]) {
+bool SkString_equalsText(reskia_string_t *string, const char text[]) {
     return reinterpret_cast<SkString *>(string)->equals(text);
 }
 
-bool SkString_equals_3(reskia_string_t *string, const char text[], size_t len) {
+bool SkString_equalsTextWithLength(reskia_string_t *string, const char text[], size_t len) {
     return reinterpret_cast<SkString *>(string)->equals(text, len);
 }
 
@@ -88,7 +88,7 @@ bool SkString_startsWith(reskia_string_t *string, const char prefixStr[]) {
     return reinterpret_cast<SkString *>(string)->startsWith(prefixStr);
 }
 
-bool SkString_startsWith_2(reskia_string_t *string, const char prefixChar) {
+bool SkString_startsWithChar(reskia_string_t *string, const char prefixChar) {
     return reinterpret_cast<SkString *>(string)->startsWith(prefixChar);
 }
 
@@ -104,7 +104,7 @@ bool SkString_contains(reskia_string_t *string, const char substring[]) {
     return reinterpret_cast<SkString *>(string)->contains(substring);
 }
 
-bool SkString_contains_2(reskia_string_t *string, const char subchar) {
+bool SkString_containsChar(reskia_string_t *string, const char subchar) {
     return reinterpret_cast<SkString *>(string)->contains(subchar);
 }
 
@@ -128,15 +128,15 @@ void SkString_set(reskia_string_t *string, const reskia_string_t *src) {
     reinterpret_cast<SkString *>(string)->set(* reinterpret_cast<const SkString *>(src));
 }
 
-void SkString_set_2(reskia_string_t *string, const char text[]) {
+void SkString_setText(reskia_string_t *string, const char text[]) {
     reinterpret_cast<SkString *>(string)->set(text);
 }
 
-void SkString_set_3(reskia_string_t *string, const char text[], size_t len) {
+void SkString_setTextWithLength(reskia_string_t *string, const char text[], size_t len) {
     reinterpret_cast<SkString *>(string)->set(text, len);
 }
 
-void SkString_set_4(reskia_string_t *string, string_view_t str) {
+void SkString_setStringView(reskia_string_t *string, string_view_t str) {
     reinterpret_cast<SkString *>(string)->set(static_string_view_get_entity(str));
 }
 
@@ -144,15 +144,15 @@ void SkString_insert(reskia_string_t *string, size_t offset, const char text[]) 
     reinterpret_cast<SkString *>(string)->insert(offset, text);
 }
 
-void SkString_insert_2(reskia_string_t *string, size_t offset, const char text[], size_t len) {
+void SkString_insertTextWithLength(reskia_string_t *string, size_t offset, const char text[], size_t len) {
     reinterpret_cast<SkString *>(string)->insert(offset, text, len);
 }
 
-void SkString_insert_3(reskia_string_t *string, size_t offset, const reskia_string_t *str) {
+void SkString_insertString(reskia_string_t *string, size_t offset, const reskia_string_t *str) {
     reinterpret_cast<SkString *>(string)->insert(offset, * reinterpret_cast<const SkString *>(str));
 }
 
-void SkString_insert_4(reskia_string_t *string, size_t offset, string_view_t str) {
+void SkString_insertStringView(reskia_string_t *string, size_t offset, string_view_t str) {
     reinterpret_cast<SkString *>(string)->insert(offset, static_string_view_get_entity(str));
 }
 
@@ -188,15 +188,15 @@ void SkString_append(reskia_string_t *string, const char text[]) {
     reinterpret_cast<SkString *>(string)->append(text);
 }
 
-void SkString_append_2(reskia_string_t *string, const char text[], size_t len) {
+void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len) {
     reinterpret_cast<SkString *>(string)->append(text, len);
 }
 
-void SkString_append_3(reskia_string_t *string, const reskia_string_t *str) {
+void SkString_appendString(reskia_string_t *string, const reskia_string_t *str) {
     reinterpret_cast<SkString *>(string)->append(* reinterpret_cast<const SkString *>(str));
 }
 
-void SkString_append_4(reskia_string_t *string, string_view_t str) {
+void SkString_appendStringView(reskia_string_t *string, string_view_t str) {
     reinterpret_cast<SkString *>(string)->append(static_string_view_get_entity(str));
 }
 
@@ -232,15 +232,15 @@ void SkString_prepend(reskia_string_t *string, const char text[]) {
     reinterpret_cast<SkString *>(string)->prepend(text);
 }
 
-void SkString_prepend_2(reskia_string_t *string, const char text[], size_t len) {
+void SkString_prependTextWithLength(reskia_string_t *string, const char text[], size_t len) {
     reinterpret_cast<SkString *>(string)->prepend(text, len);
 }
 
-void SkString_prepend_3(reskia_string_t *string, const reskia_string_t *str) {
+void SkString_prependString(reskia_string_t *string, const reskia_string_t *str) {
     reinterpret_cast<SkString *>(string)->prepend(* reinterpret_cast<const SkString *>(str));
 }
 
-void SkString_prepend_4(reskia_string_t *string, string_view_t str) {
+void SkString_prependStringView(reskia_string_t *string, string_view_t str) {
     reinterpret_cast<SkString *>(string)->prepend(static_string_view_get_entity(str));
 }
 

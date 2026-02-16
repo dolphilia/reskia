@@ -18,7 +18,7 @@ sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_met
         *reinterpret_cast<const SkPDF::Metadata *>(metadata)));
 }
 
-sk_document_t SkPDF_MakeDocument_2(reskia_w_stream_t *stream) {
+sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream) {
     return static_sk_document_make(SkPDF::MakeDocument(reinterpret_cast<SkWStream *>(stream)));
 }
 

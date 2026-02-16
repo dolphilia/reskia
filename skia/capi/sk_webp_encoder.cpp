@@ -12,7 +12,7 @@ bool SkWebpEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, co
     return SkWebpEncoder::Encode(reinterpret_cast<SkWStream *>(dst), *reinterpret_cast<const SkPixmap *>(src), *reinterpret_cast<const SkWebpEncoder::Options *>(options));
 }
 
-sk_data_t SkWebpEncoder_Encode_2(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_webp_encoder_options_t *options) {
+sk_data_t SkWebpEncoder_EncodeFromImage(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_webp_encoder_options_t *options) {
     return static_sk_data_make(SkWebpEncoder::Encode(reinterpret_cast<GrDirectContext *>(ctx), reinterpret_cast<const SkImage *>(img), *reinterpret_cast<const SkWebpEncoder::Options *>(options)));
 }
 

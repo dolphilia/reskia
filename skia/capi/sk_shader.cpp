@@ -36,7 +36,7 @@ reskia_image_t *SkShader_isAImage(reskia_shader_t *shader, reskia_matrix_t *loca
     return reinterpret_cast<reskia_image_t *>(reinterpret_cast<SkShader *>(shader)->isAImage(reinterpret_cast<SkMatrix *>(localMatrix), reinterpret_cast<SkTileMode *>(xy)));
 }
 
-bool SkShader_isAImage_2(reskia_shader_t *shader) {
+bool SkShader_isAImageWithoutLocalMatrixAndTileModes(reskia_shader_t *shader) {
     return reinterpret_cast<SkShader *>(shader)->isAImage();
 }
 
@@ -72,7 +72,7 @@ sk_data_t SkShader_serialize(reskia_shader_t *shader, const reskia_serial_procs_
     return static_sk_data_make(reinterpret_cast<SkShader *>(shader)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkShader_serialize_2(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
+size_t SkShader_serializeToMemory(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
     return reinterpret_cast<SkShader *>(shader)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
 }
 

@@ -82,7 +82,7 @@ const float *SkV3_ptr(reskia_v3_t *v3) {
     return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 
-float *SkV3_ptr_2(reskia_v3_t *v3) {
+float *SkV3_ptrMutable(reskia_v3_t *v3) {
     return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 

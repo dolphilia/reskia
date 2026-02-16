@@ -33,11 +33,11 @@ reskia_paint_t *SkPaint_new() {
     return reinterpret_cast<reskia_paint_t *>(new SkPaint());
 }
 
-reskia_paint_t *SkPaint_new_2(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace) {
+reskia_paint_t *SkPaint_newWithColor4fAndColorSpace(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace) {
     return reinterpret_cast<reskia_paint_t *>(new SkPaint(* reinterpret_cast<const SkColor4f *>(color), reinterpret_cast<SkColorSpace *>(colorSpace)));
 }
 
-reskia_paint_t *SkPaint_new_3(const reskia_paint_t *paint) {
+reskia_paint_t *SkPaint_newCopy(const reskia_paint_t *paint) {
     return reinterpret_cast<reskia_paint_t *>(new SkPaint(* reinterpret_cast<const SkPaint *>(paint)));
 }
 
@@ -89,7 +89,7 @@ void SkPaint_setColor(reskia_paint_t *paint, reskia_color_t color) {
     reinterpret_cast<SkPaint *>(paint)->setColor(color);
 }
 
-void SkPaint_setColor_2(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace) {
+void SkPaint_setColorWithColor4fAndColorSpace(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace) {
     reinterpret_cast<SkPaint *>(paint)->setColor(* reinterpret_cast<const SkColor4f *>(color), reinterpret_cast<SkColorSpace *>(colorSpace));
 }
 

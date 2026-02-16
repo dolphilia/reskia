@@ -31,7 +31,7 @@ float SkV3_dot(reskia_v3_t *v3, const reskia_v3_t *v); // (SkV3 *v3, const SkV3 
 sk_v3_t SkV3_cross(reskia_v3_t *v3, const reskia_v3_t *v); // (SkV3 *v3, const SkV3 *v) -> sk_v3_t
 sk_v3_t SkV3_normalize(reskia_v3_t *v3); // (SkV3 *v3) -> sk_v3_t
 const float *SkV3_ptr(reskia_v3_t *v3); // (SkV3 *v3) -> const float *
-float *SkV3_ptr_2(reskia_v3_t *v3); // (SkV3 *v3) -> float *
+float *SkV3_ptrMutable(reskia_v3_t *v3); // (SkV3 *v3) -> float *
 
 // static
 

@@ -26,7 +26,7 @@ sk_shader_t SkShaders_Color(reskia_color_t color) {
     return static_sk_shader_make(SkShaders::Color(color));
 }
 
-sk_shader_t SkShaders_Color_2(const reskia_color_4f_t *color4f, sk_color_space_t color_space) {
+sk_shader_t SkShaders_ColorWithColor4fAndColorSpace(const reskia_color_4f_t *color4f, sk_color_space_t color_space) {
     return static_sk_shader_make(SkShaders::Color(*reinterpret_cast<const SkColor4f *>(color4f), static_sk_color_space_get_entity(color_space)));
 }
 
@@ -34,7 +34,7 @@ sk_shader_t SkShaders_Blend(reskia_shaders_blend_mode_t mode, sk_shader_t dst, s
     return static_sk_shader_make(SkShaders::Blend(static_cast<SkBlendMode>(mode), static_sk_shader_get_entity(dst), static_sk_shader_get_entity(src)));
 }
 
-sk_shader_t SkShaders_Blend_2(reskia_blender_t value, sk_shader_t dst, sk_shader_t src) {
+sk_shader_t SkShaders_BlendWithBlender(reskia_blender_t value, sk_shader_t dst, sk_shader_t src) {
     return static_sk_shader_make(SkShaders::Blend(static_sk_blender_get_entity(value), static_sk_shader_get_entity(dst), static_sk_shader_get_entity(src)));
 }
 

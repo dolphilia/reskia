@@ -21,7 +21,7 @@ extern "C" {
 // SkPathMeasure & operator=(SkPathMeasure &&)
 
 reskia_path_measure_t *SkPathMeasure_new(); // () -> SkPathMeasure *
-reskia_path_measure_t *SkPathMeasure_new_2(const reskia_path_t *path, bool forceClosed, float resScale); // (const SkPath *path, bool forceClosed, SkScalar resScale) -> SkPathMeasure *
+reskia_path_measure_t *SkPathMeasure_newWithPathForceClosedAndResScale(const reskia_path_t *path, bool forceClosed, float resScale); // (const SkPath *path, bool forceClosed, SkScalar resScale) -> SkPathMeasure *
 void SkPathMeasure_delete(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure)
 void SkPathMeasure_setPath(reskia_path_measure_t *path_measure, const reskia_path_t *path, bool forceClosed); // (SkPathMeasure *path_measure, const SkPath *path, bool forceClosed)
 float SkPathMeasure_getLength(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> SkScalar

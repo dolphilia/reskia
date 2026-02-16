@@ -40,7 +40,7 @@ sk_data_t SkPicture_serialize(reskia_picture_t *picture, const reskia_serial_pro
     return static_sk_data_make(reinterpret_cast<SkPicture *>(picture)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-void SkPicture_serialize_2(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs) {
+void SkPicture_serializeToStream(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs) {
     reinterpret_cast<SkPicture *>(picture)->serialize(
         reinterpret_cast<SkWStream *>(stream),
         reinterpret_cast<const SkSerialProcs *>(procs));
@@ -63,7 +63,7 @@ sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, reskia_picture_tile_
         reinterpret_cast<const SkRect *>(tileRect)));
 }
 
-sk_shader_t SkPicture_makeShader_2(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode) {
+sk_shader_t SkPicture_makeShaderWithoutLocalMatrixAndTileRect(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode) {
     return static_sk_shader_make(reinterpret_cast<SkPicture *>(picture)->makeShader(
         static_cast<SkTileMode>(tmx),
         static_cast<SkTileMode>(tmy),
@@ -96,7 +96,7 @@ sk_picture_t SkPicture_MakeFromData(const reskia_data_t *data, const reskia_dese
         reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 
-sk_picture_t SkPicture_MakeFromData_2(const void *data, size_t size, const reskia_deserial_procs_t *procs) {
+sk_picture_t SkPicture_MakeFromMemory(const void *data, size_t size, const reskia_deserial_procs_t *procs) {
     return static_sk_picture_make(SkPicture::MakeFromData(data, size, reinterpret_cast<const SkDeserialProcs *>(procs)));
 }
 

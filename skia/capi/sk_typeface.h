@@ -44,7 +44,7 @@ int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_
 uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> SkTypefaceID
 sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_font_arguments_t *arguments); // (SkTypeface *typeface, const SkFontArguments *arguments) -> sk_typeface_t
 void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkWStream *stream, SkTypeface::SerializeBehavior behavior)
-sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkTypeface::SerializeBehavior behavior) -> sk_data_t
+sk_data_t SkTypeface_serializeToData(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkTypeface::SerializeBehavior behavior) -> sk_data_t
 void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs); // (SkTypeface *typeface, const SkUnichar uni[], int count, SkGlyphID glyphs[])
 int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // (SkTypeface *typeface, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
 uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar); // (SkTypeface *typeface, SkUnichar unichar) -> SkGlyphID
@@ -86,7 +86,7 @@ sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t f
 sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index); // (const char path[], int index) -> sk_typeface_t
 sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index); // (sk_stream_asset_t stream_asset, int index) -> sk_typeface_t
 sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index); // (sk_data_t data, int index) -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeDeserialize_2(reskia_stream_t *stream); // (SkStream *stream) -> sk_typeface_t
+sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream); // (SkStream *stream) -> sk_typeface_t
 
 #endif
 

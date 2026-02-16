@@ -31,13 +31,13 @@ reskia_canvas_t *SkPictureRecorder_beginRecording(reskia_picture_recorder_t *pic
         static_sk_b_box_hierarchy_get_entity(b_box_hierarchy)));
 }
 
-reskia_canvas_t *SkPictureRecorder_beginRecording_2(reskia_picture_recorder_t *picture_recorder, const reskia_rect_t *bounds, reskia_bbh_factory_t *bbhFactory) {
+reskia_canvas_t *SkPictureRecorder_beginRecordingWithBoundsAndFactory(reskia_picture_recorder_t *picture_recorder, const reskia_rect_t *bounds, reskia_bbh_factory_t *bbhFactory) {
     return reinterpret_cast<reskia_canvas_t *>(reinterpret_cast<SkPictureRecorder *>(picture_recorder)->beginRecording(
         *reinterpret_cast<const SkRect *>(bounds),
         reinterpret_cast<SkBBHFactory *>(bbhFactory)));
 }
 
-reskia_canvas_t *SkPictureRecorder_beginRecording_3(reskia_picture_recorder_t *picture_recorder, float width, float height, reskia_bbh_factory_t *bbhFactory) {
+reskia_canvas_t *SkPictureRecorder_beginRecordingWithSizeAndFactory(reskia_picture_recorder_t *picture_recorder, float width, float height, reskia_bbh_factory_t *bbhFactory) {
     return reinterpret_cast<reskia_canvas_t *>(reinterpret_cast<SkPictureRecorder *>(picture_recorder)->beginRecording(
         width,
         height,

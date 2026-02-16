@@ -35,7 +35,7 @@ size_t SkTextBlob_serialize(reskia_text_blob_t *text_blob, const reskia_serial_p
     return reinterpret_cast<SkTextBlob *>(text_blob)->serialize(* reinterpret_cast<const SkSerialProcs *>(procs), memory, memory_size);
 }
 
-sk_data_t SkTextBlob_serialize_2(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs) {
+sk_data_t SkTextBlob_serializeToData(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs) {
     return static_sk_data_make(reinterpret_cast<SkTextBlob *>(text_blob)->serialize(* reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 

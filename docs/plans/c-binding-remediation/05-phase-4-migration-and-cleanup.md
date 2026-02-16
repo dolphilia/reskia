@@ -27,10 +27,14 @@
   - 対象: `SkImage`, `SkSurface`, `SkShader`, `SkRuntimeEffect`, `SkRefCnt` など（`skia/capi/sk_*.h/.cpp` 56 ファイル）。
   - `Sk*_delete` の定義/宣言/参照を削除し、`Sk*_release` に置換済み（後方互換ラッパは追加しない）。
 
-1. [ ] 連番関数名の整理
+1. [x] 連番関数名の整理
 - `_2/_3/_4` 形式を意味名へ置換
 - 進捗管理:
   - `checklists/phase4-sequential-api-rename-status.csv`（`skia/capi/*.h` の連番 API 370 件を棚卸し済み）
+- 実施内容（2026-02-16）:
+  - チェックリスト対象 370 件を上から順に `.h/.cpp` の宣言・定義まで改名完了。
+  - `phase4-sequential-api-rename-status.csv` は `todo=0`, `done=370` を確認。
+  - 各バッチ実施後に `cmake --build skia/cmake-build-local -j 8` で `Built target reskia` を継続確認。
 
 1. [ ] 自動生成の導入（任意だが推奨）
 - 型定義から header/cpp を生成

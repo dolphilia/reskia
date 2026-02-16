@@ -23,7 +23,7 @@ reskia_pixmap_t *SkPixmap_new() {
     return reinterpret_cast<reskia_pixmap_t *>(new SkPixmap());
 }
 
-reskia_pixmap_t *SkPixmap_new_2(const reskia_image_info_t *info, const void *addr, size_t rowBytes) {
+reskia_pixmap_t *SkPixmap_newWithImageInfoAddressAndRowBytes(const reskia_image_info_t *info, const void *addr, size_t rowBytes) {
     return reinterpret_cast<reskia_pixmap_t *>(
             new SkPixmap(*reinterpret_cast<const SkImageInfo *>(info), addr, rowBytes));
 }
@@ -36,11 +36,11 @@ void SkPixmap_reset(reskia_pixmap_t *pixmap) {
     return reinterpret_cast<SkPixmap *>(pixmap)->reset();
 }
 
-void SkPixmap_reset_2(reskia_pixmap_t *pixmap, const reskia_image_info_t *info, const void *addr, size_t rowBytes) {
+void SkPixmap_resetWithImageInfoAddressAndRowBytes(reskia_pixmap_t *pixmap, const reskia_image_info_t *info, const void *addr, size_t rowBytes) {
     return reinterpret_cast<SkPixmap *>(pixmap)->reset(* reinterpret_cast<const SkImageInfo *>(info), addr, rowBytes);
 }
 
-bool SkPixmap_reset_3(reskia_pixmap_t *pixmap, const reskia_mask_t *mask) {
+bool SkPixmap_resetFromMask(reskia_pixmap_t *pixmap, const reskia_mask_t *mask) {
     return reinterpret_cast<SkPixmap *>(pixmap)->reset(* reinterpret_cast<const SkMask *>(mask));
 }
 
@@ -130,7 +130,7 @@ float SkPixmap_getAlphaf(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->getAlphaf(x, y);
 }
 
-const void *SkPixmap_addr_2(reskia_pixmap_t *pixmap, int x, int y) {
+const void *SkPixmap_addrAt(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addr(x, y);
 }
 
@@ -154,23 +154,23 @@ const uint16_t *SkPixmap_addrF16(reskia_pixmap_t *pixmap) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addrF16();
 }
 
-const uint8_t *SkPixmap_addr8_2(reskia_pixmap_t *pixmap, int x, int y) {
+const uint8_t *SkPixmap_addr8At(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addr8(x, y);
 }
 
-const uint16_t *SkPixmap_addr16_2(reskia_pixmap_t *pixmap, int x, int y) {
+const uint16_t *SkPixmap_addr16At(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addr16(x, y);
 }
 
-const uint32_t *SkPixmap_addr32_2(reskia_pixmap_t *pixmap, int x, int y) {
+const uint32_t *SkPixmap_addr32At(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addr32(x, y);
 }
 
-const uint64_t *SkPixmap_addr64_2(reskia_pixmap_t *pixmap, int x, int y) {
+const uint64_t *SkPixmap_addr64At(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addr64(x, y);
 }
 
-const uint16_t *SkPixmap_addrF16_2(reskia_pixmap_t *pixmap, int x, int y) {
+const uint16_t *SkPixmap_addrF16At(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->addrF16(x, y);
 }
 
@@ -178,7 +178,7 @@ void *SkPixmap_writable_addr(reskia_pixmap_t *pixmap) {
     return reinterpret_cast<SkPixmap *>(pixmap)->writable_addr();
 }
 
-void *SkPixmap_writable_addr_2(reskia_pixmap_t *pixmap, int x, int y) {
+void *SkPixmap_writable_addrAt(reskia_pixmap_t *pixmap, int x, int y) {
     return reinterpret_cast<SkPixmap *>(pixmap)->writable_addr(x, y);
 }
 
@@ -206,15 +206,15 @@ bool SkPixmap_readPixels(reskia_pixmap_t *pixmap, const reskia_image_info_t *dst
     return reinterpret_cast<SkPixmap *>(pixmap)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes);
 }
 
-bool SkPixmap_readPixels_2(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+bool SkPixmap_readPixelsWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
     return reinterpret_cast<SkPixmap *>(pixmap)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkPixmap_readPixels_3(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, int srcX, int srcY) {
+bool SkPixmap_readPixelsToPixmapWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, int srcX, int srcY) {
     return reinterpret_cast<SkPixmap *>(pixmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
-bool SkPixmap_readPixels_4(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst) {
+bool SkPixmap_readPixelsToPixmap(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst) {
     return reinterpret_cast<SkPixmap *>(pixmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst));
 }
 
@@ -226,11 +226,11 @@ bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect
     return reinterpret_cast<SkPixmap *>(pixmap)->erase(color, * reinterpret_cast<const SkIRect *>(subset));
 }
 
-bool SkPixmap_erase_2(reskia_pixmap_t *pixmap, uint32_t color) {
+bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color) {
     return reinterpret_cast<SkPixmap *>(pixmap)->erase(color);
 }
 
-bool SkPixmap_erase_3(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset) {
+bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset) {
     return reinterpret_cast<SkPixmap *>(pixmap)->erase(* reinterpret_cast<const SkColor4f *>(color), reinterpret_cast<const SkIRect *>(subset));
 }
 

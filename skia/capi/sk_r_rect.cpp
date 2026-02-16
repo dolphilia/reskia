@@ -22,7 +22,7 @@ reskia_r_rect_t *SkRRect_new() {
     return reinterpret_cast<reskia_r_rect_t *>(new SkRRect());
 }
 
-reskia_r_rect_t *SkRRect_new_2(const reskia_r_rect_t *rrect) {
+reskia_r_rect_t *SkRRect_newCopy(const reskia_r_rect_t *rrect) {
     return reinterpret_cast<reskia_r_rect_t *>(new SkRRect(*reinterpret_cast<const SkRRect *>(rrect)));
 }
 
@@ -116,7 +116,7 @@ void SkRRect_inset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *
     reinterpret_cast<SkRRect *>(rrect)->inset(dx, dy, reinterpret_cast<SkRRect *>(dst));
 }
 
-void SkRRect_inset_2(reskia_r_rect_t *rrect, float dx, float dy) {
+void SkRRect_insetInPlace(reskia_r_rect_t *rrect, float dx, float dy) {
     reinterpret_cast<SkRRect *>(rrect)->inset(dx, dy);
 }
 
@@ -124,7 +124,7 @@ void SkRRect_outset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t 
     reinterpret_cast<SkRRect *>(rrect)->outset(dx, dy, reinterpret_cast<SkRRect *>(dst));
 }
 
-void SkRRect_outset_2(reskia_r_rect_t *rrect, float dx, float dy) {
+void SkRRect_outsetInPlace(reskia_r_rect_t *rrect, float dx, float dy) {
     reinterpret_cast<SkRRect *>(rrect)->outset(dx, dy);
 }
 
@@ -164,7 +164,7 @@ sk_string_t SkRRect_dumpToString(reskia_r_rect_t *rrect, bool asHex) {
     return static_sk_string_make(reinterpret_cast<SkRRect *>(rrect)->dumpToString(asHex));
 }
 
-void SkRRect_dump_2(reskia_r_rect_t *rrect) {
+void SkRRect_dumpDefault(reskia_r_rect_t *rrect) {
     reinterpret_cast<SkRRect *>(rrect)->dump();
 }
 

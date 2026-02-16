@@ -18,15 +18,15 @@ reskia_memory_stream_t *SkMemoryStream_new() {
     return reinterpret_cast<reskia_memory_stream_t *>(new SkMemoryStream());
 }
 
-reskia_memory_stream_t *SkMemoryStream_new_2(size_t length) {
+reskia_memory_stream_t *SkMemoryStream_newWithLength(size_t length) {
     return reinterpret_cast<reskia_memory_stream_t *>(new SkMemoryStream(length));
 }
 
-reskia_memory_stream_t *SkMemoryStream_new_3(const uint8_t *data, size_t length, bool copyData) {
+reskia_memory_stream_t *SkMemoryStream_newWithDataAndCopyFlag(const uint8_t *data, size_t length, bool copyData) {
     return reinterpret_cast<reskia_memory_stream_t *>(new SkMemoryStream(data, length, copyData));
 }
 
-reskia_memory_stream_t *SkMemoryStream_new_4(sk_data_t data) {
+reskia_memory_stream_t *SkMemoryStream_newWithData(sk_data_t data) {
     return reinterpret_cast<reskia_memory_stream_t *>(new SkMemoryStream(static_sk_data_get_entity(data)));
 }
 

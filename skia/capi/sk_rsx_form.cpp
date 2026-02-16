@@ -32,7 +32,7 @@ void SkRSXform_toQuad(reskia_rsxform_t *rsx_form, float width, float height, res
     reinterpret_cast<SkRSXform *>(rsx_form)->toQuad(width, height, reinterpret_cast<SkPoint *>(quad));
 }
 
-void SkRSXform_toQuad_2(reskia_rsxform_t *rsx_form, const reskia_size_t *size, reskia_point_t *quad) {
+void SkRSXform_toQuadWithSize(reskia_rsxform_t *rsx_form, const reskia_size_t *size, reskia_point_t *quad) {
     reinterpret_cast<SkRSXform *>(rsx_form)->toQuad(* reinterpret_cast<const SkSize *>(size), reinterpret_cast<SkPoint *>(quad));
 }
 

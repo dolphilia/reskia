@@ -20,7 +20,7 @@ bool SkRSXform_rectStaysRect(reskia_rsxform_t *rsx_form); // (SkRSXform *rsx_for
 void SkRSXform_setIdentity(reskia_rsxform_t *rsx_form); // (SkRSXform *rsx_form)
 void SkRSXform_set(reskia_rsxform_t *rsx_form, float scos, float ssin, float tx, float ty); // (SkRSXform *rsx_form, SkScalar scos, SkScalar ssin, SkScalar tx, SkScalar ty)
 void SkRSXform_toQuad(reskia_rsxform_t *rsx_form, float width, float height, reskia_point_t *quad); // (SkRSXform *rsx_form, SkScalar width, SkScalar height, SkPoint quad[4])
-void SkRSXform_toQuad_2(reskia_rsxform_t *rsx_form, const reskia_size_t *size, reskia_point_t *quad); // (SkRSXform *rsx_form, const SkSize *size, SkPoint quad[4])
+void SkRSXform_toQuadWithSize(reskia_rsxform_t *rsx_form, const reskia_size_t *size, reskia_point_t *quad); // (SkRSXform *rsx_form, const SkSize *size, SkPoint quad[4])
 void SkRSXform_toTriStrip(reskia_rsxform_t *rsx_form, float width, float height, reskia_point_t *strip); // (SkRSXform *rsx_form, SkScalar width, SkScalar height, SkPoint strip[4])
 
 // static

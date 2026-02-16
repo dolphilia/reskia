@@ -738,16 +738,16 @@ UTEST(cskia, drawPath2) {
     //SkPath_lineTo(path, 400, 200);     // 直線を追加
     SkPath_moveTo(path, 200, 100);      // 始点
     SkPath_lineTo(path, 400, 100);      // 上辺
-    SkPath_arcTo_2(path, 450, 100, 450, 150, 50); // 右上の角を丸める
+    SkPath_arcToTangent(path, 450, 100, 450, 150, 50); // 右上の角を丸める
     SkPath_lineTo(path, 450, 250);      // 右辺
-    SkPath_arcTo_2(path, 450, 300, 400, 300, 50); // 右下の角を丸める
+    SkPath_arcToTangent(path, 450, 300, 400, 300, 50); // 右下の角を丸める
     SkPath_lineTo(path, 250, 300);      // 下辺
     SkPath_lineTo(path, 220, 350);      // 吹き出しのポイント部分
     SkPath_lineTo(path, 200, 300);      // 吹き出しのポイント部分
     SkPath_lineTo(path, 150, 300);      // 下辺
-    SkPath_arcTo_2(path, 100, 300, 100, 250, 50); // 左下の角を丸める
+    SkPath_arcToTangent(path, 100, 300, 100, 250, 50); // 左下の角を丸める
     SkPath_lineTo(path, 100, 150);      // 左辺
-    SkPath_arcTo_2(path, 100, 100, 150, 100, 50); // 左上の角を丸める
+    SkPath_arcToTangent(path, 100, 100, 150, 100, 50); // 左上の角を丸める
     SkPath_close(path);
 
     SkPaint *paint = SkPaint_new();

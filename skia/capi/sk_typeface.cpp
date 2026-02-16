@@ -65,7 +65,7 @@ void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream
     reinterpret_cast<SkTypeface *>(typeface)->serialize(reinterpret_cast<SkWStream *>(stream), static_cast<SkTypeface::SerializeBehavior>(behavior));
 }
 
-sk_data_t SkTypeface_serialize_2(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior) {
+sk_data_t SkTypeface_serializeToData(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior) {
     return static_sk_data_make(reinterpret_cast<SkTypeface *>(typeface)->serialize(static_cast<SkTypeface::SerializeBehavior>(behavior)));
 }
 
@@ -195,7 +195,7 @@ sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index) {
     return static_sk_typeface_make(SkTypeface::MakeFromData(static_sk_data_get_entity(data), index));
 }
 
-sk_typeface_t SkTypeface_MakeDeserialize_2(reskia_stream_t *stream) {
+sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream) {
     return static_sk_typeface_make(SkTypeface::MakeDeserialize(reinterpret_cast<SkStream *>(stream)));
 }
 

@@ -39,8 +39,8 @@ typedef int32_t reskia_paint_blend_mode_t;
 //SkPaint & operator=(SkPaint &&paint)
 
 reskia_paint_t *SkPaint_new(); // () -> SkPaint *
-reskia_paint_t *SkPaint_new_2(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // (const SkColor4f *color, SkColorSpace *colorSpace) -> SkPaint *
-reskia_paint_t *SkPaint_new_3(const reskia_paint_t *paint); // (const SkPaint *paint) -> SkPaint *
+reskia_paint_t *SkPaint_newWithColor4fAndColorSpace(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // (const SkColor4f *color, SkColorSpace *colorSpace) -> SkPaint *
+reskia_paint_t *SkPaint_newCopy(const reskia_paint_t *paint); // (const SkPaint *paint) -> SkPaint *
 void SkPaint_delete(reskia_paint_t *paint); // (SkPaint *paint)
 void SkPaint_reset(reskia_paint_t *paint); // (SkPaint *paint)
 bool SkPaint_isAntiAlias(reskia_paint_t *paint); // (SkPaint *paint) -> bool
@@ -53,7 +53,7 @@ void SkPaint_setStroke(reskia_paint_t *paint, bool v); // (SkPaint *paint, bool 
 reskia_color_t SkPaint_getColor(reskia_paint_t *paint); // (SkPaint *paint) -> SkColor
 sk_color_4f_t SkPaint_getColor4f(reskia_paint_t *paint); // (SkPaint *paint) -> sk_color_4f_t
 void SkPaint_setColor(reskia_paint_t *paint, reskia_color_t color); // (SkPaint *paint, SkColor color)
-void SkPaint_setColor_2(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // (SkPaint *paint, const SkColor4f *color, SkColorSpace *colorSpace)
+void SkPaint_setColorWithColor4fAndColorSpace(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // (SkPaint *paint, const SkColor4f *color, SkColorSpace *colorSpace)
 void SkPaint_setColor4f(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // (SkPaint *paint, const SkColor4f *color, SkColorSpace *colorSpace)
 float SkPaint_getAlphaf(reskia_paint_t *paint); // (SkPaint *paint) -> float
 uint8_t SkPaint_getAlpha(reskia_paint_t *paint); // (SkPaint *paint) -> uint8_t

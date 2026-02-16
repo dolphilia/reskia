@@ -30,7 +30,7 @@ const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob); // borrow
 uint32_t SkTextBlob_uniqueID(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> uint32_t
 int SkTextBlob_getIntercepts(reskia_text_blob_t *text_blob, const float *bounds, float *intervals, const reskia_paint_t *paint); // (SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) -> int
 size_t SkTextBlob_serialize(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs, void *memory, size_t memory_size); // (SkTextBlob *text_blob, const SkSerialProcs *procs, void *memory, size_t memory_size) -> size_t
-sk_data_t SkTextBlob_serialize_2(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs); // (SkTextBlob *text_blob, const SkSerialProcs *procs) -> sk_data_t
+sk_data_t SkTextBlob_serializeToData(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs); // (SkTextBlob *text_blob, const SkSerialProcs *procs) -> sk_data_t
 bool SkTextBlob_unique(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> bool
 void SkTextBlob_ref(reskia_text_blob_t *text_blob); // retained: 参照カウントを増やす (SkTextBlob *text_blob)
 void SkTextBlob_unref(reskia_text_blob_t *text_blob); // owned: 参照カウントを減らす (SkTextBlob *text_blob)

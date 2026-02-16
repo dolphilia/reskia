@@ -20,15 +20,15 @@ reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new() {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo());
 }
 
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_2(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes) {
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoColorTypesAndRowBytes(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes) {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo(*reinterpret_cast<const SkYUVAInfo *>(info), reinterpret_cast<const SkColorType *>(type), rowBytes));
 }
 
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_3(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes) {
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoDataTypeAndRowBytes(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes) {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo(*reinterpret_cast<const SkYUVAInfo *>(info), static_cast<SkYUVAPixmapInfo::DataType>(type), rowBytes));
 }
 
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new_4(const reskia_yuva_pixmap_info_t *info) {
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newCopy(const reskia_yuva_pixmap_info_t *info) {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo(*reinterpret_cast<const SkYUVAPixmapInfo *>(info)));
 }
 

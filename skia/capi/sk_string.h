@@ -28,9 +28,9 @@ extern "C" {
 // char & operator[](size_t n)
 
 reskia_string_t *SkString_new(); // () -> SkString *
-reskia_string_t *SkString_new_2(size_t len); // (size_t len) -> SkString *
-reskia_string_t *SkString_new_3(const char text[]); // (const char text[]) -> SkString *
-reskia_string_t *SkString_new_4(const char text[], size_t len); // (const char text[], size_t len) -> SkString *
+reskia_string_t *SkString_newWithLength(size_t len); // (size_t len) -> SkString *
+reskia_string_t *SkString_newFromText(const char text[]); // (const char text[]) -> SkString *
+reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len); // (const char text[], size_t len) -> SkString *
 reskia_string_t *SkString_new_5(const reskia_string_t *str); // (const SkString *str) -> SkString *
 reskia_string_t *SkString_new_6(const reskia_std_string_t *str); // (const std::string *str) -> SkString *
 reskia_string_t *SkString_new_7(int view); // (string_view_t view) -> SkString *
@@ -38,31 +38,31 @@ void SkString_delete(reskia_string_t *string); // (SkString *string)
 bool SkString_isEmpty(reskia_string_t *string); // (SkString *string) -> bool
 size_t SkString_size(reskia_string_t *string); // (SkString *string) -> size_t
 const char * SkString_data(reskia_string_t *string); // (SkString *string) -> const char *
-char * SkString_data_2(reskia_string_t *string); // (SkString *string) -> char *
+char * SkString_dataMutable(reskia_string_t *string); // (SkString *string) -> char *
 const char * SkString_c_str(reskia_string_t *string); // (SkString *string) -> const char *
 bool SkString_equals(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str) -> bool
-bool SkString_equals_2(reskia_string_t *string, const char text[]); // (SkString *string, const char text[]) -> bool
-bool SkString_equals_3(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len) -> bool
+bool SkString_equalsText(reskia_string_t *string, const char text[]); // (SkString *string, const char text[]) -> bool
+bool SkString_equalsTextWithLength(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len) -> bool
 bool SkString_startsWith(reskia_string_t *string, const char prefixStr[]); // (SkString *string, const char prefixStr[]) -> bool
-bool SkString_startsWith_2(reskia_string_t *string, char prefixChar); // (SkString *string, char prefixChar) -> bool
+bool SkString_startsWithChar(reskia_string_t *string, char prefixChar); // (SkString *string, char prefixChar) -> bool
 
 //bool SkString_endsWith(SkString *string, const char suffixStr[]);
 //bool SkString_endsWith_2(SkString *string, const char suffixChar);
 
 bool SkString_contains(reskia_string_t *string, const char substring[]); // (SkString *string, const char substring[]) -> bool
-bool SkString_contains_2(reskia_string_t *string, char subchar); // (SkString *string, char subchar) -> bool
+bool SkString_containsChar(reskia_string_t *string, char subchar); // (SkString *string, char subchar) -> bool
 int SkString_find(reskia_string_t *string, const char substring[]); // (SkString *string, const char substring[]) -> int
 int SkString_findLastOf(reskia_string_t *string, char subchar); // (SkString *string, char subchar) -> int
 void SkString_reset(reskia_string_t *string); // (SkString *string)
 void SkString_resize(reskia_string_t *string, size_t len); // (SkString *string, size_t len)
 void SkString_set(reskia_string_t *string, const reskia_string_t *src); // (SkString *string, const SkString *src)
-void SkString_set_2(reskia_string_t *string, const char text[]); // (SkString *string, const char text[])
-void SkString_set_3(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
-void SkString_set_4(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_setText(reskia_string_t *string, const char text[]); // (SkString *string, const char text[])
+void SkString_setTextWithLength(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
+void SkString_setStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
 void SkString_insert(reskia_string_t *string, size_t offset, const char text[]); // (SkString *string, size_t offset, const char text[])
-void SkString_insert_2(reskia_string_t *string, size_t offset, const char text[], size_t len); // (SkString *string, size_t offset, const char text[], size_t len)
-void SkString_insert_3(reskia_string_t *string, size_t offset, const reskia_string_t *str); // (SkString *string, size_t offset, const SkString *str)
-void SkString_insert_4(reskia_string_t *string, size_t offset, int str); // (SkString *string, size_t offset, string_view_t str)
+void SkString_insertTextWithLength(reskia_string_t *string, size_t offset, const char text[], size_t len); // (SkString *string, size_t offset, const char text[], size_t len)
+void SkString_insertString(reskia_string_t *string, size_t offset, const reskia_string_t *str); // (SkString *string, size_t offset, const SkString *str)
+void SkString_insertStringView(reskia_string_t *string, size_t offset, int str); // (SkString *string, size_t offset, string_view_t str)
 void SkString_insertUnichar(reskia_string_t *string, size_t offset, reskia_string_unichar_t unichar); // (SkString *string, size_t offset, SkUnichar unichar)
 void SkString_insertS32(reskia_string_t *string, size_t offset, int value); // (SkString *string, size_t offset, int32_t value)
 void SkString_insertS64(reskia_string_t *string, size_t offset, long long value, int minDigits); // (SkString *string, size_t offset, int64_t value, int minDigits)
@@ -71,9 +71,9 @@ void SkString_insertU64(reskia_string_t *string, size_t offset, uint64_t value, 
 void SkString_insertHex(reskia_string_t *string, size_t offset, uint32_t value, int minDigits); // (SkString *string, size_t offset, uint32_t value, int minDigits)
 void SkString_insertScalar(reskia_string_t *string, size_t offset, float v); // (SkString *string, size_t offset, SkScalar v)
 void SkString_append(reskia_string_t *string, const char text[]); // (SkString *string, const char text[])
-void SkString_append_2(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
-void SkString_append_3(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
-void SkString_append_4(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
+void SkString_appendString(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
+void SkString_appendStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
 void SkString_appendUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_appendS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_appendS64(reskia_string_t *string, long long value, int minDigits); // (SkString *string, int64_t value, int minDigits)
@@ -82,9 +82,9 @@ void SkString_appendU64(reskia_string_t *string, uint64_t value, int minDigits);
 void SkString_appendHex(reskia_string_t *string, uint32_t value, int minDigits); // (SkString *string, uint32_t value, int minDigits)
 void SkString_appendScalar(reskia_string_t *string, float value); // (SkString *string, SkScalar value)
 void SkString_prepend(reskia_string_t *string, const char text[]); // (SkString *string, const char text[])
-void SkString_prepend_2(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
-void SkString_prepend_3(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
-void SkString_prepend_4(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_prependTextWithLength(reskia_string_t *string, const char text[], size_t len); // (SkString *string, const char text[], size_t len)
+void SkString_prependString(reskia_string_t *string, const reskia_string_t *str); // (SkString *string, const SkString *str)
+void SkString_prependStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
 void SkString_prependUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_prependS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_prependS64(reskia_string_t *string, int value, int minDigits); // (SkString *string, int32_t value, int minDigits)

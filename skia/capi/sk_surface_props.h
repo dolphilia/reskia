@@ -21,8 +21,8 @@ extern "C" {
 // bool operator!=(const SkSurfaceProps &that)
 
 reskia_surface_props_t *SkSurfaceProps_new(); // () -> SkSurfaceProps *
-reskia_surface_props_t *SkSurfaceProps_new_2(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry); // (uint32_t flags, SkPixelGeometry geometry) -> SkSurfaceProps *
-reskia_surface_props_t *SkSurfaceProps_new_3(const reskia_surface_props_t *props); // (const SkSurfaceProps *props) -> SkSurfaceProps *
+reskia_surface_props_t *SkSurfaceProps_newWithFlagsAndGeometry(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry); // (uint32_t flags, SkPixelGeometry geometry) -> SkSurfaceProps *
+reskia_surface_props_t *SkSurfaceProps_newCopy(const reskia_surface_props_t *props); // (const SkSurfaceProps *props) -> SkSurfaceProps *
 void SkSurfaceProps_delete(reskia_surface_props_t *surface_props); // (SkSurfaceProps *surface_props)
 sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(reskia_surface_props_t *surface_props, reskia_surface_props_pixel_geometry_t newPixelGeometry); // (SkSurfaceProps *surface_props, SkPixelGeometry newPixelGeometry) -> sk_surface_props_t
 uint32_t SkSurfaceProps_flags(reskia_surface_props_t *surface_props); // (SkSurfaceProps *surface_props) -> uint32_t

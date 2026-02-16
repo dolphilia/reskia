@@ -24,8 +24,8 @@ extern "C" {
 
 void SkStrokeRec_delete(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec)
 sk_stroke_rec_t SkStrokeRec_static(reskia_stroke_rec_init_style_t style); // (SkStrokeRec::InitStyle style) -> sk_stroke_rec_t
-sk_stroke_rec_t SkStrokeRec_static_2(const reskia_paint_t *paint, reskia_stroke_rec_paint_style_t style, float resScale); // (const SkPaint *paint, SkPaint::Style style, SkScalar resScale) -> sk_stroke_rec_t
-sk_stroke_rec_t SkStrokeRec_static_3(const reskia_paint_t *paint, float resScale); // (const SkPaint *paint, SkScalar resScale) -> sk_stroke_rec_t
+sk_stroke_rec_t SkStrokeRec_staticWithPaintStyleAndResScale(const reskia_paint_t *paint, reskia_stroke_rec_paint_style_t style, float resScale); // (const SkPaint *paint, SkPaint::Style style, SkScalar resScale) -> sk_stroke_rec_t
+sk_stroke_rec_t SkStrokeRec_staticWithPaintAndResScale(const reskia_paint_t *paint, float resScale); // (const SkPaint *paint, SkScalar resScale) -> sk_stroke_rec_t
 reskia_stroke_rec_style_t SkStrokeRec_getStyle(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkStrokeRec::Style
 float SkStrokeRec_getWidth(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkScalar
 float SkStrokeRec_getMiter(reskia_stroke_rec_t *stroke_rec); // (SkStrokeRec *stroke_rec) -> SkScalar
@@ -48,7 +48,7 @@ bool SkStrokeRec_hasEqualEffect(reskia_stroke_rec_t *stroke_rec, const reskia_st
 // static
 
 float SkStrokeRec_GetInflationRadius(const reskia_paint_t *paint, reskia_stroke_rec_paint_style_t style); // (const SkPaint *paint, SkPaint::Style style) -> SkScalar
-float SkStrokeRec_GetInflationRadius_2(reskia_stroke_rec_join_t join, float miterLimit, reskia_stroke_rec_cap_t cap, float strokeWidth); // (SkPaint::Join join, SkScalar miterLimit, SkPaint::Cap cap, SkScalar strokeWidth) -> SkScalar
+float SkStrokeRec_GetInflationRadiusWithJoinMiterCapAndStrokeWidth(reskia_stroke_rec_join_t join, float miterLimit, reskia_stroke_rec_cap_t cap, float strokeWidth); // (SkPaint::Join join, SkScalar miterLimit, SkPaint::Cap cap, SkScalar strokeWidth) -> SkScalar
 
 #ifdef __cplusplus
 }

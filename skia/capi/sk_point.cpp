@@ -52,7 +52,7 @@ void SkPoint_scale(sk_point_t point, float value) {
     static_sk_point_get_entity(point).scale(value);
 }
 
-void SkPoint_scale_2(sk_point_t point, float scale, reskia_point_t *dst) {
+void SkPoint_scaleTo(sk_point_t point, float scale, reskia_point_t *dst) {
     static_sk_point_get_entity(point).scale(scale, reinterpret_cast<SkPoint *>(dst));
 }
 
@@ -68,7 +68,7 @@ void SkPoint_iset(sk_point_t point, const reskia_i_point_t *p) {
     static_sk_point_get_entity(point).iset(* reinterpret_cast<const SkIPoint *>(p));
 }
 
-void SkPoint_iset_2(sk_point_t point, int32_t x, int32_t y) {
+void SkPoint_isetXY(sk_point_t point, int32_t x, int32_t y) {
     static_sk_point_get_entity(point).iset(x, y);
 }
 
@@ -118,7 +118,7 @@ void SkPoint_Offset(reskia_point_t *points, int count, float dx, float dy) {
     SkPoint::Offset(reinterpret_cast<SkPoint *>(points), count, dx, dy);
 }
 
-void SkPoint_Offset_2(reskia_point_t *points, int count, const reskia_vector_t *offset) {
+void SkPoint_OffsetByVector(reskia_point_t *points, int count, const reskia_vector_t *offset) {
     SkPoint::Offset(reinterpret_cast<SkPoint *>(points), count, * reinterpret_cast<const SkVector *>(offset));
 }
 

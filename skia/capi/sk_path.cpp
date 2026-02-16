@@ -24,7 +24,7 @@ reskia_path_t *SkPath_new() {
     return reinterpret_cast<reskia_path_t *>(new SkPath());
 }
 
-reskia_path_t *SkPath_new_2(const reskia_path_t *path) {
+reskia_path_t *SkPath_newCopy(const reskia_path_t *path) {
     return reinterpret_cast<reskia_path_t *>(new SkPath(*reinterpret_cast<const SkPath *>(path)));
 }
 
@@ -165,7 +165,7 @@ reskia_path_t *SkPath_moveTo(reskia_path_t *path, float x, float y) {
     return reinterpret_cast<reskia_path_t *>(&p->moveTo(x, y));
 }
 
-reskia_path_t *SkPath_moveTo_2(reskia_path_t *path, const reskia_point_t *p) {
+reskia_path_t *SkPath_moveToPoint(reskia_path_t *path, const reskia_point_t *p) {
     auto *_path = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&_path->moveTo(* reinterpret_cast<const SkPoint *>(p)));
 }
@@ -180,7 +180,7 @@ reskia_path_t *SkPath_lineTo(reskia_path_t *path, float x, float y) {
     return reinterpret_cast<reskia_path_t *>(&p->lineTo(x, y));
 }
 
-reskia_path_t *SkPath_lineTo_2(reskia_path_t *path, const reskia_point_t *p) {
+reskia_path_t *SkPath_lineToPoint(reskia_path_t *path, const reskia_point_t *p) {
     auto *_path = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&_path->lineTo(* reinterpret_cast<const SkPoint *>(p)));
 }
@@ -195,7 +195,7 @@ reskia_path_t *SkPath_quadTo(reskia_path_t *path, float x1, float y1, float x2, 
     return reinterpret_cast<reskia_path_t *>(&p->quadTo(x1, y1, x2, y2));
 }
 
-reskia_path_t *SkPath_quadTo_2(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2) {
+reskia_path_t *SkPath_quadToPoints(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->quadTo(* reinterpret_cast<const SkPoint *>(p1), * reinterpret_cast<const SkPoint *>(p2)));
 }
@@ -210,7 +210,7 @@ reskia_path_t *SkPath_conicTo(reskia_path_t *path, float x1, float y1, float x2,
     return reinterpret_cast<reskia_path_t *>(&p->conicTo(x1, y1, x2, y2, w));
 }
 
-reskia_path_t *SkPath_conicTo_2(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2, float w) {
+reskia_path_t *SkPath_conicToPoints(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2, float w) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->conicTo(* reinterpret_cast<const SkPoint *>(p1), * reinterpret_cast<const SkPoint *>(p2), w));
 }
@@ -225,7 +225,7 @@ reskia_path_t *SkPath_cubicTo(reskia_path_t *path, float x1, float y1, float x2,
     return reinterpret_cast<reskia_path_t *>(&p->cubicTo(x1, y1, x2, y2, x3, y3));
 }
 
-reskia_path_t *SkPath_cubicTo_2(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3) {
+reskia_path_t *SkPath_cubicToPoints(reskia_path_t *path, const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->cubicTo(* reinterpret_cast<const SkPoint *>(p1), * reinterpret_cast<const SkPoint *>(p2), * reinterpret_cast<const SkPoint *>(p3)));
 }
@@ -240,17 +240,17 @@ reskia_path_t *SkPath_arcTo(reskia_path_t *path, const reskia_rect_t *oval, floa
     return reinterpret_cast<reskia_path_t *>(&p->arcTo(* reinterpret_cast<const SkRect *>(oval), startAngle, sweepAngle, forceMoveTo));
 }
 
-reskia_path_t *SkPath_arcTo_2(reskia_path_t *path, float x1, float y1, float x2, float y2, float radius) {
+reskia_path_t *SkPath_arcToTangent(reskia_path_t *path, float x1, float y1, float x2, float y2, float radius) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->arcTo(x1, y1, x2, y2, radius));
 }
 
-reskia_path_t *SkPath_arcTo_3(reskia_path_t *path, sk_point_t p1, sk_point_t p2, float radius) {
+reskia_path_t *SkPath_arcToPoints(reskia_path_t *path, sk_point_t p1, sk_point_t p2, float radius) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->arcTo(static_sk_point_get_entity(p1), static_sk_point_get_entity(p2), radius));
 }
 
-reskia_path_t *SkPath_arcTo_4(reskia_path_t *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float x, float y) {
+reskia_path_t *SkPath_arcToArcSize(reskia_path_t *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float x, float y) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->arcTo(rx, ry, xAxisRotate, static_cast<SkPath::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), x, y));
 }
@@ -282,12 +282,12 @@ reskia_path_t *SkPath_addRect(reskia_path_t *path, const reskia_rect_t *rect, in
     return reinterpret_cast<reskia_path_t *>(&p->addRect(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), start));
 }
 
-reskia_path_t *SkPath_addRect_2(reskia_path_t *path, const reskia_rect_t *rect, int dir) {
+reskia_path_t *SkPath_addRectWithDirection(reskia_path_t *path, const reskia_rect_t *rect, int dir) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addRect(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir)));
 }
 
-reskia_path_t *SkPath_addRect_3(reskia_path_t *path, float left, float top, float right, float bottom, int dir) {
+reskia_path_t *SkPath_addRectLTRBWithDirection(reskia_path_t *path, float left, float top, float right, float bottom, int dir) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addRect(left, top, right, bottom, static_cast<SkPathDirection>(dir)));
 }
@@ -297,7 +297,7 @@ reskia_path_t *SkPath_addOval(reskia_path_t *path, const reskia_rect_t *oval, in
     return reinterpret_cast<reskia_path_t *>(&p->addOval(* reinterpret_cast<const SkRect *>(oval), static_cast<SkPathDirection>(dir)));
 }
 
-reskia_path_t *SkPath_addOval_2(reskia_path_t *path, const reskia_rect_t *oval, int dir, unsigned start) {
+reskia_path_t *SkPath_addOvalWithStart(reskia_path_t *path, const reskia_rect_t *oval, int dir, unsigned start) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addOval(* reinterpret_cast<const SkRect *>(oval), static_cast<SkPathDirection>(dir), start));
 }
@@ -317,7 +317,7 @@ reskia_path_t *SkPath_addRoundRect(reskia_path_t *path, const reskia_rect_t *rec
     return reinterpret_cast<reskia_path_t *>(&p->addRoundRect(* reinterpret_cast<const SkRect *>(rect), rx, ry, static_cast<SkPathDirection>(dir)));
 }
 
-reskia_path_t *SkPath_addRoundRect_2(reskia_path_t *path, const reskia_rect_t *rect, const float *radii, int dir) {
+reskia_path_t *SkPath_addRoundRectWithRadii(reskia_path_t *path, const reskia_rect_t *rect, const float *radii, int dir) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addRoundRect(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkScalar *>(radii), static_cast<SkPathDirection>(dir)));
 }
@@ -327,7 +327,7 @@ reskia_path_t *SkPath_addRRect(reskia_path_t *path, const reskia_r_rect_t *rrect
     return reinterpret_cast<reskia_path_t *>(&p->addRRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir)));
 }
 
-reskia_path_t *SkPath_addRRect_2(reskia_path_t *path, const reskia_r_rect_t *rrect, int dir, unsigned start) {
+reskia_path_t *SkPath_addRRectWithStart(reskia_path_t *path, const reskia_r_rect_t *rrect, int dir, unsigned start) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addRRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir), start));
 }
@@ -337,7 +337,7 @@ reskia_path_t *SkPath_addPoly(reskia_path_t *path, const reskia_point_t *pts, in
     return reinterpret_cast<reskia_path_t *>(&p->addPoly(reinterpret_cast<const SkPoint *>(pts), count, close));
 }
 
-reskia_path_t *SkPath_addPoly_2(reskia_path_t *path, const void *list, bool close) {
+reskia_path_t *SkPath_addPolyFromList(reskia_path_t *path, const void *list, bool close) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addPoly(* reinterpret_cast<const std::initializer_list<SkPoint> *>(list), close));
 }
@@ -347,12 +347,12 @@ reskia_path_t *SkPath_addPath(reskia_path_t *path, const reskia_path_t *src, flo
     return reinterpret_cast<reskia_path_t *>(&p->addPath(* reinterpret_cast<const SkPath *>(src), dx, dy, static_cast<SkPath::AddPathMode>(mode)));
 }
 
-reskia_path_t *SkPath_addPath_2(reskia_path_t *path, const reskia_path_t *src, int modeSkPath) {
+reskia_path_t *SkPath_addPathWithMode(reskia_path_t *path, const reskia_path_t *src, int modeSkPath) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addPath(* reinterpret_cast<const SkPath *>(src), static_cast<SkPath::AddPathMode>(modeSkPath)));
 }
 
-reskia_path_t *SkPath_addPath_3(reskia_path_t *path, const reskia_path_t *src, const reskia_matrix_t *matrix, int mode) {
+reskia_path_t *SkPath_addPathWithMatrixAndMode(reskia_path_t *path, const reskia_path_t *src, const reskia_matrix_t *matrix, int mode) {
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->addPath(* reinterpret_cast<const SkPath *>(src), * reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkPath::AddPathMode>(mode)));
 }
@@ -366,7 +366,7 @@ void SkPath_offset(reskia_path_t *path, float dx, float dy, reskia_path_t *dst) 
     reinterpret_cast<SkPath *>(path)->offset(dx, dy, reinterpret_cast<SkPath *>(dst));
 }
 
-void SkPath_offset_2(reskia_path_t *path, float dx, float dy) {
+void SkPath_offsetInPlace(reskia_path_t *path, float dx, float dy) {
     reinterpret_cast<SkPath *>(path)->offset(dx, dy);
 }
 
@@ -374,7 +374,7 @@ void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia
     reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<SkPath *>(dst), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-void SkPath_transform_2(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc) {
+void SkPath_transformInPlace(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc) {
     reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
@@ -394,7 +394,7 @@ void SkPath_setLastPt(reskia_path_t *path, float x, float y) {
     reinterpret_cast<SkPath *>(path)->setLastPt(x, y);
 }
 
-void SkPath_setLastPt_2(reskia_path_t *path, const reskia_point_t *p) {
+void SkPath_setLastPtPoint(reskia_path_t *path, const reskia_point_t *p) {
     reinterpret_cast<SkPath *>(path)->setLastPt(* reinterpret_cast<const SkPoint *>(p));
 }
 
@@ -410,7 +410,7 @@ void SkPath_dump(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex)
     reinterpret_cast<SkPath *>(path)->dump(reinterpret_cast<SkWStream *>(stream), dumpAsHex);
 }
 
-void SkPath_dump_2(reskia_path_t *path) {
+void SkPath_dumpDefault(reskia_path_t *path) {
     reinterpret_cast<SkPath *>(path)->dump();
 }
 
@@ -422,7 +422,7 @@ void SkPath_dumpArrays(reskia_path_t *path, reskia_w_stream_t *stream, bool dump
     reinterpret_cast<SkPath *>(path)->dumpArrays(reinterpret_cast<SkWStream *>(stream), dumpAsHex);
 }
 
-void SkPath_dumpArrays_2(reskia_path_t *path) {
+void SkPath_dumpArraysDefault(reskia_path_t *path) {
     reinterpret_cast<SkPath *>(path)->dumpArrays();
 }
 
@@ -461,7 +461,7 @@ sk_path_t SkPath_Oval(const reskia_rect_t *rect, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::Oval(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_Oval_2(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
+sk_path_t SkPath_OvalWithStart(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
     return static_sk_path_make(SkPath::Oval(* reinterpret_cast<const SkRect *>(rect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
@@ -473,11 +473,11 @@ sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, reskia_path_direction_t dir
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir)));
 }
 
-sk_path_t SkPath_RRect_2(const reskia_r_rect_t *rrect, reskia_path_direction_t dir, unsigned startIndex) {
+sk_path_t SkPath_RRectWithStart(const reskia_r_rect_t *rrect, reskia_path_direction_t dir, unsigned startIndex) {
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkPathDirection>(dir), startIndex));
 }
 
-sk_path_t SkPath_RRect_3(const reskia_rect_t *bounds, float rx, float ry, reskia_path_direction_t dir) {
+sk_path_t SkPath_RRectFromRectAndRadii(const reskia_rect_t *bounds, float rx, float ry, reskia_path_direction_t dir) {
     return static_sk_path_make(SkPath::RRect(* reinterpret_cast<const SkRect *>(bounds), rx, ry, static_cast<SkPathDirection>(dir)));
 }
 
@@ -485,7 +485,7 @@ sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, re
     return static_sk_path_make(SkPath::Polygon(reinterpret_cast<const SkPoint *>(pts), count, isClosed, static_cast<SkPathFillType>(type), isVolatile));
 }
 
-sk_path_t SkPath_Polygon_2(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile) {
+sk_path_t SkPath_PolygonFromList(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile) {
     return static_sk_path_make(SkPath::Polygon(* reinterpret_cast<const std::initializer_list<SkPoint> *>(list), isClosed, static_cast<SkPathFillType>(fillType), isVolatile));
 }
 

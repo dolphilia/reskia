@@ -14,7 +14,7 @@ reskia_path_measure_t *SkPathMeasure_new() {
     return reinterpret_cast<reskia_path_measure_t *>(new SkPathMeasure());
 }
 
-reskia_path_measure_t *SkPathMeasure_new_2(const reskia_path_t *path, bool forceClosed, float resScale) {
+reskia_path_measure_t *SkPathMeasure_newWithPathForceClosedAndResScale(const reskia_path_t *path, bool forceClosed, float resScale) {
     return reinterpret_cast<reskia_path_measure_t *>(new SkPathMeasure(*reinterpret_cast<const SkPath *>(path), forceClosed, resScale));
 }
 

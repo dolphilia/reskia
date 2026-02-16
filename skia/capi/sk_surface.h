@@ -46,15 +46,15 @@ bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_bac
 reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> SkCanvas *
 int SkSurface_capabilities(reskia_surface_t *surface); // (SkSurface *surface) -> const_sk_capabilities_t
 sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo); // (SkSurface *surface, const SkImageInfo *imageInfo) -> sk_surface_t
-sk_surface_t SkSurface_makeSurface_2(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
+sk_surface_t SkSurface_makeSurfaceWithDimensions(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
 sk_image_t SkSurface_makeImageSnapshot(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_t
-sk_image_t SkSurface_makeImageSnapshot_2(reskia_surface_t *surface, const reskia_i_rect_t *bounds); // (SkSurface *surface, const SkIRect *bounds) -> sk_image_t
+sk_image_t SkSurface_makeImageSnapshotWithBounds(reskia_surface_t *surface, const reskia_i_rect_t *bounds); // (SkSurface *surface, const SkIRect *bounds) -> sk_image_t
 void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint)
-void SkSurface_draw_2(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkPaint *paint)
+void SkSurface_drawWithoutSamplingOptions(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkPaint *paint)
 bool SkSurface_peekPixels(reskia_surface_t *surface, reskia_pixmap_t *pixmap); // (SkSurface *surface, SkPixmap *pixmap) -> bool
 bool SkSurface_readPixels(reskia_surface_t *surface, const reskia_pixmap_t *dst, int srcX, int srcY); // (SkSurface *surface, const SkPixmap *dst, int srcX, int srcY) -> bool
-bool SkSurface_readPixels_2(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // (SkSurface *surface, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
-bool SkSurface_readPixels_3(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY); // (SkSurface *surface, const SkBitmap *dst, int srcX, int srcY) -> bool
+bool SkSurface_readPixelsWithImageInfoAndPixels(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // (SkSurface *surface, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
+bool SkSurface_readPixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY); // (SkSurface *surface, const SkBitmap *dst, int srcX, int srcY) -> bool
 
 // TODO
 // void SkSurface_asyncRescaleAndReadPixels(void *surface, const void *info, const void *srcRect, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context); // (SkSurface *surface, const SkImageInfo *info, const SkIRect *srcRect, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context)
@@ -62,7 +62,7 @@ bool SkSurface_readPixels_3(reskia_surface_t *surface, const reskia_bitmap_t *ds
 // void SkSurface_asyncRescaleAndReadPixelsYUVA420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context); // (SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, const SkISize *dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context)
 
 void SkSurface_writePixels(reskia_surface_t *surface, const reskia_pixmap_t *src, int dstX, int dstY); // (SkSurface *surface, const SkPixmap *src, int dstX, int dstY)
-void SkSurface_writePixels_2(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY); // (SkSurface *surface, const SkBitmap *src, int dstX, int dstY)
+void SkSurface_writePixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY); // (SkSurface *surface, const SkBitmap *src, int dstX, int dstY)
 const reskia_surface_props_t *SkSurface_props(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> const SkSurfaceProps *
 bool SkSurface_wait(reskia_surface_t *surface, int numSemaphores, const reskia_backend_semaphore_t *waitSemaphores, bool deleteSemaphoresAfterWait); // (SkSurface *surface, int numSemaphores, const GrBackendSemaphore *waitSemaphores, bool deleteSemaphoresAfterWait) -> bool
 bool SkSurface_characterize(reskia_surface_t *surface, reskia_surface_characterization_t *characterization); // (SkSurface *surface, GrSurfaceCharacterization *characterization) -> bool

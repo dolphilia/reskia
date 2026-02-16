@@ -65,11 +65,11 @@ sk_mesh_specification_result_t SkMeshSpecification_Make(reskia_mesh_specificatio
     return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs)));
 }
 
-sk_mesh_specification_result_t SkMeshSpecification_Make_2(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs) {
+sk_mesh_specification_result_t SkMeshSpecification_MakeWithColorSpace(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs) {
     return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs), * reinterpret_cast<sk_sp<SkColorSpace> *>(cs)));
 }
 
-sk_mesh_specification_result_t SkMeshSpecification_Make_3(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs, reskia_mesh_specification_alpha_type_t at) {
+sk_mesh_specification_result_t SkMeshSpecification_MakeWithColorSpaceAndAlphaType(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs, reskia_mesh_specification_alpha_type_t at) {
     return static_sk_mesh_specification_result_make(SkMeshSpecification::Make(* reinterpret_cast<SkSpan<const SkMeshSpecification::Attribute> *>(attributes), vertexStride, * reinterpret_cast<SkSpan<const SkMeshSpecification::Varying> *>(varyings), * reinterpret_cast<const SkString *>(vs), * reinterpret_cast<const SkString *>(fs), * reinterpret_cast<sk_sp<SkColorSpace> *>(cs), static_cast<SkAlphaType>(at)));
 }
 

@@ -17,7 +17,7 @@ extern "C" {
 
 void SkPDF_SetNodeId(reskia_canvas_t *dst, int nodeID);
 sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_metadata_t *metadata);
-sk_document_t SkPDF_MakeDocument_2(reskia_w_stream_t *stream);
+sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream);
 
 #ifdef __cplusplus
 }

@@ -30,7 +30,7 @@ extern "C" {
 void SkShader_release(reskia_shader_t *shader); // owned: caller が保持する参照を release する (SkShader *shader)
 bool SkShader_isOpaque(reskia_shader_t *shader); // (SkShader *shader) -> bool
 reskia_image_t *SkShader_isAImage(reskia_shader_t *shader, reskia_matrix_t *localMatrix, int *xy); // borrowed: 解放不要の借用ポインタ (SkShader *shader, SkMatrix *localMatrix, SkTileMode xy[2]) -> SkImage *
-bool SkShader_isAImage_2(reskia_shader_t *shader); // (SkShader *shader) -> bool
+bool SkShader_isAImageWithoutLocalMatrixAndTileModes(reskia_shader_t *shader); // (SkShader *shader) -> bool
 sk_shader_t SkShader_makeWithLocalMatrix(reskia_shader_t *shader, const reskia_matrix_t *matrix); // (SkShader *shader, const SkMatrix *matrix) -> sk_shader_t
 sk_shader_t SkShader_makeWithColorFilter(reskia_shader_t *shader, sk_color_filter_t color_filter); // (SkShader *shader, sk_color_filter_t color_filter) -> sk_shader_t
 sk_shader_t SkShader_makeWithWorkingColorSpace(reskia_shader_t *shader, sk_color_space_t color_space); // (SkShader *shader, sk_color_space_t color_space) -> sk_shader_t
@@ -39,7 +39,7 @@ const char *SkShader_getTypeName(reskia_shader_t *shader); // (SkShader *shader)
 void SkShader_flatten(reskia_shader_t *shader, reskia_write_buffer_t *buffer); // (SkShader *shader, SkWriteBuffer *buffer)
 reskia_shader_type_t SkShader_getFlattenableType(reskia_shader_t *shader); // (SkShader *shader) -> SkShader::Type
 sk_data_t SkShader_serialize(reskia_shader_t *shader, const reskia_serial_procs_t *procs); // (SkShader *shader, const SkSerialProcs *procs) -> sk_data_t
-size_t SkShader_serialize_2(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkShader *shader, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
+size_t SkShader_serializeToMemory(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkShader *shader, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
 bool SkShader_unique(reskia_shader_t *shader); // (SkShader *shader) -> bool
 void SkShader_ref(reskia_shader_t *shader); // retained: 参照カウントを増やす (SkShader *shader)
 void SkShader_unref(reskia_shader_t *shader); // owned: 参照カウントを減らす (SkShader *shader)

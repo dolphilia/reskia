@@ -104,7 +104,7 @@ void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int
     reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(reinterpret_cast<const SkPoint *>(pts), count);
 }
 
-void SkRect_set_2(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1) {
+void SkRect_setFromPoints(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1) {
     reinterpret_cast<SkRect *>(rect)->set(* reinterpret_cast<const SkPoint *>(p0), * reinterpret_cast<const SkPoint *>(p1));
 }
 
@@ -124,7 +124,7 @@ sk_rect_t SkRect_makeOffset(reskia_rect_t *rect, float dx, float dy) {
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeOutset(dx, dy));
 }
 
-sk_rect_t SkRect_makeOffset_2(reskia_rect_t *rect, sk_point_t v) {
+sk_rect_t SkRect_makeOffsetFromPoint(reskia_rect_t *rect, sk_point_t v) {
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeOffset(static_sk_point_get_entity(v)));
 }
 
@@ -140,7 +140,7 @@ void SkRect_offset(reskia_rect_t *rect, float dx, float dy) {
     reinterpret_cast<SkRect *>(rect)->offset(dx, dy);
 }
 
-void SkRect_offset_2(reskia_rect_t *rect, const reskia_point_t *delta) {
+void SkRect_offsetByPoint(reskia_rect_t *rect, const reskia_point_t *delta) {
     reinterpret_cast<SkRect *>(rect)->offset(* reinterpret_cast<const SkPoint *>(delta));
 }
 
@@ -160,7 +160,7 @@ bool SkRect_intersect(reskia_rect_t *rect, const reskia_rect_t *r) {
     return reinterpret_cast<SkRect *>(rect)->intersect(* reinterpret_cast<const SkRect *>(r));
 }
 
-bool SkRect_intersect_2(reskia_rect_t *rect, const reskia_rect_t *a, const reskia_rect_t *b) {
+bool SkRect_intersectFromRects(reskia_rect_t *rect, const reskia_rect_t *a, const reskia_rect_t *b) {
     return reinterpret_cast<SkRect *>(rect)->intersect(* reinterpret_cast<const SkRect *>(a), * reinterpret_cast<const SkRect *>(b));
 }
 
@@ -184,11 +184,11 @@ bool SkRect_contains(reskia_rect_t *rect, float x, float y) {
     return reinterpret_cast<SkRect *>(rect)->contains(x, y);
 }
 
-bool SkRect_contains_2(reskia_rect_t *rect, const reskia_rect_t *r) {
+bool SkRect_containsRect(reskia_rect_t *rect, const reskia_rect_t *r) {
     return reinterpret_cast<SkRect *>(rect)->contains(* reinterpret_cast<const SkRect *>(r));
 }
 
-bool SkRect_contains_3(reskia_rect_t *rect, const reskia_i_rect_t *r) {
+bool SkRect_containsIRect(reskia_rect_t *rect, const reskia_i_rect_t *r) {
     return reinterpret_cast<SkRect *>(rect)->contains(* reinterpret_cast<const SkIRect *>(r));
 }
 
@@ -200,7 +200,7 @@ void SkRect_roundOut(reskia_rect_t *rect, reskia_i_rect_t *dst) {
     reinterpret_cast<SkRect *>(rect)->roundOut(reinterpret_cast<SkIRect *>(dst));
 }
 
-void SkRect_roundOut_2(reskia_rect_t *rect, reskia_rect_t *dst) {
+void SkRect_roundOutToRect(reskia_rect_t *rect, reskia_rect_t *dst) {
     reinterpret_cast<SkRect *>(rect)->roundOut(reinterpret_cast<SkRect *>(dst));
 }
 
@@ -208,15 +208,15 @@ void SkRect_roundIn(reskia_rect_t *rect, reskia_i_rect_t *dst) {
     reinterpret_cast<SkRect *>(rect)->roundIn(reinterpret_cast<SkIRect *>(dst));
 }
 
-sk_i_rect_t SkRect_round_2(reskia_rect_t *rect) {
+sk_i_rect_t SkRect_roundToIRect(reskia_rect_t *rect) {
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->round());
 }
 
-sk_i_rect_t SkRect_roundOut_3(reskia_rect_t *rect) {
+sk_i_rect_t SkRect_roundOutToIRect(reskia_rect_t *rect) {
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->roundOut());
 }
 
-sk_i_rect_t SkRect_roundIn_2(reskia_rect_t *rect) {
+sk_i_rect_t SkRect_roundInToIRect(reskia_rect_t *rect) {
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->roundIn());
 }
 
@@ -236,7 +236,7 @@ void SkRect_dump(reskia_rect_t *rect, bool asHex) {
     reinterpret_cast<SkRect *>(rect)->dump(asHex);
 }
 
-void SkRect_dump_2(reskia_rect_t *rect) {
+void SkRect_dumpDefault(reskia_rect_t *rect) {
     reinterpret_cast<SkRect *>(rect)->dump();
 }
 
@@ -274,7 +274,7 @@ sk_rect_t SkRect_Make(const reskia_i_size_t *size) {
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkISize *>(size)));
 }
 
-sk_rect_t SkRect_Make_2(const reskia_i_rect_t *irect) {
+sk_rect_t SkRect_MakeFromIRect(const reskia_i_rect_t *irect) {
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkIRect *>(irect)));
 }
 

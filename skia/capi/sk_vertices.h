@@ -37,7 +37,7 @@ bool SkVertices_refCntGreaterThan(reskia_vertices_t *vertices, int32_t threadIso
 // static
 
 sk_vertices_t SkVertices_MakeCopy(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors, int indexCount, const uint16_t *indices); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[], int indexCount, const uint16_t indices[]) -> sk_vertices_t
-sk_vertices_t SkVertices_MakeCopy_2(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[]) -> sk_vertices_t
+sk_vertices_t SkVertices_MakeCopyWithoutIndices(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors); // (SkVertices::VertexMode mode, int vertexCount, const SkPoint positions[], const SkPoint texs[], const SkColor colors[]) -> sk_vertices_t
 
 #ifdef __cplusplus
 }

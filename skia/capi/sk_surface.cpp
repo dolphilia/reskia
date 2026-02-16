@@ -74,7 +74,7 @@ sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image
     return static_sk_surface_make(reinterpret_cast<SkSurface *>(surface)->makeSurface(* reinterpret_cast<const SkImageInfo *>(imageInfo)));
 }
 
-sk_surface_t SkSurface_makeSurface_2(reskia_surface_t *surface, int width, int height) {
+sk_surface_t SkSurface_makeSurfaceWithDimensions(reskia_surface_t *surface, int width, int height) {
     return static_sk_surface_make(reinterpret_cast<SkSurface *>(surface)->makeSurface(width, height));
 }
 
@@ -82,7 +82,7 @@ sk_image_t SkSurface_makeImageSnapshot(reskia_surface_t *surface) {
     return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeImageSnapshot());
 }
 
-sk_image_t SkSurface_makeImageSnapshot_2(reskia_surface_t *surface, const reskia_i_rect_t *bounds) {
+sk_image_t SkSurface_makeImageSnapshotWithBounds(reskia_surface_t *surface, const reskia_i_rect_t *bounds) {
     return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeImageSnapshot(* reinterpret_cast<const SkIRect *>(bounds)));
 }
 
@@ -90,7 +90,7 @@ void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x,
     reinterpret_cast<SkSurface *>(surface)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y, * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint));
 }
 
-void SkSurface_draw_2(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint) {
+void SkSurface_drawWithoutSamplingOptions(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint) {
     reinterpret_cast<SkSurface *>(surface)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y, reinterpret_cast<const SkPaint *>(paint));
 }
 
@@ -102,11 +102,11 @@ bool SkSurface_readPixels(reskia_surface_t *surface, const reskia_pixmap_t *dst,
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
-bool SkSurface_readPixels_2(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+bool SkSurface_readPixelsWithImageInfoAndPixels(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkSurface_readPixels_3(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY) {
+bool SkSurface_readPixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY) {
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkBitmap *>(dst), srcX, srcY);
 }
 
@@ -126,7 +126,7 @@ void SkSurface_writePixels(reskia_surface_t *surface, const reskia_pixmap_t *src
     reinterpret_cast<SkSurface *>(surface)->writePixels(* reinterpret_cast<const SkPixmap *>(src), dstX, dstY);
 }
 
-void SkSurface_writePixels_2(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY) {
+void SkSurface_writePixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY) {
     reinterpret_cast<SkSurface *>(surface)->writePixels(* reinterpret_cast<const SkBitmap *>(src), dstX, dstY);
 }
 
