@@ -39,12 +39,17 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 - 状態: 概ね網羅
 - 根拠: `skia/CMakeLists.txt` で `src/core`, `src/pathops`, `src/sksl` を大量にビルド対象化
 
-### 3.2 SVG / テキストシェーピング
+### 3.2 SVG / テキストシェーピング ✅ 完了
 
 - 状態: 部分網羅
 - `svg`, `skshaper`, `skunicode` は別プロジェクトでビルド可能
 - ただし依存（ICU/HarfBuzz/ICU4X/libgrapheme）不足時は最小実装へ縮退
 - 根拠: `/Users/dolphilia/github/reskia/svg/CMakeLists.txt`
+- 追補（2026-02-17）:
+  - `svg -> skshaper -> skunicode` のリンクを明示化済み
+  - ICU 利用時の `skunicode` への `icui18n/icuuc/icudata` リンクを明示化済み
+  - `test_shaping_smoke` を追加し、UTF-8 + BiDi + 改行 shaping と SVG text 描画スモークを `PASS` 確認済み
+  - 詳細: `/Users/dolphilia/github/reskia/docs/plans/svg-text-shaping-enablement/04-phase-4-build-matrix.md`, `/Users/dolphilia/github/reskia/docs/plans/svg-text-shaping-enablement/05-phase-5-smoke-and-docs.md`
 
 ### 3.3 skottie（Lottie アニメーション）
 

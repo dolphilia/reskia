@@ -1,0 +1,4 @@
+mode,harfbuzz,icu,icu4x,libgrapheme,notes
+prebuilt,NOT_GUARANTEED,NOT_GUARANTEED,NOT_GUARANTEED,NOT_GUARANTEED,"skia/lib 中心で link されるが、ヘッダ検出元は既定 include path 依存。"
+source,AVAILABLE_VIA scripts/build_third_party.sh --with-harfbuzz,AVAILABLE_VIA scripts/build_third_party.sh --with-icu,AVAILABLE_VIA scripts/build_third_party.sh --with-icu4x,AVAILABLE_VIA scripts/build_third_party.sh --with-libgrapheme,"third_party/install に導入可能。ICU4X は API 差異のため暫定OFF。"
+system,OS_PACKAGE_DEPENDENT,OS_PACKAGE_DEPENDENT,OS_PACKAGE_DEPENDENT,OS_PACKAGE_DEPENDENT,"ReskiaDeps 側で shaper/unicode 依存の find_package は未定義。環境依存が大きい。"

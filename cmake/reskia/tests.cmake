@@ -41,6 +41,20 @@ if(RESKIA_BUILD_TESTS)
     endif()
     add_test(NAME c_skia_codec_smoke COMMAND test_codec_smoke)
 
+    if(APPLE AND TARGET svg AND TARGET skshaper AND TARGET skunicode)
+        add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
+        target_include_directories(test_shaping_smoke PRIVATE
+                "${PROJECT_SOURCE_DIR}"
+                "${PROJECT_SOURCE_DIR}/_include"
+                "${RESKIA_ROOT_DIR}/svg"
+        )
+        if(RESKIA_DEP_LINK_DIRS)
+            target_link_directories(test_shaping_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+        endif()
+        target_link_libraries(test_shaping_smoke reskia ${RESKIA_DEP_LIBS})
+        add_test(NAME c_skia_shaping_smoke COMMAND test_shaping_smoke)
+    endif()
+
     if(RESKIA_ENABLE_PDF)
         add_executable(test_pdf_smoke test/test_pdf_smoke.cpp)
         target_include_directories(test_pdf_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")

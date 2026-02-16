@@ -79,6 +79,7 @@ list(APPEND SOURCE_FILES
         handles/static_sk_runtime_effect.cpp
         handles/static_sk_sampling_options.cpp
         handles/static_sk_shader.cpp
+        handles/static_sk_shaper_run_handler_buffer.cpp
         handles/static_sk_size_t.cpp
         handles/static_sk_stream_asset.cpp
         handles/static_sk_stream_memory.cpp

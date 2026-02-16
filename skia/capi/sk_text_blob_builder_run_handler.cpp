@@ -3,11 +3,14 @@
 //
 
 #include "sk_text_blob_builder_run_handler.h"
+#include "../handles/static_sk_point-internal.h"
+#include "../handles/static_sk_text_blob-internal.h"
+#include "../handles/static_sk_shaper_run_handler_buffer-internal.h"
 
 extern "C" {
 
 SkTextBlobBuilderRunHandler *SkTextBlobBuilderRunHandler_new(const char *utf8Text, sk_point_t offset) {
-    return new SkTextBlobBuilderRunHandler(utf8Text, static_sk_point_get(offset));
+    return new SkTextBlobBuilderRunHandler(utf8Text, static_sk_point_get_entity(offset));
 }
 
 void SkTextBlobBuilderRunHandler_delete(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {

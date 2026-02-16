@@ -1,0 +1,7 @@
+dependency,probe,enabled_target,compile_definition,sources,status_on_current_env
+CoreText,APPLE,skshaper,"SK_SHAPER_CORETEXT_AVAILABLE;SK_BUILD_FOR_MAC",modules/skshaper/src/SkShaper_coretext.cpp,ENABLED
+HarfBuzz,hb.h,skshaper,SK_SHAPER_HARFBUZZ_AVAILABLE,modules/skshaper/src/SkShaper_harfbuzz.cpp,DISABLED
+ICU,unicode/ubidi.h,skunicode,SK_UNICODE_ICU_IMPLEMENTATION,"modules/skunicode/src/SkUnicode_icu.cpp;modules/skunicode/src/SkUnicode_icu_bidi.cpp;modules/skunicode/src/SkUnicode_icu_builtin.cpp;modules/skunicode/src/SkUnicode_icu_runtime.cpp;modules/skunicode/src/SkUnicode_client.cpp",DISABLED
+ICU4X,ICU4XDataProvider.hpp,skunicode,SK_UNICODE_ICU4X_IMPLEMENTATION,modules/skunicode/src/SkUnicode_icu4x.cpp,DISABLED
+libgrapheme,grapheme.h,skunicode,SK_UNICODE_LIBGRAPHEME_IMPLEMENTATION,modules/skunicode/src/SkUnicode_libgrapheme.cpp,DISABLED
+skunicode-bridge,ICU_UBIDI_INCLUDE_DIR,skshaper,SK_SHAPER_UNICODE_AVAILABLE,modules/skshaper/src/SkShaper_skunicode.cpp,DISABLED

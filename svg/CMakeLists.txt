@@ -71,6 +71,11 @@ add_library(skunicode
 target_compile_features(skunicode PUBLIC cxx_std_17)
 target_include_directories(skunicode PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
+# Ensure text shaping symbols are resolved transitively:
+# reskia -> svg -> skshaper -> skunicode
+target_link_libraries(svg PUBLIC skshaper)
+target_link_libraries(skshaper PUBLIC skunicode)
+
 if(APPLE)
     target_compile_definitions(skshaper PRIVATE SK_SHAPER_CORETEXT_AVAILABLE SK_BUILD_FOR_MAC)
     target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_coretext.cpp)
@@ -85,6 +90,10 @@ endif()
 
 find_path(ICU_UBIDI_INCLUDE_DIR unicode/ubidi.h)
 if(ICU_UBIDI_INCLUDE_DIR)
+    find_library(ICU_I18N_LIBRARY NAMES icui18n)
+    find_library(ICU_UC_LIBRARY NAMES icuuc)
+    find_library(ICU_DATA_LIBRARY NAMES icudata)
+
     target_include_directories(skunicode PRIVATE "${ICU_UBIDI_INCLUDE_DIR}")
     target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU_IMPLEMENTATION)
     target_sources(skunicode PRIVATE
@@ -94,6 +103,14 @@ if(ICU_UBIDI_INCLUDE_DIR)
             modules/skunicode/src/SkUnicode_icu_runtime.cpp
             modules/skunicode/src/SkUnicode_client.cpp
     )
+
+    if(ICU_I18N_LIBRARY AND ICU_UC_LIBRARY AND ICU_DATA_LIBRARY)
+        target_link_libraries(skunicode PUBLIC
+                "${ICU_I18N_LIBRARY}"
+                "${ICU_UC_LIBRARY}"
+                "${ICU_DATA_LIBRARY}"
+        )
+    endif()
 endif()
 
 find_path(ICU4X_INCLUDE_DIR ICU4XDataProvider.hpp)
