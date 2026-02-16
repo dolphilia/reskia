@@ -22,7 +22,7 @@ sk_codec_t SkGifDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result
         reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
 }
 
-sk_codec_t SkGifDecoder_Decode_2(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
+sk_codec_t SkGifDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
     return static_sk_codec_make(SkGifDecoder::Decode(
         static_sk_data_get_entity(data),
         reinterpret_cast<SkCodec::Result *>(result),

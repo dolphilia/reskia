@@ -1,187 +1,187 @@
 file,line,symbol,proposed_name,status,owner,note
-skia/capi/sk_android_codec.h,48,SkAndroidCodec_getAndroidPixels_2,,todo,,
-skia/capi/sk_b_box_hierarchy.h,20,SkBBoxHierarchy_insert_2,,todo,,
-skia/capi/sk_bitmap.h,42,SkBitmap_new_2,,todo,,
-skia/capi/sk_bitmap.h,46,SkBitmap_allocPixels_2,,todo,,
-skia/capi/sk_bitmap.h,47,SkBitmap_allocPixels_3,,todo,,
-skia/capi/sk_bitmap.h,48,SkBitmap_allocPixels_4,,todo,,
-skia/capi/sk_bitmap.h,61,SkBitmap_erase_2,,todo,,
-skia/capi/sk_bitmap.h,65,SkBitmap_eraseColor_2,,todo,,
-skia/capi/sk_bitmap.h,67,SkBitmap_extractAlpha_2,,todo,,
-skia/capi/sk_bitmap.h,68,SkBitmap_extractAlpha_3,,todo,,
-skia/capi/sk_bitmap.h,86,SkBitmap_installPixels_2,,todo,,
-skia/capi/sk_bitmap.h,87,SkBitmap_installPixels_3,,todo,,
-skia/capi/sk_bitmap.h,92,SkBitmap_makeShader_2,,todo,,
-skia/capi/sk_bitmap.h,93,SkBitmap_makeShader_3,,todo,,
-skia/capi/sk_bitmap.h,94,SkBitmap_makeShader_4,,todo,,
-skia/capi/sk_bitmap.h,101,SkBitmap_readPixels_2,,todo,,
-skia/capi/sk_bitmap.h,102,SkBitmap_readPixels_3,,todo,,
-skia/capi/sk_bitmap.h,117,SkBitmap_tryAllocPixels_2,,todo,,
-skia/capi/sk_bitmap.h,118,SkBitmap_tryAllocPixels_3,,todo,,
-skia/capi/sk_bitmap.h,119,SkBitmap_tryAllocPixels_4,,todo,,
-skia/capi/sk_bitmap.h,123,SkBitmap_writePixels_2,,todo,,
-skia/capi/sk_blender.h,32,SkBlender_serialize_2,,todo,,
-skia/capi/sk_bmp_decoder.h,23,SkBmpDecoder_Decode_2,,todo,,
-skia/capi/sk_canvas.h,42,SkCanvas_new_2,,todo,,
-skia/capi/sk_canvas.h,43,SkCanvas_new_3,,todo,,
-skia/capi/sk_canvas.h,44,SkCanvas_new_4,,todo,,
-skia/capi/sk_canvas.h,50,SkCanvas_clear_2,,todo,,
-skia/capi/sk_canvas.h,53,SkCanvas_clipPath_2,,todo,,
-skia/capi/sk_canvas.h,54,SkCanvas_clipPath_3,,todo,,
-skia/capi/sk_canvas.h,56,SkCanvas_clipRect_2,,todo,,
-skia/capi/sk_canvas.h,57,SkCanvas_clipRect_3,,todo,,
-skia/capi/sk_canvas.h,60,SkCanvas_clipRRect_2,,todo,,
-skia/capi/sk_canvas.h,61,SkCanvas_clipRRect_3,,todo,,
-skia/capi/sk_canvas.h,64,SkCanvas_concat_2,,todo,,
-skia/capi/sk_canvas.h,67,SkCanvas_drawAnnotation_2,,todo,,
-skia/capi/sk_canvas.h,71,SkCanvas_drawCircle_2,,todo,,
-skia/capi/sk_canvas.h,73,SkCanvas_drawColor_2,,todo,,
-skia/capi/sk_canvas.h,75,SkCanvas_drawDrawable_2,,todo,,
-skia/capi/sk_canvas.h,78,SkCanvas_drawGlyphs_2,,todo,,
-skia/capi/sk_canvas.h,79,SkCanvas_drawGlyphs_3,,todo,,
-skia/capi/sk_canvas.h,81,SkCanvas_drawImage_2,,todo,,
-skia/capi/sk_canvas.h,82,SkCanvas_drawImage_3,,todo,,
-skia/capi/sk_canvas.h,83,SkCanvas_drawImage_4,,todo,,
-skia/capi/sk_canvas.h,85,SkCanvas_drawImageLattice_2,,todo,,
-skia/capi/sk_canvas.h,88,SkCanvas_drawImageRect_2,,todo,,
-skia/capi/sk_canvas.h,89,SkCanvas_drawImageRect_3,,todo,,
-skia/capi/sk_canvas.h,90,SkCanvas_drawImageRect_4,,todo,,
-skia/capi/sk_canvas.h,93,SkCanvas_drawLine_2,,todo,,
-skia/capi/sk_canvas.h,100,SkCanvas_drawPicture_2,,todo,,
-skia/capi/sk_canvas.h,101,SkCanvas_drawPicture_3,,todo,,
-skia/capi/sk_canvas.h,102,SkCanvas_drawPicture_4,,todo,,
-skia/capi/sk_canvas.h,104,SkCanvas_drawPoint_2,,todo,,
-skia/capi/sk_canvas.h,112,SkCanvas_drawString_2,,todo,,
-skia/capi/sk_canvas.h,114,SkCanvas_drawTextBlob_2,,todo,,
-skia/capi/sk_canvas.h,116,SkCanvas_drawVertices_2,,todo,,
-skia/capi/sk_canvas.h,119,SkCanvas_experimental_DrawEdgeAAQuad_2,,todo,,
-skia/capi/sk_canvas.h,123,SkCanvas_getDeviceClipBounds_2,,todo,,
-skia/capi/sk_canvas.h,125,SkCanvas_getLocalClipBounds_2,,todo,,
-skia/capi/sk_canvas.h,140,SkCanvas_quickReject_2,,todo,,
-skia/capi/sk_canvas.h,142,SkCanvas_readPixels_2,,todo,,
-skia/capi/sk_canvas.h,143,SkCanvas_readPixels_3,,todo,,
-skia/capi/sk_canvas.h,150,SkCanvas_rotate_2,,todo,,
-skia/capi/sk_canvas.h,153,SkCanvas_saveLayer_2,,todo,,
-skia/capi/sk_canvas.h,154,SkCanvas_saveLayer_3,,todo,,
-skia/capi/sk_canvas.h,159,SkCanvas_setMatrix_2,,todo,,
-skia/capi/sk_canvas.h,164,SkCanvas_writePixels_2,,todo,,
-skia/capi/sk_codec.h,47,SkCodec_getPixels_2,,todo,,
-skia/capi/sk_codec.h,48,SkCodec_getPixels_3,,todo,,
-skia/capi/sk_codec.h,50,SkCodec_getImage_2,,todo,,
-skia/capi/sk_codec.h,54,SkCodec_startIncrementalDecode_2,,todo,,
-skia/capi/sk_codec.h,57,SkCodec_startScanlineDecode_2,,todo,,
-skia/capi/sk_codec.h,65,SkCodec_getFrameInfo_2,,todo,,
-skia/capi/sk_color.h,22,SkColor_SkHSVToColor_2,,todo,,
-skia/capi/sk_color_4f.h,39,SkColor4f_vec_2,,todo,,
-skia/capi/sk_color_filter.h,42,SkColorFilter_serialize_2,,todo,,
-skia/capi/sk_color_filters.h,28,SkColorFilters_Blend_2,,todo,,
-skia/capi/sk_color_filters.h,31,SkColorFilters_HSLAMatrix_2,,todo,,
-skia/capi/sk_color_filters.h,36,SkColorFilters_Matrix_2,,todo,,
-skia/capi/sk_color_filters.h,39,SkColorFilters_Table_2,,todo,,
-skia/capi/sk_color_info.h,22,SkColorInfo_new_2,,todo,,
-skia/capi/sk_color_info.h,23,SkColorInfo_new_3,,todo,,
-skia/capi/sk_color_matrix.h,19,SkColorMatrix_new_2,,todo,,
-skia/capi/sk_color_matrix_filter.h,42,SkColorMatrixFilter_serialize_2,,todo,,
-skia/capi/sk_color_space.h,36,SkColorSpace_transferFn_2,,todo,,
-skia/capi/sk_color_table.h,32,SkColorTable_Make_2,,todo,,
-skia/capi/sk_contour_measure_iter.h,18,SkContourMeasureIter_new_2,,todo,,
-skia/capi/sk_drawable.h,35,SkDrawable_draw_2,,todo,,
-skia/capi/sk_drawable.h,47,SkDrawable_serialize_2,,todo,,
-skia/capi/sk_dynamic_memory_w_stream.h,33,SkDynamicMemoryWStream_writeToAndReset_2,,todo,,
-skia/capi/sk_file_stream.h,21,SkFILEStream_new_2,,todo,,
-skia/capi/sk_file_stream.h,22,SkFILEStream_new_3,,todo,,
-skia/capi/sk_flattenable.h,30,SkFlattenable_serialize_2,,todo,,
-skia/capi/sk_font.h,31,SkFont_new_2,,todo,,
-skia/capi/sk_font.h,32,SkFont_new_3,,todo,,
-skia/capi/sk_font.h,33,SkFont_new_4,,todo,,
-skia/capi/sk_font.h,68,SkFont_measureText_2,,todo,,
-skia/capi/sk_font.h,73,SkFont_getWidths_3,,todo,,
-skia/capi/sk_font_mgr.h,36,SkFontMgr_makeFromStream_2,,todo,,
-skia/capi/sk_gif_decoder.h,25,SkGifDecoder_Decode_2,,todo,,
-skia/capi/sk_gradient_shader.h,30,SkGradientShader_MakeLinear_2,,todo,,
-skia/capi/sk_gradient_shader.h,31,SkGradientShader_MakeLinear_3,,todo,,
-skia/capi/sk_gradient_shader.h,33,SkGradientShader_MakeRadial_2,,todo,,
-skia/capi/sk_gradient_shader.h,34,SkGradientShader_MakeRadial_3,,todo,,
-skia/capi/sk_gradient_shader.h,36,SkGradientShader_MakeTwoPointConical_2,,todo,,
-skia/capi/sk_gradient_shader.h,37,SkGradientShader_MakeTwoPointConical_3,,todo,,
-skia/capi/sk_gradient_shader.h,39,SkGradientShader_MakeSweep_2,,todo,,
-skia/capi/sk_gradient_shader.h,40,SkGradientShader_MakeSweep_3,,todo,,
-skia/capi/sk_gradient_shader.h,41,SkGradientShader_MakeSweep_4,,todo,,
-skia/capi/sk_high_contrast_config.h,15,SkHighContrastConfig_new_2,,todo,,
-skia/capi/sk_i_rect.h,43,SkIRect_makeOffset_2,,todo,,
-skia/capi/sk_i_rect.h,47,SkIRect_offset_2,,todo,,
-skia/capi/sk_i_rect.h,53,SkIRect_contains_2,,todo,,
-skia/capi/sk_i_rect.h,54,SkIRect_contains_3,,todo,,
-skia/capi/sk_i_rect.h,57,SkIRect_intersect_2,,todo,,
-skia/capi/sk_icc.h,20,SkICC_SkWriteICCProfile_2,,todo,,
-skia/capi/sk_ico_decoder.h,25,SkIcoDecoder_Decode_2,,todo,,
-skia/capi/sk_image.h,56,SkImage_makeShader_2,,todo,,
-skia/capi/sk_image.h,57,SkImage_makeShader_3,,todo,,
-skia/capi/sk_image.h,58,SkImage_makeShader_4,,todo,,
-skia/capi/sk_image.h,60,SkImage_makeRawShader_2,,todo,,
-skia/capi/sk_image.h,61,SkImage_makeRawShader_3,,todo,,
-skia/capi/sk_image.h,62,SkImage_makeRawShader_4,,todo,,
-skia/capi/sk_image.h,68,SkImage_readPixels_2,,todo,,
-skia/capi/sk_image.h,69,SkImage_readPixels_3,,todo,,
-skia/capi/sk_image.h,70,SkImage_readPixels_4,,todo,,
-skia/capi/sk_image.h,79,SkImage_makeSubset_2,,todo,,
-skia/capi/sk_image.h,85,SkImage_makeRasterImage_2,,todo,,
-skia/capi/sk_image.h,89,SkImage_makeColorSpace_2,,todo,,
-skia/capi/sk_image.h,91,SkImage_makeColorTypeAndColorSpace_2,,todo,,
-skia/capi/sk_image_filter.h,46,SkImageFilter_serialize_2,,todo,,
-skia/capi/sk_image_filters.h,47,SkImageFilters_Blend_2,,todo,,
-skia/capi/sk_image_filters.h,49,SkImageFilters_Blur_2,,todo,,
-skia/capi/sk_image_filters.h,53,SkImageFilters_Crop_2,,todo,,
-skia/capi/sk_image_filters.h,59,SkImageFilters_Image_2,,todo,,
-skia/capi/sk_image_filters.h,64,SkImageFilters_Merge_2,,todo,,
-skia/capi/sk_image_filters.h,67,SkImageFilters_Picture_2,,todo,,
-skia/capi/sk_image_filters.h,69,SkImageFilters_RuntimeShader_2,,todo,,
-skia/capi/sk_image_filters.h,70,SkImageFilters_RuntimeShader_3,,todo,,
-skia/capi/sk_image_filters.h,71,SkImageFilters_RuntimeShader_4,,todo,,
-skia/capi/sk_image_filters.h,73,SkImageFilters_Shader_2,,todo,,
-skia/capi/sk_image_generator.h,33,SkImageGenerator_getPixels_2,,todo,,
-skia/capi/sk_image_info.h,63,SkImageInfo_Make_2,,todo,,
-skia/capi/sk_image_info.h,64,SkImageInfo_Make_3,,todo,,
-skia/capi/sk_image_info.h,65,SkImageInfo_Make_4,,todo,,
-skia/capi/sk_image_info.h,68,SkImageInfo_MakeN32_2,,todo,,
-skia/capi/sk_image_info.h,71,SkImageInfo_MakeN32Premul_2,,todo,,
-skia/capi/sk_image_info.h,72,SkImageInfo_MakeN32Premul_3,,todo,,
-skia/capi/sk_image_info.h,73,SkImageInfo_MakeN32Premul_4,,todo,,
-skia/capi/sk_image_info.h,75,SkImageInfo_MakeA8_2,,todo,,
-skia/capi/sk_image_info.h,77,SkImageInfo_MakeUnknown_2,,todo,,
-skia/capi/sk_images.h,40,SkImages_DeferredFromPicture_2,,todo,,
-skia/capi/sk_jpeg_decoder.h,22,SkJpegDecoder_Decode_2,,todo,,
-skia/capi/sk_jpeg_encoder.h,22,SkJpegEncoder_Encode_2,,todo,,
-skia/capi/sk_jpeg_encoder.h,23,SkJpegEncoder_Encode_3,,todo,,
-skia/capi/sk_jpeg_encoder.h,25,SkJpegEncoder_Make_2,,todo,,
-skia/capi/sk_m_44.h,30,SkM44_new_2,,todo,,
-skia/capi/sk_m_44.h,31,SkM44_new_3,,todo,,
-skia/capi/sk_m_44.h,32,SkM44_new_4,,todo,,
-skia/capi/sk_m_44.h,51,SkM44_preConcat_2,,todo,,
-skia/capi/sk_m_44.h,63,SkM44_preScale_2,,todo,,
-skia/capi/sk_mask_builder.h,24,SkMaskBuilder_new_2,,todo,,
-skia/capi/sk_mask_filter.h,35,SkMaskFilter_serialize_2,,todo,,
-skia/capi/sk_matrix.h,69,SkMatrix_setTranslate_2,,todo,,
-skia/capi/sk_matrix.h,71,SkMatrix_setScale_2,,todo,,
-skia/capi/sk_matrix.h,73,SkMatrix_setRotate_2,,todo,,
-skia/capi/sk_matrix.h,75,SkMatrix_setSinCos_2,,todo,,
-skia/capi/sk_matrix.h,78,SkMatrix_setSkew_2,,todo,,
-skia/capi/sk_matrix.h,82,SkMatrix_preScale_2,,todo,,
-skia/capi/sk_matrix.h,84,SkMatrix_preRotate_2,,todo,,
-skia/capi/sk_matrix.h,86,SkMatrix_preSkew_2,,todo,,
-skia/capi/sk_matrix.h,90,SkMatrix_postScale_2,,todo,,
-skia/capi/sk_matrix.h,92,SkMatrix_postRotate_2,,todo,,
-skia/capi/sk_matrix.h,94,SkMatrix_postSkew_2,,todo,,
-skia/capi/sk_matrix.h,103,SkMatrix_mapPoints_2,,todo,,
-skia/capi/sk_matrix.h,105,SkMatrix_mapHomogeneousPoints_2,,todo,,
-skia/capi/sk_matrix.h,108,SkMatrix_mapXY_2,,todo,,
-skia/capi/sk_matrix.h,111,SkMatrix_mapVectors_2,,todo,,
-skia/capi/sk_matrix.h,113,SkMatrix_mapVector_2,,todo,,
-skia/capi/sk_matrix.h,115,SkMatrix_mapRect_2,,todo,,
-skia/capi/sk_matrix.h,116,SkMatrix_mapRect_3,,todo,,
-skia/capi/sk_matrix.h,133,SkMatrix_Translate_2,,todo,,
-skia/capi/sk_matrix.h,134,SkMatrix_Translate_3,,todo,,
-skia/capi/sk_matrix.h,136,SkMatrix_RotateDeg_2,,todo,,
+skia/capi/sk_android_codec.h,48,SkAndroidCodec_getAndroidPixels_2,SkAndroidCodec_getAndroidPixels_withoutOptions,done,codex,renamed on 2026-02-16
+skia/capi/sk_b_box_hierarchy.h,20,SkBBoxHierarchy_insert_2,SkBBoxHierarchy_insert_withMetadata,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,42,SkBitmap_new_2,SkBitmap_new_copy,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,46,SkBitmap_allocPixels_2,SkBitmap_allocPixels_withAllocator,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,47,SkBitmap_allocPixels_3,SkBitmap_allocPixels_withInfo,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,48,SkBitmap_allocPixels_4,SkBitmap_allocPixels_withInfoRowBytes,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,61,SkBitmap_erase_2,SkBitmap_eraseColor4fInArea,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,65,SkBitmap_eraseColor_2,SkBitmap_eraseColor4f,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,67,SkBitmap_extractAlpha_2,SkBitmap_extractAlpha_withPaintAllocatorOffset,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,68,SkBitmap_extractAlpha_3,SkBitmap_extractAlpha_withPaintOffset,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,86,SkBitmap_installPixels_2,SkBitmap_installPixels_withReleaseProc,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,87,SkBitmap_installPixels_3,SkBitmap_installPixels_withPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,92,SkBitmap_makeShader_2,SkBitmap_makeShader_withOptionalLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,93,SkBitmap_makeShader_3,SkBitmap_makeShader_withTileModesOptionalLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,94,SkBitmap_makeShader_4,SkBitmap_makeShader_withTileModesLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,101,SkBitmap_readPixels_2,SkBitmap_readPixels_withPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,102,SkBitmap_readPixels_3,SkBitmap_readPixels_withPixmapAt,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,117,SkBitmap_tryAllocPixels_2,SkBitmap_tryAllocPixels_withAllocator,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,118,SkBitmap_tryAllocPixels_3,SkBitmap_tryAllocPixels_withInfo,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,119,SkBitmap_tryAllocPixels_4,SkBitmap_tryAllocPixels_withInfoRowBytes,done,codex,renamed on 2026-02-16
+skia/capi/sk_bitmap.h,123,SkBitmap_writePixels_2,SkBitmap_writePixels_withDstOffset,done,codex,renamed on 2026-02-16
+skia/capi/sk_blender.h,32,SkBlender_serialize_2,SkBlender_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_bmp_decoder.h,23,SkBmpDecoder_Decode_2,SkBmpDecoder_DecodeFromDataHandle,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,42,SkCanvas_new_2,SkCanvas_newWithSizeProps,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,43,SkCanvas_new_3,SkCanvas_newFromBitmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,44,SkCanvas_new_4,SkCanvas_newFromBitmapWithProps,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,50,SkCanvas_clear_2,SkCanvas_clearColor,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,53,SkCanvas_clipPath_2,SkCanvas_clipPathWithOp,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,54,SkCanvas_clipPath_3,SkCanvas_clipPathWithOpAA,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,56,SkCanvas_clipRect_2,SkCanvas_clipRectWithOp,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,57,SkCanvas_clipRect_3,SkCanvas_clipRectWithOpAA,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,60,SkCanvas_clipRRect_2,SkCanvas_clipRRectWithOp,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,61,SkCanvas_clipRRect_3,SkCanvas_clipRRectWithOpAA,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,64,SkCanvas_concat_2,SkCanvas_concatMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,67,SkCanvas_drawAnnotation_2,SkCanvas_drawAnnotationWithDataPtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,71,SkCanvas_drawCircle_2,SkCanvas_drawCircleAt,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,73,SkCanvas_drawColor_2,SkCanvas_drawColorU32,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,75,SkCanvas_drawDrawable_2,SkCanvas_drawDrawableAt,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,78,SkCanvas_drawGlyphs_2,SkCanvas_drawGlyphsAtPositions,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,79,SkCanvas_drawGlyphs_3,SkCanvas_drawGlyphsWithXforms,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,81,SkCanvas_drawImage_2,SkCanvas_drawImageHandleWithSampling,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,82,SkCanvas_drawImage_3,SkCanvas_drawImagePtrWithSampling,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,83,SkCanvas_drawImage_4,SkCanvas_drawImagePtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,85,SkCanvas_drawImageLattice_2,SkCanvas_drawImageLatticeWithFilter,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,88,SkCanvas_drawImageRect_2,SkCanvas_drawImageRectHandleWithSrcDst,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,89,SkCanvas_drawImageRect_3,SkCanvas_drawImageRectPtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,90,SkCanvas_drawImageRect_4,SkCanvas_drawImageRectPtrWithSrcDst,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,93,SkCanvas_drawLine_2,SkCanvas_drawLineXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,100,SkCanvas_drawPicture_2,SkCanvas_drawPictureHandleWithMatrixPaint,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,101,SkCanvas_drawPicture_3,SkCanvas_drawPicturePtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,102,SkCanvas_drawPicture_4,SkCanvas_drawPicturePtrWithMatrixPaint,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,104,SkCanvas_drawPoint_2,SkCanvas_drawPointXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,112,SkCanvas_drawString_2,SkCanvas_drawStringObject,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,114,SkCanvas_drawTextBlob_2,SkCanvas_drawTextBlobPtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,116,SkCanvas_drawVertices_2,SkCanvas_drawVerticesPtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,119,SkCanvas_experimental_DrawEdgeAAQuad_2,SkCanvas_experimental_DrawEdgeAAQuadU32Color,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,123,SkCanvas_getDeviceClipBounds_2,SkCanvas_getDeviceClipBoundsInto,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,125,SkCanvas_getLocalClipBounds_2,SkCanvas_getLocalClipBoundsInto,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,140,SkCanvas_quickReject_2,SkCanvas_quickRejectRect,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,142,SkCanvas_readPixels_2,SkCanvas_readPixelsWithImageInfo,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,143,SkCanvas_readPixels_3,SkCanvas_readPixelsWithPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,150,SkCanvas_rotate_2,SkCanvas_rotateAround,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,153,SkCanvas_saveLayer_2,SkCanvas_saveLayerWithBoundsPaintRef,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,154,SkCanvas_saveLayer_3,SkCanvas_saveLayerWithBoundsPaintPtr,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,159,SkCanvas_setMatrix_2,SkCanvas_setMatrix3x3,done,codex,renamed on 2026-02-16
+skia/capi/sk_canvas.h,164,SkCanvas_writePixels_2,SkCanvas_writePixelsWithImageInfo,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,47,SkCodec_getPixels_2,SkCodec_getPixelsWithoutOptions,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,48,SkCodec_getPixels_3,SkCodec_getPixelsFromPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,50,SkCodec_getImage_2,SkCodec_getImageDefault,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,54,SkCodec_startIncrementalDecode_2,SkCodec_startIncrementalDecodeWithoutOptions,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,57,SkCodec_startScanlineDecode_2,SkCodec_startScanlineDecodeWithoutOptions,done,codex,renamed on 2026-02-16
+skia/capi/sk_codec.h,65,SkCodec_getFrameInfo_2,SkCodec_getFrameInfoList,done,codex,renamed on 2026-02-16
+skia/capi/sk_color.h,22,SkColor_SkHSVToColor_2,SkColor_SkHSVToColorWithAlpha,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_4f.h,39,SkColor4f_vec_2,SkColor4f_vecMutable,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_filter.h,42,SkColorFilter_serialize_2,SkColorFilter_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_filters.h,28,SkColorFilters_Blend_2,SkColorFilters_BlendColor,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_filters.h,31,SkColorFilters_HSLAMatrix_2,SkColorFilters_HSLAMatrixFromMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_filters.h,36,SkColorFilters_Matrix_2,SkColorFilters_MatrixFromMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_filters.h,39,SkColorFilters_Table_2,SkColorFilters_TableFromColorTable,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_info.h,22,SkColorInfo_new_2,SkColorInfo_newWithColorTypeAlphaTypeColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_info.h,23,SkColorInfo_new_3,SkColorInfo_newCopy,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_matrix.h,19,SkColorMatrix_new_2,SkColorMatrix_newWithComponents,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_matrix_filter.h,42,SkColorMatrixFilter_serialize_2,SkColorMatrixFilter_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_space.h,36,SkColorSpace_transferFn_2,SkColorSpace_transferFnToStruct,done,codex,renamed on 2026-02-16
+skia/capi/sk_color_table.h,32,SkColorTable_Make_2,SkColorTable_MakeARGBTables,done,codex,renamed on 2026-02-16
+skia/capi/sk_contour_measure_iter.h,18,SkContourMeasureIter_new_2,SkContourMeasureIter_newWithPath,done,codex,renamed on 2026-02-16
+skia/capi/sk_drawable.h,35,SkDrawable_draw_2,SkDrawable_drawAt,done,codex,renamed on 2026-02-16
+skia/capi/sk_drawable.h,47,SkDrawable_serialize_2,SkDrawable_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_dynamic_memory_w_stream.h,33,SkDynamicMemoryWStream_writeToAndReset_2,SkDynamicMemoryWStream_writeToAndResetDynamicStream,done,codex,renamed on 2026-02-16
+skia/capi/sk_file_stream.h,21,SkFILEStream_new_2,SkFILEStream_newFromFileHandle,done,codex,renamed on 2026-02-16
+skia/capi/sk_file_stream.h,22,SkFILEStream_new_3,SkFILEStream_newFromFileHandleWithSize,done,codex,renamed on 2026-02-16
+skia/capi/sk_flattenable.h,30,SkFlattenable_serialize_2,SkFlattenable_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_font.h,31,SkFont_new_2,SkFont_newWithTypefaceAndSize,done,codex,renamed on 2026-02-16
+skia/capi/sk_font.h,32,SkFont_new_3,SkFont_newWithTypeface,done,codex,renamed on 2026-02-16
+skia/capi/sk_font.h,33,SkFont_new_4,SkFont_newWithTypefaceSizeScaleXSkewX,done,codex,renamed on 2026-02-16
+skia/capi/sk_font.h,68,SkFont_measureText_2,SkFont_measureTextWithPaint,done,codex,renamed on 2026-02-16
+skia/capi/sk_font.h,73,SkFont_getWidths_3,SkFont_getWidthsWithoutBounds,done,codex,renamed on 2026-02-16
+skia/capi/sk_font_mgr.h,36,SkFontMgr_makeFromStream_2,SkFontMgr_makeFromStreamWithArguments,done,codex,renamed on 2026-02-16
+skia/capi/sk_gif_decoder.h,25,SkGifDecoder_Decode_2,SkGifDecoder_DecodeFromData,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,30,SkGradientShader_MakeLinear_2,SkGradientShader_MakeLinear4fWithInterpolation,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,31,SkGradientShader_MakeLinear_3,SkGradientShader_MakeLinear4fWithFlags,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,33,SkGradientShader_MakeRadial_2,SkGradientShader_MakeRadial4fWithInterpolation,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,34,SkGradientShader_MakeRadial_3,SkGradientShader_MakeRadial4fWithFlags,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,36,SkGradientShader_MakeTwoPointConical_2,SkGradientShader_MakeTwoPointConical4fWithInterpolation,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,37,SkGradientShader_MakeTwoPointConical_3,SkGradientShader_MakeTwoPointConical4fWithFlags,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,39,SkGradientShader_MakeSweep_2,SkGradientShader_MakeSweepWithFlagsOnly,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,40,SkGradientShader_MakeSweep_3,SkGradientShader_MakeSweep4fWithInterpolation,done,codex,renamed on 2026-02-16
+skia/capi/sk_gradient_shader.h,41,SkGradientShader_MakeSweep_4,SkGradientShader_MakeSweep4fWithFlags,done,codex,renamed on 2026-02-16
+skia/capi/sk_high_contrast_config.h,15,SkHighContrastConfig_new_2,SkHighContrastConfig_newWithGrayscaleInvertStyleContrast,done,codex,renamed on 2026-02-16
+skia/capi/sk_i_rect.h,43,SkIRect_makeOffset_2,SkIRect_makeOffsetWithPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_i_rect.h,47,SkIRect_offset_2,SkIRect_offsetWithPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_i_rect.h,53,SkIRect_contains_2,SkIRect_containsIRect,done,codex,renamed on 2026-02-16
+skia/capi/sk_i_rect.h,54,SkIRect_contains_3,SkIRect_containsRect,done,codex,renamed on 2026-02-16
+skia/capi/sk_i_rect.h,57,SkIRect_intersect_2,SkIRect_intersectFromRects,done,codex,renamed on 2026-02-16
+skia/capi/sk_icc.h,20,SkICC_SkWriteICCProfile_2,SkICC_SkWriteICCProfileFromICCProfile,done,codex,renamed on 2026-02-16
+skia/capi/sk_ico_decoder.h,25,SkIcoDecoder_Decode_2,SkIcoDecoder_DecodeFromData,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,56,SkImage_makeShader_2,SkImage_makeShaderWithTileModesAndLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,57,SkImage_makeShader_3,SkImage_makeShaderWithSamplingAndLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,58,SkImage_makeShader_4,SkImage_makeShaderWithSampling,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,60,SkImage_makeRawShader_2,SkImage_makeRawShaderWithTileModesAndLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,61,SkImage_makeRawShader_3,SkImage_makeRawShaderWithSamplingAndLocalMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,62,SkImage_makeRawShader_4,SkImage_makeRawShaderWithSampling,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,68,SkImage_readPixels_2,SkImage_readPixelsWithContextPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,69,SkImage_readPixels_3,SkImage_readPixelsWithImageInfo,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,70,SkImage_readPixels_4,SkImage_readPixelsWithPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,79,SkImage_makeSubset_2,SkImage_makeSubsetWithRecorder,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,85,SkImage_makeRasterImage_2,SkImage_makeRasterImageWithoutContext,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,89,SkImage_makeColorSpace_2,SkImage_makeColorSpaceWithRecorder,done,codex,renamed on 2026-02-16
+skia/capi/sk_image.h,91,SkImage_makeColorTypeAndColorSpace_2,SkImage_makeColorTypeAndColorSpaceWithRecorder,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filter.h,46,SkImageFilter_serialize_2,SkImageFilter_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,47,SkImageFilters_Blend_2,SkImageFilters_BlendWithBlender,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,49,SkImageFilters_Blur_2,SkImageFilters_BlurWithoutTileMode,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,53,SkImageFilters_Crop_2,SkImageFilters_CropWithRect,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,59,SkImageFilters_Image_2,SkImageFilters_ImageWithSampling,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,64,SkImageFilters_Merge_2,SkImageFilters_MergeTwo,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,67,SkImageFilters_Picture_2,SkImageFilters_PictureOnly,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,69,SkImageFilters_RuntimeShader_2,SkImageFilters_RuntimeShaderWithSampleRadius,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,70,SkImageFilters_RuntimeShader_3,SkImageFilters_RuntimeShaderWithChildShaderNames,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,71,SkImageFilters_RuntimeShader_4,SkImageFilters_RuntimeShaderWithMaxSampleRadius,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_filters.h,73,SkImageFilters_Shader_2,SkImageFilters_ShaderWithDither,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_generator.h,33,SkImageGenerator_getPixels_2,SkImageGenerator_getPixelsWithPixmap,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,63,SkImageInfo_Make_2,SkImageInfo_MakeWithColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,64,SkImageInfo_Make_3,SkImageInfo_MakeWithDimensions,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,65,SkImageInfo_Make_4,SkImageInfo_MakeWithDimensionsAndColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,68,SkImageInfo_MakeN32_2,SkImageInfo_MakeN32WithColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,71,SkImageInfo_MakeN32Premul_2,SkImageInfo_MakeN32PremulWithColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,72,SkImageInfo_MakeN32Premul_3,SkImageInfo_MakeN32PremulWithDimensions,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,73,SkImageInfo_MakeN32Premul_4,SkImageInfo_MakeN32PremulWithDimensionsAndColorSpace,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,75,SkImageInfo_MakeA8_2,SkImageInfo_MakeA8WithDimensions,done,codex,renamed on 2026-02-16
+skia/capi/sk_image_info.h,77,SkImageInfo_MakeUnknown_2,SkImageInfo_MakeUnknownDefault,done,codex,renamed on 2026-02-16
+skia/capi/sk_images.h,40,SkImages_DeferredFromPicture_2,SkImages_DeferredFromPictureWithoutProps,done,codex,renamed on 2026-02-16
+skia/capi/sk_jpeg_decoder.h,22,SkJpegDecoder_Decode_2,SkJpegDecoder_DecodeFromData,done,codex,renamed on 2026-02-16
+skia/capi/sk_jpeg_encoder.h,22,SkJpegEncoder_Encode_2,SkJpegEncoder_EncodeYuvaPixmaps,done,codex,renamed on 2026-02-16
+skia/capi/sk_jpeg_encoder.h,23,SkJpegEncoder_Encode_3,SkJpegEncoder_EncodeImage,done,codex,renamed on 2026-02-16
+skia/capi/sk_jpeg_encoder.h,25,SkJpegEncoder_Make_2,SkJpegEncoder_MakeYuvaPixmaps,done,codex,renamed on 2026-02-16
+skia/capi/sk_m_44.h,30,SkM44_new_2,SkM44_newFromMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_m_44.h,31,SkM44_new_3,SkM44_newDefault,done,codex,renamed on 2026-02-16
+skia/capi/sk_m_44.h,32,SkM44_new_4,SkM44_newFromConcat,done,codex,renamed on 2026-02-16
+skia/capi/sk_m_44.h,51,SkM44_preConcat_2,SkM44_preConcatMatrix,done,codex,renamed on 2026-02-16
+skia/capi/sk_m_44.h,63,SkM44_preScale_2,SkM44_preScale3D,done,codex,renamed on 2026-02-16
+skia/capi/sk_mask_builder.h,24,SkMaskBuilder_new_2,SkMaskBuilder_newWithImageBoundsRowBytesFormat,done,codex,renamed on 2026-02-16
+skia/capi/sk_mask_filter.h,35,SkMaskFilter_serialize_2,SkMaskFilter_serializeToMemory,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,69,SkMatrix_setTranslate_2,SkMatrix_setTranslateWithVector,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,71,SkMatrix_setScale_2,SkMatrix_setScaleXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,73,SkMatrix_setRotate_2,SkMatrix_setRotateDegrees,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,75,SkMatrix_setSinCos_2,SkMatrix_setSinCosValues,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,78,SkMatrix_setSkew_2,SkMatrix_setSkewXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,82,SkMatrix_preScale_2,SkMatrix_preScaleXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,84,SkMatrix_preRotate_2,SkMatrix_preRotateDegrees,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,86,SkMatrix_preSkew_2,SkMatrix_preSkewXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,90,SkMatrix_postScale_2,SkMatrix_postScaleXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,92,SkMatrix_postRotate_2,SkMatrix_postRotateDegrees,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,94,SkMatrix_postSkew_2,SkMatrix_postSkewXY,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,103,SkMatrix_mapPoints_2,SkMatrix_mapPointsInPlace,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,105,SkMatrix_mapHomogeneousPoints_2,SkMatrix_mapHomogeneousPointsFromPoints,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,108,SkMatrix_mapXY_2,SkMatrix_mapXYToPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,111,SkMatrix_mapVectors_2,SkMatrix_mapVectorsInPlace,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,113,SkMatrix_mapVector_2,SkMatrix_mapVectorToPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,115,SkMatrix_mapRect_2,SkMatrix_mapRectInPlace,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,116,SkMatrix_mapRect_3,SkMatrix_mapRectFromSource,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,133,SkMatrix_Translate_2,SkMatrix_TranslateFromPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,134,SkMatrix_Translate_3,SkMatrix_TranslateFromIPoint,done,codex,renamed on 2026-02-16
+skia/capi/sk_matrix.h,136,SkMatrix_RotateDeg_2,SkMatrix_RotateDegAroundPoint,done,codex,renamed on 2026-02-16
 skia/capi/sk_memory_stream.h,22,SkMemoryStream_new_2,,todo,,
 skia/capi/sk_memory_stream.h,23,SkMemoryStream_new_3,,todo,,
 skia/capi/sk_memory_stream.h,24,SkMemoryStream_new_4,,todo,,

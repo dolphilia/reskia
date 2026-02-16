@@ -27,9 +27,9 @@ typedef struct reskia_v4_t reskia_v4_t;
 //SkV3 operator*(SkV3 v)
 
 reskia_m_44_t *SkM44_new(const reskia_m_44_t *src); // (const SkM44 *src) -> SkM44 *
-reskia_m_44_t *SkM44_new_2(const reskia_matrix_t *src); // (const SkMatrix *src) -> SkM44 *
-reskia_m_44_t *SkM44_new_3(); // () -> SkM44 *
-reskia_m_44_t *SkM44_new_4(const reskia_m_44_t *a, const reskia_m_44_t *b); // (const SkM44 *a, const SkM44 *b) -> SkM44 *
+reskia_m_44_t *SkM44_newFromMatrix(const reskia_matrix_t *src); // (const SkMatrix *src) -> SkM44 *
+reskia_m_44_t *SkM44_newDefault(); // () -> SkM44 *
+reskia_m_44_t *SkM44_newFromConcat(const reskia_m_44_t *a, const reskia_m_44_t *b); // (const SkM44 *a, const SkM44 *b) -> SkM44 *
 reskia_m_44_t *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15); // (SkScalar m0, SkScalar m4, SkScalar m8, SkScalar m12, SkScalar m1, SkScalar m5, SkScalar m9, SkScalar m13, SkScalar m2, SkScalar m6, SkScalar m10, SkScalar m14, SkScalar m3, SkScalar m7, SkScalar m11, SkScalar m15) -> SkM44 *
 void SkM44_delete(reskia_m_44_t *m44); // (SkM44 *m44)
 void SkM44_getColMajor(reskia_m_44_t *m44, float *v); // (SkM44 *m44, SkScalar v[])
@@ -48,7 +48,7 @@ sk_m_44_t SkM44_setRotateUnit(reskia_m_44_t *m44, sk_v3_t axis, float radians); 
 sk_m_44_t SkM44_setRotate(reskia_m_44_t *m44, sk_v3_t axis, float radians); // (SkM44 *m44, sk_v3_t axis, SkScalar radians) -> sk_m_44_t
 sk_m_44_t SkM44_setConcat(reskia_m_44_t *m44, const reskia_m_44_t *a, const reskia_m_44_t *b); // (SkM44 *m44, const SkM44 *a, const SkM44 *b) -> sk_m_44_t
 sk_m_44_t SkM44_preConcat(reskia_m_44_t *m44, const reskia_m_44_t *m); // (SkM44 *m44, const SkM44 *m) -> sk_m_44_t
-sk_m_44_t SkM44_preConcat_2(reskia_m_44_t *m44, const reskia_matrix_t *matrix); // (SkM44 *m44, const SkMatrix *matrix) -> sk_m_44_t
+sk_m_44_t SkM44_preConcatMatrix(reskia_m_44_t *m44, const reskia_matrix_t *matrix); // (SkM44 *m44, const SkMatrix *matrix) -> sk_m_44_t
 sk_m_44_t SkM44_postConcat(reskia_m_44_t *m44, const reskia_m_44_t *m); // (SkM44 *m44, const SkM44 *m) -> sk_m_44_t
 void SkM44_normalizePerspective(reskia_m_44_t *m44); // (SkM44 *m44)
 bool SkM44_isFinite(reskia_m_44_t *m44); // (SkM44 *m44) -> bool
@@ -60,7 +60,7 @@ sk_matrix_t SkM44_asM33(reskia_m_44_t *m44); // (SkM44 *m44) -> sk_matrix_t
 sk_m_44_t SkM44_preTranslate(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t
 sk_m_44_t SkM44_postTranslate(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t
 sk_m_44_t SkM44_preScale(reskia_m_44_t *m44, float x, float y); // (SkM44 *m44, SkScalar x, SkScalar y) -> sk_m_44_t
-sk_m_44_t SkM44_preScale_2(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t
+sk_m_44_t SkM44_preScale3D(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t
 
 // static
 

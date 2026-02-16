@@ -40,21 +40,21 @@ void SkIRect_setXYWH(reskia_i_rect_t *i_rect, int x, int y, int width, int heigh
 void SkIRect_setWH(reskia_i_rect_t *i_rect, int width, int height); // (SkIRect *i_rect, int32_t width, int32_t height)
 void SkIRect_setSize(reskia_i_rect_t *i_rect, sk_i_size_t size); // (SkIRect *i_rect, sk_i_size_t size)
 sk_i_rect_t SkIRect_makeOffset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
-sk_i_rect_t SkIRect_makeOffset_2(reskia_i_rect_t *i_rect, sk_i_point_t offset); // (SkIRect *i_rect, sk_i_point_t offset) -> sk_i_rect_t
+sk_i_rect_t SkIRect_makeOffsetWithPoint(reskia_i_rect_t *i_rect, sk_i_point_t offset); // (SkIRect *i_rect, sk_i_point_t offset) -> sk_i_rect_t
 sk_i_rect_t SkIRect_makeInset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
 sk_i_rect_t SkIRect_makeOutset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy) -> sk_i_rect_t
 void SkIRect_offset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy)
-void SkIRect_offset_2(reskia_i_rect_t *i_rect, const reskia_i_point_t *delta); // (SkIRect *i_rect, const SkIPoint *delta)
+void SkIRect_offsetWithPoint(reskia_i_rect_t *i_rect, const reskia_i_point_t *delta); // (SkIRect *i_rect, const SkIPoint *delta)
 void SkIRect_offsetTo(reskia_i_rect_t *i_rect, int newX, int newY); // (SkIRect *i_rect, int32_t newX, int32_t newY)
 void SkIRect_inset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy)
 void SkIRect_outset(reskia_i_rect_t *i_rect, int dx, int dy); // (SkIRect *i_rect, int32_t dx, int32_t dy)
 void SkIRect_adjust(reskia_i_rect_t *i_rect, int dL, int dT, int dR, int dB); // (SkIRect *i_rect, int32_t dL, int32_t dT, int32_t dR, int32_t dB)
 bool SkIRect_contains(reskia_i_rect_t *i_rect, int x, int y); // (SkIRect *i_rect, int32_t x, int32_t y) -> bool
-bool SkIRect_contains_2(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r) -> bool
-bool SkIRect_contains_3(reskia_i_rect_t *i_rect, const reskia_rect_t *r); // (SkIRect *i_rect, const SkRect *r) -> bool
+bool SkIRect_containsIRect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r) -> bool
+bool SkIRect_containsRect(reskia_i_rect_t *i_rect, const reskia_rect_t *r); // (SkIRect *i_rect, const SkRect *r) -> bool
 bool SkIRect_containsNoEmptyCheck(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r) -> bool
 bool SkIRect_intersect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r) -> bool
-bool SkIRect_intersect_2(reskia_i_rect_t *i_rect, const reskia_i_rect_t *a, const reskia_i_rect_t *b); // (SkIRect *i_rect, const SkIRect *a, const SkIRect *b) -> bool
+bool SkIRect_intersectFromRects(reskia_i_rect_t *i_rect, const reskia_i_rect_t *a, const reskia_i_rect_t *b); // (SkIRect *i_rect, const SkIRect *a, const SkIRect *b) -> bool
 void SkIRect_join(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r); // (SkIRect *i_rect, const SkIRect *r)
 void SkIRect_sort(reskia_i_rect_t *i_rect); // (SkIRect *i_rect)
 sk_i_rect_t SkIRect_makeSorted(reskia_i_rect_t *i_rect); // (SkIRect *i_rect) -> sk_i_rect_t

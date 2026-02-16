@@ -17,7 +17,7 @@ typedef struct reskia_rect_t reskia_rect_t;
 
 void SkBBoxHierarchy_release(reskia_b_box_hierarchy_t *b_box_hierarchy); // owned: caller が保持する参照を release する (SkBBoxHierarchy *b_box_hierarchy)
 void SkBBoxHierarchy_insert(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, int N); // borrowed: inputs are borrowed only (SkBBoxHierarchy *b_box_hierarchy, const SkRect *rect, int N)
-void SkBBoxHierarchy_insert_2(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, const reskia_b_box_hierarchy_metadata_t *metadata, int N); // borrowed: inputs are borrowed only (SkBBoxHierarchy *b_box_hierarchy, const SkRect *rect, const SkBBoxHierarchy::Metadata *metadata, int N)
+void SkBBoxHierarchy_insert_withMetadata(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, const reskia_b_box_hierarchy_metadata_t *metadata, int N); // borrowed: inputs are borrowed only (SkBBoxHierarchy *b_box_hierarchy, const SkRect *rect, const SkBBoxHierarchy::Metadata *metadata, int N)
 void SkBBoxHierarchy_search(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *query, int results); // borrowed: hierarchy/query are borrowed (SkBBoxHierarchy *b_box_hierarchy, const SkRect *query, std::vector<int> *results)
 size_t SkBBoxHierarchy_bytesUsed(reskia_b_box_hierarchy_t *b_box_hierarchy); // (SkBBoxHierarchy *b_box_hierarchy) -> size_t
 bool SkBBoxHierarchy_unique(reskia_b_box_hierarchy_t *b_box_hierarchy); // (SkBBoxHierarchy *b_box_hierarchy) -> bool

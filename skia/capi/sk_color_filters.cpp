@@ -26,7 +26,7 @@ sk_color_filter_t SkColorFilters_Blend(const reskia_color_4f_t *c, sk_color_spac
     return static_sk_color_filter_make(SkColorFilters::Blend(*reinterpret_cast<const SkColor4f *>(c), static_sk_color_space_get_entity(color_space), static_cast<SkBlendMode>(mode)));
 }
 
-sk_color_filter_t SkColorFilters_Blend_2(reskia_color_t c, reskia_blend_mode_t mode) {
+sk_color_filter_t SkColorFilters_BlendColor(reskia_color_t c, reskia_blend_mode_t mode) {
     return static_sk_color_filter_make(SkColorFilters::Blend(static_cast<SkColor>(c), static_cast<SkBlendMode>(mode)));
 }
 
@@ -38,7 +38,7 @@ sk_color_filter_t SkColorFilters_HSLAMatrix(const float rowMajor[20]) {
     return static_sk_color_filter_make(SkColorFilters::HSLAMatrix(rowMajor));
 }
 
-sk_color_filter_t SkColorFilters_HSLAMatrix_2(const reskia_color_matrix_t *matrix) {
+sk_color_filter_t SkColorFilters_HSLAMatrixFromMatrix(const reskia_color_matrix_t *matrix) {
     return static_sk_color_filter_make(SkColorFilters::HSLAMatrix(*reinterpret_cast<const SkColorMatrix *>(matrix)));
 }
 
@@ -58,7 +58,7 @@ sk_color_filter_t SkColorFilters_Matrix(const float rowMajor[20]) {
     return static_sk_color_filter_make(SkColorFilters::Matrix(rowMajor));
 }
 
-sk_color_filter_t SkColorFilters_Matrix_2(const reskia_color_matrix_t *matrix) {
+sk_color_filter_t SkColorFilters_MatrixFromMatrix(const reskia_color_matrix_t *matrix) {
     return static_sk_color_filter_make(SkColorFilters::Matrix(*reinterpret_cast<const SkColorMatrix *>(matrix)));
 }
 
@@ -70,7 +70,7 @@ sk_color_filter_t SkColorFilters_Table(const uint8_t table[256]) {
     return static_sk_color_filter_make(SkColorFilters::Table(table));
 }
 
-sk_color_filter_t SkColorFilters_Table_2(sk_color_table_t color_table) {
+sk_color_filter_t SkColorFilters_TableFromColorTable(sk_color_table_t color_table) {
     return static_sk_color_filter_make(SkColorFilters::Table(static_sk_color_table_get_entity(color_table)));
 }
 

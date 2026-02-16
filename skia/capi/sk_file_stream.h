@@ -18,8 +18,8 @@ typedef struct reskia_file_stream_t reskia_file_stream_t;
 typedef struct reskia_file_t reskia_file_t;
 
 reskia_file_stream_t *SkFILEStream_new(const char path[]); // (const char path[]) -> SkFILEStream *
-reskia_file_stream_t *SkFILEStream_new_2(reskia_file_t *file); // (FILE *file) -> SkFILEStream *
-reskia_file_stream_t *SkFILEStream_new_3(reskia_file_t *file, size_t size); // (FILE *file, size_t size) -> SkFILEStream *
+reskia_file_stream_t *SkFILEStream_newFromFileHandle(reskia_file_t *file); // (FILE *file) -> SkFILEStream *
+reskia_file_stream_t *SkFILEStream_newFromFileHandleWithSize(reskia_file_t *file, size_t size); // (FILE *file, size_t size) -> SkFILEStream *
 void SkFILEStream_delete(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream)
 bool SkFILEStream_isValid(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream) -> bool
 void SkFILEStream_close(reskia_file_stream_t *file_stream); // (SkFILEStream *file_stream)

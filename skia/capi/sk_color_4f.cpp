@@ -48,7 +48,7 @@ const float *SkColor4f_vec(reskia_color_4f_t *color) {
     return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 
-float *SkColor4f_vec_2(reskia_color_4f_t *color) {
+float *SkColor4f_vecMutable(reskia_color_4f_t *color) {
     return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 

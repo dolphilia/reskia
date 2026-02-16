@@ -165,7 +165,7 @@ sk_matrix_t SkMatrix_setTranslate(reskia_matrix_t *matrix, float dx, float dy) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setTranslate(dx, dy));
 }
 
-sk_matrix_t SkMatrix_setTranslate_2(reskia_matrix_t *matrix, const reskia_vector_t *v) {
+sk_matrix_t SkMatrix_setTranslateWithVector(reskia_matrix_t *matrix, const reskia_vector_t *v) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setTranslate(* reinterpret_cast<const SkVector *>(v)));
 }
 
@@ -173,7 +173,7 @@ sk_matrix_t SkMatrix_setScale(reskia_matrix_t *matrix, float sx, float sy, float
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setScale(sx, sy, px, py));
 }
 
-sk_matrix_t SkMatrix_setScale_2(reskia_matrix_t *matrix, float sx, float sy) {
+sk_matrix_t SkMatrix_setScaleXY(reskia_matrix_t *matrix, float sx, float sy) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setScale(sx, sy));
 }
 
@@ -181,7 +181,7 @@ sk_matrix_t SkMatrix_setRotate(reskia_matrix_t *matrix, float degrees, float px,
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setRotate(degrees, px, py));
 }
 
-sk_matrix_t SkMatrix_setRotate_2(reskia_matrix_t *matrix, float degrees) {
+sk_matrix_t SkMatrix_setRotateDegrees(reskia_matrix_t *matrix, float degrees) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setRotate(degrees));
 }
 
@@ -189,7 +189,7 @@ sk_matrix_t SkMatrix_setSinCos(reskia_matrix_t *matrix, float sinValue, float co
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setSinCos(sinValue, cosValue, px, py));
 }
 
-sk_matrix_t SkMatrix_setSinCos_2(reskia_matrix_t *matrix, float sinValue, float cosValue) {
+sk_matrix_t SkMatrix_setSinCosValues(reskia_matrix_t *matrix, float sinValue, float cosValue) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setSinCos(sinValue, cosValue));
 }
 
@@ -201,7 +201,7 @@ sk_matrix_t SkMatrix_setSkew(reskia_matrix_t *matrix, float kx, float ky, float 
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setSkew(kx, ky, px, py));
 }
 
-sk_matrix_t SkMatrix_setSkew_2(reskia_matrix_t *matrix, float kx, float ky) {
+sk_matrix_t SkMatrix_setSkewXY(reskia_matrix_t *matrix, float kx, float ky) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->setSkew(kx, ky));
 }
 
@@ -217,7 +217,7 @@ sk_matrix_t SkMatrix_preScale(reskia_matrix_t *matrix, float sx, float sy, float
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preScale(sx, sy, px, py));
 }
 
-sk_matrix_t SkMatrix_preScale_2(reskia_matrix_t *matrix, float sx, float sy) {
+sk_matrix_t SkMatrix_preScaleXY(reskia_matrix_t *matrix, float sx, float sy) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preScale(sx, sy));
 }
 
@@ -225,7 +225,7 @@ sk_matrix_t SkMatrix_preRotate(reskia_matrix_t *matrix, float degrees, float px,
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preRotate(degrees, px, py));
 }
 
-sk_matrix_t SkMatrix_preRotate_2(reskia_matrix_t *matrix, float degrees) {
+sk_matrix_t SkMatrix_preRotateDegrees(reskia_matrix_t *matrix, float degrees) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preRotate(degrees));
 }
 
@@ -233,7 +233,7 @@ sk_matrix_t SkMatrix_preSkew(reskia_matrix_t *matrix, float kx, float ky, float 
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preSkew(kx, ky, px, py));
 }
 
-sk_matrix_t SkMatrix_preSkew_2(reskia_matrix_t *matrix, float kx, float ky) {
+sk_matrix_t SkMatrix_preSkewXY(reskia_matrix_t *matrix, float kx, float ky) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->preSkew(kx, ky));
 }
 
@@ -249,7 +249,7 @@ sk_matrix_t SkMatrix_postScale(reskia_matrix_t *matrix, float sx, float sy, floa
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postScale(sx, sy, px, py));
 }
 
-sk_matrix_t SkMatrix_postScale_2(reskia_matrix_t *matrix, float sx, float sy) {
+sk_matrix_t SkMatrix_postScaleXY(reskia_matrix_t *matrix, float sx, float sy) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postScale(sx, sy));
 }
 
@@ -257,7 +257,7 @@ sk_matrix_t SkMatrix_postRotate(reskia_matrix_t *matrix, float degrees, float px
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postRotate(degrees, px, py));
 }
 
-sk_matrix_t SkMatrix_postRotate_2(reskia_matrix_t *matrix, float degrees) {
+sk_matrix_t SkMatrix_postRotateDegrees(reskia_matrix_t *matrix, float degrees) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postRotate(degrees));
 }
 
@@ -265,7 +265,7 @@ sk_matrix_t SkMatrix_postSkew(reskia_matrix_t *matrix, float kx, float ky, float
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postSkew(kx, ky, px, py));
 }
 
-sk_matrix_t SkMatrix_postSkew_2(reskia_matrix_t *matrix, float kx, float ky) {
+sk_matrix_t SkMatrix_postSkewXY(reskia_matrix_t *matrix, float kx, float ky) {
     return static_sk_matrix_make(reinterpret_cast<SkMatrix *>(matrix)->postSkew(kx, ky));
 }
 
@@ -301,7 +301,7 @@ void SkMatrix_mapPoints(reskia_matrix_t *matrix, reskia_point_t *dst, const resk
     reinterpret_cast<SkMatrix *>(matrix)->mapPoints(reinterpret_cast<SkPoint *>(dst), reinterpret_cast<const SkPoint *>(src), count);
 }
 
-void SkMatrix_mapPoints_2(reskia_matrix_t *matrix, reskia_point_t *pts, int count) {
+void SkMatrix_mapPointsInPlace(reskia_matrix_t *matrix, reskia_point_t *pts, int count) {
     reinterpret_cast<SkMatrix *>(matrix)->mapPoints(reinterpret_cast<SkPoint *>(pts), count);
 }
 
@@ -309,7 +309,7 @@ void SkMatrix_mapHomogeneousPoints(reskia_matrix_t *matrix, reskia_point3_t *dst
     reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoints(reinterpret_cast<SkPoint3 *>(dst), reinterpret_cast<const SkPoint3 *>(src), count);
 }
 
-void SkMatrix_mapHomogeneousPoints_2(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count) {
+void SkMatrix_mapHomogeneousPointsFromPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count) {
     reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoints(reinterpret_cast<SkPoint3 *>(dst), reinterpret_cast<const SkPoint *>(src), count);
 }
 
@@ -321,7 +321,7 @@ void SkMatrix_mapXY(reskia_matrix_t *matrix, float x, float y, reskia_point_t *r
     reinterpret_cast<SkMatrix *>(matrix)->mapXY(x, y, reinterpret_cast<SkPoint *>(result));
 }
 
-sk_point_t SkMatrix_mapXY_2(reskia_matrix_t *matrix, float x, float y) {
+sk_point_t SkMatrix_mapXYToPoint(reskia_matrix_t *matrix, float x, float y) {
     return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapXY(x, y));
 }
 
@@ -333,7 +333,7 @@ void SkMatrix_mapVectors(reskia_matrix_t *matrix, reskia_vector_t *dst, const re
     reinterpret_cast<SkMatrix *>(matrix)->mapVectors(reinterpret_cast<SkVector *>(dst), reinterpret_cast<const SkVector *>(src), count);
 }
 
-void SkMatrix_mapVectors_2(reskia_matrix_t *matrix, reskia_vector_t *vecs, int count) {
+void SkMatrix_mapVectorsInPlace(reskia_matrix_t *matrix, reskia_vector_t *vecs, int count) {
     reinterpret_cast<SkMatrix *>(matrix)->mapVectors(reinterpret_cast<SkVector *>(vecs), count);
 }
 
@@ -341,7 +341,7 @@ void SkMatrix_mapVector(reskia_matrix_t *matrix, float dx, float dy, reskia_vect
     reinterpret_cast<SkMatrix *>(matrix)->mapVector(dx, dy, reinterpret_cast<SkVector *>(result));
 }
 
-sk_point_t SkMatrix_mapVector_2(reskia_matrix_t *matrix, float dx, float dy) {
+sk_point_t SkMatrix_mapVectorToPoint(reskia_matrix_t *matrix, float dx, float dy) {
     return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapVector(dx, dy));
 }
 
@@ -349,11 +349,11 @@ bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_
     return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-bool SkMatrix_mapRect_2(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc) {
+bool SkMatrix_mapRectInPlace(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc) {
     return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), static_cast<SkApplyPerspectiveClip>(pc));
 }
 
-sk_rect_t SkMatrix_mapRect_3(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
+sk_rect_t SkMatrix_mapRectFromSource(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
     return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc)));
 }
 
@@ -412,11 +412,11 @@ sk_matrix_t SkMatrix_Translate(float dx, float dy) {
     return static_sk_matrix_make(SkMatrix::Translate(dx, dy));
 }
 
-sk_matrix_t SkMatrix_Translate_2(sk_point_t t) {
+sk_matrix_t SkMatrix_TranslateFromPoint(sk_point_t t) {
     return static_sk_matrix_make(SkMatrix::Translate(static_sk_point_get_entity(t)));
 }
 
-sk_matrix_t SkMatrix_Translate_3(sk_i_point_t t) {
+sk_matrix_t SkMatrix_TranslateFromIPoint(sk_i_point_t t) {
     return static_sk_matrix_make(SkMatrix::Translate(static_sk_i_point_get_entity(t)));
 }
 
@@ -424,7 +424,7 @@ sk_matrix_t SkMatrix_RotateDeg(float deg) {
     return static_sk_matrix_make(SkMatrix::RotateDeg(deg));
 }
 
-sk_matrix_t SkMatrix_RotateDeg_2(float deg, sk_point_t pt) {
+sk_matrix_t SkMatrix_RotateDegAroundPoint(float deg, sk_point_t pt) {
     return static_sk_matrix_make(SkMatrix::RotateDeg(deg, static_sk_point_get_entity(pt)));
 }
 

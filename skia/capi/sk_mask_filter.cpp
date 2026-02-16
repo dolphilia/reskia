@@ -48,7 +48,7 @@ sk_data_t SkMaskFilter_serialize(reskia_mask_filter_t *mask_filter, const reskia
     return static_sk_data_make(reinterpret_cast<SkMaskFilter *>(mask_filter)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkMaskFilter_serialize_2(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
+size_t SkMaskFilter_serializeToMemory(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
     return reinterpret_cast<SkMaskFilter *>(mask_filter)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
 }
 

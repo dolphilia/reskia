@@ -12,7 +12,7 @@ extern "C" {
 typedef struct reskia_high_contrast_config_t reskia_high_contrast_config_t;
 
 reskia_high_contrast_config_t *SkHighContrastConfig_new(); // () -> SkHighContrastConfig *
-reskia_high_contrast_config_t *SkHighContrastConfig_new_2(bool grayscale, int invertStyle, float contrast); // (bool grayscale, SkHighContrastConfig::InvertStyle invertStyle, SkScalar contrast) -> SkHighContrastConfig *
+reskia_high_contrast_config_t *SkHighContrastConfig_newWithGrayscaleInvertStyleContrast(bool grayscale, int invertStyle, float contrast); // (bool grayscale, SkHighContrastConfig::InvertStyle invertStyle, SkScalar contrast) -> SkHighContrastConfig *
 void SkHighContrastConfig_delete(reskia_high_contrast_config_t *highContrastConfig); // (SkHighContrastConfig * highContrastConfig)
 bool isValid(reskia_high_contrast_config_t *high_contrast_config); // (SkHighContrastConfig *high_contrast_config) -> bool
 

@@ -18,11 +18,11 @@ reskia_file_stream_t *SkFILEStream_new(const char path[]) {
     return reinterpret_cast<reskia_file_stream_t *>(new SkFILEStream(path));
 }
 
-reskia_file_stream_t *SkFILEStream_new_2(reskia_file_t *file) {
+reskia_file_stream_t *SkFILEStream_newFromFileHandle(reskia_file_t *file) {
     return reinterpret_cast<reskia_file_stream_t *>(new SkFILEStream(reinterpret_cast<FILE *>(file)));
 }
 
-reskia_file_stream_t *SkFILEStream_new_3(reskia_file_t *file, size_t size) {
+reskia_file_stream_t *SkFILEStream_newFromFileHandleWithSize(reskia_file_t *file, size_t size) {
     return reinterpret_cast<reskia_file_stream_t *>(new SkFILEStream(reinterpret_cast<FILE *>(file), size));
 }
 

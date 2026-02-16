@@ -16,7 +16,7 @@ reskia_contour_measure_iter_t *SkContourMeasureIter_new() {
     return reinterpret_cast<reskia_contour_measure_iter_t *>(new SkContourMeasureIter());
 }
 
-reskia_contour_measure_iter_t *SkContourMeasureIter_new_2(const reskia_path_t *path, bool forceClosed, float resScale) {
+reskia_contour_measure_iter_t *SkContourMeasureIter_newWithPath(const reskia_path_t *path, bool forceClosed, float resScale) {
     return reinterpret_cast<reskia_contour_measure_iter_t *>(new SkContourMeasureIter(* reinterpret_cast<const SkPath *>(path), forceClosed, resScale));
 }
 

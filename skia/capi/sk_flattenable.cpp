@@ -40,7 +40,7 @@ sk_data_t SkFlattenable_serialize(reskia_flattenable_t *flattenable, const reski
     return static_sk_data_make(reinterpret_cast<SkFlattenable *>(flattenable)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkFlattenable_serialize_2(reskia_flattenable_t *flattenable, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+size_t SkFlattenable_serializeToMemory(reskia_flattenable_t *flattenable, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
     return reinterpret_cast<SkFlattenable *>(flattenable)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 

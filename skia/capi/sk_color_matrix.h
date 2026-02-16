@@ -16,7 +16,7 @@ typedef struct reskia_color_matrix_t reskia_color_matrix_t;
 typedef int32_t reskia_color_matrix_yuv_color_space_t;
 
 reskia_color_matrix_t *SkColorMatrix_new(); // () -> SkColorMatrix *
-reskia_color_matrix_t *SkColorMatrix_new_2(float m00, float m01, float m02, float m03, float m04, float m10, float m11, float m12, float m13, float m14, float m20, float m21, float m22, float m23, float m24, float m30, float m31, float m32, float m33, float m34); // (float m00, float m01, float m02, float m03, float m04, float m10, float m11, float m12, float m13, float m14, float m20, float m21, float m22, float m23, float m24, float m30, float m31, float m32, float m33, float m34) -> SkColorMatrix *
+reskia_color_matrix_t *SkColorMatrix_newWithComponents(float m00, float m01, float m02, float m03, float m04, float m10, float m11, float m12, float m13, float m14, float m20, float m21, float m22, float m23, float m24, float m30, float m31, float m32, float m33, float m34); // (float m00, float m01, float m02, float m03, float m04, float m10, float m11, float m12, float m13, float m14, float m20, float m21, float m22, float m23, float m24, float m30, float m31, float m32, float m33, float m34) -> SkColorMatrix *
 void SkColorMatrix_delete(reskia_color_matrix_t *color_matrix); // (SkColorMatrix *color_matrix)
 void SkColorMatrix_setIdentity(reskia_color_matrix_t *color_matrix); // (SkColorMatrix *color_matrix)
 void SkColorMatrix_setScale(reskia_color_matrix_t *color_matrix, float rScale, float gScale, float bScale, float aScale); // (SkColorMatrix *color_matrix, float rScale, float gScale, float bScale, float aScale)

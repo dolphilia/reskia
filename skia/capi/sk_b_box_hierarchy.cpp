@@ -20,7 +20,7 @@ void SkBBoxHierarchy_insert(reskia_b_box_hierarchy_t *b_box_hierarchy, const res
     reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(reinterpret_cast<const SkRect *>(rect), N);
 }
 
-void SkBBoxHierarchy_insert_2(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, const reskia_b_box_hierarchy_metadata_t *metadata, int N) {
+void SkBBoxHierarchy_insert_withMetadata(reskia_b_box_hierarchy_t *b_box_hierarchy, const reskia_rect_t *rect, const reskia_b_box_hierarchy_metadata_t *metadata, int N) {
     reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->insert(reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkBBoxHierarchy::Metadata *>(metadata), N);
 }
 

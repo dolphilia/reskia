@@ -48,15 +48,15 @@ reskia_canvas_t *SkCanvas_new(void) {
     return reinterpret_cast<reskia_canvas_t *>(new SkCanvas());
 }
 
-reskia_canvas_t *SkCanvas_new_2(int width, int height, const void * props) {
+reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const void * props) {
     return reinterpret_cast<reskia_canvas_t *>(new SkCanvas(width, height, static_cast<const SkSurfaceProps *>(props)));
 }
 
-reskia_canvas_t *SkCanvas_new_3(void * bitmap) {
+reskia_canvas_t *SkCanvas_newFromBitmap(void * bitmap) {
     return reinterpret_cast<reskia_canvas_t *>(new SkCanvas(* static_cast<SkBitmap *>(bitmap)));
 }
 
-reskia_canvas_t *SkCanvas_new_4(const void * bitmap, const void * props) {
+reskia_canvas_t *SkCanvas_newFromBitmapWithProps(const void * bitmap, const void * props) {
     return reinterpret_cast<reskia_canvas_t *>(new SkCanvas(* static_cast<const SkBitmap *>(bitmap), * static_cast<const SkSurfaceProps *>(props)));
 }
 
@@ -80,7 +80,7 @@ void SkCanvas_clear(reskia_canvas_t *canvas, const void * color) {
     reinterpret_cast<SkCanvas *>(canvas)->clear(* static_cast<const SkColor4f *>(color));
 }
 
-void SkCanvas_clear_2(reskia_canvas_t *canvas, uint32_t color) {
+void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color) {
     reinterpret_cast<SkCanvas *>(canvas)->clear(color);
 }
 
@@ -92,11 +92,11 @@ void SkCanvas_clipPath(reskia_canvas_t *canvas, const void *path, bool doAntiAli
     reinterpret_cast<SkCanvas *>(canvas)->clipPath(* static_cast<const SkPath *>(path), doAntiAlias);
 }
 
-void SkCanvas_clipPath_2(reskia_canvas_t *canvas, const void *path, reskia_canvas_clip_op_t op) {
+void SkCanvas_clipPathWithOp(reskia_canvas_t *canvas, const void *path, reskia_canvas_clip_op_t op) {
     reinterpret_cast<SkCanvas *>(canvas)->clipPath(* static_cast<const SkPath *>(path), static_cast<SkClipOp>(op));
 }
 
-void SkCanvas_clipPath_3(reskia_canvas_t *canvas, const void *path, reskia_canvas_clip_op_t op, bool doAntiAlias) {
+void SkCanvas_clipPathWithOpAA(reskia_canvas_t *canvas, const void *path, reskia_canvas_clip_op_t op, bool doAntiAlias) {
     reinterpret_cast<SkCanvas *>(canvas)->clipPath(* static_cast<const SkPath *>(path), static_cast<SkClipOp>(op), doAntiAlias);
 }
 
@@ -104,11 +104,11 @@ void SkCanvas_clipRect(reskia_canvas_t *canvas, const void * rect, bool doAntiAl
     reinterpret_cast<SkCanvas *>(canvas)->clipRect(* static_cast<const SkRect *>(rect), doAntiAlias);
 }
 
-void SkCanvas_clipRect_2(reskia_canvas_t *canvas, const void * rect, reskia_canvas_clip_op_t op) {
+void SkCanvas_clipRectWithOp(reskia_canvas_t *canvas, const void * rect, reskia_canvas_clip_op_t op) {
     reinterpret_cast<SkCanvas *>(canvas)->clipRect(* static_cast<const SkRect *>(rect), static_cast<SkClipOp>(op));
 }
 
-void SkCanvas_clipRect_3(reskia_canvas_t *canvas, const void * rect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
+void SkCanvas_clipRectWithOpAA(reskia_canvas_t *canvas, const void * rect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
     reinterpret_cast<SkCanvas *>(canvas)->clipRect(* static_cast<const SkRect *>(rect), static_cast<SkClipOp>(op), doAntiAlias);
 }
 
@@ -120,11 +120,11 @@ void SkCanvas_clipRRect(reskia_canvas_t *canvas, const void * rrect, bool doAnti
     reinterpret_cast<SkCanvas *>(canvas)->clipRRect(* static_cast<const SkRRect *>(rrect), doAntiAlias);
 }
 
-void SkCanvas_clipRRect_2(reskia_canvas_t *canvas, const void *rrect, reskia_canvas_clip_op_t op) {
+void SkCanvas_clipRRectWithOp(reskia_canvas_t *canvas, const void *rrect, reskia_canvas_clip_op_t op) {
     reinterpret_cast<SkCanvas *>(canvas)->clipRRect(* static_cast<const SkRRect *>(rrect), static_cast<SkClipOp>(op));
 }
 
-void SkCanvas_clipRRect_3(reskia_canvas_t *canvas, const void *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
+void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const void *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
     reinterpret_cast<SkCanvas *>(canvas)->clipRRect(* static_cast<const SkRRect *>(rrect), static_cast<SkClipOp>(op), doAntiAlias);
 }
 
@@ -136,7 +136,7 @@ void SkCanvas_concat(reskia_canvas_t *canvas, const void * m44) {
     reinterpret_cast<SkCanvas *>(canvas)->concat(* static_cast<const SkM44 *>(m44));
 }
 
-void SkCanvas_concat_2(reskia_canvas_t *canvas, const void * matrix) {
+void SkCanvas_concatMatrix(reskia_canvas_t *canvas, const void * matrix) {
     reinterpret_cast<SkCanvas *>(canvas)->concat(* static_cast<const SkMatrix *>(matrix));
 }
 
@@ -153,7 +153,7 @@ void SkCanvas_drawAnnotation(reskia_canvas_t *canvas, const void * rect, const c
     reinterpret_cast<SkCanvas *>(canvas)->drawAnnotation(* static_cast<const SkRect *>(rect), key, static_sk_data_get_entity(data));
 }
 
-void SkCanvas_drawAnnotation_2(reskia_canvas_t *canvas, const void * rect, const char * key, void * value) {
+void SkCanvas_drawAnnotationWithDataPtr(reskia_canvas_t *canvas, const void * rect, const char * key, void * value) {
     reinterpret_cast<SkCanvas *>(canvas)->drawAnnotation(* static_cast<const SkRect *>(rect), key, static_cast<SkData *>(value));
 }
 
@@ -169,7 +169,7 @@ void SkCanvas_drawCircle(reskia_canvas_t *canvas, sk_point_t center, float radiu
     reinterpret_cast<SkCanvas *>(canvas)->drawCircle(static_sk_point_get_entity(center), radius, * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawCircle_2(reskia_canvas_t *canvas, float cx, float cy, float radius, const void * paint) {
+void SkCanvas_drawCircleAt(reskia_canvas_t *canvas, float cx, float cy, float radius, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawCircle(cx, cy, radius, * static_cast<const SkPaint *>(paint));
 }
 
@@ -177,7 +177,7 @@ void SkCanvas_drawColor(reskia_canvas_t *canvas, const void * color, reskia_blen
     reinterpret_cast<SkCanvas *>(canvas)->drawColor(* static_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
-void SkCanvas_drawColor_2(reskia_canvas_t *canvas, uint32_t color, reskia_blend_mode_t mode) {
+void SkCanvas_drawColorU32(reskia_canvas_t *canvas, uint32_t color, reskia_blend_mode_t mode) {
     reinterpret_cast<SkCanvas *>(canvas)->drawColor(color, static_cast<SkBlendMode>(mode));
 }
 
@@ -185,7 +185,7 @@ void SkCanvas_drawDrawable(reskia_canvas_t *canvas, void *drawable, const void *
     reinterpret_cast<SkCanvas *>(canvas)->drawDrawable(static_cast<SkDrawable *>(drawable), static_cast<const SkMatrix *>(matrix));
 }
 
-void SkCanvas_drawDrawable_2(reskia_canvas_t *canvas, void *drawable, float x, float y) {
+void SkCanvas_drawDrawableAt(reskia_canvas_t *canvas, void *drawable, float x, float y) {
     reinterpret_cast<SkCanvas *>(canvas)->drawDrawable(static_cast<SkDrawable *>(drawable), x, y);
 }
 
@@ -197,11 +197,11 @@ void SkCanvas_drawGlyphs(reskia_canvas_t *canvas, int count, const void * glyphs
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_cast<const uint32_t *>(clusters), textByteCount, utf8text, static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawGlyphs_2(reskia_canvas_t *canvas, int count, const void * glyphs, const void * positions, sk_point_t origin, const void * font, const void * paint) {
+void SkCanvas_drawGlyphsAtPositions(reskia_canvas_t *canvas, int count, const void * glyphs, const void * positions, sk_point_t origin, const void * font, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkPoint *>(positions), static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawGlyphs_3(reskia_canvas_t *canvas, int count, const void * glyphs, const void * xforms, sk_point_t origin, const void * font, const void * paint) {
+void SkCanvas_drawGlyphsWithXforms(reskia_canvas_t *canvas, int count, const void * glyphs, const void * xforms, sk_point_t origin, const void * font, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, static_cast<const SkGlyphID *>(glyphs), static_cast<const SkRSXform *>(xforms), static_sk_point_get_entity(origin), * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
@@ -209,15 +209,15 @@ void SkCanvas_drawImage(reskia_canvas_t *canvas, sk_image_t image, float left, f
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), left, top);
 }
 
-void SkCanvas_drawImage_2(reskia_canvas_t *canvas, sk_image_t image, float x, float y, const void * sampling, const void * paint) {
+void SkCanvas_drawImageHandleWithSampling(reskia_canvas_t *canvas, sk_image_t image, float x, float y, const void * sampling, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), x, y, * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawImage_3(reskia_canvas_t *canvas, const void * image, float x, float y, const void * sampling, const void * paint) {
+void SkCanvas_drawImagePtrWithSampling(reskia_canvas_t *canvas, const void * image, float x, float y, const void * sampling, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_cast<const SkImage *>(image), x, y, * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawImage_4(reskia_canvas_t *canvas, const void * image, float left, float top) {
+void SkCanvas_drawImagePtr(reskia_canvas_t *canvas, const void * image, float left, float top) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_cast<const SkImage *>(image), left, top);
 }
 
@@ -225,7 +225,7 @@ void SkCanvas_drawImageLattice(reskia_canvas_t *canvas, const void * image, cons
     reinterpret_cast<SkCanvas *>(canvas)->drawImageLattice(static_cast<const SkImage *>(image), * static_cast<const SkCanvas::Lattice *>(lattice), * static_cast<const SkRect *>(dst));
 }
 
-void SkCanvas_drawImageLattice_2(reskia_canvas_t *canvas, const void * image, const void * lattice, const void * dst, reskia_canvas_filter_mode_t filter, const void * paint) {
+void SkCanvas_drawImageLatticeWithFilter(reskia_canvas_t *canvas, const void * image, const void * lattice, const void * dst, reskia_canvas_filter_mode_t filter, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImageLattice(static_cast<const SkImage *>(image), * static_cast<const SkCanvas::Lattice *>(lattice), * static_cast<const SkRect *>(dst), static_cast<SkFilterMode>(filter), static_cast<const SkPaint *>(paint));
 }
 
@@ -237,15 +237,15 @@ void SkCanvas_drawImageRect(reskia_canvas_t *canvas, sk_image_t image, const voi
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawImageRect_2(reskia_canvas_t *canvas, sk_image_t image, const void * src, const void * dst, const void * sampling, const void * paint, reskia_canvas_src_rect_constraint_t constraint) {
+void SkCanvas_drawImageRectHandleWithSrcDst(reskia_canvas_t *canvas, sk_image_t image, const void * src, const void * dst, const void * sampling, const void * paint, reskia_canvas_src_rect_constraint_t constraint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * static_cast<const SkRect *>(src), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
-void SkCanvas_drawImageRect_3(reskia_canvas_t *canvas, const void * image, const void * dst, const void * sampling, const void * paint) {
+void SkCanvas_drawImageRectPtr(reskia_canvas_t *canvas, const void * image, const void * dst, const void * sampling, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_cast<const SkImage *>(image), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawImageRect_4(reskia_canvas_t *canvas, const void * image, const void * src, const void * dst, const void * sampling, const void * paint, reskia_canvas_src_rect_constraint_t constraint) {
+void SkCanvas_drawImageRectPtrWithSrcDst(reskia_canvas_t *canvas, const void * image, const void * src, const void * dst, const void * sampling, const void * paint, reskia_canvas_src_rect_constraint_t constraint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_cast<const SkImage *>(image), * static_cast<const SkRect *>(src), * static_cast<const SkRect *>(dst), * static_cast<const SkSamplingOptions *>(sampling), static_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
@@ -257,7 +257,7 @@ void SkCanvas_drawLine(reskia_canvas_t *canvas, sk_point_t p0, sk_point_t p1, co
     reinterpret_cast<SkCanvas *>(canvas)->drawLine(static_sk_point_get_entity(p0), static_sk_point_get_entity(p1), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawLine_2(reskia_canvas_t *canvas, float x0, float y0, float x1, float y1, const void * paint) {
+void SkCanvas_drawLineXY(reskia_canvas_t *canvas, float x0, float y0, float x1, float y1, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawLine(x0, y0, x1, y1, * static_cast<const SkPaint *>(paint));
 }
 
@@ -285,15 +285,15 @@ void SkCanvas_drawPicture(reskia_canvas_t *canvas, sk_picture_t picture) {
     reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture));
 }
 
-void SkCanvas_drawPicture_2(reskia_canvas_t *canvas, sk_picture_t picture, const void * matrix, const void * paint) {
+void SkCanvas_drawPictureHandleWithMatrixPaint(reskia_canvas_t *canvas, sk_picture_t picture, const void * matrix, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawPicture_3(reskia_canvas_t *canvas, const void * picture) {
+void SkCanvas_drawPicturePtr(reskia_canvas_t *canvas, const void * picture) {
     reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_cast<const SkPicture *>(picture));
 }
 
-void SkCanvas_drawPicture_4(reskia_canvas_t *canvas, const void * picture, const void * matrix, const void * paint) {
+void SkCanvas_drawPicturePtrWithMatrixPaint(reskia_canvas_t *canvas, const void * picture, const void * matrix, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_cast<const SkPicture *>(picture), static_cast<const SkMatrix *>(matrix), static_cast<const SkPaint *>(paint));
 }
 
@@ -301,7 +301,7 @@ void SkCanvas_drawPoint(reskia_canvas_t *canvas, sk_point_t p, const void * pain
     reinterpret_cast<SkCanvas *>(canvas)->drawPoint(static_sk_point_get_entity(p), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawPoint_2(reskia_canvas_t *canvas, float x, float y, const void * paint) {
+void SkCanvas_drawPointXY(reskia_canvas_t *canvas, float x, float y, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawPoint(x, y, * static_cast<const SkPaint *>(paint));
 }
 
@@ -333,7 +333,7 @@ void SkCanvas_drawString(reskia_canvas_t *canvas, const char str[], float x, flo
     reinterpret_cast<SkCanvas *>(canvas)->drawString(str, x, y, * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawString_2(reskia_canvas_t *canvas, const void * str, float x, float y, const void * font, const void * paint) {
+void SkCanvas_drawStringObject(reskia_canvas_t *canvas, const void * str, float x, float y, const void * font, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawString(* static_cast<const SkString *>(str), x, y, * static_cast<const SkFont *>(font), * static_cast<const SkPaint *>(paint));
 }
 
@@ -341,7 +341,7 @@ void SkCanvas_drawTextBlob(reskia_canvas_t *canvas, sk_text_blob_t text_blob, fl
     reinterpret_cast<SkCanvas *>(canvas)->drawTextBlob(static_sk_text_blob_get_entity(text_blob), x, y, * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawTextBlob_2(reskia_canvas_t *canvas, const void * blob, float x, float y, const void * paint) {
+void SkCanvas_drawTextBlobPtr(reskia_canvas_t *canvas, const void * blob, float x, float y, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawTextBlob(static_cast<const SkTextBlob *>(blob), x, y, * static_cast<const SkPaint *>(paint));
 }
 
@@ -349,7 +349,7 @@ void SkCanvas_drawVertices(reskia_canvas_t *canvas, sk_vertices_t vertices, resk
     reinterpret_cast<SkCanvas *>(canvas)->drawVertices(static_sk_vertices_get_entity(vertices), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
 }
 
-void SkCanvas_drawVertices_2(reskia_canvas_t *canvas, const void * vertices, reskia_blend_mode_t mode, const void * paint) {
+void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const void * vertices, reskia_blend_mode_t mode, const void * paint) {
     reinterpret_cast<SkCanvas *>(canvas)->drawVertices(static_cast<const SkVertices *>(vertices), static_cast<SkBlendMode>(mode), * static_cast<const SkPaint *>(paint));
 }
 
@@ -361,7 +361,7 @@ void SkCanvas_experimental_DrawEdgeAAQuad(reskia_canvas_t *canvas, const void * 
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* static_cast<const SkRect *>(rect), static_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), * static_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
-void SkCanvas_experimental_DrawEdgeAAQuad_2(reskia_canvas_t *canvas, const void * rect, const void * clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode) {
+void SkCanvas_experimental_DrawEdgeAAQuadU32Color(reskia_canvas_t *canvas, const void * rect, const void * clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode) {
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* static_cast<const SkRect *>(rect), static_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), color, static_cast<SkBlendMode>(mode));
 }
 
@@ -377,7 +377,7 @@ sk_i_rect_t SkCanvas_getDeviceClipBounds(reskia_canvas_t *canvas) {
     return static_sk_i_rect_make(reinterpret_cast<SkCanvas *>(canvas)->getDeviceClipBounds());
 }
 
-bool SkCanvas_getDeviceClipBounds_2(reskia_canvas_t *canvas, void * bounds) {
+bool SkCanvas_getDeviceClipBoundsInto(reskia_canvas_t *canvas, void * bounds) {
     return reinterpret_cast<SkCanvas *>(canvas)->getDeviceClipBounds(static_cast<SkIRect *>(bounds));
 }
 
@@ -385,7 +385,7 @@ sk_rect_t SkCanvas_getLocalClipBounds(reskia_canvas_t *canvas) {
     return static_sk_rect_make(reinterpret_cast<SkCanvas *>(canvas)->getLocalClipBounds());
 }
 
-bool SkCanvas_getLocalClipBounds_2(reskia_canvas_t *canvas, void * bounds) {
+bool SkCanvas_getLocalClipBoundsInto(reskia_canvas_t *canvas, void * bounds) {
     return reinterpret_cast<SkCanvas *>(canvas)->getLocalClipBounds(static_cast<SkRect *>(bounds));
 }
 
@@ -445,7 +445,7 @@ bool SkCanvas_quickReject(reskia_canvas_t *canvas, const void * path) {
     return reinterpret_cast<SkCanvas *>(canvas)->quickReject(* static_cast<const SkPath *>(path));
 }
 
-bool SkCanvas_quickReject_2(reskia_canvas_t *canvas, const void * rect) {
+bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const void * rect) {
     return reinterpret_cast<SkCanvas *>(canvas)->quickReject(* static_cast<const SkRect *>(rect));
 }
 
@@ -453,11 +453,11 @@ bool SkCanvas_readPixels(reskia_canvas_t *canvas, const void * bitmap, int srcX,
     return reinterpret_cast<SkCanvas *>(canvas)->readPixels(* static_cast<const SkBitmap *>(bitmap), srcX, srcY);
 }
 
-bool SkCanvas_readPixels_2(reskia_canvas_t *canvas, const void * dstInfo, void * dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const void * dstInfo, void * dstPixels, size_t dstRowBytes, int srcX, int srcY) {
     return reinterpret_cast<SkCanvas *>(canvas)->readPixels(* static_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkCanvas_readPixels_3(reskia_canvas_t *canvas, const void * pixmap, int srcX, int srcY) {
+bool SkCanvas_readPixelsWithPixmap(reskia_canvas_t *canvas, const void * pixmap, int srcX, int srcY) {
     return reinterpret_cast<SkCanvas *>(canvas)->readPixels(* static_cast<const SkPixmap *>(pixmap), srcX, srcY);
 }
 
@@ -485,7 +485,7 @@ void SkCanvas_rotate(reskia_canvas_t *canvas, float degrees) {
     reinterpret_cast<SkCanvas *>(canvas)->rotate(degrees);
 }
 
-void SkCanvas_rotate_2(reskia_canvas_t *canvas, float degrees, float px, float py) {
+void SkCanvas_rotateAround(reskia_canvas_t *canvas, float degrees, float px, float py) {
     reinterpret_cast<SkCanvas *>(canvas)->rotate(degrees, px, py);
 }
 
@@ -497,11 +497,11 @@ int SkCanvas_saveLayer(reskia_canvas_t *canvas, const void * layerRec) {
     return reinterpret_cast<SkCanvas *>(canvas)->saveLayer(* static_cast<const SkCanvas::SaveLayerRec *>(layerRec));
 }
 
-int SkCanvas_saveLayer_2(reskia_canvas_t *canvas, const void * bounds, const void * paint) {
+int SkCanvas_saveLayerWithBoundsPaintRef(reskia_canvas_t *canvas, const void * bounds, const void * paint) {
     return reinterpret_cast<SkCanvas *>(canvas)->saveLayer(* static_cast<const SkRect *>(bounds), static_cast<const SkPaint *>(paint));
 }
 
-int SkCanvas_saveLayer_3(reskia_canvas_t *canvas, const void * bounds, const void * paint) {
+int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const void * bounds, const void * paint) {
     return reinterpret_cast<SkCanvas *>(canvas)->saveLayer(static_cast<const SkRect *>(bounds), static_cast<const SkPaint *>(paint));
 }
 
@@ -521,7 +521,7 @@ void SkCanvas_setMatrix(reskia_canvas_t *canvas, const void * matrix) {
     reinterpret_cast<SkCanvas *>(canvas)->setMatrix(* static_cast<const SkM44 *>(matrix));
 }
 
-void SkCanvas_setMatrix_2(reskia_canvas_t *canvas, const void * matrix) {
+void SkCanvas_setMatrix3x3(reskia_canvas_t *canvas, const void * matrix) {
     reinterpret_cast<SkCanvas *>(canvas)->setMatrix(* static_cast<const SkMatrix *>(matrix));
 }
 
@@ -542,7 +542,7 @@ bool SkCanvas_writePixels(reskia_canvas_t *canvas, const void * bitmap, int x, i
 }
 
 bool
-SkCanvas_writePixels_2(reskia_canvas_t *canvas, const void * info, const void * pixels, size_t rowBytes, int x, int y) {
+SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const void * info, const void * pixels, size_t rowBytes, int x, int y) {
     return reinterpret_cast<SkCanvas *>(canvas)->writePixels(* static_cast<const SkImageInfo *>(info), pixels, rowBytes, x, y);
 }
 

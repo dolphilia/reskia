@@ -29,7 +29,7 @@ void SkColorTable_unref(reskia_color_table_t *color_table); // owned: 参照カ�
 // static
 
 sk_color_table_t SkColorTable_Make(const uint8_t table[256]); // (const uint8_t table[256]) -> sk_color_table_t
-sk_color_table_t SkColorTable_Make_2(const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]); // (const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]) -> sk_color_table_t
+sk_color_table_t SkColorTable_MakeARGBTables(const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]); // (const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]) -> sk_color_table_t
 sk_color_table_t SkColorTable_Deserialize(reskia_read_buffer_t *buffer); // (SkReadBuffer *buffer) -> sk_color_table_t
 
 #ifdef __cplusplus

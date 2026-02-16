@@ -22,15 +22,15 @@ reskia_font_t *SkFont_new() {
     return reinterpret_cast<reskia_font_t *>(new SkFont());
 }
 
-reskia_font_t *SkFont_new_2(sk_typeface_t typeface, float size) {
+reskia_font_t *SkFont_newWithTypefaceAndSize(sk_typeface_t typeface, float size) {
     return reinterpret_cast<reskia_font_t *>(new SkFont(static_sk_typeface_get_entity(typeface), size));
 }
 
-reskia_font_t *SkFont_new_3(sk_typeface_t typeface) {
+reskia_font_t *SkFont_newWithTypeface(sk_typeface_t typeface) {
     return reinterpret_cast<reskia_font_t *>(new SkFont(static_sk_typeface_get_entity(typeface)));
 }
 
-reskia_font_t *SkFont_new_4(sk_typeface_t typeface, float size, float scaleX, float skewX) {
+reskia_font_t *SkFont_newWithTypefaceSizeScaleXSkewX(sk_typeface_t typeface, float size, float scaleX, float skewX) {
     return reinterpret_cast<reskia_font_t *>(new SkFont(static_sk_typeface_get_entity(typeface), size, scaleX, skewX));
 }
 
@@ -163,7 +163,7 @@ float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLe
     return reinterpret_cast<SkFont *>(font)->measureText(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkRect *>(bounds));
 }
 
-float SkFont_measureText_2(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint) {
+float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint) {
     return reinterpret_cast<SkFont *>(font)->measureText(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));
 }
 
@@ -176,7 +176,7 @@ void SkFont_getWidths_2(reskia_font_t *font, const void * glyphs, int count, voi
     reinterpret_cast<SkFont *>(font)->getWidths(static_cast<const SkGlyphID *>(glyphs), count, static_cast<SkScalar *>(widths), ptr);
 }
 
-void SkFont_getWidths_3(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths) {
+void SkFont_getWidthsWithoutBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths) {
     reinterpret_cast<SkFont *>(font)->getWidths(glyphs, count, widths);
 }
 

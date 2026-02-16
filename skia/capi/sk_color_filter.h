@@ -39,7 +39,7 @@ const char *SkColorFilter_getTypeName(reskia_color_filter_t *color_filter); // (
 void SkColorFilter_flatten(reskia_color_filter_t *color_filter, reskia_write_buffer_t *write_buffer); // (SkColorFilter *color_filter, SkWriteBuffer *write_buffer)
 reskia_color_filter_type_t SkColorFilter_getFlattenableType(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> SkColorFilter::Type
 sk_data_t SkColorFilter_serialize(reskia_color_filter_t *color_filter, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, const SkSerialProcs *serial_procs) -> sk_data_t
-size_t SkColorFilter_serialize_2(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
+size_t SkColorFilter_serializeToMemory(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkColorFilter *color_filter, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkColorFilter_unique(reskia_color_filter_t *color_filter); // (SkColorFilter *color_filter) -> bool
 void SkColorFilter_ref(reskia_color_filter_t *color_filter); // retained: 参照カウントを増やす (SkColorFilter *color_filter)
 void SkColorFilter_unref(reskia_color_filter_t *color_filter); // owned: 参照カウントを減らす (SkColorFilter *color_filter)

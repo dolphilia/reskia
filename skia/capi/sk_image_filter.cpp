@@ -88,7 +88,7 @@ sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const res
         reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
-size_t SkImageFilter_serialize_2(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
+size_t SkImageFilter_serializeToMemory(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
     return reinterpret_cast<SkImageFilter *>(image_filter)->serialize(
         memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
 }

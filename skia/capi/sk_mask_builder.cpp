@@ -21,7 +21,7 @@ reskia_mask_builder_t *SkMaskBuilder_new() {
     return reinterpret_cast<reskia_mask_builder_t *>(new SkMaskBuilder());
 }
 
-reskia_mask_builder_t *SkMaskBuilder_new_2(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format) {
+reskia_mask_builder_t *SkMaskBuilder_newWithImageBoundsRowBytesFormat(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format) {
     return reinterpret_cast<reskia_mask_builder_t *>(new SkMaskBuilder(img, *reinterpret_cast<const SkIRect *>(bounds), rowBytes, static_cast<SkMask::Format>(format)));
 }
 

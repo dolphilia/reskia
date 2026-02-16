@@ -43,7 +43,7 @@ const char *SkImageFilter_getTypeName(reskia_image_filter_t *image_filter); // (
 void SkImageFilter_flatten(reskia_image_filter_t *image_filter, reskia_write_buffer_t *buffer); // (SkImageFilter *image_filter, SkWriteBuffer *buffer)
 reskia_image_filter_type_t SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> SkImageFilter::Type
 sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const reskia_serial_procs_t *procs); // (SkImageFilter *image_filter, const SkSerialProcs *procs) -> sk_data_t
-size_t SkImageFilter_serialize_2(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkImageFilter *image_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
+size_t SkImageFilter_serializeToMemory(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkImageFilter *image_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
 bool SkImageFilter_unique(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> bool
 void SkImageFilter_ref(reskia_image_filter_t *image_filter); // retained: 参照カウントを増やす (SkImageFilter *image_filter)
 void SkImageFilter_unref(reskia_image_filter_t *image_filter); // owned: 参照カウントを減らす (SkImageFilter *image_filter)

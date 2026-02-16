@@ -19,11 +19,11 @@ reskia_color_info_t *SkColorInfo_new() {
     return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo());
 }
 
-reskia_color_info_t *SkColorInfo_new_2(int ct, int at, sk_color_space_t color_space) {
+reskia_color_info_t *SkColorInfo_newWithColorTypeAlphaTypeColorSpace(int ct, int at, sk_color_space_t color_space) {
     return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo(static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-reskia_color_info_t *SkColorInfo_new_3(const reskia_color_info_t *color_info) {
+reskia_color_info_t *SkColorInfo_newCopy(const reskia_color_info_t *color_info) {
     return reinterpret_cast<reskia_color_info_t *>(new SkColorInfo(*reinterpret_cast<const SkColorInfo *>(color_info)));
 }
 

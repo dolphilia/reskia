@@ -40,7 +40,7 @@ sk_image_filter_t SkImageFilters_Blend(reskia_image_filters_blend_mode_t mode, s
     return static_sk_image_filter_make(SkImageFilters::Blend(static_cast<SkBlendMode>(mode), static_sk_image_filter_get_entity(background), static_sk_image_filter_get_entity(foreground), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
-sk_image_filter_t SkImageFilters_Blend_2(reskia_blender_t blender, sk_image_filter_t background, sk_image_filter_t foreground, const reskia_crop_rect_t *cropRect) {
+sk_image_filter_t SkImageFilters_BlendWithBlender(reskia_blender_t blender, sk_image_filter_t background, sk_image_filter_t foreground, const reskia_crop_rect_t *cropRect) {
     return static_sk_image_filter_make(SkImageFilters::Blend(static_sk_blender_get_entity(blender), static_sk_image_filter_get_entity(background), static_sk_image_filter_get_entity(foreground), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
@@ -48,7 +48,7 @@ sk_image_filter_t SkImageFilters_Blur(float sigmaX, float sigmaY, reskia_image_f
     return static_sk_image_filter_make(SkImageFilters::Blur(sigmaX, sigmaY, static_cast<SkTileMode>(tileMode), static_sk_image_filter_get_entity(input), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
-sk_image_filter_t SkImageFilters_Blur_2(float sigmaX, float sigmaY, sk_image_filter_t input, const reskia_crop_rect_t *cropRect) {
+sk_image_filter_t SkImageFilters_BlurWithoutTileMode(float sigmaX, float sigmaY, sk_image_filter_t input, const reskia_crop_rect_t *cropRect) {
     return static_sk_image_filter_make(SkImageFilters::Blur(sigmaX, sigmaY, static_sk_image_filter_get_entity(input), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
@@ -64,7 +64,7 @@ sk_image_filter_t SkImageFilters_Crop(const reskia_rect_t *rect, reskia_image_fi
     return static_sk_image_filter_make(SkImageFilters::Crop(* reinterpret_cast<const SkRect *>(rect), static_cast<SkTileMode>(tileMode), static_sk_image_filter_get_entity(input)));
 }
 
-sk_image_filter_t SkImageFilters_Crop_2(const reskia_rect_t *rect, sk_image_filter_t input) {
+sk_image_filter_t SkImageFilters_CropWithRect(const reskia_rect_t *rect, sk_image_filter_t input) {
     return static_sk_image_filter_make(SkImageFilters::Crop(* reinterpret_cast<const SkRect *>(rect), static_sk_image_filter_get_entity(input)));
 }
 
@@ -88,7 +88,7 @@ sk_image_filter_t SkImageFilters_Image(sk_image_t image, const reskia_rect_t *sr
     return static_sk_image_filter_make(SkImageFilters::Image(static_sk_image_get_entity(image), * reinterpret_cast<const SkRect *>(srcRect), * reinterpret_cast<const SkRect *>(dstRect), * reinterpret_cast<const SkSamplingOptions *>(sampling)));
 }
 
-sk_image_filter_t SkImageFilters_Image_2(sk_image_t image, const reskia_sampling_options_t *sampling) {
+sk_image_filter_t SkImageFilters_ImageWithSampling(sk_image_t image, const reskia_sampling_options_t *sampling) {
     return static_sk_image_filter_make(SkImageFilters::Image(static_sk_image_get_entity(image), * reinterpret_cast<const SkSamplingOptions *>(sampling)));
 }
 
@@ -108,7 +108,7 @@ sk_image_filter_t SkImageFilters_Merge(reskia_image_filter_sp_t *filters, int co
     return static_sk_image_filter_make(SkImageFilters::Merge(reinterpret_cast<sk_sp<SkImageFilter> *>(filters), count, * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
-sk_image_filter_t SkImageFilters_Merge_2(sk_image_filter_t first, sk_image_filter_t second, const reskia_crop_rect_t *cropRect) {
+sk_image_filter_t SkImageFilters_MergeTwo(sk_image_filter_t first, sk_image_filter_t second, const reskia_crop_rect_t *cropRect) {
     return static_sk_image_filter_make(SkImageFilters::Merge(static_sk_image_filter_get_entity(first), static_sk_image_filter_get_entity(second), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
@@ -120,7 +120,7 @@ sk_image_filter_t SkImageFilters_Picture(sk_picture_t picture, const reskia_rect
     return static_sk_image_filter_make(SkImageFilters::Picture(static_sk_picture_get_entity(picture), * reinterpret_cast<const SkRect *>(targetRect)));
 }
 
-sk_image_filter_t SkImageFilters_Picture_2(sk_picture_t picture) {
+sk_image_filter_t SkImageFilters_PictureOnly(sk_picture_t picture) {
     return static_sk_image_filter_make(SkImageFilters::Picture(static_sk_picture_get_entity(picture)));
 }
 
@@ -128,15 +128,15 @@ sk_image_filter_t SkImageFilters_RuntimeShader(const reskia_runtime_shader_build
     return static_sk_image_filter_make(SkImageFilters::RuntimeShader(* reinterpret_cast<const SkRuntimeShaderBuilder *>(builder), static_string_view_get_entity(childShaderName), static_sk_image_filter_get_entity(input)));
 }
 
-sk_image_filter_t SkImageFilters_RuntimeShader_2(const reskia_runtime_shader_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input) {
+sk_image_filter_t SkImageFilters_RuntimeShaderWithSampleRadius(const reskia_runtime_shader_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input) {
     return static_sk_image_filter_make(SkImageFilters::RuntimeShader(* reinterpret_cast<const SkRuntimeShaderBuilder *>(builder), sampleRadius, static_string_view_get_entity(childShaderName), static_sk_image_filter_get_entity(input)));
 }
 
-sk_image_filter_t SkImageFilters_RuntimeShader_3(const reskia_runtime_shader_builder_t *builder, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount) {
+sk_image_filter_t SkImageFilters_RuntimeShaderWithChildShaderNames(const reskia_runtime_shader_builder_t *builder, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount) {
     return static_sk_image_filter_make(SkImageFilters::RuntimeShader(* reinterpret_cast<const SkRuntimeShaderBuilder *>(builder), reinterpret_cast<std::string_view *>(childShaderNames), reinterpret_cast<const sk_sp<SkImageFilter> *>(inputs), inputCount));
 }
 
-sk_image_filter_t SkImageFilters_RuntimeShader_4(const reskia_runtime_shader_builder_t *builder, float maxSampleRadius, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount) {
+sk_image_filter_t SkImageFilters_RuntimeShaderWithMaxSampleRadius(const reskia_runtime_shader_builder_t *builder, float maxSampleRadius, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount) {
     return static_sk_image_filter_make(SkImageFilters::RuntimeShader(* reinterpret_cast<const SkRuntimeShaderBuilder *>(builder), maxSampleRadius, reinterpret_cast<std::string_view *>(childShaderNames), reinterpret_cast<const sk_sp<SkImageFilter> *>(inputs), inputCount));
 }
 
@@ -144,7 +144,7 @@ sk_image_filter_t SkImageFilters_Shader(sk_shader_t shader, const reskia_crop_re
     return static_sk_image_filter_make(SkImageFilters::Shader(static_sk_shader_get_entity(shader), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 
-sk_image_filter_t SkImageFilters_Shader_2(sk_shader_t shader, reskia_image_filters_dither_t dither, const reskia_crop_rect_t *cropRect) {
+sk_image_filter_t SkImageFilters_ShaderWithDither(sk_shader_t shader, reskia_image_filters_dither_t dither, const reskia_crop_rect_t *cropRect) {
     return static_sk_image_filter_make(SkImageFilters::Shader(static_sk_shader_get_entity(shader), static_cast<SkImageFilters::Dither>(dither), * reinterpret_cast<const SkImageFilters::CropRect *>(cropRect)));
 }
 

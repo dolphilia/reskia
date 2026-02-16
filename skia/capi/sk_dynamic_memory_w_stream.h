@@ -30,7 +30,7 @@ void SkDynamicMemoryWStream_copyTo(reskia_dynamic_memory_w_stream_t *dynamic_mem
 bool SkDynamicMemoryWStream_writeToStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkWStream *dst) -> bool
 void SkDynamicMemoryWStream_copyToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, void *dst)
 bool SkDynamicMemoryWStream_writeToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkWStream *dst) -> bool
-bool SkDynamicMemoryWStream_writeToAndReset_2(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst) -> bool
+bool SkDynamicMemoryWStream_writeToAndResetDynamicStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst) -> bool
 void SkDynamicMemoryWStream_prependToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst)
 sk_data_t SkDynamicMemoryWStream_detachAsData(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_data_t
 sk_stream_asset_t SkDynamicMemoryWStream_detachAsStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_stream_asset_t

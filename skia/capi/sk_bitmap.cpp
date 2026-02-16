@@ -36,7 +36,7 @@ reskia_bitmap_t *SkBitmap_new(void) {
     return reinterpret_cast<reskia_bitmap_t *>(new SkBitmap());
 }
 
-reskia_bitmap_t *SkBitmap_new_2(const reskia_bitmap_t *src) {
+reskia_bitmap_t *SkBitmap_new_copy(const reskia_bitmap_t *src) {
     return reinterpret_cast<reskia_bitmap_t *>(new SkBitmap(*reinterpret_cast<const SkBitmap *>(src)));
 }
 
@@ -52,15 +52,15 @@ void SkBitmap_allocPixels(reskia_bitmap_t *bitmap) {
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels();
 }
 
-void SkBitmap_allocPixels_2(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
+void SkBitmap_allocPixels_withAllocator(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(reinterpret_cast<SkBitmap::Allocator *>(allocator));
 }
 
-void SkBitmap_allocPixels_3(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) {
+void SkBitmap_allocPixels_withInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) {
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(* reinterpret_cast<const SkImageInfo *>(info));
 }
 
-void SkBitmap_allocPixels_4(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
+void SkBitmap_allocPixels_withInfoRowBytes(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(* reinterpret_cast<const SkImageInfo *>(info), rowBytes);
 }
 
@@ -112,7 +112,7 @@ void SkBitmap_erase(reskia_bitmap_t *bitmap, uint32_t c, const reskia_i_rect_t *
     reinterpret_cast<SkBitmap *>(bitmap)->erase(c, * reinterpret_cast<const SkIRect *>(area));
 }
 
-void SkBitmap_erase_2(reskia_bitmap_t *bitmap, sk_color_4f_t c, const reskia_i_rect_t *area) {
+void SkBitmap_eraseColor4fInArea(reskia_bitmap_t *bitmap, sk_color_4f_t c, const reskia_i_rect_t *area) {
     reinterpret_cast<SkBitmap *>(bitmap)->erase(static_sk_color_4f_get_entity(c), * reinterpret_cast<const SkIRect *>(area));
 }
 
@@ -128,7 +128,7 @@ void SkBitmap_eraseColor(reskia_bitmap_t *bitmap, uint32_t c) {
     reinterpret_cast<SkBitmap *>(bitmap)->eraseColor(c);
 }
 
-void SkBitmap_eraseColor_2(reskia_bitmap_t *bitmap, sk_color_4f_t c) {
+void SkBitmap_eraseColor4f(reskia_bitmap_t *bitmap, sk_color_4f_t c) {
     reinterpret_cast<SkBitmap *>(bitmap)->eraseColor(static_sk_color_4f_get_entity(c));
 }
 
@@ -136,11 +136,11 @@ bool SkBitmap_extractAlpha(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst) { // i
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst));
 }
 
-bool SkBitmap_extractAlpha_2(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_bitmap_allocator_t *allocator, reskia_i_point_t *offset) {
+bool SkBitmap_extractAlpha_withPaintAllocatorOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_bitmap_allocator_t *allocator, reskia_i_point_t *offset) {
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst), reinterpret_cast<const SkPaint *>(paint), reinterpret_cast<SkBitmap::Allocator *>(allocator), reinterpret_cast<SkIPoint *>(offset));
 }
 
-bool SkBitmap_extractAlpha_3(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_i_point_t *offset) { // inline
+bool SkBitmap_extractAlpha_withPaintOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_i_point_t *offset) { // inline
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst), reinterpret_cast<const SkPaint *>(paint), reinterpret_cast<SkIPoint *>(offset));
 }
 
@@ -212,11 +212,11 @@ bool SkBitmap_installPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-bool SkBitmap_installPixels_2(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) {
+bool SkBitmap_installPixels_withReleaseProc(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) {
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, releaseProc, context);
 }
 
-bool SkBitmap_installPixels_3(reskia_bitmap_t *bitmap, const reskia_pixmap_t *pixmap) {
+bool SkBitmap_installPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *pixmap) {
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkPixmap *>(pixmap));
 }
 
@@ -236,15 +236,15 @@ sk_shader_t SkBitmap_makeShader(reskia_bitmap_t *bitmap, const reskia_sampling_o
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkBitmap_makeShader_2(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+sk_shader_t SkBitmap_makeShader_withOptionalLocalMatrix(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(lm)));
 }
 
-sk_shader_t SkBitmap_makeShader_3(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkBitmap_makeShader_withTileModesOptionalLocalMatrix(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkBitmap_makeShader_4(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+sk_shader_t SkBitmap_makeShader_withTileModesLocalMatrix(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
@@ -272,11 +272,11 @@ bool SkBitmap_readPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *dst
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
-bool SkBitmap_readPixels_2(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst) { // inline
+bool SkBitmap_readPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst) { // inline
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst));
 }
 
-bool SkBitmap_readPixels_3(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst, int srcX, int srcY) {
+bool SkBitmap_readPixels_withPixmapAt(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst, int srcX, int srcY) {
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
@@ -336,15 +336,15 @@ bool SkBitmap_tryAllocPixels(reskia_bitmap_t *bitmap) { // inline
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels();
 }
 
-bool SkBitmap_tryAllocPixels_2(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
+bool SkBitmap_tryAllocPixels_withAllocator(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(reinterpret_cast<SkBitmap::Allocator *>(allocator));
 }
 
-bool SkBitmap_tryAllocPixels_3(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) { // inline
+bool SkBitmap_tryAllocPixels_withInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) { // inline
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(* reinterpret_cast<const SkImageInfo *>(info));
 }
 
-bool SkBitmap_tryAllocPixels_4(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
+bool SkBitmap_tryAllocPixels_withInfoRowBytes(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(* reinterpret_cast<const SkImageInfo *>(info), rowBytes);
 }
 
@@ -360,7 +360,7 @@ bool SkBitmap_writePixels(reskia_bitmap_t *bitmap, const reskia_pixmap_t *src) {
     return reinterpret_cast<SkBitmap *>(bitmap)->writePixels(* reinterpret_cast<const SkPixmap *>(src));
 }
 
-bool SkBitmap_writePixels_2(reskia_bitmap_t *bitmap, const reskia_pixmap_t *src, int dstX, int dstY) {
+bool SkBitmap_writePixels_withDstOffset(reskia_bitmap_t *bitmap, const reskia_pixmap_t *src, int dstX, int dstY) {
     return reinterpret_cast<SkBitmap *>(bitmap)->writePixels(* reinterpret_cast<const SkPixmap *>(src), dstX, dstY);
 }
 

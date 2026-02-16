@@ -33,7 +33,7 @@ bool SkColorSpace_isSRGB(reskia_color_space_t *color_space); // (SkColorSpace *c
 sk_data_t SkColorSpace_serialize(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> sk_data_t
 size_t SkColorSpace_writeToMemory(reskia_color_space_t *color_space, void *memory); // (SkColorSpace *color_space, void *memory) -> size_t
 void SkColorSpace_transferFn(reskia_color_space_t *color_space, float gabcdef[7]); // (SkColorSpace *color_space, float gabcdef[7])
-void SkColorSpace_transferFn_2(reskia_color_space_t *color_space, reskia_transfer_function_t *fn); // (SkColorSpace *color_space, skcms_TransferFunction *fn)
+void SkColorSpace_transferFnToStruct(reskia_color_space_t *color_space, reskia_transfer_function_t *fn); // (SkColorSpace *color_space, skcms_TransferFunction *fn)
 void SkColorSpace_invTransferFn(reskia_color_space_t *color_space, reskia_transfer_function_t *fn); // (SkColorSpace *color_space, skcms_TransferFunction *fn)
 void SkColorSpace_gamutTransformTo(reskia_color_space_t *color_space, const reskia_color_space_t *dst, reskia_matrix3x3_t *src_to_dst); // (SkColorSpace *color_space, const SkColorSpace *dst, skcms_Matrix3x3 *src_to_dst)
 uint32_t SkColorSpace_transferFnHash(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> uint32_t

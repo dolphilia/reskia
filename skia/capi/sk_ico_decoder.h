@@ -22,7 +22,7 @@ typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
 bool SkIcoDecoder_IsIco(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
 sk_codec_t SkIcoDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkIcoDecoder_Decode_2(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_data_t data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codec_t SkIcoDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_data_t data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
 sk_codecs_decoder_t SkIcoDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
 #ifdef __cplusplus

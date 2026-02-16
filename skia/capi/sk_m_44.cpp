@@ -28,15 +28,15 @@ reskia_m_44_t *SkM44_new(const reskia_m_44_t *src) {
     return reinterpret_cast<reskia_m_44_t *>(new SkM44(*reinterpret_cast<const SkM44 *>(src)));
 }
 
-reskia_m_44_t *SkM44_new_2(const reskia_matrix_t *src) {
+reskia_m_44_t *SkM44_newFromMatrix(const reskia_matrix_t *src) {
     return reinterpret_cast<reskia_m_44_t *>(new SkM44(*reinterpret_cast<const SkMatrix *>(src)));
 }
 
-reskia_m_44_t *SkM44_new_3() {
+reskia_m_44_t *SkM44_newDefault() {
     return reinterpret_cast<reskia_m_44_t *>(new SkM44());
 }
 
-reskia_m_44_t *SkM44_new_4(const reskia_m_44_t *a, const reskia_m_44_t *b) {
+reskia_m_44_t *SkM44_newFromConcat(const reskia_m_44_t *a, const reskia_m_44_t *b) {
     return reinterpret_cast<reskia_m_44_t *>(new SkM44(*reinterpret_cast<const SkM44 *>(a), *reinterpret_cast<const SkM44 *>(b)));
 }
 
@@ -112,7 +112,7 @@ sk_m_44_t SkM44_preConcat(reskia_m_44_t *m44, const reskia_m_44_t *m) {
     return static_sk_m_44_make(reinterpret_cast<SkM44 *>(m44)->preConcat(*reinterpret_cast<const SkM44 *>(m)));
 }
 
-sk_m_44_t SkM44_preConcat_2(reskia_m_44_t *m44, const reskia_matrix_t *matrix) {
+sk_m_44_t SkM44_preConcatMatrix(reskia_m_44_t *m44, const reskia_matrix_t *matrix) {
     return static_sk_m_44_make(reinterpret_cast<SkM44 *>(m44)->preConcat(*reinterpret_cast<const SkMatrix *>(matrix)));
 }
 
@@ -160,7 +160,7 @@ sk_m_44_t SkM44_preScale(reskia_m_44_t *m44, float x, float y) {
     return static_sk_m_44_make(reinterpret_cast<SkM44 *>(m44)->preScale(x, y));
 }
 
-sk_m_44_t SkM44_preScale_2(reskia_m_44_t *m44, float x, float y, float z) {
+sk_m_44_t SkM44_preScale3D(reskia_m_44_t *m44, float x, float y, float z) {
     return static_sk_m_44_make(reinterpret_cast<SkM44 *>(m44)->preScale(x, y, z));
 }
 

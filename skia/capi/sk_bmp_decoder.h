@@ -20,7 +20,7 @@ typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
 bool SkBmpDecoder_IsBmp(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
 sk_codec_t SkBmpDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkBmpDecoder_Decode_2(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+sk_codec_t SkBmpDecoder_DecodeFromDataHandle(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (sk_stream_t stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
 sk_codecs_decoder_t SkBmpDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
 #ifdef __cplusplus

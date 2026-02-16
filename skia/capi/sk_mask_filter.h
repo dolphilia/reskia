@@ -32,7 +32,7 @@ const char *SkMaskFilter_getTypeName(reskia_mask_filter_t *mask_filter); // (SkM
 void SkMaskFilter_flatten(reskia_mask_filter_t *mask_filter, reskia_write_buffer_t *buffer); // (SkMaskFilter *mask_filter, SkWriteBuffer *buffer)
 reskia_mask_filter_type_t SkMaskFilter_getFlattenableType(reskia_mask_filter_t *mask_filter); // (SkMaskFilter *mask_filter) -> SkMaskFilter::Type
 sk_data_t SkMaskFilter_serialize(reskia_mask_filter_t *mask_filter, const reskia_serial_procs_t *procs); // (SkMaskFilter *mask_filter, const SkSerialProcs *procs) -> sk_data_t
-size_t SkMaskFilter_serialize_2(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkMaskFilter *mask_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
+size_t SkMaskFilter_serializeToMemory(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkMaskFilter *mask_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
 bool SkMaskFilter_unique(reskia_mask_filter_t *mask_filter); // (SkMaskFilter *mask_filter) -> bool
 void SkMaskFilter_ref(reskia_mask_filter_t *mask_filter); // retained: 参照カウントを増やす (SkMaskFilter *mask_filter)
 void SkMaskFilter_unref(reskia_mask_filter_t *mask_filter); // owned: 参照カウントを減らす (SkMaskFilter *mask_filter)

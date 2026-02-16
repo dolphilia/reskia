@@ -26,7 +26,7 @@ reskia_color_t SkColor_SkHSVToColor(const float hsv[3]) {
     return static_cast<reskia_color_t>(SkHSVToColor(hsv));
 }
 
-reskia_color_t SkColor_SkHSVToColor_2(reskia_u32_t alpha, const float hsv[3]) {
+reskia_color_t SkColor_SkHSVToColorWithAlpha(reskia_u32_t alpha, const float hsv[3]) {
     return static_cast<reskia_color_t>(SkHSVToColor(static_cast<U8CPU>(alpha), hsv));
 }
 

@@ -31,7 +31,7 @@ sk_shader_t SkGradientShader_MakeLinear(const reskia_point_t *pts, const reskia_
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeLinear_2(const reskia_point_t *pts, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeLinear4fWithInterpolation(const reskia_point_t *pts, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeLinear(
         reinterpret_cast<const SkPoint *>(pts),
         reinterpret_cast<const SkColor4f *>(colors),
@@ -43,7 +43,7 @@ sk_shader_t SkGradientShader_MakeLinear_2(const reskia_point_t *pts, const reski
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeLinear_3(const reskia_point_t *pts, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeLinear4fWithFlags(const reskia_point_t *pts, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeLinear(
         reinterpret_cast<const SkPoint *>(pts),
         reinterpret_cast<const SkColor4f *>(colors),
@@ -67,7 +67,7 @@ sk_shader_t SkGradientShader_MakeRadial(const reskia_point_t *center, float radi
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeRadial_2(const reskia_point_t *center, float radius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeRadial4fWithInterpolation(const reskia_point_t *center, float radius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeRadial(
         *reinterpret_cast<const SkPoint *>(center),
         radius,
@@ -80,7 +80,7 @@ sk_shader_t SkGradientShader_MakeRadial_2(const reskia_point_t *center, float ra
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeRadial_3(const reskia_point_t *center, float radius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeRadial4fWithFlags(const reskia_point_t *center, float radius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeRadial(
         *reinterpret_cast<const SkPoint *>(center),
         radius,
@@ -107,7 +107,7 @@ sk_shader_t SkGradientShader_MakeTwoPointConical(const reskia_point_t *start, fl
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeTwoPointConical_2(const reskia_point_t *start, float startRadius, const reskia_point_t *end, float endRadius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeTwoPointConical4fWithInterpolation(const reskia_point_t *start, float startRadius, const reskia_point_t *end, float endRadius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeTwoPointConical(
         *reinterpret_cast<const SkPoint *>(start),
         startRadius,
@@ -122,7 +122,7 @@ sk_shader_t SkGradientShader_MakeTwoPointConical_2(const reskia_point_t *start, 
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeTwoPointConical_3(const reskia_point_t *start, float startRadius, const reskia_point_t *end, float endRadius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeTwoPointConical4fWithFlags(const reskia_point_t *start, float startRadius, const reskia_point_t *end, float endRadius, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, uint32_t flags, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeTwoPointConical(
         *reinterpret_cast<const SkPoint *>(start),
         startRadius,
@@ -151,7 +151,7 @@ sk_shader_t SkGradientShader_MakeSweep(float cx, float cy, const reskia_color_t 
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeSweep_2(float cx, float cy, const reskia_color_t *colors, const float *pos, int count, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeSweepWithFlagsOnly(float cx, float cy, const reskia_color_t *colors, const float *pos, int count, uint32_t flags, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeSweep(
         cx,
         cy,
@@ -162,7 +162,7 @@ sk_shader_t SkGradientShader_MakeSweep_2(float cx, float cy, const reskia_color_
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeSweep_3(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, float startAngle, float endAngle, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeSweep4fWithInterpolation(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, float startAngle, float endAngle, const reskia_gradient_shader_interpolation_t *interpolation, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeSweep(
         cx,
         cy,
@@ -177,7 +177,7 @@ sk_shader_t SkGradientShader_MakeSweep_3(float cx, float cy, const reskia_color_
         reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeSweep_4(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, float startAngle, float endAngle, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeSweep4fWithFlags(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, reskia_gradient_shader_tile_mode_t mode, float startAngle, float endAngle, uint32_t flags, const reskia_matrix_t *localMatrix) {
     return static_sk_shader_make(SkGradientShader::MakeSweep(
         cx,
         cy,

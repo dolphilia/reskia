@@ -36,7 +36,7 @@ float SkColor4f_fA(reskia_color_4f_t *color); // (SkColor4f *color) -> float
 //float & operator[] (SkColor4f *color, int index);
 
 const float * SkColor4f_vec(reskia_color_4f_t *color); // (SkColor4f *color) -> const float *
-float * SkColor4f_vec_2(reskia_color_4f_t *color); // (SkColor4f *color) -> float *
+float * SkColor4f_vecMutable(reskia_color_4f_t *color); // (SkColor4f *color) -> float *
 
 // TODO
 // std::array< float, 4 > SkColor4f_array (void *color);

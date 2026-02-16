@@ -19,8 +19,8 @@ typedef struct reskia_color_space_t reskia_color_space_t;
 typedef int32_t reskia_color_info_color_type_t;
 
 reskia_color_info_t *SkColorInfo_new(); // () -> SkColorInfo *
-reskia_color_info_t *SkColorInfo_new_2(int ct, int at, sk_color_space_t color_space); // (SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> SkColorInfo *
-reskia_color_info_t *SkColorInfo_new_3(const reskia_color_info_t *color_info); // (const SkColorInfo *color_info) -> SkColorInfo *
+reskia_color_info_t *SkColorInfo_newWithColorTypeAlphaTypeColorSpace(int ct, int at, sk_color_space_t color_space); // (SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> SkColorInfo *
+reskia_color_info_t *SkColorInfo_newCopy(const reskia_color_info_t *color_info); // (const SkColorInfo *color_info) -> SkColorInfo *
 void SkColorInfo_delete(reskia_color_info_t *color_info); // (SkColorInfo *color_info)
 reskia_alpha_type_t SkColorInfo_alphaType(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> SkAlphaType
 int SkColorInfo_bytesPerPixel(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> int

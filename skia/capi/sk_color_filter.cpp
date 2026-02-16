@@ -77,7 +77,7 @@ sk_data_t SkColorFilter_serialize(reskia_color_filter_t *color_filter, const res
     return static_sk_data_make(reinterpret_cast<SkColorFilter *>(color_filter)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkColorFilter_serialize_2(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+size_t SkColorFilter_serializeToMemory(reskia_color_filter_t *color_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
     return reinterpret_cast<SkColorFilter *>(color_filter)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 

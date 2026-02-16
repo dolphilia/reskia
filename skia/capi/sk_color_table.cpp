@@ -54,7 +54,7 @@ sk_color_table_t SkColorTable_Make(const uint8_t table[256]) {
     return static_sk_color_table_make(SkColorTable::Make(table));
 }
 
-sk_color_table_t SkColorTable_Make_2(const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]) {
+sk_color_table_t SkColorTable_MakeARGBTables(const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]) {
     return static_sk_color_table_make(SkColorTable::Make(tableA, tableR, tableG, tableB));
 }
 

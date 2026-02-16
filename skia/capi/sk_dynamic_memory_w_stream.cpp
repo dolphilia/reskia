@@ -54,7 +54,7 @@ bool SkDynamicMemoryWStream_writeToAndReset(reskia_dynamic_memory_w_stream_t *dy
     return reinterpret_cast<SkDynamicMemoryWStream *>(dynamic_memory_w_stream)->writeToAndReset(reinterpret_cast<SkWStream *>(dst));
 }
 
-bool SkDynamicMemoryWStream_writeToAndReset_2(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst) {
+bool SkDynamicMemoryWStream_writeToAndResetDynamicStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst) {
     return reinterpret_cast<SkDynamicMemoryWStream *>(dynamic_memory_w_stream)->writeToAndReset(reinterpret_cast<SkDynamicMemoryWStream *>(dst));
 }
 

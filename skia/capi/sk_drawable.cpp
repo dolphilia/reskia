@@ -30,7 +30,7 @@ void SkDrawable_draw(reskia_drawable_t *drawable, reskia_canvas_t *canvas, const
     reinterpret_cast<SkDrawable *>(drawable)->draw(reinterpret_cast<SkCanvas *>(canvas), reinterpret_cast<const SkMatrix *>(matrix));
 }
 
-void SkDrawable_draw_2(reskia_drawable_t *drawable, reskia_canvas_t *canvas, float x, float y) {
+void SkDrawable_drawAt(reskia_drawable_t *drawable, reskia_canvas_t *canvas, float x, float y) {
     reinterpret_cast<SkDrawable *>(drawable)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y);
 }
 
@@ -78,7 +78,7 @@ sk_data_t SkDrawable_serialize(reskia_drawable_t *drawable, const reskia_serial_
     return static_sk_data_make(reinterpret_cast<SkDrawable *>(drawable)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkDrawable_serialize_2(reskia_drawable_t *drawable, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+size_t SkDrawable_serializeToMemory(reskia_drawable_t *drawable, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
     return reinterpret_cast<SkDrawable *>(drawable)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 

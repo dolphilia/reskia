@@ -19,10 +19,10 @@ typedef struct reskia_w_stream_t reskia_w_stream_t;
 typedef struct reskia_yuva_pixmaps_t reskia_yuva_pixmaps_t;
 
 bool SkJpegEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_jpeg_encoder_options_t *options);
-bool SkJpegEncoder_Encode_2(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options);
-sk_data_t SkJpegEncoder_Encode_3(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_jpeg_encoder_options_t *options);
+bool SkJpegEncoder_EncodeYuvaPixmaps(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options);
+sk_data_t SkJpegEncoder_EncodeImage(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_jpeg_encoder_options_t *options);
 sk_encoder_t SkJpegEncoder_Make(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_jpeg_encoder_options_t *options);
-sk_encoder_t SkJpegEncoder_Make_2(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options);
+sk_encoder_t SkJpegEncoder_MakeYuvaPixmaps(reskia_w_stream_t *dst, const reskia_yuva_pixmaps_t *src, const reskia_color_space_t *srcColorSpace, const reskia_jpeg_encoder_options_t *options);
 }
 
 #endif //RAIA_SKIA_SK_JPEG_ENCODER_H

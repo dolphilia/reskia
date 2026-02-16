@@ -74,7 +74,7 @@ reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels(reskia_android_codec_
     return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkAndroidCodec::AndroidOptions *>(options)));
 }
 
-reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels_2(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
+reskia_codec_result_code_t SkAndroidCodec_getAndroidPixels_withoutOptions(reskia_android_codec_t *androidCodec, const reskia_image_info_t *info, void *pixels, size_t rowBytes) {
     return static_cast<reskia_codec_result_code_t>(reinterpret_cast<SkAndroidCodec *>(androidCodec)->getAndroidPixels(*reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes));
 }
 

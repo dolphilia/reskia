@@ -18,7 +18,7 @@ sk_data_t SkICC_SkWriteICCProfile(const reskia_transfer_function_t *transferFunc
         *reinterpret_cast<const skcms_Matrix3x3 *>(toXYZD50)));
 }
 
-const_sk_data_t SkICC_SkWriteICCProfile_2(const reskia_icc_profile_t *iccProfile, const char *description) {
+const_sk_data_t SkICC_SkWriteICCProfileFromICCProfile(const reskia_icc_profile_t *iccProfile, const char *description) {
     return static_const_sk_data_make(SkWriteICCProfile(
         reinterpret_cast<const skcms_ICCProfile *>(iccProfile), description));
 }

@@ -70,7 +70,7 @@ void SkColorSpace_transferFn(reskia_color_space_t *color_space, float gabcdef[7]
     reinterpret_cast<SkColorSpace *>(color_space)->transferFn(gabcdef);
 }
 
-void SkColorSpace_transferFn_2(reskia_color_space_t *color_space, reskia_transfer_function_t *fn) {
+void SkColorSpace_transferFnToStruct(reskia_color_space_t *color_space, reskia_transfer_function_t *fn) {
     reinterpret_cast<SkColorSpace *>(color_space)->transferFn(reinterpret_cast<skcms_TransferFunction *>(fn));
 }
 

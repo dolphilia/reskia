@@ -42,7 +42,7 @@ bool SkImageGenerator_getPixels(reskia_image_generator_t *image_generator, const
     return reinterpret_cast<SkImageGenerator *>(image_generator)->getPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
-bool SkImageGenerator_getPixels_2(reskia_image_generator_t *image_generator, const reskia_pixmap_t *pm) {
+bool SkImageGenerator_getPixelsWithPixmap(reskia_image_generator_t *image_generator, const reskia_pixmap_t *pm) {
     return reinterpret_cast<SkImageGenerator *>(image_generator)->getPixels(* reinterpret_cast<const SkPixmap *>(pm));
 }
 

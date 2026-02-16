@@ -29,7 +29,7 @@ const char *SkBlender_getTypeName(reskia_blender_t *blender); // (SkBlender *ble
 void SkBlender_flatten(reskia_blender_t *blender, reskia_write_buffer_t *write_buffer); // borrowed: inputs are borrowed only (SkBlender *blender, SkWriteBuffer *write_buffer)
 reskia_blender_type_t SkBlender_getFlattenableType(reskia_blender_t *blender); // (SkBlender *blender) -> SkBlender::Type
 sk_data_t SkBlender_serialize(reskia_blender_t *blender, const reskia_serial_procs_t *serial_procs); // (SkBlender *blender, const SkSerialProcs *serial_procs) -> sk_data_t
-size_t SkBlender_serialize_2(reskia_blender_t *blender, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkBlender *blender, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
+size_t SkBlender_serializeToMemory(reskia_blender_t *blender, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs); // (SkBlender *blender, void *memory, size_t memory_size, const SkSerialProcs *serial_procs) -> size_t
 bool SkBlender_unique(reskia_blender_t *blender); // (SkBlender *blender) -> bool
 void SkBlender_ref(reskia_blender_t *blender); // retained: 参照カウントを増やす (SkBlender *blender)
 void SkBlender_unref(reskia_blender_t *blender); // owned: 参照カウントを減らす (SkBlender *blender)

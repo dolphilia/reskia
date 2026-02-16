@@ -42,7 +42,7 @@ sk_data_t SkBlender_serialize(reskia_blender_t *blender, const reskia_serial_pro
     return static_sk_data_make(reinterpret_cast<SkBlender *>(blender)->serialize(reinterpret_cast<const SkSerialProcs *>(serial_procs)));
 }
 
-size_t SkBlender_serialize_2(reskia_blender_t *blender, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
+size_t SkBlender_serializeToMemory(reskia_blender_t *blender, void *memory, size_t memory_size, const reskia_serial_procs_t *serial_procs) {
     return reinterpret_cast<SkBlender *>(blender)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(serial_procs));
 }
 

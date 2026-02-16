@@ -100,7 +100,7 @@ sk_i_rect_t SkIRect_makeOffset(reskia_i_rect_t *i_rect, int32_t dx, int32_t dy) 
     return static_sk_i_rect_make(reinterpret_cast<SkIRect *>(i_rect)->makeOffset(dx, dy));
 }
 
-sk_i_rect_t SkIRect_makeOffset_2(reskia_i_rect_t *i_rect, sk_i_point_t offset) {
+sk_i_rect_t SkIRect_makeOffsetWithPoint(reskia_i_rect_t *i_rect, sk_i_point_t offset) {
     return static_sk_i_rect_make(reinterpret_cast<SkIRect *>(i_rect)->makeOffset(static_sk_i_point_get_entity(offset)));
 }
 
@@ -116,7 +116,7 @@ void SkIRect_offset(reskia_i_rect_t *i_rect, int32_t dx, int32_t dy) {
     return reinterpret_cast<SkIRect *>(i_rect)->offset(dx, dy);
 }
 
-void SkIRect_offset_2(reskia_i_rect_t *i_rect, const reskia_i_point_t *delta) {
+void SkIRect_offsetWithPoint(reskia_i_rect_t *i_rect, const reskia_i_point_t *delta) {
     reinterpret_cast<SkIRect *>(i_rect)->offset(* reinterpret_cast<const SkIPoint *>(delta));
 }
 
@@ -140,11 +140,11 @@ bool SkIRect_contains(reskia_i_rect_t *i_rect, int32_t x, int32_t y) {
     return reinterpret_cast<SkIRect *>(i_rect)->contains(x, y);
 }
 
-bool SkIRect_contains_2(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r) {
+bool SkIRect_containsIRect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r) {
     return reinterpret_cast<SkIRect *>(i_rect)->contains(* reinterpret_cast<const SkIRect *>(r));
 }
 
-bool SkIRect_contains_3(reskia_i_rect_t *i_rect, const reskia_rect_t *r) {
+bool SkIRect_containsRect(reskia_i_rect_t *i_rect, const reskia_rect_t *r) {
     return reinterpret_cast<SkIRect *>(i_rect)->contains(* reinterpret_cast<const SkRect *>(r));
 }
 
@@ -156,7 +156,7 @@ bool SkIRect_intersect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r) {
     return reinterpret_cast<SkIRect *>(i_rect)->intersect(* reinterpret_cast<const SkIRect *>(r));
 }
 
-bool SkIRect_intersect_2(reskia_i_rect_t *i_rect, const reskia_i_rect_t *a, const reskia_i_rect_t *b) {
+bool SkIRect_intersectFromRects(reskia_i_rect_t *i_rect, const reskia_i_rect_t *a, const reskia_i_rect_t *b) {
     return reinterpret_cast<SkIRect *>(i_rect)->intersect(* reinterpret_cast<const SkIRect *>(a), * reinterpret_cast<const SkIRect *>(b));
 }
 

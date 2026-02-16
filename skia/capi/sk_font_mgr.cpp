@@ -78,7 +78,7 @@ sk_typeface_t SkFontMgr_makeFromStream(reskia_font_mgr_t *font_mgr, sk_stream_as
     return static_sk_typeface_make(reinterpret_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_take_entity(stream_asset), ttcIndex));
 }
 
-sk_typeface_t SkFontMgr_makeFromStream_2(reskia_font_mgr_t *font_mgr, sk_stream_asset_t stream_asset, const reskia_font_arguments_t *font_argments) {
+sk_typeface_t SkFontMgr_makeFromStreamWithArguments(reskia_font_mgr_t *font_mgr, sk_stream_asset_t stream_asset, const reskia_font_arguments_t *font_argments) {
     return static_sk_typeface_make(reinterpret_cast<SkFontMgr *>(font_mgr)->makeFromStream(static_sk_stream_asset_take_entity(stream_asset), * reinterpret_cast<const SkFontArguments *>(font_argments)));
 }
 

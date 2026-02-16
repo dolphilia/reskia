@@ -31,7 +31,7 @@ sk_codec_t SkBmpDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result
         reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
 }
 
-sk_codec_t SkBmpDecoder_Decode_2(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
+sk_codec_t SkBmpDecoder_DecodeFromDataHandle(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
     return static_sk_codec_make(SkBmpDecoder::Decode(
         static_sk_data_get_entity(stream),
         reinterpret_cast<SkCodec::Result *>(result),

@@ -45,7 +45,7 @@ sk_image_t SkImages_DeferredFromPicture(sk_picture_t picture, const reskia_i_siz
     return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), *reinterpret_cast<const SkISize *>(dimensions), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space), static_sk_surface_props_get_entity(props)));
 }
 
-sk_image_t SkImages_DeferredFromPicture_2(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, reskia_images_bit_depth_t bitDepth, sk_color_space_t color_space) {
+sk_image_t SkImages_DeferredFromPictureWithoutProps(sk_picture_t picture, const reskia_i_size_t *dimensions, const reskia_matrix_t *matrix, const reskia_paint_t *paint, reskia_images_bit_depth_t bitDepth, sk_color_space_t color_space) {
     return static_sk_image_make(SkImages::DeferredFromPicture(static_sk_picture_get_entity(picture), *reinterpret_cast<const SkISize *>(dimensions), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint), static_cast<SkImages::BitDepth>(bitDepth), static_sk_color_space_get_entity(color_space)));
 }
 
