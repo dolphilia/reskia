@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkVertices_delete(reskia_vertices_t *vertices) {
+void SkVertices_release(reskia_vertices_t *vertices) {
     reinterpret_cast<SkVertices *>(vertices)->unref();
 }
 

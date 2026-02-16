@@ -20,7 +20,7 @@ typedef int32_t reskia_vertices_vertex_mode_t; // SkVertices::VertexMode
 extern "C" {
 #endif
 
-void SkVertices_delete(reskia_vertices_t *vertices); // owned: caller が保持する参照を release する (SkVertices *vertices)
+void SkVertices_release(reskia_vertices_t *vertices); // owned: caller が保持する参照を release する (SkVertices *vertices)
 uint32_t SkVertices_uniqueID(reskia_vertices_t *vertices); // (SkVertices *vertices) -> uint32_t
 const reskia_rect_t *SkVertices_bounds(reskia_vertices_t *vertices); // borrowed: 解放不要の借用ポインタ (SkVertices *vertices) -> const SkRect *
 size_t SkVertices_approximateSize(reskia_vertices_t *vertices); // (SkVertices *vertices) -> size_t

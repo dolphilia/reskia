@@ -24,7 +24,7 @@ typedef struct reskia_font_style_t reskia_font_style_t;
 typedef struct reskia_string_t reskia_string_t;
 typedef int32_t reskia_font_mgr_unichar_t;
 
-void SkFontMgr_delete(reskia_font_mgr_t *font_mgr); // owned: caller が保持する参照を release する (SkFontMgr *font_mgr)
+void SkFontMgr_release(reskia_font_mgr_t *font_mgr); // owned: caller が保持する参照を release する (SkFontMgr *font_mgr)
 int SkFontMgr_countFamilies(reskia_font_mgr_t *font_mgr); // (SkFontMgr *font_mgr) -> int
 void SkFontMgr_getFamilyName(reskia_font_mgr_t *font_mgr, int index, reskia_string_t *familyName); // (SkFontMgr *font_mgr, int index, SkString *familyName)
 reskia_status_t SkFontMgr_createStyleSet(reskia_font_mgr_t *font_mgr, int index, sk_font_style_set_t *out_style_set); // out_style_set: non-null, 書き込み先

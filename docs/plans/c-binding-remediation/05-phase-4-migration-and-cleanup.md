@@ -21,13 +21,16 @@
     - `sources-binding.cmake` -> `sources-capi.cmake`
     - `sources-static.cmake` -> `sources-handles.cmake`
 
-1. [ ] 旧API廃止計画
-- `*_delete`（RefCounted対象）を `deprecated` マクロ化
-- 2リリース後に削除予定としてマイルストーン化
+1. [x] 旧API廃止計画
+- 実施内容（2026-02-16）:
+  - RefCounted 対象 28 型の C API で `Sk*_delete` を廃止し、`Sk*_release` に統一。
+  - 対象: `SkImage`, `SkSurface`, `SkShader`, `SkRuntimeEffect`, `SkRefCnt` など（`skia/capi/sk_*.h/.cpp` 56 ファイル）。
+  - `Sk*_delete` の定義/宣言/参照を削除し、`Sk*_release` に置換済み（後方互換ラッパは追加しない）。
 
 1. [ ] 連番関数名の整理
 - `_2/_3/_4` 形式を意味名へ置換
-- 旧名は互換ラッパで段階削除
+- 進捗管理:
+  - `checklists/phase4-sequential-api-rename-status.csv`（`skia/capi/*.h` の連番 API 370 件を棚卸し済み）
 
 1. [ ] 自動生成の導入（任意だが推奨）
 - 型定義から header/cpp を生成

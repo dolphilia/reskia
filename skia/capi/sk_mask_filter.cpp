@@ -20,7 +20,7 @@
 
 extern "C" {
 
-void SkMaskFilter_delete(reskia_mask_filter_t *maskFilter) {
+void SkMaskFilter_release(reskia_mask_filter_t *maskFilter) {
     reinterpret_cast<SkMaskFilter *>(maskFilter)->unref();
 }
 

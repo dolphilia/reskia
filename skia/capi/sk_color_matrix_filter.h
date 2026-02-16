@@ -26,7 +26,7 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef uint32_t reskia_color_t;
 typedef int32_t reskia_color_matrix_filter_type_t;
 
-void SkColorMatrixFilter_delete(reskia_color_matrix_filter_t *color_matrix_filter); // owned: caller が保持する参照を release する (SkColorMatrixFilter *color_matrix_filter)
+void SkColorMatrixFilter_release(reskia_color_matrix_filter_t *color_matrix_filter); // owned: caller が保持する参照を release する (SkColorMatrixFilter *color_matrix_filter)
 bool SkColorMatrixFilter_asAColorMode(reskia_color_matrix_filter_t *color_matrix_filter, reskia_color_t *color, int *mode); // (SkColorMatrixFilter *color_matrix_filter, SkColor *color, SkBlendMode *mode) -> bool
 bool SkColorMatrixFilter_asAColorMatrix(reskia_color_matrix_filter_t *color_matrix_filter, float matrix[20]); // (SkColorMatrixFilter *color_matrix_filter, float matrix[20]) -> bool
 bool SkColorMatrixFilter_isAlphaUnchanged(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> bool

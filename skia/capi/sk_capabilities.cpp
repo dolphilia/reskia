@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkCapabilities_delete(void * capabilities) {
+void SkCapabilities_release(void * capabilities) {
     static_cast<SkCapabilities *>(capabilities)->unref();
 }
 

@@ -16,7 +16,7 @@
 
 extern "C" {
 
-void SkPathEffect_delete(reskia_path_effect_t *pathEffect) {
+void SkPathEffect_release(reskia_path_effect_t *pathEffect) {
     reinterpret_cast<SkPathEffect *>(pathEffect)->unref();
 }
 

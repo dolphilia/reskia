@@ -23,7 +23,7 @@ typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_blender_type_t;
 
-void SkBlender_delete(reskia_blender_t *blender); // owned: caller が保持する参照を release する (SkBlender *blender)
+void SkBlender_release(reskia_blender_t *blender); // owned: caller が保持する参照を release する (SkBlender *blender)
 sk_flattenable_factory_t SkBlender_getFactory(reskia_blender_t *blender); // (SkBlender *blender) -> sk_flattenable_factory_t
 const char *SkBlender_getTypeName(reskia_blender_t *blender); // (SkBlender *blender) -> const char *
 void SkBlender_flatten(reskia_blender_t *blender, reskia_write_buffer_t *write_buffer); // borrowed: inputs are borrowed only (SkBlender *blender, SkWriteBuffer *write_buffer)

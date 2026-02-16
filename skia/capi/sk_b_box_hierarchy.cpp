@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkBBoxHierarchy_delete(reskia_b_box_hierarchy_t *b_box_hierarchy) {
+void SkBBoxHierarchy_release(reskia_b_box_hierarchy_t *b_box_hierarchy) {
     reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 

@@ -14,7 +14,7 @@
 
 extern "C" {
 
-void SkTextBlob_delete(reskia_text_blob_t *text_blob) {
+void SkTextBlob_release(reskia_text_blob_t *text_blob) {
     reinterpret_cast<SkTextBlob *>(text_blob)->unref();
 }
 

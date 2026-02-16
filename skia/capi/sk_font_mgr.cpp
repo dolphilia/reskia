@@ -24,7 +24,7 @@
 
 extern "C" {
 
-void SkFontMgr_delete(reskia_font_mgr_t *font_mgr) {
+void SkFontMgr_release(reskia_font_mgr_t *font_mgr) {
     reinterpret_cast<SkFontMgr *>(font_mgr)->unref();
 }
 

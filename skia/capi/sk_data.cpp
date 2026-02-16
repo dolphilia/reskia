@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkData_delete(reskia_data_t *sk_data) {
+void SkData_release(reskia_data_t *sk_data) {
     reinterpret_cast<SkData *>(sk_data)->unref();
 }
 

@@ -13,7 +13,7 @@ typedef struct reskia_canvas_t reskia_canvas_t;
 typedef struct reskia_document_t reskia_document_t;
 typedef struct reskia_rect_t reskia_rect_t;
 
-void SkDocument_delete(reskia_document_t *document); // owned: caller が保持する参照を release する (SkDocument *document)
+void SkDocument_release(reskia_document_t *document); // owned: caller が保持する参照を release する (SkDocument *document)
 reskia_canvas_t * SkDocument_beginPage(reskia_document_t *document, float width, float height, const reskia_rect_t *content); // borrowed: 解放不要の借用ポインタ (SkDocument *document, SkScalar width, SkScalar height, const SkRect *content) -> SkCanvas *
 void SkDocument_endPage(reskia_document_t *document); // (SkDocument *document)
 void SkDocument_close(reskia_document_t *document); // (SkDocument *document)

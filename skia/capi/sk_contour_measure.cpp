@@ -8,7 +8,7 @@
 
 extern "C" {
 
-void SkContourMeasure_delete(reskia_contour_measure_t *contour_measure) {
+void SkContourMeasure_release(reskia_contour_measure_t *contour_measure) {
     reinterpret_cast<SkContourMeasure *>(contour_measure)->unref();
 }
 

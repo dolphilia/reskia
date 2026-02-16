@@ -19,7 +19,7 @@ typedef struct reskia_icc_profile_t reskia_icc_profile_t;
 typedef struct reskia_matrix3x3_t reskia_matrix3x3_t;
 typedef struct reskia_transfer_function_t reskia_transfer_function_t;
 
-void SkColorSpace_delete(reskia_color_space_t *color_space); // owned: caller が保持する参照を release する (SkColorSpace *color_space)
+void SkColorSpace_release(reskia_color_space_t *color_space); // owned: caller が保持する参照を release する (SkColorSpace *color_space)
 void SkColorSpace_toProfile(reskia_color_space_t *color_space, reskia_icc_profile_t *profile); // (SkColorSpace *color_space, skcms_ICCProfile *profile)
 bool SkColorSpace_gammaCloseToSRGB(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> bool
 bool SkColorSpace_gammaIsLinear(reskia_color_space_t *color_space); // (SkColorSpace *color_space) -> bool

@@ -12,7 +12,7 @@ reskia_ref_cnt_base_t *SkRefCntBase_new() {
     return reinterpret_cast<reskia_ref_cnt_base_t *>(new SkRefCntBase());
 }
 
-void SkRefCntBase_delete(reskia_ref_cnt_base_t *ref_cnt_base) {
+void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base) {
     reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 

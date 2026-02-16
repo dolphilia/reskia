@@ -28,7 +28,7 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_image_filter_map_direction_t;
 typedef int32_t reskia_image_filter_type_t;
 
-void SkImageFilter_delete(reskia_image_filter_t *image_filter); // owned: caller が保持する参照を release する (SkImageFilter *image_filter)
+void SkImageFilter_release(reskia_image_filter_t *image_filter); // owned: caller が保持する参照を release する (SkImageFilter *image_filter)
 sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, reskia_image_filter_map_direction_t direction, const reskia_i_rect_t *inputRect); // (SkImageFilter *image_filter, const SkIRect *src, const SkMatrix *ctm, SkImageFilter::MapDirection direction, const SkIRect *inputRect) -> sk_i_rect_t
 bool SkImageFilter_isColorFilterNode(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
 bool SkImageFilter_asColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool

@@ -15,7 +15,7 @@ extern "C" {
 
 typedef struct reskia_data_table_t reskia_data_table_t;
 
-void SkDataTable_delete(reskia_data_table_t *data_table); // owned: caller が保持する参照を release する (SkDataTable *data_table)
+void SkDataTable_release(reskia_data_table_t *data_table); // owned: caller が保持する参照を release する (SkDataTable *data_table)
 bool SkDataTable_isEmpty(reskia_data_table_t *data_table); // (SkDataTable *data_table) -> bool
 int SkDataTable_count(reskia_data_table_t *data_table); // (SkDataTable *data_table) -> int
 size_t SkDataTable_atSize(reskia_data_table_t *data_table, int index); // (SkDataTable *data_table, int index) -> size_t

@@ -13,7 +13,7 @@ extern "C" {
 
 typedef int32_t reskia_sksl_version_t;
 
-void SkCapabilities_delete(void * capabilities); // owned: caller が保持する参照を release する (SkCapabilities *capabilities)
+void SkCapabilities_release(void * capabilities); // owned: caller が保持する参照を release する (SkCapabilities *capabilities)
 void SkCapabilities_ref(void * capabilities); // retained: 参照カウントを増やす (SkCapabilities *capabilities)
 reskia_sksl_version_t SkCapabilities_skslVersion(void * capabilities); // (SkCapabilities *capabilities) -> SkSL::Version
 bool SkCapabilities_unique(void * capabilities); // (SkCapabilities *capabilities) -> bool

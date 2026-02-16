@@ -27,7 +27,7 @@ typedef int32_t reskia_shader_type_t;
 extern "C" {
 #endif
 
-void SkShader_delete(reskia_shader_t *shader); // owned: caller が保持する参照を release する (SkShader *shader)
+void SkShader_release(reskia_shader_t *shader); // owned: caller が保持する参照を release する (SkShader *shader)
 bool SkShader_isOpaque(reskia_shader_t *shader); // (SkShader *shader) -> bool
 reskia_image_t *SkShader_isAImage(reskia_shader_t *shader, reskia_matrix_t *localMatrix, int *xy); // borrowed: 解放不要の借用ポインタ (SkShader *shader, SkMatrix *localMatrix, SkTileMode xy[2]) -> SkImage *
 bool SkShader_isAImage_2(reskia_shader_t *shader); // (SkShader *shader) -> bool

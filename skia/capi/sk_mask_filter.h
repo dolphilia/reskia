@@ -25,7 +25,7 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_mask_filter_type_t;
 typedef int32_t reskia_mask_filter_blur_style_t;
 
-void SkMaskFilter_delete(reskia_mask_filter_t *maskFilter); // owned: caller が保持する参照を release する (SkMaskFilter *maskFilter)
+void SkMaskFilter_release(reskia_mask_filter_t *maskFilter); // owned: caller が保持する参照を release する (SkMaskFilter *maskFilter)
 sk_rect_t SkMaskFilter_approximateFilteredBounds(reskia_mask_filter_t *mask_filter, const reskia_rect_t *src); // (SkMaskFilter *mask_filter, const SkRect *src) -> sk_rect_t
 sk_flattenable_factory_t SkMaskFilter_getFactory(reskia_mask_filter_t *mask_filter); // (SkMaskFilter *mask_filter) -> sk_flattenable_factory_t
 const char *SkMaskFilter_getTypeName(reskia_mask_filter_t *mask_filter); // (SkMaskFilter *mask_filter) -> const char *

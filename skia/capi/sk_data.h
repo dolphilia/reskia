@@ -17,7 +17,7 @@ typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_file_t reskia_file_t;
 typedef struct reskia_stream_t reskia_stream_t;
 
-void SkData_delete(reskia_data_t *sk_data); // owned: caller が保持する参照を release する (SkData *sk_data)
+void SkData_release(reskia_data_t *sk_data); // owned: caller が保持する参照を release する (SkData *sk_data)
 size_t SkData_size(reskia_data_t *sk_data); // (SkData *sk_data) -> size_t
 bool SkData_isEmpty(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
 const uint8_t * SkData_data(reskia_data_t *sk_data); // borrowed: 解放不要の借用ポインタ (SkData *sk_data) -> const void *

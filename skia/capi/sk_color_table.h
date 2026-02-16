@@ -16,7 +16,7 @@ typedef struct reskia_color_table_t reskia_color_table_t;
 typedef struct reskia_read_buffer_t reskia_read_buffer_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 
-void SkColorTable_delete(reskia_color_table_t *color_table); // owned: caller が保持する参照を release する (SkColorTable *color_table)
+void SkColorTable_release(reskia_color_table_t *color_table); // owned: caller が保持する参照を release する (SkColorTable *color_table)
 const uint8_t *SkColorTable_alphaTable(reskia_color_table_t *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
 const uint8_t *SkColorTable_redTable(reskia_color_table_t *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *
 const uint8_t *SkColorTable_greenTable(reskia_color_table_t *color_table); // borrowed: 解放不要の借用ポインタ (SkColorTable *color_table) -> const uint8_t *

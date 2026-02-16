@@ -18,7 +18,7 @@
 
 extern "C" {
 
-void SkPicture_delete(reskia_picture_t *picture) {
+void SkPicture_release(reskia_picture_t *picture) {
     reinterpret_cast<SkPicture *>(picture)->unref();
 }
 

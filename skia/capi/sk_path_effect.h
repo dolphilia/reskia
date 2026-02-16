@@ -22,7 +22,7 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 extern "C" {
 #endif
 
-void SkPathEffect_delete(reskia_path_effect_t *pathEffect); // owned: caller が保持する参照を release する
+void SkPathEffect_release(reskia_path_effect_t *pathEffect); // owned: caller が保持する参照を release する
 int SkPathEffect_asADash(reskia_path_effect_t *path_effect, reskia_path_effect_dash_info_t *info);
 bool SkPathEffect_filterPath(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR);
 bool SkPathEffect_filterPath_2(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR, const reskia_matrix_t *ctm);

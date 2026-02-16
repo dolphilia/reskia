@@ -24,7 +24,7 @@
 
 extern "C" {
 
-void SkShader_delete(reskia_shader_t *shader) {
+void SkShader_release(reskia_shader_t *shader) {
     reinterpret_cast<SkShader *>(shader)->unref();
 }
 

@@ -14,7 +14,7 @@
 
 extern "C" {
 
-void SkFontStyleSet_delete(reskia_font_style_set_t *font_style_set) {
+void SkFontStyleSet_release(reskia_font_style_set_t *font_style_set) {
     reinterpret_cast<SkFontStyleSet *>(font_style_set)->unref();
 }
 

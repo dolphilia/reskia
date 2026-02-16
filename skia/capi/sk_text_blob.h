@@ -25,7 +25,7 @@ typedef int32_t reskia_text_blob_text_encoding_t;
 extern "C" {
 #endif
 
-void SkTextBlob_delete(reskia_text_blob_t *text_blob); // owned: caller が保持する参照を release する (SkTextBlob *text_blob)
+void SkTextBlob_release(reskia_text_blob_t *text_blob); // owned: caller が保持する参照を release する (SkTextBlob *text_blob)
 const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob); // borrowed: 解放不要の借用ポインタ (SkTextBlob *text_blob) -> const SkRect *
 uint32_t SkTextBlob_uniqueID(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> uint32_t
 int SkTextBlob_getIntercepts(reskia_text_blob_t *text_blob, const float *bounds, float *intervals, const reskia_paint_t *paint); // (SkTextBlob *text_blob, const SkScalar bounds[2], SkScalar intervals[], const SkPaint *paint) -> int

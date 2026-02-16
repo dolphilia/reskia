@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkDataTable_delete(reskia_data_table_t *data_table) {
+void SkDataTable_release(reskia_data_table_t *data_table) {
     reinterpret_cast<SkDataTable *>(data_table)->unref();
 }
 

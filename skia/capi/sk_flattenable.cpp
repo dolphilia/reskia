@@ -16,7 +16,7 @@
 
 extern "C" {
 
-void SkFlattenable_delete(reskia_flattenable_t *flattenable) {
+void SkFlattenable_release(reskia_flattenable_t *flattenable) {
     reinterpret_cast<SkFlattenable *>(flattenable)->unref();
 }
 

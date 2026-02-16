@@ -22,7 +22,7 @@
 
 extern "C" {
 
-void SkDrawable_delete(reskia_drawable_t *drawable) {
+void SkDrawable_release(reskia_drawable_t *drawable) {
     reinterpret_cast<SkDrawable *>(drawable)->unref();
 }
 

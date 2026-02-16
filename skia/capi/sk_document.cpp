@@ -8,7 +8,7 @@
 
 extern "C" {
 
-void SkDocument_delete(reskia_document_t *document) {
+void SkDocument_release(reskia_document_t *document) {
     reinterpret_cast<SkDocument *>(document)->unref();
 }
 

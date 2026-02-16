@@ -30,7 +30,7 @@ typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_drawable_flattenable_type_t;
 
-void SkDrawable_delete(reskia_drawable_t *drawable); // owned: caller が保持する参照を release する (SkDrawable *drawable)
+void SkDrawable_release(reskia_drawable_t *drawable); // owned: caller が保持する参照を release する (SkDrawable *drawable)
 void SkDrawable_draw(reskia_drawable_t *drawable, reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // (SkDrawable *drawable, SkCanvas *canvas, const SkMatrix *matrix)
 void SkDrawable_draw_2(reskia_drawable_t *drawable, reskia_canvas_t *canvas, float x, float y); // (SkDrawable *drawable, SkCanvas *canvas, SkScalar x, SkScalar y)
 sk_drawable_gpu_draw_handler_t SkDrawable_snapGpuDrawHandler(reskia_drawable_t *drawable, int backendApi, const reskia_matrix_t *matrix, const reskia_i_rect_t *clipBounds, const reskia_image_info_t *bufferInfo); // (SkDrawable *drawable, GrBackendApi backendApi, const SkMatrix *matrix, const SkIRect *clipBounds, const SkImageInfo *bufferInfo) -> sk_drawable_gpu_draw_handler_t

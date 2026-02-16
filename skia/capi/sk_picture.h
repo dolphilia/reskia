@@ -30,7 +30,7 @@ typedef int32_t reskia_picture_filter_mode_t;
 extern "C" {
 #endif
 
-void SkPicture_delete(reskia_picture_t *picture); // owned: caller が保持する参照を release する (SkPicture *picture)
+void SkPicture_release(reskia_picture_t *picture); // owned: caller が保持する参照を release する (SkPicture *picture)
 void SkPicture_playback(reskia_picture_t *picture, reskia_canvas_t *canvas, reskia_picture_abort_callback_t *callback); // (SkPicture *picture, SkCanvas *canvas, SkPicture::AbortCallback *callback)
 sk_rect_t SkPicture_cullRect(reskia_picture_t *picture); // (SkPicture *picture) -> sk_rect_t
 uint32_t SkPicture_uniqueID(reskia_picture_t *picture); // (SkPicture *picture) -> uint32_t

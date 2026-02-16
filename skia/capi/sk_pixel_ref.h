@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes); // owned: 呼び出し側が解放責務を持つ新規オブジェクト (int width, int height, void *addr, size_t rowBytes) -> SkPixelRef *
-void SkPixelRef_delete(reskia_pixel_ref_t *pixel_ref); // owned: caller が保持する参照を release する (SkPixelRef *pixel_ref)
+void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref); // owned: caller が保持する参照を release する (SkPixelRef *pixel_ref)
 sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref); // (SkPixelRef *pixel_ref) -> sk_i_size_t
 int SkPixelRef_width(reskia_pixel_ref_t *pixel_ref); // (SkPixelRef *pixel_ref) -> int
 int SkPixelRef_height(reskia_pixel_ref_t *pixel_ref); // (SkPixelRef *pixel_ref) -> int

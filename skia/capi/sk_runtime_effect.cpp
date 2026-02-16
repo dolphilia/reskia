@@ -38,7 +38,7 @@
 
 extern "C" {
 
-void SkRuntimeEffect_delete(reskia_runtime_effect_t *runtime_effect) {
+void SkRuntimeEffect_release(reskia_runtime_effect_t *runtime_effect) {
     reinterpret_cast<SkRuntimeEffect *>(runtime_effect)->unref();
 }
 

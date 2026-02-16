@@ -21,7 +21,7 @@ typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_flattenable_type_t;
 
-void SkFlattenable_delete(reskia_flattenable_t *flattenable); // owned: caller が保持する参照を release する (SkFlattenable *flattenable)
+void SkFlattenable_release(reskia_flattenable_t *flattenable); // owned: caller が保持する参照を release する (SkFlattenable *flattenable)
 sk_flattenable_factory_t SkFlattenable_getFactory(reskia_flattenable_t *flattenable); // (SkFlattenable *flattenable) -> sk_flattenable_factory_t
 const char * SkFlattenable_getTypeName(reskia_flattenable_t *flattenable); // (SkFlattenable *flattenable) -> const char *
 void SkFlattenable_flatten(reskia_flattenable_t *flattenable, reskia_write_buffer_t *write_buffer); // (SkFlattenable *flattenable, SkWriteBuffer *write_buffer)

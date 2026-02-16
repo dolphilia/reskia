@@ -22,7 +22,7 @@
 
 extern "C" {
 
-void SkSurface_delete(reskia_surface_t *surface) {
+void SkSurface_release(reskia_surface_t *surface) {
     reinterpret_cast<SkSurface *>(surface)->unref();
 }
 

@@ -18,7 +18,7 @@
 
 extern "C" {
 
-void SkBlender_delete(reskia_blender_t *blender) {
+void SkBlender_release(reskia_blender_t *blender) {
     reinterpret_cast<SkBlender *>(blender)->unref();
 }
 

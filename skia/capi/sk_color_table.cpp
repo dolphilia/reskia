@@ -12,7 +12,7 @@
 
 extern "C" {
 
-void SkColorTable_delete(reskia_color_table_t *color_table) {
+void SkColorTable_release(reskia_color_table_t *color_table) {
     reinterpret_cast<SkColorTable *>(color_table)->unref();
 }
 

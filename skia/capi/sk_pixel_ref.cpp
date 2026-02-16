@@ -19,7 +19,7 @@ reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t row
     return reinterpret_cast<reskia_pixel_ref_t *>(new SkPixelRef(width, height, addr, rowBytes));
 }
 
-void SkPixelRef_delete(reskia_pixel_ref_t *pixel_ref) {
+void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref) {
     reinterpret_cast<SkPixelRef *>(pixel_ref)->unref();
 }
 

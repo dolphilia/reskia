@@ -37,7 +37,7 @@ typedef int32_t reskia_image_tile_mode_t;
 typedef int32_t reskia_image_caching_hint_t;
 typedef int32_t reskia_image_legacy_bitmap_mode_t;
 
-void SkImage_delete(reskia_image_t *image); // owned: caller が保持する参照を release する (SkImage *image)
+void SkImage_release(reskia_image_t *image); // owned: caller が保持する参照を release する (SkImage *image)
 
 // TODO
 // const void *SkImage_imageInfo(void *image); // (SkImage *image) -> const SkImageInfo *

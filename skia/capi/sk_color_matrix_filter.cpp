@@ -20,7 +20,7 @@
 
 extern "C" {
 
-void SkColorMatrixFilter_delete(reskia_color_matrix_filter_t *color_matrix_filter) {
+void SkColorMatrixFilter_release(reskia_color_matrix_filter_t *color_matrix_filter) {
     reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->unref();
 }
 

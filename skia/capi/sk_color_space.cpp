@@ -14,7 +14,7 @@
 
 extern "C" {
 
-void SkColorSpace_delete(reskia_color_space_t *color_space) {
+void SkColorSpace_release(reskia_color_space_t *color_space) {
     reinterpret_cast<SkColorSpace *>(color_space)->unref();
 }
 

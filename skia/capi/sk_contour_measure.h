@@ -18,7 +18,7 @@ typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_vector_t reskia_vector_t;
 typedef int32_t reskia_contour_measure_matrix_flags_t;
 
-void SkContourMeasure_delete(reskia_contour_measure_t *contour_measure); // owned: caller が保持する参照を release する (SkContourMeasure *contour_measure)
+void SkContourMeasure_release(reskia_contour_measure_t *contour_measure); // owned: caller が保持する参照を release する (SkContourMeasure *contour_measure)
 float SkContourMeasure_length(reskia_contour_measure_t *contour_measure); // (SkContourMeasure *contour_measure) -> SkScalar
 bool SkContourMeasure_getPosTan(reskia_contour_measure_t *contour_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent); // (SkContourMeasure *contour_measure, SkScalar distance, SkPoint *position, SkVector *tangent) -> bool
 bool SkContourMeasure_getMatrix(reskia_contour_measure_t *contour_measure, float distance, reskia_matrix_t *matrix, reskia_contour_measure_matrix_flags_t flags); // (SkContourMeasure *contour_measure, SkScalar distance, SkMatrix *matrix, SkContourMeasure::MatrixFlags flags) -> bool

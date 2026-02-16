@@ -21,7 +21,7 @@
 
 extern "C" {
 
-void SkImageFilter_delete(reskia_image_filter_t *image_filter) {
+void SkImageFilter_release(reskia_image_filter_t *image_filter) {
     reinterpret_cast<SkImageFilter *>(image_filter)->unref();
 }
 

@@ -32,7 +32,7 @@ typedef struct reskia_std_string_t reskia_std_string_t;
 extern "C" {
 #endif
 
-void SkRuntimeEffect_delete(reskia_runtime_effect_t *runtime_effect); // owned: caller が保持する参照を release する (SkRuntimeEffect *runtime_effect)
+void SkRuntimeEffect_release(reskia_runtime_effect_t *runtime_effect); // owned: caller が保持する参照を release する (SkRuntimeEffect *runtime_effect)
 sk_shader_t SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_shader_sp_t *children, size_t childCount, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkShader> children[], size_t childCount, const SkMatrix *localMatrix) -> sk_shader_t
 sk_shader_t SkRuntimeEffect_makeShader_2(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const reskia_matrix_t *localMatrix); // (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const SkMatrix *localMatrix) -> sk_shader_t
 sk_color_filter_t SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runtime_effect, sk_data_t data); // (SkRuntimeEffect *runtime_effect, sk_data_t data) -> sk_color_filter_t

@@ -33,7 +33,7 @@ typedef int32_t reskia_surface_content_change_mode_t;
 extern "C" {
 #endif
 
-void SkSurface_delete(reskia_surface_t *surface); // owned: caller が保持する参照を release する (SkSurface *surface)
+void SkSurface_release(reskia_surface_t *surface); // owned: caller が保持する参照を release する (SkSurface *surface)
 bool SkSurface_isCompatible(reskia_surface_t *surface, const reskia_surface_characterization_t *characterization); // (SkSurface *surface, const GrSurfaceCharacterization *characterization) -> bool
 int SkSurface_width(reskia_surface_t *surface); // (SkSurface *surface) -> int
 int SkSurface_height(reskia_surface_t *surface); // (SkSurface *surface) -> int

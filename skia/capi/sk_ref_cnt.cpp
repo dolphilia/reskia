@@ -8,7 +8,7 @@
 
 extern "C" {
 
-void SkRefCnt_delete(void * refCnt) {
+void SkRefCnt_release(void * refCnt) {
     static_cast<SkRefCnt *>(refCnt)->unref();
 }
 

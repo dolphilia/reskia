@@ -16,7 +16,7 @@ typedef struct reskia_font_style_set_t reskia_font_style_set_t;
 typedef struct reskia_font_style_t reskia_font_style_t;
 typedef struct reskia_string_t reskia_string_t;
 
-void SkFontStyleSet_delete(reskia_font_style_set_t *font_style_set); // owned: caller が保持する参照を release する (SkFontStyleSet *font_style_set)
+void SkFontStyleSet_release(reskia_font_style_set_t *font_style_set); // owned: caller が保持する参照を release する (SkFontStyleSet *font_style_set)
 int SkFontStyleSet_count(reskia_font_style_set_t *font_style_set); // (SkFontStyleSet *font_style_set) -> int
 void SkFontStyleSet_getStyle(reskia_font_style_set_t *font_style_set, int index, reskia_font_style_t *font_style, reskia_string_t *style); // (SkFontStyleSet *font_style_set, int index, SkFontStyle *font_style, SkString *style)
 sk_typeface_t SkFontStyleSet_createTypeface(reskia_font_style_set_t *font_style_set, int index); // (SkFontStyleSet *font_style_set, int index) -> sk_typeface_t
