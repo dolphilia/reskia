@@ -9,7 +9,6 @@
 1. ディレクトリ命名の段階移行
 - `skia/static` -> `skia/handles`（または `skia/registry`）
 - `skia/binding` -> `skia/capi`
-- 互換のため旧パス include を一時残す。
 
 2. 旧API廃止計画
 - `*_delete`（RefCounted対象）を `deprecated` マクロ化

@@ -40,7 +40,3 @@ ctest --test-dir skia/cmake-build-local --output-on-failure
 - Rust wrapper で basic draw の往復が成功。
 - ASan/UBSan（可能なら）でクラッシュ/リーク重大項目がゼロ。
 - C APIとRust APIの所有権表が一致している。
-
-## 注記
-
-- LuaJIT互換は維持し、`ffi.gc(handle, release)` 運用に統一する。
