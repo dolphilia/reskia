@@ -3,6 +3,11 @@ include_guard(GLOBAL)
 set(RESKIA_DEPS_MODE "prebuilt" CACHE STRING "Dependency mode: prebuilt, source, or system")
 set_property(CACHE RESKIA_DEPS_MODE PROPERTY STRINGS prebuilt source system)
 option(RESKIA_ENABLE_AVIF "Link AVIF dependency if available" OFF)
+option(RESKIA_ENABLE_JPEGXL "Link JPEGXL dependency if available" OFF)
+option(RESKIA_ENABLE_RAW "Enable RAW codec integration (requires dng_sdk/piex sources)" OFF)
+option(RESKIA_ENABLE_GIF "Enable GIF codec integration (requires Wuffs source)" OFF)
+option(RESKIA_ENABLE_JPEG_ENCODER "Enable JPEG encoder integration" OFF)
+option(RESKIA_ENABLE_WEBP_ENCODER "Enable WebP encoder integration" OFF)
 
 set(RESKIA_THIRD_PARTY_PREFIX "" CACHE PATH "Install prefix used when RESKIA_DEPS_MODE=source")
 
@@ -51,10 +56,19 @@ function(_reskia_resolve_mode_prebuilt root_dir out_link_dirs out_link_libs)
         if(RESKIA_ENABLE_AVIF)
             list(APPEND _libs avif)
         endif()
+        if(RESKIA_ENABLE_JPEGXL)
+            list(APPEND _libs jxl jxl_threads jxl_cms)
+        endif()
     elseif(APPLE)
         set(_libs expat png png16 jpeg webp webpdecoder webpdemux webpmux)
+        if(RESKIA_ENABLE_RAW)
+            list(APPEND _libs z)
+        endif()
         if(RESKIA_ENABLE_AVIF)
             list(APPEND _libs avif)
+        endif()
+        if(RESKIA_ENABLE_JPEGXL)
+            list(APPEND _libs jxl jxl_threads jxl_cms)
         endif()
     elseif(UNIX)
         set(_libs "")
@@ -89,10 +103,25 @@ function(_reskia_resolve_mode_source root_dir out_link_dirs out_link_libs)
         _reskia_find_required_library(_lib_webpdecoder "source" "${root_dir}" NAMES webpdecoder libwebpdecoder)
         _reskia_find_required_library(_lib_webpdemux "source" "${root_dir}" NAMES webpdemux libwebpdemux)
         _reskia_find_required_library(_lib_webpmux "source" "${root_dir}" NAMES webpmux libwebpmux)
+        _reskia_find_required_library(_lib_sharpyuv "source" "${root_dir}" NAMES sharpyuv libsharpyuv)
 
         if(RESKIA_ENABLE_AVIF)
             _reskia_find_required_library(_lib_avif "source" "${root_dir}" NAMES avif)
             list(APPEND _libs "${_lib_avif}")
+        endif()
+        if(RESKIA_ENABLE_RAW)
+            _reskia_find_required_library(_lib_zlib "source" "${root_dir}" NAMES z zlib)
+            list(APPEND _libs "${_lib_zlib}")
+        endif()
+        if(RESKIA_ENABLE_JPEGXL)
+            _reskia_find_required_library(_lib_jxl "source" "${root_dir}" NAMES jxl libjxl)
+            _reskia_find_required_library(_lib_jxl_threads "source" "${root_dir}" NAMES jxl_threads libjxl_threads)
+            _reskia_find_required_library(_lib_jxl_cms "source" "${root_dir}" NAMES jxl_cms libjxl_cms)
+            list(APPEND _libs
+                    "${_lib_jxl}"
+                    "${_lib_jxl_threads}"
+                    "${_lib_jxl_cms}"
+            )
         endif()
 
         list(APPEND _libs
@@ -100,6 +129,7 @@ function(_reskia_resolve_mode_source root_dir out_link_dirs out_link_libs)
                 "${_lib_webpdecoder}"
                 "${_lib_webpdemux}"
                 "${_lib_webpmux}"
+                "${_lib_sharpyuv}"
         )
     elseif(WIN32)
         message(FATAL_ERROR "RESKIA_DEPS_MODE=source on WIN32 is not implemented yet.")
@@ -127,15 +157,30 @@ function(_reskia_resolve_mode_system root_dir out_link_dirs out_link_libs)
         find_package(PNG REQUIRED)
         find_package(JPEG REQUIRED)
         list(APPEND _libs EXPAT::EXPAT PNG::PNG JPEG::JPEG)
+        if(RESKIA_ENABLE_RAW)
+            find_package(ZLIB REQUIRED)
+            list(APPEND _libs ZLIB::ZLIB)
+        endif()
 
         _reskia_find_required_library(_lib_webp "system" "${root_dir}" NAMES webp libwebp)
         _reskia_find_required_library(_lib_webpdecoder "system" "${root_dir}" NAMES webpdecoder libwebpdecoder)
         _reskia_find_required_library(_lib_webpdemux "system" "${root_dir}" NAMES webpdemux libwebpdemux)
         _reskia_find_required_library(_lib_webpmux "system" "${root_dir}" NAMES webpmux libwebpmux)
+        _reskia_find_required_library(_lib_sharpyuv "system" "${root_dir}" NAMES sharpyuv libsharpyuv)
 
         if(RESKIA_ENABLE_AVIF)
             _reskia_find_required_library(_lib_avif "system" "${root_dir}" NAMES avif)
             list(APPEND _libs "${_lib_avif}")
+        endif()
+        if(RESKIA_ENABLE_JPEGXL)
+            _reskia_find_required_library(_lib_jxl "system" "${root_dir}" NAMES jxl libjxl)
+            _reskia_find_required_library(_lib_jxl_threads "system" "${root_dir}" NAMES jxl_threads libjxl_threads)
+            _reskia_find_required_library(_lib_jxl_cms "system" "${root_dir}" NAMES jxl_cms libjxl_cms)
+            list(APPEND _libs
+                    "${_lib_jxl}"
+                    "${_lib_jxl_threads}"
+                    "${_lib_jxl_cms}"
+            )
         endif()
 
         list(APPEND _libs
@@ -143,12 +188,19 @@ function(_reskia_resolve_mode_system root_dir out_link_dirs out_link_libs)
                 "${_lib_webpdecoder}"
                 "${_lib_webpdemux}"
                 "${_lib_webpmux}"
+                "${_lib_sharpyuv}"
         )
     elseif(WIN32)
         # 互換維持: prebuilt と同名ライブラリ指定を許容（削除期限: 2026-06-30）。
         # 期限までに imported target ベースへ移行する。
         set(_link_dirs "${root_dir}/skia/lib")
-        set(_libs zlib libpng turbojpeg-static avif libwebp libwebpdemux libwebpmux)
+        set(_libs zlib libpng turbojpeg-static libwebp libwebpdemux libwebpmux)
+        if(RESKIA_ENABLE_AVIF)
+            list(APPEND _libs avif)
+        endif()
+        if(RESKIA_ENABLE_JPEGXL)
+            list(APPEND _libs jxl jxl_threads jxl_cms)
+        endif()
     elseif(UNIX)
         # Current UNIX path in skia links only skcms.
         set(_libs "")

@@ -4,7 +4,12 @@
 
 #include "sk_webp_encoder.h"
 
+#include "include/core/SkData.h"
+#include "include/encode/SkEncoder.h"
 #include "include/encode/SkWebpEncoder.h"
+
+#include "../handles/static_sk_data-internal.h"
+#include "../handles/static_sk_encoder_frame-internal.h"
 
 extern "C" {
 
@@ -17,7 +22,10 @@ sk_data_t SkWebpEncoder_EncodeFromImage(reskia_direct_context_t *ctx, const resk
 }
 
 bool SkWebpEncoder_EncodeAnimated(reskia_w_stream_t *dst, const_sk_encoder_frame_t encoderFrame, const reskia_webp_encoder_options_t *options) {
-    return SkWebpEncoder::EncodeAnimated(reinterpret_cast<SkWStream *>(dst), static_const_sk_encoder_frame_get(encoderFrame), *reinterpret_cast<const SkWebpEncoder::Options *>(options));
+    return SkWebpEncoder::EncodeAnimated(
+        reinterpret_cast<SkWStream *>(dst),
+        static_const_sk_encoder_frame_get_entity(encoderFrame),
+        *reinterpret_cast<const SkWebpEncoder::Options *>(options));
 }
 
 }

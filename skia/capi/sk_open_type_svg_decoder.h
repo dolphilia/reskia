@@ -6,12 +6,11 @@
 #define RAIA_SKIA_SK_OPEN_TYPE_SVG_DECODER_H
 
 #include "include/core/SkOpenTypeSVGDecoder.h"
-#include "../handles/static_sk_color.h"
 
 extern "C" {
 void SkOpenTypeSVGDecoder_delete(SkOpenTypeSVGDecoder *open_type_svg_decoder);
 size_t SkOpenTypeSVGDecoder_approximateSize(SkOpenTypeSVGDecoder *open_type_svg_decoder);
-bool SkOpenTypeSVGDecoder_render(SkOpenTypeSVGDecoder *open_type_svg_decoder, SkCanvas *canvas, int upem, SkGlyphID glyphId, SkColor foregroundColor, sk_color_t color);
+bool SkOpenTypeSVGDecoder_render(SkOpenTypeSVGDecoder *open_type_svg_decoder, SkCanvas *canvas, int upem, SkGlyphID glyphId, SkColor foregroundColor, SkColor color);
 }
 
 #endif //RAIA_SKIA_SK_OPEN_TYPE_SVG_DECODER_H

@@ -20,6 +20,34 @@ if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     endif()
 endif()
 
+set(RESKIA_INTERNAL_LIBS skcms)
+if(APPLE)
+    list(APPEND RESKIA_INTERNAL_LIBS skresources svg)
+endif()
+
+set(RESKIA_RESOLVED_INTERNAL_LIBS "")
+foreach(_reskia_internal_lib IN LISTS RESKIA_INTERNAL_LIBS)
+    if(TARGET ${_reskia_internal_lib})
+        list(APPEND RESKIA_RESOLVED_INTERNAL_LIBS ${_reskia_internal_lib})
+    else()
+        find_library(_reskia_internal_lib_path
+                NAMES ${_reskia_internal_lib} lib${_reskia_internal_lib}
+                PATHS
+                "${RESKIA_ROOT_DIR}/skia/lib"
+                "${RESKIA_THIRD_PARTY_PREFIX}"
+                "${RESKIA_ROOT_DIR}/third_party/install"
+                PATH_SUFFIXES lib lib64
+        )
+        if(NOT _reskia_internal_lib_path)
+            message(FATAL_ERROR
+                    "Required internal library not found: ${_reskia_internal_lib} "
+                    "(RESKIA_DEPS_MODE=${RESKIA_DEPS_MODE}).")
+        endif()
+        list(APPEND RESKIA_RESOLVED_INTERNAL_LIBS "${_reskia_internal_lib_path}")
+    endif()
+    unset(_reskia_internal_lib_path CACHE)
+endforeach()
+
 set(SOURCE_FILES reskia.cpp)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
@@ -71,17 +99,71 @@ target_include_directories(reskia
         "${PROJECT_SOURCE_DIR}"
         "${PROJECT_SOURCE_DIR}/_include"
 )
+if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+    target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
+endif()
 if(RESKIA_DEP_LINK_DIRS)
     target_link_directories(reskia PRIVATE ${RESKIA_DEP_LINK_DIRS})
 endif()
 target_compile_definitions(reskia PRIVATE SK_ENABLE_OPTIMIZE_SIZE)
+if(RESKIA_ENABLE_AVIF)
+    if("src/codec/SkAvifCodec.cpp" IN_LIST SOURCE_FILES)
+        target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_AVIF)
+    else()
+        message(WARNING "RESKIA_ENABLE_AVIF=ON ですが src/codec/SkAvifCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+    endif()
+endif()
+if(RESKIA_ENABLE_JPEGXL)
+    if("src/codec/SkJpegxlCodec.cpp" IN_LIST SOURCE_FILES)
+        target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_JPEGXL)
+    else()
+        message(WARNING "RESKIA_ENABLE_JPEGXL=ON ですが src/codec/SkJpegxlCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+    endif()
+endif()
+if(RESKIA_ENABLE_RAW)
+    if("src/codec/SkRawCodec.cpp" IN_LIST SOURCE_FILES)
+        target_include_directories(reskia PRIVATE
+                "${RESKIA_ROOT_DIR}/third_party/src/dng_sdk/source"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex"
+        )
+        target_compile_definitions(reskia PRIVATE
+                qDNGBigEndian=0
+                qDNGReportErrors=0
+                qDNGThreadSafe=1
+                qDNGUseLibJPEG=1
+                qDNGUseXMP=0
+                qDNGValidate=0
+                qDNGValidateTarget=1
+                UNIX_ENV=1
+                BREAK_IF_DEBUGGING_AND_OUT_OF_RANGE
+        )
+        target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_RAW)
+    else()
+        message(WARNING "RESKIA_ENABLE_RAW=ON ですが src/codec/SkRawCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+    endif()
+endif()
+if(RESKIA_ENABLE_GIF)
+    if("src/codec/SkWuffsCodec.cpp" IN_LIST SOURCE_FILES)
+        target_include_directories(reskia PRIVATE "${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c")
+        if("${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c/wuffs-v0.3.c" IN_LIST SOURCE_FILES)
+            set_source_files_properties(
+                    "${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c/wuffs-v0.3.c"
+                    PROPERTIES COMPILE_DEFINITIONS
+                    "WUFFS_IMPLEMENTATION;WUFFS_CONFIG__MODULES;WUFFS_CONFIG__MODULE__BASE;WUFFS_CONFIG__MODULE__GIF;WUFFS_CONFIG__MODULE__LZW"
+            )
+        endif()
+        target_compile_definitions(reskia PRIVATE SK_HAS_WUFFS_LIBRARY)
+    else()
+        message(WARNING "RESKIA_ENABLE_GIF=ON ですが src/codec/SkWuffsCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+    endif()
+endif()
 
 if(WIN32)
-    target_link_libraries(reskia skcms ${RESKIA_DEP_LIBS})
+    target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS})
 elseif(APPLE)
-    target_link_libraries(reskia skcms skresources svg ${RESKIA_DEP_LIBS} "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
+    target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS} "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
 elseif(UNIX)
-    target_link_libraries(reskia skcms ${RESKIA_DEP_LIBS})
+    target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS})
 endif()
 
 if(WIN32)

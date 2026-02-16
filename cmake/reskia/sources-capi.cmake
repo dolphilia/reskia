@@ -3,7 +3,6 @@ list(APPEND SOURCE_FILES
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
         capi/sk_auto_canvas_restore.cpp
-        capi/sk_avif_decoder.cpp
         capi/sk_b_box_hierarchy.cpp
         capi/sk_bitmap.cpp
         capi/sk_blend_mode.cpp
@@ -50,7 +49,6 @@ list(APPEND SOURCE_FILES
         capi/sk_font_style_set.cpp
         capi/sk_font_style.cpp
         capi/sk_font.cpp
-#        capi/sk_gif_decoder.cpp
         capi/sk_gradient_shader.cpp
         capi/sk_graphics.cpp
         capi/sk_high_contrast_config.cpp
@@ -67,8 +65,6 @@ list(APPEND SOURCE_FILES
         capi/sk_image.cpp
         capi/sk_images.cpp
         capi/sk_jpeg_decoder.cpp
-#        capi/sk_jpeg_encoder.cpp
-        capi/sk_jpegxl_decoder.cpp
         capi/sk_line_2d_path_effect.cpp
         capi/sk_luma_color_filter.cpp
         capi/sk_m_44.cpp
@@ -82,7 +78,6 @@ list(APPEND SOURCE_FILES
         capi/sk_mesh_specification.cpp
         capi/sk_meshes.cpp
         capi/sk_op_builder.cpp
-#        capi/sk_open_type_svg_decoder.cpp
         capi/sk_overdraw_canvas.cpp
         capi/sk_overdraw_color_filter.cpp
         capi/sk_paint.cpp
@@ -105,7 +100,6 @@ list(APPEND SOURCE_FILES
         capi/sk_point.cpp
         capi/sk_r_rect.cpp
 #        capi/sk_raster_handle_allocator.cpp
-#        capi/sk_raw_decoder.cpp
         capi/sk_read_buffer.cpp
         capi/sk_rect.cpp
         capi/sk_ref_cnt_base.cpp
@@ -149,9 +143,34 @@ list(APPEND SOURCE_FILES
         capi/sk_w_stream.cpp
         capi/sk_wbmp_decoder.cpp
         capi/sk_webp_decoder.cpp
-#        capi/sk_webp_encoder.cpp
         capi/sk_write_buffer.cpp
         capi/sk_yuva_info.cpp
         capi/sk_yuva_pixmap_info.cpp
         capi/sk_yuva_pixmaps.cpp
 )
+
+if(RESKIA_ENABLE_AVIF)
+    list(APPEND SOURCE_FILES capi/sk_avif_decoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_JPEGXL)
+    list(APPEND SOURCE_FILES capi/sk_jpegxl_decoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_GIF)
+    list(APPEND SOURCE_FILES capi/sk_gif_decoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_RAW)
+    list(APPEND SOURCE_FILES capi/sk_raw_decoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_JPEG_ENCODER)
+    list(APPEND SOURCE_FILES capi/sk_jpeg_encoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_WEBP_ENCODER)
+    list(APPEND SOURCE_FILES capi/sk_webp_encoder.cpp)
+endif()
+
+list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)

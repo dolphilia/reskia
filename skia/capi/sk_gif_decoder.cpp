@@ -8,6 +8,8 @@
 
 #include "../handles/static_sk_stream-internal.h"
 #include "../handles/static_sk_data-internal.h"
+#include "../handles/static_sk_codecs_decoder-internal.h"
+#include "../handles/static_sk_codec-internal.h"
 
 extern "C" {
 

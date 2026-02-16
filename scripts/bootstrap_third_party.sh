@@ -16,6 +16,14 @@ if [[ -d "${ROOT_DIR}/.git" ]]; then
     third_party/src/libjpeg-turbo \
     third_party/src/libwebp \
     third_party/src/libavif \
+    third_party/src/aom \
+    third_party/src/libjxl \
+    third_party/src/highway \
+    third_party/src/brotli \
+    third_party/src/lcms2 \
+    third_party/src/dng_sdk \
+    third_party/src/piex \
+    third_party/src/wuffs \
     third_party/src/expat \
     third_party/src/harfbuzz \
     third_party/src/icu \
@@ -35,5 +43,5 @@ Next step:
   scripts/build_third_party.sh --build-type Release
 
 Optional builds:
-  scripts/build_third_party.sh --with-avif --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x
+  scripts/build_third_party.sh --with-avif --with-jpegxl --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x
 OUT

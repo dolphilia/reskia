@@ -512,3 +512,62 @@ list(APPEND SOURCE_FILES
         src/xml/SkXMLParser.cpp
         src/xml/SkXMLWriter.cpp
 )
+
+if(RESKIA_ENABLE_AVIF)
+    list(APPEND SOURCE_FILES src/codec/SkAvifCodec.cpp)
+endif()
+
+if(RESKIA_ENABLE_JPEGXL)
+    list(APPEND SOURCE_FILES src/codec/SkJpegxlCodec.cpp)
+endif()
+
+if(RESKIA_ENABLE_RAW)
+    if(EXISTS "${RESKIA_ROOT_DIR}/third_party/src/dng_sdk/source/dng_host.h"
+            AND EXISTS "${RESKIA_ROOT_DIR}/third_party/src/piex/src/piex.h")
+        list(APPEND SOURCE_FILES src/codec/SkRawCodec.cpp)
+        file(GLOB DNG_SDK_SOURCES "${RESKIA_ROOT_DIR}/third_party/src/dng_sdk/source/*.cpp")
+        list(FILTER DNG_SDK_SOURCES EXCLUDE REGEX ".*/dng_xmp(_sdk)?\\.cpp$")
+        list(FILTER DNG_SDK_SOURCES EXCLUDE REGEX ".*/dng_validate\\.cpp$")
+        list(APPEND SOURCE_FILES ${DNG_SDK_SOURCES})
+        list(APPEND SOURCE_FILES
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/binary_parse/cached_paged_byte_array.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/binary_parse/range_checked_byte_ptr.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/image_type_recognition/image_type_recognition_lite.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/piex.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/piex_cr3.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/tiff_directory/tiff_directory.cc"
+                "${RESKIA_ROOT_DIR}/third_party/src/piex/src/tiff_parser.cc"
+        )
+    else()
+        message(WARNING "RESKIA_ENABLE_RAW=ON ですが third_party/src/dng_sdk または third_party/src/piex が未配置のため SkRawCodec.cpp は未追加です。")
+    endif()
+endif()
+
+if(RESKIA_ENABLE_GIF)
+    if(EXISTS "${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c/wuffs-v0.3.c")
+        list(APPEND SOURCE_FILES src/codec/SkWuffsCodec.cpp)
+        list(APPEND SOURCE_FILES "${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c/wuffs-v0.3.c")
+    else()
+        message(WARNING "RESKIA_ENABLE_GIF=ON ですが third_party/src/wuffs/release/c/wuffs-v0.3.c が未配置のため SkWuffsCodec.cpp は未追加です。")
+    endif()
+endif()
+
+if(RESKIA_ENABLE_JPEG_ENCODER)
+    list(APPEND SOURCE_FILES
+            src/encode/SkJPEGWriteUtility.cpp
+            src/encode/SkJpegEncoderImpl.cpp
+    )
+else()
+    list(APPEND SOURCE_FILES src/encode/SkJpegEncoder_none.cpp)
+endif()
+
+if(RESKIA_ENABLE_WEBP_ENCODER)
+    if(EXISTS "${PROJECT_SOURCE_DIR}/src/encode/SkWebpEncoderImpl.cpp")
+        list(APPEND SOURCE_FILES src/encode/SkWebpEncoderImpl.cpp)
+    else()
+        message(WARNING "RESKIA_ENABLE_WEBP_ENCODER=ON ですが SkWebpEncoderImpl.cpp が見つからないため none 実装を使用します。")
+        list(APPEND SOURCE_FILES src/encode/SkWebpEncoder_none.cpp)
+    endif()
+else()
+    list(APPEND SOURCE_FILES src/encode/SkWebpEncoder_none.cpp)
+endif()

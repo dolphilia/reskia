@@ -11,6 +11,7 @@ BUILD_TYPE="Release"
 JOBS=""
 CLEAN=0
 WITH_AVIF=0
+WITH_JPEGXL=0
 WITH_HARFBUZZ=0
 WITH_LIBGRAPHEME=0
 WITH_ICU=0
@@ -24,7 +25,8 @@ Options:
   --build-type <Debug|Release>  Build type (default: Release)
   --jobs <N>                    Parallel jobs (default: auto)
   --clean                       Remove each build directory before configure
-  --with-avif                   Build and install libavif (experimental)
+  --with-avif                   Build and install libavif (submodule + local aom)
+  --with-jpegxl                 Build and install libjxl stack (submodule + local deps)
   --with-harfbuzz               Build and install harfbuzz (minimal feature set)
   --with-libgrapheme            Build and install libgrapheme
   --with-icu                    Build and install ICU4C (icu/icu4c/source)
@@ -49,6 +51,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --with-avif)
       WITH_AVIF=1
+      shift
+      ;;
+    --with-jpegxl)
+      WITH_JPEGXL=1
       shift
       ;;
     --with-harfbuzz)
@@ -204,12 +210,52 @@ if [[ ${WITH_HARFBUZZ} -eq 1 ]]; then
 fi
 
 if [[ ${WITH_AVIF} -eq 1 ]]; then
-  # LOCAL tells libavif to fetch codec deps during configure if needed.
+  cmake_build_install aom "${SRC_DIR}/aom" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DENABLE_TESTS=OFF \
+    -DENABLE_TOOLS=OFF \
+    -DENABLE_EXAMPLES=OFF \
+    -DENABLE_DOCS=OFF
+
   cmake_build_install libavif "${SRC_DIR}/libavif" \
     -DBUILD_SHARED_LIBS=OFF \
     -DAVIF_BUILD_APPS=OFF \
     -DAVIF_BUILD_TESTS=OFF \
-    -DAVIF_CODEC_AOM=LOCAL
+    -DAVIF_LIBYUV=OFF \
+    -DAVIF_CODEC_AOM=SYSTEM \
+    -DAVIF_CODEC_DAV1D=OFF \
+    -DAVIF_CODEC_LIBGAV1=OFF \
+    -DAVIF_CODEC_RAV1E=OFF \
+    -DAVIF_CODEC_SVT=OFF
+fi
+
+if [[ ${WITH_JPEGXL} -eq 1 ]]; then
+  cmake_build_install highway "${SRC_DIR}/highway" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DHWY_ENABLE_TESTS=OFF \
+    -DHWY_ENABLE_EXAMPLES=OFF
+
+  cmake_build_install brotli "${SRC_DIR}/brotli" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBROTLI_DISABLE_TESTS=ON
+
+  cmake_build_install lcms2 "${SRC_DIR}/lcms2" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_TESTING=OFF
+
+  cmake_build_install libjxl "${SRC_DIR}/libjxl" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_TESTING=OFF \
+    -DJPEGXL_ENABLE_TOOLS=OFF \
+    -DJPEGXL_ENABLE_EXAMPLES=OFF \
+    -DJPEGXL_ENABLE_BENCHMARK=OFF \
+    -DJPEGXL_ENABLE_TESTS=OFF \
+    -DJPEGXL_ENABLE_JNI=OFF \
+    -DJPEGXL_ENABLE_DOXYGEN=OFF \
+    -DJPEGXL_ENABLE_MANPAGES=OFF \
+    -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
+    -DJPEGXL_FORCE_SYSTEM_HWY=ON \
+    -DJPEGXL_FORCE_SYSTEM_LCMS2=ON
 fi
 
 if [[ ${WITH_LIBGRAPHEME} -eq 1 ]]; then

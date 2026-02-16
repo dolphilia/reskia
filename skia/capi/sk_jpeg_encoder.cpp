@@ -4,7 +4,12 @@
 
 #include "sk_jpeg_encoder.h"
 
+#include "include/core/SkData.h"
+#include "include/encode/SkEncoder.h"
 #include "include/encode/SkJpegEncoder.h"
+
+#include "../handles/static_sk_data-internal.h"
+#include "../handles/static_sk_encoder-internal.h"
 
 extern "C" {
 

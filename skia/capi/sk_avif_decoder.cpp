@@ -4,22 +4,40 @@
 
 #include "sk_avif_decoder.h"
 
+#include "include/codec/SkAvifDecoder.h"
+
+#include "../handles/static_sk_stream.h"
+#include "../handles/static_sk_data.h"
+#include "../handles/static_sk_codec.h"
+#include "../handles/static_sk_codecs_decoder.h"
+
+#include "../handles/static_sk_stream-internal.h"
+#include "../handles/static_sk_data-internal.h"
+#include "../handles/static_sk_codecs_decoder-internal.h"
+#include "../handles/static_sk_codec-internal.h"
+
 extern "C" {
 
-//bool SkAvifDecoder_IsAvif(const void* ptr, size_t size) {
-//    return SkAvifDecoder::IsAvif(ptr, size);
-//}
-//
-//int SkAvifDecoder_Decode(int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-//    return static_sk_codec_make(SkAvifDecoder::Decode(static_sk_stream_move(static_stream), result, decodeContext));
-//}
-//
-//int SkAvifDecoder_Decode_2(int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) {
-//    return static_sk_codec_make(SkAvifDecoder::Decode(static_sk_data_move(static_data), result, decodeContext));
-//}
-//
-//int SkAvifDecoder_Decoder() {
-//    return static_sk_codecs_decoder_make(SkAvifDecoder::Decoder());
-//}
+bool SkAvifDecoder_IsAvif(const uint8_t *ptr, size_t size) {
+    return SkAvifDecoder::IsAvif(ptr, size);
+}
+
+sk_codec_t SkAvifDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
+    return static_sk_codec_make(SkAvifDecoder::Decode(
+        static_sk_stream_take_entity(stream),
+        reinterpret_cast<SkCodec::Result *>(result),
+        reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
+}
+
+sk_codec_t SkAvifDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
+    return static_sk_codec_make(SkAvifDecoder::Decode(
+        static_sk_data_get_entity(data),
+        reinterpret_cast<SkCodec::Result *>(result),
+        reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
+}
+
+sk_codecs_decoder_t SkAvifDecoder_Decoder() {
+    return static_sk_codecs_decoder_make(SkAvifDecoder::Decoder());
+}
 
 }
