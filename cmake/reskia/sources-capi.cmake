@@ -87,7 +87,6 @@ list(APPEND SOURCE_FILES
         capi/sk_path_effect.cpp
         capi/sk_path_measure.cpp
         capi/sk_path.cpp
-#        capi/sk_pdf.cpp
         capi/sk_perlin_noise_shader.cpp
         capi/sk_picture_recorder.cpp
         capi/sk_picture.cpp
@@ -171,6 +170,10 @@ endif()
 
 if(RESKIA_ENABLE_WEBP_ENCODER)
     list(APPEND SOURCE_FILES capi/sk_webp_encoder.cpp)
+endif()
+
+if(RESKIA_ENABLE_PDF)
+    list(APPEND SOURCE_FILES capi/sk_pdf.cpp)
 endif()
 
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)

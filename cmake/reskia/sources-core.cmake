@@ -552,6 +552,33 @@ if(RESKIA_ENABLE_GIF)
     endif()
 endif()
 
+if(RESKIA_ENABLE_PDF)
+    list(APPEND SOURCE_FILES
+            src/pdf/SkClusterator.cpp
+            src/pdf/SkDeflate.cpp
+            src/pdf/SkJpegInfo_none.cpp
+            src/pdf/SkKeyedImage.cpp
+            src/pdf/SkPDFBitmap.cpp
+            src/pdf/SkPDFDevice.cpp
+            src/pdf/SkPDFDocument.cpp
+            src/pdf/SkPDFFont.cpp
+            src/pdf/SkPDFFormXObject.cpp
+            src/pdf/SkPDFGradientShader.cpp
+            src/pdf/SkPDFGraphicStackState.cpp
+            src/pdf/SkPDFGraphicState.cpp
+            src/pdf/SkPDFMakeCIDGlyphWidthsArray.cpp
+            src/pdf/SkPDFMakeToUnicodeCmap.cpp
+            src/pdf/SkPDFMetadata.cpp
+            src/pdf/SkPDFResourceDict.cpp
+            src/pdf/SkPDFShader.cpp
+            src/pdf/SkPDFSubsetFont.cpp
+            src/pdf/SkPDFTag.cpp
+            src/pdf/SkPDFType1Font.cpp
+            src/pdf/SkPDFTypes.cpp
+            src/pdf/SkPDFUtils.cpp
+    )
+endif()
+
 if(RESKIA_ENABLE_JPEG_ENCODER)
     list(APPEND SOURCE_FILES
             src/encode/SkJPEGWriteUtility.cpp

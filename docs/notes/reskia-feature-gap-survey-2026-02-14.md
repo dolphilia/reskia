@@ -75,14 +75,14 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
   - Reskia `skia/CMakeLists.txt` には `src/gpu/*` が列挙されていない
   - `binding` には `GrDirectContext*` / `Recorder*` を受ける関数はあるが、コンテキスト生成系 API がほぼない
 
-### 3.7 PDF
+### 3.7 PDF ✅ 完了
 
 - 状態: 実装ファイルはあるが未有効
 - 根拠:
   - `skia/capi/sk_pdf.cpp` は存在
   - `skia/CMakeLists.txt` では `#        capi/sk_pdf.cpp` として無効
 
-### 3.8 コーデック拡張（AVIF/JPEGXL/GIF/RAW/OpenType SVG）
+### 3.8 コーデック拡張（AVIF/JPEGXL/GIF/RAW/OpenType SVG） ✅ 完了
 
 - 状態: 部分対応・未有効混在
 - 根拠:
@@ -90,7 +90,7 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
   - `sk_avif_decoder.cpp`, `sk_jpegxl_decoder.cpp` は関数実装自体がコメントアウト
   - `sk_gif_decoder.cpp`, `sk_open_type_svg_decoder.cpp` は実装あるが CMake 側で無効
 
-### 3.9 エンコーダ（JPEG/WebP）
+### 3.9 エンコーダ（JPEG/WebP） ✅ 完了
 
 - 状態: 実装ありだが未有効
 - 根拠:

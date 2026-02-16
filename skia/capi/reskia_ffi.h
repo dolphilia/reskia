@@ -30,6 +30,7 @@
 #include "sk_paint.h"
 #include "sk_path.h"
 #include "sk_path_effect.h"
+#include "sk_pdf.h"
 #include "sk_picture.h"
 #include "sk_pixel_ref.h"
 #include "sk_read_buffer.h"

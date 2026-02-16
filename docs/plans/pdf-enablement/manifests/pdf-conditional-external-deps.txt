@@ -1,0 +1,5 @@
+vendor/skia-upstream/src/pdf/SkDeflate.cpp:15:#include "zlib.h"  // NO_G3_REWRITE
+vendor/skia-upstream/src/pdf/SkPDFSubsetFont.cpp:12:#include "hb.h"  // NO_G3_REWRITE
+vendor/skia-upstream/src/pdf/SkPDFSubsetFont.cpp:13:#include "hb-subset.h"  // NO_G3_REWRITE
+vendor/skia-upstream/src/pdf/SkPDFSubsetFont.cpp:113:#include "sample/chromium/font_subsetter.h"
+vendor/skia-upstream/src/pdf/SkPDFSubsetFont.cpp:117:#include "third_party/icu/SkLoadICU.h"
