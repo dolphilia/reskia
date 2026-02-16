@@ -37,3 +37,18 @@
 [submodule "third_party/src/wuffs"]
 	path = third_party/src/wuffs
 	url = https://github.com/google/wuffs.git
+[submodule "third_party/src/aom"]
+	path = third_party/src/aom
+	url = https://aomedia.googlesource.com/aom
+[submodule "third_party/src/libjxl"]
+	path = third_party/src/libjxl
+	url = https://github.com/libjxl/libjxl.git
+[submodule "third_party/src/highway"]
+	path = third_party/src/highway
+	url = https://github.com/google/highway.git
+[submodule "third_party/src/brotli"]
+	path = third_party/src/brotli
+	url = https://github.com/google/brotli.git
+[submodule "third_party/src/lcms2"]
+	path = third_party/src/lcms2
+	url = https://github.com/mm2/Little-CMS.git
