@@ -579,6 +579,33 @@ if(RESKIA_ENABLE_PDF)
     )
 endif()
 
+if(RESKIA_ENABLE_SKOTTIE)
+    if(NOT APPLE)
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON は現在 APPLE のみ対応です。")
+    endif()
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/sksg/sksg.gni")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON ですが modules/sksg/sksg.gni が見つかりません。Phase 1 の同期を実施してください。")
+    endif()
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/skottie/skottie.gni")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON ですが modules/skottie/skottie.gni が見つかりません。Phase 1 の同期を実施してください。")
+    endif()
+
+    set(_reskia_skottie_sources "")
+    file(STRINGS "${PROJECT_SOURCE_DIR}/modules/sksg/sksg.gni" _reskia_sksg_gni_lines REGEX "\\$_modules/.+")
+    file(STRINGS "${PROJECT_SOURCE_DIR}/modules/skottie/skottie.gni" _reskia_skottie_gni_lines REGEX "\\$_modules/.+")
+
+    foreach(_reskia_gni_line IN LISTS _reskia_sksg_gni_lines _reskia_skottie_gni_lines)
+        string(REGEX MATCH "\\$_modules/[^\" ]+" _reskia_gni_path "${_reskia_gni_line}")
+        if(_reskia_gni_path)
+            string(REPLACE "$_modules/" "modules/" _reskia_module_path "${_reskia_gni_path}")
+            list(APPEND _reskia_skottie_sources "${_reskia_module_path}")
+        endif()
+    endforeach()
+
+    list(REMOVE_DUPLICATES _reskia_skottie_sources)
+    list(APPEND SOURCE_FILES ${_reskia_skottie_sources})
+endif()
+
 if(RESKIA_ENABLE_JPEG_ENCODER)
     list(APPEND SOURCE_FILES
             src/encode/SkJPEGWriteUtility.cpp

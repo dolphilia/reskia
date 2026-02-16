@@ -9,6 +9,7 @@ option(RESKIA_ENABLE_GIF "Enable GIF codec integration (requires Wuffs source)" 
 option(RESKIA_ENABLE_JPEG_ENCODER "Enable JPEG encoder integration" OFF)
 option(RESKIA_ENABLE_WEBP_ENCODER "Enable WebP encoder integration" OFF)
 option(RESKIA_ENABLE_PDF "Enable PDF backend integration" OFF)
+option(RESKIA_ENABLE_SKOTTIE "Enable skottie (Lottie) integration" OFF)
 
 set(RESKIA_THIRD_PARTY_PREFIX "" CACHE PATH "Install prefix used when RESKIA_DEPS_MODE=source")
 

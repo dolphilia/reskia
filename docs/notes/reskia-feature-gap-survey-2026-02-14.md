@@ -7,6 +7,7 @@
 - `/Users/dolphilia/github/reskia/vendor/skia-upstream`
 
 確認時刻: 2026-02-14 11:47:19 JST
+追補更新: 2026-02-17 07:38:20 JST（3.3 skottie 対応反映）
 
 ## 1. 調査方法
 
@@ -19,14 +20,14 @@
 Reskia 側 `skia/modules`:
 
 - `skcms`
+- `skottie`
 - `skresources`
+- `sksg`
 - `svg`
 
 upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配置:
 
-- `skottie`
 - `skparagraph`
-- `sksg`
 - `skplaintexteditor`
 - `skshaper`（Reskia では `svg/modules/skshaper` として同梱）
 - `skunicode`（Reskia では `svg/modules/skunicode` として同梱）
@@ -51,12 +52,23 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
   - `test_shaping_smoke` を追加し、UTF-8 + BiDi + 改行 shaping と SVG text 描画スモークを `PASS` 確認済み
   - 詳細: `/Users/dolphilia/github/reskia/docs/plans/svg-text-shaping-enablement/04-phase-4-build-matrix.md`, `/Users/dolphilia/github/reskia/docs/plans/svg-text-shaping-enablement/05-phase-5-smoke-and-docs.md`
 
-### 3.3 skottie（Lottie アニメーション）
+### 3.3 skottie（Lottie アニメーション） ✅ 完了
 
-- 状態: 未対応
+- 状態: 部分網羅（最小 C API + CMake トグル対応）
 - 根拠:
-  - `skia/modules/skottie` が存在しない
-  - `skia/CMakeLists.txt` に `modules/skottie` 系の source/link なし
+  - `skia/modules/skottie` と `skia/modules/sksg` を同期済み
+  - `RESKIA_ENABLE_SKOTTIE`（既定 `OFF`）を追加し、`ON` 時のみ `modules/sksg` / `modules/skottie` の source を取り込み
+  - `SK_ENABLE_SKOTTIE` / `SK_ENABLE_SKOTTIE_SKSLEFFECT` を `ON` 時に付与
+  - C API `skia/capi/sk_skottie.{h,cpp}` を追加（load/seek/render/release）
+  - `test_skottie_smoke` を追加し、`ctest -R c_skia_skottie_smoke` で `PASS` 確認
+- 制約:
+  - 現状 `RESKIA_ENABLE_SKOTTIE=ON` は `APPLE` のみ対応
+  - `RESKIA_DEPS_MODE=source` では `skresources` / `svg` の解決が必要
+- 詳細:
+  - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/02-phase-2-cmake-enablement.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/03-phase-3-capi-minimal.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/04-phase-4-build-matrix.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/05-phase-5-smoke-and-docs.md`
 
 ### 3.4 skparagraph（高機能テキストレイアウト）
 
@@ -67,10 +79,11 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 ### 3.5 sksg（Scene Graph）
 
-- 状態: 未対応
+- 状態: 部分網羅（skottie 依存として同梱）
 - 根拠:
-  - `skia/modules/sksg` が存在しない
-  - `binding` で `SkSG*` の公開なし
+  - `skia/modules/sksg` は同期済み
+  - `RESKIA_ENABLE_SKOTTIE=ON` 時に `sksg` ソースをビルドへ取り込み
+  - `binding` で `SkSG*` の直接公開は未実装
 
 ### 3.6 GPU（Ganesh/Graphite、Vulkan/Metal/Dawn）
 
@@ -82,63 +95,57 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 ### 3.7 PDF ✅ 完了
 
-- 状態: 実装ファイルはあるが未有効
+- 状態: 条件付き対応（既定 OFF）
 - 根拠:
   - `skia/capi/sk_pdf.cpp` は存在
-  - `skia/CMakeLists.txt` では `#        capi/sk_pdf.cpp` として無効
+  - `RESKIA_ENABLE_PDF=ON` で `sources-capi.cmake` から有効化可能
 
 ### 3.8 コーデック拡張（AVIF/JPEGXL/GIF/RAW/OpenType SVG） ✅ 完了
 
-- 状態: 部分対応・未有効混在
+- 状態: 部分対応・条件付き有効化
 - 根拠:
   - `SkAvifCodec.cpp`, `SkJpegxlCodec.cpp` などが `skia/CMakeLists.txt` でコメントアウト
   - `sk_avif_decoder.cpp`, `sk_jpegxl_decoder.cpp` は関数実装自体がコメントアウト
-  - `sk_gif_decoder.cpp`, `sk_open_type_svg_decoder.cpp` は実装あるが CMake 側で無効
+  - `sk_gif_decoder.cpp`, `sk_raw_decoder.cpp` はトグル（`RESKIA_ENABLE_GIF` / `RESKIA_ENABLE_RAW`）で有効化
+  - `sk_open_type_svg_decoder.cpp` は既定でビルド対象に組み込み済み
 
 ### 3.9 エンコーダ（JPEG/WebP） ✅ 完了
 
-- 状態: 実装ありだが未有効
+- 状態: 実装あり・条件付き有効化
 - 根拠:
   - `capi/sk_jpeg_encoder.cpp`, `capi/sk_webp_encoder.cpp` 存在
-  - `skia/CMakeLists.txt` で両方コメントアウト
+  - `RESKIA_ENABLE_JPEG_ENCODER` / `RESKIA_ENABLE_WEBP_ENCODER` で有効化可能
 
 ## 4. C binding の有効化状況（件数）
 
-- `skia/capi/*.cpp` 実ファイル数: 155
-- `skia/CMakeLists.txt` で有効化: 146
-- `skia/CMakeLists.txt` でコメントアウト: 9
+- `skia/capi/*.cpp` 実ファイル数: 157
+- 既定（主要トグル `OFF`）で有効: 147（`APPLE` の `capi/sk_typeface_mac.cpp` を含む）
+- `sources-capi.cmake` でコメントアウト: 2
+- トグル有効化で追加される C API: 8（AVIF/JPEGXL/GIF/RAW/JPEG encoder/WebP encoder/PDF/skottie）
 
-コメントアウト対象:
+コメントアウト対象（常時無効）:
 
 - `capi/sk_font_mgr_fontconfig.cpp`
-- `capi/sk_gif_decoder.cpp`
-- `capi/sk_jpeg_encoder.cpp`
-- `capi/sk_open_type_svg_decoder.cpp`
-- `capi/sk_pdf.cpp`
 - `capi/sk_raster_handle_allocator.cpp`
-- `capi/sk_raw_decoder.cpp`
-- `capi/sk_text_blob_builder_run_handler.cpp`
-- `capi/sk_webp_encoder.cpp`
 
 ## 5. 代表的な未網羅機能（優先候補）
 
 優先度A（機能価値が高い）:
 
-1. `skottie`（Lottie）
-2. `skparagraph`（高度テキスト組版）
-3. GPU実行パス（少なくとも1 backend: Metal/Vulkan のどちらか）
+1. `skparagraph`（高度テキスト組版）
+2. GPU実行パス（少なくとも1 backend: Metal/Vulkan のどちらか）
 
 優先度B（周辺機能の実用性向上）:
 
-4. PDF binding 有効化
-5. JPEG/WebP encoder binding 有効化
-6. GIF/OpenType SVG decoder binding 有効化
+3. PDF binding 有効化
+4. JPEG/WebP encoder binding 有効化
+5. GIF/OpenType SVG decoder binding 有効化
 
 優先度C（将来拡張）:
 
-7. `sksg`
-8. `skplaintexteditor`
-9. Web系モジュール（PathKit/CanvasKit/Jetski）
+6. `sksg` 直接 C API 公開
+7. `skplaintexteditor`
+8. Web系モジュール（PathKit/CanvasKit/Jetski）
 
 ## 6. 補足
 

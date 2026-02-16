@@ -176,4 +176,8 @@ if(RESKIA_ENABLE_PDF)
     list(APPEND SOURCE_FILES capi/sk_pdf.cpp)
 endif()
 
+if(RESKIA_ENABLE_SKOTTIE)
+    list(APPEND SOURCE_FILES capi/sk_skottie.cpp)
+endif()
+
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)

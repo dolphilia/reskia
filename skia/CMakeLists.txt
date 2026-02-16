@@ -48,6 +48,19 @@ foreach(_reskia_internal_lib IN LISTS RESKIA_INTERNAL_LIBS)
     unset(_reskia_internal_lib_path CACHE)
 endforeach()
 
+if(RESKIA_ENABLE_SKOTTIE)
+    if(NOT APPLE)
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON は現在 APPLE のみ対応です。")
+    endif()
+    if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+        if((NOT TARGET skresources) OR (NOT TARGET svg))
+            message(FATAL_ERROR
+                    "RESKIA_ENABLE_SKOTTIE=ON には skresources と svg の source モード解決が必要です。"
+            )
+        endif()
+    endif()
+endif()
+
 set(SOURCE_FILES reskia.cpp)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
@@ -99,6 +112,9 @@ target_include_directories(reskia
         "${PROJECT_SOURCE_DIR}"
         "${PROJECT_SOURCE_DIR}/_include"
 )
+if(RESKIA_ENABLE_SKOTTIE)
+    target_include_directories(reskia PRIVATE "${RESKIA_ROOT_DIR}/svg")
+endif()
 if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
 endif()
@@ -106,6 +122,12 @@ if(RESKIA_DEP_LINK_DIRS)
     target_link_directories(reskia PRIVATE ${RESKIA_DEP_LINK_DIRS})
 endif()
 target_compile_definitions(reskia PRIVATE SK_ENABLE_OPTIMIZE_SIZE)
+if(RESKIA_ENABLE_SKOTTIE)
+    target_compile_definitions(reskia PRIVATE
+            SK_ENABLE_SKOTTIE
+            SK_ENABLE_SKOTTIE_SKSLEFFECT
+    )
+endif()
 if(RESKIA_ENABLE_AVIF)
     if("src/codec/SkAvifCodec.cpp" IN_LIST SOURCE_FILES)
         target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_AVIF)
