@@ -33,9 +33,9 @@ foreach(_reskia_internal_lib IN LISTS RESKIA_INTERNAL_LIBS)
         find_library(_reskia_internal_lib_path
                 NAMES ${_reskia_internal_lib} lib${_reskia_internal_lib}
                 PATHS
-                "${RESKIA_ROOT_DIR}/skia/lib"
                 "${RESKIA_THIRD_PARTY_PREFIX}"
                 "${RESKIA_ROOT_DIR}/third_party/install"
+                "${RESKIA_ROOT_DIR}/skia/lib"
                 PATH_SUFFIXES lib lib64
         )
         if(NOT _reskia_internal_lib_path)
@@ -249,10 +249,20 @@ if(APPLE AND RESKIA_ENABLE_GPU_METAL)
     endif()
 endif()
 target_compile_features(reskia PRIVATE cxx_std_17)
+set(_reskia_external_include_root "${RESKIA_THIRD_PARTY_PREFIX}")
+if(_reskia_external_include_root STREQUAL "")
+    set(_reskia_external_include_root "${RESKIA_ROOT_DIR}/third_party/install")
+endif()
+set(RESKIA_PUBLIC_INCLUDE_DIRS
+        "${PROJECT_SOURCE_DIR}"
+        "${_reskia_external_include_root}/include"
+)
+if(EXISTS "${_reskia_external_include_root}/include/libpng18")
+    list(APPEND RESKIA_PUBLIC_INCLUDE_DIRS "${_reskia_external_include_root}/include/libpng18")
+endif()
 target_include_directories(reskia
     PRIVATE
-        "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/_include"
+        ${RESKIA_PUBLIC_INCLUDE_DIRS}
 )
 if(RESKIA_ENABLE_SKOTTIE OR RESKIA_ENABLE_SKPARAGRAPH)
     target_include_directories(reskia PRIVATE "${RESKIA_ROOT_DIR}/svg")
@@ -265,9 +275,6 @@ if(RESKIA_ENABLE_GPU_DAWN)
 endif()
 if(RESKIA_ENABLE_GPU_VULKAN)
     target_include_directories(reskia PRIVATE "${RESKIA_VMA_INCLUDE_DIR}")
-endif()
-if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
-    target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
 endif()
 if(RESKIA_DEP_LINK_DIRS)
     target_link_directories(reskia PRIVATE ${RESKIA_DEP_LINK_DIRS})

@@ -40,6 +40,7 @@ function(_reskia_find_required_library out_var mode root_dir)
                 PATHS
                 "${RESKIA_THIRD_PARTY_PREFIX}"
                 "${root_dir}/third_party/install"
+                "${root_dir}/skia/lib"
                 PATH_SUFFIXES lib lib64
         )
     endif()
@@ -52,36 +53,74 @@ endfunction()
 
 function(_reskia_resolve_mode_prebuilt root_dir out_link_dirs out_link_libs)
     # mode=prebuilt
-    # | Platform | Link Dirs       | Libraries                              |
-    # |----------|-----------------|----------------------------------------|
-    # | WIN32    | <root>/skia/lib | zlib, libpng, turbojpeg-static, webp* |
-    # | APPLE    | <root>/skia/lib | expat, png/jpeg, webp*                 |
-    # | UNIX     | <root>/skia/lib | (none)                                 |
-    set(_link_dirs "${root_dir}/skia/lib")
+    # | Platform | Link Dirs | Libraries                                      |
+    # |----------|-----------|------------------------------------------------|
+    # | WIN32    | (none)    | third_party/install 優先, skia/lib フォールバック |
+    # | APPLE    | (none)    | third_party/install 優先, skia/lib フォールバック |
+    # | UNIX     | (none)    | third_party/install 優先, skia/lib フォールバック |
+    set(_link_dirs "")
     set(_libs "")
 
     if(WIN32)
-        set(_libs zlib libpng turbojpeg-static libwebp libwebpdemux libwebpmux)
+        _reskia_find_required_library(_lib_zlib "prebuilt" "${root_dir}" NAMES z zlib zlibstatic)
+        _reskia_find_required_library(_lib_png "prebuilt" "${root_dir}" NAMES png png16 png18 libpng libpng16 libpng18)
+        _reskia_find_required_library(_lib_jpeg "prebuilt" "${root_dir}" NAMES jpeg libjpeg turbojpeg turbojpeg-static)
+        _reskia_find_required_library(_lib_webp "prebuilt" "${root_dir}" NAMES webp libwebp)
+        _reskia_find_required_library(_lib_webpdemux "prebuilt" "${root_dir}" NAMES webpdemux libwebpdemux)
+        _reskia_find_required_library(_lib_webpmux "prebuilt" "${root_dir}" NAMES webpmux libwebpmux)
+        list(APPEND _libs
+                "${_lib_zlib}"
+                "${_lib_png}"
+                "${_lib_jpeg}"
+                "${_lib_webp}"
+                "${_lib_webpdemux}"
+                "${_lib_webpmux}"
+        )
         if(RESKIA_ENABLE_AVIF)
-            list(APPEND _libs avif)
+            _reskia_find_required_library(_lib_avif "prebuilt" "${root_dir}" NAMES avif libavif)
+            list(APPEND _libs "${_lib_avif}")
         endif()
         if(RESKIA_ENABLE_JPEGXL)
-            list(APPEND _libs jxl jxl_threads jxl_cms)
+            _reskia_find_required_library(_lib_jxl "prebuilt" "${root_dir}" NAMES jxl libjxl)
+            _reskia_find_required_library(_lib_jxl_threads "prebuilt" "${root_dir}" NAMES jxl_threads libjxl_threads)
+            _reskia_find_required_library(_lib_jxl_cms "prebuilt" "${root_dir}" NAMES jxl_cms libjxl_cms)
+            list(APPEND _libs "${_lib_jxl}" "${_lib_jxl_threads}" "${_lib_jxl_cms}")
         endif()
     elseif(APPLE)
-        set(_libs expat png png16 jpeg webp webpdecoder webpdemux webpmux)
+        _reskia_find_required_library(_lib_expat "prebuilt" "${root_dir}" NAMES expat libexpat)
+        _reskia_find_required_library(_lib_png "prebuilt" "${root_dir}" NAMES png png16 png18 libpng libpng16 libpng18)
+        _reskia_find_required_library(_lib_jpeg "prebuilt" "${root_dir}" NAMES jpeg libjpeg turbojpeg)
+        _reskia_find_required_library(_lib_webp "prebuilt" "${root_dir}" NAMES webp libwebp)
+        _reskia_find_required_library(_lib_webpdecoder "prebuilt" "${root_dir}" NAMES webpdecoder libwebpdecoder)
+        _reskia_find_required_library(_lib_webpdemux "prebuilt" "${root_dir}" NAMES webpdemux libwebpdemux)
+        _reskia_find_required_library(_lib_webpmux "prebuilt" "${root_dir}" NAMES webpmux libwebpmux)
+        list(APPEND _libs
+                "${_lib_expat}"
+                "${_lib_png}"
+                "${_lib_jpeg}"
+                "${_lib_webp}"
+                "${_lib_webpdecoder}"
+                "${_lib_webpdemux}"
+                "${_lib_webpmux}"
+        )
         if(RESKIA_ENABLE_RAW OR RESKIA_ENABLE_PDF)
-            list(APPEND _libs z)
+            _reskia_find_required_library(_lib_zlib "prebuilt" "${root_dir}" NAMES z zlib)
+            list(APPEND _libs "${_lib_zlib}")
         endif()
         if(RESKIA_ENABLE_AVIF)
-            list(APPEND _libs avif)
+            _reskia_find_required_library(_lib_avif "prebuilt" "${root_dir}" NAMES avif libavif)
+            list(APPEND _libs "${_lib_avif}")
         endif()
         if(RESKIA_ENABLE_JPEGXL)
-            list(APPEND _libs jxl jxl_threads jxl_cms)
+            _reskia_find_required_library(_lib_jxl "prebuilt" "${root_dir}" NAMES jxl libjxl)
+            _reskia_find_required_library(_lib_jxl_threads "prebuilt" "${root_dir}" NAMES jxl_threads libjxl_threads)
+            _reskia_find_required_library(_lib_jxl_cms "prebuilt" "${root_dir}" NAMES jxl_cms libjxl_cms)
+            list(APPEND _libs "${_lib_jxl}" "${_lib_jxl_threads}" "${_lib_jxl_cms}")
         endif()
     elseif(UNIX)
         if(RESKIA_ENABLE_PDF)
-            set(_libs z)
+            _reskia_find_required_library(_lib_zlib "prebuilt" "${root_dir}" NAMES z zlib)
+            set(_libs "${_lib_zlib}")
         else()
             set(_libs "")
         endif()

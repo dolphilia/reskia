@@ -129,7 +129,6 @@ list(APPEND SOURCE_FILES
         capi/sk_surface_gpu.cpp
         capi/sk_surfaces.cpp
         capi/sk_table_mask_filter.cpp
-        capi/sk_text_blob_builder_run_handler.cpp
         capi/sk_text_blob_builder.cpp
         capi/sk_text_blob.cpp
         capi/sk_tiled_image_utils.cpp
@@ -176,6 +175,10 @@ endif()
 
 if(RESKIA_ENABLE_PDF)
     list(APPEND SOURCE_FILES capi/sk_pdf.cpp)
+endif()
+
+if(RESKIA_ENABLE_SKPARAGRAPH)
+    list(APPEND SOURCE_FILES capi/sk_text_blob_builder_run_handler.cpp)
 endif()
 
 if(RESKIA_ENABLE_SKOTTIE)

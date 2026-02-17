@@ -2,7 +2,7 @@ option(RESKIA_BUILD_TESTS "Build test_c_skia target" OFF)
 if(RESKIA_BUILD_TESTS)
     enable_testing()
     add_executable(test_c_skia test/test.cpp )
-    target_include_directories(test_c_skia PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+    target_include_directories(test_c_skia PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
     if(APPLE)
         find_library(CORE_FOUNDATION CoreFoundation)
         find_library(CORE_TEXT CoreText)
@@ -13,7 +13,7 @@ if(RESKIA_BUILD_TESTS)
     add_test(NAME c_skia_test COMMAND test_c_skia)
 
     add_executable(test_codec_smoke test/test_codec_smoke.cpp)
-    target_include_directories(test_codec_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+    target_include_directories(test_codec_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
     if(RESKIA_DEP_LINK_DIRS)
         target_link_directories(test_codec_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
     endif()
@@ -44,8 +44,7 @@ if(RESKIA_BUILD_TESTS)
     if(APPLE AND TARGET svg AND TARGET skshaper AND TARGET skunicode)
         add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
         target_include_directories(test_shaping_smoke PRIVATE
-                "${PROJECT_SOURCE_DIR}"
-                "${PROJECT_SOURCE_DIR}/_include"
+                ${RESKIA_PUBLIC_INCLUDE_DIRS}
                 "${RESKIA_ROOT_DIR}/svg"
         )
         if(RESKIA_DEP_LINK_DIRS)
@@ -57,7 +56,7 @@ if(RESKIA_BUILD_TESTS)
 
     if(RESKIA_ENABLE_PDF)
         add_executable(test_pdf_smoke test/test_pdf_smoke.cpp)
-        target_include_directories(test_pdf_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+        target_include_directories(test_pdf_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_pdf_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
         endif()
@@ -67,7 +66,7 @@ if(RESKIA_BUILD_TESTS)
 
     if(RESKIA_ENABLE_SKOTTIE)
         add_executable(test_skottie_smoke test/test_skottie_smoke.cpp)
-        target_include_directories(test_skottie_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+        target_include_directories(test_skottie_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_skottie_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
         endif()
@@ -77,7 +76,7 @@ if(RESKIA_BUILD_TESTS)
 
     if(RESKIA_ENABLE_SKSG)
         add_executable(test_sksg_smoke test/test_sksg_smoke.cpp)
-        target_include_directories(test_sksg_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+        target_include_directories(test_sksg_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_sksg_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
         endif()
@@ -85,7 +84,7 @@ if(RESKIA_BUILD_TESTS)
         add_test(NAME c_skia_sksg_smoke COMMAND test_sksg_smoke)
 
         add_executable(test_sksg_capi_smoke test/test_sksg_capi_smoke.cpp)
-        target_include_directories(test_sksg_capi_smoke PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/_include")
+        target_include_directories(test_sksg_capi_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_sksg_capi_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
         endif()
@@ -96,8 +95,7 @@ if(RESKIA_BUILD_TESTS)
     if(RESKIA_ENABLE_SKPARAGRAPH AND TARGET skshaper AND TARGET skunicode)
         add_executable(test_skparagraph_smoke test/test_skparagraph_smoke.cpp)
         target_include_directories(test_skparagraph_smoke PRIVATE
-                "${PROJECT_SOURCE_DIR}"
-                "${PROJECT_SOURCE_DIR}/_include"
+                ${RESKIA_PUBLIC_INCLUDE_DIRS}
                 "${RESKIA_ROOT_DIR}/svg"
         )
         if(RESKIA_DEP_LINK_DIRS)
@@ -110,8 +108,7 @@ if(RESKIA_BUILD_TESTS)
     if(APPLE AND RESKIA_ENABLE_GPU_GANESH AND RESKIA_ENABLE_GPU_METAL)
         add_executable(test_gpu_surface_capi_smoke test/test_gpu_surface_capi_smoke.mm)
         target_include_directories(test_gpu_surface_capi_smoke PRIVATE
-                "${PROJECT_SOURCE_DIR}"
-                "${PROJECT_SOURCE_DIR}/_include"
+                ${RESKIA_PUBLIC_INCLUDE_DIRS}
         )
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_gpu_surface_capi_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
@@ -123,8 +120,7 @@ if(RESKIA_BUILD_TESTS)
     if(APPLE AND RESKIA_ENABLE_GPU_METAL AND (RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE))
         add_executable(test_gpu_context_capi_smoke test/test_gpu_context_capi_smoke.mm)
         target_include_directories(test_gpu_context_capi_smoke PRIVATE
-                "${PROJECT_SOURCE_DIR}"
-                "${PROJECT_SOURCE_DIR}/_include"
+                ${RESKIA_PUBLIC_INCLUDE_DIRS}
         )
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_gpu_context_capi_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
