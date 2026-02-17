@@ -1,137 +1,92 @@
 # Reskia
 
-Reskia は、Google Skia を CMake ベースで扱いやすく再構成し、C 言語ラッパーを提供するためのリポジトリです。  
-主に以下を目的としています。
+Reskia は、Google Skia を CMake ベースで再構成し、C API を提供するリポジトリです。
 
-- Skia をモジュール単位の CMake プロジェクトとしてビルド可能にする
+主目的:
+
+- Skia を CMake で段階的にビルドできる構成へ整理する
 - C API（`skia/capi` と `skia/handles`）を通じて他言語連携しやすくする
 
-## ベースSkia
+## 現在の基準（2026-02-18）
 
-Reskia が基準としている Skia コミットは `vendor/skia-source.lock` で固定管理します。
-
-- lock: `vendor/skia-source.lock`
+- ベースSkiaロック: `vendor/skia-source.lock`
 - fixed ref: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
+- upstream 参照作業ツリー: `vendor/skia-upstream`（`.gitignore` で追跡対象外）
 
-比較・参照用の実クローンは以下に隔離配置します。
-
-- working clone: `vendor/skia-upstream`（`.gitignore` で追跡対象外）
-
-取得・同期:
+upstream 同期:
 
 ```bash
 scripts/fetch_skia_upstream.sh
 ```
 
-デフォルトは `google/skia`（upstream）を取得元にし、必要時のみ fork を選択します。
+fork 参照:
 
 ```bash
 scripts/fetch_skia_upstream.sh --remote fork
 ```
 
-履歴比較・追従の基準:
-
-- upstream: <https://github.com/google/skia>
-- fork: <https://github.com/dolphilia/skia>
-
-運用上は「upstream を正本、fork は補助（比較・一時回避）」とします。
-
 ## ディレクトリ構成
 
-- `skia/`: メイン共有ライブラリ `reskia`（Skia本体 + Cラッパー）
-- `skcms/`: `skcms` 静的ライブラリ
-- `skpath/`: `skcms` 相当の補助プロジェクト（`../skcms/src` フォールバックあり）
-- `skresources/`: `skresources` 静的ライブラリ
-- `svg/`: `svg`, `skshaper`, `skunicode`
-- `vendor/`: 比較・参照用Skia管理（lock は追跡、実クローンは追跡外）
-- `docs/`: ドキュメントルート
-  - `docs/notes/`: 調査結果・検証メモ
-  - `docs/guides/`: ガイド文書
-  - `docs/plans/`: 計画書
+- `skia/`: メイン共有ライブラリ `reskia` のビルド入口
+- `skia/capi/`: ポインタ境界の C API
+- `skia/handles/`: 整数ハンドル境界の C API
+- `skia/modules/skcms/`: `skcms` 静的ライブラリ
+- `skia/modules/skresources/`: `skresources` 静的ライブラリ
+- `skia/modules/svg/`: `svg`, `skshaper`, `skunicode` 静的ライブラリ
+- `skia/modules/skpath/`: `skpath_skcms`（`skcms` 互換エイリアス）
+- `cmake/deps/ReskiaDeps.cmake`: 依存解決モードと機能フラグ
+- `third_party/`: 依存サブモジュール（`src`）と生成物（`build`, `install`）
+- `docs/`: `guides`（運用ガイド）, `notes`（検証メモ）, `plans`（実装計画）
+
+注記:
+
+- ルート直下には `CMakeLists.txt` がありません。`skia/CMakeLists.txt` を入口として利用します。
 
 ## ビルド要件
 
 - CMake `>= 3.26.4`
 - C++17
-- macOS では AppleClang 環境を前提（現行検証環境）
+- 現行の検証環境: macOS + AppleClang
 
-## 依存管理モード（新規）
+## 依存解決モード
 
-`skia/CMakeLists.txt` は `RESKIA_DEPS_MODE` で依存解決方法を切り替えできます。
+`skia/CMakeLists.txt` は `RESKIA_DEPS_MODE` で依存解決を切り替えます。
 
-- `prebuilt`（既定）:
-  - 従来どおり `skia/lib` の事前ビルド済みライブラリを使用
-- `source`:
-  - `third_party/install` を参照して依存を解決
-  - 依存が未インストールなら configure で失敗
-- `system`:
-  - システム環境（`find_package` / `find_library`）から依存を解決
+- `prebuilt`（既定）
+  - `third_party/install` を優先参照して依存ライブラリを解決
+- `source`
+  - `third_party/install` 前提で解決
+  - APPLE では `skcms/skresources/svg` を `add_subdirectory` で連携
+  - WIN32 は現状未実装（`FATAL_ERROR`）
+- `system`
+  - `find_package` / `find_library` によるシステム解決
 
-補足:
+関連スクリプト:
 
-- `source` モード用の初期ディレクトリ作成:
-  - `scripts/bootstrap_third_party.sh`
-- 依存ビルド自動化:
-  - `scripts/build_third_party.sh`
-- 依存解決ロジック:
-  - `cmake/deps/ReskiaDeps.cmake`
+- サブモジュール初期化: `scripts/bootstrap_third_party.sh`
+- 依存ビルド: `scripts/build_third_party.sh`
 
-## CMake 移行ガイド（Phase 4）
-
-旧運用（`skia/lib` 前提）から新運用（mode 明示）へ移行する標準手順は、以下に一本化しています。
-
-- `docs/guides/cmake-migration-guide.md`
-
-差分の要点:
-
-- 旧: 依存解決は実質 `prebuilt` 固定
-- 新: `RESKIA_DEPS_MODE=prebuilt/source/system` を明示選択
-- 新: `source` は `bootstrap` + `build_third_party` を前提化
-
-## ビルド手順（例）
+## ビルド手順（基本）
 
 以下はリポジトリルートで実行します。
 
-### skia（reskia）
+### Debug / prebuilt
 
 ```bash
 cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
 cmake --build skia/cmake-build-local -j 8
 ```
 
-補足:
-
-- `reskia` は `SK_ENABLE_OPTIMIZE_SIZE` を付与してビルドする構成です。
-- `test_c_skia` は既定 `OFF`（`RESKIA_BUILD_TESTS`）です。
-
-### skia（reskia）Release ビルド例
-
-```bash
-cmake -S skia -B skia/cmake-build-release-local -DCMAKE_BUILD_TYPE=Release
-cmake --build skia/cmake-build-release-local -j 8
-```
-
-### skia（reskia）`source` モード例
+### Debug / source
 
 ```bash
 scripts/bootstrap_third_party.sh
 scripts/build_third_party.sh --build-type Release --clean
-cmake -S skia -B skia/cmake-build-source-local -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Release
+cmake -S skia -B skia/cmake-build-source-local -DCMAKE_BUILD_TYPE=Debug -DRESKIA_DEPS_MODE=source
 cmake --build skia/cmake-build-source-local -j 8
 ```
 
-注意:
-
-- 上記を成功させるには、事前に `third_party/install` へ各依存ライブラリをインストールしておく必要があります。
-- AVIF を有効にする場合:
-  - 依存ビルド: `scripts/build_third_party.sh --with-avif`
-  - Reskia 側: `-DRESKIA_ENABLE_AVIF=ON`
-- ICU / ICU4X を導入する場合:
-  - `scripts/build_third_party.sh --with-icu --with-icu4x`
-  - `--with-icu4x` には Rust ツールチェーン（`cargo`）が必要です。
-- `source` モードでは `skia/CMakeLists.txt` から `skcms`（および Apple では `skresources/svg`）を `add_subdirectory` 連携してビルドします。
-
-### skia（reskia）`RESKIA_BUILD_TESTS=ON` 検証手順
+### テストを有効にする場合
 
 ```bash
 cmake -S skia -B skia/cmake-build-tests-local -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON
@@ -139,55 +94,51 @@ cmake --build skia/cmake-build-tests-local -j 8
 ctest --test-dir skia/cmake-build-tests-local --output-on-failure
 ```
 
-注意:
+注記:
 
-- 2026-02-14 時点では `test_c_skia` は API 不整合が残っており、`RESKIA_BUILD_TESTS=ON` では失敗する可能性があります。
-- 現行の安定運用は `RESKIA_BUILD_TESTS=OFF`（既定値）で `reskia` 本体をビルドする方法です。
+- 既定は `RESKIA_BUILD_TESTS=OFF`。
+- `reskia` 本体は `SK_ENABLE_OPTIMIZE_SIZE` を有効化してビルドします。
 
-### skcms / skpath / skresources / svg
+## 代表的な機能フラグ
 
-```bash
-cmake -S skcms -B skcms/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
-cmake --build skcms/cmake-build-local -j 8
+`cmake/deps/ReskiaDeps.cmake` で以下の機能を切り替えできます（既定 OFF）。
 
-cmake -S skpath -B skpath/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
-cmake --build skpath/cmake-build-local -j 8
+- codec/format: `RESKIA_ENABLE_AVIF`, `RESKIA_ENABLE_JPEGXL`, `RESKIA_ENABLE_RAW`, `RESKIA_ENABLE_GIF`, `RESKIA_ENABLE_PDF`, `RESKIA_ENABLE_JPEG_GAINMAP`
+- encoder: `RESKIA_ENABLE_JPEG_ENCODER`, `RESKIA_ENABLE_WEBP_ENCODER`
+- text/layout: `RESKIA_ENABLE_SKSG`, `RESKIA_ENABLE_SKOTTIE`, `RESKIA_ENABLE_SKPARAGRAPH`, `RESKIA_ENABLE_FONTCONFIG_CAPI`
+- GPU: `RESKIA_ENABLE_GPU_GANESH`, `RESKIA_ENABLE_GPU_GRAPHITE`, `RESKIA_ENABLE_GPU_VULKAN`, `RESKIA_ENABLE_GPU_METAL`, `RESKIA_ENABLE_GPU_DAWN`
 
-cmake -S skresources -B skresources/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
-cmake --build skresources/cmake-build-local -j 8
+主な制約:
 
-cmake -S svg -B svg/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
-cmake --build svg/cmake-build-local -j 8
-```
+- `RESKIA_ENABLE_SKOTTIE=ON`: 現在 APPLE 前提
+- `RESKIA_ENABLE_SKPARAGRAPH=ON`: 現在 APPLE + `RESKIA_DEPS_MODE=source` + HarfBuzz 必須
+- `RESKIA_ENABLE_GPU_METAL=ON`: APPLE 限定
+- `RESKIA_ENABLE_GPU_DAWN=ON`: `RESKIA_ENABLE_GPU_GRAPHITE=ON` 必須
 
-## 非`skia`プロジェクトの現状（2026-02-14時点）
+## `svg/skshaper/skunicode` の縮退動作
 
-- `skcms`: build 成功
-- `skpath`: build 成功（`skcms` 変換ソースのフォールバック導入後）
-- `skresources`: build 成功
-- `svg`: `svg` / `skshaper` / `skunicode` すべて build 成功
+依存検出により実装を段階的に有効化します。依存不足時は最小実装へ縮退します。
 
-## `svg` の依存検出と機能縮退
+- `hb.h` 不在: HarfBuzz shaping 無効
+- `unicode/ubidi.h` 不在: ICU Unicode 処理と `SkShaper_skunicode` 無効
+- `ICU4XDataProvider.hpp` 不在: ICU4X 無効
+- `grapheme.h` 不在: libgrapheme 無効
+- 非Apple環境: CoreText 実装無効
 
-`svg/CMakeLists.txt` は依存ヘッダ検出ベースで `skshaper` / `skunicode` の実装を段階的に有効化します。  
-依存が無い場合は最小構成（primitive/hardcoded）でビルドします。
+## 2026-02-18 のビルド確認
 
-- `hb.h` が無い: HarfBuzz shaping 無効
-- `unicode/ubidi.h` が無い: ICU ベース Unicode 処理と `SkShaper_skunicode` 無効
-- `ICU4XDataProvider.hpp` が無い: ICU4X 無効
-- `grapheme.h` が無い: libgrapheme 無効
-- Apple 以外: CoreText 実装無効
+以下を確認済みです。
 
-## ドキュメント
+- `cmake -S skia -B skia/cmake-build-codex-docrefresh-prebuilt -DCMAKE_BUILD_TYPE=Debug` 成功
+- `cmake --build skia/cmake-build-codex-docrefresh-prebuilt -j 8` 成功（`Built target reskia`）
+- `cmake -S skia -B skia/cmake-build-codex-docrefresh-source -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Debug` 成功
+- `cmake --build skia/cmake-build-codex-docrefresh-source -j 8` 成功（`Built target reskia`）
 
-- 構造調査ガイド: `docs/guides/repository-structure.md`
-- `skia/CMakeLists.txt` ビルド検証: `docs/notes/skia-cmakelists-build-report-2026-02-13.md`
-- 依存管理方針の実施結果: `docs/notes/dependency-management-report-2026-02-14.md`
-- `third_party` サブモジュール化と自動ビルド: `docs/notes/third-party-submodule-automation-2026-02-14.md`
-- `vendor` 比較Skia管理の実装: `docs/notes/vendor-skia-management-2026-02-14.md`
-- Cバインディング設計レビュー: `docs/notes/c-binding-static-binding-review-2026-02-14.md`
-- Cバインディング改善計画: `docs/plans/c-binding-remediation/README.md`
-- CMake構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
-- CMake構成改善計画: `docs/plans/cmake-remediation/README.md`
-- CMake移行ガイド（Phase 4）: `docs/guides/cmake-migration-guide.md`
-- 機能ギャップ調査（upstream比較）: `docs/notes/reskia-feature-gap-survey-2026-02-14.md`
+## 主要ドキュメント
+
+- 構造ガイド: `docs/guides/repository-structure.md`
+- CMake移行ガイド: `docs/guides/cmake-migration-guide.md`
+- `skia` ビルド検証: `docs/notes/skia-cmakelists-build-report-2026-02-13.md`
+- 依存管理レポート: `docs/notes/dependency-management-report-2026-02-14.md`
+- C binding 設計レビュー: `docs/notes/c-binding-static-binding-review-2026-02-14.md`
+- CMake 構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
