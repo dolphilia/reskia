@@ -3,6 +3,7 @@
 //
 
 #include "sk_font_mgr_fontconfig.h"
+#include "../handles/static_sk_font_mgr-internal.h"
 
 extern "C" {
 

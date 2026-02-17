@@ -42,7 +42,6 @@ function(_reskia_find_required_library out_var mode root_dir)
                 PATHS
                 "${RESKIA_THIRD_PARTY_PREFIX}"
                 "${root_dir}/third_party/install"
-                "${root_dir}/skia/lib"
                 PATH_SUFFIXES lib lib64
         )
     endif()
@@ -57,9 +56,9 @@ function(_reskia_resolve_mode_prebuilt root_dir out_link_dirs out_link_libs)
     # mode=prebuilt
     # | Platform | Link Dirs | Libraries                                      |
     # |----------|-----------|------------------------------------------------|
-    # | WIN32    | (none)    | third_party/install 優先, skia/lib フォールバック |
-    # | APPLE    | (none)    | third_party/install 優先, skia/lib フォールバック |
-    # | UNIX     | (none)    | third_party/install 優先, skia/lib フォールバック |
+    # | WIN32    | (none)    | third_party/install から find_library で解決 |
+    # | APPLE    | (none)    | third_party/install から find_library で解決 |
+    # | UNIX     | (none)    | third_party/install から find_library で解決 |
     set(_link_dirs "")
     set(_libs "")
 

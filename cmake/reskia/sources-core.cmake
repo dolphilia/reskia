@@ -521,6 +521,32 @@ if(RESKIA_ENABLE_JPEG_GAINMAP)
     )
 endif()
 
+if(RESKIA_ENABLE_FONTCONFIG_CAPI)
+    if(UNIX)
+        set(_reskia_fontconfig_sources
+                src/ports/SkFontHost_FreeType_common.cpp
+                src/ports/SkFontHost_FreeType.cpp
+                src/ports/SkFontMgr_fontconfig.cpp
+        )
+        set(_reskia_fontconfig_missing "")
+        foreach(_reskia_src IN LISTS _reskia_fontconfig_sources)
+            if(NOT EXISTS "${PROJECT_SOURCE_DIR}/${_reskia_src}")
+                list(APPEND _reskia_fontconfig_missing "${_reskia_src}")
+            endif()
+        endforeach()
+        if(_reskia_fontconfig_missing)
+            string(JOIN ", " _reskia_fontconfig_missing_joined ${_reskia_fontconfig_missing})
+            message(WARNING
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが必要ソースが不足しています: "
+                    "${_reskia_fontconfig_missing_joined}")
+        else()
+            list(APPEND SOURCE_FILES ${_reskia_fontconfig_sources})
+        endif()
+    else()
+        message(WARNING "RESKIA_ENABLE_FONTCONFIG_CAPI=ON は現在 UNIX のみ対応です。")
+    endif()
+endif()
+
 if(RESKIA_ENABLE_RAW)
     if(EXISTS "${RESKIA_ROOT_DIR}/third_party/src/dng_sdk/source/dng_host.h"
             AND EXISTS "${RESKIA_ROOT_DIR}/third_party/src/piex/src/piex.h")

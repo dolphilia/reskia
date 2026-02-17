@@ -28,7 +28,9 @@ if [[ -d "${ROOT_DIR}/.git" ]]; then
     third_party/src/harfbuzz \
     third_party/src/icu \
     third_party/src/icu4x \
-    third_party/src/libgrapheme
+    third_party/src/libgrapheme \
+    third_party/src/freetype2 \
+    third_party/src/fontconfig
 fi
 
 cat <<OUT
@@ -43,5 +45,5 @@ Next step:
   scripts/build_third_party.sh --build-type Release
 
 Optional builds:
-  scripts/build_third_party.sh --with-avif --with-jpegxl --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x
+  scripts/build_third_party.sh --with-avif --with-jpegxl --with-harfbuzz --with-libgrapheme --with-icu --with-icu4x --with-fontconfig
 OUT

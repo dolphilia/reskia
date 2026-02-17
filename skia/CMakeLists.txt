@@ -35,7 +35,6 @@ foreach(_reskia_internal_lib IN LISTS RESKIA_INTERNAL_LIBS)
                 PATHS
                 "${RESKIA_THIRD_PARTY_PREFIX}"
                 "${RESKIA_ROOT_DIR}/third_party/install"
-                "${RESKIA_ROOT_DIR}/skia/lib"
                 PATH_SUFFIXES lib lib64
         )
         if(NOT _reskia_internal_lib_path)
@@ -230,9 +229,13 @@ elseif (APPLE)
     )
 elseif (UNIX)
     list(APPEND SOURCE_FILES
-            src/ports/SkFontMgr_empty_factory.cpp
             src/ports/SkOSFile_posix.cpp
     )
+    if(RESKIA_ENABLE_FONTCONFIG_CAPI)
+        list(APPEND SOURCE_FILES src/ports/SkFontMgr_fontconfig_factory.cpp)
+    else()
+        list(APPEND SOURCE_FILES src/ports/SkFontMgr_empty_factory.cpp)
+    endif()
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
@@ -360,6 +363,9 @@ if(RESKIA_ENABLE_PDF)
     endif()
 endif()
 if(RESKIA_ENABLE_FONTCONFIG_CAPI)
+    if(NOT UNIX)
+        message(FATAL_ERROR "RESKIA_ENABLE_FONTCONFIG_CAPI=ON は現在 UNIX のみ対応です。")
+    endif()
     if("capi/sk_font_mgr_fontconfig.cpp" IN_LIST SOURCE_FILES)
         find_path(RESKIA_FONTCONFIG_INCLUDE_DIR
                 NAMES fontconfig/fontconfig.h
@@ -376,8 +382,34 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
                     "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが fontconfig 依存が見つかりません。"
                     "fontconfig/fontconfig.h と libfontconfig を導入してください。")
         endif()
+        find_package(Freetype QUIET)
+        if(Freetype_FOUND)
+            set(RESKIA_FREETYPE_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIRS}")
+            set(RESKIA_FREETYPE_LIBRARIES "${FREETYPE_LIBRARIES}")
+        else()
+            find_path(RESKIA_FREETYPE_INCLUDE_DIR
+                    NAMES ft2build.h
+                    HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                    PATH_SUFFIXES include include/freetype2
+            )
+            find_library(RESKIA_FREETYPE_LIBRARY
+                    NAMES freetype libfreetype
+                    HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                    PATH_SUFFIXES lib lib64
+            )
+            if(RESKIA_FREETYPE_INCLUDE_DIR AND RESKIA_FREETYPE_LIBRARY)
+                set(RESKIA_FREETYPE_INCLUDE_DIRS "${RESKIA_FREETYPE_INCLUDE_DIR}")
+                set(RESKIA_FREETYPE_LIBRARIES "${RESKIA_FREETYPE_LIBRARY}")
+            endif()
+        endif()
+        if(NOT RESKIA_FREETYPE_INCLUDE_DIRS OR NOT RESKIA_FREETYPE_LIBRARIES)
+            message(FATAL_ERROR
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが FreeType 依存が見つかりません。"
+                    "ft2build.h と libfreetype を導入してください。")
+        endif()
         target_include_directories(reskia PRIVATE "${RESKIA_FONTCONFIG_INCLUDE_DIR}")
-        target_link_libraries(reskia PRIVATE "${RESKIA_FONTCONFIG_LIBRARY}")
+        target_include_directories(reskia PRIVATE ${RESKIA_FREETYPE_INCLUDE_DIRS})
+        target_link_libraries(reskia "${RESKIA_FONTCONFIG_LIBRARY}" ${RESKIA_FREETYPE_LIBRARIES})
     else()
         message(WARNING
                 "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが capi/sk_font_mgr_fontconfig.cpp が SOURCE_FILES に未登録です。")

@@ -191,11 +191,11 @@ endif()
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)
 
 if(RESKIA_ENABLE_FONTCONFIG_CAPI)
-    if(EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontMgr_fontconfig.cpp")
+    if(UNIX AND EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontMgr_fontconfig.cpp")
         list(APPEND SOURCE_FILES capi/sk_font_mgr_fontconfig.cpp)
     else()
         message(WARNING
-                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが src/ports/SkFontMgr_fontconfig.cpp が見つからないため "
-                "capi/sk_font_mgr_fontconfig.cpp は未追加です。")
+                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが UNIX 向け実装ファイル "
+                "src/ports/SkFontMgr_fontconfig.cpp が利用できないため capi/sk_font_mgr_fontconfig.cpp は未追加です。")
     endif()
 endif()

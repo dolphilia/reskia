@@ -16,6 +16,7 @@ WITH_HARFBUZZ=0
 WITH_LIBGRAPHEME=0
 WITH_ICU=0
 WITH_ICU4X=0
+WITH_FONTCONFIG=0
 
 usage() {
   cat <<USAGE
@@ -31,6 +32,7 @@ Options:
   --with-libgrapheme            Build and install libgrapheme
   --with-icu                    Build and install ICU4C (icu/icu4c/source)
   --with-icu4x                  Build and install ICU4X C API staticlib + C/C++ headers
+  --with-fontconfig             Build and install freetype2 + fontconfig (meson)
   -h, --help                    Show this help
 USAGE
 }
@@ -73,6 +75,10 @@ while [[ $# -gt 0 ]]; do
       WITH_ICU4X=1
       shift
       ;;
+    --with-fontconfig)
+      WITH_FONTCONFIG=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -94,6 +100,8 @@ if [[ -z "${JOBS}" ]]; then
     JOBS=4
   fi
 fi
+
+BUILD_TYPE_LOWER="$(printf '%s' "${BUILD_TYPE}" | tr '[:upper:]' '[:lower:]')"
 
 make_build_install() {
   local name="$1"
@@ -311,6 +319,49 @@ if [[ ${WITH_ICU4X} -eq 1 ]]; then
   rm -rf "${INSTALL_DIR}/include/icu4x" "${INSTALL_DIR}/include/icu4x-c"
   copy_tree "${ICU4X_CAPI_DIR}/bindings/cpp/icu4x" "${INSTALL_DIR}/include/icu4x"
   copy_tree "${ICU4X_CAPI_DIR}/bindings/c" "${INSTALL_DIR}/include/icu4x-c"
+fi
+
+if [[ ${WITH_FONTCONFIG} -eq 1 ]]; then
+  cmake_build_install freetype2 "${SRC_DIR}/freetype2" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DFT_DISABLE_BROTLI=TRUE \
+    -DFT_DISABLE_BZIP2=TRUE \
+    -DFT_DISABLE_HARFBUZZ=TRUE \
+    -DFT_DISABLE_PNG=FALSE \
+    -DFT_DISABLE_ZLIB=FALSE
+
+  if ! command -v meson >/dev/null 2>&1; then
+    echo "meson is required for --with-fontconfig" >&2
+    exit 1
+  fi
+  if ! command -v ninja >/dev/null 2>&1; then
+    echo "ninja is required for --with-fontconfig" >&2
+    exit 1
+  fi
+
+  FONTCONFIG_BUILD_DIR="${BUILD_DIR}/fontconfig"
+  require_dir "${SRC_DIR}/fontconfig"
+  if [[ ${CLEAN} -eq 1 ]]; then
+    rm -rf "${FONTCONFIG_BUILD_DIR}"
+  fi
+
+  PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}" \
+  meson setup "${FONTCONFIG_BUILD_DIR}" "${SRC_DIR}/fontconfig" \
+    --prefix "${INSTALL_DIR}" \
+    --buildtype "${BUILD_TYPE_LOWER}" \
+    --default-library static \
+    -Dtests=disabled \
+    -Dtools=disabled \
+    -Ddoc=disabled \
+    -Dcache-build=disabled \
+    -Dnls=disabled \
+    -Dxml-backend=expat \
+    --wipe
+
+  PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}" \
+  meson compile -C "${FONTCONFIG_BUILD_DIR}" -j "${JOBS}"
+  PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}" \
+  meson install -C "${FONTCONFIG_BUILD_DIR}"
 fi
 
 cat <<OUT
