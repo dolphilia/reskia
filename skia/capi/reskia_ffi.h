@@ -23,6 +23,7 @@
 #include "sk_flattenable.h"
 #include "sk_font_mgr.h"
 #include "sk_font_style_set.h"
+#include "sk_gpu_context.h"
 #include "sk_image.h"
 #include "sk_image_filter.h"
 #include "sk_mask_filter.h"

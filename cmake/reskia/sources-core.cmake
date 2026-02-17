@@ -644,6 +644,162 @@ if(RESKIA_ENABLE_SKPARAGRAPH)
     list(APPEND SOURCE_FILES ${_reskia_skparagraph_sources})
 endif()
 
+if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/src/gpu")
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_GPU_GANESH=ON または RESKIA_ENABLE_GPU_GRAPHITE=ON ですが "
+                "src/gpu が見つかりません。Phase 1 の同期を実施してください。")
+    endif()
+
+    file(GLOB_RECURSE _reskia_gpu_all_sources
+            RELATIVE "${PROJECT_SOURCE_DIR}"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.c"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.cc"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.cpp"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.mm")
+    if(NOT _reskia_gpu_all_sources)
+        message(FATAL_ERROR
+                "GPU トグルが有効ですが src/gpu に実ファイルがありません。"
+                "docs/plans/gpu-enablement/manifests/phase1-gpu-diff.txt を参照して同期してください。")
+    endif()
+
+    macro(_reskia_append_gpu_sources)
+        file(GLOB_RECURSE _reskia_gpu_glob
+                RELATIVE "${PROJECT_SOURCE_DIR}"
+                ${ARGN})
+        if(_reskia_gpu_glob)
+            list(APPEND _reskia_gpu_sources ${_reskia_gpu_glob})
+        endif()
+    endmacro()
+
+    set(_reskia_gpu_sources "")
+    file(GLOB _reskia_gpu_root_sources
+            RELATIVE "${PROJECT_SOURCE_DIR}"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.c"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.cc"
+            "${PROJECT_SOURCE_DIR}/src/gpu/*.cpp")
+    if(_reskia_gpu_root_sources)
+        list(APPEND _reskia_gpu_sources ${_reskia_gpu_root_sources})
+    endif()
+
+    file(GLOB _reskia_gpu_tessellate_sources
+            RELATIVE "${PROJECT_SOURCE_DIR}"
+            "${PROJECT_SOURCE_DIR}/src/gpu/tessellate/*.c"
+            "${PROJECT_SOURCE_DIR}/src/gpu/tessellate/*.cc"
+            "${PROJECT_SOURCE_DIR}/src/gpu/tessellate/*.cpp")
+    if(_reskia_gpu_tessellate_sources)
+        list(APPEND _reskia_gpu_sources ${_reskia_gpu_tessellate_sources})
+    endif()
+
+    file(GLOB _reskia_text_gpu_sources
+            RELATIVE "${PROJECT_SOURCE_DIR}"
+            "${PROJECT_SOURCE_DIR}/src/text/gpu/*.c"
+            "${PROJECT_SOURCE_DIR}/src/text/gpu/*.cc"
+            "${PROJECT_SOURCE_DIR}/src/text/gpu/*.cpp")
+    if(_reskia_text_gpu_sources)
+        list(APPEND _reskia_gpu_sources ${_reskia_text_gpu_sources})
+    endif()
+
+    if(RESKIA_ENABLE_GPU_GANESH)
+        _reskia_append_gpu_sources(
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp")
+    endif()
+
+    if(RESKIA_ENABLE_GPU_GRAPHITE)
+        _reskia_append_gpu_sources(
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cpp")
+    endif()
+
+    if(RESKIA_ENABLE_GPU_VULKAN)
+        _reskia_append_gpu_sources(
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cpp")
+        if(RESKIA_ENABLE_GPU_GRAPHITE)
+            _reskia_append_gpu_sources(
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cpp")
+        endif()
+    endif()
+
+    if(RESKIA_ENABLE_GPU_METAL)
+        _reskia_append_gpu_sources(
+                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.mm"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.mm"
+                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cpp")
+        if(RESKIA_ENABLE_GPU_GRAPHITE)
+            _reskia_append_gpu_sources(
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/mtl/*.mm"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/mtl/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/mtl/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/mtl/*.cpp")
+        endif()
+    endif()
+
+    if(RESKIA_ENABLE_GPU_DAWN)
+        _reskia_append_gpu_sources(
+                "${PROJECT_SOURCE_DIR}/src/gpu/dawn/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/dawn/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/dawn/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/dawn/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/dawn/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/dawn/*.cpp")
+    endif()
+
+    if(NOT RESKIA_ENABLE_GPU_VULKAN)
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/vk/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/vk/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/vk/")
+    endif()
+    if(NOT RESKIA_ENABLE_GPU_METAL)
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/mtl/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/mtl/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/mtl/")
+    endif()
+    if(NOT RESKIA_ENABLE_GPU_DAWN)
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/dawn/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/dawn/")
+    endif()
+
+    if(NOT APPLE)
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/mtl/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/mtl/")
+    endif()
+    if(NOT WIN32)
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/d3d/")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/gl/win/")
+    endif()
+
+    list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/GrAHardwareBuffer")
+    list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/gl/android/")
+    list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/gl/")
+    list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/ganesh/gl/webgl/")
+
+    list(REMOVE_DUPLICATES _reskia_gpu_sources)
+    if(NOT _reskia_gpu_sources)
+        message(FATAL_ERROR
+                "GPU トグルに対応する src/gpu ソースが見つかりません。"
+                "有効化オプションと同期内容を確認してください。")
+    endif()
+
+    list(APPEND SOURCE_FILES ${_reskia_gpu_sources})
+    unset(_reskia_gpu_all_sources)
+    unset(_reskia_gpu_sources)
+endif()
+
 if(RESKIA_ENABLE_JPEG_ENCODER)
     list(APPEND SOURCE_FILES
             src/encode/SkJPEGWriteUtility.cpp

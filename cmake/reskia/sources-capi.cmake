@@ -51,6 +51,7 @@ list(APPEND SOURCE_FILES
         capi/sk_font.cpp
         capi/sk_gradient_shader.cpp
         capi/sk_graphics.cpp
+        capi/sk_gpu_context.cpp
         capi/sk_high_contrast_config.cpp
         capi/sk_high_contrast_filter.cpp
         capi/sk_i_point.cpp

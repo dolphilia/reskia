@@ -12,6 +12,11 @@ option(RESKIA_ENABLE_PDF "Enable PDF backend integration" OFF)
 option(RESKIA_ENABLE_SKSG "Enable sksg (Scene Graph) integration" OFF)
 option(RESKIA_ENABLE_SKOTTIE "Enable skottie (Lottie) integration" OFF)
 option(RESKIA_ENABLE_SKPARAGRAPH "Enable skparagraph integration" OFF)
+option(RESKIA_ENABLE_GPU_GANESH "Enable Skia Ganesh GPU backend integration" OFF)
+option(RESKIA_ENABLE_GPU_GRAPHITE "Enable Skia Graphite GPU backend integration" OFF)
+option(RESKIA_ENABLE_GPU_VULKAN "Enable Vulkan GPU backend integration" OFF)
+option(RESKIA_ENABLE_GPU_METAL "Enable Metal GPU backend integration" OFF)
+option(RESKIA_ENABLE_GPU_DAWN "Enable Dawn GPU backend integration (experimental)" OFF)
 
 set(RESKIA_THIRD_PARTY_PREFIX "" CACHE PATH "Install prefix used when RESKIA_DEPS_MODE=source")
 

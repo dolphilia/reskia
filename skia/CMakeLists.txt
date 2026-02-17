@@ -106,6 +106,56 @@ if(RESKIA_ENABLE_SKPARAGRAPH)
     )
 endif()
 
+if(RESKIA_ENABLE_GPU_VULKAN OR RESKIA_ENABLE_GPU_METAL OR RESKIA_ENABLE_GPU_DAWN)
+    if(NOT (RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE))
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_GPU_VULKAN/METAL/DAWN を有効化する場合は "
+                "RESKIA_ENABLE_GPU_GANESH または RESKIA_ENABLE_GPU_GRAPHITE も有効化してください。")
+    endif()
+endif()
+
+if(RESKIA_ENABLE_GPU_DAWN AND NOT RESKIA_ENABLE_GPU_GRAPHITE)
+    message(FATAL_ERROR "RESKIA_ENABLE_GPU_DAWN=ON は現在 RESKIA_ENABLE_GPU_GRAPHITE=ON が必須です。")
+endif()
+
+if(RESKIA_ENABLE_GPU_METAL AND NOT APPLE)
+    message(FATAL_ERROR "RESKIA_ENABLE_GPU_METAL=ON は現在 APPLE のみ対応です。")
+endif()
+
+if(RESKIA_ENABLE_GPU_GRAPHITE AND NOT (RESKIA_ENABLE_GPU_METAL OR RESKIA_ENABLE_GPU_VULKAN OR RESKIA_ENABLE_GPU_DAWN))
+    message(FATAL_ERROR
+            "RESKIA_ENABLE_GPU_GRAPHITE=ON の場合は少なくとも 1 つの backend "
+            "(RESKIA_ENABLE_GPU_METAL / RESKIA_ENABLE_GPU_VULKAN / RESKIA_ENABLE_GPU_DAWN) を有効化してください。")
+endif()
+
+if(RESKIA_ENABLE_GPU_VULKAN)
+    find_package(Vulkan REQUIRED)
+endif()
+
+set(RESKIA_DAWN_INCLUDE_DIR "" CACHE PATH "Dawn include directory (required when RESKIA_ENABLE_GPU_DAWN=ON)")
+set(RESKIA_DAWN_LIBRARY "" CACHE FILEPATH "Dawn library path (required when RESKIA_ENABLE_GPU_DAWN=ON)")
+if(RESKIA_ENABLE_GPU_DAWN)
+    if(RESKIA_DAWN_INCLUDE_DIR STREQUAL "")
+        find_path(RESKIA_DAWN_INCLUDE_DIR
+                NAMES dawn/webgpu.h webgpu/webgpu.h
+                HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                PATH_SUFFIXES include
+        )
+    endif()
+    if(RESKIA_DAWN_LIBRARY STREQUAL "")
+        find_library(RESKIA_DAWN_LIBRARY
+                NAMES dawn webgpu_dawn dawn_native
+                HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                PATH_SUFFIXES lib lib64
+        )
+    endif()
+    if(NOT RESKIA_DAWN_INCLUDE_DIR OR NOT RESKIA_DAWN_LIBRARY)
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_GPU_DAWN=ON ですが Dawn 依存が見つかりません。"
+                "RESKIA_DAWN_INCLUDE_DIR と RESKIA_DAWN_LIBRARY を指定してください。")
+    endif()
+endif()
+
 set(SOURCE_FILES reskia.cpp)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
@@ -151,6 +201,18 @@ elseif (UNIX)
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
+if(APPLE AND RESKIA_ENABLE_GPU_METAL)
+    set(_reskia_gpu_mtl_sources "")
+    foreach(_reskia_src IN LISTS SOURCE_FILES)
+        if(_reskia_src MATCHES "^src/gpu/.+\\.mm$")
+            list(APPEND _reskia_gpu_mtl_sources "${PROJECT_SOURCE_DIR}/${_reskia_src}")
+        endif()
+    endforeach()
+    if(_reskia_gpu_mtl_sources)
+        set_source_files_properties(${_reskia_gpu_mtl_sources}
+                PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+    endif()
+endif()
 target_compile_features(reskia PRIVATE cxx_std_17)
 target_include_directories(reskia
     PRIVATE
@@ -162,6 +224,9 @@ if(RESKIA_ENABLE_SKOTTIE OR RESKIA_ENABLE_SKPARAGRAPH)
 endif()
 if(RESKIA_ENABLE_SKPARAGRAPH)
     target_include_directories(reskia PRIVATE "${RESKIA_SKPARAGRAPH_HARFBUZZ_INCLUDE_DIR}")
+endif()
+if(RESKIA_ENABLE_GPU_DAWN)
+    target_include_directories(reskia PRIVATE "${RESKIA_DAWN_INCLUDE_DIR}")
 endif()
 if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
@@ -243,13 +308,38 @@ if(RESKIA_ENABLE_PDF)
         message(WARNING "RESKIA_ENABLE_PDF=ON ですが src/pdf/SkPDFDocument.cpp が SOURCE_FILES に未登録のため PDF マクロは未定義です。")
     endif()
 endif()
+if(RESKIA_ENABLE_GPU_GANESH)
+    target_compile_definitions(reskia PRIVATE SK_GANESH)
+endif()
+if(RESKIA_ENABLE_GPU_GRAPHITE)
+    target_compile_definitions(reskia PRIVATE SK_GRAPHITE)
+endif()
+if(RESKIA_ENABLE_GPU_VULKAN)
+    target_compile_definitions(reskia PRIVATE SK_VULKAN)
+endif()
+if(RESKIA_ENABLE_GPU_METAL)
+    target_compile_definitions(reskia PRIVATE SK_METAL)
+endif()
+if(RESKIA_ENABLE_GPU_DAWN)
+    target_compile_definitions(reskia PRIVATE SK_DAWN)
+endif()
 
 if(WIN32)
     target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS})
 elseif(APPLE)
     target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS} "-framework Cocoa" "-framework CoreFoundation" "-framework CoreText")
+    if(RESKIA_ENABLE_GPU_METAL)
+        target_link_libraries(reskia "-framework Metal" "-framework QuartzCore")
+    endif()
 elseif(UNIX)
     target_link_libraries(reskia ${RESKIA_RESOLVED_INTERNAL_LIBS} ${RESKIA_DEP_LIBS})
+endif()
+
+if(RESKIA_ENABLE_GPU_VULKAN)
+    target_link_libraries(reskia Vulkan::Vulkan)
+endif()
+if(RESKIA_ENABLE_GPU_DAWN)
+    target_link_libraries(reskia "${RESKIA_DAWN_LIBRARY}")
 endif()
 
 if(WIN32)
