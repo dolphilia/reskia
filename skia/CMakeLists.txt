@@ -191,7 +191,7 @@ if(RESKIA_ENABLE_GPU_DAWN)
     endif()
 endif()
 
-set(SOURCE_FILES reskia.cpp)
+set(SOURCE_FILES)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-capi.cmake")
@@ -245,7 +245,7 @@ if(APPLE AND RESKIA_ENABLE_GPU_METAL)
     endforeach()
     if(_reskia_gpu_mtl_sources)
         set_source_files_properties(${_reskia_gpu_mtl_sources}
-                PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+                PROPERTIES COMPILE_OPTIONS "-fno-objc-arc")
     endif()
 endif()
 target_compile_features(reskia PRIVATE cxx_std_17)

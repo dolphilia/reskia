@@ -718,10 +718,13 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.c"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp")
+        if(RESKIA_ENABLE_GPU_GANESH)
+            _reskia_append_gpu_sources(
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.cpp")
+        endif()
         if(RESKIA_ENABLE_GPU_GRAPHITE)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.c"
@@ -733,13 +736,16 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
     if(RESKIA_ENABLE_GPU_METAL)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.mm"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.mm"
                 "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.cpp"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.c"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/mtl/*.cpp")
+        if(RESKIA_ENABLE_GPU_GANESH)
+            _reskia_append_gpu_sources(
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.mm"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mtl/*.cpp")
+        endif()
         if(RESKIA_ENABLE_GPU_GRAPHITE)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/mtl/*.mm"
@@ -772,6 +778,9 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
     if(NOT RESKIA_ENABLE_GPU_DAWN)
         list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/dawn/")
         list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/dawn/")
+    endif()
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/vello/cpp/vello.h")
+        list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/compute/Vello")
     endif()
 
     if(NOT APPLE)

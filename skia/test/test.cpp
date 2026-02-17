@@ -3,21 +3,20 @@
 //
 
 #include "test.h"
-#include "../export_api.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
 #include <memory>
 #include <vector>
 
-#ifdef __WINDOWS__
+#if defined(_WIN32) || defined(_WIN64)
 #define _USE_MATH_DEFINES
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 //#include <dwrite.h>
 #include <cmath>
 #endif
-#ifdef __MACOS__
+#if defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreText/CoreText.h>
 #endif
@@ -176,7 +175,7 @@ UTEST(cskia, drawRect_rotate) {
 /**
  * インストール済みフォントで文字を描画する macOS
  */
-#ifdef __MACOS__
+#if defined(__APPLE__)
 UTEST(cskia, drawTextBlob_Installedfont) {
     const int image_width = 500;
     const int image_height = 500;
@@ -235,7 +234,7 @@ UTEST(cskia, drawTextBlob_Installedfont) {
 #endif
 
 // インストール済みフォントで描画する windows
-#ifdef __WINDOWS__
+#if defined(_WIN32) || defined(_WIN64)
 /*
 #include "include/core/SkCanvas.h"
 #include "include/core/SkGraphics.h"
@@ -308,7 +307,7 @@ UTEST(cskia, drawTextBlob_Installedfont) {
 /**
  * 外部フォントで文字を描画する（macOSのみ）
  */
-#ifdef __MACOS__
+#if defined(__APPLE__)
 UTEST(cskia, drawTextBlob_fromFile) {
     const int image_width = 500;
     const int image_height = 500;
