@@ -305,6 +305,7 @@ list(APPEND SOURCE_FILES
         src/image/SkSurface_Raster.cpp
         src/image/SkSurface.cpp
         src/image/SkTiledImageUtils.cpp
+        src/lazy/SkDiscardableMemoryPool.cpp
         src/opts/SkOpts_hsw.cpp
         src/pathops/SkAddIntersections.cpp
         src/pathops/SkDConicLineIntersection.cpp

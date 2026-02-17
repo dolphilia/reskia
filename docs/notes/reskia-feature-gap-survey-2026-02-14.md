@@ -10,6 +10,7 @@
 追補更新: 2026-02-17 07:38:20 JST（3.3 skottie 対応反映）
 追補更新: 2026-02-17 09:41:06 JST（3.4 skparagraph 対応反映）
 追補更新: 2026-02-17 14:08:26 JST（3.6 GPU 対応反映）
+追補更新: 2026-02-18 06:09:33 JST（7. src 未同期ディレクトリ棚卸し）
 
 ## 1. 調査方法
 
@@ -177,3 +178,112 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 - 「ヘッダ上で型が見える」ことと「CMake で機能が有効」なことは別。  
   Reskia では後者が不足している機能が複数ある。
 - GPU系は API 断片はあるが、`src/gpu` 非ビルドのため機能としては不十分。
+
+## 7. src 未同期ディレクトリ棚卸し（Step 1, 2026-02-18）
+
+### 7.1 比較結果（ディレクトリ単位）
+
+`vendor/skia-upstream/src` に存在し、`skia/src` に未同期のディレクトリ:
+
+- `android`
+- `lazy`
+- `ports/fontations`（`src` を含む）
+- `sksl/lex`
+- `xps`
+
+### 7.2 CMake 取り込み状況
+
+- `skia/CMakeLists.txt` と `cmake/reskia/sources-*.cmake` には、上記 5 系統の source 登録は現時点で存在しない。
+- したがって、ディレクトリ同期のみではビルド対象にはならず、別途 source 登録が必要。
+
+### 7.3 依存マップ（include 分類）
+
+調査対象: `vendor/skia-upstream/src/{android,lazy,ports/fontations,sksl/lex,xps}` の `#include`
+
+| upstream 側ディレクトリ | internal 依存 (`src/`,`include/`,`modules/`) | external 依存 | missing internal |
+|---|---:|---:|---:|
+| `android` | 19 | 3 | 0 |
+| `lazy` | 8 | 0 | 1 |
+| `ports/fontations/src` | 0 | 2 | 0 |
+| `sksl/lex` | 26 | 43 | 26 |
+| `xps` | 59 | 8 | 2 |
+
+`missing internal` は、現行 `skia/` ツリーに未配置の内部 include を参照する件数（主に同ディレクトリ自己参照）を示す。
+
+### 7.4 同期時の注意点（依存観点）
+
+1. `android`
+- `log/log.h`（Android NDK）依存あり。
+- 取り込み時は Android 向けガード（`ANDROID` 条件）前提。
+
+2. `lazy`
+- `src/lazy/SkDiscardableMemoryPool.h` への自己参照があるため、ディレクトリ同期で解消可能。
+- 追加の外部 SDK 依存は確認されない。
+
+3. `ports/fontations`
+- 実体は `ffi.rs`（Rust）と C ブリッジヘッダ中心。
+- C++ の通常ビルド経路に直結しないため、初期同期は「配置のみ / ビルド非接続」が妥当。
+
+4. `sksl/lex`
+- `src/sksl/lex/*` の相互参照が多く、現行 `skia/src` には未配置。
+- `Main.cpp` はジェネレータ系ツール用途であり、ランタイムライブラリへ直接リンクしない設計が前提。
+
+5. `xps`
+- `ObjBase.h`, `XpsObjectModel.h`, `T2EmbApi.h`, `FontSub.h` など Windows/XPS 依存。
+- 取り込み時は `WIN32` 条件と COM/XPS ライブラリ連携の整理が必須。
+
+### 7.5 Step 1 結論（次フェーズ入力）
+
+- 未同期ディレクトリは 5 系統で確定。
+- 低リスク同期候補: `lazy`（自己完結度が高い）。
+- 条件付き同期候補: `android`（Android 条件）、`xps`（Windows 条件）。
+- 保留/分離候補: `ports/fontations`（Rust 経路）、`sksl/lex`（生成ツール経路）。
+
+## 8. Step 2: lazy 先行同期の最小PR案（2026-02-18）
+
+目的:
+- `vendor/skia-upstream/src/lazy` を最小差分で `skia/src/lazy` に同期し、`reskia` ビルドに組み込む。
+
+### 8.1 PRスコープ（最小）
+
+追加ファイル（upstream から同名同期）:
+
+1. `/Users/dolphilia/github/reskia/skia/src/lazy/SkDiscardableMemoryPool.h`
+2. `/Users/dolphilia/github/reskia/skia/src/lazy/SkDiscardableMemoryPool.cpp`
+
+CMake差分（1行追加）:
+
+1. `/Users/dolphilia/github/reskia/cmake/reskia/sources-core.cmake`
+   - `SOURCE_FILES` に `src/lazy/SkDiscardableMemoryPool.cpp` を追加
+
+### 8.2 想定 diff（CMake）
+
+```diff
+diff --git a/cmake/reskia/sources-core.cmake b/cmake/reskia/sources-core.cmake
+@@
+         src/image/SkSurface_Raster.cpp
+         src/image/SkSurface.cpp
+         src/image/SkTiledImageUtils.cpp
++        src/lazy/SkDiscardableMemoryPool.cpp
+         src/opts/SkOpts_hsw.cpp
+         src/pathops/SkAddIntersections.cpp
+```
+
+### 8.3 非スコープ（このPRでは行わない）
+
+- `BUILD.bazel` の同期（Reskia は CMake 主体のため対象外）
+- `android` / `xps` / `sksl/lex` / `ports/fontations` の同時同期
+- 新規トグル追加（`lazy` は既存依存のみで常時ビルドに含める）
+
+### 8.4 受け入れ条件
+
+1. configure 成功
+- `cmake -S skia -B skia/cmake-build-codex-lazy-sync-prebuilt -DCMAKE_BUILD_TYPE=Debug`
+
+2. build 成功
+- `cmake --build skia/cmake-build-codex-lazy-sync-prebuilt -j 8`
+- 期待: `Built target reskia`
+
+3. 影響確認
+- 既存の主要ビルド警告/エラー増加なし
+- `SkDiscardableMemoryPool.cpp` 由来の未解決参照なし
