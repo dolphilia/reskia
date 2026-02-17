@@ -119,4 +119,21 @@ if(RESKIA_BUILD_TESTS)
         target_link_libraries(test_gpu_surface_capi_smoke reskia ${RESKIA_DEP_LIBS} "-framework Metal")
         add_test(NAME c_skia_gpu_surface_capi_smoke COMMAND test_gpu_surface_capi_smoke)
     endif()
+
+    if(APPLE AND RESKIA_ENABLE_GPU_METAL AND (RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE))
+        add_executable(test_gpu_context_capi_smoke test/test_gpu_context_capi_smoke.mm)
+        target_include_directories(test_gpu_context_capi_smoke PRIVATE
+                "${PROJECT_SOURCE_DIR}"
+                "${PROJECT_SOURCE_DIR}/_include"
+        )
+        if(RESKIA_DEP_LINK_DIRS)
+            target_link_directories(test_gpu_context_capi_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+        endif()
+        target_compile_definitions(test_gpu_context_capi_smoke PRIVATE
+                RESKIA_TEST_GPU_GANESH=$<BOOL:${RESKIA_ENABLE_GPU_GANESH}>
+                RESKIA_TEST_GPU_GRAPHITE=$<BOOL:${RESKIA_ENABLE_GPU_GRAPHITE}>
+        )
+        target_link_libraries(test_gpu_context_capi_smoke reskia ${RESKIA_DEP_LIBS} "-framework Metal")
+        add_test(NAME c_skia_gpu_context_capi_smoke COMMAND test_gpu_context_capi_smoke)
+    endif()
 endif()

@@ -128,8 +128,43 @@ if(RESKIA_ENABLE_GPU_GRAPHITE AND NOT (RESKIA_ENABLE_GPU_METAL OR RESKIA_ENABLE_
             "(RESKIA_ENABLE_GPU_METAL / RESKIA_ENABLE_GPU_VULKAN / RESKIA_ENABLE_GPU_DAWN) を有効化してください。")
 endif()
 
+if(RESKIA_ENABLE_GPU_GRAPHITE)
+    set(_reskia_required_graphite_sksl
+            "sksl_graphite_frag.minified.sksl"
+            "sksl_graphite_vert.minified.sksl")
+    set(_reskia_missing_graphite_sksl "")
+    foreach(_reskia_sksl_file IN LISTS _reskia_required_graphite_sksl)
+        if(NOT EXISTS "${PROJECT_SOURCE_DIR}/src/sksl/generated/${_reskia_sksl_file}")
+            list(APPEND _reskia_missing_graphite_sksl "${_reskia_sksl_file}")
+        endif()
+    endforeach()
+    if(_reskia_missing_graphite_sksl)
+        string(JOIN ", " _reskia_missing_graphite_sksl_joined ${_reskia_missing_graphite_sksl})
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_GPU_GRAPHITE=ON ですが src/sksl/generated の同期が不足しています: "
+                "${_reskia_missing_graphite_sksl_joined}。"
+                "vendor/skia-upstream/src/sksl/generated から同期してください。")
+    endif()
+endif()
+
+set(RESKIA_VMA_INCLUDE_DIR "" CACHE PATH "Directory containing vk_mem_alloc.h (required when RESKIA_ENABLE_GPU_VULKAN=ON)")
 if(RESKIA_ENABLE_GPU_VULKAN)
     find_package(Vulkan REQUIRED)
+    if(RESKIA_VMA_INCLUDE_DIR STREQUAL "")
+        find_path(RESKIA_VMA_INCLUDE_DIR
+                NAMES vk_mem_alloc.h
+                HINTS
+                "${RESKIA_ROOT_DIR}/third_party/src/vulkanmemoryallocator"
+                "${RESKIA_ROOT_DIR}/third_party/install"
+                "${RESKIA_THIRD_PARTY_PREFIX}"
+                PATH_SUFFIXES include include/vma
+        )
+    endif()
+    if(NOT RESKIA_VMA_INCLUDE_DIR)
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_GPU_VULKAN=ON ですが vk_mem_alloc.h が見つかりません。"
+                "RESKIA_VMA_INCLUDE_DIR を指定してください。")
+    endif()
 endif()
 
 set(RESKIA_DAWN_INCLUDE_DIR "" CACHE PATH "Dawn include directory (required when RESKIA_ENABLE_GPU_DAWN=ON)")
@@ -228,6 +263,9 @@ endif()
 if(RESKIA_ENABLE_GPU_DAWN)
     target_include_directories(reskia PRIVATE "${RESKIA_DAWN_INCLUDE_DIR}")
 endif()
+if(RESKIA_ENABLE_GPU_VULKAN)
+    target_include_directories(reskia PRIVATE "${RESKIA_VMA_INCLUDE_DIR}")
+endif()
 if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
 endif()
@@ -315,7 +353,7 @@ if(RESKIA_ENABLE_GPU_GRAPHITE)
     target_compile_definitions(reskia PRIVATE SK_GRAPHITE)
 endif()
 if(RESKIA_ENABLE_GPU_VULKAN)
-    target_compile_definitions(reskia PRIVATE SK_VULKAN)
+    target_compile_definitions(reskia PRIVATE SK_VULKAN SK_USE_VMA)
 endif()
 if(RESKIA_ENABLE_GPU_METAL)
     target_compile_definitions(reskia PRIVATE SK_METAL)

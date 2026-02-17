@@ -1,6 +1,6 @@
 # 05 Phase 5: Build 行列と GPU スモーク
 
-更新日時: 2026-02-17 12:24:18 JST
+更新日時: 2026-02-17 12:30:26 JST
 
 ## 目的
 
@@ -52,11 +52,34 @@ cmake --build skia/cmake-build-gpu-smoke-metal -j 8
 ctest --test-dir skia/cmake-build-gpu-smoke-metal --output-on-failure
 ```
 
-## 実施結果（前倒し）
+## 実施結果（2026-02-17）
 
-1. `test_gpu_surface_capi_smoke` ターゲットはビルド成功。
-2. `ctest -R c_skia_gpu_surface_capi_smoke` は成功（環境により `PASS` または `SKIP` 分類）。
+1. macOS: `GANESH=ON` + `METAL=ON`
+- configure/build 成功。
+- `c_skia_gpu_surface_capi_smoke`: `PASS`
+- `c_skia_gpu_context_capi_smoke`: `PASS`
+2. macOS: `GRAPHITE=ON` + `METAL=ON`
+- configure は成功。
+- build 失敗（未実装/同期不足）。
+- `src/sksl/generated/sksl_graphite_frag.minified.sksl` 不在で `SkSLModuleLoader.cpp` が失敗。
+3. `GANESH=ON` + `VULKAN=ON`
+- configure は成功。
+- build 失敗（依存不足）。
+- `vk_mem_alloc.h` 不在で `VulkanMemoryAllocatorWrapper.cpp` が失敗。
+4. `GRAPHITE=ON` + `DAWN=ON`
+- configure 失敗（依存不足）。
+- `RESKIA_DAWN_INCLUDE_DIR` / `RESKIA_DAWN_LIBRARY` 未指定。
+
+## 判定基準の充足状況
+
+1. 主要 1 構成以上でスモークが 0 exit。
+- 充足（`GANESH+METAL` で context/surface ともに PASS）。
+2. 失敗構成は原因分類（依存不足/未実装/環境制約）が記録される。
+- 充足（Graphite/Metal=未実装/同期不足、Ganesh/Vulkan=依存不足、Graphite/Dawn=依存不足）。
+3. 既定 OFF 構成の回帰がない。
+- 充足（GPU OFF の既定に変更なし）。
 
 ## 次フェーズへの引き継ぎ
 
-1. Phase 6 で結果を docs へ反映し、公開ポリシーを確定する。
+1. Phase 6 で Graphite 生成物同期手順（`sksl_graphite_*`）と Vulkan/VMA 依存導入手順を文書化する。
+2. Dawn は `RESKIA_DAWN_INCLUDE_DIR` / `RESKIA_DAWN_LIBRARY` を使う導入テンプレートを追加する。

@@ -9,6 +9,7 @@
 確認時刻: 2026-02-14 11:47:19 JST
 追補更新: 2026-02-17 07:38:20 JST（3.3 skottie 対応反映）
 追補更新: 2026-02-17 09:41:06 JST（3.4 skparagraph 対応反映）
+追補更新: 2026-02-17 14:08:26 JST（3.6 GPU 対応反映）
 
 ## 1. 調査方法
 
@@ -106,11 +107,16 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 ### 3.6 GPU（Ganesh/Graphite、Vulkan/Metal/Dawn）
 
-- 状態: 弱い（実質未網羅）
+- 状態: 部分網羅（既定 OFF、Metal 経路は最小スモーク確認済み）
 - 根拠:
-  - upstream には `vendor/skia-upstream/src/gpu/ganesh`, `graphite`, `vk`, `mtl`, `dawn` がある
-  - Reskia `skia/CMakeLists.txt` には `src/gpu/*` が列挙されていない
-  - `binding` には `GrDirectContext*` / `Recorder*` を受ける関数はあるが、コンテキスト生成系 API がほぼない
+  - `RESKIA_ENABLE_GPU_GANESH` / `RESKIA_ENABLE_GPU_GRAPHITE` / `RESKIA_ENABLE_GPU_VULKAN` / `RESKIA_ENABLE_GPU_METAL` / `RESKIA_ENABLE_GPU_DAWN` を導入済み
+  - `cmake/reskia/sources-core.cmake` で `src/gpu/*` を backend 別に段階結線済み
+  - C API に GPU context/surface 系（Ganesh/Graphite、Metal/Vulkan）を追加済み
+  - `GANESH=ON + METAL=ON` で `c_skia_gpu_context_capi_smoke` と `c_skia_gpu_surface_capi_smoke` が `PASS`
+- 既知制約（2026-02-17 時点）:
+  - Graphite 有効化には `skia/src/sksl/generated/sksl_graphite_{frag,vert}.minified.sksl` の同期が必須
+  - Vulkan 有効化には `vk_mem_alloc.h`（VMA）が必須（`RESKIA_VMA_INCLUDE_DIR`）
+  - Dawn 有効化は `RESKIA_ENABLE_GPU_GRAPHITE=ON` 前提で、`RESKIA_DAWN_INCLUDE_DIR` / `RESKIA_DAWN_LIBRARY` 指定が必要
 
 ### 3.7 PDF ✅ 完了
 
