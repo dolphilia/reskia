@@ -81,18 +81,42 @@ if(APPLE)
     target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_coretext.cpp)
 endif()
 
-find_path(HARFBUZZ_INCLUDE_DIR hb.h)
-if(HARFBUZZ_INCLUDE_DIR)
+set(SVG_DEP_HINTS
+        "${CMAKE_PREFIX_PATH}"
+        "${PROJECT_SOURCE_DIR}/../third_party/install"
+)
+if(DEFINED RESKIA_THIRD_PARTY_PREFIX AND NOT RESKIA_THIRD_PARTY_PREFIX STREQUAL "")
+    list(PREPEND SVG_DEP_HINTS "${RESKIA_THIRD_PARTY_PREFIX}")
+endif()
+
+find_path(HARFBUZZ_INCLUDE_DIR
+        NAMES hb.h
+        HINTS ${SVG_DEP_HINTS}
+        PATH_SUFFIXES include include/harfbuzz
+)
+find_library(HARFBUZZ_LIBRARY
+        NAMES harfbuzz libharfbuzz
+        HINTS ${SVG_DEP_HINTS}
+        PATH_SUFFIXES lib lib64
+)
+if(HARFBUZZ_INCLUDE_DIR AND HARFBUZZ_LIBRARY)
     target_include_directories(skshaper PRIVATE "${HARFBUZZ_INCLUDE_DIR}")
     target_compile_definitions(skshaper PRIVATE SK_SHAPER_HARFBUZZ_AVAILABLE)
     target_sources(skshaper PRIVATE modules/skshaper/src/SkShaper_harfbuzz.cpp)
+    target_link_libraries(skshaper PUBLIC "${HARFBUZZ_LIBRARY}")
+elseif(HARFBUZZ_INCLUDE_DIR AND NOT HARFBUZZ_LIBRARY)
+    message(WARNING "hb.h は検出されましたが libharfbuzz が見つからないため HarfBuzz 実装は無効化します。")
 endif()
 
-find_path(ICU_UBIDI_INCLUDE_DIR unicode/ubidi.h)
+find_path(ICU_UBIDI_INCLUDE_DIR
+        NAMES unicode/ubidi.h
+        HINTS ${SVG_DEP_HINTS}
+        PATH_SUFFIXES include
+)
 if(ICU_UBIDI_INCLUDE_DIR)
-    find_library(ICU_I18N_LIBRARY NAMES icui18n)
-    find_library(ICU_UC_LIBRARY NAMES icuuc)
-    find_library(ICU_DATA_LIBRARY NAMES icudata)
+    find_library(ICU_I18N_LIBRARY NAMES icui18n HINTS ${SVG_DEP_HINTS} PATH_SUFFIXES lib lib64)
+    find_library(ICU_UC_LIBRARY NAMES icuuc HINTS ${SVG_DEP_HINTS} PATH_SUFFIXES lib lib64)
+    find_library(ICU_DATA_LIBRARY NAMES icudata HINTS ${SVG_DEP_HINTS} PATH_SUFFIXES lib lib64)
 
     target_include_directories(skunicode PRIVATE "${ICU_UBIDI_INCLUDE_DIR}")
     target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU_IMPLEMENTATION)

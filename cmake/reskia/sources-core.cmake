@@ -606,6 +606,28 @@ if(RESKIA_ENABLE_SKOTTIE)
     list(APPEND SOURCE_FILES ${_reskia_skottie_sources})
 endif()
 
+if(RESKIA_ENABLE_SKPARAGRAPH)
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/skparagraph/skparagraph.gni")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON ですが modules/skparagraph/skparagraph.gni が見つかりません。Phase 1 の同期を実施してください。")
+    endif()
+
+    set(_reskia_skparagraph_sources "")
+    file(STRINGS "${PROJECT_SOURCE_DIR}/modules/skparagraph/skparagraph.gni"
+            _reskia_skparagraph_gni_lines
+            REGEX "\\$_modules/skparagraph/(include|src)/.+")
+
+    foreach(_reskia_gni_line IN LISTS _reskia_skparagraph_gni_lines)
+        string(REGEX MATCH "\\$_modules/skparagraph/(include|src)/[^\" ]+" _reskia_gni_path "${_reskia_gni_line}")
+        if(_reskia_gni_path)
+            string(REPLACE "$_modules/" "modules/" _reskia_module_path "${_reskia_gni_path}")
+            list(APPEND _reskia_skparagraph_sources "${_reskia_module_path}")
+        endif()
+    endforeach()
+
+    list(REMOVE_DUPLICATES _reskia_skparagraph_sources)
+    list(APPEND SOURCE_FILES ${_reskia_skparagraph_sources})
+endif()
+
 if(RESKIA_ENABLE_JPEG_ENCODER)
     list(APPEND SOURCE_FILES
             src/encode/SkJPEGWriteUtility.cpp

@@ -8,6 +8,7 @@
 
 確認時刻: 2026-02-14 11:47:19 JST
 追補更新: 2026-02-17 07:38:20 JST（3.3 skottie 対応反映）
+追補更新: 2026-02-17 09:41:06 JST（3.4 skparagraph 対応反映）
 
 ## 1. 調査方法
 
@@ -27,7 +28,6 @@ Reskia 側 `skia/modules`:
 
 upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配置:
 
-- `skparagraph`
 - `skplaintexteditor`
 - `skshaper`（Reskia では `svg/modules/skshaper` として同梱）
 - `skunicode`（Reskia では `svg/modules/skunicode` として同梱）
@@ -70,12 +70,22 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
   - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/04-phase-4-build-matrix.md`
   - `/Users/dolphilia/github/reskia/docs/plans/skottie-enablement/05-phase-5-smoke-and-docs.md`
 
-### 3.4 skparagraph（高機能テキストレイアウト）
+### 3.4 skparagraph（高機能テキストレイアウト） ✅ 完了
 
-- 状態: 未対応
+- 状態: 部分網羅（C++ モジュール有効化 + 最小スモーク）
 - 根拠:
-  - `skia/modules/skparagraph` が存在しない
-  - `binding` に paragraph API 群なし
+  - `skia/modules/skparagraph` を同期済み
+  - `RESKIA_ENABLE_SKPARAGRAPH`（既定 `OFF`）を追加し、`ON` 時のみ `skparagraph` source を取り込み
+  - `RESKIA_ENABLE_SKPARAGRAPH=ON` 時に HarfBuzz（`hb.h` / `libharfbuzz`）を検出し、未導入時は configure で `FATAL_ERROR`
+  - `test_skparagraph_smoke` を追加し、`ctest -R c_skia_skparagraph_smoke` で `PASS` 確認
+- 制約:
+  - 現状 `RESKIA_ENABLE_SKPARAGRAPH=ON` は `APPLE` のみ対応
+  - 現状 `RESKIA_DEPS_MODE=source` のみ対応
+  - C API の paragraph 公開は未実装
+- 詳細:
+  - `/Users/dolphilia/github/reskia/docs/plans/skparagraph-enablement/02-phase-2-cmake-enablement.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/skparagraph-enablement/03-phase-3-smoke.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/skparagraph-enablement/04-phase-4-build-matrix.md`
 
 ### 3.5 sksg（Scene Graph）
 
@@ -132,8 +142,8 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
 
 優先度A（機能価値が高い）:
 
-1. `skparagraph`（高度テキスト組版）
-2. GPU実行パス（少なくとも1 backend: Metal/Vulkan のどちらか）
+1. GPU実行パス（少なくとも1 backend: Metal/Vulkan のどちらか）
+2. `skparagraph` C API 公開（現状は C++ モジュールのみ）
 
 優先度B（周辺機能の実用性向上）:
 

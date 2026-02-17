@@ -61,6 +61,51 @@ if(RESKIA_ENABLE_SKOTTIE)
     endif()
 endif()
 
+if(RESKIA_ENABLE_SKPARAGRAPH)
+    if(NOT APPLE)
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON は現在 APPLE のみ対応です。")
+    endif()
+    if(NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON は現在 RESKIA_DEPS_MODE=source のみ対応です。")
+    endif()
+    if(NOT TARGET skshaper OR NOT TARGET skunicode)
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_SKPARAGRAPH=ON には skshaper/skunicode の source モード解決が必要です。"
+        )
+    endif()
+
+    set(RESKIA_SKPARAGRAPH_HARFBUZZ_HINTS
+            "${RESKIA_THIRD_PARTY_PREFIX}"
+            "${RESKIA_ROOT_DIR}/third_party/install"
+    )
+    find_path(RESKIA_SKPARAGRAPH_HARFBUZZ_INCLUDE_DIR
+            NAMES hb.h
+            HINTS ${RESKIA_SKPARAGRAPH_HARFBUZZ_HINTS}
+            PATH_SUFFIXES include include/harfbuzz
+    )
+    if(NOT RESKIA_SKPARAGRAPH_HARFBUZZ_INCLUDE_DIR)
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_SKPARAGRAPH=ON ですが hb.h が見つかりません。HarfBuzz を導入してください。"
+        )
+    endif()
+    find_library(RESKIA_SKPARAGRAPH_HARFBUZZ_LIBRARY
+            NAMES harfbuzz libharfbuzz
+            HINTS ${RESKIA_SKPARAGRAPH_HARFBUZZ_HINTS}
+            PATH_SUFFIXES lib lib64
+    )
+    if(NOT RESKIA_SKPARAGRAPH_HARFBUZZ_LIBRARY)
+        message(FATAL_ERROR
+                "RESKIA_ENABLE_SKPARAGRAPH=ON ですが libharfbuzz が見つかりません。HarfBuzz を導入してください。"
+        )
+    endif()
+
+    find_path(RESKIA_SKPARAGRAPH_ICU_UBIDI_INCLUDE_DIR
+            NAMES unicode/ubidi.h
+            HINTS ${RESKIA_SKPARAGRAPH_HARFBUZZ_HINTS}
+            PATH_SUFFIXES include
+    )
+endif()
+
 set(SOURCE_FILES reskia.cpp)
 
 include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-core.cmake")
@@ -112,8 +157,11 @@ target_include_directories(reskia
         "${PROJECT_SOURCE_DIR}"
         "${PROJECT_SOURCE_DIR}/_include"
 )
-if(RESKIA_ENABLE_SKOTTIE)
+if(RESKIA_ENABLE_SKOTTIE OR RESKIA_ENABLE_SKPARAGRAPH)
     target_include_directories(reskia PRIVATE "${RESKIA_ROOT_DIR}/svg")
+endif()
+if(RESKIA_ENABLE_SKPARAGRAPH)
+    target_include_directories(reskia PRIVATE "${RESKIA_SKPARAGRAPH_HARFBUZZ_INCLUDE_DIR}")
 endif()
 if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     target_include_directories(reskia PRIVATE "${RESKIA_THIRD_PARTY_PREFIX}/include")
@@ -127,6 +175,15 @@ if(RESKIA_ENABLE_SKOTTIE)
             SK_ENABLE_SKOTTIE
             SK_ENABLE_SKOTTIE_SKSLEFFECT
     )
+endif()
+if(RESKIA_ENABLE_SKPARAGRAPH)
+    target_compile_definitions(reskia PRIVATE
+            SK_ENABLE_PARAGRAPH
+            SK_SHAPER_HARFBUZZ_AVAILABLE
+    )
+    if(RESKIA_SKPARAGRAPH_ICU_UBIDI_INCLUDE_DIR)
+        target_compile_definitions(reskia PRIVATE SK_SHAPER_UNICODE_AVAILABLE)
+    endif()
 endif()
 if(RESKIA_ENABLE_AVIF)
     if("src/codec/SkAvifCodec.cpp" IN_LIST SOURCE_FILES)

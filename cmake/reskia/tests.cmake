@@ -74,4 +74,18 @@ if(RESKIA_BUILD_TESTS)
         target_link_libraries(test_skottie_smoke reskia ${RESKIA_DEP_LIBS})
         add_test(NAME c_skia_skottie_smoke COMMAND test_skottie_smoke)
     endif()
+
+    if(RESKIA_ENABLE_SKPARAGRAPH AND TARGET skshaper AND TARGET skunicode)
+        add_executable(test_skparagraph_smoke test/test_skparagraph_smoke.cpp)
+        target_include_directories(test_skparagraph_smoke PRIVATE
+                "${PROJECT_SOURCE_DIR}"
+                "${PROJECT_SOURCE_DIR}/_include"
+                "${RESKIA_ROOT_DIR}/svg"
+        )
+        if(RESKIA_DEP_LINK_DIRS)
+            target_link_directories(test_skparagraph_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+        endif()
+        target_link_libraries(test_skparagraph_smoke reskia ${RESKIA_DEP_LIBS})
+        add_test(NAME c_skia_skparagraph_smoke COMMAND test_skparagraph_smoke)
+    endif()
 endif()
