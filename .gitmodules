@@ -55,3 +55,6 @@
 [submodule "third_party/src/fontconfig"]
 	path = third_party/src/fontconfig
 	url = https://gitlab.freedesktop.org/fontconfig/fontconfig.git
+[submodule "third_party/src/freetype2"]
+	path = third_party/src/freetype2
+	url = https://gitlab.freedesktop.org/freetype/freetype.git
