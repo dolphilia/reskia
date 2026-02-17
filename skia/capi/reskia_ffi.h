@@ -37,6 +37,7 @@
 #include "sk_runtime_effect.h"
 #include "sk_shader.h"
 #include "sk_skottie.h"
+#include "sk_sksg.h"
 #include "sk_stream.h"
 #include "sk_stream_asset.h"
 #include "sk_stream_memory.h"

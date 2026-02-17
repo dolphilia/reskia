@@ -87,13 +87,22 @@ upstream 側 `vendor/skia-upstream/modules` で存在し、Reskia 側に未配�
   - `/Users/dolphilia/github/reskia/docs/plans/skparagraph-enablement/03-phase-3-smoke.md`
   - `/Users/dolphilia/github/reskia/docs/plans/skparagraph-enablement/04-phase-4-build-matrix.md`
 
-### 3.5 sksg（Scene Graph）
+### 3.5 sksg（Scene Graph） ✅ 完了
 
-- 状態: 部分網羅（skottie 依存として同梱）
+- 状態: 条件付き対応（既定 OFF）
 - 根拠:
   - `skia/modules/sksg` は同期済み
-  - `RESKIA_ENABLE_SKOTTIE=ON` 時に `sksg` ソースをビルドへ取り込み
-  - `binding` で `SkSG*` の直接公開は未実装
+  - `RESKIA_ENABLE_SKSG=ON` で `modules/sksg/sksg.gni` 由来ソースをビルドへ取り込み可能
+  - `RESKIA_ENABLE_SKSG=ON` + `RESKIA_ENABLE_SKOTTIE=OFF` で `sksg` 単独ビルド経路を確認済み
+  - `capi/sk_sksg.h`, `capi/sk_sksg.cpp` を追加し、最小 C API（Scene 作成/再検証/描画/解放）を公開済み
+  - `c_skia_sksg_smoke`（C++）と `c_skia_sksg_capi_smoke`（C API）の実行成功を確認
+- 制約:
+  - 既定では `RESKIA_ENABLE_SKSG=OFF`
+  - 検証済み構成は `RESKIA_DEPS_MODE=source`（macOS）での OFF/ON/併用（`SKOTTIE`）3 経路
+  - `RESKIA_ENABLE_SKOTTIE=ON` 併用時は `skottie` 側制約（現在 APPLE のみ対応）を受ける
+- 詳細:
+  - `/Users/dolphilia/github/reskia/docs/plans/sksg-enablement/00-plan.md`
+  - `/Users/dolphilia/github/reskia/docs/plans/sksg-enablement/04-phase-4-build-matrix.md`
 
 ### 3.6 GPU（Ganesh/Graphite、Vulkan/Metal/Dawn）
 

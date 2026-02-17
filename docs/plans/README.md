@@ -9,5 +9,6 @@
 - `docs/plans/codec-encoder-enablement/`: 機能ギャップ調査 3.8/3.9（コーデック拡張・エンコーダ）の有効化計画
 - `docs/plans/pdf-enablement/`: 機能ギャップ調査 3.7（PDF）の有効化計画
 - `docs/plans/skparagraph-enablement/`: 機能ギャップ調査 3.4（skparagraph）の有効化計画
+- `docs/plans/sksg-enablement/`: 機能ギャップ調査 3.5（sksg / Scene Graph）の有効化計画
 - `docs/plans/skottie-enablement/`: 機能ギャップ調査 3.3（skottie / Lottie）の有効化計画
 - `docs/plans/svg-text-shaping-enablement/`: 機能ギャップ調査 3.2（SVG/テキストシェーピング）の実装強化計画
