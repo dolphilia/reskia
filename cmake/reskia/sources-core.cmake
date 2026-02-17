@@ -25,7 +25,6 @@ list(APPEND SOURCE_FILES
         src/base/SkUtils.cpp
         src/codec/SkAndroidCodec.cpp
         src/codec/SkAndroidCodecAdapter.cpp
-        # src/codec/SkAvifCodec.cpp
         src/codec/SkBmpBaseCodec.cpp
         src/codec/SkBmpCodec.cpp
         src/codec/SkBmpMaskCodec.cpp
@@ -45,8 +44,6 @@ list(APPEND SOURCE_FILES
         src/codec/SkJpegSegmentScan.cpp
         src/codec/SkJpegSourceMgr.cpp
         src/codec/SkJpegUtility.cpp
-        #  src/codec/SkJpegxlCodec.cpp
-        #  src/codec/SkJpegXmp.cpp
         src/codec/SkMasks.cpp
         src/codec/SkMaskSwizzler.cpp
         src/codec/SkParseEncodedOrigin.cpp
@@ -58,7 +55,6 @@ list(APPEND SOURCE_FILES
         src/codec/SkTiffUtility.cpp
         src/codec/SkWbmpCodec.cpp
         src/codec/SkWebpCodec.cpp
-        # src/codec/SkXmp.cpp
         src/core/SkAAClip.cpp
         src/core/SkAlphaRuns.cpp
         src/core/SkAnalyticEdge.cpp
@@ -292,10 +288,8 @@ list(APPEND SOURCE_FILES
         src/effects/SkShaderMaskFilterImpl.cpp
         src/effects/SkTableMaskFilter.cpp
         src/effects/SkTrimPathEffect.cpp
-        # src/encode/SkPngEncoder_none.cpp
         src/encode/SkEncoder.cpp
         src/encode/SkICC.cpp
-        src/encode/SkPngEncoderImpl.cpp
         src/image/SkImage_AndroidFactories.cpp
         src/image/SkImage_Base.cpp
         src/image/SkImage_Lazy.cpp
@@ -507,7 +501,6 @@ list(APPEND SOURCE_FILES
         src/utils/SkShadowTessellator.cpp
         src/utils/SkShadowUtils.cpp
         src/utils/SkTextUtils.cpp
-        # src/utils/SkTestCanvas.cpp
         src/xml/SkDOM.cpp
         src/xml/SkXMLParser.cpp
         src/xml/SkXMLWriter.cpp
@@ -519,6 +512,13 @@ endif()
 
 if(RESKIA_ENABLE_JPEGXL)
     list(APPEND SOURCE_FILES src/codec/SkJpegxlCodec.cpp)
+endif()
+
+if(RESKIA_ENABLE_JPEG_GAINMAP)
+    list(APPEND SOURCE_FILES
+            src/codec/SkJpegXmp.cpp
+            src/codec/SkXmp.cpp
+    )
 endif()
 
 if(RESKIA_ENABLE_RAW)
@@ -816,6 +816,17 @@ if(RESKIA_ENABLE_JPEG_ENCODER)
     )
 else()
     list(APPEND SOURCE_FILES src/encode/SkJpegEncoder_none.cpp)
+endif()
+
+if(EXISTS "${PROJECT_SOURCE_DIR}/src/encode/SkPngEncoderImpl.cpp")
+    list(APPEND SOURCE_FILES src/encode/SkPngEncoderImpl.cpp)
+else()
+    message(WARNING "SkPngEncoderImpl.cpp が見つからないため SkPngEncoder_none.cpp を使用します。")
+    list(APPEND SOURCE_FILES src/encode/SkPngEncoder_none.cpp)
+endif()
+
+if(RESKIA_BUILD_TESTS)
+    list(APPEND SOURCE_FILES src/utils/SkTestCanvas.cpp)
 endif()
 
 if(RESKIA_ENABLE_WEBP_ENCODER)

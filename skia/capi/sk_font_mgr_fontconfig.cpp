@@ -6,8 +6,8 @@
 
 extern "C" {
 
-int CSkia_SkFontMgr_New_FontConfig(FcConfig *fc) {
-//    return static_sk_font_mgr_make(SkFontMgr_New_FontConfig(fc));
+sk_font_mgr_t CSkia_SkFontMgr_New_FontConfig(FcConfig *fc) {
+    return static_sk_font_mgr_make(SkFontMgr_New_FontConfig(fc));
 }
 
 }

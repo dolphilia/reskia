@@ -306,6 +306,15 @@ if(RESKIA_ENABLE_JPEGXL)
         message(WARNING "RESKIA_ENABLE_JPEGXL=ON ですが src/codec/SkJpegxlCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
     endif()
 endif()
+if(RESKIA_ENABLE_JPEG_GAINMAP)
+    if("src/codec/SkJpegXmp.cpp" IN_LIST SOURCE_FILES AND "src/codec/SkXmp.cpp" IN_LIST SOURCE_FILES)
+        target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_JPEG_GAINMAPS)
+    else()
+        message(WARNING
+                "RESKIA_ENABLE_JPEG_GAINMAP=ON ですが src/codec/SkJpegXmp.cpp または src/codec/SkXmp.cpp が "
+                "SOURCE_FILES に未登録のため gainmap マクロは未定義です。")
+    endif()
+endif()
 if(RESKIA_ENABLE_RAW)
     if("src/codec/SkRawCodec.cpp" IN_LIST SOURCE_FILES)
         target_include_directories(reskia PRIVATE
@@ -348,6 +357,30 @@ if(RESKIA_ENABLE_PDF)
         target_compile_definitions(reskia PRIVATE SK_SUPPORT_PDF)
     else()
         message(WARNING "RESKIA_ENABLE_PDF=ON ですが src/pdf/SkPDFDocument.cpp が SOURCE_FILES に未登録のため PDF マクロは未定義です。")
+    endif()
+endif()
+if(RESKIA_ENABLE_FONTCONFIG_CAPI)
+    if("capi/sk_font_mgr_fontconfig.cpp" IN_LIST SOURCE_FILES)
+        find_path(RESKIA_FONTCONFIG_INCLUDE_DIR
+                NAMES fontconfig/fontconfig.h
+                HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                PATH_SUFFIXES include
+        )
+        find_library(RESKIA_FONTCONFIG_LIBRARY
+                NAMES fontconfig libfontconfig
+                HINTS "${RESKIA_THIRD_PARTY_PREFIX}" "${RESKIA_ROOT_DIR}/third_party/install"
+                PATH_SUFFIXES lib lib64
+        )
+        if(NOT RESKIA_FONTCONFIG_INCLUDE_DIR OR NOT RESKIA_FONTCONFIG_LIBRARY)
+            message(FATAL_ERROR
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが fontconfig 依存が見つかりません。"
+                    "fontconfig/fontconfig.h と libfontconfig を導入してください。")
+        endif()
+        target_include_directories(reskia PRIVATE "${RESKIA_FONTCONFIG_INCLUDE_DIR}")
+        target_link_libraries(reskia PRIVATE "${RESKIA_FONTCONFIG_LIBRARY}")
+    else()
+        message(WARNING
+                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが capi/sk_font_mgr_fontconfig.cpp が SOURCE_FILES に未登録です。")
     endif()
 endif()
 if(RESKIA_ENABLE_GPU_GANESH)

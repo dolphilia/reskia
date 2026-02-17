@@ -44,7 +44,6 @@ list(APPEND SOURCE_FILES
         capi/sk_flattenable.cpp
         capi/sk_font_arguments.cpp
         capi/sk_font_metrics.cpp
-#        capi/sk_font_mgr_fontconfig.cpp
         capi/sk_font_mgr.cpp
         capi/sk_font_style_set.cpp
         capi/sk_font_style.cpp
@@ -99,7 +98,7 @@ list(APPEND SOURCE_FILES
         capi/sk_point_3.cpp
         capi/sk_point.cpp
         capi/sk_r_rect.cpp
-#        capi/sk_raster_handle_allocator.cpp
+        capi/sk_raster_handle_allocator.cpp
         capi/sk_read_buffer.cpp
         capi/sk_rect.cpp
         capi/sk_ref_cnt_base.cpp
@@ -190,3 +189,13 @@ if(RESKIA_ENABLE_SKSG)
 endif()
 
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)
+
+if(RESKIA_ENABLE_FONTCONFIG_CAPI)
+    if(EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontMgr_fontconfig.cpp")
+        list(APPEND SOURCE_FILES capi/sk_font_mgr_fontconfig.cpp)
+    else()
+        message(WARNING
+                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが src/ports/SkFontMgr_fontconfig.cpp が見つからないため "
+                "capi/sk_font_mgr_fontconfig.cpp は未追加です。")
+    endif()
+endif()

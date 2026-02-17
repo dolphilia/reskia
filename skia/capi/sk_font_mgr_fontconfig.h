@@ -10,8 +10,7 @@
 #include "../handles/static_sk_font_mgr.h"
 
 extern "C" {
-// TODO
-//int CSkia_SkFontMgr_New_FontConfig(FcConfig *fc);
+sk_font_mgr_t CSkia_SkFontMgr_New_FontConfig(FcConfig *fc);
 }
 
 #endif //RAIA_SKIA_SK_FONT_MGR_FONTCONFIG_H
