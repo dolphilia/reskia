@@ -45,6 +45,7 @@
 #include "sk_stream_rewindable.h"
 #include "sk_stream_seekable.h"
 #include "sk_surface.h"
+#include "sk_surface_gpu.h"
 #include "sk_text_blob.h"
 #include "sk_vertices.h"
 #include "../handles/static_sk_b_box_hierarchy.h"

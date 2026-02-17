@@ -126,6 +126,7 @@ list(APPEND SOURCE_FILES
         capi/sk_stroke_rec.cpp
         capi/sk_surface_props.cpp
         capi/sk_surface.cpp
+        capi/sk_surface_gpu.cpp
         capi/sk_surfaces.cpp
         capi/sk_table_mask_filter.cpp
         capi/sk_text_blob_builder_run_handler.cpp

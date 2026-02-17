@@ -1,6 +1,6 @@
 # 04 Phase 4: GPU Surface/Texture 最小経路
 
-更新日時: 2026-02-17 11:40:23 JST
+更新日時: 2026-02-17 12:24:18 JST
 
 ## 目的
 
@@ -19,6 +19,23 @@ GPU コンテキストだけでなく、実際に描画できる surface/texture
 - `skia/capi/sk_surface_gpu.cpp`（新規）
 - `skia/capi/reskia_ffi.h`
 - `cmake/reskia/sources-capi.cmake`
+
+## 実装進捗（着手）
+
+1. Ganesh surface 生成
+- `Reskia_GaneshSurface_MakeRenderTarget` を追加。
+- `Reskia_GaneshSurface_WrapBackendTexture` / `Reskia_GaneshSurface_WrapBackendRenderTarget` を追加。
+2. Graphite surface 生成
+- `Reskia_GraphiteSurface_MakeRenderTarget` を追加。
+- `Reskia_GraphiteSurface_WrapBackendTexture` を追加。
+3. backend handle C ABI
+- `reskia_gpu_backend_texture_handle_t` / `reskia_gpu_backend_render_target_handle_t` を定義。
+- backend API を `METAL` / `VULKAN` enum で明示し、ミスマッチ時は `RESKIA_GPU_SURFACE_STATUS_BACKEND_MISMATCH` を返す仕様を追加。
+4. 結線
+- `reskia_ffi.h` へ `sk_surface_gpu.h` を追加。
+- `sources-capi.cmake` へ `capi/sk_surface_gpu.cpp` を追加。
+5. 判定基準 1 向け前倒しスモーク
+- `test_gpu_surface_capi_smoke.mm` を追加し、C API のみで `surface 作成 -> clear/draw -> flush` 経路を検証。
 
 ## 判定基準
 
