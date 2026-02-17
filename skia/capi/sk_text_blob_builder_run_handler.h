@@ -5,7 +5,7 @@
 #ifndef RAIA_SKIA_SK_TEXT_BLOB_BUILDER_RUN_HANDLER_H
 #define RAIA_SKIA_SK_TEXT_BLOB_BUILDER_RUN_HANDLER_H
 
-#include "../../svg/modules/skshaper/include/SkShaper.h"
+#include "../modules/skshaper/include/SkShaper.h"
 #include "../handles/static_sk_text_blob.h"
 #include "../handles/static_sk_shaper_run_handler_buffer.h"
 #include "../handles/static_sk_point.h"

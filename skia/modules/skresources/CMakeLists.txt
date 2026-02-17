@@ -6,7 +6,7 @@ add_library(skresources
 )
 target_compile_features(skresources PUBLIC cxx_std_17)
 target_include_directories(skresources PRIVATE
-    "${PROJECT_SOURCE_DIR}/../skia"
+    "${PROJECT_SOURCE_DIR}/../.."
 )
 
 # set_target_properties(raia_primitive PROPERTIES PREFIX "")

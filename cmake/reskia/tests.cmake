@@ -45,7 +45,6 @@ if(RESKIA_BUILD_TESTS)
         add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
         target_include_directories(test_shaping_smoke PRIVATE
                 ${RESKIA_PUBLIC_INCLUDE_DIRS}
-                "${RESKIA_ROOT_DIR}/svg"
         )
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_shaping_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
@@ -96,7 +95,6 @@ if(RESKIA_BUILD_TESTS)
         add_executable(test_skparagraph_smoke test/test_skparagraph_smoke.cpp)
         target_include_directories(test_skparagraph_smoke PRIVATE
                 ${RESKIA_PUBLIC_INCLUDE_DIRS}
-                "${RESKIA_ROOT_DIR}/svg"
         )
         if(RESKIA_DEP_LINK_DIRS)
             target_link_directories(test_skparagraph_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
