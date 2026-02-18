@@ -6,6 +6,7 @@ pub enum reskia_image_t {}
 pub enum reskia_surface_t {}
 pub enum reskia_paint_t {}
 pub enum reskia_path_t {}
+pub enum reskia_canvas_t {}
 pub enum reskia_image_info_t {}
 pub enum reskia_surface_props_t {}
 pub type sk_image_t = c_int;
@@ -31,6 +32,12 @@ unsafe extern "C" {
     pub fn SkSurfaces_RasterWithoutRowBytes(
         image_info: *const reskia_image_info_t,
         props: *const reskia_surface_props_t,
+    ) -> sk_surface_t;
+    pub fn SkSurfaces_WrapPixels(
+        image_info: *const reskia_image_info_t,
+        pixels: *mut c_void,
+        row_bytes: usize,
+        surface_props: *const reskia_surface_props_t,
     ) -> sk_surface_t;
     pub fn static_sk_surface_delete(key: sk_surface_t);
     pub fn static_sk_image_delete(key: sk_image_t);
@@ -73,4 +80,19 @@ unsafe extern "C" {
         weight: c_float,
         out_path: *mut reskia_path_t,
     ) -> reskia_status_t;
+
+    pub fn reskia_surface_borrow_canvas(surface: *mut reskia_surface_t) -> *mut reskia_canvas_t;
+    pub fn SkCanvas_clearColor(canvas: *mut reskia_canvas_t, color: u32);
+    pub fn SkCanvas_drawCircleAt(
+        canvas: *mut reskia_canvas_t,
+        cx: c_float,
+        cy: c_float,
+        radius: c_float,
+        paint: *const reskia_paint_t,
+    );
+    pub fn SkCanvas_drawPath(
+        canvas: *mut reskia_canvas_t,
+        path: *const reskia_path_t,
+        paint: *const reskia_paint_t,
+    );
 }

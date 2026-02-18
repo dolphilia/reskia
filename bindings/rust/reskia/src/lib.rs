@@ -7,6 +7,7 @@ pub use reskia_sys as sys;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Error {
     NullReturn(&'static str),
+    OperationFailed(&'static str),
     Status(sys::reskia_status_t),
 }
 
@@ -14,6 +15,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::NullReturn(op) => write!(f, "reskia returned null pointer: {op}"),
+            Self::OperationFailed(op) => write!(f, "reskia operation failed: {op}"),
             Self::Status(status) => write!(f, "reskia returned error status: {status:?}"),
         }
     }
@@ -124,6 +126,11 @@ pub struct BorrowedSurface<'a> {
     _marker: PhantomData<&'a ()>,
 }
 
+pub struct CanvasRef<'a> {
+    raw: NonNull<sys::reskia_canvas_t>,
+    _marker: PhantomData<&'a ()>,
+}
+
 impl Surface {
     /// # Safety
     ///
@@ -158,6 +165,15 @@ impl Surface {
         Image::from_handle_retained(handle)
     }
 
+    pub fn borrow_canvas(&mut self) -> Result<CanvasRef<'_>, Error> {
+        let raw = unsafe { sys::reskia_surface_borrow_canvas(self.raw.as_ptr()) };
+        let raw = NonNull::new(raw).ok_or(Error::NullReturn("Surface::borrow_canvas"))?;
+        Ok(CanvasRef {
+            raw,
+            _marker: PhantomData,
+        })
+    }
+
     /// # Safety
     ///
     /// The returned borrow is tied to `'a` and must not outlive the underlying handle storage.
@@ -182,6 +198,22 @@ impl BorrowedSurface<'_> {
 
     pub fn height(&self) -> i32 {
         unsafe { sys::SkSurface_height(self.raw.as_ptr()) }
+    }
+}
+
+impl CanvasRef<'_> {
+    pub fn clear_argb(&mut self, a: u8, r: u8, g: u8, b: u8) {
+        let color =
+            (u32::from(a) << 24) | (u32::from(r) << 16) | (u32::from(g) << 8) | u32::from(b);
+        unsafe { sys::SkCanvas_clearColor(self.raw.as_ptr(), color) };
+    }
+
+    pub fn draw_circle(&mut self, cx: f32, cy: f32, radius: f32, paint: &Paint) {
+        unsafe { sys::SkCanvas_drawCircleAt(self.raw.as_ptr(), cx, cy, radius, paint.as_ptr()) };
+    }
+
+    pub fn draw_path(&mut self, path: &Path, paint: &Paint) {
+        unsafe { sys::SkCanvas_drawPath(self.raw.as_ptr(), path.as_ptr(), paint.as_ptr()) };
     }
 }
 
@@ -374,6 +406,72 @@ impl Drop for Path {
     fn drop(&mut self) {
         unsafe { sys::reskia_path_release(self.raw.as_ptr()) };
     }
+}
+
+pub fn render_demo_into_bgra(
+    width: u32,
+    height: u32,
+    pixels: &mut [u32],
+    time_seconds: f32,
+) -> Result<(), Error> {
+    if width == 0 || height == 0 {
+        return Err(Error::OperationFailed("render_demo_into_bgra"));
+    }
+    let expected_len = width as usize * height as usize;
+    if pixels.len() < expected_len {
+        return Err(Error::OperationFailed(
+            "render_demo_into_bgra: pixel buffer is too small",
+        ));
+    }
+
+    let info_handle = unsafe { sys::SkImageInfo_MakeN32Premul(width as i32, height as i32) };
+    let info_ptr = unsafe { sys::static_sk_image_info_get_ptr(info_handle) };
+    let info_ptr = NonNull::new(info_ptr).ok_or(Error::NullReturn("SkImageInfo_MakeN32Premul"))?;
+
+    let surface_handle = unsafe {
+        sys::SkSurfaces_WrapPixels(
+            info_ptr.as_ptr().cast::<sys::reskia_image_info_t>(),
+            pixels.as_mut_ptr().cast(),
+            (width as usize) * std::mem::size_of::<u32>(),
+            std::ptr::null(),
+        )
+    };
+    unsafe { sys::static_sk_image_info_delete(info_handle) };
+
+    if surface_handle < 0 {
+        return Err(Error::OperationFailed(
+            "SkSurfaces_WrapPixels returned invalid handle",
+        ));
+    }
+
+    let mut surface = Surface::from_handle_retained(surface_handle)?;
+    let draw_result = (|| -> Result<(), Error> {
+        let mut canvas = surface.borrow_canvas()?;
+        canvas.clear_argb(0xFF, 0x12, 0x18, 0x24);
+
+        let mut circle = Paint::new()?;
+        circle.set_argb(0xFF, 0xF4, 0x7C, 0x2A);
+        let radius = (width.min(height) as f32) * 0.18;
+        let x = (width as f32) * (0.5 + 0.2 * time_seconds.cos());
+        let y = (height as f32) * (0.5 + 0.2 * time_seconds.sin());
+        canvas.draw_circle(x, y, radius, &circle);
+
+        let mut triangle = Paint::new()?;
+        triangle.set_argb(0xFF, 0x38, 0xB6, 0xFF);
+        let mut path = Path::new()?;
+        let w = width as f32;
+        let h = height as f32;
+        path.move_to(w * 0.15, h * 0.80);
+        path.line_to(w * 0.50, h * 0.20);
+        path.line_to(w * 0.85, h * 0.80);
+        path.close();
+        canvas.draw_path(&path, &triangle);
+        Ok(())
+    })();
+
+    drop(surface);
+    unsafe { sys::static_sk_surface_delete(surface_handle) };
+    draw_result
 }
 
 #[cfg(test)]

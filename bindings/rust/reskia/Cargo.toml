@@ -12,5 +12,9 @@ path = "src/lib.rs"
 [dependencies]
 reskia-sys = { path = "../reskia-sys" }
 
+[dev-dependencies]
+softbuffer = "0.4"
+winit = "0.29"
+
 [lints]
 workspace = true

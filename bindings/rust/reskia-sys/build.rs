@@ -2,6 +2,8 @@ use std::env;
 use std::path::{Path, PathBuf};
 
 fn main() {
+    println!("cargo:rerun-if-env-changed=RESKIA_LIB_DIR");
+
     let crate_dir =
         PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR is not set"));
     let repo_root = crate_dir
@@ -33,9 +35,11 @@ fn default_lib_dir(repo_root: &Path) -> Option<PathBuf> {
         "skia/cmake-build-debug",
         "skia/cmake-build-release",
         "skia/cmake-build-ci-prebuilt",
+        "skia/cmake-build-codex-docrefresh-prebuilt",
         "skia/cmake-build-phase3-prebuilt",
         "skia/cmake-build-source-local",
         "skia/cmake-build-ci-source",
+        "skia/cmake-build-codex-docrefresh-source",
         "skia/cmake-build-phase3-source",
     ];
 
