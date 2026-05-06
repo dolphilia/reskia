@@ -4,12 +4,15 @@
 
 対象ファイル数が多いため、修正漏れを防ぐ運用を先に固定する。
 
+C API の最終的な範囲は、Skia の公開クラスについて公開メソッドと static factory/helper を可能な限り C ABI に露出する方針を前提にする。ファイル単位の進捗だけではなく、公開 API method-level の coverage も合わせて管理する。
+
 ## 管理対象
 
 - `manifests/capi-files.txt`（`skia/capi` の `*.cpp` / `*.h`）
 - `manifests/handles-files.txt`（`skia/handles` の `*.cpp` / `*.h` / `*-internal.h`）
 - `checklists/capi-status.csv`
 - `checklists/handles-status.csv`
+- `checklists/public-api-coverage-matrix.csv`（生成物）
 
 ## ステータス定義
 
@@ -43,6 +46,14 @@ awk 'BEGIN{print "file,status,phase,owner,note"} {print $0",todo,,,"}' docs/plan
 awk -F, 'NR>1 && $2!="done" && $2!="na" {c++} END {print c+0}' docs/plans/c-binding-remediation/checklists/capi-status.csv
 awk -F, 'NR>1 && $2!="done" && $2!="na" {c++} END {print c+0}' docs/plans/c-binding-remediation/checklists/handles-status.csv
 ```
+
+5. 公開 API coverage matrix 再生成
+
+```bash
+python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/reskia
+```
+
+`public-api-coverage-matrix.csv` は手編集しない。`method_status=missing` は未対応候補、`partial` は overload/意味名 API の確認候補として扱う。実装対象外にする場合は、別途 checklist や調査メモへ理由を残す。
 
 ## 品質ゲート
 

@@ -79,6 +79,12 @@
 - `skia/internal/` は現時点では空。
 - `skia/reskia.h`, `skia/reskia.cpp` は現状ほぼプレースホルダ状態。
 
+### 3.4 C API バインディング方針
+
+Reskia の C API バインディングは、Skia の公開クラスについて、公開メソッドと static factory/helper を可能な限り C ABI に露出する方針で進める。`skia/capi` はポインタ境界の C API、`skia/handles` は整数ハンドル境界の API として、この方針を支える二層である。
+
+今後の C API 追加・レビューでは、`vendor/skia-upstream` の公開ヘッダと `skia/capi` / `skia/handles` の対応状況を確認し、対象外とする API には platform dependency、optional module、所有権、ABI 安全性などの理由を残す。method-level の進捗確認には `scripts/generate_public_api_coverage.py` と `docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv` を使う。
+
 ## 4. 依存ライブラリ配置
 
 - `skia/lib/` に `.a` / `.dylib` が多数同梱されている（`libpng`, `libjpeg`, `libwebp`, `libavif` など）。

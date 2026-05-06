@@ -7,6 +7,12 @@ Reskia は、Google Skia を CMake ベースで再構成し、C API を提供す
 - Skia を CMake で段階的にビルドできる構成へ整理する
 - C API（`skia/capi` と `skia/handles`）を通じて他言語連携しやすくする
 
+## C API バインディング方針
+
+Reskia の C API バインディングは、Skia の公開クラスについて、公開メソッドと static factory/helper を可能な限り C ABI に露出する方針で進めます。`skia/capi` はポインタ境界の直接的な C API、`skia/handles` は整数ハンドル境界の API を担います。
+
+今後の C API 追加・レビュー・計画では、この方針を前提にします。実装対象の優先順位は、`vendor/skia-upstream` の公開ヘッダ、既存 `skia/capi` の coverage、optional module / platform dependency、所有権と ABI 安全性を見て決めます。進捗確認には `docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv` と `scripts/generate_public_api_coverage.py` を使用します。
+
 ## 現在の基準（2026-02-18）
 
 - ベースSkiaロック: `vendor/skia-source.lock`
@@ -141,4 +147,6 @@ ctest --test-dir skia/cmake-build-tests-local --output-on-failure
 - `skia` ビルド検証: `docs/notes/skia-cmakelists-build-report-2026-02-13.md`
 - 依存管理レポート: `docs/notes/dependency-management-report-2026-02-14.md`
 - C binding 設計レビュー: `docs/notes/c-binding-static-binding-review-2026-02-14.md`
+- C API / handle coverage 調査: `docs/notes/bindings/capi-and-handle-binding-coverage-survey-2026-05-06.md`
+- 公開 API coverage matrix: `docs/notes/bindings/public-api-coverage-matrix-progress-2026-05-06.md`
 - CMake 構成レビュー: `docs/notes/cmake-architecture-review-2026-02-14.md`
