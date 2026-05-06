@@ -8,8 +8,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "sk_async_read_result.h"
+#include "../handles/static_sk_color_space.h"
 #include "../handles/static_sk_image.h"
 #include "../handles/static_sk_image_info.h"
+#include "../handles/static_sk_i_size.h"
 #include "../handles/static_sk_surface.h"
 
 typedef struct reskia_backend_semaphore_t reskia_backend_semaphore_t;
@@ -28,6 +31,9 @@ typedef struct reskia_surface_characterization_t reskia_surface_characterization
 typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_surface_t reskia_surface_t;
 typedef int32_t reskia_surface_content_change_mode_t;
+typedef int32_t reskia_surface_rescale_gamma_t;
+typedef int32_t reskia_surface_rescale_mode_t;
+typedef int32_t reskia_surface_yuv_color_space_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,10 +62,9 @@ bool SkSurface_readPixels(reskia_surface_t *surface, const reskia_pixmap_t *dst,
 bool SkSurface_readPixelsWithImageInfoAndPixels(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // (SkSurface *surface, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
 bool SkSurface_readPixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY); // (SkSurface *surface, const SkBitmap *dst, int srcX, int srcY) -> bool
 
-// TODO
-// void SkSurface_asyncRescaleAndReadPixels(void *surface, const void *info, const void *srcRect, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context); // (SkSurface *surface, const SkImageInfo *info, const SkIRect *srcRect, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context)
-// void SkSurface_asyncRescaleAndReadPixelsYUV420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context); // (SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, const SkISize *dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context)
-// void SkSurface_asyncRescaleAndReadPixelsYUVA420(void *surface, sk_color_space_t dstColorSpace, int yuvColorSpace, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkSurface::ReadPixelsCallback callback, void * context); // (SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, const SkISize *dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, SkSurface::ReadPixelsCallback callback, SkSurface::ReadPixelsContext context)
+void SkSurface_asyncRescaleAndReadPixels(reskia_surface_t *surface, const reskia_image_info_t *info, const reskia_i_rect_t *srcRect, reskia_surface_rescale_gamma_t rescaleGamma, reskia_surface_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context); // (SkSurface *surface, const SkImageInfo *info, const SkIRect *srcRect, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, reskia_async_read_pixels_callback_t callback, void *context)
+void SkSurface_asyncRescaleAndReadPixelsYUV420(reskia_surface_t *surface, sk_color_space_t dstColorSpace, reskia_surface_yuv_color_space_t yuvColorSpace, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_surface_rescale_gamma_t rescaleGamma, reskia_surface_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context); // (SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, sk_i_size_t dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, reskia_async_read_pixels_callback_t callback, void *context)
+void SkSurface_asyncRescaleAndReadPixelsYUVA420(reskia_surface_t *surface, sk_color_space_t dstColorSpace, reskia_surface_yuv_color_space_t yuvColorSpace, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_surface_rescale_gamma_t rescaleGamma, reskia_surface_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context); // (SkSurface *surface, sk_color_space_t dstColorSpace, SkYUVColorSpace yuvColorSpace, const SkIRect *srcRect, sk_i_size_t dstSize, SkSurface::RescaleGamma rescaleGamma, SkSurface::RescaleMode rescaleMode, reskia_async_read_pixels_callback_t callback, void *context)
 
 void SkSurface_writePixels(reskia_surface_t *surface, const reskia_pixmap_t *src, int dstX, int dstY); // (SkSurface *surface, const SkPixmap *src, int dstX, int dstY)
 void SkSurface_writePixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY); // (SkSurface *surface, const SkBitmap *src, int dstX, int dstY)

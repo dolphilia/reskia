@@ -204,6 +204,48 @@ Phase B は完了。
 - 少なくとも 1 つの callback API に smoke test を追加する。
 - 既存 LuaJIT/Rust 利用を壊さない。
 
+### Phase C progress 2026-05-06
+
+実装済み:
+
+- `SkFont::getPaths` -> `SkFont_getPaths`
+
+callback ABI:
+
+- C callback 型は `reskia_font_glyph_path_proc_t`。
+- callback に渡す `path_or_null` と `matrix` は callback 実行中だけ有効な borrowed pointer。caller は保持・delete してはいけない。
+- `path_or_null` は glyph が path を持たない場合に `NULL` になり得る。
+- `ctx` は caller 所有。Reskia は保持・解放しない。
+- `font == NULL`、`glyphIDs == NULL`、`count <= 0`、`glyphPathProc == NULL` の場合は何もせず戻る。
+
+smoke:
+
+- `skia/test/test_phase_c_callback_smoke.cpp` を追加。
+- `RESKIA_BUILD_TESTS=ON` 用に `cmake/reskia/tests.cmake` へ `test_phase_c_callback_smoke` を追加。
+
+再分類:
+
+- `SkRegion::toString` は `SK_BUILD_FOR_ANDROID_FRAMEWORK` guarded API で、現在の default Reskia build では利用できないため `na`。
+
+設計のみ:
+
+- `SkGraphics::SetImageGeneratorFromEncodedDataFactory` は global callback registration。C ABI 化には `SkImageGenerator` を表す owned wrapper と、登録 callback の process lifetime 管理が必要。
+- `SkTypeface::Register` は global registration で、callback が `std::unique_ptr<SkStreamAsset>` を消費し `sk_sp<SkTypeface>` を返す。C ABI 化には stream ownership transfer と returned typeface ownership の明示が必要。
+
+検証:
+
+- `python3 -m py_compile scripts/generate_public_api_coverage.py`
+- `python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/reskia`
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `c++ -std=c++17 -I skia -I skia/include skia/test/test_phase_c_callback_smoke.cpp skia/cmake-build-codex-project-survey-prebuilt/libreskia.dylib -Wl,-rpath,/Users/dolphilia/github/reskia/skia/cmake-build-codex-project-survey-prebuilt -o /private/tmp/reskia_phase_c_callback_smoke`
+- `/private/tmp/reskia_phase_c_callback_smoke`
+
+既知の検証制約:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase-c-tests -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON` は configure 成功。
+- `cmake --build skia/cmake-build-codex-phase-c-tests --target test_phase_c_callback_smoke -j 8` は、既存 test 構成が `SkTestCanvas.cpp` 関連の未解決シンボルで `reskia` link に失敗するため完走しない。追加 smoke 自体は通常ビルド済み `libreskia.dylib` に対する単体コンパイル・実行で確認済み。
+
 ## Phase D: async read API の専用フェーズ
 
 目的: `SkImage` / `SkSurface` の async read 系 TODO をまとめて設計・実装する。
@@ -231,6 +273,28 @@ Phase B は完了。
 1. sync read 系と同じ入力型を使えるところは合わせる。
 2. callback result は opaque wrapper にし、callback 内でだけ有効な borrowed object とするか、retain/take 可能にするかを明確化する。
 3. まず raster/simple path の smoke を作る。
+
+進捗（2026-05-06）:
+
+- `skia/capi/sk_async_read_result.h/cpp` を追加し、`reskia_async_read_pixels_callback_t` と `reskia_async_read_result_t` を導入した。
+- `AsyncReadResult` は callback 実行中だけ有効な borrowed wrapper とし、`Reskia_AsyncReadResult_count` / `data` / `rowBytes` で参照する。
+- `SkImage` / `SkSurface` の async read 系 6 API を C ABI で公開した。
+- `public-api-coverage-matrix.csv` 上では対象 6 件が `covered` に変わった。
+- `test_phase_d_async_read_smoke.cpp` を追加し、raster surface と snapshot image の `asyncRescaleAndReadPixels` が C callback 経由で result を返すことを確認した。
+
+検証:
+
+- `python3 -m py_compile scripts/generate_public_api_coverage.py`
+- `python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/reskia`
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `c++ -std=c++17 -I skia -I skia/include skia/test/test_phase_d_async_read_smoke.cpp skia/cmake-build-codex-project-survey-prebuilt/libreskia.dylib -Wl,-rpath,/Users/dolphilia/github/reskia/skia/cmake-build-codex-project-survey-prebuilt -o /private/tmp/reskia_phase_d_async_read_smoke`
+- `/private/tmp/reskia_phase_d_async_read_smoke`
+
+既知の検証制約:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase-d-tests -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON` は configure 成功。
+- `cmake --build skia/cmake-build-codex-phase-d-tests --target test_phase_d_async_read_smoke -j 8` は、既存 test 構成が `SkTestCanvas.cpp` 関連の未解決シンボルで `reskia` link に失敗するため完走しない。追加 smoke 自体は通常ビルド済み `libreskia.dylib` に対する単体コンパイル・実行で確認済み。
 
 ## Phase E: generator 精度改善
 

@@ -16,6 +16,23 @@
 #include "../handles/static_std_vector_sk_scalar-internal.h"
 #include "../handles/static_sk_typeface-internal.h"
 
+namespace {
+
+struct ReskiaFontGetPathsCallback {
+    reskia_font_glyph_path_proc_t proc;
+    void *ctx;
+};
+
+void reskia_font_get_paths_bridge(const SkPath *pathOrNull, const SkMatrix &mx, void *ctx) {
+    auto *callback = static_cast<ReskiaFontGetPathsCallback *>(ctx);
+    callback->proc(
+            reinterpret_cast<const reskia_path_t *>(pathOrNull),
+            reinterpret_cast<const reskia_matrix_t *>(&mx),
+            callback->ctx);
+}
+
+}
+
 extern "C" {
 
 reskia_font_t *SkFont_new() {
@@ -212,8 +229,12 @@ bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path) 
     return reinterpret_cast<SkFont *>(font)->getPath(glyphID, reinterpret_cast<SkPath *>(path));
 }
 
-void SkFont_getPaths(reskia_font_t *font, const void * glyphIDs, int count, void(*glyphPathProc)(const SkPath *pathOrNull, const SkMatrix &mx, void *ctx), void *ctx) { // @TODO
-    reinterpret_cast<SkFont *>(font)->getPaths(static_cast<const SkGlyphID *>(glyphIDs), count, glyphPathProc, ctx);
+void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx) {
+    if (!font || !glyphIDs || count <= 0 || !glyphPathProc) {
+        return;
+    }
+    ReskiaFontGetPathsCallback callback = {glyphPathProc, ctx};
+    reinterpret_cast<SkFont *>(font)->getPaths(glyphIDs, count, reskia_font_get_paths_bridge, &callback);
 }
 
 float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics) {

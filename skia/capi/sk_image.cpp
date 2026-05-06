@@ -3,6 +3,7 @@
 //
 
 #include "sk_image.h"
+#include "sk_async_read_result-internal.h"
 
 #include "include/core/SkImage.h"
 
@@ -142,19 +143,51 @@ bool SkImage_readPixelsWithPixmap(reskia_image_t *image, const reskia_pixmap_t *
     return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-// TODO
-//
-// void SkImage_asyncRescaleAndReadPixels(void *image, const void *info, const void *srcRect, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixels(* reinterpret_cast<const SkImageInfo *>(info), * reinterpret_cast<const SkIRect *>(srcRect), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
-// }
-//
-// void SkImage_asyncRescaleAndReadPixelsYUV420(void *image, int yuvColorSpace, sk_color_space_t color_space, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUV420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * reinterpret_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
-// }
-//
-// void SkImage_asyncRescaleAndReadPixelsYUVA420(void *image, int yuvColorSpace, sk_color_space_t color_space, const void *srcRect, const void *dstSize, int rescaleGamma, int rescaleMode, SkImage::ReadPixelsCallback callback, void * context) {
-//     reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUVA420(static_cast<SkYUVColorSpace>(yuvColorSpace), static_sk_color_space_move(color_space), * reinterpret_cast<const SkIRect *>(srcRect), * static_cast<const SkISize *>(dstSize), static_cast<SkImage::RescaleGamma>(rescaleGamma), static_cast<SkImage::RescaleMode>(rescaleMode), callback, context);
-// }
+void SkImage_asyncRescaleAndReadPixels(reskia_image_t *image, const reskia_image_info_t *info, const reskia_i_rect_t *srcRect, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
+    if (!image || !info || !srcRect || !callback) {
+        reskia_async_read_pixels_fail(callback, context);
+        return;
+    }
+    reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixels(
+            *reinterpret_cast<const SkImageInfo *>(info),
+            *reinterpret_cast<const SkIRect *>(srcRect),
+            static_cast<SkImage::RescaleGamma>(rescaleGamma),
+            static_cast<SkImage::RescaleMode>(rescaleMode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, context));
+}
+
+void SkImage_asyncRescaleAndReadPixelsYUV420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
+    if (!image || !srcRect || !callback) {
+        reskia_async_read_pixels_fail(callback, context);
+        return;
+    }
+    reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUV420(
+            static_cast<SkYUVColorSpace>(yuvColorSpace),
+            static_sk_color_space_get_entity(color_space),
+            *reinterpret_cast<const SkIRect *>(srcRect),
+            static_sk_i_size_get_entity(dstSize),
+            static_cast<SkImage::RescaleGamma>(rescaleGamma),
+            static_cast<SkImage::RescaleMode>(rescaleMode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, context));
+}
+
+void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
+    if (!image || !srcRect || !callback) {
+        reskia_async_read_pixels_fail(callback, context);
+        return;
+    }
+    reinterpret_cast<SkImage *>(image)->asyncRescaleAndReadPixelsYUVA420(
+            static_cast<SkYUVColorSpace>(yuvColorSpace),
+            static_sk_color_space_get_entity(color_space),
+            *reinterpret_cast<const SkIRect *>(srcRect),
+            static_sk_i_size_get_entity(dstSize),
+            static_cast<SkImage::RescaleGamma>(rescaleGamma),
+            static_cast<SkImage::RescaleMode>(rescaleMode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, context));
+}
 
 bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, const reskia_sampling_options_t *sampling, reskia_image_caching_hint_t cachingHint) {
     return reinterpret_cast<SkImage *>(image)->scalePixels(* reinterpret_cast<const SkPixmap *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));

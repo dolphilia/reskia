@@ -17,6 +17,7 @@ extern "C" {
 
 typedef struct reskia_font_t reskia_font_t;
 typedef struct reskia_font_metrics_t reskia_font_metrics_t;
+typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_paint_t reskia_paint_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
@@ -26,6 +27,7 @@ typedef int32_t reskia_font_edging_t;
 typedef int32_t reskia_font_hinting_t;
 typedef int32_t reskia_font_text_encoding_t;
 typedef int32_t reskia_unichar_t;
+typedef void (*reskia_font_glyph_path_proc_t)(const reskia_path_t *path_or_null, const reskia_matrix_t *matrix, void *ctx);
 
 reskia_font_t *SkFont_new(); // () -> SkFont *
 reskia_font_t *SkFont_newWithTypefaceAndSize(int typeface, float size); // (sk_typeface_t typeface, SkScalar size) -> SkFont *
@@ -80,8 +82,7 @@ void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, floa
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint); // (SkFont *font, const SkGlyphID glyphs[], int count, const SkPoint pos[], SkScalar top, SkScalar bottom, const SkPaint *paint) -> int
 bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path); // (SkFont *font, SkGlyphID glyphID, SkPath *path) -> bool
 
-// TODO
-//void SkFont_getPaths(void *font, const void * glyphIDs, int count, void(*glyphPathProc)(const SkPath *pathOrNull, const SkMatrix &mx, void *ctx), void *ctx); // (SkFont *font, const SkGlyphID glyphIDs[], int count, void(*glyphPathProc)(const SkPath *pathOrNull, const SkMatrix &mx, void *ctx), void *ctx)
+void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx); // borrowed during callback (SkFont *font, const SkGlyphID glyphIDs[], int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx)
 float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics); // (SkFont *font, SkFontMetrics *metrics) -> SkScalar
 float SkFont_getSpacing(reskia_font_t *font); // (SkFont *font) -> SkScalar
 void SkFont_dump(reskia_font_t *font); // (SkFont *font)
