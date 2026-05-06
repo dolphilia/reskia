@@ -39,7 +39,9 @@ typedef int32_t reskia_overdraw_canvas_point_mode_t;
 typedef int32_t reskia_overdraw_canvas_src_rect_constraint_t;
 typedef int32_t reskia_overdraw_canvas_filter_mode_t;
 typedef int32_t reskia_overdraw_canvas_quad_aa_flags_t;
+typedef struct reskia_canvas_t reskia_canvas_t;
 
+reskia_overdraw_canvas_t *SkOverdrawCanvas_new(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> SkOverdrawCanvas *
 void SkOverdrawCanvas_delete(reskia_overdraw_canvas_t *overdraw_canvas); // (SkOverdrawCanvas *overdraw_canvas)
 void SkOverdrawCanvas_onDrawTextBlob(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_text_blob_t *blob, float scalar1, float scalar2, const reskia_paint_t *paint); // (SkOverdrawCanvas *overdraw_canvas, const SkTextBlob *blob, SkScalar scalar1, SkScalar scalar2, const SkPaint *paint)
 void SkOverdrawCanvas_onDrawGlyphRunList(reskia_overdraw_canvas_t *overdraw_canvas, const reskia_glyph_run_list_t *glyphRunList, const reskia_paint_t *paint); // (SkOverdrawCanvas *overdraw_canvas, const sktext::GlyphRunList *glyphRunList, const SkPaint *paint)

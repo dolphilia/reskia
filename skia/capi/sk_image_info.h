@@ -26,10 +26,10 @@ typedef uint64_t reskia_u64_t;
 typedef int32_t reskia_image_info_color_type_t;
 typedef int32_t reskia_image_info_alpha_type_t;
 
-//bool operator==(const SkImageInfo &other)
-//bool operator!=(const SkImageInfo &other)
 reskia_image_info_t *SkImageInfo_new(); // () -> SkImageInfo *
 void SkImageInfo_delete(reskia_image_info_t *image_info); // (SkImageInfo *image_info)
+bool SkImageInfo_equals(reskia_image_info_t *image_info, const reskia_image_info_t *other); // (SkImageInfo *image_info, const SkImageInfo *other) -> bool
+bool SkImageInfo_notEquals(reskia_image_info_t *image_info, const reskia_image_info_t *other); // (SkImageInfo *image_info, const SkImageInfo *other) -> bool
 int SkImageInfo_width(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 int SkImageInfo_height(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 reskia_image_info_color_type_t SkImageInfo_colorType(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkColorType

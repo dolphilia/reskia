@@ -20,15 +20,20 @@
 
 extern "C" {
 
-//bool operator==(const SkImageInfo &other)
-//bool operator!=(const SkImageInfo &other)
-
 reskia_image_info_t *SkImageInfo_new() {
     return reinterpret_cast<reskia_image_info_t *>(new SkImageInfo());
 }
 
 void SkImageInfo_delete(reskia_image_info_t *image_info) {
     delete reinterpret_cast<SkImageInfo *>(image_info);
+}
+
+bool SkImageInfo_equals(reskia_image_info_t *image_info, const reskia_image_info_t *other) {
+    return *reinterpret_cast<SkImageInfo *>(image_info) == *reinterpret_cast<const SkImageInfo *>(other);
+}
+
+bool SkImageInfo_notEquals(reskia_image_info_t *image_info, const reskia_image_info_t *other) {
+    return *reinterpret_cast<SkImageInfo *>(image_info) != *reinterpret_cast<const SkImageInfo *>(other);
 }
 
 int SkImageInfo_width(reskia_image_info_t *image_info) {

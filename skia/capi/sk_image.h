@@ -12,6 +12,7 @@
 #include "../handles/static_sk_i_rect.h"
 #include "../handles/static_sk_i_size.h"
 #include "../handles/static_sk_image.h"
+#include "../handles/static_sk_image_info.h"
 #include "../handles/static_sk_image_required_properties.h"
 #include "../handles/static_sk_shader.h"
 
@@ -39,8 +40,7 @@ typedef int32_t reskia_image_legacy_bitmap_mode_t;
 
 void SkImage_release(reskia_image_t *image); // owned: caller が保持する参照を release する (SkImage *image)
 
-// TODO
-// const void *SkImage_imageInfo(void *image); // (SkImage *image) -> const SkImageInfo *
+sk_image_info_t SkImage_imageInfo(reskia_image_t *image); // (SkImage *image) -> sk_image_info_t
 int SkImage_width(reskia_image_t *image); // (SkImage *image) -> int
 int SkImage_height(reskia_image_t *image); // (SkImage *image) -> int
 sk_i_size_t SkImage_dimensions(reskia_image_t *image); // (SkImage *image) -> sk_i_size_t

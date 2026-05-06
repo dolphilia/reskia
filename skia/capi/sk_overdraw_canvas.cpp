@@ -4,9 +4,14 @@
 
 #include "sk_overdraw_canvas.h"
 
+#include "include/core/SkCanvas.h"
 #include "include/core/SkOverdrawCanvas.h"
 
 extern "C" {
+
+reskia_overdraw_canvas_t *SkOverdrawCanvas_new(reskia_canvas_t *canvas) {
+    return reinterpret_cast<reskia_overdraw_canvas_t *>(new SkOverdrawCanvas(reinterpret_cast<SkCanvas *>(canvas)));
+}
 
 void SkOverdrawCanvas_delete(reskia_overdraw_canvas_t *overdraw_canvas) {
     delete reinterpret_cast<SkOverdrawCanvas *>(overdraw_canvas);

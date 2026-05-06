@@ -166,7 +166,7 @@ def split_top_level_statements(body: str) -> list[tuple[int, str]]:
         elif char == "}" and depth_brace:
             depth_brace -= 1
 
-        if depth_angle == 0 and depth_paren == 0 and depth_brace == 0 and char in (";", "{"):
+        if depth_angle == 0 and depth_paren == 0 and depth_brace == 0 and char in (";", "{", "}"):
             statement = "".join(current).strip()
             if statement:
                 statements.append((token_line, statement))
@@ -314,6 +314,12 @@ def class_prefix_candidates(class_name: str, path: str) -> set[str]:
 def method_token(name: str) -> str:
     if name.startswith("~"):
         return "delete"
+    if name == "operator==":
+        return "equals"
+    if name == "operator!=":
+        return "notEquals"
+    if name == "operator=":
+        return "assign"
     if name.startswith("operator"):
         return name.replace("operator", "operator_").replace("=", "assign").replace("==", "eq")
     return name

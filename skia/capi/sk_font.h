@@ -32,6 +32,8 @@ reskia_font_t *SkFont_newWithTypefaceAndSize(int typeface, float size); // (sk_t
 reskia_font_t *SkFont_newWithTypeface(int typeface); // (sk_typeface_t typeface) -> SkFont *
 reskia_font_t *SkFont_newWithTypefaceSizeScaleXSkewX(int typeface, float size, float scaleX, float skewX); // (sk_typeface_t typeface, SkScalar size, SkScalar scaleX, SkScalar skewX) -> SkFont *
 void SkFont_delete(reskia_font_t *font); // (SkFont *font)
+bool SkFont_equals(reskia_font_t *font, const reskia_font_t *other); // (SkFont *font, const SkFont *other) -> bool
+bool SkFont_notEquals(reskia_font_t *font, const reskia_font_t *other); // (SkFont *font, const SkFont *other) -> bool
 bool SkFont_isForceAutoHinting(reskia_font_t *font); // (SkFont *font) -> bool
 bool SkFont_isEmbeddedBitmaps(reskia_font_t *font); // (SkFont *font) -> bool
 bool SkFont_isSubpixel(reskia_font_t *font); // (SkFont *font) -> bool

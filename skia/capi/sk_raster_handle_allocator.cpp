@@ -4,6 +4,10 @@
 
 #include "sk_raster_handle_allocator.h"
 
+#include "include/core/SkSurfaceProps.h"
+
+#include "../handles/static_sk_canvas-internal.h"
+
 extern "C" {
 
 void SkRasterHandleAllocator_delete(reskia_raster_handle_allocator_t *raster_handle_allocator) {
@@ -25,9 +29,19 @@ void SkRasterHandleAllocator_updateHandle(reskia_raster_handle_allocator_t *rast
 
 // static
 
-// @TODO
-//std::unique_ptr<SkCanvas> SkRasterHandleAllocator_MakeCanvas(std::unique_ptr<SkRasterHandleAllocator> allocator, const SkImageInfo &info, const SkRasterHandleAllocator::Rec *rec, const SkSurfaceProps *props) {
-//    return SkRasterHandleAllocator::MakeCanvas(allocator, info, rec, props);
-//}
+sk_canvas_t SkRasterHandleAllocator_MakeCanvas(reskia_raster_handle_allocator_t *allocator, const reskia_image_info_t *info, const reskia_raster_handle_allocator_rec_t *rec, const reskia_surface_props_t *props) {
+    if (!allocator || !info) {
+        return 0;
+    }
+    auto canvas = SkRasterHandleAllocator::MakeCanvas(
+            std::unique_ptr<SkRasterHandleAllocator>(reinterpret_cast<SkRasterHandleAllocator *>(allocator)),
+            *reinterpret_cast<const SkImageInfo *>(info),
+            reinterpret_cast<const SkRasterHandleAllocator::Rec *>(rec),
+            reinterpret_cast<const SkSurfaceProps *>(props));
+    if (!canvas) {
+        return 0;
+    }
+    return static_sk_canvas_make(std::move(canvas));
+}
 
 }

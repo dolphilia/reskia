@@ -38,6 +38,14 @@ void SkFont_delete(reskia_font_t *font) {
     delete reinterpret_cast<SkFont *>(font);
 }
 
+bool SkFont_equals(reskia_font_t *font, const reskia_font_t *other) {
+    return *reinterpret_cast<SkFont *>(font) == *reinterpret_cast<const SkFont *>(other);
+}
+
+bool SkFont_notEquals(reskia_font_t *font, const reskia_font_t *other) {
+    return *reinterpret_cast<SkFont *>(font) != *reinterpret_cast<const SkFont *>(other);
+}
+
 bool SkFont_isForceAutoHinting(reskia_font_t *font) {
     return reinterpret_cast<SkFont *>(font)->isForceAutoHinting();
 }

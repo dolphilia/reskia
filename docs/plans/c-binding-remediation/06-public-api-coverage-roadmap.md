@@ -71,7 +71,7 @@ Skia の公開クラスについて、公開メソッドと static factory/helpe
 | priority | API | 作業内容 |
 | --- | --- | --- |
 | P1 | `SkImage::imageInfo` | `SkImage_imageInfo` を実装し、戻り値を `sk_image_info_t` または既存 `reskia_image_info_t` 規約へ合わせる。 |
-| P2 | `SkPathBuilder::countVerbs` | `SkPathBuilder_countVerbs` を追加する。 |
+| P0 | `SkPathBuilder::countVerbs` | Phase A 再確認で private method と判明。バインディング対象外として generator を修正する。 |
 | P2 | `SkYUVAInfo::GetYUVALocations` | コメントアウト済み API を再設計し、C ABI で返せる型にする。 |
 | P2 | `SkNullWStream` constructor | `SkNullWStream_new` / `delete` または stream handle 化を追加する。 |
 | P2 | `SkOverdrawCanvas` constructor | 既存 `onDraw*` / `delete` と整合する `SkOverdrawCanvas_new` を追加する。 |
@@ -92,6 +92,33 @@ Skia の公開クラスについて、公開メソッドと static factory/helpe
 4. `SkNullWStream`
 5. `SkOverdrawCanvas`
 6. `SkRasterHandleAllocator::MakeCanvas`
+
+### Phase A progress 2026-05-06
+
+実装済み:
+
+- `SkImage::imageInfo` -> `SkImage_imageInfo`
+- `SkYUVAInfo::GetYUVALocations` -> `SkYUVAInfo_GetYUVALocations`
+- `SkNullWStream` constructor -> `SkNullWStream_new`
+- `SkOverdrawCanvas` constructor -> `SkOverdrawCanvas_new`
+- `SkRasterHandleAllocator::MakeCanvas` -> `SkRasterHandleAllocator_MakeCanvas`
+
+再分類:
+
+- `SkPathBuilder::countVerbs` は `vendor/skia-upstream/include/core/SkPathBuilder.h` で `private:` 節にあるため、公開 API ではない。`scripts/generate_public_api_coverage.py` は inline method body の後ろに続く `private:` 節を同一 statement に混ぜていたため、`}` で文を区切るように修正した。
+
+検証:
+
+- `python3 -m py_compile scripts/generate_public_api_coverage.py`
+- `python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/reskia`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+
+所有権メモ:
+
+- `SkRasterHandleAllocator_MakeCanvas` は C ABI に渡された `reskia_raster_handle_allocator_t*` の所有権を引き取る。これは upstream API が `std::unique_ptr<SkRasterHandleAllocator>` を消費するため。呼び出し後、成功/失敗にかかわらず caller は allocator を delete してはいけない。
+- 戻り値は `sk_canvas_t`。`0` は失敗、非 0 は `static_sk_canvas_delete` で解放する static canvas handle。
+
+Phase A は完了。
 
 ## Phase B: named comparison API のまとめ実装
 
@@ -123,6 +150,30 @@ Skia の公開クラスについて、公開メソッドと static factory/helpe
 - operator missing が named API として解消される。
 - generator 側は operator を named API 候補として扱えるよう改善する。
 - `public-api-coverage-matrix.csv` 再生成後、対象 API が `covered` または `partial` へ移る。
+
+### Phase B progress 2026-05-06
+
+実装済み:
+
+- `SkFont::operator==` / `operator!=` -> `SkFont_equals` / `SkFont_notEquals`
+- `SkColorInfo::operator==` / `operator!=` -> `SkColorInfo_equals` / `SkColorInfo_notEquals`
+- `SkImageInfo::operator==` / `operator!=` -> `SkImageInfo_equals` / `SkImageInfo_notEquals`
+- `SkM44::operator==` / `operator!=` -> `SkM44_equals` / `SkM44_notEquals`
+- `SkRegion::operator==` / `operator!=` -> `SkRegion_equals` / `SkRegion_notEquals`
+- `SkYUVAInfo::operator==` / `operator!=` -> `SkYUVAInfo_equals` / `SkYUVAInfo_notEquals`
+- `SkYUVAPixmapInfo::operator==` / `operator!=` -> `SkYUVAPixmapInfo_equals` / `SkYUVAPixmapInfo_notEquals`
+
+生成器:
+
+- `scripts/generate_public_api_coverage.py` の `method_token` で `operator==` を `equals`、`operator!=` を `notEquals`、`operator=` を `assign` として扱うようにした。これにより named comparison API が matrix 上で `covered` として追跡できる。
+
+検証:
+
+- `python3 -m py_compile scripts/generate_public_api_coverage.py`
+- `python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/reskia`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+
+Phase B は完了。
 
 ## Phase C: callback/registration API の設計
 

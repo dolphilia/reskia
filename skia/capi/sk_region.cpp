@@ -9,9 +9,6 @@
 extern "C" {
 
 //SkRegion & operator=(const SkRegion &region)
-//bool operator==(const SkRegion &other)
-//bool operator!=(const SkRegion &other)
-
 reskia_region_t *SkRegion_new() {
     return reinterpret_cast<reskia_region_t *>(new SkRegion());
 }
@@ -28,6 +25,14 @@ reskia_region_t *SkRegion_newFromIRect(const reskia_i_rect_t *rect) {
 
 void SkRegion_delete(reskia_region_t *region) {
     delete reinterpret_cast<SkRegion *>(region);
+}
+
+bool SkRegion_equals(reskia_region_t *region, const reskia_region_t *other) {
+    return *reinterpret_cast<SkRegion *>(region) == *reinterpret_cast<const SkRegion *>(other);
+}
+
+bool SkRegion_notEquals(reskia_region_t *region, const reskia_region_t *other) {
+    return *reinterpret_cast<SkRegion *>(region) != *reinterpret_cast<const SkRegion *>(other);
 }
 
 bool SkRegion_set(reskia_region_t *region, const reskia_region_t *src) {

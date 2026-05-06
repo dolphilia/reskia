@@ -19,8 +19,6 @@
 extern "C" {
 
 //SkM44 & operator=(const SkM44 &src)
-//bool operator==(const SkM44 &other)
-//bool operator!=(const SkM44 &other)
 //SkV4 operator*(const SkV4 &v)
 //SkV3 operator*(SkV3 v)
 
@@ -46,6 +44,14 @@ reskia_m_44_t *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, fl
 
 void SkM44_delete(reskia_m_44_t *m44) {
     delete reinterpret_cast<SkM44 *>(m44);
+}
+
+bool SkM44_equals(reskia_m_44_t *m44, const reskia_m_44_t *other) {
+    return *reinterpret_cast<SkM44 *>(m44) == *reinterpret_cast<const SkM44 *>(other);
+}
+
+bool SkM44_notEquals(reskia_m_44_t *m44, const reskia_m_44_t *other) {
+    return *reinterpret_cast<SkM44 *>(m44) != *reinterpret_cast<const SkM44 *>(other);
 }
 
 void SkM44_getColMajor(reskia_m_44_t *m44, float *v) {

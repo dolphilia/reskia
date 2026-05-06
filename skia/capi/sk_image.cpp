@@ -11,12 +11,14 @@
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_color_space.h"
 #include "../handles/static_sk_i_rect.h"
+#include "../handles/static_sk_image_info.h"
 #include "../handles/static_sk_image_required_properties.h"
 #include "../handles/static_sk_i_size.h"
 
 #include "../handles/static_sk_image-internal.h"
 #include "../handles/static_sk_image_required_properties-internal.h"
 #include "../handles/static_sk_i_rect-internal.h"
+#include "../handles/static_sk_image_info-internal.h"
 #include "../handles/static_sk_i_size-internal.h"
 #include "../handles/static_sk_shader-internal.h"
 #include "../handles/static_sk_data-internal.h"
@@ -28,11 +30,9 @@ void SkImage_release(reskia_image_t *image) {
     reinterpret_cast<SkImage *>(image)->unref();
 }
 
-// TODO
-// const void * SkImage_imageInfo(void *image) {
-//     auto *info = static_cast<SkImageInfo *>(image);
-//     return &info->imageInfo();
-// }
+sk_image_info_t SkImage_imageInfo(reskia_image_t *image) {
+    return static_sk_image_info_make(reinterpret_cast<SkImage *>(image)->imageInfo());
+}
 
 int SkImage_width(reskia_image_t *image) {
     return reinterpret_cast<SkImage *>(image)->width();

@@ -31,6 +31,14 @@ void SkColorInfo_delete(reskia_color_info_t *color_info) {
     delete reinterpret_cast<SkColorInfo *>(color_info);
 }
 
+bool SkColorInfo_equals(reskia_color_info_t *color_info, const reskia_color_info_t *other) {
+    return *reinterpret_cast<SkColorInfo *>(color_info) == *reinterpret_cast<const SkColorInfo *>(other);
+}
+
+bool SkColorInfo_notEquals(reskia_color_info_t *color_info, const reskia_color_info_t *other) {
+    return *reinterpret_cast<SkColorInfo *>(color_info) != *reinterpret_cast<const SkColorInfo *>(other);
+}
+
 reskia_alpha_type_t SkColorInfo_alphaType(reskia_color_info_t *color_info) {
     return static_cast<reskia_alpha_type_t>(reinterpret_cast<SkColorInfo *>(color_info)->alphaType());
 }

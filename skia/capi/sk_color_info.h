@@ -22,6 +22,8 @@ reskia_color_info_t *SkColorInfo_new(); // () -> SkColorInfo *
 reskia_color_info_t *SkColorInfo_newWithColorTypeAlphaTypeColorSpace(int ct, int at, sk_color_space_t color_space); // (SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> SkColorInfo *
 reskia_color_info_t *SkColorInfo_newCopy(const reskia_color_info_t *color_info); // (const SkColorInfo *color_info) -> SkColorInfo *
 void SkColorInfo_delete(reskia_color_info_t *color_info); // (SkColorInfo *color_info)
+bool SkColorInfo_equals(reskia_color_info_t *color_info, const reskia_color_info_t *other); // (SkColorInfo *color_info, const SkColorInfo *other) -> bool
+bool SkColorInfo_notEquals(reskia_color_info_t *color_info, const reskia_color_info_t *other); // (SkColorInfo *color_info, const SkColorInfo *other) -> bool
 reskia_alpha_type_t SkColorInfo_alphaType(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> SkAlphaType
 int SkColorInfo_bytesPerPixel(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> int
 reskia_color_space_t *SkColorInfo_colorSpace(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> SkColorSpace*

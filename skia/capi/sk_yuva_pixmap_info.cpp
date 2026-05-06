@@ -13,9 +13,6 @@
 extern "C" {
 
 // SkYUVAPixmapInfo & operator=(const SkYUVAPixmapInfo &)
-// bool operator==(const SkYUVAPixmapInfo &)
-// bool operator!=(const SkYUVAPixmapInfo &that)
-
 reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new() {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo());
 }
@@ -34,6 +31,14 @@ reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newCopy(const reskia_yuva_pixmap_inf
 
 void SkYUVAPixmapInfo_delete(reskia_yuva_pixmap_info_t *yuvaPixmapInfo) {
     delete reinterpret_cast<SkYUVAPixmapInfo *>(yuvaPixmapInfo);
+}
+
+bool SkYUVAPixmapInfo_equals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other) {
+    return *reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info) == *reinterpret_cast<const SkYUVAPixmapInfo *>(other);
+}
+
+bool SkYUVAPixmapInfo_notEquals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other) {
+    return *reinterpret_cast<SkYUVAPixmapInfo *>(yuva_pixmap_info) != *reinterpret_cast<const SkYUVAPixmapInfo *>(other);
 }
 
 const reskia_yuva_info_t *SkYUVAPixmapInfo_yuvaInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info) {

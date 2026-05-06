@@ -18,13 +18,12 @@ extern "C" {
 #endif
 
 //SkRegion & operator=(const SkRegion &region)
-//bool operator==(const SkRegion &other)
-//bool operator!=(const SkRegion &other)
-
 reskia_region_t *SkRegion_new(); // () -> SkRegion *
 reskia_region_t *SkRegion_newCopy(const reskia_region_t *region); // (const SkRegion *region) -> SkRegion *
 reskia_region_t *SkRegion_newFromIRect(const reskia_i_rect_t *rect); // (const SkIRect *rect) -> SkRegion *
 void SkRegion_delete(reskia_region_t *region); // (SkRegion *region)
+bool SkRegion_equals(reskia_region_t *region, const reskia_region_t *other); // (SkRegion *region, const SkRegion *other) -> bool
+bool SkRegion_notEquals(reskia_region_t *region, const reskia_region_t *other); // (SkRegion *region, const SkRegion *other) -> bool
 bool SkRegion_set(reskia_region_t *region, const reskia_region_t *src); // (SkRegion *region, const SkRegion *src) -> bool
 void SkRegion_swap(reskia_region_t *region, reskia_region_t *other); // (SkRegion *region, SkRegion *other)
 bool SkRegion_isEmpty(reskia_region_t *region); // (SkRegion *region) -> bool

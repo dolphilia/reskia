@@ -8,6 +8,10 @@
 
 extern "C" {
 
+reskia_w_stream_t *SkNullWStream_new() {
+    return reinterpret_cast<reskia_w_stream_t *>(new SkNullWStream());
+}
+
 void SkWStream_delete(reskia_w_stream_t *w_stream) {
     delete reinterpret_cast<SkWStream *>(w_stream);
 }

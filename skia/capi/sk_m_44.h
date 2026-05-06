@@ -21,8 +21,6 @@ typedef struct reskia_v3_t reskia_v3_t;
 typedef struct reskia_v4_t reskia_v4_t;
 
 //SkM44 & operator=(const SkM44 &src)
-//bool operator==(const SkM44 &other)
-//bool operator!=(const SkM44 &other)
 //SkV4 operator*(const SkV4 &v)
 //SkV3 operator*(SkV3 v)
 
@@ -32,6 +30,8 @@ reskia_m_44_t *SkM44_newDefault(); // () -> SkM44 *
 reskia_m_44_t *SkM44_newFromConcat(const reskia_m_44_t *a, const reskia_m_44_t *b); // (const SkM44 *a, const SkM44 *b) -> SkM44 *
 reskia_m_44_t *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15); // (SkScalar m0, SkScalar m4, SkScalar m8, SkScalar m12, SkScalar m1, SkScalar m5, SkScalar m9, SkScalar m13, SkScalar m2, SkScalar m6, SkScalar m10, SkScalar m14, SkScalar m3, SkScalar m7, SkScalar m11, SkScalar m15) -> SkM44 *
 void SkM44_delete(reskia_m_44_t *m44); // (SkM44 *m44)
+bool SkM44_equals(reskia_m_44_t *m44, const reskia_m_44_t *other); // (SkM44 *m44, const SkM44 *other) -> bool
+bool SkM44_notEquals(reskia_m_44_t *m44, const reskia_m_44_t *other); // (SkM44 *m44, const SkM44 *other) -> bool
 void SkM44_getColMajor(reskia_m_44_t *m44, float *v); // (SkM44 *m44, SkScalar v[])
 void SkM44_getRowMajor(reskia_m_44_t *m44, float *v); // (SkM44 *m44, SkScalar v[])
 float SkM44_rc(reskia_m_44_t *m44, int r, int c); // (SkM44 *m44, int r, int c) -> SkScalar

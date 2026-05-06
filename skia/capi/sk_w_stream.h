@@ -15,6 +15,7 @@ typedef struct reskia_w_stream_t reskia_w_stream_t;
 extern "C" {
 #endif
 
+reskia_w_stream_t *SkNullWStream_new(); // () -> SkNullWStream *
 void SkWStream_delete(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)
 bool SkWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size); // (SkWStream *w_stream, const void *buffer, size_t size) -> bool
 void SkWStream_flush(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)

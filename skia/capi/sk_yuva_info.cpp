@@ -5,6 +5,7 @@
 #include "sk_yuva_info.h"
 
 #include "include/core/SkYUVAInfo.h"
+#include "src/core/SkYUVAInfoLocation.h"
 
 #include "../handles/static_std_tuple_int_int.h"
 #include "../handles/static_sk_matrix.h"
@@ -19,9 +20,6 @@
 extern "C" {
 
 // SkYUVAInfo & operator=(const SkYUVAInfo &that)
-// bool operator==(const SkYUVAInfo &that)
-// bool operator!=(const SkYUVAInfo &that)
-
 reskia_yuva_info_t *SkYUVAInfo_new() {
     return reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo());
 }
@@ -36,6 +34,14 @@ reskia_yuva_info_t *SkYUVAInfo_newWithDimensionsConfigSubsamplingSpaceOriginAndS
 
 void SkYUVAInfo_delete(reskia_yuva_info_t *yuvaInfo) {
     delete reinterpret_cast<SkYUVAInfo *>(yuvaInfo);
+}
+
+bool SkYUVAInfo_equals(reskia_yuva_info_t *yuva_info, const reskia_yuva_info_t *other) {
+    return *reinterpret_cast<SkYUVAInfo *>(yuva_info) == *reinterpret_cast<const SkYUVAInfo *>(other);
+}
+
+bool SkYUVAInfo_notEquals(reskia_yuva_info_t *yuva_info, const reskia_yuva_info_t *other) {
+    return *reinterpret_cast<SkYUVAInfo *>(yuva_info) != *reinterpret_cast<const SkYUVAInfo *>(other);
 }
 
 reskia_yuva_info_plane_config_t SkYUVAInfo_planeConfig(reskia_yuva_info_t *yuva_info) {
@@ -140,9 +146,17 @@ int SkYUVAInfo_NumChannelsInPlane(reskia_yuva_info_plane_config_t config, int i)
     return SkYUVAInfo::NumChannelsInPlane(static_cast<SkYUVAInfo::PlaneConfig>(config), i);
 }
 
-// SkYUVAInfo::YUVALocations SkYUVAInfo_GetYUVALocations(SkYUVAInfo::PlaneConfig config, const uint32_t *planeChannelFlags) {
-//     return SkYUVAInfo::GetYUVALocations(config, planeChannelFlags);
-// }
+bool SkYUVAInfo_GetYUVALocations(reskia_yuva_info_plane_config_t config, const uint32_t *planeChannelFlags, reskia_yuva_location_t *locations) {
+    if (!planeChannelFlags || !locations) {
+        return false;
+    }
+    auto yuvaLocations = SkYUVAInfo::GetYUVALocations(static_cast<SkYUVAInfo::PlaneConfig>(config), planeChannelFlags);
+    for (int i = 0; i < SkYUVAInfo::kYUVAChannelCount; ++i) {
+        locations[i].plane = yuvaLocations[i].fPlane;
+        locations[i].channel = static_cast<int32_t>(yuvaLocations[i].fChannel);
+    }
+    return SkYUVAInfo::YUVALocation::AreValidLocations(yuvaLocations);
+}
 
 bool SkYUVAInfo_HasAlpha(reskia_yuva_info_plane_config_t config) {
     return SkYUVAInfo::HasAlpha(static_cast<SkYUVAInfo::PlaneConfig>(config));
