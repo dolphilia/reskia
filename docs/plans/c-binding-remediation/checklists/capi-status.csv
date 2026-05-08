@@ -73,8 +73,8 @@ skia/capi/sk_document.cpp,todo,P2,,
 skia/capi/sk_document.h,todo,P2,,
 skia/capi/sk_drawable.cpp,todo,P2,,
 skia/capi/sk_drawable.h,todo,P2,,
-skia/capi/sk_dynamic_memory_w_stream.cpp,todo,P2,,
-skia/capi/sk_dynamic_memory_w_stream.h,todo,P2,,
+skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream NULL ガードと write/read/copy buffer 規約を補強
+skia/capi/sk_dynamic_memory_w_stream.h,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream raw buffer/stream transfer コメントを補強
 skia/capi/sk_encoded_origin.cpp,todo,P2,,
 skia/capi/sk_encoded_origin.h,todo,P2,,
 skia/capi/sk_encoder.cpp,todo,P2,,
@@ -293,8 +293,8 @@ skia/capi/sk_v4.cpp,todo,P2,,
 skia/capi/sk_v4.h,todo,P2,,
 skia/capi/sk_vertices.cpp,todo,P2,,
 skia/capi/sk_vertices.h,todo,P2,,
-skia/capi/sk_w_stream.cpp,todo,P2,,
-skia/capi/sk_w_stream.h,todo,P2,,
+skia/capi/sk_w_stream.cpp,done,P2,codex,phase2-batch-i: SkWStream NULL ガードと write/writeStream 規約を補強
+skia/capi/sk_w_stream.h,done,P2,codex,phase2-batch-i: SkWStream raw buffer/text/stream transfer コメントを補強
 skia/capi/sk_wbmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_wbmp_decoder.h,todo,P2,,
 skia/capi/sk_webp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化

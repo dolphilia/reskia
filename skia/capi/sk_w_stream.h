@@ -17,13 +17,13 @@ extern "C" {
 
 reskia_w_stream_t *SkNullWStream_new(); // () -> SkNullWStream *
 void SkWStream_delete(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)
-bool SkWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size); // (SkWStream *w_stream, const void *buffer, size_t size) -> bool
+bool SkWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size); // buffer may be null only when size == 0
 void SkWStream_flush(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)
 size_t SkWStream_bytesWritten(reskia_w_stream_t *w_stream); // (SkWStream *w_stream) -> size_t
 bool SkWStream_write8(reskia_w_stream_t *w_stream, uint32_t value); // (SkWStream *w_stream, U8CPU value) -> bool
 bool SkWStream_write16(reskia_w_stream_t *w_stream, uint32_t value); // (SkWStream *w_stream, U16CPU value) -> bool
 bool SkWStream_write32(reskia_w_stream_t *w_stream, uint32_t v); // (SkWStream *w_stream, uint32_t v) -> bool
-bool SkWStream_writeText(reskia_w_stream_t *w_stream, const char text[]); // (SkWStream *w_stream, const char text[]) -> bool
+bool SkWStream_writeText(reskia_w_stream_t *w_stream, const char text[]); // text: non-null C string
 bool SkWStream_newline(reskia_w_stream_t *w_stream); // (SkWStream *w_stream) -> bool
 bool SkWStream_writeDecAsText(reskia_w_stream_t *w_stream, int32_t i); // (SkWStream *w_stream, int32_t i) -> bool
 bool SkWStream_writeBigDecAsText(reskia_w_stream_t *w_stream, int64_t i, int minDigits); // (SkWStream *w_stream, int64_t i, int minDigits) -> bool
@@ -32,7 +32,7 @@ bool SkWStream_writeScalarAsText(reskia_w_stream_t *w_stream, float v); // (SkWS
 bool SkWStream_writeBool(reskia_w_stream_t *w_stream, bool v); // (SkWStream *w_stream, bool v) -> bool
 bool SkWStream_writeScalar(reskia_w_stream_t *w_stream, float v); // (SkWStream *w_stream, SkScalar v) -> bool
 bool SkWStream_writePackedUInt(reskia_w_stream_t *w_stream, size_t size); // (SkWStream *w_stream, size_t size) -> bool
-bool SkWStream_writeStream(reskia_w_stream_t *w_stream, reskia_stream_t *input, size_t length); // (SkWStream *w_stream, SkStream *input, size_t length) -> bool
+bool SkWStream_writeStream(reskia_w_stream_t *w_stream, reskia_stream_t *input, size_t length); // input may be null only when length == 0
 
 // static
 
