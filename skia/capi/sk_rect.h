@@ -34,13 +34,13 @@ float SkRect_height(reskia_rect_t *rect); // (SkRect *rect) -> float
 float SkRect_centerX(reskia_rect_t *rect); // (SkRect *rect) -> float
 float SkRect_centerY(reskia_rect_t *rect); // (SkRect *rect) -> float
 sk_point_t SkRect_center(reskia_rect_t *rect); // (SkRect *rect) -> sk_point_t
-void SkRect_toQuad(reskia_rect_t *rect, reskia_point_t *quad); // (SkRect *rect, SkPoint quad[4])
+void SkRect_toQuad(reskia_rect_t *rect, reskia_point_t *quad); // quad: non-null caller-owned SkPoint[4] output
 void SkRect_setEmpty(reskia_rect_t *rect); // (SkRect *rect)
 void SkRect_set(reskia_rect_t *rect, const reskia_i_rect_t *src); // (SkRect *rect, const SkIRect *src)
 void SkRect_setLTRB(reskia_rect_t *rect, float left, float top, float right, float bottom); // (SkRect *rect, float left, float top, float right, float bottom)
-void SkRect_setBounds(reskia_rect_t *rect, const reskia_point_t *pts, int count); // (SkRect *rect, const SkPoint pts[], int count)
-bool SkRect_setBoundsCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count); // (SkRect *rect, const SkPoint pts[], int count) -> bool
-void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count); // (SkRect *rect, const SkPoint pts[], int count)
+void SkRect_setBounds(reskia_rect_t *rect, const reskia_point_t *pts, int count); // pts may be null only when count == 0
+bool SkRect_setBoundsCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count); // pts may be null only when count == 0
+void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count); // pts may be null only when count == 0
 void SkRect_setFromPoints(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1); // (SkRect *rect, const SkPoint *p0, const SkPoint *p1)
 void SkRect_setXYWH(reskia_rect_t *rect, float x, float y, float width, float height); // (SkRect *rect, float x, float y, float width, float height)
 void SkRect_setWH(reskia_rect_t *rect, float width, float height); // (SkRect *rect, float width, float height)
@@ -63,16 +63,16 @@ void SkRect_joinPossiblyEmptyRect(reskia_rect_t *rect, const reskia_rect_t *r); 
 bool SkRect_contains(reskia_rect_t *rect, float x, float y); // (SkRect *rect, float x, float y) -> bool
 bool SkRect_containsRect(reskia_rect_t *rect, const reskia_rect_t *r); // (SkRect *rect, const SkRect *r) -> bool
 bool SkRect_containsIRect(reskia_rect_t *rect, const reskia_i_rect_t *r); // (SkRect *rect, const SkIRect *r) -> bool
-void SkRect_round(reskia_rect_t *rect, reskia_i_rect_t *dst); // (SkRect *rect, SkIRect *dst)
-void SkRect_roundOut(reskia_rect_t *rect, reskia_i_rect_t *dst); // (SkRect *rect, SkIRect *dst)
-void SkRect_roundOutToRect(reskia_rect_t *rect, reskia_rect_t *dst); // (SkRect *rect, SkRect *dst)
-void SkRect_roundIn(reskia_rect_t *rect, reskia_i_rect_t *dst); // (SkRect *rect, SkIRect *dst)
+void SkRect_round(reskia_rect_t *rect, reskia_i_rect_t *dst); // dst: non-null caller-owned output
+void SkRect_roundOut(reskia_rect_t *rect, reskia_i_rect_t *dst); // dst: non-null caller-owned output
+void SkRect_roundOutToRect(reskia_rect_t *rect, reskia_rect_t *dst); // dst: non-null caller-owned output
+void SkRect_roundIn(reskia_rect_t *rect, reskia_i_rect_t *dst); // dst: non-null caller-owned output
 sk_i_rect_t SkRect_roundToIRect(reskia_rect_t *rect); // (SkRect *rect) -> sk_i_rect_t
 sk_i_rect_t SkRect_roundOutToIRect(reskia_rect_t *rect); // (SkRect *rect) -> sk_i_rect_t
 sk_i_rect_t SkRect_roundInToIRect(reskia_rect_t *rect); // (SkRect *rect) -> sk_i_rect_t
 void SkRect_sort(reskia_rect_t *rect); // (SkRect *rect)
 sk_rect_t SkRect_makeSorted(reskia_rect_t *rect); // (SkRect *rect) -> sk_rect_t
-const float * SkRect_asScalars(reskia_rect_t *rect); // (SkRect *rect) -> const float *
+const float * SkRect_asScalars(reskia_rect_t *rect); // borrowed scalar storage; valid while rect remains alive and unchanged
 void SkRect_dump(reskia_rect_t *rect, bool asHex); // (SkRect *rect, bool asHex)
 void SkRect_dumpDefault(reskia_rect_t *rect); // (SkRect *rect)
 void SkRect_dumpHex(reskia_rect_t *rect); // (SkRect *rect)

@@ -207,16 +207,16 @@ skia/capi/sk_point.cpp,todo,P2,,
 skia/capi/sk_point.h,todo,P2,,
 skia/capi/sk_point_3.cpp,todo,P2,,
 skia/capi/sk_point_3.h,todo,P2,,
-skia/capi/sk_r_rect.cpp,todo,P2,,
-skia/capi/sk_r_rect.h,todo,P2,,
+skia/capi/sk_r_rect.cpp,done,P2,codex,phase2-batch-e: SkRRect NULL ガードと memory/borrowed pointer 規約を補強
+skia/capi/sk_r_rect.h,done,P2,codex,phase2-batch-e: SkRRect buffer/radii/borrowed pointer コメントを補強
 skia/capi/sk_raster_handle_allocator.cpp,todo,P2,,
 skia/capi/sk_raster_handle_allocator.h,todo,P2,,
 skia/capi/sk_raw_decoder.cpp,todo,P2,,
 skia/capi/sk_raw_decoder.h,todo,P2,,
 skia/capi/sk_read_buffer.cpp,todo,P2,,
 skia/capi/sk_read_buffer.h,todo,P2,,
-skia/capi/sk_rect.cpp,todo,P2,,
-skia/capi/sk_rect.h,todo,P2,,
+skia/capi/sk_rect.cpp,done,P2,codex,phase2-batch-e: SkRect NULL ガードを accessor/mutator/static factory に横展開
+skia/capi/sk_rect.h,done,P2,codex,phase2-batch-e: SkRect output/raw array/borrowed scalar コメントを補強
 skia/capi/sk_ref_cnt.cpp,todo,P2,,
 skia/capi/sk_ref_cnt.h,todo,P2,,
 skia/capi/sk_ref_cnt_base.cpp,todo,P2,,

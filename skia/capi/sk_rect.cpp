@@ -21,226 +21,394 @@ void SkRect_delete(reskia_rect_t *rect) {
 }
 
 bool SkRect_isEmpty(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkRect *>(rect)->isEmpty();
 }
 
 bool SkRect_isSorted(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->isSorted();
 }
 
 bool SkRect_isFinite(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->isFinite();
 }
 
 float SkRect_x(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->x();
 }
 
 float SkRect_y(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->y();
 }
 
 float SkRect_left(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->left();
 }
 
 float SkRect_top(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->top();
 }
 
 float SkRect_right(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->right();
 }
 
 float SkRect_bottom(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->bottom();
 }
 
 float SkRect_width(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->width();
 }
 
 float SkRect_height(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->height();
 }
 
 float SkRect_centerX(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->centerX();
 }
 
 float SkRect_centerY(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkRect *>(rect)->centerY();
 }
 
 sk_point_t SkRect_center(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_point_make(reinterpret_cast<SkRect *>(rect)->center());
 }
 
 void SkRect_toQuad(reskia_rect_t *rect, reskia_point_t *quad) {
+    if (rect == nullptr || quad == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->toQuad(reinterpret_cast<SkPoint *>(quad));
 }
 
 void SkRect_setEmpty(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setEmpty();
 }
 
 void SkRect_set(reskia_rect_t *rect, const reskia_i_rect_t *src) {
+    if (rect == nullptr || src == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->set(* reinterpret_cast<const SkIRect *>(src));
 }
 
 void SkRect_setLTRB(reskia_rect_t *rect, float left, float top, float right, float bottom) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setLTRB(left, top, right, bottom);
 }
 
 void SkRect_setBounds(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
+    if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setBounds(reinterpret_cast<const SkPoint *>(pts), count);
 }
 
 bool SkRect_setBoundsCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
+    if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->setBoundsCheck(reinterpret_cast<const SkPoint *>(pts), count);
 }
 
 void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
+    if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(reinterpret_cast<const SkPoint *>(pts), count);
 }
 
 void SkRect_setFromPoints(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1) {
+    if (rect == nullptr || p0 == nullptr || p1 == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->set(* reinterpret_cast<const SkPoint *>(p0), * reinterpret_cast<const SkPoint *>(p1));
 }
 
 void SkRect_setXYWH(reskia_rect_t *rect, float x, float y, float width, float height) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setXYWH(x, y, width, height);
 }
 
 void SkRect_setWH(reskia_rect_t *rect, float width, float height) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setWH(width, height);
 }
 
 void SkRect_setIWH(reskia_rect_t *rect, int32_t width, int32_t height) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->setIWH(width, height);
 }
 
 sk_rect_t SkRect_makeOffset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeOutset(dx, dy));
 }
 
 sk_rect_t SkRect_makeOffsetFromPoint(reskia_rect_t *rect, sk_point_t v) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeOffset(static_sk_point_get_entity(v)));
 }
 
 sk_rect_t SkRect_makeInset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeInset(dx, dy));
 }
 
 sk_rect_t SkRect_makeOutset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeOutset(dx, dy));
 }
 
 void SkRect_offset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->offset(dx, dy);
 }
 
 void SkRect_offsetByPoint(reskia_rect_t *rect, const reskia_point_t *delta) {
+    if (rect == nullptr || delta == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->offset(* reinterpret_cast<const SkPoint *>(delta));
 }
 
 void SkRect_offsetTo(reskia_rect_t *rect, float newX, float newY) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->offsetTo(newX, newY);
 }
 
 void SkRect_inset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->inset(dx, dy);
 }
 
 void SkRect_outset(reskia_rect_t *rect, float dx, float dy) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->outset(dx, dy);
 }
 
 bool SkRect_intersect(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->intersect(* reinterpret_cast<const SkRect *>(r));
 }
 
 bool SkRect_intersectFromRects(reskia_rect_t *rect, const reskia_rect_t *a, const reskia_rect_t *b) {
+    if (rect == nullptr || a == nullptr || b == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->intersect(* reinterpret_cast<const SkRect *>(a), * reinterpret_cast<const SkRect *>(b));
 }
 
 bool SkRect_intersects(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->intersects(* reinterpret_cast<const SkRect *>(r));
 }
 
 void SkRect_join(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->join(* reinterpret_cast<const SkRect *>(r));
 }
 
 void SkRect_joinNonEmptyArg(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->joinNonEmptyArg(* reinterpret_cast<const SkRect *>(r));
 }
 
 void SkRect_joinPossiblyEmptyRect(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->joinPossiblyEmptyRect(* reinterpret_cast<const SkRect *>(r));
 }
 
 bool SkRect_contains(reskia_rect_t *rect, float x, float y) {
+    if (rect == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->contains(x, y);
 }
 
 bool SkRect_containsRect(reskia_rect_t *rect, const reskia_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->contains(* reinterpret_cast<const SkRect *>(r));
 }
 
 bool SkRect_containsIRect(reskia_rect_t *rect, const reskia_i_rect_t *r) {
+    if (rect == nullptr || r == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRect *>(rect)->contains(* reinterpret_cast<const SkIRect *>(r));
 }
 
 void SkRect_round(reskia_rect_t *rect, reskia_i_rect_t *dst) {
+    if (rect == nullptr || dst == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->round(reinterpret_cast<SkIRect *>(dst));
 }
 
 void SkRect_roundOut(reskia_rect_t *rect, reskia_i_rect_t *dst) {
+    if (rect == nullptr || dst == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->roundOut(reinterpret_cast<SkIRect *>(dst));
 }
 
 void SkRect_roundOutToRect(reskia_rect_t *rect, reskia_rect_t *dst) {
+    if (rect == nullptr || dst == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->roundOut(reinterpret_cast<SkRect *>(dst));
 }
 
 void SkRect_roundIn(reskia_rect_t *rect, reskia_i_rect_t *dst) {
+    if (rect == nullptr || dst == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->roundIn(reinterpret_cast<SkIRect *>(dst));
 }
 
 sk_i_rect_t SkRect_roundToIRect(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->round());
 }
 
 sk_i_rect_t SkRect_roundOutToIRect(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->roundOut());
 }
 
 sk_i_rect_t SkRect_roundInToIRect(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkRect *>(rect)->roundIn());
 }
 
 void SkRect_sort(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->sort();
 }
 
 sk_rect_t SkRect_makeSorted(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(reinterpret_cast<SkRect *>(rect)->makeSorted());
 }
 
 const float * SkRect_asScalars(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkRect *>(rect)->asScalars();
 }
 
 void SkRect_dump(reskia_rect_t *rect, bool asHex) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->dump(asHex);
 }
 
 void SkRect_dumpDefault(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->dump();
 }
 
 void SkRect_dumpHex(reskia_rect_t *rect) {
+    if (rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRect *>(rect)->dumpHex();
 }
 
@@ -259,6 +427,9 @@ sk_rect_t SkRect_MakeIWH(int w, int h) {
 }
 
 sk_rect_t SkRect_MakeSize(const reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(SkRect::MakeSize(* reinterpret_cast<const SkSize *>(size)));
 }
 
@@ -271,14 +442,23 @@ sk_rect_t SkRect_MakeXYWH(float x, float y, float w, float h) {
 }
 
 sk_rect_t SkRect_Make(const reskia_i_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkISize *>(size)));
 }
 
 sk_rect_t SkRect_MakeFromIRect(const reskia_i_rect_t *irect) {
+    if (irect == nullptr) {
+        return 0;
+    }
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkIRect *>(irect)));
 }
 
 bool SkRect_Intersects(const reskia_rect_t *a, const reskia_rect_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return false;
+    }
     return SkRect::Intersects(* reinterpret_cast<const SkRect *>(a), * reinterpret_cast<const SkRect *>(b));
 }
 
