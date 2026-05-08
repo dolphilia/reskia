@@ -155,8 +155,8 @@ skia/capi/sk_mask_filter.cpp,todo,P2,,
 skia/capi/sk_mask_filter.h,todo,P2,,
 skia/capi/sk_matrix.cpp,todo,P2,,
 skia/capi/sk_matrix.h,todo,P2,,
-skia/capi/sk_memory_stream.cpp,todo,P2,,
-skia/capi/sk_memory_stream.h,todo,P2,,
+skia/capi/sk_memory_stream.cpp,done,P2,codex,phase2-batch-h: SkMemoryStream NULL ガードと read/peek/raw buffer 規約を補強
+skia/capi/sk_memory_stream.h,done,P2,codex,phase2-batch-h: SkMemoryStream borrowed memory と direct/copy lifetime コメントを補強
 skia/capi/sk_mesh.cpp,todo,P2,,
 skia/capi/sk_mesh.h,todo,P2,,
 skia/capi/sk_mesh_specification.cpp,todo,P2,,
@@ -245,8 +245,8 @@ skia/capi/sk_shaders.cpp,todo,P2,,
 skia/capi/sk_shaders.h,todo,P2,,
 skia/capi/sk_size.cpp,todo,P2,,
 skia/capi/sk_size.h,todo,P2,,
-skia/capi/sk_stream.cpp,todo,P2,,
-skia/capi/sk_stream.h,todo,P2,,
+skia/capi/sk_stream.cpp,done,P2,codex,phase2-batch-h: SkStream NULL ガードと read/peek/output pointer 規約を補強
+skia/capi/sk_stream.h,done,P2,codex,phase2-batch-h: SkStream read/peek/memory-base コメントを補強
 skia/capi/sk_stream_asset.cpp,todo,P2,,
 skia/capi/sk_stream_asset.h,todo,P2,,
 skia/capi/sk_stream_memory.cpp,todo,P2,,

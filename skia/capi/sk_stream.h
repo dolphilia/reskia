@@ -18,9 +18,9 @@ extern "C" {
 #endif
 
 void SkStream_delete(reskia_stream_t *stream); // (SkStream *stream)
-size_t SkStream_read(reskia_stream_t *stream, void *buffer, size_t size); // (SkStream *stream, void *buffer, size_t size) -> size_t
+size_t SkStream_read(reskia_stream_t *stream, void *buffer, size_t size); // buffer may be null to skip size bytes
 size_t SkStream_skip(reskia_stream_t *stream, size_t size); // (SkStream *stream, size_t size) -> size_t
-size_t SkStream_peek(reskia_stream_t *stream, void *buffer, size_t size); // (SkStream *stream, void *buffer, size_t size) -> size_t
+size_t SkStream_peek(reskia_stream_t *stream, void *buffer, size_t size); // buffer may be null only when size == 0
 bool SkStream_isAtEnd(reskia_stream_t *stream); // (SkStream *stream) -> bool
 bool SkStream_readS8(reskia_stream_t *stream, int8_t *i); // (SkStream *stream, int8_t *i) -> bool
 bool SkStream_readS16(reskia_stream_t *stream, int16_t *i); // (SkStream *stream, int16_t *i) -> bool
@@ -40,11 +40,11 @@ bool SkStream_seek(reskia_stream_t *stream, size_t size); // (SkStream *stream, 
 bool SkStream_move(reskia_stream_t *stream, long i); // (SkStream *stream, long i) -> bool
 bool SkStream_hasLength(reskia_stream_t *stream); // (SkStream *stream) -> bool
 size_t SkStream_getLength(reskia_stream_t *stream); // (SkStream *stream) -> size_t
-const void * SkStream_getMemoryBase(reskia_stream_t *stream); // (SkStream *stream) -> const void *
+const void * SkStream_getMemoryBase(reskia_stream_t *stream); // borrowed memory base when supported; caller must not free
 
 // static
 
-sk_stream_asset_t SkStream_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStream_MakeFromFile(const char path[]); // path: non-null filesystem path
 
 #ifdef __cplusplus
 }
