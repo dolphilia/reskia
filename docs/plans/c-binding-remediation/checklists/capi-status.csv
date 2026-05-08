@@ -63,8 +63,8 @@ skia/capi/sk_cubic_resampler.cpp,todo,P2,,
 skia/capi/sk_cubic_resampler.h,todo,P2,,
 skia/capi/sk_dash_path_effect.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
 skia/capi/sk_dash_path_effect.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
-skia/capi/sk_data.cpp,todo,P2,,
-skia/capi/sk_data.h,todo,P2,,
+skia/capi/sk_data.cpp,done,P2,codex,phase2-batch-g: SkData NULL ガードと zero-length raw pointer 規約を補強
+skia/capi/sk_data.h,done,P2,codex,phase2-batch-g: SkData raw buffer/lifetime/ownership コメントを補強
 skia/capi/sk_data_table.cpp,todo,P2,,
 skia/capi/sk_data_table.h,todo,P2,,
 skia/capi/sk_discrete_path_effect.cpp,todo,P2,,
@@ -129,8 +129,8 @@ skia/capi/sk_image_filters.cpp,todo,P2,,
 skia/capi/sk_image_filters.h,todo,P2,,
 skia/capi/sk_image_generator.cpp,todo,P2,,
 skia/capi/sk_image_generator.h,todo,P2,,
-skia/capi/sk_image_info.cpp,todo,P2,,
-skia/capi/sk_image_info.h,todo,P2,,
+skia/capi/sk_image_info.cpp,done,P2,codex,phase2-batch-f: SkImageInfo NULL ガードと byte-size/color-space 規約を補強
+skia/capi/sk_image_info.h,done,P2,codex,phase2-batch-f: SkImageInfo borrowed color space と rowBytes/byte-size コメントを補強
 skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
 skia/capi/sk_images.h,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一
 skia/capi/sk_jpeg_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化

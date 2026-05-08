@@ -21,6 +21,8 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `04-phase-2-batch-c-path.md`
 - `05-phase-2-batch-d-paint.md`
 - `06-phase-2-batch-e-rect-rrect.md`
+- `07-phase-2-batch-f-image-info.md`
+- `08-phase-2-batch-g-data.md`
 
 ## 関連計画
 

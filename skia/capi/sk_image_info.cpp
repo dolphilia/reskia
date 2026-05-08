@@ -29,114 +29,198 @@ void SkImageInfo_delete(reskia_image_info_t *image_info) {
 }
 
 bool SkImageInfo_equals(reskia_image_info_t *image_info, const reskia_image_info_t *other) {
+    if (image_info == nullptr || other == nullptr) {
+        return false;
+    }
     return *reinterpret_cast<SkImageInfo *>(image_info) == *reinterpret_cast<const SkImageInfo *>(other);
 }
 
 bool SkImageInfo_notEquals(reskia_image_info_t *image_info, const reskia_image_info_t *other) {
+    if (image_info == nullptr || other == nullptr) {
+        return image_info != other;
+    }
     return *reinterpret_cast<SkImageInfo *>(image_info) != *reinterpret_cast<const SkImageInfo *>(other);
 }
 
 int SkImageInfo_width(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->width();
 }
 
 int SkImageInfo_height(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->height();
 }
 
 reskia_image_info_color_type_t SkImageInfo_colorType(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_image_info_color_type_t>(reinterpret_cast<SkImageInfo *>(image_info)->colorType());
 }
 
 reskia_image_info_alpha_type_t SkImageInfo_alphaType(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_image_info_alpha_type_t>(reinterpret_cast<SkImageInfo *>(image_info)->alphaType());
 }
 
 reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkImageInfo *>(image_info)->colorSpace());
 }
 
 sk_color_space_t SkImageInfo_refColorSpace(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_color_space_make(reinterpret_cast<SkImageInfo *>(image_info)->refColorSpace());
 }
 
 bool SkImageInfo_isEmpty(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->isEmpty();
 }
 
 sk_color_info_t SkImageInfo_colorInfo(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_color_info_make(reinterpret_cast<SkImageInfo *>(image_info)->colorInfo());
 }
 
 bool SkImageInfo_isOpaque(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->isOpaque();
 }
 
 sk_i_size_t SkImageInfo_dimensions(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_i_size_make(reinterpret_cast<SkImageInfo *>(image_info)->dimensions());
 }
 
 sk_i_rect_t SkImageInfo_bounds(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkImageInfo *>(image_info)->bounds());
 }
 
 bool SkImageInfo_gammaCloseToSRGB(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->gammaCloseToSRGB();
 }
 
 sk_image_info_t SkImageInfo_makeWH(reskia_image_info_t *image_info, int newWidth, int newHeight) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeWH(newWidth, newHeight));
 }
 
 sk_image_info_t SkImageInfo_makeDimensions(reskia_image_info_t *image_info, sk_i_size_t newSize) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeDimensions(static_sk_i_size_get_entity(newSize)));
 }
 
 sk_image_info_t SkImageInfo_makeAlphaType(reskia_image_info_t *image_info, reskia_image_info_alpha_type_t newAlphaType) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeAlphaType(static_cast<SkAlphaType>(newAlphaType)));
 }
 
 sk_image_info_t SkImageInfo_makeColorType(reskia_image_info_t *image_info, reskia_image_info_color_type_t newColorType) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeColorType(static_cast<SkColorType>(newColorType)));
 }
 
 sk_image_info_t SkImageInfo_makeColorSpace(reskia_image_info_t *image_info, sk_color_space_t color_space) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkImageInfo *>(image_info)->makeColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
 int SkImageInfo_bytesPerPixel(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->bytesPerPixel();
 }
 
 int SkImageInfo_shiftPerPixel(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->shiftPerPixel();
 }
 
 reskia_u64_t SkImageInfo_minRowBytes64(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->minRowBytes64();
 }
 
 size_t SkImageInfo_minRowBytes(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->minRowBytes();
 }
 
 size_t SkImageInfo_computeOffset(reskia_image_info_t *image_info, int x, int y, size_t rowBytes) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->computeOffset(x, y, rowBytes);
 }
 
 size_t SkImageInfo_computeByteSize(reskia_image_info_t *image_info, size_t rowBytes) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->computeByteSize(rowBytes);
 }
 
 size_t SkImageInfo_computeMinByteSize(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->computeMinByteSize();
 }
 
 bool SkImageInfo_validRowBytes(reskia_image_info_t *image_info, size_t rowBytes) {
+    if (image_info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkImageInfo *>(image_info)->validRowBytes(rowBytes);
 }
 
 void SkImageInfo_reset(reskia_image_info_t *image_info) {
+    if (image_info == nullptr) {
+        return;
+    }
     reinterpret_cast<SkImageInfo *>(image_info)->reset();
 }
 
@@ -159,6 +243,9 @@ sk_image_info_t SkImageInfo_MakeWithDimensionsAndColorSpace(sk_i_size_t dimensio
 }
 
 sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo) {
+    if (colorInfo == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), * reinterpret_cast<const SkColorInfo *>(colorInfo)));
 }
 
