@@ -22,9 +22,9 @@ bool SkStreamSeekable_seek(reskia_stream_seekable_t *stream_seekable, size_t pos
 bool SkStreamSeekable_move(reskia_stream_seekable_t *stream_seekable, long offset); // Moves the read position by the specified offset relative to the current position.
 int SkStreamSeekable_fork(reskia_stream_seekable_t *stream_seekable); // Creates a forked copy of the current stream at its current position.
 bool SkStreamSeekable_rewind(reskia_stream_seekable_t *stream_seekable); // Resets the read position to the beginning of the stream.
-size_t SkStreamSeekable_read(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size); // Reads up to `size` bytes from the stream into `buffer`.
+size_t SkStreamSeekable_read(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size); // buffer may be null to skip size bytes.
 size_t SkStreamSeekable_skip(reskia_stream_seekable_t *stream_seekable, size_t size); // Skips over the specified number of bytes in the stream.
-size_t SkStreamSeekable_peek(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size); // Reads `size` bytes into `buffer` without advancing the read position.
+size_t SkStreamSeekable_peek(reskia_stream_seekable_t *stream_seekable, void *buffer, size_t size); // buffer may be null only when size == 0.
 bool SkStreamSeekable_isAtEnd(reskia_stream_seekable_t *stream_seekable); // Checks if the stream has reached its end.
 bool SkStreamSeekable_readS8(reskia_stream_seekable_t *stream_seekable, int8_t *i); // Reads an 8-bit signed integer from the stream.
 bool SkStreamSeekable_readS16(reskia_stream_seekable_t *stream_seekable, int16_t *i); // Reads a 16-bit signed integer from the stream.
@@ -37,11 +37,11 @@ bool SkStreamSeekable_readScalar(reskia_stream_seekable_t *stream_seekable, floa
 bool SkStreamSeekable_readPackedUInt(reskia_stream_seekable_t *stream_seekable, size_t *size); // Reads a packed unsigned integer from the stream.
 bool SkStreamSeekable_hasLength(reskia_stream_seekable_t *stream_seekable); // Checks if the stream has a known length.
 size_t SkStreamSeekable_getLength(reskia_stream_seekable_t *stream_seekable); // Returns the total length of the stream.
-const void * SkStreamSeekable_getMemoryBase(reskia_stream_seekable_t *stream_seekable); // Returns a pointer to the stream's memory base if available.
+const void * SkStreamSeekable_getMemoryBase(reskia_stream_seekable_t *stream_seekable); // Borrowed memory base when available; caller must not free.
 
 // static
 
-int SkStreamSeekable_MakeFromFile(const char path[]); // Creates a SkStreamSeekable object from the specified file.
+int SkStreamSeekable_MakeFromFile(const char path[]); // path: non-null filesystem path.
 
 #ifdef __cplusplus
 }

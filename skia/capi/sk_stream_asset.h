@@ -26,9 +26,9 @@ size_t SkStreamAsset_getPosition(reskia_stream_asset_t *stream_asset); // (SkStr
 bool SkStreamAsset_seek(reskia_stream_asset_t *stream_asset, size_t position); // (SkStreamAsset *stream_asset, size_t position) -> bool
 bool SkStreamAsset_move(reskia_stream_asset_t *stream_asset, long offset); // (SkStreamAsset *stream_asset, long offset) -> bool
 bool SkStreamAsset_rewind(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
-size_t SkStreamAsset_read(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
+size_t SkStreamAsset_read(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // buffer may be null to skip size bytes
 size_t SkStreamAsset_skip(reskia_stream_asset_t *stream_asset, size_t size); // (SkStreamAsset *stream_asset, size_t size) -> size_t
-size_t SkStreamAsset_peek(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // (SkStreamAsset *stream_asset, void *buffer, size_t size) -> size_t
+size_t SkStreamAsset_peek(reskia_stream_asset_t *stream_asset, void *buffer, size_t size); // buffer may be null only when size == 0
 bool SkStreamAsset_isAtEnd(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> bool
 bool SkStreamAsset_readS8(reskia_stream_asset_t *stream_asset, int8_t *i); // (SkStreamAsset *stream_asset, int8_t *i) -> bool
 bool SkStreamAsset_readS16(reskia_stream_asset_t *stream_asset, int16_t *i); // (SkStreamAsset *stream_asset, int16_t *i) -> bool
@@ -39,11 +39,11 @@ bool SkStreamAsset_readU32(reskia_stream_asset_t *stream_asset, uint32_t *i); //
 bool SkStreamAsset_readBool(reskia_stream_asset_t *stream_asset, bool *b); // (SkStreamAsset *stream_asset, bool *b) -> bool
 bool SkStreamAsset_readScalar(reskia_stream_asset_t *stream_asset, float *v); // (SkStreamAsset *stream_asset, SkScalar *v) -> bool
 bool SkStreamAsset_readPackedUInt(reskia_stream_asset_t *stream_asset, size_t *size); // (SkStreamAsset *stream_asset, size_t *size) -> bool
-const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset); // (SkStreamAsset *stream_asset) -> const void *
+const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset); // borrowed memory base when supported; caller must not free
 
 // static
 
-sk_stream_asset_t SkStreamAsset_MakeFromFile(const char path[]); // (const char path[]) -> sk_stream_asset_t
+sk_stream_asset_t SkStreamAsset_MakeFromFile(const char path[]); // path: non-null filesystem path
 
 #ifdef __cplusplus
 }

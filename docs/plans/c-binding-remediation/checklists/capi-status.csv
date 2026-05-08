@@ -247,14 +247,14 @@ skia/capi/sk_size.cpp,todo,P2,,
 skia/capi/sk_size.h,todo,P2,,
 skia/capi/sk_stream.cpp,done,P2,codex,phase2-batch-h: SkStream NULL ガードと read/peek/output pointer 規約を補強
 skia/capi/sk_stream.h,done,P2,codex,phase2-batch-h: SkStream read/peek/memory-base コメントを補強
-skia/capi/sk_stream_asset.cpp,todo,P2,,
-skia/capi/sk_stream_asset.h,todo,P2,,
-skia/capi/sk_stream_memory.cpp,todo,P2,,
-skia/capi/sk_stream_memory.h,todo,P2,,
-skia/capi/sk_stream_rewindable.cpp,todo,P2,,
-skia/capi/sk_stream_rewindable.h,todo,P2,,
-skia/capi/sk_stream_seekable.cpp,todo,P2,,
-skia/capi/sk_stream_seekable.h,todo,P2,,
+skia/capi/sk_stream_asset.cpp,done,P2,codex,phase2-batch-j: SkStreamAsset NULL ガードと read/peek/file 規約を補強
+skia/capi/sk_stream_asset.h,done,P2,codex,phase2-batch-j: SkStreamAsset read/peek/memory-base コメントを補強
+skia/capi/sk_stream_memory.cpp,done,P2,codex,phase2-batch-j: SkStreamMemory NULL ガードと read/peek/typed read 規約を補強
+skia/capi/sk_stream_memory.h,done,P2,codex,phase2-batch-j: SkStreamMemory read/peek/memory-base コメントを補強
+skia/capi/sk_stream_rewindable.cpp,done,P2,codex,phase2-batch-j: SkStreamRewindable NULL ガードと read/peek/position 規約を補強
+skia/capi/sk_stream_rewindable.h,done,P2,codex,phase2-batch-j: SkStreamRewindable read/peek/memory-base コメントを補強
+skia/capi/sk_stream_seekable.cpp,done,P2,codex,phase2-batch-j: SkStreamSeekable NULL ガードと read/peek/position 規約を補強
+skia/capi/sk_stream_seekable.h,done,P2,codex,phase2-batch-j: SkStreamSeekable read/peek/memory-base コメントを補強
 skia/capi/sk_string.cpp,todo,P2,,
 skia/capi/sk_string.h,todo,P2,,
 skia/capi/sk_stroke_rec.cpp,todo,P2,,
