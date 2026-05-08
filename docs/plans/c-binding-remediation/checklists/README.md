@@ -12,6 +12,19 @@
 - `public-api-coverage-matrix.csv`（vendored Skia 公開 class/struct method と Reskia C API 関数名の機械照合マトリクス）
 - `public-api-core-effects-missing-triage.csv`（`include/core` / `include/effects` の missing method を `real_gap` / `na` / `false_positive` に仕分けたもの）
 
+## `handles` 系チェックリストの役割
+
+- `static-handle-table-status.csv`
+  - `skia/handles/static_*.cpp` の `HandleTable` 移行状態を追跡する。
+  - Phase 1 の registry safety で最も重要な実装チェックリスト。
+  - `done`: `handle_table.hpp` へ移行済み、または既存実装が `find` ベース/無効キー安全化済み。
+  - `na`: 実装/API 未定義、またはコメントアウトのみで適用対象外。
+- `handles-status.csv`
+  - `skia/handles` の `.cpp` / `*-internal.h` / 公開 `.h` を含む広い棚卸し。
+  - `.cpp` は実装安全化の進捗を示す。
+  - `*-internal.h` は `get_entity` 分離など内部宣言の整合状態を示す。
+  - 公開 `.h` は宣言のみで Phase 1 の `handle_table` 実装対象ではないため、原則 `na` とする。
+
 更新ルール:
 
 1. ファイル修正に着手したら `status=doing`

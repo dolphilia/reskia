@@ -12,4 +12,5 @@
 - `docs/plans/skparagraph-enablement/`: 機能ギャップ調査 3.4（skparagraph）の有効化計画
 - `docs/plans/sksg-enablement/`: 機能ギャップ調査 3.5（sksg / Scene Graph）の有効化計画
 - `docs/plans/skottie-enablement/`: 機能ギャップ調査 3.3（skottie / Lottie）の有効化計画
+- `docs/plans/stability-hardening/`: C API / handles / test / sanitizer / platform matrix の横断的な安全化・安定化計画
 - `docs/plans/svg-text-shaping-enablement/`: 機能ギャップ調査 3.2（SVG/テキストシェーピング）の実装強化計画
