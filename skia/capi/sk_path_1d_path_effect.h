@@ -21,7 +21,7 @@ void SkPath1DPathEffect_delete(reskia_path_1d_path_effect_t *path1DPathEffect); 
 
 // static
 
-sk_path_effect_t SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, reskia_path_1d_path_effect_style_t style); // (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
+sk_path_effect_t SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, reskia_path_1d_path_effect_style_t style); // path は非 NULL。生成不能なら 0 (const SkPath *path, SkScalar advance, SkScalar phase, SkPath1DPathEffect::Style style) -> sk_path_effect_t
 void SkPath1DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

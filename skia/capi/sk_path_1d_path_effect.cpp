@@ -10,6 +10,19 @@
 
 #include "../handles/static_sk_path_effect-internal.h"
 
+#include <utility>
+
+namespace {
+
+sk_path_effect_t make_path_effect_handle(sk_sp<SkPathEffect> path_effect) {
+    if (!path_effect) {
+        return 0;
+    }
+    return static_sk_path_effect_make(std::move(path_effect));
+}
+
+}  // namespace
+
 extern "C" {
 
 void SkPath1DPathEffect_delete(reskia_path_1d_path_effect_t *path1DPathEffect) {
@@ -19,7 +32,10 @@ void SkPath1DPathEffect_delete(reskia_path_1d_path_effect_t *path1DPathEffect) {
 // static
 
 sk_path_effect_t SkPath1DPathEffect_Make(const reskia_path_t *path, float advance, float phase, reskia_path_1d_path_effect_style_t style) {
-    return static_sk_path_effect_make(SkPath1DPathEffect::Make(
+    if (path == nullptr) {
+        return 0;
+    }
+    return make_path_effect_handle(SkPath1DPathEffect::Make(
         *reinterpret_cast<const SkPath *>(path),
         advance,
         phase,

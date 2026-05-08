@@ -19,7 +19,7 @@ void SkPath2DPathEffect_delete(reskia_path_2d_path_effect_t *path2DPathEffect); 
 
 // static
 
-sk_path_effect_t SkPath2DPathEffect_Make(const reskia_matrix_t *matrix, const reskia_path_t *path); // (const SkMatrix *matrix, const SkPath *path) -> sk_path_effect_t
+sk_path_effect_t SkPath2DPathEffect_Make(const reskia_matrix_t *matrix, const reskia_path_t *path); // matrix/path は非 NULL。生成不能なら 0 (const SkMatrix *matrix, const SkPath *path) -> sk_path_effect_t
 void SkPath2DPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

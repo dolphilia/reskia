@@ -18,7 +18,7 @@ void SkDiscretePathEffect_delete(reskia_discrete_path_effect_t *discretePathEffe
 
 // static
 
-sk_path_effect_t SkDiscretePathEffect_Make(float segLength, float dev, uint32_t seedAssist); // (SkScalar segLength, SkScalar dev, uint32_t seedAssist) -> sk_path_effect_t
+sk_path_effect_t SkDiscretePathEffect_Make(float segLength, float dev, uint32_t seedAssist); // 生成不能なら 0 (SkScalar segLength, SkScalar dev, uint32_t seedAssist) -> sk_path_effect_t
 void SkDiscretePathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus

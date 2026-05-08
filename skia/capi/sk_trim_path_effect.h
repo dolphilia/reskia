@@ -15,11 +15,11 @@ typedef int32_t reskia_trim_path_effect_mode_t; // SkTrimPathEffect::Mode
 extern "C" {
 #endif
 
-void SkTrimPathEffect_delete(void * trimPathEffect); // (SkTrimPathEffect * trimPathEffect)
+void SkTrimPathEffect_delete(void * trimPathEffect); // owned: NULL 入力では no-op (SkTrimPathEffect * trimPathEffect)
 
 // static
 
-sk_path_effect_t SkTrimPathEffect_Make(float startT, float stopT, reskia_trim_path_effect_mode_t mode); // (SkScalar startT, SkScalar stopT, SkTrimPathEffect::Mode mode) -> sk_path_effect_t
+sk_path_effect_t SkTrimPathEffect_Make(float startT, float stopT, reskia_trim_path_effect_mode_t mode); // 生成不能なら 0 (SkScalar startT, SkScalar stopT, SkTrimPathEffect::Mode mode) -> sk_path_effect_t
 
 #ifdef __cplusplus
 }

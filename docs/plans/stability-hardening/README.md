@@ -27,6 +27,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `10-phase-2-batch-i-wstream.md`
 - `11-phase-2-batch-j-stream-derived.md`
 - `12-phase-2-batch-k-color-info-space.md`
+- `13-phase-2-batch-l-path-effect.md`
 
 ## 関連計画
 

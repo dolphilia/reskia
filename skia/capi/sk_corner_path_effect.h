@@ -11,11 +11,11 @@
 extern "C" {
 #endif
 
-void SkCornerPathEffect_delete(void * cornerPathEffect); // (SkCornerPathEffect * cornerPathEffect)
+void SkCornerPathEffect_delete(void * cornerPathEffect); // owned: NULL 入力では no-op (SkCornerPathEffect * cornerPathEffect)
 
 // static
 
-sk_path_effect_t SkCornerPathEffect_Make(float radius); // (SkScalar radius) -> sk_path_effect_t
+sk_path_effect_t SkCornerPathEffect_Make(float radius); // 生成不能なら 0 (SkScalar radius) -> sk_path_effect_t
 void SkCornerPathEffect_RegisterFlattenables(); // ()
 
 #ifdef __cplusplus
