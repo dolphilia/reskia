@@ -171,10 +171,10 @@ skia/capi/sk_overdraw_canvas.cpp,todo,P2,,
 skia/capi/sk_overdraw_canvas.h,todo,P2,,
 skia/capi/sk_overdraw_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
 skia/capi/sk_overdraw_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
-skia/capi/sk_paint.cpp,todo,P2,,
-skia/capi/sk_paint.h,todo,P2,,
-skia/capi/sk_path.cpp,done,P2,codex,step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一
-skia/capi/sk_path.h,done,P2,codex,step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一
+skia/capi/sk_paint.cpp,done,P2,codex,phase2-batch-d: SkPaint NULL ガードと borrowed/ref handle 規約を補強
+skia/capi/sk_paint.h,done,P2,codex,phase2-batch-d: SkPaint pointer/handle コメントと NULL 規約を補強
+skia/capi/sk_path.cpp,done,P2,codex,step4+phase2-batch-c: SkPath_interpolate status 規約に加えて NULL ガードを横展開
+skia/capi/sk_path.h,done,P2,codex,step4+phase2-batch-c: SkPath raw buffer/list コメントと NULL 規約を補強
 skia/capi/sk_path_1d_path_effect.cpp,todo,P2,,
 skia/capi/sk_path_1d_path_effect.h,todo,P2,,
 skia/capi/sk_path_2d_path_effect.cpp,todo,P2,,
