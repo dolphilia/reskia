@@ -13,6 +13,9 @@ void SkColorSpacePrimaries_delete(reskia_color_space_primaries_t *color_pace_pri
 }
 
 void SkColorSpacePrimaries_toXYZD50(reskia_color_space_primaries_t *color_pace_primaries, reskia_matrix3x3_t *toXYZD50) {
+    if (color_pace_primaries == nullptr || toXYZD50 == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorSpacePrimaries *>(color_pace_primaries)->toXYZD50(reinterpret_cast<skcms_Matrix3x3 *>(toXYZD50));
 }
 
