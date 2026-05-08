@@ -61,6 +61,22 @@ if(RESKIA_BUILD_TESTS)
     endif()
     add_test(NAME c_skia_codec_smoke COMMAND test_codec_smoke)
 
+    add_executable(test_canvas_invalid_input_smoke test/test_canvas_invalid_input_smoke.cpp)
+    target_include_directories(test_canvas_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    if(RESKIA_DEP_LINK_DIRS)
+        target_link_directories(test_canvas_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+    endif()
+    target_link_libraries(test_canvas_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_canvas_invalid_input_smoke COMMAND test_canvas_invalid_input_smoke)
+
+    add_executable(test_image_surface_invalid_input_smoke test/test_image_surface_invalid_input_smoke.cpp)
+    target_include_directories(test_image_surface_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    if(RESKIA_DEP_LINK_DIRS)
+        target_link_directories(test_image_surface_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+    endif()
+    target_link_libraries(test_image_surface_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_image_surface_invalid_input_smoke COMMAND test_image_surface_invalid_input_smoke)
+
     if(APPLE AND TARGET svg AND TARGET skshaper AND TARGET skunicode)
         add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
         target_include_directories(test_shaping_smoke PRIVATE

@@ -1,12 +1,12 @@
 file,status,phase,owner,note
 skia/capi/sk_alpha_type.cpp,todo,P2,,
 skia/capi/sk_alpha_type.h,todo,P2,,
-skia/capi/sk_android_codec.cpp,done,P2,codex,"step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）"
-skia/capi/sk_android_codec.h,done,P2,codex,"step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一"
+skia/capi/sk_android_codec.cpp,done,P2,codex,step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
+skia/capi/sk_android_codec.h,done,P2,codex,step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一
 skia/capi/sk_annotation.cpp,todo,P2,,
 skia/capi/sk_annotation.h,todo,P2,,
-skia/capi/sk_auto_canvas_restore.cpp,done,P2,codex,"step5: non-ref型 delete 維持、delete static_cast を除去"
-skia/capi/sk_auto_canvas_restore.h,done,P2,codex,"step5: non-ref型 delete 規約確認（実装側 cast 修正）"
+skia/capi/sk_auto_canvas_restore.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
+skia/capi/sk_auto_canvas_restore.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
 skia/capi/sk_avif_decoder.cpp,todo,P2,,
 skia/capi/sk_avif_decoder.h,todo,P2,,
 skia/capi/sk_b_box_hierarchy.cpp,todo,P2,,
@@ -19,13 +19,13 @@ skia/capi/sk_blender.cpp,todo,P2,,
 skia/capi/sk_blender.h,todo,P2,,
 skia/capi/sk_blenders.cpp,todo,P2,,
 skia/capi/sk_blenders.h,todo,P2,,
-skia/capi/sk_bmp_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_bmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_bmp_decoder.h,todo,P2,,
-skia/capi/sk_canvas.cpp,todo,P2,,
-skia/capi/sk_canvas.h,todo,P2,,
+skia/capi/sk_canvas.cpp,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory NULL guards and typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
+skia/capi/sk_canvas.h,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
-skia/capi/sk_codec.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_codec.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_codec.h,todo,P2,,
 skia/capi/sk_codecs.cpp,todo,P2,,
 skia/capi/sk_codecs.h,todo,P2,,
@@ -55,14 +55,14 @@ skia/capi/sk_contour_measure.cpp,todo,P2,,
 skia/capi/sk_contour_measure.h,todo,P2,,
 skia/capi/sk_contour_measure_iter.cpp,todo,P2,,
 skia/capi/sk_contour_measure_iter.h,todo,P2,,
-skia/capi/sk_corner_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_corner_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
+skia/capi/sk_corner_path_effect.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_corner_path_effect.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_cubic_map.cpp,todo,P2,,
 skia/capi/sk_cubic_map.h,todo,P2,,
 skia/capi/sk_cubic_resampler.cpp,todo,P2,,
 skia/capi/sk_cubic_resampler.h,todo,P2,,
-skia/capi/sk_dash_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_dash_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
+skia/capi/sk_dash_path_effect.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_dash_path_effect.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_data.cpp,todo,P2,,
 skia/capi/sk_data.h,todo,P2,,
 skia/capi/sk_data_table.cpp,todo,P2,,
@@ -79,8 +79,8 @@ skia/capi/sk_encoded_origin.cpp,todo,P2,,
 skia/capi/sk_encoded_origin.h,todo,P2,,
 skia/capi/sk_encoder.cpp,todo,P2,,
 skia/capi/sk_encoder.h,todo,P2,,
-skia/capi/sk_executor.cpp,done,P2,codex,"step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一"
-skia/capi/sk_executor.h,done,P2,codex,"step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一"
+skia/capi/sk_executor.cpp,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
+skia/capi/sk_executor.h,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
 skia/capi/sk_file_stream.cpp,todo,P2,,
 skia/capi/sk_file_stream.h,todo,P2,,
 skia/capi/sk_file_w_stream.cpp,todo,P2,,
@@ -93,8 +93,8 @@ skia/capi/sk_font_arguments.cpp,todo,P2,,
 skia/capi/sk_font_arguments.h,todo,P2,,
 skia/capi/sk_font_metrics.cpp,todo,P2,,
 skia/capi/sk_font_metrics.h,todo,P2,,
-skia/capi/sk_font_mgr.cpp,done,P2,codex,"step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一（phase1 step2 実施済み）"
-skia/capi/sk_font_mgr.h,done,P2,codex,"step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一"
+skia/capi/sk_font_mgr.cpp,done,P2,codex,step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一（phase1 step2 実施済み）
+skia/capi/sk_font_mgr.h,done,P2,codex,step4: createStyleSet/matchFamily を reskia_status_t + out pointer 規約へ統一
 skia/capi/sk_font_mgr_fontconfig.cpp,todo,P2,,
 skia/capi/sk_font_mgr_fontconfig.h,todo,P2,,
 skia/capi/sk_font_style.cpp,todo,P2,,
@@ -109,20 +109,20 @@ skia/capi/sk_graphics.cpp,todo,P2,,
 skia/capi/sk_graphics.h,todo,P2,,
 skia/capi/sk_high_contrast_config.cpp,todo,P2,,
 skia/capi/sk_high_contrast_config.h,todo,P2,,
-skia/capi/sk_high_contrast_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_high_contrast_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
-skia/capi/sk_i_point.cpp,done,P2,codex,"step5: non-ref型 delete 維持、delete static_cast を除去"
-skia/capi/sk_i_point.h,done,P2,codex,"step5: non-ref型 delete 規約確認（実装側 cast 修正）"
+skia/capi/sk_high_contrast_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_high_contrast_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
+skia/capi/sk_i_point.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
+skia/capi/sk_i_point.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
 skia/capi/sk_i_rect.cpp,todo,P2,,
 skia/capi/sk_i_rect.h,todo,P2,,
 skia/capi/sk_i_size.cpp,todo,P2,,
 skia/capi/sk_i_size.h,todo,P2,,
 skia/capi/sk_icc.cpp,todo,P2,,
 skia/capi/sk_icc.h,todo,P2,,
-skia/capi/sk_ico_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_ico_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_ico_decoder.h,todo,P2,,
-skia/capi/sk_image.cpp,todo,P2,,
-skia/capi/sk_image.h,todo,P2,,
+skia/capi/sk_image.cpp,done,P2,codex,stability Phase 2 Batch A: image C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and async callback keeps borrowed-result policy
+skia/capi/sk_image.h,done,P2,codex,stability Phase 2 Batch A: image C API ownership/lifetime reviewed; header already uses typed handles/opaque pointers with retained/owned/borrowed comments for key APIs
 skia/capi/sk_image_filter.cpp,todo,P2,,
 skia/capi/sk_image_filter.h,todo,P2,,
 skia/capi/sk_image_filters.cpp,todo,P2,,
@@ -131,9 +131,9 @@ skia/capi/sk_image_generator.cpp,todo,P2,,
 skia/capi/sk_image_generator.h,todo,P2,,
 skia/capi/sk_image_info.cpp,todo,P2,,
 skia/capi/sk_image_info.h,todo,P2,,
-skia/capi/sk_images.cpp,done,P2,codex,"step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）"
-skia/capi/sk_images.h,done,P2,codex,"step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一"
-skia/capi/sk_jpeg_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
+skia/capi/sk_images.h,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一
+skia/capi/sk_jpeg_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_jpeg_decoder.h,todo,P2,,
 skia/capi/sk_jpeg_encoder.cpp,todo,P2,,
 skia/capi/sk_jpeg_encoder.h,todo,P2,,
@@ -141,8 +141,8 @@ skia/capi/sk_jpegxl_decoder.cpp,todo,P2,,
 skia/capi/sk_jpegxl_decoder.h,todo,P2,,
 skia/capi/sk_line_2d_path_effect.cpp,todo,P2,,
 skia/capi/sk_line_2d_path_effect.h,todo,P2,,
-skia/capi/sk_luma_color_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_luma_color_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
+skia/capi/sk_luma_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_luma_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_m_44.cpp,todo,P2,,
 skia/capi/sk_m_44.h,todo,P2,,
 skia/capi/sk_malloc_pixel_ref.cpp,todo,P2,,
@@ -169,12 +169,12 @@ skia/capi/sk_open_type_svg_decoder.cpp,todo,P2,,
 skia/capi/sk_open_type_svg_decoder.h,todo,P2,,
 skia/capi/sk_overdraw_canvas.cpp,todo,P2,,
 skia/capi/sk_overdraw_canvas.h,todo,P2,,
-skia/capi/sk_overdraw_color_filter.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_overdraw_color_filter.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
+skia/capi/sk_overdraw_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_overdraw_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_paint.cpp,todo,P2,,
 skia/capi/sk_paint.h,todo,P2,,
-skia/capi/sk_path.cpp,done,P2,codex,"step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一"
-skia/capi/sk_path.h,done,P2,codex,"step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一"
+skia/capi/sk_path.cpp,done,P2,codex,step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一
+skia/capi/sk_path.h,done,P2,codex,step4: SkPath_interpolate を reskia_status_t + out_path 規約へ統一
 skia/capi/sk_path_1d_path_effect.cpp,todo,P2,,
 skia/capi/sk_path_1d_path_effect.h,todo,P2,,
 skia/capi/sk_path_2d_path_effect.cpp,todo,P2,,
@@ -199,7 +199,7 @@ skia/capi/sk_pixmap.cpp,todo,P2,,
 skia/capi/sk_pixmap.h,todo,P2,,
 skia/capi/sk_pixmap_utils.cpp,todo,P2,,
 skia/capi/sk_pixmap_utils.h,todo,P2,,
-skia/capi/sk_png_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_png_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_png_decoder.h,todo,P2,,
 skia/capi/sk_png_encoder.cpp,todo,P2,,
 skia/capi/sk_png_encoder.h,todo,P2,,
@@ -259,8 +259,8 @@ skia/capi/sk_string.cpp,todo,P2,,
 skia/capi/sk_string.h,todo,P2,,
 skia/capi/sk_stroke_rec.cpp,todo,P2,,
 skia/capi/sk_stroke_rec.h,todo,P2,,
-skia/capi/sk_surface.cpp,todo,P2,,
-skia/capi/sk_surface.h,todo,P2,,
+skia/capi/sk_surface.cpp,done,P2,codex,stability Phase 2 Batch A: surface C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and borrowed parent pointers are guarded
+skia/capi/sk_surface.h,done,P2,codex,stability Phase 2 Batch A: surface C API ownership/lifetime reviewed; header documents retained/owned/borrowed APIs for core surface accessors
 skia/capi/sk_surface_props.cpp,todo,P2,,
 skia/capi/sk_surface_props.h,todo,P2,,
 skia/capi/sk_surfaces.cpp,todo,P2,,
@@ -277,9 +277,9 @@ skia/capi/sk_tiled_image_utils.cpp,todo,P2,,
 skia/capi/sk_tiled_image_utils.h,todo,P2,,
 skia/capi/sk_trace_memory_dump.cpp,todo,P2,,
 skia/capi/sk_trace_memory_dump.h,todo,P2,,
-skia/capi/sk_trim_path_effect.cpp,done,P2,codex,"step5: RefCounted delete を unref 委譲へ統一"
-skia/capi/sk_trim_path_effect.h,done,P2,codex,"step5: RefCounted delete 規約確認（実装 unref 化）"
-skia/capi/sk_typeface.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_trim_path_effect.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
+skia/capi/sk_trim_path_effect.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
+skia/capi/sk_typeface.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_typeface.h,todo,P2,,
 skia/capi/sk_typeface_mac.cpp,todo,P2,,
 skia/capi/sk_typeface_mac.h,todo,P2,,
@@ -295,9 +295,9 @@ skia/capi/sk_vertices.cpp,todo,P2,,
 skia/capi/sk_vertices.h,todo,P2,,
 skia/capi/sk_w_stream.cpp,todo,P2,,
 skia/capi/sk_w_stream.h,todo,P2,,
-skia/capi/sk_wbmp_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_wbmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_wbmp_decoder.h,todo,P2,,
-skia/capi/sk_webp_decoder.cpp,done,phase1,codex,"step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化"
+skia/capi/sk_webp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_webp_decoder.h,todo,P2,,
 skia/capi/sk_webp_encoder.cpp,todo,P2,,
 skia/capi/sk_webp_encoder.h,todo,P2,,

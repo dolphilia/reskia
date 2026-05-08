@@ -26,90 +26,156 @@
 extern "C" {
 
 void SkSurface_release(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->unref();
 }
 
 bool SkSurface_isCompatible(reskia_surface_t *surface, const reskia_surface_characterization_t *characterization) {
+    if (surface == nullptr || characterization == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->isCompatible(* reinterpret_cast<const GrSurfaceCharacterization *>(characterization));
 }
 
 int SkSurface_width(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkSurface *>(surface)->width();
 }
 
 int SkSurface_height(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkSurface *>(surface)->height();
 }
 
 sk_image_info_t SkSurface_imageInfo(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkSurface *>(surface)->imageInfo());
 }
 
 uint32_t SkSurface_generationID(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkSurface *>(surface)->generationID();
 }
 
 void SkSurface_notifyContentWillChange(reskia_surface_t *surface, reskia_surface_content_change_mode_t mode) {
+    if (surface == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->notifyContentWillChange(static_cast<SkSurface::ContentChangeMode>(mode));
 }
 
 reskia_recording_context_t *SkSurface_recordingContext(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_recording_context_t *>(reinterpret_cast<SkSurface *>(surface)->recordingContext());
 }
 
 reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_graphite_recorder_t *>(reinterpret_cast<SkSurface *>(surface)->recorder());
 }
 
 bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, reskia_surface_content_change_mode_t mode, void(* proc)(void *), void * context) {
+    if (surface == nullptr || backendTexture == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->replaceBackendTexture(* reinterpret_cast<const GrBackendTexture *>(backendTexture), static_cast<GrSurfaceOrigin>(origin), static_cast<SkSurface::ContentChangeMode>(mode), proc, context);
 }
 
 reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_canvas_t *>(reinterpret_cast<SkSurface *>(surface)->getCanvas());
 }
 
 const_sk_capabilities_t SkSurface_capabilities(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return static_const_sk_capabilities_make(reinterpret_cast<SkSurface *>(surface)->capabilities());
 }
 
 sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo) {
+    if (surface == nullptr || imageInfo == nullptr) {
+        return 0;
+    }
     return static_sk_surface_make(reinterpret_cast<SkSurface *>(surface)->makeSurface(* reinterpret_cast<const SkImageInfo *>(imageInfo)));
 }
 
 sk_surface_t SkSurface_makeSurfaceWithDimensions(reskia_surface_t *surface, int width, int height) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return static_sk_surface_make(reinterpret_cast<SkSurface *>(surface)->makeSurface(width, height));
 }
 
 sk_image_t SkSurface_makeImageSnapshot(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
     return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeImageSnapshot());
 }
 
 sk_image_t SkSurface_makeImageSnapshotWithBounds(reskia_surface_t *surface, const reskia_i_rect_t *bounds) {
+    if (surface == nullptr || bounds == nullptr) {
+        return 0;
+    }
     return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeImageSnapshot(* reinterpret_cast<const SkIRect *>(bounds)));
 }
 
 void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint) {
+    if (surface == nullptr || canvas == nullptr || sampling == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y, * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkSurface_drawWithoutSamplingOptions(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint) {
+    if (surface == nullptr || canvas == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->draw(reinterpret_cast<SkCanvas *>(canvas), x, y, reinterpret_cast<const SkPaint *>(paint));
 }
 
 bool SkSurface_peekPixels(reskia_surface_t *surface, reskia_pixmap_t *pixmap) {
+    if (surface == nullptr || pixmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->peekPixels(reinterpret_cast<SkPixmap *>(pixmap));
 }
 
 bool SkSurface_readPixels(reskia_surface_t *surface, const reskia_pixmap_t *dst, int srcX, int srcY) {
+    if (surface == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
 bool SkSurface_readPixelsWithImageInfoAndPixels(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+    if (surface == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
 bool SkSurface_readPixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *dst, int srcX, int srcY) {
+    if (surface == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkBitmap *>(dst), srcX, srcY);
 }
 
@@ -160,34 +226,58 @@ void SkSurface_asyncRescaleAndReadPixelsYUVA420(reskia_surface_t *surface, sk_co
 }
 
 void SkSurface_writePixels(reskia_surface_t *surface, const reskia_pixmap_t *src, int dstX, int dstY) {
+    if (surface == nullptr || src == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->writePixels(* reinterpret_cast<const SkPixmap *>(src), dstX, dstY);
 }
 
 void SkSurface_writePixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY) {
+    if (surface == nullptr || src == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->writePixels(* reinterpret_cast<const SkBitmap *>(src), dstX, dstY);
 }
 
 const reskia_surface_props_t *SkSurface_props(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<const reskia_surface_props_t *>(&reinterpret_cast<SkSurface *>(surface)->props());
 }
 
 bool SkSurface_wait(reskia_surface_t *surface, int numSemaphores, const reskia_backend_semaphore_t *waitSemaphores, bool deleteSemaphoresAfterWait) {
+    if (surface == nullptr || (numSemaphores > 0 && waitSemaphores == nullptr)) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->wait(numSemaphores, reinterpret_cast<const GrBackendSemaphore *>(waitSemaphores), deleteSemaphoresAfterWait);
 }
 
 bool SkSurface_characterize(reskia_surface_t *surface, reskia_surface_characterization_t *characterization) {
+    if (surface == nullptr || characterization == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->characterize(reinterpret_cast<GrSurfaceCharacterization *>(characterization));
 }
 
 bool SkSurface_unique(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSurface *>(surface)->unique();
 }
 
 void SkSurface_ref(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->ref();
 }
 
 void SkSurface_unref(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSurface *>(surface)->unref();
 }
 

@@ -853,7 +853,20 @@ else()
 endif()
 
 if(RESKIA_BUILD_TESTS)
-    list(APPEND SOURCE_FILES src/utils/SkTestCanvas.cpp)
+    list(APPEND SOURCE_FILES
+            src/text/gpu/DistanceFieldAdjustTable.cpp
+            src/text/gpu/GlyphVector.cpp
+            src/text/gpu/SDFTControl.cpp
+            src/text/gpu/SkChromeRemoteGlyphCache.cpp
+            src/text/gpu/Slug.cpp
+            src/text/gpu/SlugImpl.cpp
+            src/text/gpu/StrikeCache.cpp
+            src/text/gpu/SubRunAllocator.cpp
+            src/text/gpu/SubRunContainer.cpp
+            src/text/gpu/TextBlob.cpp
+            src/text/gpu/VertexFiller.cpp
+            src/utils/SkTestCanvas.cpp
+    )
 endif()
 
 if(RESKIA_ENABLE_WEBP_ENCODER)
