@@ -76,8 +76,8 @@ reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const reskia_s
 reskia_canvas_t *SkCanvas_newFromBitmap(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkCanvas *
 reskia_canvas_t *SkCanvas_newFromBitmapWithProps(const reskia_bitmap_t *bitmap, const reskia_surface_props_t *props); // (const SkBitmap *bitmap, const SkSurfaceProps *props) -> SkCanvas *
 void SkCanvas_delete(reskia_canvas_t *canvas); // (SkCanvas *canvas)
-void * SkCanvas_accessTopLayerPixels(reskia_canvas_t *canvas, reskia_image_info_t *info, size_t *rowBytes, reskia_i_point_t *origin); // borrowed pixels; info/rowBytes/origin are optional out params (SkCanvas *canvas, SkImageInfo *info, size_t *rowBytes, SkIPoint *origin) -> void *
-void * SkCanvas_accessTopRasterHandle(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> SkRasterHandleAllocator::Handle
+void * SkCanvas_accessTopLayerPixels(reskia_canvas_t *canvas, reskia_image_info_t *info, size_t *rowBytes, reskia_i_point_t *origin); // borrowed raw pixels; pointer is owned by canvas/layer and valid only while that storage remains unchanged; info/rowBytes/origin are optional out params (SkCanvas *canvas, SkImageInfo *info, size_t *rowBytes, SkIPoint *origin) -> void *
+void * SkCanvas_accessTopRasterHandle(reskia_canvas_t *canvas); // borrowed implementation-defined raster handle; caller must not free it (SkCanvas *canvas) -> SkRasterHandleAllocator::Handle
 void SkCanvas_androidFramework_setDeviceClipRestriction(reskia_canvas_t *canvas, const reskia_i_rect_t *rect); // rect: non-null (SkCanvas *canvas, const SkIRect *rect)
 void SkCanvas_clear(reskia_canvas_t *canvas, const reskia_color_4f_t *color); // color: non-null (SkCanvas *canvas, const SkColor4f *color)
 void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color); // (SkCanvas *canvas, SkColor color)
@@ -140,7 +140,7 @@ void SkCanvas_drawRect(reskia_canvas_t *canvas, sk_rect_t rect, const reskia_pai
 void SkCanvas_drawRegion(reskia_canvas_t *canvas, const reskia_region_t *region, const reskia_paint_t *paint); // region/paint: non-null (SkCanvas *canvas, const SkRegion *region, const SkPaint *paint)
 void SkCanvas_drawRoundRect(reskia_canvas_t *canvas, const reskia_rect_t *rect, float rx, float ry, const reskia_paint_t *paint); // rect/paint: non-null (SkCanvas *canvas, const SkRect *rect, SkScalar rx, SkScalar ry, const SkPaint *paint)
 void SkCanvas_drawRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, const reskia_paint_t *paint); // rrect/paint: non-null (SkCanvas *canvas, const SkRRect *rrect, const SkPaint *paint)
-void SkCanvas_drawSimpleText(reskia_canvas_t *canvas, const void *text, size_t byteLength, reskia_canvas_text_encoding_t encoding, float x, float y, const reskia_font_t *font, const reskia_paint_t *paint); // text/font/paint: non-null when byteLength > 0 (SkCanvas *canvas, const void *text, size_t byteLength, SkTextEncoding encoding, SkScalar x, SkScalar y, const SkFont *font, const SkPaint *paint)
+void SkCanvas_drawSimpleText(reskia_canvas_t *canvas, const void *text, size_t byteLength, reskia_canvas_text_encoding_t encoding, float x, float y, const reskia_font_t *font, const reskia_paint_t *paint); // borrowed raw text bytes; text must remain readable for byteLength during call and is not retained; font/paint: non-null (SkCanvas *canvas, const void *text, size_t byteLength, SkTextEncoding encoding, SkScalar x, SkScalar y, const SkFont *font, const SkPaint *paint)
 void SkCanvas_drawString(reskia_canvas_t *canvas, const char * str, float x, float y, const reskia_font_t *font, const reskia_paint_t *paint); // str/font/paint: non-null (SkCanvas *canvas, const char str[], SkScalar x, SkScalar y, const SkFont *font, const SkPaint *paint)
 void SkCanvas_drawStringObject(reskia_canvas_t *canvas, const reskia_string_t *str, float x, float y, const reskia_font_t *font, const reskia_paint_t *paint); // str/font/paint: non-null (SkCanvas *canvas, const SkString *str, SkScalar x, SkScalar y, const SkFont *font, const SkPaint *paint)
 void SkCanvas_drawTextBlob(reskia_canvas_t *canvas, sk_text_blob_t text_blob, float x, float y, const reskia_paint_t *paint); // text_blob/paint: non-null (SkCanvas *canvas, sk_text_blob_t text_blob, SkScalar x, SkScalar y, const SkPaint *paint)
@@ -172,7 +172,7 @@ void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path
 bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path); // path: non-null (SkCanvas *canvas, const SkPath *path) -> bool
 bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const reskia_rect_t *rect); // rect: non-null (SkCanvas *canvas, const SkRect *rect) -> bool
 bool SkCanvas_readPixels(reskia_canvas_t *canvas, const reskia_bitmap_t *bitmap, int srcX, int srcY); // (SkCanvas *canvas, const SkBitmap *bitmap, int srcX, int srcY) -> bool
-bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // dstInfo/dstPixels: non-null (SkCanvas *canvas, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
+bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // dstPixels: caller-owned mutable buffer, non-null and large enough for dstInfo/dstRowBytes; not retained (SkCanvas *canvas, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
 bool SkCanvas_readPixelsWithPixmap(reskia_canvas_t *canvas, const reskia_pixmap_t *pixmap, int srcX, int srcY); // pixmap: non-null (SkCanvas *canvas, const SkPixmap *pixmap, int srcX, int srcY) -> bool
 reskia_graphite_recorder_t *SkCanvas_recorder(reskia_canvas_t *canvas); // borrowed: 解放不要の借用ポインタ (SkCanvas *canvas) -> skgpu::graphite::Recorder *
 reskia_recording_context_t *SkCanvas_recordingContext(reskia_canvas_t *canvas); // borrowed: 解放不要の借用ポインタ (SkCanvas *canvas) -> GrRecordingContext *
@@ -194,10 +194,10 @@ void SkCanvas_skew(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *c
 void SkCanvas_temporary_internal_getRgnClip(reskia_canvas_t *canvas, reskia_region_t *region); // region: non-null out param (SkCanvas *canvas, SkRegion *region)
 void SkCanvas_translate(reskia_canvas_t *canvas, float dx, float dy); // (SkCanvas *canvas, SkScalar dx, SkScalar dy)
 bool SkCanvas_writePixels(reskia_canvas_t *canvas, const reskia_bitmap_t *bitmap, int x, int y); // (SkCanvas *canvas, const SkBitmap *bitmap, int x, int y) -> bool
-bool SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *info, const void *pixels, size_t rowBytes, int x, int y); // info/pixels: non-null (SkCanvas *canvas, const SkImageInfo *info, const void *pixels, size_t rowBytes, int x, int y) -> bool
+bool SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *info, const void *pixels, size_t rowBytes, int x, int y); // pixels: caller-owned read-only buffer, non-null and readable for info/rowBytes during call; not retained (SkCanvas *canvas, const SkImageInfo *info, const void *pixels, size_t rowBytes, int x, int y) -> bool
 // static
-sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_surface_props_t *props); // info/pixels: non-null; props may be NULL (const SkImageInfo *info, void *pixels, size_t rowBytes, const SkSurfaceProps *props) -> sk_canvas_t
-sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void *pixels, size_t rowBytes); // (int width, int height, SkPMColor *pixels, size_t rowBytes) -> sk_canvas_t}
+sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_surface_props_t *props); // pixels: caller-owned mutable backing store; must outlive returned canvas and not be freed while canvas can draw; props may be NULL (const SkImageInfo *info, void *pixels, size_t rowBytes, const SkSurfaceProps *props) -> sk_canvas_t
+sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void *pixels, size_t rowBytes); // pixels: caller-owned mutable N32 backing store; must outlive returned canvas (int width, int height, SkPMColor *pixels, size_t rowBytes) -> sk_canvas_t}
 
 #ifdef __cplusplus
 }

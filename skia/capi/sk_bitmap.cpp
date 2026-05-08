@@ -37,6 +37,9 @@ reskia_bitmap_t *SkBitmap_new(void) {
 }
 
 reskia_bitmap_t *SkBitmap_new_copy(const reskia_bitmap_t *src) {
+    if (src == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_bitmap_t *>(new SkBitmap(*reinterpret_cast<const SkBitmap *>(src)));
 }
 
@@ -45,328 +48,571 @@ void SkBitmap_delete(reskia_bitmap_t *bitmap) {
 }
 
 void SkBitmap_allocN32Pixels(reskia_bitmap_t *bitmap, int width, int height, bool isOpaque) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocN32Pixels(width, height, isOpaque);
 }
 
 void SkBitmap_allocPixels(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels();
 }
 
 void SkBitmap_allocPixels_withAllocator(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
+    if (bitmap == nullptr || allocator == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(reinterpret_cast<SkBitmap::Allocator *>(allocator));
 }
 
 void SkBitmap_allocPixels_withInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) {
+    if (bitmap == nullptr || info == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(* reinterpret_cast<const SkImageInfo *>(info));
 }
 
 void SkBitmap_allocPixels_withInfoRowBytes(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
+    if (bitmap == nullptr || info == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixels(* reinterpret_cast<const SkImageInfo *>(info), rowBytes);
 }
 
 void SkBitmap_allocPixelsFlags(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, uint32_t flags) {
+    if (bitmap == nullptr || info == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->allocPixelsFlags(* reinterpret_cast<const SkImageInfo *>(info), flags);
 }
 
 reskia_alpha_type_t SkBitmap_alphaType(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_alpha_type_t>(reinterpret_cast<SkBitmap *>(bitmap)->alphaType());
 }
 
 sk_image_t SkBitmap_asImage(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_image_make(reinterpret_cast<SkBitmap *>(bitmap)->asImage());
 }
 
 sk_i_rect_t SkBitmap_bounds(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkBitmap *>(bitmap)->bounds());
 }
 
 int SkBitmap_bytesPerPixel(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->bytesPerPixel();
 }
 
 reskia_color_space_t *SkBitmap_colorSpace(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_color_space_t *>(reinterpret_cast<SkBitmap *>(bitmap)->colorSpace());
 }
 
 reskia_bitmap_color_type_t SkBitmap_colorType(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_bitmap_color_type_t>(reinterpret_cast<SkBitmap *>(bitmap)->colorType());
 }
 
 size_t SkBitmap_computeByteSize(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->computeByteSize();
 }
 
 sk_i_size_t SkBitmap_dimensions(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_i_size_make(reinterpret_cast<SkBitmap *>(bitmap)->dimensions());
 }
 
 bool SkBitmap_drawsNothing(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->drawsNothing();
 }
 
 bool SkBitmap_empty(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->empty();
 }
 
 void SkBitmap_erase(reskia_bitmap_t *bitmap, uint32_t c, const reskia_i_rect_t *area) {
+    if (bitmap == nullptr || area == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->erase(c, * reinterpret_cast<const SkIRect *>(area));
 }
 
 void SkBitmap_eraseColor4fInArea(reskia_bitmap_t *bitmap, sk_color_4f_t c, const reskia_i_rect_t *area) {
+    if (bitmap == nullptr || c == 0 || area == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->erase(static_sk_color_4f_get_entity(c), * reinterpret_cast<const SkIRect *>(area));
 }
 
 void SkBitmap_eraseArea(reskia_bitmap_t *bitmap, const reskia_i_rect_t *area, uint32_t c) { // inline
+    if (bitmap == nullptr || area == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->eraseArea(* reinterpret_cast<const SkIRect *>(area), c);
 }
 
 void SkBitmap_eraseARGB(reskia_bitmap_t *bitmap, uint32_t a, uint32_t r, uint32_t g, uint32_t b) { // inline
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->eraseARGB(a, r, g, b);
 }
 
 void SkBitmap_eraseColor(reskia_bitmap_t *bitmap, uint32_t c) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->eraseColor(c);
 }
 
 void SkBitmap_eraseColor4f(reskia_bitmap_t *bitmap, sk_color_4f_t c) {
+    if (bitmap == nullptr || c == 0) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->eraseColor(static_sk_color_4f_get_entity(c));
 }
 
 bool SkBitmap_extractAlpha(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst) { // inline
+    if (bitmap == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst));
 }
 
 bool SkBitmap_extractAlpha_withPaintAllocatorOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_bitmap_allocator_t *allocator, reskia_i_point_t *offset) {
+    if (bitmap == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst), reinterpret_cast<const SkPaint *>(paint), reinterpret_cast<SkBitmap::Allocator *>(allocator), reinterpret_cast<SkIPoint *>(offset));
 }
 
 bool SkBitmap_extractAlpha_withPaintOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_i_point_t *offset) { // inline
+    if (bitmap == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->extractAlpha(reinterpret_cast<SkBitmap *>(dst), reinterpret_cast<const SkPaint *>(paint), reinterpret_cast<SkIPoint *>(offset));
 }
 
 bool SkBitmap_extractSubset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_i_rect_t *subset) {
+    if (bitmap == nullptr || dst == nullptr || subset == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->extractSubset(reinterpret_cast<SkBitmap *>(dst), * reinterpret_cast<const SkIRect *>(subset));
 }
 
 void *SkBitmap_getAddr(reskia_bitmap_t *bitmap, int x, int y) {
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getAddr(x, y);
 }
 
 uint16_t *SkBitmap_getAddr16(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getAddr16(x, y);
 }
 
 uint32_t *SkBitmap_getAddr32(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getAddr32(x, y);
 }
 
 uint8_t *SkBitmap_getAddr8(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getAddr8(x, y);
 }
 
 float SkBitmap_getAlphaf(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getAlphaf(x, y);
 }
 
 void SkBitmap_getBounds(reskia_bitmap_t *bitmap, reskia_i_rect_t *bounds) {
+    if (bitmap == nullptr || bounds == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->getBounds(reinterpret_cast<SkIRect *>(bounds));
 }
 
 void SkBitmap_getBounds2(reskia_bitmap_t *bitmap, reskia_rect_t *bounds) {
+    if (bitmap == nullptr || bounds == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->getBounds(reinterpret_cast<SkRect *>(bounds));
 }
 
 uint32_t SkBitmap_getColor(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getColor(x, y);
 }
 
 sk_color_4f_t SkBitmap_getColor4f(reskia_bitmap_t *bitmap, int x, int y) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_color_4f_make(reinterpret_cast<SkBitmap *>(bitmap)->getColor4f(x, y));
 }
 
 uint32_t SkBitmap_getGenerationID(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getGenerationID();
 }
 
 void *SkBitmap_getPixels(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->getPixels();
 }
 
 sk_i_rect_t SkBitmap_getSubset(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkBitmap *>(bitmap)->getSubset());
 }
 
 int SkBitmap_height(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->height();
 }
 
 sk_image_info_t SkBitmap_info(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_image_info_make(reinterpret_cast<SkBitmap *>(bitmap)->info());
 }
 
 bool SkBitmap_installMaskPixels(reskia_bitmap_t *bitmap, reskia_mask_builder_t *mask) { // Deprecated
+    if (bitmap == nullptr || mask == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->installMaskPixels(* reinterpret_cast<SkMaskBuilder *>(mask));
 }
 
 bool SkBitmap_installPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes) { // inline
+    if (bitmap == nullptr || info == nullptr || pixels == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes);
 }
 
 bool SkBitmap_installPixels_withReleaseProc(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) {
+    if (bitmap == nullptr || info == nullptr || pixels == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, releaseProc, context);
 }
 
 bool SkBitmap_installPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *pixmap) {
+    if (bitmap == nullptr || pixmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->installPixels(* reinterpret_cast<const SkPixmap *>(pixmap));
 }
 
 bool SkBitmap_isImmutable(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->isImmutable();
 }
 
 bool SkBitmap_isNull(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->isNull();
 }
 
 bool SkBitmap_isOpaque(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->isOpaque();
 }
 
 sk_shader_t SkBitmap_makeShader(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    if (bitmap == nullptr || sampling == nullptr || lm == nullptr) {
+        return 0;
+    }
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
 sk_shader_t SkBitmap_makeShader_withOptionalLocalMatrix(reskia_bitmap_t *bitmap, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    if (bitmap == nullptr || sampling == nullptr) {
+        return 0;
+    }
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(* reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(lm)));
 }
 
 sk_shader_t SkBitmap_makeShader_withTileModesOptionalLocalMatrix(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
+    if (bitmap == nullptr || sampling == nullptr) {
+        return 0;
+    }
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
 sk_shader_t SkBitmap_makeShader_withTileModesLocalMatrix(reskia_bitmap_t *bitmap, reskia_bitmap_tile_mode_t tmx, reskia_bitmap_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
+    if (bitmap == nullptr || sampling == nullptr || lm == nullptr) {
+        return 0;
+    }
     return static_sk_shader_make(reinterpret_cast<SkBitmap *>(bitmap)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
 }
 
 void SkBitmap_notifyPixelsChanged(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->notifyPixelsChanged();
 }
 
 bool SkBitmap_peekPixels(reskia_bitmap_t *bitmap, reskia_pixmap_t *pixmap) {
+    if (bitmap == nullptr || pixmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->peekPixels(reinterpret_cast<SkPixmap *>(pixmap));
 }
 
 reskia_pixel_ref_t *SkBitmap_pixelRef(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_pixel_ref_t *>(reinterpret_cast<SkBitmap *>(bitmap)->pixelRef());
 }
 
 sk_i_point_t SkBitmap_pixelRefOrigin(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_i_point_make(reinterpret_cast<SkBitmap *>(bitmap)->pixelRefOrigin());
 }
 
 int SkBitmap_pixmap(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_pixmap_make(reinterpret_cast<SkBitmap *>(bitmap)->pixmap());
 }
 
 bool SkBitmap_readPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
+    if (bitmap == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
 }
 
 bool SkBitmap_readPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst) { // inline
+    if (bitmap == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst));
 }
 
 bool SkBitmap_readPixels_withPixmapAt(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst, int srcX, int srcY) {
+    if (bitmap == nullptr || dst == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY);
 }
 
 bool SkBitmap_readyToDraw(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->readyToDraw();
 }
 
 sk_color_space_t SkBitmap_refColorSpace(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return static_sk_color_space_make(reinterpret_cast<SkBitmap *>(bitmap)->refColorSpace());
 }
 
 void SkBitmap_reset(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->reset();
 }
 
 size_t SkBitmap_rowBytes(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->rowBytes();
 }
 
 int SkBitmap_rowBytesAsPixels(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->rowBytesAsPixels();
 }
 
 bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaType) {
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->setAlphaType(static_cast<SkAlphaType>(alphaType));
 }
 
 void SkBitmap_setImmutable(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->setImmutable();
 }
 
 bool SkBitmap_setInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *imageInfo, size_t rowBytes) {
+    if (bitmap == nullptr || imageInfo == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->setInfo(* reinterpret_cast<const SkImageInfo *>(imageInfo), rowBytes);
 }
 
 void SkBitmap_setPixelRef(reskia_bitmap_t *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->setPixelRef(static_sk_pixel_ref_get_entity(pixelRef), dx, dy);
 }
 
 void SkBitmap_setPixels(reskia_bitmap_t *bitmap, void *pixels) {
+    if (bitmap == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->setPixels(pixels);
 }
 
 int SkBitmap_shiftPerPixel(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->shiftPerPixel();
 }
 
 void SkBitmap_swap(reskia_bitmap_t *bitmap, reskia_bitmap_t *other) {
+    if (bitmap == nullptr || other == nullptr) {
+        return;
+    }
     reinterpret_cast<SkBitmap *>(bitmap)->swap(*reinterpret_cast<SkBitmap *>(other));
 }
 
 bool SkBitmap_tryAllocN32Pixels(reskia_bitmap_t *bitmap, int width, int height, bool isOpaque) {
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocN32Pixels(width, height, isOpaque);
 }
 
 bool SkBitmap_tryAllocPixels(reskia_bitmap_t *bitmap) { // inline
+    if (bitmap == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels();
 }
 
 bool SkBitmap_tryAllocPixels_withAllocator(reskia_bitmap_t *bitmap, reskia_bitmap_allocator_t *allocator) {
+    if (bitmap == nullptr || allocator == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(reinterpret_cast<SkBitmap::Allocator *>(allocator));
 }
 
 bool SkBitmap_tryAllocPixels_withInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *info) { // inline
+    if (bitmap == nullptr || info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(* reinterpret_cast<const SkImageInfo *>(info));
 }
 
 bool SkBitmap_tryAllocPixels_withInfoRowBytes(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, size_t rowBytes) {
+    if (bitmap == nullptr || info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixels(* reinterpret_cast<const SkImageInfo *>(info), rowBytes);
 }
 
 bool SkBitmap_tryAllocPixelsFlags(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, uint32_t flags) {
+    if (bitmap == nullptr || info == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->tryAllocPixelsFlags(* reinterpret_cast<const SkImageInfo *>(info), flags);
 }
 
 int SkBitmap_width(reskia_bitmap_t *bitmap) {
+    if (bitmap == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->width();
 }
 
 bool SkBitmap_writePixels(reskia_bitmap_t *bitmap, const reskia_pixmap_t *src) { // inline
+    if (bitmap == nullptr || src == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->writePixels(* reinterpret_cast<const SkPixmap *>(src));
 }
 
 bool SkBitmap_writePixels_withDstOffset(reskia_bitmap_t *bitmap, const reskia_pixmap_t *src, int dstX, int dstY) {
+    if (bitmap == nullptr || src == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkBitmap *>(bitmap)->writePixels(* reinterpret_cast<const SkPixmap *>(src), dstX, dstY);
 }
 
 // static
 
 bool SkBitmap_ComputeIsOpaque(const reskia_bitmap_t *bm) { // inline static
+    if (bm == nullptr) {
+        return false;
+    }
     return SkBitmap::ComputeIsOpaque(*reinterpret_cast<const SkBitmap *>(bm));
 }
 

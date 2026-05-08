@@ -11,8 +11,8 @@ skia/capi/sk_avif_decoder.cpp,todo,P2,,
 skia/capi/sk_avif_decoder.h,todo,P2,,
 skia/capi/sk_b_box_hierarchy.cpp,todo,P2,,
 skia/capi/sk_b_box_hierarchy.h,todo,P2,,
-skia/capi/sk_bitmap.cpp,todo,P2,,
-skia/capi/sk_bitmap.h,todo,P2,,
+skia/capi/sk_bitmap.cpp,done,P2,codex,"stability Phase 2 Batch B: NULL guards added across SkBitmap and bitmap invalid input smoke passes"
+skia/capi/sk_bitmap.h,done,P2,codex,"stability Phase 2 Batch B: typed pointer review retained; raw pixel buffer lifetime/mutability comments added"
 skia/capi/sk_blend_mode.cpp,todo,P2,,
 skia/capi/sk_blend_mode.h,todo,P2,,
 skia/capi/sk_blender.cpp,todo,P2,,

@@ -17,6 +17,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `00-plan.md`
 - `01-phase-1-checklist-alignment.md`
 - `02-phase-2-batch-a-capi-safety.md`
+- `03-phase-2-batch-b-bitmap.md`
 
 ## 関連計画
 
