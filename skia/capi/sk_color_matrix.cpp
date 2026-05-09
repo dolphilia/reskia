@@ -25,38 +25,65 @@ void SkColorMatrix_delete(reskia_color_matrix_t *color_matrix) {
 }
 
 void SkColorMatrix_setIdentity(reskia_color_matrix_t *color_matrix) {
+    if (color_matrix == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->setIdentity();
 }
 
 void SkColorMatrix_setScale(reskia_color_matrix_t *color_matrix, float rScale, float gScale, float bScale, float aScale) {
+    if (color_matrix == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->setScale(rScale, gScale, bScale, aScale);
 }
 
 void SkColorMatrix_postTranslate(reskia_color_matrix_t *color_matrix, float dr, float dg, float db, float da) {
+    if (color_matrix == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->postTranslate(dr, dg, db, da);
 }
 
 void SkColorMatrix_setConcat(reskia_color_matrix_t *color_matrix, const reskia_color_matrix_t *a, const reskia_color_matrix_t *b) {
+    if (color_matrix == nullptr || a == nullptr || b == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->setConcat(*reinterpret_cast<const SkColorMatrix *>(a), *reinterpret_cast<const SkColorMatrix *>(b));
 }
 
 void SkColorMatrix_preConcat(reskia_color_matrix_t *color_matrix, const reskia_color_matrix_t *mat) {
+    if (color_matrix == nullptr || mat == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->preConcat(*reinterpret_cast<const SkColorMatrix *>(mat));
 }
 
 void SkColorMatrix_postConcat(reskia_color_matrix_t *color_matrix, const reskia_color_matrix_t *mat) {
+    if (color_matrix == nullptr || mat == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->postConcat(*reinterpret_cast<const SkColorMatrix *>(mat));
 }
 
 void SkColorMatrix_setSaturation(reskia_color_matrix_t *color_matrix, float sat) {
+    if (color_matrix == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->setSaturation(sat);
 }
 
 void SkColorMatrix_setRowMajor(reskia_color_matrix_t *color_matrix, const float src[20]) {
+    if (color_matrix == nullptr || src == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->setRowMajor(src);
 }
 
 void SkColorMatrix_getRowMajor(reskia_color_matrix_t *color_matrix, float dst[20]) {
+    if (color_matrix == nullptr || dst == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorMatrix *>(color_matrix)->getRowMajor(dst);
 }
 

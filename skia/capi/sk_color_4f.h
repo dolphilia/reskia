@@ -17,14 +17,14 @@ typedef uint32_t reskia_u32_t;
 typedef uint32_t reskia_color_t;
 typedef uint32_t reskia_pmcolor_t;
 
-void SkColor4f_delete(reskia_color_4f_t *color);
+void SkColor4f_delete(reskia_color_4f_t *color); // NULL 入力では no-op
 
 // Public Attributes
 
-float SkColor4f_fR(reskia_color_4f_t *color); // (SkColor4f *color) -> float
-float SkColor4f_fG(reskia_color_4f_t *color); // (SkColor4f *color) -> float
-float SkColor4f_fB(reskia_color_4f_t *color); // (SkColor4f *color) -> float
-float SkColor4f_fA(reskia_color_4f_t *color); // (SkColor4f *color) -> float
+float SkColor4f_fR(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> float
+float SkColor4f_fG(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> float
+float SkColor4f_fB(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> float
+float SkColor4f_fA(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> float
 
 // Public Member Functions
 
@@ -35,22 +35,22 @@ float SkColor4f_fA(reskia_color_4f_t *color); // (SkColor4f *color) -> float
 //float operator[] (SkColor4f *color, int index);
 //float & operator[] (SkColor4f *color, int index);
 
-const float * SkColor4f_vec(reskia_color_4f_t *color); // (SkColor4f *color) -> const float *
-float * SkColor4f_vecMutable(reskia_color_4f_t *color); // (SkColor4f *color) -> float *
+const float * SkColor4f_vec(reskia_color_4f_t *color); // borrowed raw array: 4 要素。NULL 入力では NULL (SkColor4f *color) -> const float *
+float * SkColor4f_vecMutable(reskia_color_4f_t *color); // borrowed mutable raw array: 4 要素。NULL 入力では NULL (SkColor4f *color) -> float *
 
 // TODO
 // std::array< float, 4 > SkColor4f_array (void *color);
 
-bool SkColor4f_isOpaque(reskia_color_4f_t *color); // (SkColor4f *color) -> bool
-bool SkColor4f_fitsInBytes(reskia_color_4f_t *color); // (SkColor4f *color) -> bool
-reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color); // (SkColor4f *color) -> SkColor
+bool SkColor4f_isOpaque(reskia_color_4f_t *color); // NULL 入力では false (SkColor4f *color) -> bool
+bool SkColor4f_fitsInBytes(reskia_color_4f_t *color); // NULL 入力では false (SkColor4f *color) -> bool
+reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> SkColor
 
 // TODO
 //SkRGBA4f< kPremul_SkAlphaType > premul (SkColor4f *color);
 //SkRGBA4f< kUnpremul_SkAlphaType > unpremul (SkColor4f *color);
 
-reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color); // (SkColor4f *color) -> uint32_t
-sk_color_4f_t SkColor4f_makeOpaque(reskia_color_4f_t *color); //  (SkColor4f *color) -> SkColor4f
+reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> uint32_t
+sk_color_4f_t SkColor4f_makeOpaque(reskia_color_4f_t *color); // NULL 入力では 0 (SkColor4f *color) -> SkColor4f
 
 // static
 

@@ -20,18 +20,30 @@ void SkColor4f_delete(reskia_color_4f_t *color) {
 // Public Attributes
 
 float SkColor4f_fR(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkColor4f *>(color)->fR;
 }
 
 float SkColor4f_fG(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkColor4f *>(color)->fG;
 }
 
 float SkColor4f_fB(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkColor4f *>(color)->fB;
 }
 
 float SkColor4f_fA(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkColor4f *>(color)->fA;
 }
 
@@ -45,10 +57,16 @@ float SkColor4f_fA(reskia_color_4f_t *color) {
 //float & 	operator[] (SkColor4f *color, int index);
 
 const float *SkColor4f_vec(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 
 float *SkColor4f_vecMutable(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColor4f *>(color)->vec();
 }
 
@@ -58,14 +76,23 @@ float *SkColor4f_vecMutable(reskia_color_4f_t *color) {
 // }
 
 bool SkColor4f_isOpaque(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkColor4f *>(color)->isOpaque();
 }
 
 bool SkColor4f_fitsInBytes(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkColor4f *>(color)->fitsInBytes();
 }
 
 reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_color_t>(reinterpret_cast<SkColor4f *>(color)->toSkColor());
 }
 
@@ -74,10 +101,16 @@ reskia_color_t SkColor4f_toSkColor(reskia_color_4f_t *color) {
 //SkRGBA4f< kUnpremul_SkAlphaType > unpremul (SkColor4f *color);
 
 reskia_u32_t SkColor4f_toBytes_RGBA(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_u32_t>(reinterpret_cast<SkColor4f *>(color)->toBytes_RGBA());
 }
 
 sk_color_4f_t SkColor4f_makeOpaque(reskia_color_4f_t *color) {
+    if (color == nullptr) {
+        return 0;
+    }
     return static_sk_color_4f_make(reinterpret_cast<SkColor4f *>(color)->makeOpaque());
 }
 
