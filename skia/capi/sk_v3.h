@@ -24,20 +24,20 @@ extern "C" {
 // void operator*=(SkV3 v)
 // void operator*=(SkScalar s)
 
-void SkV3_delete(reskia_v3_t *v3); // (SkV3 *v3)
-float SkV3_lengthSquared(reskia_v3_t *v3); // (SkV3 *v3) -> SkScalar
-float SkV3_length(reskia_v3_t *v3); // (SkV3 *v3) -> SkScalar
-float SkV3_dot(reskia_v3_t *v3, const reskia_v3_t *v); // (SkV3 *v3, const SkV3 *v) -> SkScalar
-sk_v3_t SkV3_cross(reskia_v3_t *v3, const reskia_v3_t *v); // (SkV3 *v3, const SkV3 *v) -> sk_v3_t
-sk_v3_t SkV3_normalize(reskia_v3_t *v3); // (SkV3 *v3) -> sk_v3_t
-const float *SkV3_ptr(reskia_v3_t *v3); // (SkV3 *v3) -> const float *
-float *SkV3_ptrMutable(reskia_v3_t *v3); // (SkV3 *v3) -> float *
+void SkV3_delete(reskia_v3_t *v3); // NULL 入力では no-op
+float SkV3_lengthSquared(reskia_v3_t *v3); // NULL 入力では 0
+float SkV3_length(reskia_v3_t *v3); // NULL 入力では 0
+float SkV3_dot(reskia_v3_t *v3, const reskia_v3_t *v); // v は非 NULL。NULL 入力では 0
+sk_v3_t SkV3_cross(reskia_v3_t *v3, const reskia_v3_t *v); // v は非 NULL。NULL 入力では default vector handle
+sk_v3_t SkV3_normalize(reskia_v3_t *v3); // NULL 入力では default vector handle
+const float *SkV3_ptr(reskia_v3_t *v3); // borrowed: 3 要素、解放不要。NULL 入力では NULL
+float *SkV3_ptrMutable(reskia_v3_t *v3); // borrowed mutable: 3 要素、解放不要。NULL 入力では NULL
 
 // static
 
-float SkV3_Dot(const reskia_v3_t *a, const reskia_v3_t *b); // (const SkV3 *a, const SkV3 *b) -> SkScalar
-sk_v3_t SkV3_Cross(const reskia_v3_t *a, const reskia_v3_t *b); // (const SkV3 *a, const SkV3 *b) -> sk_v3_t
-sk_v3_t SkV3_Normalize(const reskia_v3_t *v); // (const SkV3 *v) -> sk_v3_t
+float SkV3_Dot(const reskia_v3_t *a, const reskia_v3_t *b); // a/b は非 NULL。NULL 入力では 0
+sk_v3_t SkV3_Cross(const reskia_v3_t *a, const reskia_v3_t *b); // a/b は非 NULL。NULL 入力では default vector handle
+sk_v3_t SkV3_Normalize(const reskia_v3_t *v); // v は非 NULL。NULL 入力では default vector handle
 
 #ifdef __cplusplus
 }

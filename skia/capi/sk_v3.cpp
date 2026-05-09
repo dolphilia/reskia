@@ -55,48 +55,81 @@ extern "C" {
 // void operator*=(SkScalar s)
 
 void SkV3_delete(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return;
+    }
     delete reinterpret_cast<SkV3 *>(v3);
 }
 
 float SkV3_lengthSquared(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV3 *>(v3)->lengthSquared();
 }
 
 float SkV3_length(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV3 *>(v3)->length();
 }
 
 float SkV3_dot(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV3 *>(v3)->dot(* reinterpret_cast<const SkV3 *>(v));
 }
 
 sk_v3_t SkV3_cross(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return static_sk_v3_make({});
+    }
     return static_sk_v3_make(reinterpret_cast<SkV3 *>(v3)->cross(* reinterpret_cast<const SkV3 *>(v)));
 }
 
 sk_v3_t SkV3_normalize(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return static_sk_v3_make({});
+    }
     return static_sk_v3_make(reinterpret_cast<SkV3 *>(v3)->normalize());
 }
 
 const float *SkV3_ptr(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 
 float *SkV3_ptrMutable(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkV3 *>(v3)->ptr();
 }
 
 // static
 
 float SkV3_Dot(const reskia_v3_t *a, const reskia_v3_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return 0.0f;
+    }
     return SkV3::Dot(* reinterpret_cast<const SkV3 *>(a), * reinterpret_cast<const SkV3 *>(b));
 }
 
 sk_v3_t SkV3_Cross(const reskia_v3_t *a, const reskia_v3_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return static_sk_v3_make({});
+    }
     return static_sk_v3_make(SkV3::Cross(* reinterpret_cast<const SkV3 *>(a), * reinterpret_cast<const SkV3 *>(b)));
 }
 
 sk_v3_t SkV3_Normalize(const reskia_v3_t *v) {
+    if (v == nullptr) {
+        return static_sk_v3_make({});
+    }
     return static_sk_v3_make(SkV3::Normalize(* reinterpret_cast<const SkV3 *>(v)));
 }
 

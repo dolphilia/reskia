@@ -25,14 +25,14 @@ extern "C" {
 // void operator*=(SkScalar s)
 // void operator/=(SkScalar s)
 
-void SkV2_delete(reskia_v2_t *v2); // (SkV2 *v2)
-float SkV2_lengthSquared(reskia_v2_t *v2); // (SkV2 *v2) -> SkScalar
-float SkV2_length(reskia_v2_t *v2); // (SkV2 *v2) -> SkScalar
-float SkV2_dot(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
-float SkV2_cross(reskia_v2_t *v2, sk_v2_t v); // (SkV2 *v2, sk_v2_t v) -> SkScalar
-sk_v2_t SkV2_normalize(reskia_v2_t *v2); // (SkV2 *v2) -> sk_v2_t
-const float *SkV2_ptr(reskia_v2_t *v2); // (SkV2 *v2) -> const float *
-float *SkV2_ptrMutable(reskia_v2_t *v2); // (SkV2 *v2) -> float *
+void SkV2_delete(reskia_v2_t *v2); // NULL 入力では no-op
+float SkV2_lengthSquared(reskia_v2_t *v2); // NULL 入力では 0
+float SkV2_length(reskia_v2_t *v2); // NULL 入力では 0
+float SkV2_dot(reskia_v2_t *v2, sk_v2_t v); // v handle 0 は default vector。v2 NULL では 0
+float SkV2_cross(reskia_v2_t *v2, sk_v2_t v); // v handle 0 は default vector。v2 NULL では 0
+sk_v2_t SkV2_normalize(reskia_v2_t *v2); // NULL 入力では default vector handle
+const float *SkV2_ptr(reskia_v2_t *v2); // borrowed: 2 要素、解放不要。NULL 入力では NULL
+float *SkV2_ptrMutable(reskia_v2_t *v2); // borrowed mutable: 2 要素、解放不要。NULL 入力では NULL
 
 // static
 

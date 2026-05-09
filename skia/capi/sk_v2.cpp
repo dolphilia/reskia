@@ -25,34 +25,58 @@ extern "C" {
 // void operator/=(SkScalar s)
 
 void SkV2_delete(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return;
+    }
     delete reinterpret_cast<SkV2 *>(v2);
 }
 
 float SkV2_lengthSquared(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV2 *>(v2)->lengthSquared();
 }
 
 float SkV2_length(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV2 *>(v2)->length();
 }
 
 float SkV2_dot(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV2 *>(v2)->dot(static_sk_v2_get_entity(v));
 }
 
 float SkV2_cross(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkV2 *>(v2)->cross(static_sk_v2_get_entity(v));
 }
 
 sk_v2_t SkV2_normalize(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return static_sk_v2_make({});
+    }
     return static_sk_v2_make(reinterpret_cast<SkV2 *>(v2)->normalize());
 }
 
 const float *SkV2_ptr(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkV2 *>(v2)->ptr();
 }
 
 float *SkV2_ptrMutable(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkV2 *>(v2)->ptr();
 }
 
