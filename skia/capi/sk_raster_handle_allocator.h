@@ -18,10 +18,10 @@ typedef void *reskia_raster_handle_t;
 
 extern "C" {
 
-void SkRasterHandleAllocator_delete(reskia_raster_handle_allocator_t *raster_handle_allocator); // (SkRasterHandleAllocator *raster_handle_allocator)
-bool SkRasterHandleAllocator_allocHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, const reskia_image_info_t *info, reskia_raster_handle_allocator_rec_t *rec); // (SkRasterHandleAllocator *raster_handle_allocator, const SkImageInfo *info, SkRasterHandleAllocator::Rec *rec) -> bool
-void SkRasterHandleAllocator_updateHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, reskia_raster_handle_t handle, const reskia_matrix_t *matrix, const reskia_i_rect_t *irect); // (SkRasterHandleAllocator *raster_handle_allocator, SkRasterHandleAllocator::Handle handle, const SkMatrix *matrix, const SkIRect *irect)
-sk_canvas_t SkRasterHandleAllocator_MakeCanvas(reskia_raster_handle_allocator_t *allocator, const reskia_image_info_t *info, const reskia_raster_handle_allocator_rec_t *rec, const reskia_surface_props_t *props); // takes ownership of allocator; returns 0 on failure (std::unique_ptr<SkRasterHandleAllocator> allocator, const SkImageInfo &info, const SkRasterHandleAllocator::Rec *rec, const SkSurfaceProps *props) -> sk_canvas_t
+void SkRasterHandleAllocator_delete(reskia_raster_handle_allocator_t *raster_handle_allocator); // NULL allocator is no-op.
+bool SkRasterHandleAllocator_allocHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, const reskia_image_info_t *info, reskia_raster_handle_allocator_rec_t *rec); // allocator/info/rec are required. Invalid input returns false.
+void SkRasterHandleAllocator_updateHandle(reskia_raster_handle_allocator_t *raster_handle_allocator, reskia_raster_handle_t handle, const reskia_matrix_t *matrix, const reskia_i_rect_t *irect); // allocator/handle/matrix/irect are required. Invalid input is no-op.
+sk_canvas_t SkRasterHandleAllocator_MakeCanvas(reskia_raster_handle_allocator_t *allocator, const reskia_image_info_t *info, const reskia_raster_handle_allocator_rec_t *rec, const reskia_surface_props_t *props); // takes ownership of non-NULL allocator; rec/props may be NULL. Returns 0 on failure.
 
 }
 

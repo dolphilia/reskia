@@ -9,18 +9,30 @@
 extern "C" {
 
 void SkRefCnt_release(void * refCnt) {
+    if (refCnt == nullptr) {
+        return;
+    }
     static_cast<SkRefCnt *>(refCnt)->unref();
 }
 
 bool SkRefCnt_unique(void * ref_cnt) {
+    if (ref_cnt == nullptr) {
+        return false;
+    }
     return static_cast<SkRefCnt *>(ref_cnt)->unique();
 }
 
 void SkRefCnt_ref(void * ref_cnt) {
+    if (ref_cnt == nullptr) {
+        return;
+    }
     static_cast<SkRefCnt *>(ref_cnt)->ref();
 }
 
 void SkRefCnt_unref(void * ref_cnt) {
+    if (ref_cnt == nullptr) {
+        return;
+    }
     static_cast<SkRefCnt *>(ref_cnt)->unref();
 }
 

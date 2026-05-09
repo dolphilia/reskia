@@ -16,8 +16,8 @@ extern "C" {
 
 typedef struct reskia_image_info_t reskia_image_info_t;
 
-sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes); // (const SkImageInfo *imageInfo, size_t rowBytes) -> sk_pixel_ref_t
-sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, sk_data_t data); // (const SkImageInfo &imageInfo, size_t rowBytes, sk_data_t data) -> sk_pixel_ref_t
+sk_pixel_ref_t SkMallocPixelRef_MakeAllocate(const reskia_image_info_t *imageInfo, size_t rowBytes); // imageInfo is required. Failed allocation returns 0.
+sk_pixel_ref_t SkMallocPixelRef_MakeWithData(const reskia_image_info_t *imageInfo, size_t rowBytes, sk_data_t data); // imageInfo and valid data handle are required. Failed creation returns 0.
 
 #ifdef __cplusplus
 }

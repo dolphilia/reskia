@@ -13,18 +13,30 @@ reskia_ref_cnt_base_t *SkRefCntBase_new() {
 }
 
 void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base) {
+    if (ref_cnt_base == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 
 bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base) {
+    if (ref_cnt_base == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unique();
 }
 
 void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base) {
+    if (ref_cnt_base == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->ref();
 }
 
 void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base) {
+    if (ref_cnt_base == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRefCntBase *>(ref_cnt_base)->unref();
 }
 

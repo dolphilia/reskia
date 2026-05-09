@@ -12,10 +12,10 @@ extern "C" {
 #endif
 
 reskia_ref_cnt_base_t *SkRefCntBase_new(); // owned: 呼び出し側が解放責務を持つ新規オブジェクト
-void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base); // owned: caller が保持する参照を release する
-bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base);
-void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base); // retained: 参照カウントを増やす
-void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base); // owned: 参照カウントを減らす
+void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base); // owned: caller が保持する参照を release する。NULL 入力では no-op。
+bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base); // NULL 入力では false。
+void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base); // retained: 参照カウントを増やす。NULL 入力では no-op。
+void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base); // owned: 参照カウントを減らす。NULL 入力では no-op。
 
 #ifdef __cplusplus
 }

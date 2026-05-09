@@ -145,8 +145,8 @@ skia/capi/sk_luma_color_filter.cpp,done,P2,codex,step5: RefCounted delete を un
 skia/capi/sk_luma_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_m_44.cpp,done,P2,codex,phase2-batch-w: NULL guards and 4x4 index/raw array checks,
 skia/capi/sk_m_44.h,done,P2,codex,phase2-batch-w: 16-entry matrix and row/col pointer comments,
-skia/capi/sk_malloc_pixel_ref.cpp,todo,P2,,
-skia/capi/sk_malloc_pixel_ref.h,todo,P2,,
+skia/capi/sk_malloc_pixel_ref.cpp,done,P2,codex,phase2-batch-an: SkMallocPixelRef factory の NULL/invalid handle ガードと handle 0 規約を補強
+skia/capi/sk_malloc_pixel_ref.h,done,P2,codex,phase2-batch-an: SkMallocPixelRef imageInfo/data handle の必須入力規約コメントを補強
 skia/capi/sk_mask.cpp,done,P2,codex,phase2-batch-u: NULL guards and format/bounds/image checks,
 skia/capi/sk_mask.h,done,P2,codex,phase2-batch-u: borrowed image and address pointer comments,
 skia/capi/sk_mask_builder.cpp,done,P2,codex,phase2-batch-u: NULL guards and mutable address checks,
@@ -193,8 +193,8 @@ skia/capi/sk_picture.cpp,done,P2,phase2-batch-ae: NULL guards and nullable handl
 skia/capi/sk_picture.h,done,P2,phase2-batch-ae: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_picture_recorder.cpp,done,P2,phase2-batch-ae: NULL/bounds guards and nullable finish handles,
 skia/capi/sk_picture_recorder.h,done,P2,phase2-batch-ae: documented borrowed canvas and handle-0 conventions,
-skia/capi/sk_pixel_ref.cpp,todo,P2,,
-skia/capi/sk_pixel_ref.h,todo,P2,,
+skia/capi/sk_pixel_ref.cpp,done,P2,codex,phase2-batch-an: SkPixelRef query/mutation/refcount の NULL ガードと負サイズ拒否を補強
+skia/capi/sk_pixel_ref.h,done,P2,codex,phase2-batch-an: SkPixelRef borrowed pixels/dimensions/refcount の NULL 規約コメントを補強
 skia/capi/sk_pixmap.cpp,todo,P2,,
 skia/capi/sk_pixmap.h,todo,P2,,
 skia/capi/sk_pixmap_utils.cpp,todo,P2,,
@@ -209,20 +209,20 @@ skia/capi/sk_point_3.cpp,todo,P2,,
 skia/capi/sk_point_3.h,todo,P2,,
 skia/capi/sk_r_rect.cpp,done,P2,codex,phase2-batch-e: SkRRect NULL ガードと memory/borrowed pointer 規約を補強
 skia/capi/sk_r_rect.h,done,P2,codex,phase2-batch-e: SkRRect buffer/radii/borrowed pointer コメントを補強
-skia/capi/sk_raster_handle_allocator.cpp,todo,P2,,
-skia/capi/sk_raster_handle_allocator.h,todo,P2,,
+skia/capi/sk_raster_handle_allocator.cpp,done,P2,codex,phase2-batch-al: SkRasterHandleAllocator abstract wrapper の NULL ガードと consumed allocator 境界を補強
+skia/capi/sk_raster_handle_allocator.h,done,P2,codex,phase2-batch-al: allocator/info/rec/handle/matrix/clip/props の NULL 規約コメントを補強
 skia/capi/sk_raw_decoder.cpp,todo,P2,,
 skia/capi/sk_raw_decoder.h,todo,P2,,
 skia/capi/sk_read_buffer.cpp,partial,P2,codex,phase2-batch-ai: flattenable/array/factory/deserial read path の NULL ガードと handle 0 規約を補強
 skia/capi/sk_read_buffer.h,partial,P2,codex,phase2-batch-ai: read buffer 後半 API の NULL/array 出力規約コメントを補強
 skia/capi/sk_rect.cpp,done,P2,codex,phase2-batch-e: SkRect NULL ガードを accessor/mutator/static factory に横展開
 skia/capi/sk_rect.h,done,P2,codex,phase2-batch-e: SkRect output/raw array/borrowed scalar コメントを補強
-skia/capi/sk_ref_cnt.cpp,todo,P2,,
-skia/capi/sk_ref_cnt.h,todo,P2,,
-skia/capi/sk_ref_cnt_base.cpp,todo,P2,,
-skia/capi/sk_ref_cnt_base.h,todo,P2,,
-skia/capi/sk_region.cpp,todo,P2,,
-skia/capi/sk_region.h,todo,P2,,
+skia/capi/sk_ref_cnt.cpp,done,P2,codex,phase2-batch-am: raw SkRefCnt wrapper の NULL ガードを補強
+skia/capi/sk_ref_cnt.h,done,P2,codex,phase2-batch-am: raw SkRefCnt ref/unref/unique の NULL 規約コメントを補強
+skia/capi/sk_ref_cnt_base.cpp,done,P2,codex,phase2-batch-am: SkRefCntBase ref/unref/unique の NULL ガードを補強
+skia/capi/sk_ref_cnt_base.h,done,P2,codex,phase2-batch-am: SkRefCntBase ownership/refcount API の NULL 規約コメントを補強
+skia/capi/sk_region.cpp,done,P2,codex,phase2-batch-aj: SkRegion query/mutation/op/serialization の NULL ガードと invalid op 規約を補強
+skia/capi/sk_region.h,done,P2,codex,phase2-batch-aj: SkRegion borrowed pointer/raw array/op/serialization の NULL 規約コメントを補強
 skia/capi/sk_rsx_form.cpp,todo,P2,,
 skia/capi/sk_rsx_form.h,todo,P2,,
 skia/capi/sk_runtime_blend_builder.cpp,todo,P2,,
@@ -267,10 +267,10 @@ skia/capi/sk_surfaces.cpp,todo,P2,,
 skia/capi/sk_surfaces.h,todo,P2,,
 skia/capi/sk_table_mask_filter.cpp,done,P2,codex,phase2-batch-t: raw table NULL guards and create NULL rule,
 skia/capi/sk_table_mask_filter.h,done,P2,codex,phase2-batch-t: 256-entry table and owned filter comments,
-skia/capi/sk_text_blob.cpp,todo,P2,,
-skia/capi/sk_text_blob.h,todo,P2,,
-skia/capi/sk_text_blob_builder.cpp,todo,P2,,
-skia/capi/sk_text_blob_builder.h,todo,P2,,
+skia/capi/sk_text_blob.cpp,done,P2,codex,phase2-batch-ak: SkTextBlob ref/query/serialize/static factory の NULL ガードと handle 0 規約を補強
+skia/capi/sk_text_blob.h,done,P2,codex,phase2-batch-ak: SkTextBlob borrowed pointer/text buffer/serialize procs の NULL 規約コメントを補強
+skia/capi/sk_text_blob_builder.cpp,done,P2,codex,phase2-batch-ak: SkTextBlobBuilder make/run-buffer allocation の NULL/count/textByteCount ガードを補強
+skia/capi/sk_text_blob_builder.h,done,P2,codex,phase2-batch-ak: SkTextBlobBuilder run-buffer allocation の必須入力規約コメントを補強
 skia/capi/sk_text_blob_builder_run_handler.cpp,todo,P2,,
 skia/capi/sk_text_blob_builder_run_handler.h,todo,P2,,
 skia/capi/sk_tiled_image_utils.cpp,todo,P2,,
