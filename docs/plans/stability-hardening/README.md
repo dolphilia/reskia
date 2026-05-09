@@ -37,6 +37,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `20-phase-2-batch-s-color-table.md`
 - `21-phase-2-batch-t-mask-filter.md`
 - `22-phase-2-batch-u-mask.md`
+- `23-phase-2-batch-v-matrix.md`
 
 ## 関連計画
 
