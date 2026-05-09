@@ -221,6 +221,14 @@ if(RESKIA_BUILD_TESTS)
     target_link_libraries(test_color_table_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
     add_test(NAME c_skia_color_table_invalid_input_smoke COMMAND test_color_table_invalid_input_smoke)
 
+    add_executable(test_mask_filter_invalid_input_smoke test/test_mask_filter_invalid_input_smoke.cpp)
+    target_include_directories(test_mask_filter_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    if(RESKIA_DEP_LINK_DIRS)
+        target_link_directories(test_mask_filter_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+    endif()
+    target_link_libraries(test_mask_filter_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_mask_filter_invalid_input_smoke COMMAND test_mask_filter_invalid_input_smoke)
+
     if(APPLE AND TARGET svg AND TARGET skshaper AND TARGET skunicode)
         add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
         target_include_directories(test_shaping_smoke PRIVATE

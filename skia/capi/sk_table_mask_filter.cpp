@@ -9,20 +9,32 @@
 extern "C" {
 
 void SkTableMaskFilter_delete(reskia_table_mask_filter_t *tableMaskFilter) {
+    if (tableMaskFilter == nullptr) {
+        return;
+    }
     delete reinterpret_cast<SkTableMaskFilter *>(tableMaskFilter);
 }
 
 // static
 
 void SkTableMaskFilter_MakeGammaTable(uint8_t * table, float gamma) {
+    if (table == nullptr) {
+        return;
+    }
     SkTableMaskFilter::MakeGammaTable(table, gamma);
 }
 
 void SkTableMaskFilter_MakeClipTable(uint8_t * table, uint8_t min, uint8_t max) {
+    if (table == nullptr) {
+        return;
+    }
     SkTableMaskFilter::MakeClipTable(table, min, max);
 }
 
 reskia_mask_filter_t *SkTableMaskFilter_Create(const uint8_t * table) {
+    if (table == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_mask_filter_t *>(SkTableMaskFilter::Create(table));
 }
 

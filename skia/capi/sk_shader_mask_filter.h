@@ -14,11 +14,11 @@ typedef struct reskia_shader_mask_filter_t reskia_shader_mask_filter_t;
 extern "C" {
 #endif
 
-void SkShaderMaskFilter_delete(reskia_shader_mask_filter_t *shaderMaskFilter); // (SkShaderMaskFilter *shaderMaskFilter)
+void SkShaderMaskFilter_delete(reskia_shader_mask_filter_t *shaderMaskFilter); // NULL 入力では no-op
 
 // static
 
-sk_mask_filter_t SkShaderMaskFilter_Make(sk_shader_t shader); // (sk_shader_t shader) -> sk_mask_filter_t
+sk_mask_filter_t SkShaderMaskFilter_Make(sk_shader_t shader); // shader handle 0 や生成不能では 0
 
 #ifdef __cplusplus
 }

@@ -14,15 +14,15 @@ typedef struct reskia_table_mask_filter_t reskia_table_mask_filter_t;
 extern "C" {
 #endif
 
-void SkTableMaskFilter_delete(reskia_table_mask_filter_t *tableMaskFilter); // (SkTableMaskFilter *tableMaskFilter)
+void SkTableMaskFilter_delete(reskia_table_mask_filter_t *tableMaskFilter); // NULL 入力では no-op
 
 // static
 
-void SkTableMaskFilter_MakeGammaTable(uint8_t * table, float gamma); // (uint8_t table[256], SkScalar gamma)
-void SkTableMaskFilter_MakeClipTable(uint8_t * table, uint8_t min, uint8_t max); // (uint8_t table[256], uint8_t min, uint8_t max)
-reskia_mask_filter_t *SkTableMaskFilter_Create(const uint8_t * table); // (const uint8_t table[256]) -> SkMaskFilter *
-reskia_mask_filter_t *SkTableMaskFilter_CreateGamma(float gamma); // (SkScalar gamma) -> SkMaskFilter *
-reskia_mask_filter_t *SkTableMaskFilter_CreateClip(uint8_t min, uint8_t max); // (uint8_t min, uint8_t max) -> SkMaskFilter *
+void SkTableMaskFilter_MakeGammaTable(uint8_t * table, float gamma); // table は 256 要素以上、非 NULL。NULL 入力では no-op
+void SkTableMaskFilter_MakeClipTable(uint8_t * table, uint8_t min, uint8_t max); // table は 256 要素以上、非 NULL。NULL 入力では no-op
+reskia_mask_filter_t *SkTableMaskFilter_Create(const uint8_t * table); // table は 256 要素以上、非 NULL。NULL 入力や生成不能では NULL。owned ref
+reskia_mask_filter_t *SkTableMaskFilter_CreateGamma(float gamma); // 生成不能では NULL。owned ref
+reskia_mask_filter_t *SkTableMaskFilter_CreateClip(uint8_t min, uint8_t max); // 生成不能では NULL。owned ref
 
 #ifdef __cplusplus
 }
