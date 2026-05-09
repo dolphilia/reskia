@@ -59,6 +59,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `42-phase-2-batch-ao-pixmap.md`
 - `43-phase-2-batch-ap-yuva-pixmaps.md`
 - `44-phase-2-batch-aq-yuva-info.md`
+- `45-phase-2-batch-ar-read-write-buffer-completion.md`
 
 ## 関連計画
 

@@ -125,6 +125,12 @@ reskia_read_buffer_t *SkReadBuffer_new() {
 }
 
 reskia_read_buffer_t *SkReadBuffer_newWithDataAndSize(const void* data, size_t size) {
+    if (data == nullptr && size > 0) {
+        return nullptr;
+    }
+    if (data == nullptr) {
+        return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer());
+    }
     return reinterpret_cast<reskia_read_buffer_t *>(new SkReadBuffer(data, size));
 }
 
@@ -133,132 +139,208 @@ void SkReadBuffer_delete(reskia_read_buffer_t *buffer) {
 }
 
 void SkReadBuffer_setMemory(reskia_read_buffer_t *buffer, const void* data, size_t size) {
-    reinterpret_cast<SkReadBuffer *>(buffer)->setMemory(data, size);
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || (data == nullptr && size > 0)) {
+        return;
+    }
+    if (data == nullptr) {
+        return;
+    }
+    readBuffer->setMemory(data, size);
 }
 
 bool SkReadBuffer_isVersionLT(reskia_read_buffer_t *buffer, reskia_read_buffer_version_t targetVersion) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->isVersionLT(static_cast<SkPicturePriv::Version>(targetVersion));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || targetVersion <= 0) {
+        return false;
+    }
+    return readBuffer->isVersionLT(static_cast<SkPicturePriv::Version>(targetVersion));
 }
 
 uint32_t SkReadBuffer_getVersion(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->getVersion();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->getVersion() : 0;
 }
 
 void SkReadBuffer_setVersion(reskia_read_buffer_t *buffer, int version) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->setVersion(version);
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr) {
+        return;
+    }
+    return readBuffer->setVersion(version);
 }
 
 size_t SkReadBuffer_size(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->size();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->size() : 0;
 }
 
 size_t SkReadBuffer_offset(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->offset();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->offset() : 0;
 }
 
 bool SkReadBuffer_eof(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->eof();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->eof() : true;
 }
 
 const void* SkReadBuffer_skip(reskia_read_buffer_t *buffer, size_t size) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->skip(size);
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->skip(size) : nullptr;
 }
 
 const void* SkReadBuffer_skipCount(reskia_read_buffer_t *buffer, size_t count, size_t size) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->skip(count, size);
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->skip(count, size) : nullptr;
 }
 
 size_t SkReadBuffer_available(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->available();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->available() : 0;
 }
 
 // template <typename T> const T* skipT()
 // template <typename T> const T* skipT(size_t count)
 
 bool SkReadBuffer_readBool(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readBool();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->readBool() : false;
 }
 
 SkColor SkReadBuffer_readColor(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readColor();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->readColor() : 0;
 }
 
 int32_t SkReadBuffer_readInt(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readInt();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->readInt() : 0;
 }
 
 SkScalar SkReadBuffer_readScalar(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readScalar();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->readScalar() : 0;
 }
 
 uint32_t SkReadBuffer_readUInt(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readUInt();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->readUInt() : 0;
 }
 
 int32_t SkReadBuffer_read32(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->read32();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->read32() : 0;
 }
 
 // template <typename T> T read32LE(T max)
 
 uint8_t SkReadBuffer_peekByte(reskia_read_buffer_t *buffer) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->peekByte();
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? readBuffer->peekByte() : 0;
 }
 
 void SkReadBuffer_readString(reskia_read_buffer_t *buffer, reskia_string_t *string) {
-    reinterpret_cast<SkReadBuffer *>(buffer)->readString(reinterpret_cast<SkString *>(string));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || string == nullptr) {
+        return;
+    }
+    readBuffer->readString(reinterpret_cast<SkString *>(string));
 }
 
 void SkReadBuffer_readColor4f(reskia_read_buffer_t *buffer, reskia_color_4f_t *color) {
-    reinterpret_cast<SkReadBuffer *>(buffer)->readColor4f(reinterpret_cast<SkColor4f *>(color));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || color == nullptr) {
+        return;
+    }
+    readBuffer->readColor4f(reinterpret_cast<SkColor4f *>(color));
 }
 
 void SkReadBuffer_readPoint(reskia_read_buffer_t *buffer, reskia_point_t *point) {
-    reinterpret_cast<SkReadBuffer *>(buffer)->readPoint(reinterpret_cast<SkPoint *>(point));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || point == nullptr) {
+        return;
+    }
+    readBuffer->readPoint(reinterpret_cast<SkPoint *>(point));
 }
 
 sk_point_t SkReadBuffer_readPointValue(reskia_read_buffer_t *buffer) {
-    return static_sk_point_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPoint());
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? static_sk_point_make(readBuffer->readPoint()) : 0;
 }
 
 void SkReadBuffer_readPoint3(reskia_read_buffer_t *buffer, reskia_point_3_t *point) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readPoint3(reinterpret_cast<SkPoint3 *>(point));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || point == nullptr) {
+        return;
+    }
+    return readBuffer->readPoint3(reinterpret_cast<SkPoint3 *>(point));
 }
 
 void SkReadBuffer_read(reskia_read_buffer_t *buffer, reskia_m_44_t *m44) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->read(reinterpret_cast<SkM44 *>(m44));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || m44 == nullptr) {
+        return;
+    }
+    return readBuffer->read(reinterpret_cast<SkM44 *>(m44));
 }
 
 void SkReadBuffer_readMatrix(reskia_read_buffer_t *buffer, reskia_matrix_t *matrix) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readMatrix(reinterpret_cast<SkMatrix *>(matrix));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || matrix == nullptr) {
+        return;
+    }
+    return readBuffer->readMatrix(reinterpret_cast<SkMatrix *>(matrix));
 }
 
 void SkReadBuffer_readIRect(reskia_read_buffer_t *buffer, reskia_i_rect_t *rect) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readIRect(reinterpret_cast<SkIRect *>(rect));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || rect == nullptr) {
+        return;
+    }
+    return readBuffer->readIRect(reinterpret_cast<SkIRect *>(rect));
 }
 
 void SkReadBuffer_readRect(reskia_read_buffer_t *buffer, reskia_rect_t *rect) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readRect(reinterpret_cast<SkRect *>(rect));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || rect == nullptr) {
+        return;
+    }
+    return readBuffer->readRect(reinterpret_cast<SkRect *>(rect));
 }
 
 sk_rect_t SkReadBuffer_readRectValue(reskia_read_buffer_t *buffer) {
-    return static_sk_rect_make(reinterpret_cast<SkReadBuffer *>(buffer)->readRect());
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? static_sk_rect_make(readBuffer->readRect()) : 0;
 }
 
 void SkReadBuffer_readRRect(reskia_read_buffer_t *buffer, reskia_r_rect_t *rrect) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readRRect(reinterpret_cast<SkRRect *>(rrect));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || rrect == nullptr) {
+        return;
+    }
+    return readBuffer->readRRect(reinterpret_cast<SkRRect *>(rrect));
 }
 
 void SkReadBuffer_readRegion(reskia_read_buffer_t *buffer, reskia_region_t *region) {
-    return reinterpret_cast<SkReadBuffer *>(buffer)->readRegion(reinterpret_cast<SkRegion *>(region));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || region == nullptr) {
+        return;
+    }
+    return readBuffer->readRegion(reinterpret_cast<SkRegion *>(region));
 }
 
 void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path) {
-      return reinterpret_cast<SkReadBuffer *>(buffer)->readPath(reinterpret_cast<SkPath *>(path));
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    if (readBuffer == nullptr || path == nullptr) {
+        return;
+    }
+    return readBuffer->readPath(reinterpret_cast<SkPath *>(path));
 }
 
 sk_paint_t SkReadBuffer_readPaint(reskia_read_buffer_t *buffer) {
-    return static_sk_paint_make(reinterpret_cast<SkReadBuffer *>(buffer)->readPaint());
+    SkReadBuffer *readBuffer = as_read_buffer(buffer);
+    return readBuffer != nullptr ? static_sk_paint_make(readBuffer->readPaint()) : 0;
 }
 
 reskia_flattenable_t *SkReadBuffer_readRawFlattenable(reskia_read_buffer_t *buffer) {

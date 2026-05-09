@@ -18,11 +18,84 @@ bool check(bool condition, const char *message) {
 
 int main() {
     SkReadBuffer_delete(nullptr);
+    if (!check(SkReadBuffer_newWithDataAndSize(nullptr, 4) == nullptr, "constructor rejects null data with size")) {
+        return 1;
+    }
     SkReadBuffer_setTypefaceArray(nullptr, nullptr, 0);
     SkReadBuffer_setFactoryPlayback(nullptr, nullptr, 0);
     SkReadBuffer_setDeserialProcs(nullptr, nullptr);
     SkReadBuffer_setAllowSkSL(nullptr, true);
+    SkReadBuffer_setMemory(nullptr, nullptr, 4);
+    SkReadBuffer_setVersion(nullptr, 1);
 
+    if (!check(!SkReadBuffer_isVersionLT(nullptr, 1), "isVersionLT null")) {
+        return 1;
+    }
+    if (!check(!SkReadBuffer_isVersionLT(nullptr, 0), "isVersionLT invalid version")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_getVersion(nullptr) == 0, "getVersion null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_size(nullptr) == 0, "size null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_offset(nullptr) == 0, "offset null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_eof(nullptr), "eof null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_skip(nullptr, 4) == nullptr, "skip null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_skipCount(nullptr, 1, 4) == nullptr, "skipCount null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_available(nullptr) == 0, "available null")) {
+        return 1;
+    }
+    if (!check(!SkReadBuffer_readBool(nullptr), "readBool null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_readColor(nullptr) == 0, "readColor null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_readInt(nullptr) == 0, "readInt null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_readScalar(nullptr) == 0, "readScalar null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_readUInt(nullptr) == 0, "readUInt null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_read32(nullptr) == 0, "read32 null")) {
+        return 1;
+    }
+    if (!check(SkReadBuffer_peekByte(nullptr) == 0, "peekByte null")) {
+        return 1;
+    }
+    SkReadBuffer_readString(nullptr, nullptr);
+    SkReadBuffer_readColor4f(nullptr, nullptr);
+    SkReadBuffer_readPoint(nullptr, nullptr);
+    if (!check(SkReadBuffer_readPointValue(nullptr) == 0, "readPointValue null")) {
+        return 1;
+    }
+    SkReadBuffer_readPoint3(nullptr, nullptr);
+    SkReadBuffer_read(nullptr, nullptr);
+    SkReadBuffer_readMatrix(nullptr, nullptr);
+    SkReadBuffer_readIRect(nullptr, nullptr);
+    SkReadBuffer_readRect(nullptr, nullptr);
+    if (!check(SkReadBuffer_readRectValue(nullptr) == 0, "readRectValue null")) {
+        return 1;
+    }
+    SkReadBuffer_readRRect(nullptr, nullptr);
+    SkReadBuffer_readRegion(nullptr, nullptr);
+    SkReadBuffer_readPath(nullptr, nullptr);
+    if (!check(SkReadBuffer_readPaint(nullptr) == 0, "readPaint null")) {
+        return 1;
+    }
     if (!check(SkReadBuffer_readRawFlattenable(nullptr) == nullptr, "readRawFlattenable null")) {
         return 1;
     }
@@ -128,8 +201,32 @@ int main() {
     SkWriteBuffer_writePad32(nullptr, nullptr, 0);
     SkWriteBuffer_writeByteArray(nullptr, nullptr, 0);
     SkWriteBuffer_writeDataAsByteArray(nullptr, nullptr);
+    SkWriteBuffer_writeBool(nullptr, false);
+    SkWriteBuffer_writeScalar(nullptr, 0);
+    SkWriteBuffer_writeScalarArray(nullptr, nullptr, 0);
+    SkWriteBuffer_writeInt(nullptr, 0);
+    SkWriteBuffer_writeIntArray(nullptr, nullptr, 0);
+    SkWriteBuffer_writeUInt(nullptr, 0);
+    SkWriteBuffer_write32(nullptr, 0);
+    SkWriteBuffer_writeString(nullptr, 0);
     SkWriteBuffer_writeFlattenable(nullptr, nullptr);
+    SkWriteBuffer_writeColor(nullptr, 0);
+    SkWriteBuffer_writeColorArray(nullptr, nullptr, 0);
+    SkWriteBuffer_writeColor4f(nullptr, nullptr);
+    SkWriteBuffer_writeColor4fArray(nullptr, nullptr, 0);
+    SkWriteBuffer_writePoint(nullptr, nullptr);
+    SkWriteBuffer_writePointArray(nullptr, nullptr, 0);
+    SkWriteBuffer_writePoint3(nullptr, nullptr);
+    SkWriteBuffer_write(nullptr, nullptr);
+    SkWriteBuffer_writeMatrix(nullptr, nullptr);
+    SkWriteBuffer_writeIRect(nullptr, nullptr);
+    SkWriteBuffer_writeRect(nullptr, nullptr);
+    SkWriteBuffer_writeRegion(nullptr, nullptr);
+    SkWriteBuffer_writeSampling(nullptr, nullptr);
+    SkWriteBuffer_writePath(nullptr, nullptr);
+    SkWriteBuffer_writeImage(nullptr, nullptr);
     SkWriteBuffer_writeTypeface(nullptr, nullptr);
+    SkWriteBuffer_writePaint(nullptr, nullptr);
     if (!check(SkWriteBuffer_writeStream(nullptr, nullptr, 0) == 0, "writeStream null")) {
         return 1;
     }

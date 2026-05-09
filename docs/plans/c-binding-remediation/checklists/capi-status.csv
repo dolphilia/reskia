@@ -213,8 +213,8 @@ skia/capi/sk_raster_handle_allocator.cpp,done,P2,codex,phase2-batch-al: SkRaster
 skia/capi/sk_raster_handle_allocator.h,done,P2,codex,phase2-batch-al: allocator/info/rec/handle/matrix/clip/props の NULL 規約コメントを補強
 skia/capi/sk_raw_decoder.cpp,todo,P2,,
 skia/capi/sk_raw_decoder.h,todo,P2,,
-skia/capi/sk_read_buffer.cpp,partial,P2,codex,phase2-batch-ai: flattenable/array/factory/deserial read path の NULL ガードと handle 0 規約を補強
-skia/capi/sk_read_buffer.h,partial,P2,codex,phase2-batch-ai: read buffer 後半 API の NULL/array 出力規約コメントを補強
+skia/capi/sk_read_buffer.cpp,done,P2,2026-05-10,Phase 2 batch AR: primitive/geometry read NULL guards and invalid memory input handling completed
+skia/capi/sk_read_buffer.h,done,P2,2026-05-10,Phase 2 batch AR: documented primitive read geometry output and memory input null rules
 skia/capi/sk_rect.cpp,done,P2,codex,phase2-batch-e: SkRect NULL ガードを accessor/mutator/static factory に横展開
 skia/capi/sk_rect.h,done,P2,codex,phase2-batch-e: SkRect output/raw array/borrowed scalar コメントを補強
 skia/capi/sk_ref_cnt.cpp,done,P2,codex,phase2-batch-am: raw SkRefCnt wrapper の NULL ガードを補強
@@ -301,8 +301,8 @@ skia/capi/sk_webp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity
 skia/capi/sk_webp_decoder.h,todo,P2,,
 skia/capi/sk_webp_encoder.cpp,todo,P2,,
 skia/capi/sk_webp_encoder.h,todo,P2,,
-skia/capi/sk_write_buffer.cpp,partial,P2,codex,phase2-batch-ai: writer 本体 NULL の no-op/0 返却と nullable payload 境界を補強
-skia/capi/sk_write_buffer.h,partial,P2,codex,phase2-batch-ai: write buffer flattenable/raw buffer/stream の NULL 規約コメントを補強
+skia/capi/sk_write_buffer.cpp,done,P2,2026-05-10,Phase 2 batch AR: primitive/array/geometry/object write NULL guards completed
+skia/capi/sk_write_buffer.h,done,P2,2026-05-10,Phase 2 batch AR: documented write buffer primitive array and geometry null rules
 skia/capi/sk_yuva_info.cpp,done,P2,2026-05-10,Phase 2 batch AQ: null guards enum validation plane index checks and handle validation
 skia/capi/sk_yuva_info.h,done,P2,2026-05-10,Phase 2 batch AQ: documented tuple handle and dimension handle signatures
 skia/capi/sk_yuva_pixmap_info.cpp,done,P2,2026-05-10,Phase 2 batch AP: null guards plane index checks and enum validation
