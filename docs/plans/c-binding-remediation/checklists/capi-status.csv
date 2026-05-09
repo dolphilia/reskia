@@ -7,8 +7,8 @@ skia/capi/sk_annotation.cpp,todo,P2,,
 skia/capi/sk_annotation.h,todo,P2,,
 skia/capi/sk_auto_canvas_restore.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
 skia/capi/sk_auto_canvas_restore.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
-skia/capi/sk_avif_decoder.cpp,todo,P2,,
-skia/capi/sk_avif_decoder.h,todo,P2,,
+skia/capi/sk_avif_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_avif_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_b_box_hierarchy.cpp,todo,P2,,
 skia/capi/sk_b_box_hierarchy.h,todo,P2,,
 skia/capi/sk_bitmap.cpp,done,P2,codex,"stability Phase 2 Batch B: NULL guards added across SkBitmap and bitmap invalid input smoke passes"
@@ -19,14 +19,14 @@ skia/capi/sk_blender.cpp,todo,P2,,
 skia/capi/sk_blender.h,todo,P2,,
 skia/capi/sk_blenders.cpp,todo,P2,,
 skia/capi/sk_blenders.h,todo,P2,,
-skia/capi/sk_bmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_bmp_decoder.h,todo,P2,,
+skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_canvas.cpp,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory NULL guards and typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
 skia/capi/sk_canvas.h,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
-skia/capi/sk_codec.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_codec.h,todo,P2,,
+skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
+skia/capi/sk_codec.h,done,P2,2026-05-10,Phase 2 batch AS: documented codec null output pointer stream and data handle rules
 skia/capi/sk_codecs.cpp,todo,P2,,
 skia/capi/sk_codecs.h,todo,P2,,
 skia/capi/sk_color.cpp,done,P2,codex,phase2-batch-p: HSV raw array NULL guards,
@@ -101,8 +101,8 @@ skia/capi/sk_font_style.cpp,done,P2,phase2-batch-z: NULL query/delete guards and
 skia/capi/sk_font_style.h,done,P2,phase2-batch-z: documented NULL query/delete conventions,
 skia/capi/sk_font_style_set.cpp,done,P2,phase2-batch-z: NULL/range guards and nullable typeface/style-set handle factories,
 skia/capi/sk_font_style_set.h,done,P2,phase2-batch-z: documented NULL/range/no-op/handle-0 conventions,
-skia/capi/sk_gif_decoder.cpp,todo,P2,,
-skia/capi/sk_gif_decoder.h,todo,P2,,
+skia/capi/sk_gif_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_gif_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_gradient_shader.cpp,todo,P2,,
 skia/capi/sk_gradient_shader.h,todo,P2,,
 skia/capi/sk_graphics.cpp,todo,P2,,
@@ -119,8 +119,8 @@ skia/capi/sk_i_size.cpp,todo,P2,,
 skia/capi/sk_i_size.h,todo,P2,,
 skia/capi/sk_icc.cpp,todo,P2,,
 skia/capi/sk_icc.h,todo,P2,,
-skia/capi/sk_ico_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_ico_decoder.h,todo,P2,,
+skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_image.cpp,done,P2,codex,stability Phase 2 Batch A: image C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and async callback keeps borrowed-result policy
 skia/capi/sk_image.h,done,P2,codex,stability Phase 2 Batch A: image C API ownership/lifetime reviewed; header already uses typed handles/opaque pointers with retained/owned/borrowed comments for key APIs
 skia/capi/sk_image_filter.cpp,todo,P2,,
@@ -133,12 +133,12 @@ skia/capi/sk_image_info.cpp,done,P2,codex,phase2-batch-f: SkImageInfo NULL ガ�
 skia/capi/sk_image_info.h,done,P2,codex,phase2-batch-f: SkImageInfo borrowed color space と rowBytes/byte-size コメントを補強
 skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
 skia/capi/sk_images.h,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一
-skia/capi/sk_jpeg_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_jpeg_decoder.h,todo,P2,,
+skia/capi/sk_jpeg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_jpeg_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_jpeg_encoder.cpp,todo,P2,,
 skia/capi/sk_jpeg_encoder.h,todo,P2,,
-skia/capi/sk_jpegxl_decoder.cpp,todo,P2,,
-skia/capi/sk_jpegxl_decoder.h,todo,P2,,
+skia/capi/sk_jpegxl_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_jpegxl_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_line_2d_path_effect.cpp,done,P2,codex,phase2-batch-l: matrix NULL ガードと null sk_sp handle 規約を補強
 skia/capi/sk_line_2d_path_effect.h,done,P2,codex,phase2-batch-l: matrix 非 NULL 規約を明記
 skia/capi/sk_luma_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
@@ -199,8 +199,8 @@ skia/capi/sk_pixmap.cpp,done,P2,2026-05-10,Phase 2 batch AO: null guards and typ
 skia/capi/sk_pixmap.h,done,P2,2026-05-10,Phase 2 batch AO: documented null and typed pointer conventions
 skia/capi/sk_pixmap_utils.cpp,done,P2,2026-05-10,Phase 2 batch AO: null guards and encoded-origin validation
 skia/capi/sk_pixmap_utils.h,done,P2,2026-05-10,Phase 2 batch AO: documented null and origin conventions
-skia/capi/sk_png_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_png_decoder.h,todo,P2,,
+skia/capi/sk_png_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_png_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_png_encoder.cpp,todo,P2,,
 skia/capi/sk_png_encoder.h,todo,P2,,
 skia/capi/sk_point.cpp,todo,P2,,
@@ -211,8 +211,8 @@ skia/capi/sk_r_rect.cpp,done,P2,codex,phase2-batch-e: SkRRect NULL ガードと 
 skia/capi/sk_r_rect.h,done,P2,codex,phase2-batch-e: SkRRect buffer/radii/borrowed pointer コメントを補強
 skia/capi/sk_raster_handle_allocator.cpp,done,P2,codex,phase2-batch-al: SkRasterHandleAllocator abstract wrapper の NULL ガードと consumed allocator 境界を補強
 skia/capi/sk_raster_handle_allocator.h,done,P2,codex,phase2-batch-al: allocator/info/rec/handle/matrix/clip/props の NULL 規約コメントを補強
-skia/capi/sk_raw_decoder.cpp,todo,P2,,
-skia/capi/sk_raw_decoder.h,todo,P2,,
+skia/capi/sk_raw_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_raw_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_read_buffer.cpp,done,P2,2026-05-10,Phase 2 batch AR: primitive/geometry read NULL guards and invalid memory input handling completed
 skia/capi/sk_read_buffer.h,done,P2,2026-05-10,Phase 2 batch AR: documented primitive read geometry output and memory input null rules
 skia/capi/sk_rect.cpp,done,P2,codex,phase2-batch-e: SkRect NULL ガードを accessor/mutator/static factory に横展開
@@ -295,10 +295,10 @@ skia/capi/sk_vertices.cpp,done,P2,codex,phase2-batch-y: NULL guards and raw vert
 skia/capi/sk_vertices.h,done,P2,codex,phase2-batch-y: vertex array and optional tex/color/index comments,
 skia/capi/sk_w_stream.cpp,done,P2,codex,phase2-batch-i: SkWStream NULL ガードと write/writeStream 規約を補強
 skia/capi/sk_w_stream.h,done,P2,codex,phase2-batch-i: SkWStream raw buffer/text/stream transfer コメントを補強
-skia/capi/sk_wbmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_wbmp_decoder.h,todo,P2,,
-skia/capi/sk_webp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_webp_decoder.h,todo,P2,,
+skia/capi/sk_wbmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_wbmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
+skia/capi/sk_webp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
+skia/capi/sk_webp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_webp_encoder.cpp,todo,P2,,
 skia/capi/sk_webp_encoder.h,todo,P2,,
 skia/capi/sk_write_buffer.cpp,done,P2,2026-05-10,Phase 2 batch AR: primitive/array/geometry/object write NULL guards completed

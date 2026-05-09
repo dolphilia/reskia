@@ -10,6 +10,8 @@
 
 #include "../handles/static_sk_codec.h"
 #include "../handles/static_sk_codecs_decoder.h"
+#include "../handles/static_sk_data.h"
+#include "../handles/static_sk_stream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,9 +20,9 @@ extern "C" {
 typedef struct reskia_codec_result_t reskia_codec_result_t;
 typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
-bool SkWebpDecoder_IsWbmp(const uint8_t *ptr, size_t size); // (const void* ptr, size_t size) -> bool
-sk_codec_t SkWebpDecoder_Decode(int static_stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_stream, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
-sk_codec_t SkWebpDecoder_DecodeFromData(int static_data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // (int static_data, SkCodec::Result* result, SkCodecs::DecodeContext decodeContext) -> sk_codec_t
+bool SkWebpDecoder_IsWbmp(const uint8_t *ptr, size_t size); // ptr is required when size > 0; invalid input returns false.
+sk_codec_t SkWebpDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // stream must be a valid owned stream handle; invalid input returns 0 and sets result to kInvalidInput.
+sk_codec_t SkWebpDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // data must be a valid SkData handle; invalid input returns 0 and sets result to kInvalidInput.
 sk_codecs_decoder_t SkWebpDecoder_Decoder(); // () -> sk_codecs_decoder_t
 
 #ifdef __cplusplus

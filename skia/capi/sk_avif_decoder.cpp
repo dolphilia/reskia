@@ -6,34 +6,44 @@
 
 #include "include/codec/SkAvifDecoder.h"
 
+#include "sk_decoder_common.h"
+
 #include "../handles/static_sk_stream.h"
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_codec.h"
 #include "../handles/static_sk_codecs_decoder.h"
 
-#include "../handles/static_sk_stream-internal.h"
-#include "../handles/static_sk_data-internal.h"
 #include "../handles/static_sk_codecs_decoder-internal.h"
-#include "../handles/static_sk_codec-internal.h"
 
 extern "C" {
 
 bool SkAvifDecoder_IsAvif(const uint8_t *ptr, size_t size) {
+    if (!reskia_capi::has_encoded_bytes(ptr, size)) {
+        return false;
+    }
     return SkAvifDecoder::IsAvif(ptr, size);
 }
 
 sk_codec_t SkAvifDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
-    return static_sk_codec_make(SkAvifDecoder::Decode(
-        static_sk_stream_take_entity(stream),
+    std::unique_ptr<SkStream> native_stream = reskia_capi::take_stream_or_set_invalid(stream, result);
+    if (!native_stream) {
+        return 0;
+    }
+    return reskia_capi::make_codec_handle(SkAvifDecoder::Decode(
+        std::move(native_stream),
         reinterpret_cast<SkCodec::Result *>(result),
-        reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
+        reskia_capi::as_decode_context(decodeContext)));
 }
 
 sk_codec_t SkAvifDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext) {
-    return static_sk_codec_make(SkAvifDecoder::Decode(
-        static_sk_data_get_entity(data),
+    sk_sp<SkData> native_data = reskia_capi::get_data_or_set_invalid(data, result);
+    if (!native_data) {
+        return 0;
+    }
+    return reskia_capi::make_codec_handle(SkAvifDecoder::Decode(
+        std::move(native_data),
         reinterpret_cast<SkCodec::Result *>(result),
-        reinterpret_cast<SkCodecs::DecodeContext>(decodeContext)));
+        reskia_capi::as_decode_context(decodeContext)));
 }
 
 sk_codecs_decoder_t SkAvifDecoder_Decoder() {
