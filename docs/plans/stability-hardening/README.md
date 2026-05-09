@@ -31,6 +31,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `14-phase-2-batch-m-color-filter.md`
 - `15-phase-2-batch-n-color-values.md`
 - `16-phase-2-batch-o-color-matrix-filter.md`
+- `17-phase-2-batch-p-color-core.md`
 
 ## 関連計画
 

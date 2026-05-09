@@ -19,14 +19,23 @@ reskia_color_t SkColor_SkColorSetARGB(reskia_u32_t a, reskia_u32_t r, reskia_u32
 }
 
 void SkColor_SkColorToHSV(reskia_color_t color, float hsv[3]) {
+    if (hsv == nullptr) {
+        return;
+    }
     SkColorToHSV(static_cast<SkColor>(color), hsv);
 }
 
 reskia_color_t SkColor_SkHSVToColor(const float hsv[3]) {
+    if (hsv == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_color_t>(SkHSVToColor(hsv));
 }
 
 reskia_color_t SkColor_SkHSVToColorWithAlpha(reskia_u32_t alpha, const float hsv[3]) {
+    if (hsv == nullptr) {
+        return 0;
+    }
     return static_cast<reskia_color_t>(SkHSVToColor(static_cast<U8CPU>(alpha), hsv));
 }
 
@@ -39,6 +48,9 @@ reskia_pmcolor_t SkColor_SkPreMultiplyColor(reskia_color_t c) {
 }
 
 void SkColor_SkRGBToHSV(reskia_u32_t red, reskia_u32_t green, reskia_u32_t blue, float hsv[3]) {
+    if (hsv == nullptr) {
+        return;
+    }
     SkRGBToHSV(static_cast<U8CPU>(red), static_cast<U8CPU>(green), static_cast<U8CPU>(blue), hsv);
 }
 
