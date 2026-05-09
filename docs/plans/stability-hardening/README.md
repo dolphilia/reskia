@@ -57,6 +57,8 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `40-phase-2-batch-am-ref-cnt.md`
 - `41-phase-2-batch-an-pixel-ref.md`
 - `42-phase-2-batch-ao-pixmap.md`
+- `43-phase-2-batch-ap-yuva-pixmaps.md`
+- `44-phase-2-batch-aq-yuva-info.md`
 
 ## 関連計画
 
@@ -64,6 +66,10 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `docs/plans/cmake-remediation/`
 - `docs/plans/gpu-enablement/`
 - `docs/plans/skparagraph-enablement/`
+
+## 引き継ぎ
+
+- `handoff-2026-05-10-0805.md`
 
 ## 参照メモ
 

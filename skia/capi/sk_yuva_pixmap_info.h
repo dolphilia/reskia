@@ -23,27 +23,27 @@ extern "C" {
 
 // SkYUVAPixmapInfo & operator=(const SkYUVAPixmapInfo &)
 reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new(); // () -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoColorTypesAndRowBytes(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes); // (const SkYUVAInfo *info, const SkColorType type[4], const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoDataTypeAndRowBytes(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes); // (const SkYUVAInfo *info, SkYUVAPixmapInfo::DataType type, const size_t rowBytes[4]) -> SkYUVAPixmapInfo *
-reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newCopy(const reskia_yuva_pixmap_info_t *info); // (const SkYUVAPixmapInfo *info) -> SkYUVAPixmapInfo *
-void SkYUVAPixmapInfo_delete(reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // (SkYUVAPixmapInfo *yuvaPixmapInfo)
-bool SkYUVAPixmapInfo_equals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other); // (SkYUVAPixmapInfo *yuva_pixmap_info, const SkYUVAPixmapInfo *other) -> bool
-bool SkYUVAPixmapInfo_notEquals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other); // (SkYUVAPixmapInfo *yuva_pixmap_info, const SkYUVAPixmapInfo *other) -> bool
-const reskia_yuva_info_t *SkYUVAPixmapInfo_yuvaInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> const SkYUVAInfo *
-reskia_yuva_pixmap_info_yuv_color_space_t SkYUVAPixmapInfo_yuvColorSpace(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> SkYUVColorSpace
-int SkYUVAPixmapInfo_numPlanes(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> int
-reskia_yuva_pixmap_info_data_type_t SkYUVAPixmapInfo_dataType(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> SkYUVAPixmapInfo::DataType
-size_t SkYUVAPixmapInfo_rowBytes(reskia_yuva_pixmap_info_t *yuva_pixmap_info, int i); // (SkYUVAPixmapInfo *yuva_pixmap_info, int i) -> size_t
-const reskia_image_info_t *SkYUVAPixmapInfo_planeInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info, int i); // (SkYUVAPixmapInfo *yuva_pixmap_info, int i) -> const SkImageInfo *
-size_t SkYUVAPixmapInfo_computeTotalBytes(reskia_yuva_pixmap_info_t *yuva_pixmap_info, size_t *planeSizes); // (SkYUVAPixmapInfo *yuva_pixmap_info, size_t planeSizes[SkYUVAPixmapInfo::kMaxPlanes]) -> size_t
-bool SkYUVAPixmapInfo_initPixmapsFromSingleAllocation(reskia_yuva_pixmap_info_t *yuva_pixmap_info, void *memory, reskia_pixmap_t *pixmaps); // (SkYUVAPixmapInfo *yuva_pixmap_info, void *memory, SkPixmap pixmaps[SkYUVAPixmapInfo::kMaxPlanes]) -> bool
-bool SkYUVAPixmapInfo_isValid(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // (SkYUVAPixmapInfo *yuva_pixmap_info) -> bool
-bool SkYUVAPixmapInfo_isSupported(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_supported_data_types_t *type); // (SkYUVAPixmapInfo *yuva_pixmap_info, const SkYUVAPixmapInfo::SupportedDataTypes *type) -> bool
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoColorTypesAndRowBytes(const reskia_yuva_info_t *info, const int *type, const size_t *rowBytes); // info/type: non-null; rowBytes may be null; returns null on invalid input
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newWithInfoDataTypeAndRowBytes(const reskia_yuva_info_t *info, reskia_yuva_pixmap_info_data_type_t type, const size_t *rowBytes); // info: non-null; rowBytes may be null; returns null on invalid input
+reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_newCopy(const reskia_yuva_pixmap_info_t *info); // returns null on null info
+void SkYUVAPixmapInfo_delete(reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // null info is a no-op
+bool SkYUVAPixmapInfo_equals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other); // false on null input
+bool SkYUVAPixmapInfo_notEquals(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_t *other); // false on null input
+const reskia_yuva_info_t *SkYUVAPixmapInfo_yuvaInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // borrowed; returns null on null input
+reskia_yuva_pixmap_info_yuv_color_space_t SkYUVAPixmapInfo_yuvColorSpace(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // returns -1 on null input
+int SkYUVAPixmapInfo_numPlanes(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // returns 0 on null input
+reskia_yuva_pixmap_info_data_type_t SkYUVAPixmapInfo_dataType(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // returns -1 on null input
+size_t SkYUVAPixmapInfo_rowBytes(reskia_yuva_pixmap_info_t *yuva_pixmap_info, int i); // returns 0 on null input or out-of-range plane index
+const reskia_image_info_t *SkYUVAPixmapInfo_planeInfo(reskia_yuva_pixmap_info_t *yuva_pixmap_info, int i); // borrowed; returns null on null input or out-of-range plane index
+size_t SkYUVAPixmapInfo_computeTotalBytes(reskia_yuva_pixmap_info_t *yuva_pixmap_info, size_t *planeSizes); // returns 0 on null input and clears planeSizes when provided
+bool SkYUVAPixmapInfo_initPixmapsFromSingleAllocation(reskia_yuva_pixmap_info_t *yuva_pixmap_info, void *memory, reskia_pixmap_t *pixmaps); // info/memory/pixmaps: non-null; false on invalid input
+bool SkYUVAPixmapInfo_isValid(reskia_yuva_pixmap_info_t *yuva_pixmap_info); // returns false on null input
+bool SkYUVAPixmapInfo_isSupported(reskia_yuva_pixmap_info_t *yuva_pixmap_info, const reskia_yuva_pixmap_info_supported_data_types_t *type); // info/type: non-null; false on invalid input
 
 // static
 
-reskia_yuva_pixmap_info_color_type_t SkYUVAPixmapInfo_DefaultColorTypeForDataType(reskia_yuva_pixmap_info_data_type_t dataType, int numChannels); // (SkYUVAPixmapInfo::DataType dataType, int numChannels) -> SkColorType
-int SkYUVAPixmapInfo_NumChannelsAndDataType(reskia_yuva_pixmap_info_color_type_t type); // (SkColorType type) -> tuple_int_sk_yuva_pixmap_info_data_type_t
+reskia_yuva_pixmap_info_color_type_t SkYUVAPixmapInfo_DefaultColorTypeForDataType(reskia_yuva_pixmap_info_data_type_t dataType, int numChannels); // returns -1 on invalid dataType
+int SkYUVAPixmapInfo_NumChannelsAndDataType(reskia_yuva_pixmap_info_color_type_t type); // returns handle 0 on invalid color type
 
 #ifdef __cplusplus
 }

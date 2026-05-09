@@ -303,9 +303,9 @@ skia/capi/sk_webp_encoder.cpp,todo,P2,,
 skia/capi/sk_webp_encoder.h,todo,P2,,
 skia/capi/sk_write_buffer.cpp,partial,P2,codex,phase2-batch-ai: writer 本体 NULL の no-op/0 返却と nullable payload 境界を補強
 skia/capi/sk_write_buffer.h,partial,P2,codex,phase2-batch-ai: write buffer flattenable/raw buffer/stream の NULL 規約コメントを補強
-skia/capi/sk_yuva_info.cpp,todo,P2,,
-skia/capi/sk_yuva_info.h,todo,P2,,
-skia/capi/sk_yuva_pixmap_info.cpp,todo,P2,,
-skia/capi/sk_yuva_pixmap_info.h,todo,P2,,
-skia/capi/sk_yuva_pixmaps.cpp,todo,P2,,
-skia/capi/sk_yuva_pixmaps.h,todo,P2,,
+skia/capi/sk_yuva_info.cpp,done,P2,2026-05-10,Phase 2 batch AQ: null guards enum validation plane index checks and handle validation
+skia/capi/sk_yuva_info.h,done,P2,2026-05-10,Phase 2 batch AQ: documented tuple handle and dimension handle signatures
+skia/capi/sk_yuva_pixmap_info.cpp,done,P2,2026-05-10,Phase 2 batch AP: null guards plane index checks and enum validation
+skia/capi/sk_yuva_pixmap_info.h,done,P2,2026-05-10,Phase 2 batch AP: documented null plane index and handle conventions
+skia/capi/sk_yuva_pixmaps.cpp,done,P2,2026-05-10,Phase 2 batch AP: null guards valid-result handles and data/memory validation
+skia/capi/sk_yuva_pixmaps.h,done,P2,2026-05-10,Phase 2 batch AP: documented borrowed plane and factory conventions
