@@ -34,59 +34,59 @@ typedef int32_t reskia_typeface_unichar_t; // SkUnichar
 extern "C" {
 #endif
 
-void SkTypeface_delete(reskia_typeface_t *typeface); // (SkTypeface *typeface)
-sk_font_style_t SkTypeface_fontStyle(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> sk_font_style_t
-bool SkTypeface_isBold(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> bool
-bool SkTypeface_isItalic(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> bool
-bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> bool
-int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount); // (SkTypeface *typeface, SkFontArguments::VariationPosition::Coordinate coordinates[], int coordinateCount) -> int
-int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount); // (SkTypeface *typeface, SkFontParameters::Variation::Axis parameters[], int parameterCount) -> int
-uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> SkTypefaceID
-sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_font_arguments_t *arguments); // (SkTypeface *typeface, const SkFontArguments *arguments) -> sk_typeface_t
-void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkWStream *stream, SkTypeface::SerializeBehavior behavior)
-sk_data_t SkTypeface_serializeToData(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // (SkTypeface *typeface, SkTypeface::SerializeBehavior behavior) -> sk_data_t
-void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs); // (SkTypeface *typeface, const SkUnichar uni[], int count, SkGlyphID glyphs[])
-int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // (SkTypeface *typeface, const void *text, size_t byteLength, SkTextEncoding encoding, SkGlyphID glyphs[], int maxGlyphCount) -> int
-uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar); // (SkTypeface *typeface, SkUnichar unichar) -> SkGlyphID
-int SkTypeface_countGlyphs(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> int
-int SkTypeface_countTables(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> int
-int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags); // (SkTypeface *typeface, SkFontTableTag tags[]) -> int
-size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag); // (SkTypeface *typeface, SkFontTableTag tag) -> size_t
-size_t SkTypeface_getTableData(reskia_typeface_t *typeface, uint32_t tag, size_t offset, size_t length, void *data); // (SkTypeface *typeface, SkFontTableTag tag, size_t offset, size_t length, void *data) -> size_t
-sk_data_t SkTypeface_copyTableData(reskia_typeface_t *typeface, uint32_t tag); // (SkTypeface *typeface, SkFontTableTag tag) -> sk_data_t
-int SkTypeface_getUnitsPerEm(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> int
-bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uint16_t *glyphs, int count, int32_t *adjustments); // (SkTypeface *typeface, const SkGlyphID glyphs[], int count, int32_t adjustments[]) -> bool
-reskia_typeface_localized_strings_t *SkTypeface_createFamilyNameIterator(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> SkTypeface::LocalizedStrings *
-void SkTypeface_getFamilyName(reskia_typeface_t *typeface, reskia_string_t *name); // (SkTypeface *typeface, SkString *name)
-bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *name); // (SkTypeface *typeface, SkString *name) -> bool
-sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex); // (SkTypeface *typeface, int *ttcIndex) -> sk_stream_asset_t
-sk_stream_asset_t SkTypeface_openExistingStream(reskia_typeface_t *typeface, int *ttcIndex); // (SkTypeface *typeface, int *ttcIndex) -> sk_stream_asset_t
+void SkTypeface_delete(reskia_typeface_t *typeface); // NULL 入力では no-op
+sk_font_style_t SkTypeface_fontStyle(reskia_typeface_t *typeface); // NULL 入力では 0
+bool SkTypeface_isBold(reskia_typeface_t *typeface); // NULL 入力では false
+bool SkTypeface_isItalic(reskia_typeface_t *typeface); // NULL 入力では false
+bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface); // NULL 入力では false
+int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount); // coordinates は NULL 許可。negative count/NULL typeface では -1
+int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount); // parameters は NULL 許可。negative count/NULL typeface では -1
+uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface); // NULL 入力では 0
+sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_font_arguments_t *arguments); // arguments は非 NULL。invalid 入力や生成不能では 0
+void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior); // stream は非 NULL。invalid 入力では no-op
+sk_data_t SkTypeface_serializeToData(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // invalid 入力や生成不能では 0
+void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs); // count > 0 では uni/glyphs は count 要素以上、非 NULL。invalid 入力では no-op
+int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // byteLength > 0 では text 非 NULL。glyphs は NULL 許可。invalid 入力では 0
+uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar); // NULL 入力では 0
+int SkTypeface_countGlyphs(reskia_typeface_t *typeface); // NULL 入力では 0
+int SkTypeface_countTables(reskia_typeface_t *typeface); // NULL 入力では 0
+int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags); // tags は NULL 許可。NULL typeface では 0
+size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag); // NULL 入力では 0
+size_t SkTypeface_getTableData(reskia_typeface_t *typeface, uint32_t tag, size_t offset, size_t length, void *data); // length > 0 では data 非 NULL。invalid 入力では 0
+sk_data_t SkTypeface_copyTableData(reskia_typeface_t *typeface, uint32_t tag); // NULL 入力や生成不能では 0
+int SkTypeface_getUnitsPerEm(reskia_typeface_t *typeface); // NULL 入力では 0
+bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uint16_t *glyphs, int count, int32_t *adjustments); // count == 0 では glyphs/adjustments NULL 許可。count > 0 では両方非 NULL
+reskia_typeface_localized_strings_t *SkTypeface_createFamilyNameIterator(reskia_typeface_t *typeface); // NULL 入力では NULL。caller は iterator を unref する
+void SkTypeface_getFamilyName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では no-op
+bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では false
+sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
+sk_stream_asset_t SkTypeface_openExistingStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
 
 // TODO
 //std::unique_ptr<SkScalerContext> SkTypeface_createScalerContext(SkTypeface *typeface, const SkScalerContextEffects &effects, const SkDescriptor *descriptor);
 
-sk_rect_t SkTypeface_getBounds(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> sk_rect_t
-void SkTypeface_filterRec(reskia_typeface_t *typeface, reskia_scaler_context_rec_t *rec); // (SkTypeface *typeface, SkScalerContextRec *rec)
-void SkTypeface_getFontDescriptor(reskia_typeface_t *typeface, reskia_font_descriptor_t *desc, bool *isLocal); // (SkTypeface *typeface, SkFontDescriptor *desc, bool *isLocal)
-void *SkTypeface_internal_private_getCTFontRef(reskia_typeface_t *typeface); // (SkTypeface *typeface) -> void *
+sk_rect_t SkTypeface_getBounds(reskia_typeface_t *typeface); // NULL 入力では 0
+void SkTypeface_filterRec(reskia_typeface_t *typeface, reskia_scaler_context_rec_t *rec); // rec は非 NULL。invalid 入力では no-op
+void SkTypeface_getFontDescriptor(reskia_typeface_t *typeface, reskia_font_descriptor_t *desc, bool *isLocal); // desc/isLocal は非 NULL。invalid 入力では no-op
+void *SkTypeface_internal_private_getCTFontRef(reskia_typeface_t *typeface); // NULL 入力では NULL
 
 // static
 
-bool SkTypeface_Equal(const reskia_typeface_t *facea, const reskia_typeface_t *faceb); // (const SkTypeface *facea, const SkTypeface *faceb) -> bool
-sk_typeface_t SkTypeface_MakeEmpty(); // () -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeDeserialize(reskia_stream_t *stream, sk_font_mgr_t font_mgr); // (SkStream *stream, sk_font_mgr_t font_mgr) -> sk_typeface_t
+bool SkTypeface_Equal(const reskia_typeface_t *facea, const reskia_typeface_t *faceb); // NULL 同士は true、片方 NULL は false
+sk_typeface_t SkTypeface_MakeEmpty(); // 生成不能では 0
+sk_typeface_t SkTypeface_MakeDeserialize(reskia_stream_t *stream, sk_font_mgr_t font_mgr); // stream は非 NULL。生成不能では 0
 
 // TODO
 //void SkTypeface_Register(SkTypeface::FactoryId id, sk_sp<SkTypeface>(*make)(std::unique_ptr<SkStreamAsset>, const SkFontArguments &)); // (SkTypeface::FactoryId id, sk_sp<SkTypeface>(*make)(std::unique_ptr<SkStreamAsset>, const SkFontArguments &))
 
 #if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
 
-sk_typeface_t SkTypeface_MakeDefault(); // () -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t fontStyle); // (const char familyName[], sk_font_style_t fontStyle) -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index); // (const char path[], int index) -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index); // (sk_stream_asset_t stream_asset, int index) -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index); // (sk_data_t data, int index) -> sk_typeface_t
-sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream); // (SkStream *stream) -> sk_typeface_t
+sk_typeface_t SkTypeface_MakeDefault(); // 生成不能では 0
+sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t fontStyle); // familyName は NULL 許可。生成不能では 0
+sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index); // path 非 NULL、index >= 0。invalid 入力や生成不能では 0
+sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index); // stream_asset は consumed。invalid 入力や生成不能では 0
+sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index); // data 非 0、index >= 0。invalid 入力や生成不能では 0
+sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream); // stream は非 NULL。生成不能では 0
 
 #endif
 

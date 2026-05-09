@@ -279,8 +279,8 @@ skia/capi/sk_trace_memory_dump.cpp,todo,P2,,
 skia/capi/sk_trace_memory_dump.h,todo,P2,,
 skia/capi/sk_trim_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約と NULL delete no-op を補強
 skia/capi/sk_trim_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
-skia/capi/sk_typeface.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
-skia/capi/sk_typeface.h,todo,P2,,
+skia/capi/sk_typeface.cpp,done,P2,phase2-batch-ab: NULL/raw-buffer guards and nullable handle factories,
+skia/capi/sk_typeface.h,done,P2,phase2-batch-ab: documented NULL/raw-buffer/output-pointer/handle-0 conventions,
 skia/capi/sk_typeface_mac.cpp,todo,P2,,
 skia/capi/sk_typeface_mac.h,todo,P2,,
 skia/capi/sk_un_pre_multiply.cpp,todo,P2,,
