@@ -10,56 +10,102 @@
 
 #include "../handles/static_sk_color_table-internal.h"
 
+#include <utility>
+
+namespace {
+
+sk_color_table_t make_color_table_handle(sk_sp<SkColorTable> color_table) {
+    if (!color_table) {
+        return 0;
+    }
+    return static_sk_color_table_make(std::move(color_table));
+}
+
+}  // namespace
+
 extern "C" {
 
 void SkColorTable_release(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorTable *>(color_table)->unref();
 }
 
 const uint8_t *SkColorTable_alphaTable(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColorTable *>(color_table)->alphaTable();
 }
 
 const uint8_t *SkColorTable_redTable(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColorTable *>(color_table)->redTable();
 }
 
 const uint8_t *SkColorTable_greenTable(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColorTable *>(color_table)->greenTable();
 }
 
 const uint8_t *SkColorTable_blueTable(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkColorTable *>(color_table)->blueTable();
 }
 
 void SkColorTable_flatten(reskia_color_table_t *color_table, reskia_write_buffer_t *buffer) {
+    if (color_table == nullptr || buffer == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorTable *>(color_table)->flatten(*reinterpret_cast<SkWriteBuffer *>(buffer));
 }
 
 bool SkColorTable_unique(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkColorTable *>(color_table)->unique();
 }
 
 void SkColorTable_ref(reskia_color_table_t *color_table) {
-    return reinterpret_cast<SkColorTable *>(color_table)->ref();
+    if (color_table == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkColorTable *>(color_table)->ref();
 }
 
 void SkColorTable_unref(reskia_color_table_t *color_table) {
+    if (color_table == nullptr) {
+        return;
+    }
     reinterpret_cast<SkColorTable *>(color_table)->unref();
 }
 
 // static
 
 sk_color_table_t SkColorTable_Make(const uint8_t table[256]) {
-    return static_sk_color_table_make(SkColorTable::Make(table));
+    if (table == nullptr) {
+        return 0;
+    }
+    return make_color_table_handle(SkColorTable::Make(table));
 }
 
 sk_color_table_t SkColorTable_MakeARGBTables(const uint8_t tableA[256], const uint8_t tableR[256], const uint8_t tableG[256], const uint8_t tableB[256]) {
-    return static_sk_color_table_make(SkColorTable::Make(tableA, tableR, tableG, tableB));
+    return make_color_table_handle(SkColorTable::Make(tableA, tableR, tableG, tableB));
 }
 
 sk_color_table_t SkColorTable_Deserialize(reskia_read_buffer_t *buffer) {
-    return static_sk_color_table_make(SkColorTable::Deserialize(*reinterpret_cast<SkReadBuffer *>(buffer)));
+    if (buffer == nullptr) {
+        return 0;
+    }
+    return make_color_table_handle(SkColorTable::Deserialize(*reinterpret_cast<SkReadBuffer *>(buffer)));
 }
 
 }
