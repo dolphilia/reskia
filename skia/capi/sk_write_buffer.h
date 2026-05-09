@@ -32,10 +32,10 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 extern "C" {
 #endif
 
-void SkWriteBuffer_delete(reskia_write_buffer_t *writeBuffer);
-void SkWriteBuffer_writePad32(reskia_write_buffer_t *writeBuffer, const void *buffer, size_t bytes); // (SkWriteBuffer* writeBuffer, const void* buffer, size_t bytes)
-void SkWriteBuffer_writeByteArray(reskia_write_buffer_t *writeBuffer, const void *data, size_t size); // (SkWriteBuffer* writeBuffer, const void* data, size_t size)
-void SkWriteBuffer_writeDataAsByteArray(reskia_write_buffer_t *writeBuffer, const reskia_data_t *data); // (SkWriteBuffer* writeBuffer, const SkData* data)
+void SkWriteBuffer_delete(reskia_write_buffer_t *writeBuffer); // NULL writeBuffer is no-op.
+void SkWriteBuffer_writePad32(reskia_write_buffer_t *writeBuffer, const void *buffer, size_t bytes); // (SkWriteBuffer* writeBuffer, const void* buffer, size_t bytes). bytes > 0 requires buffer; invalid input is no-op.
+void SkWriteBuffer_writeByteArray(reskia_write_buffer_t *writeBuffer, const void *data, size_t size); // (SkWriteBuffer* writeBuffer, const void* data, size_t size). size > 0 requires data; invalid input is no-op.
+void SkWriteBuffer_writeDataAsByteArray(reskia_write_buffer_t *writeBuffer, const reskia_data_t *data); // (SkWriteBuffer* writeBuffer, const SkData* data). data may be NULL; NULL writeBuffer is no-op.
 void SkWriteBuffer_writeBool(reskia_write_buffer_t *writeBuffer, bool value); // (SkWriteBuffer* writeBuffer, bool value)
 void SkWriteBuffer_writeScalar(reskia_write_buffer_t *writeBuffer, float value); // (SkWriteBuffer* writeBuffer, SkScalar value)
 void SkWriteBuffer_writeScalarArray(reskia_write_buffer_t *writeBuffer, const float *value, uint32_t count); // (SkWriteBuffer* writeBuffer, const SkScalar* value, uint32_t count)
@@ -44,7 +44,7 @@ void SkWriteBuffer_writeIntArray(reskia_write_buffer_t *writeBuffer, const int32
 void SkWriteBuffer_writeUInt(reskia_write_buffer_t *writeBuffer, uint32_t value); // (SkWriteBuffer* writeBuffer, uint32_t value)
 void SkWriteBuffer_write32(reskia_write_buffer_t *writeBuffer, int32_t value); // (SkWriteBuffer* writeBuffer, int32_t value)
 void SkWriteBuffer_writeString(reskia_write_buffer_t *writeBuffer, int value); // (SkWriteBuffer* writeBuffer, string_view_t value)
-void SkWriteBuffer_writeFlattenable(reskia_write_buffer_t *writeBuffer, const reskia_flattenable_t *flattenable); // (SkWriteBuffer* writeBuffer, const SkFlattenable* flattenable)
+void SkWriteBuffer_writeFlattenable(reskia_write_buffer_t *writeBuffer, const reskia_flattenable_t *flattenable); // (SkWriteBuffer* writeBuffer, const SkFlattenable* flattenable). flattenable may be NULL; NULL writeBuffer is no-op.
 void SkWriteBuffer_writeColor(reskia_write_buffer_t *writeBuffer, reskia_color_t color); // (SkWriteBuffer* writeBuffer, SkColor color)
 void SkWriteBuffer_writeColorArray(reskia_write_buffer_t *writeBuffer, const reskia_color_t *color, uint32_t count); // (SkWriteBuffer* writeBuffer, const SkColor* color, uint32_t count)
 void SkWriteBuffer_writeColor4f(reskia_write_buffer_t *writeBuffer, const reskia_color_4f_t *color); // (SkWriteBuffer* writeBuffer, const SkColor4f* color)
@@ -59,11 +59,11 @@ void SkWriteBuffer_writeRect(reskia_write_buffer_t *writeBuffer, const reskia_re
 void SkWriteBuffer_writeRegion(reskia_write_buffer_t *writeBuffer, const reskia_region_t *region); // (SkWriteBuffer* writeBuffer, const SkRegion* region)
 void SkWriteBuffer_writeSampling(reskia_write_buffer_t *writeBuffer, const reskia_sampling_options_t *options); // (SkWriteBuffer* writeBuffer, const SkSamplingOptions* options)
 void SkWriteBuffer_writePath(reskia_write_buffer_t *writeBuffer, const reskia_path_t *path); // (SkWriteBuffer* writeBuffer, const SkPath* path)
-size_t SkWriteBuffer_writeStream(reskia_write_buffer_t *writeBuffer, reskia_stream_t *stream, size_t length); // (SkWriteBuffer* writeBuffer, SkStream* stream, size_t length) -> size_t
+size_t SkWriteBuffer_writeStream(reskia_write_buffer_t *writeBuffer, reskia_stream_t *stream, size_t length); // (SkWriteBuffer* writeBuffer, SkStream* stream, size_t length) -> size_t. stream is required; invalid input returns 0.
 void SkWriteBuffer_writeImage(reskia_write_buffer_t *writeBuffer, const reskia_image_t *image); // (SkWriteBuffer* writeBuffer, const SkImage* image)
-void SkWriteBuffer_writeTypeface(reskia_write_buffer_t *writeBuffer, reskia_typeface_t *typeface); // (SkWriteBuffer* writeBuffer, SkTypeface* typeface)
+void SkWriteBuffer_writeTypeface(reskia_write_buffer_t *writeBuffer, reskia_typeface_t *typeface); // (SkWriteBuffer* writeBuffer, SkTypeface* typeface). typeface may be NULL; NULL writeBuffer is no-op.
 void SkWriteBuffer_writePaint(reskia_write_buffer_t *writeBuffer, const reskia_paint_t *paint); // (SkWriteBuffer* writeBuffer, const SkPaint& paint)
-const reskia_serial_procs_t *SkWriteBuffer_serialProcs(reskia_write_buffer_t *writeBuffer); // (SkWriteBuffer* writeBuffer) -> const SkSerialProcs*
+const reskia_serial_procs_t *SkWriteBuffer_serialProcs(reskia_write_buffer_t *writeBuffer); // (SkWriteBuffer* writeBuffer) -> const SkSerialProcs*. NULL writeBuffer returns NULL.
 
 #ifdef __cplusplus
 }

@@ -9,22 +9,47 @@
 #include "../handles/static_std_string_view.h"
 #include "../handles/static_std_string_view-internal.h"
 
+namespace {
+
+SkWriteBuffer *as_write_buffer(reskia_write_buffer_t *writeBuffer) {
+    return reinterpret_cast<SkWriteBuffer *>(writeBuffer);
+}
+
+template <typename T>
+bool has_input(const T *ptr, size_t count) {
+    return count == 0 || ptr != nullptr;
+}
+
+} // namespace
+
 extern "C" {
 
 void SkWriteBuffer_delete(reskia_write_buffer_t *writeBuffer) {
-    delete reinterpret_cast<SkWriteBuffer *>(writeBuffer);
+    delete as_write_buffer(writeBuffer);
 }
 
 void SkWriteBuffer_writePad32(reskia_write_buffer_t *writeBuffer, const void *buffer, size_t bytes) {
-    reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writePad32(buffer, bytes);
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr || !has_input(buffer, bytes)) {
+        return;
+    }
+    writer->writePad32(buffer, bytes);
 }
 
 void SkWriteBuffer_writeByteArray(reskia_write_buffer_t *writeBuffer, const void *data, size_t size) {
-    reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writeByteArray(data, size);
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr || !has_input(data, size)) {
+        return;
+    }
+    writer->writeByteArray(data, size);
 }
 
 void SkWriteBuffer_writeDataAsByteArray(reskia_write_buffer_t *writeBuffer, const reskia_data_t *data) {
-    reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writeDataAsByteArray(reinterpret_cast<const SkData *>(data));
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr) {
+        return;
+    }
+    writer->writeDataAsByteArray(reinterpret_cast<const SkData *>(data));
 }
 
 void SkWriteBuffer_writeBool(reskia_write_buffer_t *writeBuffer, bool value) {
@@ -60,7 +85,11 @@ void SkWriteBuffer_writeString(reskia_write_buffer_t *writeBuffer, int value) {
 }
 
 void SkWriteBuffer_writeFlattenable(reskia_write_buffer_t *writeBuffer, const reskia_flattenable_t *flattenable) {
-    reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writeFlattenable(reinterpret_cast<const SkFlattenable *>(flattenable));
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr) {
+        return;
+    }
+    writer->writeFlattenable(reinterpret_cast<const SkFlattenable *>(flattenable));
 }
 
 void SkWriteBuffer_writeColor(reskia_write_buffer_t *writeBuffer, reskia_color_t color) {
@@ -120,7 +149,11 @@ void SkWriteBuffer_writePath(reskia_write_buffer_t *writeBuffer, const reskia_pa
 }
 
 size_t SkWriteBuffer_writeStream(reskia_write_buffer_t *writeBuffer, reskia_stream_t *stream, size_t length) {
-    return reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writeStream(reinterpret_cast<SkStream *>(stream), length);
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr || stream == nullptr) {
+        return 0;
+    }
+    return writer->writeStream(reinterpret_cast<SkStream *>(stream), length);
 }
 
 void SkWriteBuffer_writeImage(reskia_write_buffer_t *writeBuffer, const reskia_image_t *image) {
@@ -128,7 +161,11 @@ void SkWriteBuffer_writeImage(reskia_write_buffer_t *writeBuffer, const reskia_i
 }
 
 void SkWriteBuffer_writeTypeface(reskia_write_buffer_t *writeBuffer, reskia_typeface_t *typeface) {
-    reinterpret_cast<SkWriteBuffer *>(writeBuffer)->writeTypeface(reinterpret_cast<SkTypeface *>(typeface));
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr) {
+        return;
+    }
+    writer->writeTypeface(reinterpret_cast<SkTypeface *>(typeface));
 }
 
 void SkWriteBuffer_writePaint(reskia_write_buffer_t *writeBuffer, const reskia_paint_t *paint) {
@@ -136,7 +173,11 @@ void SkWriteBuffer_writePaint(reskia_write_buffer_t *writeBuffer, const reskia_p
 }
 
 const reskia_serial_procs_t *SkWriteBuffer_serialProcs(reskia_write_buffer_t *writeBuffer) {
-    return reinterpret_cast<const reskia_serial_procs_t *>(&reinterpret_cast<SkWriteBuffer *>(writeBuffer)->serialProcs());
+    SkWriteBuffer *writer = as_write_buffer(writeBuffer);
+    if (writer == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<const reskia_serial_procs_t *>(&writer->serialProcs());
 }
 
 }
