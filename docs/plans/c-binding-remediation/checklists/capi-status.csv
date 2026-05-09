@@ -71,8 +71,8 @@ skia/capi/sk_discrete_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp h
 skia/capi/sk_discrete_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
 skia/capi/sk_document.cpp,todo,P2,,
 skia/capi/sk_document.h,todo,P2,,
-skia/capi/sk_drawable.cpp,todo,P2,,
-skia/capi/sk_drawable.h,todo,P2,,
+skia/capi/sk_drawable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkDrawable,
+skia/capi/sk_drawable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream NULL ガードと write/read/copy buffer 規約を補強
 skia/capi/sk_dynamic_memory_w_stream.h,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream raw buffer/stream transfer コメントを補強
 skia/capi/sk_encoded_origin.cpp,todo,P2,,
@@ -85,8 +85,8 @@ skia/capi/sk_file_stream.cpp,todo,P2,,
 skia/capi/sk_file_stream.h,todo,P2,,
 skia/capi/sk_file_w_stream.cpp,todo,P2,,
 skia/capi/sk_file_w_stream.h,todo,P2,,
-skia/capi/sk_flattenable.cpp,todo,P2,,
-skia/capi/sk_flattenable.h,todo,P2,,
+skia/capi/sk_flattenable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkFlattenable,
+skia/capi/sk_flattenable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_font.cpp,done,P2,phase2-batch-aa: NULL/raw-array guards for SkFont query/state/text/glyph APIs,
 skia/capi/sk_font.h,done,P2,phase2-batch-aa: documented NULL/raw-array/borrowed-pointer/handle-0 conventions,
 skia/capi/sk_font_arguments.cpp,done,P2,phase2-batch-ac: NULL guards for SkFontArguments setters/getters,
