@@ -65,8 +65,8 @@ skia/capi/sk_dash_path_effect.cpp,done,P2,codex,phase2-batch-l: intervals NULL �
 skia/capi/sk_dash_path_effect.h,done,P2,codex,phase2-batch-l: intervals raw array 規約を明記
 skia/capi/sk_data.cpp,done,P2,codex,phase2-batch-g: SkData NULL ガードと zero-length raw pointer 規約を補強
 skia/capi/sk_data.h,done,P2,codex,phase2-batch-g: SkData raw buffer/lifetime/ownership コメントを補強
-skia/capi/sk_data_table.cpp,todo,P2,,
-skia/capi/sk_data_table.h,todo,P2,,
+skia/capi/sk_data_table.cpp,done,P2,codex,phase2-batch-r: NULL guards and raw table input rules,
+skia/capi/sk_data_table.h,done,P2,codex,phase2-batch-r: borrowed entry and factory array comments,
 skia/capi/sk_discrete_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約を補強
 skia/capi/sk_discrete_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
 skia/capi/sk_document.cpp,todo,P2,,
