@@ -291,8 +291,8 @@ skia/capi/sk_v3.cpp,done,P2,codex,phase2-batch-x: NULL guards for dot/cross/norm
 skia/capi/sk_v3.h,done,P2,codex,phase2-batch-x: 3-entry pointer and vector input comments,
 skia/capi/sk_v4.cpp,done,P2,codex,phase2-batch-x: NULL guards for dot/normalize and pointer access,
 skia/capi/sk_v4.h,done,P2,codex,phase2-batch-x: 4-entry pointer and vector input comments,
-skia/capi/sk_vertices.cpp,todo,P2,,
-skia/capi/sk_vertices.h,todo,P2,,
+skia/capi/sk_vertices.cpp,done,P2,codex,phase2-batch-y: NULL guards and raw vertex/index array checks,
+skia/capi/sk_vertices.h,done,P2,codex,phase2-batch-y: vertex array and optional tex/color/index comments,
 skia/capi/sk_w_stream.cpp,done,P2,codex,phase2-batch-i: SkWStream NULL ガードと write/writeStream 規約を補強
 skia/capi/sk_w_stream.h,done,P2,codex,phase2-batch-i: SkWStream raw buffer/text/stream transfer コメントを補強
 skia/capi/sk_wbmp_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化

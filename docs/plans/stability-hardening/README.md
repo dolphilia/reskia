@@ -40,6 +40,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `23-phase-2-batch-v-matrix.md`
 - `24-phase-2-batch-w-m44.md`
 - `25-phase-2-batch-x-vector.md`
+- `26-phase-2-batch-y-vertices.md`
 
 ## 関連計画
 
