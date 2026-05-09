@@ -16,13 +16,13 @@ extern "C" {
 typedef struct reskia_font_arguments_t reskia_font_arguments_t;
 
 reskia_font_arguments_t *SkFontArguments_new(); // () -> SkFontArguments *
-void SkFontArguments_delete(reskia_font_arguments_t *font_arguments); // (SkFontArguments *font_arguments)
-sk_font_arguments_t SkFontArguments_setCollectionIndex(reskia_font_arguments_t *font_arguments, int collectionIndex); // (SkFontArguments *font_arguments, int collectionIndex) -> sk_font_arguments_t
-sk_font_arguments_t SkFontArguments_setVariationDesignPosition(reskia_font_arguments_t *font_arguments, sk_font_arguments_variation_position_t position); // (SkFontArguments *font_arguments, sk_font_arguments_variation_position_t position) -> sk_font_arguments_t
-int SkFontArguments_getCollectionIndex(reskia_font_arguments_t *font_arguments); // (SkFontArguments *font_arguments) -> int
-sk_font_arguments_variation_position_t SkFontArguments_getVariationDesignPosition(reskia_font_arguments_t *font_arguments); // (SkFontArguments *font_arguments) -> sk_font_arguments_variation_position_t
-sk_font_arguments_t SkFontArguments_setPalette(reskia_font_arguments_t *font_arguments, sk_font_arguments_palette_t palette); // (SkFontArguments *font_arguments, sk_font_arguments_palette_t palette) -> sk_font_arguments_t
-sk_font_arguments_palette_t SkFontArguments_getPalette(reskia_font_arguments_t *font_arguments); // (SkFontArguments *font_arguments) -> sk_font_arguments_palette_t
+void SkFontArguments_delete(reskia_font_arguments_t *font_arguments); // NULL 入力では no-op
+sk_font_arguments_t SkFontArguments_setCollectionIndex(reskia_font_arguments_t *font_arguments, int collectionIndex); // collectionIndex >= 0。invalid 入力では 0
+sk_font_arguments_t SkFontArguments_setVariationDesignPosition(reskia_font_arguments_t *font_arguments, sk_font_arguments_variation_position_t position); // invalid font_arguments では 0。invalid position handle は default position として扱う
+int SkFontArguments_getCollectionIndex(reskia_font_arguments_t *font_arguments); // NULL 入力では 0
+sk_font_arguments_variation_position_t SkFontArguments_getVariationDesignPosition(reskia_font_arguments_t *font_arguments); // NULL 入力では 0
+sk_font_arguments_t SkFontArguments_setPalette(reskia_font_arguments_t *font_arguments, sk_font_arguments_palette_t palette); // invalid font_arguments では 0。invalid palette handle は default palette として扱う
+sk_font_arguments_palette_t SkFontArguments_getPalette(reskia_font_arguments_t *font_arguments); // NULL 入力では 0
 
 #ifdef __cplusplus
 }

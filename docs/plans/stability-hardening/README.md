@@ -44,6 +44,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `27-phase-2-batch-z-font-style.md`
 - `28-phase-2-batch-aa-font.md`
 - `29-phase-2-batch-ab-typeface.md`
+- `30-phase-2-batch-ac-font-arguments-metrics.md`
 
 ## 関連計画
 

@@ -13,22 +13,37 @@ void SkFontMetrics_delete(reskia_font_metrics_t *font_metrics) {
 }
 
 bool SkFontMetrics_hasUnderlineThickness(reskia_font_metrics_t *font_metrics, float *thickness) {
+    if (font_metrics == nullptr || thickness == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasUnderlineThickness(thickness);
 }
 
 bool SkFontMetrics_hasUnderlinePosition(reskia_font_metrics_t *font_metrics, float *position) {
+    if (font_metrics == nullptr || position == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasUnderlinePosition(position);
 }
 
 bool SkFontMetrics_hasStrikeoutThickness(reskia_font_metrics_t *font_metrics, float *thickness) {
+    if (font_metrics == nullptr || thickness == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutThickness(thickness);
 }
 
 bool SkFontMetrics_hasStrikeoutPosition(reskia_font_metrics_t *font_metrics, float *position) {
+    if (font_metrics == nullptr || position == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasStrikeoutPosition(position);
 }
 
 bool SkFontMetrics_hasBounds(reskia_font_metrics_t *font_metrics) {
+    if (font_metrics == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkFontMetrics *>(font_metrics)->hasBounds();
 }
 
