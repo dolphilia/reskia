@@ -143,8 +143,8 @@ skia/capi/sk_line_2d_path_effect.cpp,done,P2,codex,phase2-batch-l: matrix NULL �
 skia/capi/sk_line_2d_path_effect.h,done,P2,codex,phase2-batch-l: matrix 非 NULL 規約を明記
 skia/capi/sk_luma_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
 skia/capi/sk_luma_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
-skia/capi/sk_m_44.cpp,todo,P2,,
-skia/capi/sk_m_44.h,todo,P2,,
+skia/capi/sk_m_44.cpp,done,P2,codex,phase2-batch-w: NULL guards and 4x4 index/raw array checks,
+skia/capi/sk_m_44.h,done,P2,codex,phase2-batch-w: 16-entry matrix and row/col pointer comments,
 skia/capi/sk_malloc_pixel_ref.cpp,todo,P2,,
 skia/capi/sk_malloc_pixel_ref.h,todo,P2,,
 skia/capi/sk_mask.cpp,done,P2,codex,phase2-batch-u: NULL guards and format/bounds/image checks,
