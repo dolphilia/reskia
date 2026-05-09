@@ -15,8 +15,8 @@ typedef int32_t reskia_pixmap_utils_encoded_origin_t;
 extern "C" {
 #endif
 
-bool SkPixmapUtils_Orient(const void* dst, const void* src, reskia_pixmap_utils_encoded_origin_t origin); // (const SkPixmap* dst, const SkPixmap* src, SkEncodedOrigin origin) -> bool
-sk_image_info_t SkPixmapUtils_SwapWidthHeight(const void* info); // (const SkImageInfo* info) -> sk_image_info_t
+bool SkPixmapUtils_Orient(const void* dst, const void* src, reskia_pixmap_utils_encoded_origin_t origin); // dst/src: non-null SkPixmap*; origin must be a valid SkEncodedOrigin; false on invalid input
+sk_image_info_t SkPixmapUtils_SwapWidthHeight(const void* info); // info: non-null SkImageInfo*; returns handle 0 on invalid input
 
 #ifdef __cplusplus
 }

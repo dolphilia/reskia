@@ -195,10 +195,10 @@ skia/capi/sk_picture_recorder.cpp,done,P2,phase2-batch-ae: NULL/bounds guards an
 skia/capi/sk_picture_recorder.h,done,P2,phase2-batch-ae: documented borrowed canvas and handle-0 conventions,
 skia/capi/sk_pixel_ref.cpp,done,P2,codex,phase2-batch-an: SkPixelRef query/mutation/refcount の NULL ガードと負サイズ拒否を補強
 skia/capi/sk_pixel_ref.h,done,P2,codex,phase2-batch-an: SkPixelRef borrowed pixels/dimensions/refcount の NULL 規約コメントを補強
-skia/capi/sk_pixmap.cpp,todo,P2,,
-skia/capi/sk_pixmap.h,todo,P2,,
-skia/capi/sk_pixmap_utils.cpp,todo,P2,,
-skia/capi/sk_pixmap_utils.h,todo,P2,,
+skia/capi/sk_pixmap.cpp,done,P2,2026-05-10,Phase 2 batch AO: null guards and typed pixel pointer bounds checks
+skia/capi/sk_pixmap.h,done,P2,2026-05-10,Phase 2 batch AO: documented null and typed pointer conventions
+skia/capi/sk_pixmap_utils.cpp,done,P2,2026-05-10,Phase 2 batch AO: null guards and encoded-origin validation
+skia/capi/sk_pixmap_utils.h,done,P2,2026-05-10,Phase 2 batch AO: documented null and origin conventions
 skia/capi/sk_png_decoder.cpp,done,phase1,codex,step2: unique_ptr 系 get_entity 呼び出しを take_entity へ明示化
 skia/capi/sk_png_decoder.h,todo,P2,,
 skia/capi/sk_png_encoder.cpp,todo,P2,,

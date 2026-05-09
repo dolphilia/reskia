@@ -56,6 +56,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `39-phase-2-batch-al-raster-handle-allocator.md`
 - `40-phase-2-batch-am-ref-cnt.md`
 - `41-phase-2-batch-an-pixel-ref.md`
+- `42-phase-2-batch-ao-pixmap.md`
 
 ## 関連計画
 
