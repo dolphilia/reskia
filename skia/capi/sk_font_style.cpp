@@ -9,18 +9,30 @@
 extern "C" {
 
 void SkFontStyle_delete(reskia_font_style_t *font_style) {
+    if (font_style == nullptr) {
+        return;
+    }
     delete reinterpret_cast<SkFontStyle *>(font_style);
 }
 
 int SkFontStyle_weight(reskia_font_style_t *font_style) {
+    if (font_style == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkFontStyle *>(font_style)->weight();
 }
 
 int SkFontStyle_width(reskia_font_style_t *font_style) {
+    if (font_style == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkFontStyle *>(font_style)->width();
 }
 
 reskia_font_style_slant_t SkFontStyle_slant(reskia_font_style_t *font_style) {
+    if (font_style == nullptr) {
+        return -1;
+    }
     return static_cast<reskia_font_style_slant_t>(reinterpret_cast<SkFontStyle *>(font_style)->slant());
 }
 
