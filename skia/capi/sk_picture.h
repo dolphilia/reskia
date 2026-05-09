@@ -30,26 +30,26 @@ typedef int32_t reskia_picture_filter_mode_t;
 extern "C" {
 #endif
 
-void SkPicture_release(reskia_picture_t *picture); // owned: caller が保持する参照を release する (SkPicture *picture)
-void SkPicture_playback(reskia_picture_t *picture, reskia_canvas_t *canvas, reskia_picture_abort_callback_t *callback); // (SkPicture *picture, SkCanvas *canvas, SkPicture::AbortCallback *callback)
-sk_rect_t SkPicture_cullRect(reskia_picture_t *picture); // (SkPicture *picture) -> sk_rect_t
-uint32_t SkPicture_uniqueID(reskia_picture_t *picture); // (SkPicture *picture) -> uint32_t
-sk_data_t SkPicture_serialize(reskia_picture_t *picture, const reskia_serial_procs_t *procs); // (SkPicture *picture, const SkSerialProcs *procs) -> sk_data_t
-void SkPicture_serializeToStream(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs); // (SkPicture *picture, SkWStream *stream, const SkSerialProcs *procs)
-size_t SkPicture_approximateOpCount(reskia_picture_t *picture); // (SkPicture *picture) -> size_t
-size_t SkPicture_approximateBytesUsed(reskia_picture_t *picture); // (SkPicture *picture) -> size_t
-sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode, const SkMatrix *localMatrix, const SkRect *tileRect) -> sk_shader_t
-sk_shader_t SkPicture_makeShaderWithoutLocalMatrixAndTileRect(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode); // (SkPicture *picture, SkTileMode tmx, SkTileMode tmy, SkFilterMode mode) -> sk_shader_t
-bool SkPicture_unique(reskia_picture_t *picture); // (SkPicture *picture) -> bool
-void SkPicture_ref(reskia_picture_t *picture); // retained: 参照カウントを増やす (SkPicture *picture)
-void SkPicture_unref(reskia_picture_t *picture); // owned: 参照カウントを減らす (SkPicture *picture)
+void SkPicture_release(reskia_picture_t *picture); // owned: caller が保持する参照を release する。NULL 入力では no-op
+void SkPicture_playback(reskia_picture_t *picture, reskia_canvas_t *canvas, reskia_picture_abort_callback_t *callback); // canvas は非 NULL。callback は NULL 許可。invalid 入力では no-op
+sk_rect_t SkPicture_cullRect(reskia_picture_t *picture); // NULL 入力では 0
+uint32_t SkPicture_uniqueID(reskia_picture_t *picture); // NULL 入力では 0
+sk_data_t SkPicture_serialize(reskia_picture_t *picture, const reskia_serial_procs_t *procs); // procs は NULL 許可。NULL 入力や生成不能では 0
+void SkPicture_serializeToStream(reskia_picture_t *picture, reskia_w_stream_t *stream, const reskia_serial_procs_t *procs); // stream は非 NULL。invalid 入力では no-op
+size_t SkPicture_approximateOpCount(reskia_picture_t *picture); // NULL 入力では 0
+size_t SkPicture_approximateBytesUsed(reskia_picture_t *picture); // NULL 入力では 0
+sk_shader_t SkPicture_makeShader(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode, const reskia_matrix_t *localMatrix, const reskia_rect_t *tileRect); // localMatrix/tileRect は NULL 許可。invalid enum/NULL picture/生成不能では 0
+sk_shader_t SkPicture_makeShaderWithoutLocalMatrixAndTileRect(reskia_picture_t *picture, reskia_picture_tile_mode_t tmx, reskia_picture_tile_mode_t tmy, reskia_picture_filter_mode_t mode); // invalid enum/NULL picture/生成不能では 0
+bool SkPicture_unique(reskia_picture_t *picture); // NULL 入力では false
+void SkPicture_ref(reskia_picture_t *picture); // retained: 参照カウントを増やす。NULL 入力では no-op
+void SkPicture_unref(reskia_picture_t *picture); // owned: 参照カウントを減らす。NULL 入力では no-op
 
 // static
 
-sk_picture_t SkPicture_MakeFromStream(reskia_stream_t *stream, const reskia_deserial_procs_t *procs); // (SkStream *stream, const SkDeserialProcs *procs) -> sk_picture_t
-sk_picture_t SkPicture_MakeFromData(const reskia_data_t *data, const reskia_deserial_procs_t *procs); // (const SkData *data, const SkDeserialProcs *procs) -> sk_picture_t
-sk_picture_t SkPicture_MakeFromMemory(const void *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_picture_t
-sk_picture_t SkPicture_MakePlaceholder(sk_rect_t cull); // (sk_rect_t cull) -> sk_picture_t
+sk_picture_t SkPicture_MakeFromStream(reskia_stream_t *stream, const reskia_deserial_procs_t *procs); // stream は非 NULL。生成不能では 0
+sk_picture_t SkPicture_MakeFromData(const reskia_data_t *data, const reskia_deserial_procs_t *procs); // data は非 NULL。生成不能では 0
+sk_picture_t SkPicture_MakeFromMemory(const void *data, size_t size, const reskia_deserial_procs_t *procs); // data 非 NULL、size > 0。invalid 入力や生成不能では 0
+sk_picture_t SkPicture_MakePlaceholder(sk_rect_t cull); // invalid cull handle は empty rect。生成不能では 0
 
 #ifdef __cplusplus
 }

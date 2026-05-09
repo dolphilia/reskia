@@ -309,6 +309,22 @@ if(RESKIA_BUILD_TESTS)
     target_link_libraries(test_drawable_flattenable_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
     add_test(NAME c_skia_drawable_flattenable_invalid_input_smoke COMMAND test_drawable_flattenable_invalid_input_smoke)
 
+    add_executable(test_picture_recorder_invalid_input_smoke test/test_picture_recorder_invalid_input_smoke.cpp)
+    target_include_directories(test_picture_recorder_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    if(RESKIA_DEP_LINK_DIRS)
+        target_link_directories(test_picture_recorder_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+    endif()
+    target_link_libraries(test_picture_recorder_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_picture_recorder_invalid_input_smoke COMMAND test_picture_recorder_invalid_input_smoke)
+
+    add_executable(test_font_mgr_invalid_input_smoke test/test_font_mgr_invalid_input_smoke.cpp)
+    target_include_directories(test_font_mgr_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    if(RESKIA_DEP_LINK_DIRS)
+        target_link_directories(test_font_mgr_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+    endif()
+    target_link_libraries(test_font_mgr_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_font_mgr_invalid_input_smoke COMMAND test_font_mgr_invalid_input_smoke)
+
     if(APPLE AND TARGET svg AND TARGET skshaper AND TARGET skunicode)
         add_executable(test_shaping_smoke test/test_shaping_smoke.cpp)
         target_include_directories(test_shaping_smoke PRIVATE
