@@ -3,13 +3,16 @@
 #include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
 #include "capi/sk_paint.h"
+#include "capi/sk_picture_recorder.h"
 #include "capi/sk_rect.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
 #include "capi/sk_text_blob.h"
 #include "handles/static_sk_i_rect.h"
+#include "handles/static_sk_drawable.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_picture.h"
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
 #include "handles/static_sk_text_blob.h"
@@ -195,6 +198,61 @@ int main() {
     SkCanvas_drawTextBlobPtr(canvas, text_blob, 0.0f, 0.0f, paint);
     static_sk_text_blob_delete(text_blob_handle);
     SkFont_delete(font);
+
+    reskia_picture_recorder_t *picture_recorder = SkPictureRecorder_new();
+    if (!check(picture_recorder != nullptr, "SkPictureRecorder_new for canvas picture")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    if (!check(SkPictureRecorder_beginRecordingWithSizeAndFactory(picture_recorder, 2.0f, 2.0f, nullptr) != nullptr, "SkPictureRecorder_beginRecordingWithSizeAndFactory for canvas picture")) {
+        SkPictureRecorder_delete(picture_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const sk_picture_t picture_handle = SkPictureRecorder_finishRecordingAsPicture(picture_recorder);
+    auto *picture = static_cast<reskia_picture_t *>(static_sk_picture_get_ptr(picture_handle));
+    if (!check(picture != nullptr, "SkPictureRecorder_finishRecordingAsPicture for canvas")) {
+        SkPictureRecorder_delete(picture_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawPicture(canvas, picture_handle);
+    SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, nullptr, nullptr);
+    SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, nullptr, paint);
+    SkCanvas_drawPicturePtr(canvas, picture);
+    SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, nullptr, nullptr);
+    SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, nullptr, paint);
+    static_sk_picture_delete(picture_handle);
+    SkPictureRecorder_delete(picture_recorder);
+
+    reskia_picture_recorder_t *drawable_recorder = SkPictureRecorder_new();
+    if (!check(drawable_recorder != nullptr, "SkPictureRecorder_new for canvas drawable")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    if (!check(SkPictureRecorder_beginRecordingWithSizeAndFactory(drawable_recorder, 2.0f, 2.0f, nullptr) != nullptr, "SkPictureRecorder_beginRecordingWithSizeAndFactory for canvas drawable")) {
+        SkPictureRecorder_delete(drawable_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const sk_drawable_t drawable_handle = SkPictureRecorder_finishRecordingAsDrawable(drawable_recorder);
+    auto *drawable = static_cast<reskia_drawable_t *>(static_sk_drawable_get_ptr(drawable_handle));
+    if (!check(drawable != nullptr, "SkPictureRecorder_finishRecordingAsDrawable for canvas")) {
+        SkPictureRecorder_delete(drawable_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawDrawable(canvas, drawable, nullptr);
+    SkCanvas_drawDrawableAt(canvas, drawable, 0.0f, 0.0f);
+    static_sk_drawable_delete(drawable_handle);
+    SkPictureRecorder_delete(drawable_recorder);
+
     SkPaint_delete(paint);
 
     if (!check(!SkCanvas_readPixels(canvas, nullptr, 0, 0), "SkCanvas_readPixels(canvas, nullptr)")) {

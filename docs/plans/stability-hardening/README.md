@@ -100,6 +100,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `83-phase-2-batch-cd-canvas-top-layer-pixels.md`
 - `84-phase-2-batch-ce-surface-pixels-rowbytes.md`
 - `85-phase-2-batch-cf-canvas-text-blob-draw.md`
+- `86-phase-2-batch-cg-canvas-drawable-picture.md`
 
 ## 関連計画
 
