@@ -237,12 +237,12 @@ skia/capi/sk_runtime_shader_builder.cpp,todo,P2,,
 skia/capi/sk_runtime_shader_builder.h,todo,P2,,
 skia/capi/sk_sampling_options.cpp,todo,P2,,
 skia/capi/sk_sampling_options.h,todo,P2,,
-skia/capi/sk_shader.cpp,todo,P2,,
-skia/capi/sk_shader.h,todo,P2,,
+skia/capi/sk_shader.cpp,done,P2,2026-05-10,Phase 2 batch AY: shader null receiver guards factory handle 0 and serialize rules
+skia/capi/sk_shader.h,done,P2,2026-05-10,Phase 2 batch AY: documented shader null optional pointer and factory rules
 skia/capi/sk_shader_mask_filter.cpp,done,P2,codex,phase2-batch-t: shader handle 0 guard and null mask-filter handle rule,
 skia/capi/sk_shader_mask_filter.h,done,P2,codex,phase2-batch-t: shader handle 0 comment,
-skia/capi/sk_shaders.cpp,todo,P2,,
-skia/capi/sk_shaders.h,todo,P2,,
+skia/capi/sk_shaders.cpp,done,P2,2026-05-10,Phase 2 batch AY: shaders factory required pointer guards and null result handle 0 rules
+skia/capi/sk_shaders.h,done,P2,2026-05-10,Phase 2 batch AY: documented shaders optional handle and required pointer rules
 skia/capi/sk_size.cpp,todo,P2,,
 skia/capi/sk_size.h,todo,P2,,
 skia/capi/sk_stream.cpp,done,P2,codex,phase2-batch-h: SkStream NULL ガードと read/peek/output pointer 規約を補強
