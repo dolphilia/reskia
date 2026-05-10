@@ -7,6 +7,7 @@
 #include "capi/sk_r_rect.h"
 #include "handles/static_sk_i_point.h"
 #include "handles/static_sk_r_rect.h"
+#include "handles/static_sk_blender.h"
 #include "handles/static_sk_color_filter.h"
 #include "handles/static_sk_runtime_effect_result.h"
 #include "handles/static_sk_shader.h"
@@ -133,6 +134,27 @@ int main() {
     }
     if (color_filter_source != 0) {
         static_sk_string_delete(color_filter_source);
+    }
+    const sk_string_t blender_source = static_sk_string_make(SkString("half4 main(half4 src, half4 dst) { return src; }"));
+    ok &= check(blender_source != 0 && static_sk_string_get_ptr(blender_source) != nullptr, "string handle for blender source");
+    const sk_runtime_effect_result_t generated_blender_result = SkRuntimeEffect_MakeForBlenderDefault(blender_source);
+    auto *blender_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_blender_result));
+    ok &= check(blender_result_entity != nullptr && blender_result_entity->effect != nullptr, "MakeForBlenderDefault valid effect");
+    if (blender_result_entity != nullptr && blender_result_entity->effect != nullptr) {
+        const sk_blender_t generated_blender = SkRuntimeEffect_makeBlender(
+                reinterpret_cast<reskia_runtime_effect_t *>(blender_result_entity->effect.get()),
+                0,
+                0);
+        ok &= check(generated_blender != 0 && static_sk_blender_get_ptr(generated_blender) != nullptr, "SkRuntimeEffect_makeBlender generated handle ownership");
+        if (generated_blender != 0) {
+            static_sk_blender_delete(generated_blender);
+        }
+    }
+    if (generated_blender_result != 0) {
+        static_sk_runtime_effect_result_delete(generated_blender_result);
+    }
+    if (blender_source != 0) {
+        static_sk_string_delete(blender_source);
     }
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
     const sk_i_point_t trace_coord_handle = SkIPoint_Make(0, 0);

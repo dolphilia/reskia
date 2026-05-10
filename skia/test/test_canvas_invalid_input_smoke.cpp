@@ -241,6 +241,12 @@ int main() {
     SkCanvas_drawPoint(canvas, point0_handle, paint);
     SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, nullptr);
     SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, paint);
+    SkCanvas_drawCircle(canvas, 0, 1.0f, paint);
+    SkCanvas_drawCircle(canvas, 999999, 1.0f, paint);
+    SkCanvas_drawCircle(canvas, point0_handle, 1.0f, nullptr);
+    SkCanvas_drawCircle(canvas, point0_handle, 1.0f, paint);
+    SkCanvas_drawCircleAt(canvas, 0.0f, 0.0f, 1.0f, nullptr);
+    SkCanvas_drawCircleAt(canvas, 0.0f, 0.0f, 1.0f, paint);
     static_sk_point_delete(point1_handle);
     static_sk_point_delete(point0_handle);
     const sk_rect_t round_rect_handle = SkRect_MakeXYWH(0.0f, 0.0f, 2.0f, 2.0f);
@@ -250,6 +256,9 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+    SkCanvas_drawArc(canvas, nullptr, 0.0f, 90.0f, false, paint);
+    SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, nullptr);
+    SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, paint);
     const sk_i_rect_t irect_handle = SkIRect_MakeXYWH(0, 0, 2, 2);
     auto *irect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(irect_handle));
     if (!check(irect != nullptr, "SkIRect_MakeXYWH for canvas irect")) {

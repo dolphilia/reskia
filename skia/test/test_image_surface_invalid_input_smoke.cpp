@@ -55,6 +55,9 @@ int main() {
     if (!check(SkImage_colorSpace(nullptr) == nullptr, "SkImage_colorSpace(nullptr)")) {
         return 4;
     }
+    if (!check(SkImage_refColorSpace(nullptr) == 0, "SkImage_refColorSpace(nullptr)")) {
+        return 4;
+    }
     if (!check(SkImage_refEncodedData(nullptr) == 0, "SkImage_refEncodedData(nullptr)")) {
         return 5;
     }
@@ -179,6 +182,20 @@ int main() {
         static_sk_surface_delete(surface_handle);
         static_sk_image_info_delete(info_handle);
         return 22;
+    }
+    if (!check(SkImage_colorSpace(image) == nullptr, "SkImage_colorSpace image without color space")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_refColorSpace(image) == 0, "SkImage_refColorSpace image without color space")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
     }
     SkImage_asyncRescaleAndReadPixels(nullptr, info, src_rect, 0, 0, async_fail_callback, &async_fail_state);
     if (!check(async_fail_state.calls == 8, "SkImage_asyncRescaleAndReadPixels null image fail callback")) {
@@ -530,6 +547,79 @@ int main() {
         }
         static_sk_image_delete(reinterpreted);
     }
+    const sk_image_info_t srgb_info_handle = SkImageInfo_MakeN32PremulWithColorSpace(2, 2, srgb);
+    auto *srgb_info = static_cast<reskia_image_info_t *>(static_sk_image_info_get_ptr(srgb_info_handle));
+    if (!check(srgb_info != nullptr, "SkImageInfo_MakeN32PremulWithColorSpace for image color space")) {
+        static_sk_color_space_delete(srgb);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 64;
+    }
+    const sk_surface_t srgb_surface_handle = SkSurfaces_RasterWithoutRowBytes(srgb_info, nullptr);
+    auto *srgb_surface = static_cast<reskia_surface_t *>(static_sk_surface_get_ptr(srgb_surface_handle));
+    if (!check(srgb_surface != nullptr, "SkSurfaces_RasterWithoutRowBytes for image color space")) {
+        static_sk_image_info_delete(srgb_info_handle);
+        static_sk_color_space_delete(srgb);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 65;
+    }
+    const sk_image_t srgb_image_handle = SkSurface_makeImageSnapshot(srgb_surface);
+    auto *srgb_image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(srgb_image_handle));
+    if (!check(srgb_image != nullptr, "SkSurface_makeImageSnapshot for image color space")) {
+        static_sk_surface_delete(srgb_surface_handle);
+        static_sk_image_info_delete(srgb_info_handle);
+        static_sk_color_space_delete(srgb);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 66;
+    }
+    if (!check(SkImage_colorSpace(srgb_image) != nullptr, "SkImage_colorSpace borrowed valid color space")) {
+        static_sk_image_delete(srgb_image_handle);
+        static_sk_surface_delete(srgb_surface_handle);
+        static_sk_image_info_delete(srgb_info_handle);
+        static_sk_color_space_delete(srgb);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 67;
+    }
+    const sk_color_space_t retained_color_space = SkImage_refColorSpace(srgb_image);
+    if (!check(retained_color_space != 0 && static_sk_color_space_get_ptr(retained_color_space) != nullptr, "SkImage_refColorSpace retained valid color space")) {
+        if (retained_color_space != 0) {
+            static_sk_color_space_delete(retained_color_space);
+        }
+        static_sk_image_delete(srgb_image_handle);
+        static_sk_surface_delete(srgb_surface_handle);
+        static_sk_image_info_delete(srgb_info_handle);
+        static_sk_color_space_delete(srgb);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 68;
+    }
+    static_sk_color_space_delete(retained_color_space);
+    static_sk_image_delete(srgb_image_handle);
+    static_sk_surface_delete(srgb_surface_handle);
+    static_sk_image_info_delete(srgb_info_handle);
     static_sk_color_space_delete(srgb);
     static_sk_matrix_delete(matrix_handle);
     SkSamplingOptions_delete(sampling);

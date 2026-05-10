@@ -52,8 +52,8 @@ sk_i_rect_t SkImage_bounds(reskia_image_t *image); // (SkImage *image) -> sk_i_r
 reskia_u32_t SkImage_uniqueID(reskia_image_t *image); // (SkImage *image) -> uint32_t
 reskia_image_alpha_type_t SkImage_alphaType(reskia_image_t *image); // (SkImage *image) -> SkAlphaType
 reskia_image_color_type_t SkImage_colorType(reskia_image_t *image); // (SkImage *image) -> SkColorType
-reskia_color_space_t *SkImage_colorSpace(reskia_image_t *image); // borrowed: 解放不要の借用ポインタ (SkImage *image) -> SkColorSpace *
-sk_color_space_t SkImage_refColorSpace(reskia_image_t *image); // (SkImage *image) -> sk_color_space_t
+reskia_color_space_t *SkImage_colorSpace(reskia_image_t *image); // borrowed: 解放不要の借用ポインタ。NULL image or no color space returns NULL (SkImage *image) -> SkColorSpace *
+sk_color_space_t SkImage_refColorSpace(reskia_image_t *image); // retained handle; caller deletes with static_sk_color_space_delete; NULL image or no color space returns 0 (SkImage *image) -> sk_color_space_t
 bool SkImage_isAlphaOnly(reskia_image_t *image); // (SkImage *image) -> bool
 bool SkImage_isOpaque(reskia_image_t *image); // (SkImage *image) -> bool
 sk_shader_t SkImage_makeShader(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix); // image/sampling: non-null; localMatrix may be NULL; invalid input returns 0 (SkImage *image, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *localMatrix) -> sk_shader_t

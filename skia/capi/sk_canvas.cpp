@@ -304,7 +304,7 @@ void SkCanvas_drawAtlas(reskia_canvas_t *canvas, const reskia_image_t * atlas, c
 }
 
 void SkCanvas_drawCircle(reskia_canvas_t *canvas, sk_point_t center, float radius, const reskia_paint_t * paint) {
-    if (canvas == nullptr || center == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_point_handle(center) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawCircle(static_sk_point_get_entity(center), radius, * reinterpret_cast<const SkPaint *>(paint));
