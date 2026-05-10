@@ -15,8 +15,8 @@ skia/capi/sk_bitmap.cpp,done,P2,codex,"stability Phase 2 Batch B: NULL guards ad
 skia/capi/sk_bitmap.h,done,P2,codex,"stability Phase 2 Batch B: typed pointer review retained; raw pixel buffer lifetime/mutability comments added"
 skia/capi/sk_blend_mode.cpp,todo,P2,,
 skia/capi/sk_blend_mode.h,todo,P2,,
-skia/capi/sk_blender.cpp,todo,P2,,
-skia/capi/sk_blender.h,todo,P2,,
+skia/capi/sk_blender.cpp,done,P2,2026-05-10,Phase 2 batch BC: blender null receiver refcount serialize factory and deserialize guards
+skia/capi/sk_blender.h,done,P2,2026-05-10,Phase 2 batch BC: documented blender null receiver memory output and factory rules
 skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory null result handle 0 rule
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
