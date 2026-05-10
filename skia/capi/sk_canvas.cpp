@@ -70,6 +70,10 @@ sk_canvas_t make_canvas_handle(std::unique_ptr<SkCanvas> canvas) {
     return static_sk_canvas_make(std::move(canvas));
 }
 
+bool has_image_handle(sk_image_t image) {
+    return image != 0 && static_sk_image_get_ptr(image) != nullptr;
+}
+
 }  // namespace
 
 extern "C" {
@@ -356,14 +360,14 @@ void SkCanvas_drawGlyphsWithXforms(reskia_canvas_t *canvas, int count, const uin
 }
 
 void SkCanvas_drawImage(reskia_canvas_t *canvas, sk_image_t image, float left, float top) {
-    if (canvas == nullptr || image == 0) {
+    if (canvas == nullptr || !has_image_handle(image)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), left, top);
 }
 
 void SkCanvas_drawImageHandleWithSampling(reskia_canvas_t *canvas, sk_image_t image, float x, float y, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint) {
-    if (canvas == nullptr || image == 0 || sampling == nullptr) {
+    if (canvas == nullptr || !has_image_handle(image) || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImage(static_sk_image_get_entity(image), x, y, * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint));
@@ -405,14 +409,14 @@ void SkCanvas_drawImageNine(reskia_canvas_t *canvas, const reskia_image_t * imag
 }
 
 void SkCanvas_drawImageRect(reskia_canvas_t *canvas, sk_image_t image, const reskia_rect_t * dst, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint) {
-    if (canvas == nullptr || image == 0 || dst == nullptr || sampling == nullptr) {
+    if (canvas == nullptr || !has_image_handle(image) || dst == nullptr || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawImageRectHandleWithSrcDst(reskia_canvas_t *canvas, sk_image_t image, const reskia_rect_t * src, const reskia_rect_t * dst, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint, reskia_canvas_src_rect_constraint_t constraint) {
-    if (canvas == nullptr || image == 0 || src == nullptr || dst == nullptr || sampling == nullptr) {
+    if (canvas == nullptr || !has_image_handle(image) || src == nullptr || dst == nullptr || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));

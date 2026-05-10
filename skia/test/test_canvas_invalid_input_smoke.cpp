@@ -105,6 +105,11 @@ int main() {
     SkCanvas_drawDrawableAt(canvas, nullptr, 0.0f, 0.0f);
     SkCanvas_drawPicture(canvas, 0);
     SkCanvas_drawPicture(canvas, 999999);
+    SkCanvas_drawImage(canvas, 0, 0.0f, 0.0f);
+    SkCanvas_drawImage(canvas, 999999, 0.0f, 0.0f);
+    SkCanvas_drawImageHandleWithSampling(canvas, 999999, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawImageRect(canvas, 999999, nullptr, nullptr, nullptr);
+    SkCanvas_drawImageRectHandleWithSrcDst(canvas, 999999, nullptr, nullptr, nullptr, nullptr, 0);
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, 0, nullptr, nullptr);
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, 999999, nullptr, nullptr);
     SkCanvas_drawPicturePtr(canvas, nullptr);

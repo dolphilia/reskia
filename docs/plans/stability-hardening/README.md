@@ -92,6 +92,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `75-phase-2-batch-bv-canvas-atlas-image-set.md`
 - `76-phase-2-batch-bw-font-positions-intercepts.md`
 - `77-phase-2-batch-bx-canvas-layer-raster-direct.md`
+- `78-phase-2-batch-by-canvas-image-handles.md`
 
 ## 関連計画
 
