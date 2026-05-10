@@ -61,6 +61,17 @@
 #include "../handles/static_sk_point-internal.h"
 #include "../handles/static_sk_i_size-internal.h"
 
+namespace {
+
+sk_canvas_t make_canvas_handle(std::unique_ptr<SkCanvas> canvas) {
+    if (canvas == nullptr) {
+        return 0;
+    }
+    return static_sk_canvas_make(std::move(canvas));
+}
+
+}  // namespace
+
 extern "C" {
 
 reskia_canvas_t *SkCanvas_new(void) {
@@ -961,14 +972,14 @@ sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t * info, void *pi
     if (info == nullptr || pixels == nullptr) {
         return 0;
     }
-    return static_sk_canvas_make(SkCanvas::MakeRasterDirect(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkSurfaceProps *>(props)));
+    return make_canvas_handle(SkCanvas::MakeRasterDirect(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkSurfaceProps *>(props)));
 }
 
 sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void * pixels, size_t rowBytes) {
-    if (pixels == nullptr) {
+    if (width < 0 || height < 0 || pixels == nullptr) {
         return 0;
     }
-    return static_sk_canvas_make(SkCanvas::MakeRasterDirectN32(width, height, static_cast<SkPMColor *>(pixels), rowBytes));
+    return make_canvas_handle(SkCanvas::MakeRasterDirectN32(width, height, static_cast<SkPMColor *>(pixels), rowBytes));
 }
 
 }

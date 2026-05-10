@@ -45,6 +45,33 @@ int main() {
     SkCanvas_drawPictureHandleWithMatrixPaint(nullptr, 0, nullptr, nullptr);
     SkCanvas_drawPicturePtr(nullptr, nullptr);
     SkCanvas_drawPicturePtrWithMatrixPaint(nullptr, nullptr, nullptr, nullptr);
+    if (!check(SkCanvas_saveLayer(nullptr, nullptr) == 0, "SkCanvas_saveLayer(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_saveLayerWithBoundsPaintRef(nullptr, nullptr, nullptr) == 0, "SkCanvas_saveLayerWithBoundsPaintRef(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_saveLayerWithBoundsPaintPtr(nullptr, nullptr, nullptr) == 0, "SkCanvas_saveLayerWithBoundsPaintPtr(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_saveLayerAlpha(nullptr, nullptr, 255) == 0, "SkCanvas_saveLayerAlpha(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_saveLayerAlphaf(nullptr, nullptr, 1.0f) == 0, "SkCanvas_saveLayerAlphaf(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_MakeRasterDirect(nullptr, nullptr, 0, nullptr) == 0, "SkCanvas_MakeRasterDirect(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_MakeRasterDirectN32(-1, 1, nullptr, 0) == 0, "SkCanvas_MakeRasterDirectN32(negative width)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_MakeRasterDirectN32(1, -1, nullptr, 0) == 0, "SkCanvas_MakeRasterDirectN32(negative height)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_MakeRasterDirectN32(1, 1, nullptr, 0) == 0, "SkCanvas_MakeRasterDirectN32(null pixels)")) {
+        return 5;
+    }
     if (!check(SkCanvas_makeSurface(nullptr, nullptr, nullptr) == 0, "SkCanvas_makeSurface(nullptr)")) {
         return 5;
     }
@@ -82,6 +109,29 @@ int main() {
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, 999999, nullptr, nullptr);
     SkCanvas_drawPicturePtr(canvas, nullptr);
     SkCanvas_drawPicturePtrWithMatrixPaint(canvas, nullptr, nullptr, nullptr);
+    if (!check(SkCanvas_saveLayer(canvas, nullptr) == 0, "SkCanvas_saveLayer(canvas, nullptr)")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    if (!check(SkCanvas_saveLayerWithBoundsPaintRef(canvas, nullptr, nullptr) == 0, "SkCanvas_saveLayerWithBoundsPaintRef(canvas, nullptr)")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    if (!check(SkCanvas_saveLayerWithBoundsPaintPtr(canvas, nullptr, nullptr) > 0, "SkCanvas_saveLayerWithBoundsPaintPtr optional bounds/paint")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_restore(canvas);
+    if (!check(SkCanvas_saveLayerAlpha(canvas, nullptr, 255) > 0, "SkCanvas_saveLayerAlpha optional bounds")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_restore(canvas);
+    if (!check(SkCanvas_saveLayerAlphaf(canvas, nullptr, 1.0f) > 0, "SkCanvas_saveLayerAlphaf optional bounds")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_restore(canvas);
     if (!check(SkCanvas_makeSurface(canvas, nullptr, nullptr) == 0, "SkCanvas_makeSurface(canvas, nullptr)")) {
         SkCanvas_delete(canvas);
         return 7;

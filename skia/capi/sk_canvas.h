@@ -182,11 +182,11 @@ void SkCanvas_restoreToCount(reskia_canvas_t *canvas, int saveCount); // (SkCanv
 void SkCanvas_rotate(reskia_canvas_t *canvas, float degrees); // (SkCanvas *canvas, SkScalar degrees)
 void SkCanvas_rotateAround(reskia_canvas_t *canvas, float degrees, float px, float py); // (SkCanvas *canvas, SkScalar degrees, SkScalar px, SkScalar py)
 int SkCanvas_save(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> int
-int SkCanvas_saveLayer(reskia_canvas_t *canvas, const reskia_canvas_save_layer_rec_t *layerRec); // layerRec: non-null (SkCanvas *canvas, const SkCanvas::SaveLayerRec *layerRec) -> int
-int SkCanvas_saveLayerWithBoundsPaintRef(reskia_canvas_t *canvas, const reskia_rect_t *bounds, const reskia_paint_t *paint); // bounds: non-null; paint may be NULL (SkCanvas *canvas, const SkRect *bounds, const SkPaint *paint) -> int
-int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const reskia_rect_t *bounds, const reskia_paint_t *paint); // bounds/paint may be NULL (SkCanvas *canvas, const SkRect *bounds, const SkPaint *paint) -> int
-int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t *bounds, uint32_t alpha); // bounds may be NULL (SkCanvas *canvas, const SkRect *bounds, U8CPU alpha) -> int
-int SkCanvas_saveLayerAlphaf(reskia_canvas_t *canvas, const reskia_rect_t *bounds, float alpha); // bounds may be NULL (SkCanvas *canvas, const SkRect *bounds, float alpha) -> int
+int SkCanvas_saveLayer(reskia_canvas_t *canvas, const reskia_canvas_save_layer_rec_t *layerRec); // canvas/layerRec: non-null; invalid input returns 0 (SkCanvas *canvas, const SkCanvas::SaveLayerRec *layerRec) -> int
+int SkCanvas_saveLayerWithBoundsPaintRef(reskia_canvas_t *canvas, const reskia_rect_t *bounds, const reskia_paint_t *paint); // canvas/bounds: non-null; paint may be NULL; invalid input returns 0 (SkCanvas *canvas, const SkRect *bounds, const SkPaint *paint) -> int
+int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const reskia_rect_t *bounds, const reskia_paint_t *paint); // bounds/paint may be NULL; NULL canvas returns 0 (SkCanvas *canvas, const SkRect *bounds, const SkPaint *paint) -> int
+int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t *bounds, uint32_t alpha); // bounds may be NULL; NULL canvas returns 0 (SkCanvas *canvas, const SkRect *bounds, U8CPU alpha) -> int
+int SkCanvas_saveLayerAlphaf(reskia_canvas_t *canvas, const reskia_rect_t *bounds, float alpha); // bounds may be NULL; NULL canvas returns 0 (SkCanvas *canvas, const SkRect *bounds, float alpha) -> int
 void SkCanvas_scale(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *canvas, SkScalar sx, SkScalar sy)
 void SkCanvas_setMatrix(reskia_canvas_t *canvas, const reskia_m_44_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkM44 *matrix)
 void SkCanvas_setMatrix3x3(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkMatrix *matrix)
@@ -196,8 +196,8 @@ void SkCanvas_translate(reskia_canvas_t *canvas, float dx, float dy); // (SkCanv
 bool SkCanvas_writePixels(reskia_canvas_t *canvas, const reskia_bitmap_t *bitmap, int x, int y); // (SkCanvas *canvas, const SkBitmap *bitmap, int x, int y) -> bool
 bool SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *info, const void *pixels, size_t rowBytes, int x, int y); // pixels: caller-owned read-only buffer, non-null and readable for info/rowBytes during call; not retained (SkCanvas *canvas, const SkImageInfo *info, const void *pixels, size_t rowBytes, int x, int y) -> bool
 // static
-sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_surface_props_t *props); // pixels: caller-owned mutable backing store; must outlive returned canvas and not be freed while canvas can draw; props may be NULL (const SkImageInfo *info, void *pixels, size_t rowBytes, const SkSurfaceProps *props) -> sk_canvas_t
-sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void *pixels, size_t rowBytes); // pixels: caller-owned mutable N32 backing store; must outlive returned canvas (int width, int height, SkPMColor *pixels, size_t rowBytes) -> sk_canvas_t}
+sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t *info, void *pixels, size_t rowBytes, const reskia_surface_props_t *props); // info/pixels: non-null; pixels are caller-owned mutable backing store and must outlive returned canvas; props may be NULL; invalid input/factory failure returns 0 (const SkImageInfo *info, void *pixels, size_t rowBytes, const SkSurfaceProps *props) -> sk_canvas_t
+sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void *pixels, size_t rowBytes); // width/height must be >= 0; pixels are caller-owned mutable N32 backing store and must outlive returned canvas; invalid input/factory failure returns 0 (int width, int height, SkPMColor *pixels, size_t rowBytes) -> sk_canvas_t}
 
 #ifdef __cplusplus
 }
