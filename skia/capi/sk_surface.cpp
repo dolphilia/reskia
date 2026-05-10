@@ -23,6 +23,17 @@
 #include "../handles/static_sk_capabilities-internal.h"
 #include "../handles/static_sk_i_size-internal.h"
 
+namespace {
+
+bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
+    if (info == nullptr || pixels == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
+}
+
+}  // namespace
+
 extern "C" {
 
 void SkSurface_release(reskia_surface_t *surface) {
@@ -166,7 +177,7 @@ bool SkSurface_readPixels(reskia_surface_t *surface, const reskia_pixmap_t *dst,
 }
 
 bool SkSurface_readPixelsWithImageInfoAndPixels(reskia_surface_t *surface, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) {
-    if (surface == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+    if (surface == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
         return false;
     }
     return reinterpret_cast<SkSurface *>(surface)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
