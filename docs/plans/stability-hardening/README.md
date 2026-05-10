@@ -88,6 +88,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `71-phase-2-batch-br-annotation-android-codec.md`
 - `72-phase-2-batch-bs-canvas-text-glyphs.md`
 - `73-phase-2-batch-bt-font-widths-bounds.md`
+- `74-phase-2-batch-bu-auto-canvas-restore-bbox.md`
 
 ## 関連計画
 

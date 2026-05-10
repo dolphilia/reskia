@@ -5,12 +5,12 @@ skia/capi/sk_android_codec.cpp,done,P2,2026-05-10,Phase 2 batch BR: AndroidCodec
 skia/capi/sk_android_codec.h,done,P2,2026-05-10,Phase 2 batch BR: documented AndroidCodec null pointer and handle 0 rules
 skia/capi/sk_annotation.cpp,done,P2,2026-05-10,Phase 2 batch BR: annotation canvas geometry data null guards
 skia/capi/sk_annotation.h,done,P2,2026-05-10,Phase 2 batch BR: documented annotation borrowed required pointer rules
-skia/capi/sk_auto_canvas_restore.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
-skia/capi/sk_auto_canvas_restore.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
+skia/capi/sk_auto_canvas_restore.cpp,done,P2,2026-05-10,Phase 2 batch BU: auto canvas restore null restore guard
+skia/capi/sk_auto_canvas_restore.h,done,P2,2026-05-10,Phase 2 batch BU: documented auto canvas restore null lifecycle rules
 skia/capi/sk_avif_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_avif_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_b_box_hierarchy.cpp,todo,P2,,
-skia/capi/sk_b_box_hierarchy.h,todo,P2,,
+skia/capi/sk_b_box_hierarchy.cpp,done,P2,2026-05-10,Phase 2 batch BU: bbox hierarchy null pointer and invalid result handle guards
+skia/capi/sk_b_box_hierarchy.h,done,P2,2026-05-10,Phase 2 batch BU: documented bbox hierarchy lifecycle and pointer rules
 skia/capi/sk_bitmap.cpp,done,P2,codex,"stability Phase 2 Batch B: NULL guards added across SkBitmap and bitmap invalid input smoke passes"
 skia/capi/sk_bitmap.h,done,P2,codex,"stability Phase 2 Batch B: typed pointer review retained; raw pixel buffer lifetime/mutability comments added"
 skia/capi/sk_blend_mode.cpp,todo,P2,,

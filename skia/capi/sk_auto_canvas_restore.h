@@ -9,8 +9,9 @@
 extern "C" {
 #endif
 
-void * SkAutoCanvasRestore_new(void * canvas, bool doSave); // (SkCanvas * canvas, bool doSave) -> SkAutoCanvasRestore *
-void SkAutoCanvasRestore_delete(void * autoCanvasRestore); // (SkAutoCanvasRestore *autoCanvasRestore)
+void * SkAutoCanvasRestore_new(void * canvas, bool doSave); // canvas may be NULL; NULL canvas creates a no-op restore guard (SkCanvas * canvas, bool doSave) -> SkAutoCanvasRestore *
+void SkAutoCanvasRestore_delete(void * autoCanvasRestore); // NULL is no-op (SkAutoCanvasRestore *autoCanvasRestore)
+void SkAutoCanvasRestore_restore(void * autoCanvasRestore); // NULL is no-op; restores at most once (SkAutoCanvasRestore *autoCanvasRestore)
 
 #ifdef __cplusplus
 }

@@ -19,6 +19,9 @@ void SkAutoCanvasRestore_delete(void * autoCanvasRestore) {
 }
 
 void SkAutoCanvasRestore_restore(void * autoCanvasRestore) {
+    if (autoCanvasRestore == nullptr) {
+        return;
+    }
     reinterpret_cast<SkAutoCanvasRestore *>(autoCanvasRestore)->restore();
 }
 
