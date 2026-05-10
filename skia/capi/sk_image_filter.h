@@ -28,32 +28,32 @@ typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_image_filter_map_direction_t;
 typedef int32_t reskia_image_filter_type_t;
 
-void SkImageFilter_release(reskia_image_filter_t *image_filter); // owned: caller が保持する参照を release する (SkImageFilter *image_filter)
-sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, reskia_image_filter_map_direction_t direction, const reskia_i_rect_t *inputRect); // (SkImageFilter *image_filter, const SkIRect *src, const SkMatrix *ctm, SkImageFilter::MapDirection direction, const SkIRect *inputRect) -> sk_i_rect_t
-bool SkImageFilter_isColorFilterNode(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
-bool SkImageFilter_asColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
-bool SkImageFilter_asAColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // (SkImageFilter *image_filter, SkColorFilter **filterPtr) -> bool
-int SkImageFilter_countInputs(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> int
-const reskia_image_filter_t *SkImageFilter_getInput(reskia_image_filter_t *image_filter, int i); // borrowed: 解放不要の借用ポインタ (SkImageFilter *image_filter, int i) -> const SkImageFilter *
-sk_rect_t SkImageFilter_computeFastBounds(reskia_image_filter_t *image_filter, const reskia_rect_t *bounds); // (SkImageFilter *image_filter, const SkRect *bounds) -> sk_rect_t
-bool SkImageFilter_canComputeFastBounds(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> bool
-sk_image_filter_t SkImageFilter_makeWithLocalMatrix(reskia_image_filter_t *image_filter, const reskia_matrix_t *matrix); // (SkImageFilter *image_filter, const SkMatrix *matrix) -> sk_image_filter_t
-sk_flattenable_factory_t SkImageFilter_getFactory(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> sk_flattenable_factory_t
-const char *SkImageFilter_getTypeName(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> const char *
-void SkImageFilter_flatten(reskia_image_filter_t *image_filter, reskia_write_buffer_t *buffer); // (SkImageFilter *image_filter, SkWriteBuffer *buffer)
-reskia_image_filter_type_t SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> SkImageFilter::Type
-sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const reskia_serial_procs_t *procs); // (SkImageFilter *image_filter, const SkSerialProcs *procs) -> sk_data_t
-size_t SkImageFilter_serializeToMemory(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // (SkImageFilter *image_filter, void *memory, size_t memory_size, const SkSerialProcs *procs) -> size_t
-bool SkImageFilter_unique(reskia_image_filter_t *image_filter); // (SkImageFilter *image_filter) -> bool
-void SkImageFilter_ref(reskia_image_filter_t *image_filter); // retained: 参照カウントを増やす (SkImageFilter *image_filter)
-void SkImageFilter_unref(reskia_image_filter_t *image_filter); // owned: 参照カウントを減らす (SkImageFilter *image_filter)
+void SkImageFilter_release(reskia_image_filter_t *image_filter); // owned: NULL image_filter is no-op.
+sk_i_rect_t SkImageFilter_filterBounds(reskia_image_filter_t *image_filter, const reskia_i_rect_t *src, const reskia_matrix_t *ctm, reskia_image_filter_map_direction_t direction, const reskia_i_rect_t *inputRect); // image_filter/src/ctm are required; inputRect may be NULL.
+bool SkImageFilter_isColorFilterNode(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // filterPtr may be NULL; NULL image_filter returns false.
+bool SkImageFilter_asColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // filterPtr may be NULL; NULL image_filter returns false.
+bool SkImageFilter_asAColorFilter(reskia_image_filter_t *image_filter, reskia_color_filter_t **filterPtr); // filterPtr may be NULL; NULL image_filter returns false.
+int SkImageFilter_countInputs(reskia_image_filter_t *image_filter); // NULL image_filter returns 0.
+const reskia_image_filter_t *SkImageFilter_getInput(reskia_image_filter_t *image_filter, int i); // borrowed; NULL image_filter returns NULL.
+sk_rect_t SkImageFilter_computeFastBounds(reskia_image_filter_t *image_filter, const reskia_rect_t *bounds); // image_filter/bounds are required.
+bool SkImageFilter_canComputeFastBounds(reskia_image_filter_t *image_filter); // NULL image_filter returns false.
+sk_image_filter_t SkImageFilter_makeWithLocalMatrix(reskia_image_filter_t *image_filter, const reskia_matrix_t *matrix); // image_filter/matrix are required; NULL result returns 0.
+sk_flattenable_factory_t SkImageFilter_getFactory(reskia_image_filter_t *image_filter); // NULL image_filter or missing factory returns 0.
+const char *SkImageFilter_getTypeName(reskia_image_filter_t *image_filter); // NULL image_filter returns NULL.
+void SkImageFilter_flatten(reskia_image_filter_t *image_filter, reskia_write_buffer_t *buffer); // image_filter/buffer are required; NULL input is no-op.
+reskia_image_filter_type_t SkImageFilter_getFlattenableType(reskia_image_filter_t *image_filter); // NULL image_filter returns 0.
+sk_data_t SkImageFilter_serialize(reskia_image_filter_t *image_filter, const reskia_serial_procs_t *procs); // procs may be NULL; NULL image_filter/result returns 0.
+size_t SkImageFilter_serializeToMemory(reskia_image_filter_t *image_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // procs may be NULL; NULL image_filter or NULL memory with nonzero size returns 0.
+bool SkImageFilter_unique(reskia_image_filter_t *image_filter); // NULL image_filter returns false.
+void SkImageFilter_ref(reskia_image_filter_t *image_filter); // retained: NULL image_filter is no-op.
+void SkImageFilter_unref(reskia_image_filter_t *image_filter); // owned: NULL image_filter is no-op.
 
 // static
 
-sk_image_filter_t SkImageFilter_Deserialize(const void *data, size_t size, const reskia_deserial_procs_t *procs); // (const void *data, size_t size, const SkDeserialProcs *procs) -> sk_image_filter_t
-sk_flattenable_factory_t SkImageFilter_NameToFactory(const char name[]); // (const char name[]) -> sk_flattenable_factory_t
-const char *SkImageFilter_FactoryToName(sk_flattenable_factory_t factory); // (sk_flattenable_factory_t factory) -> const char *
-void SkImageFilter_Register(const char name[], sk_flattenable_factory_t factory); // (const char name[], sk_flattenable_factory_t factory)
+sk_image_filter_t SkImageFilter_Deserialize(const void *data, size_t size, const reskia_deserial_procs_t *procs); // data/procs may be NULL only as upstream allows; NULL data or zero size returns 0.
+sk_flattenable_factory_t SkImageFilter_NameToFactory(const char name[]); // NULL name or missing factory returns 0.
+const char *SkImageFilter_FactoryToName(sk_flattenable_factory_t factory); // invalid factory returns NULL.
+void SkImageFilter_Register(const char name[], sk_flattenable_factory_t factory); // name/factory are required; invalid input is no-op.
 
 #ifdef __cplusplus
 }

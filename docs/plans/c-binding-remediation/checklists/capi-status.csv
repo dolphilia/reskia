@@ -123,12 +123,12 @@ skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw bu
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_image.cpp,done,P2,codex,stability Phase 2 Batch A: image C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and async callback keeps borrowed-result policy
 skia/capi/sk_image.h,done,P2,codex,stability Phase 2 Batch A: image C API ownership/lifetime reviewed; header already uses typed handles/opaque pointers with retained/owned/borrowed comments for key APIs
-skia/capi/sk_image_filter.cpp,todo,P2,,
-skia/capi/sk_image_filter.h,todo,P2,,
-skia/capi/sk_image_filters.cpp,todo,P2,,
-skia/capi/sk_image_filters.h,todo,P2,,
-skia/capi/sk_image_generator.cpp,todo,P2,,
-skia/capi/sk_image_generator.h,todo,P2,,
+skia/capi/sk_image_filter.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filter null guards factory handle 0 and serialize rules
+skia/capi/sk_image_filter.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filter null output and optional procs rules
+skia/capi/sk_image_filters.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filters optional cropRect and required factory pointer guards
+skia/capi/sk_image_filters.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filters optional cropRect and required pointer rules
+skia/capi/sk_image_generator.cpp,done,P2,2026-05-10,Phase 2 batch AV: image generator null guards query output validation and handle 0 rules
+skia/capi/sk_image_generator.h,done,P2,2026-05-10,Phase 2 batch AV: documented image generator null output pointer and YUVA rules
 skia/capi/sk_image_info.cpp,done,P2,codex,phase2-batch-f: SkImageInfo NULL ガードと byte-size/color-space 規約を補強
 skia/capi/sk_image_info.h,done,P2,codex,phase2-batch-f: SkImageInfo borrowed color space と rowBytes/byte-size コメントを補強
 skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
@@ -165,8 +165,8 @@ skia/capi/sk_meshes.cpp,todo,P2,,
 skia/capi/sk_meshes.h,todo,P2,,
 skia/capi/sk_op_builder.cpp,todo,P2,,
 skia/capi/sk_op_builder.h,todo,P2,,
-skia/capi/sk_open_type_svg_decoder.cpp,todo,P2,,
-skia/capi/sk_open_type_svg_decoder.h,todo,P2,,
+skia/capi/sk_open_type_svg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AW: OpenType SVG decoder null object and canvas guards
+skia/capi/sk_open_type_svg_decoder.h,done,P2,2026-05-10,Phase 2 batch AW: documented OpenType SVG decoder null and required canvas rules
 skia/capi/sk_overdraw_canvas.cpp,done,P2,phase2-batch-ah: NULL guards for overdraw draw callback wrappers,
 skia/capi/sk_overdraw_canvas.h,done,P2,phase2-batch-ah: documented required/optional pointer and no-op conventions,
 skia/capi/sk_overdraw_color_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一

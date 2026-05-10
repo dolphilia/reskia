@@ -11,10 +11,16 @@ void SkOpenTypeSVGDecoder_delete(SkOpenTypeSVGDecoder *open_type_svg_decoder) {
 }
 
 size_t SkOpenTypeSVGDecoder_approximateSize(SkOpenTypeSVGDecoder *open_type_svg_decoder) {
+    if (open_type_svg_decoder == nullptr) {
+        return 0;
+    }
     return open_type_svg_decoder->approximateSize();
 }
 
 bool SkOpenTypeSVGDecoder_render(SkOpenTypeSVGDecoder *open_type_svg_decoder, SkCanvas *canvas, int upem, SkGlyphID glyphId, SkColor foregroundColor, SkColor color) {
+    if (open_type_svg_decoder == nullptr || canvas == nullptr) {
+        return false;
+    }
     SkColor palette_colors[] = {color};
     return open_type_svg_decoder->render(*canvas, upem, glyphId, foregroundColor, palette_colors);
 }

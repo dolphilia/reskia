@@ -63,6 +63,9 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `46-phase-2-batch-as-codec.md`
 - `47-phase-2-batch-at-decoders.md`
 - `48-phase-2-batch-au-encoders.md`
+- `49-phase-2-batch-av-image-generator.md`
+- `50-phase-2-batch-aw-open-type-svg-decoder.md`
+- `51-phase-2-batch-ax-image-filters.md`
 
 ## 関連計画
 

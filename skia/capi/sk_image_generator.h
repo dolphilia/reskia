@@ -23,17 +23,17 @@ typedef struct reskia_yuva_pixmap_info_t reskia_yuva_pixmap_info_t;
 typedef struct reskia_yuva_pixmaps_t reskia_yuva_pixmaps_t;
 typedef uint32_t reskia_u32_t;
 
-void SkImageGenerator_delete(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator)
-reskia_u32_t SkImageGenerator_uniqueID(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> uint32_t
-sk_data_t SkImageGenerator_refEncodedData(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_data_t
-sk_image_info_t SkImageGenerator_getInfo(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> sk_image_info_t
-bool SkImageGenerator_isValid(reskia_image_generator_t *image_generator, reskia_recording_context_t *context); // (SkImageGenerator *image_generator, GrRecordingContext *context) -> bool
-bool SkImageGenerator_isProtected(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> bool
-bool SkImageGenerator_getPixels(reskia_image_generator_t *image_generator, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // (SkImageGenerator *image_generator, const SkImageInfo *info, void *pixels, size_t rowBytes) -> bool
-bool SkImageGenerator_getPixelsWithPixmap(reskia_image_generator_t *image_generator, const reskia_pixmap_t *pm); // (SkImageGenerator *image_generator, const SkPixmap *pm) -> bool
-bool SkImageGenerator_queryYUVAInfo(reskia_image_generator_t *image_generator, const reskia_supported_data_types_t *supportedDataTypes, reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // (SkImageGenerator *image_generator, const SkYUVAPixmapInfo::SupportedDataTypes *supportedDataTypes, SkYUVAPixmapInfo *yuvaPixmapInfo) -> bool
-bool SkImageGenerator_getYUVAPlanes(reskia_image_generator_t *image_generator, const reskia_yuva_pixmaps_t *yuvaPixmaps); // (SkImageGenerator *image_generator, const SkYUVAPixmaps *yuvaPixmaps) -> bool
-bool SkImageGenerator_isTextureGenerator(reskia_image_generator_t *image_generator); // (SkImageGenerator *image_generator) -> bool
+void SkImageGenerator_delete(reskia_image_generator_t *image_generator); // NULL image_generator is no-op.
+reskia_u32_t SkImageGenerator_uniqueID(reskia_image_generator_t *image_generator); // NULL image_generator returns 0.
+sk_data_t SkImageGenerator_refEncodedData(reskia_image_generator_t *image_generator); // NULL image_generator or missing encoded data returns 0.
+sk_image_info_t SkImageGenerator_getInfo(reskia_image_generator_t *image_generator); // NULL image_generator returns 0.
+bool SkImageGenerator_isValid(reskia_image_generator_t *image_generator, reskia_recording_context_t *context); // context may be NULL; NULL image_generator returns false.
+bool SkImageGenerator_isProtected(reskia_image_generator_t *image_generator); // NULL image_generator returns false.
+bool SkImageGenerator_getPixels(reskia_image_generator_t *image_generator, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // image_generator/info/pixels are required.
+bool SkImageGenerator_getPixelsWithPixmap(reskia_image_generator_t *image_generator, const reskia_pixmap_t *pm); // image_generator/pm are required.
+bool SkImageGenerator_queryYUVAInfo(reskia_image_generator_t *image_generator, const reskia_supported_data_types_t *supportedDataTypes, reskia_yuva_pixmap_info_t *yuvaPixmapInfo); // image_generator/supportedDataTypes/yuvaPixmapInfo are required.
+bool SkImageGenerator_getYUVAPlanes(reskia_image_generator_t *image_generator, const reskia_yuva_pixmaps_t *yuvaPixmaps); // image_generator/yuvaPixmaps are required.
+bool SkImageGenerator_isTextureGenerator(reskia_image_generator_t *image_generator); // NULL image_generator returns false.
 
 #ifdef __cplusplus
 }
