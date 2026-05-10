@@ -261,10 +261,10 @@ skia/capi/sk_stroke_rec.cpp,todo,P2,,
 skia/capi/sk_stroke_rec.h,todo,P2,,
 skia/capi/sk_surface.cpp,done,P2,codex,stability Phase 2 Batch A: surface C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and borrowed parent pointers are guarded
 skia/capi/sk_surface.h,done,P2,codex,stability Phase 2 Batch A: surface C API ownership/lifetime reviewed; header documents retained/owned/borrowed APIs for core surface accessors
-skia/capi/sk_surface_props.cpp,todo,P2,,
-skia/capi/sk_surface_props.h,todo,P2,,
-skia/capi/sk_surfaces.cpp,todo,P2,,
-skia/capi/sk_surfaces.h,todo,P2,,
+skia/capi/sk_surface_props.cpp,done,P2,2026-05-10,Phase 2 batch BG: surface props null receiver and clone handle guards
+skia/capi/sk_surface_props.h,done,P2,2026-05-10,Phase 2 batch BG: documented surface props null receiver rules
+skia/capi/sk_surfaces.cpp,done,P2,2026-05-10,Phase 2 batch BG: surfaces required image info pixmap pixels and null result handle guards
+skia/capi/sk_surfaces.h,done,P2,2026-05-10,Phase 2 batch BG: documented surfaces required pointer and nullable props rules
 skia/capi/sk_table_mask_filter.cpp,done,P2,codex,phase2-batch-t: raw table NULL guards and create NULL rule,
 skia/capi/sk_table_mask_filter.h,done,P2,codex,phase2-batch-t: 256-entry table and owned filter comments,
 skia/capi/sk_text_blob.cpp,done,P2,codex,phase2-batch-ak: SkTextBlob ref/query/serialize/static factory の NULL ガードと handle 0 規約を補強
