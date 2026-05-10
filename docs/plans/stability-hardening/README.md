@@ -113,6 +113,12 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `96-phase-2-batch-cq-image-read-pixels.md`
 - `97-phase-2-batch-cr-runtime-effect-data-child.md`
 - `98-phase-2-batch-cs-canvas-rrect-draw.md`
+- `99-phase-2-batch-ct-image-factory-handles.md`
+- `100-phase-2-batch-cu-runtime-effect-result-ownership.md`
+- `101-phase-2-batch-cv-canvas-rect-draw.md`
+- `102-phase-2-batch-cw-image-color-space-handles.md`
+- `103-phase-2-batch-cx-runtime-effect-generated-handles.md`
+- `104-phase-2-batch-cy-canvas-point-line.md`
 
 ## 関連計画
 

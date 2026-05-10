@@ -4,7 +4,16 @@
 #include "capi/sk_runtime_effect_builder.h"
 #include "capi/sk_runtime_shader_builder.h"
 #include "capi/sk_i_point.h"
+#include "capi/sk_r_rect.h"
 #include "handles/static_sk_i_point.h"
+#include "handles/static_sk_r_rect.h"
+#include "handles/static_sk_color_filter.h"
+#include "handles/static_sk_runtime_effect_result.h"
+#include "handles/static_sk_shader.h"
+#include "handles/static_sk_string.h"
+#include "handles/static_sk_string-internal.h"
+#include "include/core/SkString.h"
+#include "include/effects/SkRuntimeEffect.h"
 
 #include <cstdio>
 
@@ -66,6 +75,65 @@ int main() {
     ok &= check(SkRuntimeEffect_MakeForBlender(999999, c_options) == 0, "MakeForBlender invalid source handle");
     ok &= check(SkRuntimeEffect_MakeForBlenderDefault(0) == 0, "MakeForBlenderDefault zero source handle");
     ok &= check(SkRuntimeEffect_MakeForBlenderDefault(999999) == 0, "MakeForBlenderDefault invalid source handle");
+    const sk_r_rect_t empty_rrect_handle = SkRRect_MakeEmpty();
+    auto *empty_rrect = static_cast<reskia_r_rect_t *>(static_sk_r_rect_get_ptr(empty_rrect_handle));
+    ok &= check(empty_rrect != nullptr, "empty rrect allocation for result source");
+    const sk_string_t source_handle = empty_rrect != nullptr ? SkRRect_dumpToString(empty_rrect, false) : 0;
+    ok &= check(source_handle != 0 && static_sk_string_get_ptr(source_handle) != nullptr, "string handle for result source");
+    const sk_runtime_effect_result_t shader_result = SkRuntimeEffect_MakeForShaderDefault(source_handle);
+    ok &= check(shader_result != 0 && static_sk_runtime_effect_result_get_ptr(shader_result) != nullptr, "MakeForShaderDefault result handle ownership");
+    if (shader_result != 0) {
+        static_sk_runtime_effect_result_delete(shader_result);
+    }
+    if (source_handle != 0) {
+        static_sk_string_delete(source_handle);
+    }
+    if (empty_rrect_handle != 0) {
+        static_sk_r_rect_delete(empty_rrect_handle);
+    }
+    const sk_string_t shader_source = static_sk_string_make(SkString("half4 main(float2 p) { return half4(1); }"));
+    ok &= check(shader_source != 0 && static_sk_string_get_ptr(shader_source) != nullptr, "string handle for shader source");
+    const sk_runtime_effect_result_t generated_shader_result = SkRuntimeEffect_MakeForShaderDefault(shader_source);
+    auto *shader_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_shader_result));
+    ok &= check(shader_result_entity != nullptr && shader_result_entity->effect != nullptr, "MakeForShaderDefault valid effect");
+    if (shader_result_entity != nullptr && shader_result_entity->effect != nullptr) {
+        const sk_shader_t generated_shader = SkRuntimeEffect_makeShader(
+                reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
+                0,
+                nullptr,
+                0,
+                nullptr);
+        ok &= check(generated_shader != 0 && static_sk_shader_get_ptr(generated_shader) != nullptr, "SkRuntimeEffect_makeShader generated handle ownership");
+        if (generated_shader != 0) {
+            static_sk_shader_delete(generated_shader);
+        }
+    }
+    if (generated_shader_result != 0) {
+        static_sk_runtime_effect_result_delete(generated_shader_result);
+    }
+    if (shader_source != 0) {
+        static_sk_string_delete(shader_source);
+    }
+    const sk_string_t color_filter_source = static_sk_string_make(SkString("half4 main(half4 c) { return c; }"));
+    ok &= check(color_filter_source != 0 && static_sk_string_get_ptr(color_filter_source) != nullptr, "string handle for color filter source");
+    const sk_runtime_effect_result_t generated_color_filter_result = SkRuntimeEffect_MakeForColorFilterDefault(color_filter_source);
+    auto *color_filter_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_color_filter_result));
+    ok &= check(color_filter_result_entity != nullptr && color_filter_result_entity->effect != nullptr, "MakeForColorFilterDefault valid effect");
+    if (color_filter_result_entity != nullptr && color_filter_result_entity->effect != nullptr) {
+        const sk_color_filter_t generated_color_filter = SkRuntimeEffect_makeColorFilter(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                0);
+        ok &= check(generated_color_filter != 0 && static_sk_color_filter_get_ptr(generated_color_filter) != nullptr, "SkRuntimeEffect_makeColorFilter generated handle ownership");
+        if (generated_color_filter != 0) {
+            static_sk_color_filter_delete(generated_color_filter);
+        }
+    }
+    if (generated_color_filter_result != 0) {
+        static_sk_runtime_effect_result_delete(generated_color_filter_result);
+    }
+    if (color_filter_source != 0) {
+        static_sk_string_delete(color_filter_source);
+    }
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
     const sk_i_point_t trace_coord_handle = SkIPoint_Make(0, 0);
     auto *trace_coord = static_cast<reskia_i_point_t *>(static_sk_i_point_get_ptr(trace_coord_handle));

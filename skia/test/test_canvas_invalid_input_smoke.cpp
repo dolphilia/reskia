@@ -5,6 +5,7 @@
 #include "capi/sk_paint.h"
 #include "capi/sk_path.h"
 #include "capi/sk_picture_recorder.h"
+#include "capi/sk_point.h"
 #include "capi/sk_region.h"
 #include "capi/sk_rect.h"
 #include "capi/sk_r_rect.h"
@@ -18,6 +19,7 @@
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_picture.h"
+#include "handles/static_sk_point.h"
 #include "handles/static_sk_r_rect.h"
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
@@ -213,6 +215,34 @@ int main() {
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, nullptr, 0, paint);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, nullptr);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, paint);
+    const sk_point_t point0_handle = SkPoint_Make(0.0f, 0.0f);
+    const sk_point_t point1_handle = SkPoint_Make(1.0f, 1.0f);
+    if (!check(static_sk_point_get_ptr(point0_handle) != nullptr && static_sk_point_get_ptr(point1_handle) != nullptr, "SkPoint_Make for canvas point/line")) {
+        if (point0_handle != 0) {
+            static_sk_point_delete(point0_handle);
+        }
+        if (point1_handle != 0) {
+            static_sk_point_delete(point1_handle);
+        }
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawLine(canvas, 0, point1_handle, paint);
+    SkCanvas_drawLine(canvas, 999999, point1_handle, paint);
+    SkCanvas_drawLine(canvas, point0_handle, 999999, paint);
+    SkCanvas_drawLine(canvas, point0_handle, point1_handle, nullptr);
+    SkCanvas_drawLine(canvas, point0_handle, point1_handle, paint);
+    SkCanvas_drawLineXY(canvas, 0.0f, 0.0f, 1.0f, 1.0f, nullptr);
+    SkCanvas_drawLineXY(canvas, 0.0f, 0.0f, 1.0f, 1.0f, paint);
+    SkCanvas_drawPoint(canvas, 0, paint);
+    SkCanvas_drawPoint(canvas, 999999, paint);
+    SkCanvas_drawPoint(canvas, point0_handle, nullptr);
+    SkCanvas_drawPoint(canvas, point0_handle, paint);
+    SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, paint);
+    static_sk_point_delete(point1_handle);
+    static_sk_point_delete(point0_handle);
     const sk_rect_t round_rect_handle = SkRect_MakeXYWH(0.0f, 0.0f, 2.0f, 2.0f);
     auto *round_rect = static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(round_rect_handle));
     if (!check(round_rect != nullptr, "SkRect_MakeXYWH for canvas rounded rect")) {
@@ -220,9 +250,28 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+    const sk_i_rect_t irect_handle = SkIRect_MakeXYWH(0, 0, 2, 2);
+    auto *irect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(irect_handle));
+    if (!check(irect != nullptr, "SkIRect_MakeXYWH for canvas irect")) {
+        static_sk_rect_delete(round_rect_handle);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawIRect(canvas, nullptr, paint);
+    SkCanvas_drawIRect(canvas, irect, nullptr);
+    SkCanvas_drawIRect(canvas, irect, paint);
+    SkCanvas_drawOval(canvas, nullptr, paint);
+    SkCanvas_drawOval(canvas, round_rect, nullptr);
+    SkCanvas_drawOval(canvas, round_rect, paint);
+    SkCanvas_drawRect(canvas, 0, paint);
+    SkCanvas_drawRect(canvas, 999999, paint);
+    SkCanvas_drawRect(canvas, round_rect_handle, nullptr);
+    SkCanvas_drawRect(canvas, round_rect_handle, paint);
     const sk_r_rect_t rrect_handle = SkRRect_MakeRect(round_rect);
     auto *rrect = static_cast<reskia_r_rect_t *>(static_sk_r_rect_get_ptr(rrect_handle));
     if (!check(rrect != nullptr, "SkRRect_MakeRect for canvas rrect")) {
+        static_sk_i_rect_delete(irect_handle);
         static_sk_rect_delete(round_rect_handle);
         SkPaint_delete(paint);
         SkCanvas_delete(canvas);
@@ -239,6 +288,7 @@ int main() {
     SkCanvas_drawDRRect(canvas, rrect, rrect, nullptr);
     SkCanvas_drawDRRect(canvas, rrect, rrect, paint);
     static_sk_r_rect_delete(rrect_handle);
+    static_sk_i_rect_delete(irect_handle);
     static_sk_rect_delete(round_rect_handle);
     SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlob(canvas, 999999, 0.0f, 0.0f, paint);

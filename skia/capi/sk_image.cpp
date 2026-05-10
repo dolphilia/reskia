@@ -5,6 +5,8 @@
 #include "sk_image.h"
 #include "sk_async_read_result-internal.h"
 
+#include <utility>
+
 #include "include/core/SkImage.h"
 
 #include "../handles/static_sk_image.h"
@@ -27,8 +29,16 @@
 
 namespace {
 
+sk_image_t make_image_handle(sk_sp<SkImage> image) {
+    return image ? static_sk_image_make(std::move(image)) : 0;
+}
+
 bool has_i_size_handle(sk_i_size_t size) {
     return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
+}
+
+bool has_optional_color_space_handle(sk_color_space_t color_space) {
+    return color_space == 0 || static_sk_color_space_get_ptr(color_space) != nullptr;
 }
 
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
@@ -309,14 +319,14 @@ sk_image_t SkImage_makeSubset(reskia_image_t *image, reskia_direct_context_t *di
     if (image == nullptr || subset == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<GrDirectContext *>(direct), * reinterpret_cast<const SkIRect *>(subset)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<GrDirectContext *>(direct), * reinterpret_cast<const SkIRect *>(subset)));
 }
 
 sk_image_t SkImage_makeSubsetWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_i_rect_t *subset, sk_image_required_properties_t properties) {
     if (image == nullptr || recorder == nullptr || subset == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), * reinterpret_cast<const SkIRect *>(subset), static_sk_image_required_properties_get_entity(properties)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), * reinterpret_cast<const SkIRect *>(subset), static_sk_image_required_properties_get_entity(properties)));
 }
 
 bool SkImage_hasMipmaps(reskia_image_t *image) {
@@ -337,28 +347,28 @@ sk_image_t SkImage_withDefaultMipmaps(reskia_image_t *image) {
     if (image == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->withDefaultMipmaps());
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->withDefaultMipmaps());
 }
 
 sk_image_t SkImage_makeNonTextureImage(reskia_image_t *image, reskia_direct_context_t *context) {
     if (image == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeNonTextureImage(reinterpret_cast<GrDirectContext *>(context)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeNonTextureImage(reinterpret_cast<GrDirectContext *>(context)));
 }
 
 sk_image_t SkImage_makeRasterImage(reskia_image_t *image, reskia_direct_context_t *context, reskia_image_caching_hint_t cachingHint) {
     if (image == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeRasterImage(reinterpret_cast<GrDirectContext *>(context), static_cast<SkImage::CachingHint>(cachingHint)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeRasterImage(reinterpret_cast<GrDirectContext *>(context), static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
 sk_image_t SkImage_makeRasterImageWithoutContext(reskia_image_t *image, reskia_image_caching_hint_t cachingHint) {
     if (image == nullptr) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeRasterImage(static_cast<SkImage::CachingHint>(cachingHint)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeRasterImage(static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
 bool SkImage_asLegacyBitmap(reskia_image_t *image, reskia_bitmap_t *bitmap, reskia_image_legacy_bitmap_mode_t legacyBitmapMode) {
@@ -376,38 +386,38 @@ bool SkImage_isLazyGenerated(reskia_image_t *image) {
 }
 
 sk_image_t SkImage_makeColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, sk_color_space_t color_space) {
-    if (image == nullptr) {
+    if (image == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_sk_color_space_get_entity(color_space)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_sk_color_space_get_entity(color_space)));
 }
 
 sk_image_t SkImage_makeColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    if (image == nullptr || recorder == nullptr) {
+    if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, reskia_image_color_type_t targetColorType, sk_color_space_t color_space) {
-    if (image == nullptr) {
+    if (image == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, reskia_image_color_type_t targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    if (image == nullptr || recorder == nullptr) {
+    if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
 sk_image_t SkImage_reinterpretColorSpace(reskia_image_t *image, sk_color_space_t color_space) {
-    if (image == nullptr) {
+    if (image == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return static_sk_image_make(reinterpret_cast<SkImage *>(image)->reinterpretColorSpace(static_sk_color_space_get_entity(color_space)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->reinterpretColorSpace(static_sk_color_space_get_entity(color_space)));
 }
 
 bool SkImage_unique(reskia_image_t *image) {

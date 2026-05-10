@@ -548,6 +548,7 @@ if(RESKIA_BUILD_TESTS)
 
     add_executable(test_runtime_effect_invalid_input_smoke test/test_runtime_effect_invalid_input_smoke.cpp)
     target_include_directories(test_runtime_effect_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    target_compile_features(test_runtime_effect_invalid_input_smoke PRIVATE cxx_std_17)
     if(RESKIA_DEP_LINK_DIRS)
         target_link_directories(test_runtime_effect_invalid_input_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
     endif()

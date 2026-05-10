@@ -82,6 +82,14 @@ bool has_vertices_handle(sk_vertices_t vertices) {
     return vertices != 0 && static_sk_vertices_get_ptr(vertices) != nullptr;
 }
 
+bool has_rect_handle(sk_rect_t rect) {
+    return rect != 0 && static_sk_rect_get_ptr(rect) != nullptr;
+}
+
+bool has_point_handle(sk_point_t point) {
+    return point != 0 && static_sk_point_get_ptr(point) != nullptr;
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -459,7 +467,7 @@ void SkCanvas_drawIRect(reskia_canvas_t *canvas, const reskia_i_rect_t * rect, c
 }
 
 void SkCanvas_drawLine(reskia_canvas_t *canvas, sk_point_t p0, sk_point_t p1, const reskia_paint_t * paint) {
-    if (canvas == nullptr || p0 == 0 || p1 == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_point_handle(p0) || !has_point_handle(p1) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawLine(static_sk_point_get_entity(p0), static_sk_point_get_entity(p1), * reinterpret_cast<const SkPaint *>(paint));
@@ -544,7 +552,7 @@ void SkCanvas_drawPicturePtrWithMatrixPaint(reskia_canvas_t *canvas, const reski
 }
 
 void SkCanvas_drawPoint(reskia_canvas_t *canvas, sk_point_t p, const reskia_paint_t * paint) {
-    if (canvas == nullptr || p == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_point_handle(p) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawPoint(static_sk_point_get_entity(p), * reinterpret_cast<const SkPaint *>(paint));
@@ -565,7 +573,7 @@ void SkCanvas_drawPoints(reskia_canvas_t *canvas, reskia_canvas_point_mode_t mod
 }
 
 void SkCanvas_drawRect(reskia_canvas_t *canvas, sk_rect_t rect, const reskia_paint_t * paint) {
-    if (canvas == nullptr || rect == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_rect_handle(rect) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawRect(static_sk_rect_get_entity(rect), * reinterpret_cast<const SkPaint *>(paint));
