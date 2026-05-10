@@ -74,6 +74,13 @@ bool has_image_handle(sk_image_t image) {
     return image != 0 && static_sk_image_get_ptr(image) != nullptr;
 }
 
+bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
+    if (info == nullptr || pixels == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
+}
+
 }  // namespace
 
 extern "C" {
@@ -809,7 +816,7 @@ bool SkCanvas_readPixels(reskia_canvas_t *canvas, const reskia_bitmap_t * bitmap
 }
 
 bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t * dstInfo, void * dstPixels, size_t dstRowBytes, int srcX, int srcY) {
-    if (canvas == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+    if (canvas == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
         return false;
     }
     return reinterpret_cast<SkCanvas *>(canvas)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY);
@@ -964,7 +971,7 @@ bool SkCanvas_writePixels(reskia_canvas_t *canvas, const reskia_bitmap_t * bitma
 
 bool
 SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t * info, const void * pixels, size_t rowBytes, int x, int y) {
-    if (canvas == nullptr || info == nullptr || pixels == nullptr) {
+    if (canvas == nullptr || !has_valid_pixels(info, pixels, rowBytes)) {
         return false;
     }
     return reinterpret_cast<SkCanvas *>(canvas)->writePixels(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, x, y);

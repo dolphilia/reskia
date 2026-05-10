@@ -1,4 +1,6 @@
 #include "capi/sk_canvas.h"
+#include "capi/sk_image_info.h"
+#include "handles/static_sk_image_info.h"
 
 #include <cstdio>
 
@@ -146,6 +148,42 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, nullptr, nullptr, 0, 0, 0), "SkCanvas_readPixelsWithImageInfo(null info)")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_writePixelsWithImageInfo(canvas, nullptr, nullptr, 0, 0, 0), "SkCanvas_writePixelsWithImageInfo(null info)")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    const sk_image_info_t image_info_handle = SkImageInfo_MakeN32Premul(2, 2);
+    auto *image_info = static_cast<reskia_image_info_t *>(static_sk_image_info_get_ptr(image_info_handle));
+    if (!check(image_info != nullptr, "SkImageInfo_MakeN32Premul for canvas pixels")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    uint32_t pixels[4] = {};
+    if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, image_info, nullptr, SkImageInfo_minRowBytes(image_info), 0, 0), "SkCanvas_readPixelsWithImageInfo(null pixels)")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, image_info, pixels, 1, 0, 0), "SkCanvas_readPixelsWithImageInfo(invalid rowBytes)")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_writePixelsWithImageInfo(canvas, image_info, nullptr, SkImageInfo_minRowBytes(image_info), 0, 0), "SkCanvas_writePixelsWithImageInfo(null pixels)")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_writePixelsWithImageInfo(canvas, image_info, pixels, 1, 0, 0), "SkCanvas_writePixelsWithImageInfo(invalid rowBytes)")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    static_sk_image_info_delete(image_info_handle);
     if (!check(!SkCanvas_quickReject(canvas, nullptr), "SkCanvas_quickReject(canvas, nullptr)")) {
         SkCanvas_delete(canvas);
         return 9;
