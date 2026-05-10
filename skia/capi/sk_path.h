@@ -24,6 +24,7 @@ typedef struct reskia_w_stream_t reskia_w_stream_t;
 typedef int32_t reskia_path_fill_type_t;
 typedef int32_t reskia_path_direction_t;
 typedef int32_t reskia_path_perspective_clip_t;
+typedef int32_t reskia_path_op_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -123,6 +124,10 @@ sk_data_t SkPath_serialize(reskia_path_t *path); // (SkPath *path) -> sk_data_t
 size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
 unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
+bool SkPathOps_Op(const reskia_path_t *one, const reskia_path_t *two, reskia_path_op_t op, reskia_path_t *result); // one/two/result は非 NULL、op は SkPathOp 範囲内。invalid 入力では false
+bool SkPathOps_Simplify(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
+bool SkPathOps_TightBounds(const reskia_path_t *path, reskia_rect_t *result); // path/result は非 NULL。invalid 入力では false
+bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
 
 // static
 

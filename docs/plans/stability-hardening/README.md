@@ -80,6 +80,10 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `63-phase-2-batch-bj-font-callback-recheck.md`
 - `64-phase-2-batch-bk-mesh-specification.md`
 - `65-phase-2-batch-bl-mesh.md`
+- `66-phase-2-batch-bm-file-streams.md`
+- `67-phase-2-batch-bn-op-builder.md`
+- `68-phase-2-batch-bo-pathops.md`
+- `69-phase-2-batch-bp-document-dynamic-stream.md`
 
 ## 関連計画
 

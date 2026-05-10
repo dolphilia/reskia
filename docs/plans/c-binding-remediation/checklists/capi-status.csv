@@ -69,22 +69,22 @@ skia/capi/sk_data_table.cpp,done,P2,codex,phase2-batch-r: NULL guards and raw ta
 skia/capi/sk_data_table.h,done,P2,codex,phase2-batch-r: borrowed entry and factory array comments,
 skia/capi/sk_discrete_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約を補強
 skia/capi/sk_discrete_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
-skia/capi/sk_document.cpp,todo,P2,,
-skia/capi/sk_document.h,todo,P2,,
+skia/capi/sk_document.cpp,done,P2,2026-05-10,Phase 2 batch BP: document null lifecycle and beginPage guards
+skia/capi/sk_document.h,done,P2,2026-05-10,Phase 2 batch BP: documented document null lifecycle and borrowed canvas rules
 skia/capi/sk_drawable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkDrawable,
 skia/capi/sk_drawable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
-skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream NULL ガードと write/read/copy buffer 規約を補強
-skia/capi/sk_dynamic_memory_w_stream.h,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream raw buffer/stream transfer コメントを補強
+skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,2026-05-10,Phase 2 batch BP: dynamic memory stream null transfer guard coverage rechecked
+skia/capi/sk_dynamic_memory_w_stream.h,done,P2,2026-05-10,Phase 2 batch BP: dynamic memory stream raw buffer and stream transfer rules rechecked
 skia/capi/sk_encoded_origin.cpp,todo,P2,,
 skia/capi/sk_encoded_origin.h,todo,P2,,
 skia/capi/sk_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: encoder null guard and encodeRows row count validation
 skia/capi/sk_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented encoder null and row count rules
 skia/capi/sk_executor.cpp,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
 skia/capi/sk_executor.h,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
-skia/capi/sk_file_stream.cpp,todo,P2,,
-skia/capi/sk_file_stream.h,todo,P2,,
-skia/capi/sk_file_w_stream.cpp,todo,P2,,
-skia/capi/sk_file_w_stream.h,todo,P2,,
+skia/capi/sk_file_stream.cpp,done,P2,2026-05-10,Phase 2 batch BM: file stream null path handle and raw buffer guards
+skia/capi/sk_file_stream.h,done,P2,2026-05-10,Phase 2 batch BM: documented file stream null sentinel and buffer rules
+skia/capi/sk_file_w_stream.cpp,done,P2,2026-05-10,Phase 2 batch BM: file write stream null path stream and buffer guards
+skia/capi/sk_file_w_stream.h,done,P2,2026-05-10,Phase 2 batch BM: documented file write stream null sentinel and input rules
 skia/capi/sk_flattenable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkFlattenable,
 skia/capi/sk_flattenable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_font.cpp,done,P2,2026-05-10,Phase 2 batch BJ: font getPaths callback bridge and invalid glyph callback guards
@@ -163,8 +163,8 @@ skia/capi/sk_mesh_specification.cpp,done,P2,2026-05-10,Phase 2 batch BK: mesh sp
 skia/capi/sk_mesh_specification.h,done,P2,2026-05-10,Phase 2 batch BK: documented mesh specification borrowed runtime child/uniform and invalid input rules
 skia/capi/sk_meshes.cpp,done,P2,2026-05-10,Phase 2 batch BL: mesh buffer null data and copy pointer guards
 skia/capi/sk_meshes.h,done,P2,2026-05-10,Phase 2 batch BL: documented mesh buffer raw data and copy pointer rules
-skia/capi/sk_op_builder.cpp,todo,P2,,
-skia/capi/sk_op_builder.h,todo,P2,,
+skia/capi/sk_op_builder.cpp,done,P2,2026-05-10,Phase 2 batch BN: op builder null path result and path op guards
+skia/capi/sk_op_builder.h,done,P2,2026-05-10,Phase 2 batch BN: documented op builder path pointer and path op rules
 skia/capi/sk_open_type_svg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AW: OpenType SVG decoder null object and canvas guards
 skia/capi/sk_open_type_svg_decoder.h,done,P2,2026-05-10,Phase 2 batch AW: documented OpenType SVG decoder null and required canvas rules
 skia/capi/sk_overdraw_canvas.cpp,done,P2,phase2-batch-ah: NULL guards for overdraw draw callback wrappers,
@@ -173,8 +173,8 @@ skia/capi/sk_overdraw_color_filter.cpp,done,P2,codex,step5: RefCounted delete �
 skia/capi/sk_overdraw_color_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_paint.cpp,done,P2,codex,phase2-batch-d: SkPaint NULL ガードと borrowed/ref handle 規約を補強
 skia/capi/sk_paint.h,done,P2,codex,phase2-batch-d: SkPaint pointer/handle コメントと NULL 規約を補強
-skia/capi/sk_path.cpp,done,P2,codex,step4+phase2-batch-c: SkPath_interpolate status 規約に加えて NULL ガードを横展開
-skia/capi/sk_path.h,done,P2,codex,step4+phase2-batch-c: SkPath raw buffer/list コメントと NULL 規約を補強
+skia/capi/sk_path.cpp,done,P2,2026-05-10,Phase 2 batch BO: pathops free function wrappers and path op enum guards
+skia/capi/sk_path.h,done,P2,2026-05-10,Phase 2 batch BO: documented pathops pointer and op enum rules
 skia/capi/sk_path_1d_path_effect.cpp,done,P2,codex,phase2-batch-l: path NULL ガードと null sk_sp handle 規約を補強
 skia/capi/sk_path_1d_path_effect.h,done,P2,codex,phase2-batch-l: path 非 NULL 規約を明記
 skia/capi/sk_path_2d_path_effect.cpp,done,P2,codex,phase2-batch-l: matrix/path NULL ガードと null sk_sp handle 規約を補強

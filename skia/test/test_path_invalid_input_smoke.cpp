@@ -63,23 +63,35 @@ int main() {
     if (!check(SkPath_IsLineDegenerate(nullptr, nullptr, true), "SkPath_IsLineDegenerate(nullptr)")) {
         return 16;
     }
+    if (!check(!SkPathOps_Op(nullptr, nullptr, 0, nullptr), "SkPathOps_Op(nullptr)")) {
+        return 17;
+    }
+    if (!check(!SkPathOps_Simplify(nullptr, nullptr), "SkPathOps_Simplify(nullptr)")) {
+        return 18;
+    }
+    if (!check(!SkPathOps_TightBounds(nullptr, nullptr), "SkPathOps_TightBounds(nullptr)")) {
+        return 19;
+    }
+    if (!check(!SkPathOps_AsWinding(nullptr, nullptr), "SkPathOps_AsWinding(nullptr)")) {
+        return 20;
+    }
 
     reskia_path_t *path = SkPath_new();
     if (!check(path != nullptr, "SkPath_new")) {
-        return 17;
+        return 21;
     }
 
     if (!check(SkPath_moveToPoint(path, nullptr) == nullptr, "SkPath_moveToPoint(path, nullptr)")) {
         SkPath_delete(path);
-        return 18;
+        return 22;
     }
     if (!check(SkPath_addRect(path, nullptr, 0, 0) == nullptr, "SkPath_addRect(path, nullptr)")) {
         SkPath_delete(path);
-        return 19;
+        return 23;
     }
     if (!check(SkPath_addPoly(path, nullptr, 1, false) == nullptr, "SkPath_addPoly(path, nullptr, 1)")) {
         SkPath_delete(path);
-        return 20;
+        return 24;
     }
     SkPath_transform(path, nullptr, nullptr, 0);
     SkPath_transform(nullptr, nullptr, nullptr, 0);
@@ -87,9 +99,38 @@ int main() {
     const size_t serialized_size = SkPath_writeToMemory(path, nullptr);
     if (!check(serialized_size > 0, "SkPath_writeToMemory(path, nullptr)")) {
         SkPath_delete(path);
-        return 21;
+        return 25;
     }
 
+    reskia_path_t *other = SkPath_new();
+    reskia_path_t *result = SkPath_new();
+    if (!check(other != nullptr && result != nullptr, "SkPathOps setup paths")) {
+        SkPath_delete(result);
+        SkPath_delete(other);
+        SkPath_delete(path);
+        return 26;
+    }
+    if (!check(!SkPathOps_Op(path, other, -1, result), "SkPathOps_Op(invalid low op)")) {
+        SkPath_delete(result);
+        SkPath_delete(other);
+        SkPath_delete(path);
+        return 27;
+    }
+    if (!check(!SkPathOps_Op(path, other, 5, result), "SkPathOps_Op(invalid high op)")) {
+        SkPath_delete(result);
+        SkPath_delete(other);
+        SkPath_delete(path);
+        return 28;
+    }
+    if (!check(!SkPathOps_Op(path, other, 0, nullptr), "SkPathOps_Op(null result)")) {
+        SkPath_delete(result);
+        SkPath_delete(other);
+        SkPath_delete(path);
+        return 29;
+    }
+
+    SkPath_delete(result);
+    SkPath_delete(other);
     SkPath_delete(path);
     return 0;
 }

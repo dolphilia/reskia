@@ -76,40 +76,84 @@ int main() {
     if (!check(!SkDynamicMemoryWStream_writeStream(nullptr, nullptr, 1), "SkDynamicMemoryWStream_writeStream(nullptr)")) {
         return 17;
     }
+    if (!check(!SkDynamicMemoryWStream_writeToStream(nullptr, nullptr), "SkDynamicMemoryWStream_writeToStream(nullptr)")) {
+        return 18;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeToAndReset(nullptr, nullptr), "SkDynamicMemoryWStream_writeToAndReset(nullptr)")) {
+        return 19;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeToAndResetDynamicStream(nullptr, nullptr), "SkDynamicMemoryWStream_writeToAndResetDynamicStream(nullptr)")) {
+        return 20;
+    }
     SkDynamicMemoryWStream_copyTo(nullptr, nullptr);
     SkDynamicMemoryWStream_copyToAndReset(nullptr, nullptr);
+    SkDynamicMemoryWStream_prependToAndReset(nullptr, nullptr);
     SkDynamicMemoryWStream_reset(nullptr);
+    SkDynamicMemoryWStream_padToAlign4(nullptr);
     SkDynamicMemoryWStream_flush(nullptr);
+    if (!check(!SkDynamicMemoryWStream_write8(nullptr, 1), "SkDynamicMemoryWStream_write8(nullptr)")) {
+        return 21;
+    }
+    if (!check(!SkDynamicMemoryWStream_write16(nullptr, 1), "SkDynamicMemoryWStream_write16(nullptr)")) {
+        return 22;
+    }
+    if (!check(!SkDynamicMemoryWStream_write32(nullptr, 1), "SkDynamicMemoryWStream_write32(nullptr)")) {
+        return 23;
+    }
+    if (!check(!SkDynamicMemoryWStream_newline(nullptr), "SkDynamicMemoryWStream_newline(nullptr)")) {
+        return 24;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeDecAsText(nullptr, 1), "SkDynamicMemoryWStream_writeDecAsText(nullptr)")) {
+        return 25;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeBigDecAsText(nullptr, 1, 1), "SkDynamicMemoryWStream_writeBigDecAsText(nullptr)")) {
+        return 26;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeHexAsText(nullptr, 1, 1), "SkDynamicMemoryWStream_writeHexAsText(nullptr)")) {
+        return 27;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeScalarAsText(nullptr, 1.0f), "SkDynamicMemoryWStream_writeScalarAsText(nullptr)")) {
+        return 28;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeBool(nullptr, true), "SkDynamicMemoryWStream_writeBool(nullptr)")) {
+        return 29;
+    }
+    if (!check(!SkDynamicMemoryWStream_writeScalar(nullptr, 1.0f), "SkDynamicMemoryWStream_writeScalar(nullptr)")) {
+        return 30;
+    }
+    if (!check(!SkDynamicMemoryWStream_writePackedUInt(nullptr, 1), "SkDynamicMemoryWStream_writePackedUInt(nullptr)")) {
+        return 31;
+    }
 
     reskia_dynamic_memory_w_stream_t *dynamic_stream = SkDynamicMemoryWStream_new();
     if (!check(dynamic_stream != nullptr, "SkDynamicMemoryWStream_new")) {
-        return 18;
+        return 32;
     }
     const uint8_t bytes[] = {1, 2, 3};
     if (!check(SkDynamicMemoryWStream_write(dynamic_stream, bytes, sizeof(bytes)), "SkDynamicMemoryWStream_write")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 19;
+        return 33;
     }
     if (!check(SkDynamicMemoryWStream_bytesWritten(dynamic_stream) == sizeof(bytes), "SkDynamicMemoryWStream_bytesWritten")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 20;
+        return 34;
     }
     uint8_t copied[3] = {};
     if (!check(SkDynamicMemoryWStream_read(dynamic_stream, copied, 0, sizeof(copied)), "SkDynamicMemoryWStream_read")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 21;
+        return 35;
     }
     if (!check(copied[0] == 1 && copied[1] == 2 && copied[2] == 3, "SkDynamicMemoryWStream_read contents")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 22;
+        return 36;
     }
     if (!check(!SkDynamicMemoryWStream_read(dynamic_stream, nullptr, 0, 1), "SkDynamicMemoryWStream_read null buffer")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 23;
+        return 37;
     }
     if (!check(SkDynamicMemoryWStream_writeStream(dynamic_stream, nullptr, 0), "SkDynamicMemoryWStream_writeStream null zero")) {
         SkDynamicMemoryWStream_delete(dynamic_stream);
-        return 24;
+        return 38;
     }
 
     SkDynamicMemoryWStream_delete(dynamic_stream);

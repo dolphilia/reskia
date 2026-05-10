@@ -5,6 +5,7 @@
 #include "sk_path.h"
 
 #include "include/core/SkPath.h"
+#include "include/pathops/SkPathOps.h"
 
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_rect.h"
@@ -15,6 +16,14 @@
 #include "../handles/static_sk_point-internal.h"
 #include "../handles/static_sk_rect-internal.h"
 #include "../handles/static_sk_data-internal.h"
+
+namespace {
+
+bool is_valid_path_op(reskia_path_op_t op) {
+    return op >= kDifference_SkPathOp && op <= kReverseDifference_SkPathOp;
+}
+
+}  // namespace
 
 extern "C" {
 
@@ -716,6 +725,33 @@ bool SkPath_isValid(reskia_path_t *path) {
     return reinterpret_cast<SkPath *>(path)->isValid();
 }
 
+bool SkPathOps_Op(const reskia_path_t *one, const reskia_path_t *two, reskia_path_op_t op, reskia_path_t *result) {
+    if (one == nullptr || two == nullptr || result == nullptr || !is_valid_path_op(op)) {
+        return false;
+    }
+    return Op(*reinterpret_cast<const SkPath *>(one), *reinterpret_cast<const SkPath *>(two), static_cast<SkPathOp>(op), reinterpret_cast<SkPath *>(result));
+}
+
+bool SkPathOps_Simplify(const reskia_path_t *path, reskia_path_t *result) {
+    if (path == nullptr || result == nullptr) {
+        return false;
+    }
+    return Simplify(*reinterpret_cast<const SkPath *>(path), reinterpret_cast<SkPath *>(result));
+}
+
+bool SkPathOps_TightBounds(const reskia_path_t *path, reskia_rect_t *result) {
+    if (path == nullptr || result == nullptr) {
+        return false;
+    }
+    return TightBounds(*reinterpret_cast<const SkPath *>(path), reinterpret_cast<SkRect *>(result));
+}
+
+bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result) {
+    if (path == nullptr || result == nullptr) {
+        return false;
+    }
+    return AsWinding(*reinterpret_cast<const SkPath *>(path), reinterpret_cast<SkPath *>(result));
+}
 
 // static
 
