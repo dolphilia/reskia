@@ -23,6 +23,8 @@
 #include "include/core/SkVertices.h"
 #include "include/core/SkMesh.h"
 
+#include <utility>
+
 #include "../handles/static_sk_canvas.h"
 #include "../handles/static_sk_surface.h"
 #include "../handles/static_sk_vertices.h"
@@ -467,14 +469,22 @@ void SkCanvas_drawPicture(reskia_canvas_t *canvas, sk_picture_t picture) {
     if (canvas == nullptr || picture == 0) {
         return;
     }
-    reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture));
+    sk_sp<SkPicture> native_picture = static_sk_picture_get_entity(picture);
+    if (!native_picture) {
+        return;
+    }
+    reinterpret_cast<SkCanvas *>(canvas)->drawPicture(native_picture);
 }
 
 void SkCanvas_drawPictureHandleWithMatrixPaint(reskia_canvas_t *canvas, sk_picture_t picture, const reskia_matrix_t * matrix, const reskia_paint_t * paint) {
     if (canvas == nullptr || picture == 0) {
         return;
     }
-    reinterpret_cast<SkCanvas *>(canvas)->drawPicture(static_sk_picture_get_entity(picture), reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint));
+    sk_sp<SkPicture> native_picture = static_sk_picture_get_entity(picture);
+    if (!native_picture) {
+        return;
+    }
+    reinterpret_cast<SkCanvas *>(canvas)->drawPicture(native_picture, reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawPicturePtr(reskia_canvas_t *canvas, const reskia_picture_t * picture) {
@@ -726,7 +736,8 @@ sk_surface_t SkCanvas_makeSurface(reskia_canvas_t *canvas, const reskia_image_in
     if (canvas == nullptr || info == nullptr) {
         return 0;
     }
-    return static_sk_surface_make(reinterpret_cast<SkCanvas *>(canvas)->makeSurface(* reinterpret_cast<const SkImageInfo *>(info), reinterpret_cast<const SkSurfaceProps *>(props)));
+    sk_sp<SkSurface> surface = reinterpret_cast<SkCanvas *>(canvas)->makeSurface(* reinterpret_cast<const SkImageInfo *>(info), reinterpret_cast<const SkSurfaceProps *>(props));
+    return surface ? static_sk_surface_make(std::move(surface)) : 0;
 }
 
 bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t * pixmap) {

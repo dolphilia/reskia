@@ -28,6 +28,9 @@ struct ReskiaFontGetPathsCallback {
 
 void reskia_font_get_paths_bridge(const SkPath *pathOrNull, const SkMatrix &mx, void *ctx) {
     auto *callback = static_cast<ReskiaFontGetPathsCallback *>(ctx);
+    if (callback == nullptr || callback->proc == nullptr) {
+        return;
+    }
     callback->proc(
             reinterpret_cast<const reskia_path_t *>(pathOrNull),
             reinterpret_cast<const reskia_matrix_t *>(&mx),

@@ -82,7 +82,7 @@ void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, floa
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint); // count > 0 では glyphs/pos は count 要素以上、非 NULL。invalid/empty 結果では 0
 bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path); // path は非 NULL。invalid 入力では false
 
-void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx); // borrowed during callback (SkFont *font, const SkGlyphID glyphIDs[], int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx)
+void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx); // count > 0 では glyphIDs/glyphPathProc は非 NULL。callback 中の path_or_null/matrix は借用で保持不可。invalid 入力では no-op
 float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics); // metrics は NULL 許可。NULL font では 0
 float SkFont_getSpacing(reskia_font_t *font); // NULL 入力では 0
 void SkFont_dump(reskia_font_t *font); // NULL 入力では no-op

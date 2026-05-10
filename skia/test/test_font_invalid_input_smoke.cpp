@@ -14,6 +14,13 @@ bool check(bool condition, const char *message) {
     return true;
 }
 
+void glyph_path_counter(const reskia_path_t *, const reskia_matrix_t *, void *ctx) {
+    auto *count = static_cast<int *>(ctx);
+    if (count != nullptr) {
+        ++*count;
+    }
+}
+
 }  // namespace
 
 int main() {
@@ -160,6 +167,23 @@ int main() {
     }
 
     uint16_t glyphs[1] = {SkFont_unicharToGlyph(font, 65)};
+    int path_callback_count = 0;
+    SkFont_getPaths(font, nullptr, 1, glyph_path_counter, &path_callback_count);
+    if (!check(path_callback_count == 0, "SkFont_getPaths(valid font, null glyphIDs)")) {
+        SkFont_delete(font);
+        return 34;
+    }
+    SkFont_getPaths(font, glyphs, 0, glyph_path_counter, &path_callback_count);
+    if (!check(path_callback_count == 0, "SkFont_getPaths(valid font, zero count)")) {
+        SkFont_delete(font);
+        return 35;
+    }
+    SkFont_getPaths(font, glyphs, 1, nullptr, &path_callback_count);
+    if (!check(path_callback_count == 0, "SkFont_getPaths(valid font, null callback)")) {
+        SkFont_delete(font);
+        return 36;
+    }
+
     float widths[1] = {0.0f};
     SkFont_getWidthsWithoutBounds(font, glyphs, 1, widths);
     SkFont_getWidths(font, glyphs, 0, nullptr, nullptr);

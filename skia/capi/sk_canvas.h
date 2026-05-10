@@ -129,8 +129,8 @@ void SkCanvas_drawOval(reskia_canvas_t *canvas, const reskia_rect_t *oval, const
 void SkCanvas_drawPaint(reskia_canvas_t *canvas, const reskia_paint_t *paint); // paint: non-null (SkCanvas *canvas, const SkPaint *paint)
 void SkCanvas_drawPatch(reskia_canvas_t *canvas, const reskia_point_t *cubics, const uint32_t colors[4], const reskia_point_t *texCoords, reskia_blend_mode_t mode, const reskia_paint_t *paint); // cubics/texCoords/paint: non-null; colors may be NULL (SkCanvas *canvas, const SkPoint cubics[12], const SkColor colors[4], const SkPoint texCoords[4], SkBlendMode mode, const SkPaint *paint)
 void SkCanvas_drawPath(reskia_canvas_t *canvas, const reskia_path_t *path, const reskia_paint_t *paint); // path/paint: non-null (SkCanvas *canvas, const SkPath *path, const SkPaint *paint)
-void SkCanvas_drawPicture(reskia_canvas_t *canvas, sk_picture_t picture); // (SkCanvas *canvas, sk_picture_t picture)
-void SkCanvas_drawPictureHandleWithMatrixPaint(reskia_canvas_t *canvas, sk_picture_t picture, const reskia_matrix_t *matrix, const reskia_paint_t *paint); // picture: non-null; matrix/paint may be NULL (SkCanvas *canvas, sk_picture_t picture, const SkMatrix *matrix, const SkPaint *paint)
+void SkCanvas_drawPicture(reskia_canvas_t *canvas, sk_picture_t picture); // invalid picture handle は no-op (SkCanvas *canvas, sk_picture_t picture)
+void SkCanvas_drawPictureHandleWithMatrixPaint(reskia_canvas_t *canvas, sk_picture_t picture, const reskia_matrix_t *matrix, const reskia_paint_t *paint); // invalid picture handle は no-op。matrix/paint may be NULL (SkCanvas *canvas, sk_picture_t picture, const SkMatrix *matrix, const SkPaint *paint)
 void SkCanvas_drawPicturePtr(reskia_canvas_t *canvas, const reskia_picture_t *picture); // picture: non-null (SkCanvas *canvas, const SkPicture *picture)
 void SkCanvas_drawPicturePtrWithMatrixPaint(reskia_canvas_t *canvas, const reskia_picture_t *picture, const reskia_matrix_t *matrix, const reskia_paint_t *paint); // picture: non-null; matrix/paint may be NULL (SkCanvas *canvas, const SkPicture *picture, const SkMatrix *matrix, const SkPaint *paint)
 void SkCanvas_drawPoint(reskia_canvas_t *canvas, sk_point_t p, const reskia_paint_t *paint); // paint: non-null (SkCanvas *canvas, sk_point_t p, const SkPaint *paint)
@@ -166,7 +166,7 @@ sk_matrix_t SkCanvas_getTotalMatrix(reskia_canvas_t *canvas); // (SkCanvas *canv
 sk_image_info_t SkCanvas_imageInfo(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_image_info_t
 bool SkCanvas_isClipEmpty(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
 bool SkCanvas_isClipRect(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
-sk_surface_t SkCanvas_makeSurface(reskia_canvas_t *canvas, const reskia_image_info_t *info, const reskia_surface_props_t *props); // props may be NULL (SkCanvas *canvas, const SkImageInfo *info, const SkSurfaceProps *props) -> sk_surface_t
+sk_surface_t SkCanvas_makeSurface(reskia_canvas_t *canvas, const reskia_image_info_t *info, const reskia_surface_props_t *props); // info: non-null; props may be NULL; 生成不能なら 0 (SkCanvas *canvas, const SkImageInfo *info, const SkSurfaceProps *props) -> sk_surface_t
 bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t *pixmap); // pixmap: non-null out param (SkCanvas *canvas, SkPixmap *pixmap) -> bool
 void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path_t *path, const reskia_draw_shadow_rec_t *rec); // path/rec: non-null (SkCanvas *canvas, const SkPath *path, const SkDrawShadowRec *rec)
 bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path); // path: non-null (SkCanvas *canvas, const SkPath *path) -> bool

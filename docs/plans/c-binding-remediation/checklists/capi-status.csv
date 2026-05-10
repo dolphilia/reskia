@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory NULL guards and typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
-skia/capi/sk_canvas.h,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
+skia/capi/sk_canvas.cpp,done,P2,2026-05-10,Phase 2 batch BI: canvas draw picture invalid handle and makeSurface null result recheck
+skia/capi/sk_canvas.h,done,P2,2026-05-10,Phase 2 batch BI: documented canvas draw picture invalid handle and makeSurface handle 0 rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
@@ -87,8 +87,8 @@ skia/capi/sk_file_w_stream.cpp,todo,P2,,
 skia/capi/sk_file_w_stream.h,todo,P2,,
 skia/capi/sk_flattenable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkFlattenable,
 skia/capi/sk_flattenable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
-skia/capi/sk_font.cpp,done,P2,phase2-batch-aa: NULL/raw-array guards for SkFont query/state/text/glyph APIs,
-skia/capi/sk_font.h,done,P2,phase2-batch-aa: documented NULL/raw-array/borrowed-pointer/handle-0 conventions,
+skia/capi/sk_font.cpp,done,P2,2026-05-10,Phase 2 batch BJ: font getPaths callback bridge and invalid glyph callback guards
+skia/capi/sk_font.h,done,P2,2026-05-10,Phase 2 batch BJ: documented font getPaths borrowed callback and invalid input rules
 skia/capi/sk_font_arguments.cpp,done,P2,phase2-batch-ac: NULL guards for SkFontArguments setters/getters,
 skia/capi/sk_font_arguments.h,done,P2,phase2-batch-ac: documented NULL/default-handle/handle-0 conventions,
 skia/capi/sk_font_metrics.cpp,done,P2,phase2-batch-ac: NULL output guards for SkFontMetrics query helpers,
@@ -157,12 +157,12 @@ skia/capi/sk_matrix.cpp,done,P2,codex,phase2-batch-v: NULL guards and raw array/
 skia/capi/sk_matrix.h,done,P2,codex,phase2-batch-v: matrix raw array/count/output comments,
 skia/capi/sk_memory_stream.cpp,done,P2,codex,phase2-batch-h: SkMemoryStream NULL ガードと read/peek/raw buffer 規約を補強
 skia/capi/sk_memory_stream.h,done,P2,codex,phase2-batch-h: SkMemoryStream borrowed memory と direct/copy lifetime コメントを補強
-skia/capi/sk_mesh.cpp,todo,P2,,
-skia/capi/sk_mesh.h,todo,P2,,
-skia/capi/sk_mesh_specification.cpp,todo,P2,,
-skia/capi/sk_mesh_specification.h,todo,P2,,
-skia/capi/sk_meshes.cpp,todo,P2,,
-skia/capi/sk_meshes.h,todo,P2,,
+skia/capi/sk_mesh.cpp,done,P2,2026-05-10,Phase 2 batch BL: mesh null getters bounds validation and invalid result sentinels
+skia/capi/sk_mesh.h,done,P2,2026-05-10,Phase 2 batch BL: documented mesh borrowed pointers handle 0 and bounds rules
+skia/capi/sk_mesh_specification.cpp,done,P2,2026-05-10,Phase 2 batch BK: mesh specification runtime child/uniform null guards and factory input validation
+skia/capi/sk_mesh_specification.h,done,P2,2026-05-10,Phase 2 batch BK: documented mesh specification borrowed runtime child/uniform and invalid input rules
+skia/capi/sk_meshes.cpp,done,P2,2026-05-10,Phase 2 batch BL: mesh buffer null data and copy pointer guards
+skia/capi/sk_meshes.h,done,P2,2026-05-10,Phase 2 batch BL: documented mesh buffer raw data and copy pointer rules
 skia/capi/sk_op_builder.cpp,todo,P2,,
 skia/capi/sk_op_builder.h,todo,P2,,
 skia/capi/sk_open_type_svg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AW: OpenType SVG decoder null object and canvas guards

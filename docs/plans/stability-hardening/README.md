@@ -76,6 +76,10 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `59-phase-2-batch-bf-runtime-effect.md`
 - `60-phase-2-batch-bg-surface-props-surfaces.md`
 - `61-phase-2-batch-bh-images-recheck.md`
+- `62-phase-2-batch-bi-canvas-recheck.md`
+- `63-phase-2-batch-bj-font-callback-recheck.md`
+- `64-phase-2-batch-bk-mesh-specification.md`
+- `65-phase-2-batch-bl-mesh.md`
 
 ## 関連計画
 
