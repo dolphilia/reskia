@@ -256,7 +256,10 @@ void SkCanvas_drawArc(reskia_canvas_t *canvas, const reskia_rect_t * oval, float
 }
 
 void SkCanvas_drawAtlas(reskia_canvas_t *canvas, const reskia_image_t * atlas, const reskia_rsxform_t * xform, const reskia_rect_t * tex, const uint32_t * colors, int count, reskia_blend_mode_t mode, const reskia_sampling_options_t * sampling, const reskia_rect_t * cullRect, const reskia_paint_t * paint) {
-    if (canvas == nullptr || atlas == nullptr || xform == nullptr || tex == nullptr || sampling == nullptr) {
+    if (canvas == nullptr || count <= 0) {
+        return;
+    }
+    if (atlas == nullptr || xform == nullptr || tex == nullptr || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawAtlas(reinterpret_cast<const SkImage *>(atlas), reinterpret_cast<const SkRSXform *>(xform), reinterpret_cast<const SkRect *>(tex), reinterpret_cast<const SkColor *>(colors), count, static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkRect *>(cullRect), reinterpret_cast<const SkPaint *>(paint));
@@ -612,7 +615,10 @@ void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const reskia_vertices_t *
 }
 
 void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const reskia_image_set_entry_t * imageSet, int cnt, const reskia_point_t * dstClips, const reskia_matrix_t * preViewMatrices, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint, reskia_canvas_src_rect_constraint_t constraint) {
-    if (canvas == nullptr || sampling == nullptr || (cnt > 0 && imageSet == nullptr)) {
+    if (canvas == nullptr || cnt <= 0) {
+        return;
+    }
+    if (imageSet == nullptr || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAImageSet(reinterpret_cast<const SkCanvas::ImageSetEntry *>(imageSet), cnt, reinterpret_cast<const SkPoint *>(dstClips), reinterpret_cast<const SkMatrix *>(preViewMatrices), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));

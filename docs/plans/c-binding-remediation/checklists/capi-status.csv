@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-10,Phase 2 batch BS: canvas raw text and glyph array count guards
-skia/capi/sk_canvas.h,done,P2,2026-05-10,Phase 2 batch BS: documented canvas raw text and glyph array pointer rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-10,Phase 2 batch BV: canvas atlas and image set count guards
+skia/capi/sk_canvas.h,done,P2,2026-05-10,Phase 2 batch BV: documented canvas atlas and image set pointer rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
