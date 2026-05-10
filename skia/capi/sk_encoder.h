@@ -11,8 +11,8 @@ extern "C" {
 
 typedef struct reskia_encoder_t reskia_encoder_t;
 
-void SkEncoder_delete(reskia_encoder_t *encoder); // (SkEncoder *encoder)
-bool SkEncoder_encodeRows(reskia_encoder_t *encoder, int numRows); // (SkEncoder *encoder, int numRows) -> bool
+void SkEncoder_delete(reskia_encoder_t *encoder); // NULL encoder is no-op.
+bool SkEncoder_encodeRows(reskia_encoder_t *encoder, int numRows); // NULL encoder or numRows <= 0 returns false.
 
 #ifdef __cplusplus
 }

@@ -77,8 +77,8 @@ skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,codex,phase2-batch-i: SkDynamic
 skia/capi/sk_dynamic_memory_w_stream.h,done,P2,codex,phase2-batch-i: SkDynamicMemoryWStream raw buffer/stream transfer コメントを補強
 skia/capi/sk_encoded_origin.cpp,todo,P2,,
 skia/capi/sk_encoded_origin.h,todo,P2,,
-skia/capi/sk_encoder.cpp,todo,P2,,
-skia/capi/sk_encoder.h,todo,P2,,
+skia/capi/sk_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: encoder null guard and encodeRows row count validation
+skia/capi/sk_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented encoder null and row count rules
 skia/capi/sk_executor.cpp,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
 skia/capi/sk_executor.h,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一
 skia/capi/sk_file_stream.cpp,todo,P2,,
@@ -135,8 +135,8 @@ skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_
 skia/capi/sk_images.h,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一
 skia/capi/sk_jpeg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_jpeg_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_jpeg_encoder.cpp,todo,P2,,
-skia/capi/sk_jpeg_encoder.h,todo,P2,,
+skia/capi/sk_jpeg_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: stream pixmap image options guards and handle 0 rules
+skia/capi/sk_jpeg_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented JPEG encoder pointer and handle rules
 skia/capi/sk_jpegxl_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_jpegxl_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_line_2d_path_effect.cpp,done,P2,codex,phase2-batch-l: matrix NULL ガードと null sk_sp handle 規約を補強
@@ -201,8 +201,8 @@ skia/capi/sk_pixmap_utils.cpp,done,P2,2026-05-10,Phase 2 batch AO: null guards a
 skia/capi/sk_pixmap_utils.h,done,P2,2026-05-10,Phase 2 batch AO: documented null and origin conventions
 skia/capi/sk_png_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_png_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_png_encoder.cpp,todo,P2,,
-skia/capi/sk_png_encoder.h,todo,P2,,
+skia/capi/sk_png_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: stream pixmap image options guards and handle 0 rules
+skia/capi/sk_png_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented PNG encoder pointer and handle rules
 skia/capi/sk_point.cpp,todo,P2,,
 skia/capi/sk_point.h,todo,P2,,
 skia/capi/sk_point_3.cpp,todo,P2,,
@@ -299,8 +299,8 @@ skia/capi/sk_wbmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw b
 skia/capi/sk_wbmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_webp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_webp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_webp_encoder.cpp,todo,P2,,
-skia/capi/sk_webp_encoder.h,todo,P2,,
+skia/capi/sk_webp_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: stream pixmap image frame options guards and handle 0 rules
+skia/capi/sk_webp_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented WebP encoder pointer frame and handle rules
 skia/capi/sk_write_buffer.cpp,done,P2,2026-05-10,Phase 2 batch AR: primitive/array/geometry/object write NULL guards completed
 skia/capi/sk_write_buffer.h,done,P2,2026-05-10,Phase 2 batch AR: documented write buffer primitive array and geometry null rules
 skia/capi/sk_yuva_info.cpp,done,P2,2026-05-10,Phase 2 batch AQ: null guards enum validation plane index checks and handle validation

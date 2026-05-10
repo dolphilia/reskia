@@ -6,14 +6,26 @@
 
 #include "include/encode/SkEncoder.h"
 
+namespace {
+
+SkEncoder *as_encoder(reskia_encoder_t *encoder) {
+    return reinterpret_cast<SkEncoder *>(encoder);
+}
+
+} // namespace
+
 extern "C" {
 
 void SkEncoder_delete(reskia_encoder_t *encoder) {
-    delete reinterpret_cast<SkEncoder *>(encoder);
+    delete as_encoder(encoder);
 }
 
 bool SkEncoder_encodeRows(reskia_encoder_t *encoder, int numRows) {
-    return reinterpret_cast<SkEncoder *>(encoder)->encodeRows(numRows);
+    SkEncoder *native = as_encoder(encoder);
+    if (native == nullptr || numRows <= 0) {
+        return false;
+    }
+    return native->encodeRows(numRows);
 }
 
 }
