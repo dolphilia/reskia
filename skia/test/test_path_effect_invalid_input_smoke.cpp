@@ -58,6 +58,9 @@ int main() {
     if (!check(SkPathEffect_serializeToMemory(nullptr, nullptr, 0, nullptr) == 0, "SkPathEffect_serializeToMemory(nullptr)")) {
         return 9;
     }
+    if (!check(SkPathEffect_serializeToMemory(nullptr, nullptr, 8, nullptr) == 0, "SkPathEffect_serializeToMemory(nullptr, nonzero size)")) {
+        return 26;
+    }
     if (!check(!SkPathEffect_unique(nullptr), "SkPathEffect_unique(nullptr)")) {
         return 10;
     }
@@ -75,6 +78,9 @@ int main() {
     }
     if (!check(SkPathEffect_FactoryToName(0) == nullptr, "SkPathEffect_FactoryToName(0)")) {
         return 15;
+    }
+    if (!check(SkPathEffect_FactoryToName(999999) == nullptr, "SkPathEffect_FactoryToName(invalid)")) {
+        return 27;
     }
     SkPathEffect_Register(nullptr, 0);
 

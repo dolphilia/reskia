@@ -32,6 +32,13 @@ sk_flattenable_factory_t make_flattenable_factory_handle(SkFlattenable::Factory 
     return static_sk_flattenable_factory_make(factory);
 }
 
+sk_data_t make_data_handle(sk_sp<SkData> data) {
+    if (!data) {
+        return 0;
+    }
+    return static_sk_data_make(std::move(data));
+}
+
 }  // namespace
 
 extern "C" {
@@ -112,11 +119,11 @@ sk_data_t SkPathEffect_serialize(reskia_path_effect_t *path_effect, const reskia
     if (path_effect == nullptr) {
         return 0;
     }
-    return static_sk_data_make(reinterpret_cast<SkPathEffect *>(path_effect)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
+    return make_data_handle(reinterpret_cast<SkPathEffect *>(path_effect)->serialize(reinterpret_cast<const SkSerialProcs *>(procs)));
 }
 
 size_t SkPathEffect_serializeToMemory(reskia_path_effect_t *path_effect, uint8_t *memory, size_t memory_size, const reskia_serial_procs_t *procs) {
-    if (path_effect == nullptr) {
+    if (path_effect == nullptr || (memory == nullptr && memory_size != 0)) {
         return 0;
     }
     return reinterpret_cast<SkPathEffect *>(path_effect)->serialize(memory, memory_size, reinterpret_cast<const SkSerialProcs *>(procs));
@@ -158,7 +165,7 @@ int SkPathEffect_GetFlattenableType() {
 }
 
 sk_path_effect_t SkPathEffect_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs) {
-    if (data == nullptr) {
+    if (data == nullptr || size == 0) {
         return 0;
     }
     return make_path_effect_handle(SkPathEffect::Deserialize(data, size, reinterpret_cast<const SkDeserialProcs *>(procs)));
@@ -172,17 +179,19 @@ sk_flattenable_factory_t SkPathEffect_NameToFactory(const char name[]) {
 }
 
 const char * SkPathEffect_FactoryToName(sk_flattenable_factory_t factory) {
-    if (factory == 0) {
+    SkFlattenable::Factory native = static_sk_flattenable_factory_get_entity(factory);
+    if (native == nullptr) {
         return nullptr;
     }
-    return SkPathEffect::FactoryToName(static_sk_flattenable_factory_get_entity(factory));
+    return SkPathEffect::FactoryToName(native);
 }
 
 void SkPathEffect_Register(const char name[], sk_flattenable_factory_t factory) {
-    if (name == nullptr || factory == 0) {
+    SkFlattenable::Factory native = static_sk_flattenable_factory_get_entity(factory);
+    if (name == nullptr || native == nullptr) {
         return;
     }
-    SkPathEffect::Register(name, static_sk_flattenable_factory_get_entity(factory));
+    SkPathEffect::Register(name, native);
 }
 
 }

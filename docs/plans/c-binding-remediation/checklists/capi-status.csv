@@ -181,8 +181,8 @@ skia/capi/sk_path_2d_path_effect.cpp,done,P2,codex,phase2-batch-l: matrix/path N
 skia/capi/sk_path_2d_path_effect.h,done,P2,codex,phase2-batch-l: matrix/path 非 NULL 規約を明記
 skia/capi/sk_path_builder.cpp,todo,P2,,
 skia/capi/sk_path_builder.h,todo,P2,,
-skia/capi/sk_path_effect.cpp,done,P2,codex,phase2-batch-l: NULL guards and null handle rules,
-skia/capi/sk_path_effect.h,done,P2,codex,phase2-batch-l: serialize/filter/factory pointer rules,
+skia/capi/sk_path_effect.cpp,done,P2,2026-05-10,Phase 2 batch BA: path effect serialize data handle memory output and factory invalid handle guards
+skia/capi/sk_path_effect.h,done,P2,2026-05-10,Phase 2 batch BA: documented path effect serialize null result and nonzero output buffer rules
 skia/capi/sk_path_measure.cpp,done,P2,codex,phase2-batch-q: NULL guards for path measure APIs,
 skia/capi/sk_path_measure.h,done,P2,codex,phase2-batch-q: path/output pointer comments,
 skia/capi/sk_pdf.cpp,todo,P2,,
