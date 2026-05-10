@@ -7,6 +7,19 @@
 #include "../handles/static_sk_text_blob-internal.h"
 #include "../handles/static_sk_shaper_run_handler_buffer-internal.h"
 
+#include <utility>
+
+namespace {
+
+sk_text_blob_t make_text_blob_handle(sk_sp<SkTextBlob> blob) {
+    if (!blob) {
+        return 0;
+    }
+    return static_sk_text_blob_make(std::move(blob));
+}
+
+} // namespace
+
 extern "C" {
 
 SkTextBlobBuilderRunHandler *SkTextBlobBuilderRunHandler_new(const char *utf8Text, sk_point_t offset) {
@@ -18,33 +31,57 @@ void SkTextBlobBuilderRunHandler_delete(SkTextBlobBuilderRunHandler *text_blob_b
 }
 
 sk_text_blob_t SkTextBlobBuilderRunHandler_makeBlob(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {
-    return static_sk_text_blob_make(text_blob_builder_run_handler->makeBlob());
+    if (text_blob_builder_run_handler == nullptr) {
+        return 0;
+    }
+    return make_text_blob_handle(text_blob_builder_run_handler->makeBlob());
 }
 
 sk_point_t SkTextBlobBuilderRunHandler_endPoint(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {
+    if (text_blob_builder_run_handler == nullptr) {
+        return 0;
+    }
     return static_sk_point_make(text_blob_builder_run_handler->endPoint());
 }
 
 void SkTextBlobBuilderRunHandler_beginLine(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {
+    if (text_blob_builder_run_handler == nullptr) {
+        return;
+    }
     text_blob_builder_run_handler->beginLine();
 }
 
 void SkTextBlobBuilderRunHandler_runInfo(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler, const SkTextBlobBuilderRunHandler::RunInfo *run_info) {
+    if (text_blob_builder_run_handler == nullptr || run_info == nullptr) {
+        return;
+    }
     text_blob_builder_run_handler->runInfo(*run_info);
 }
 void SkTextBlobBuilderRunHandler_commitRunInfo(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {
+    if (text_blob_builder_run_handler == nullptr) {
+        return;
+    }
     text_blob_builder_run_handler->commitRunInfo();
 }
 
 sk_shaper_run_handler_buffer_t SkTextBlobBuilderRunHandler_runBuffer(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler, const SkTextBlobBuilderRunHandler::RunInfo *run_info) {
+    if (text_blob_builder_run_handler == nullptr || run_info == nullptr) {
+        return 0;
+    }
     return static_sk_shaper_run_handler_buffer_make(text_blob_builder_run_handler->runBuffer(*run_info));
 }
 
 void SkTextBlobBuilderRunHandler_commitRunBuffer(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler, const SkTextBlobBuilderRunHandler::RunInfo *run_info) {
+    if (text_blob_builder_run_handler == nullptr || run_info == nullptr) {
+        return;
+    }
     text_blob_builder_run_handler->commitRunBuffer(*run_info);
 }
 
 void SkTextBlobBuilderRunHandler_commitLine(SkTextBlobBuilderRunHandler *text_blob_builder_run_handler) {
+    if (text_blob_builder_run_handler == nullptr) {
+        return;
+    }
     text_blob_builder_run_handler->commitLine();
 }
 
