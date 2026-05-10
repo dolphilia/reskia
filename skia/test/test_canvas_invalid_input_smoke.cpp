@@ -85,6 +85,12 @@ int main() {
     if (!check(SkCanvas_makeSurface(nullptr, nullptr, nullptr) == 0, "SkCanvas_makeSurface(nullptr)")) {
         return 5;
     }
+    if (!check(SkCanvas_accessTopLayerPixels(nullptr, nullptr, nullptr, nullptr) == nullptr, "SkCanvas_accessTopLayerPixels(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkCanvas_peekPixels(nullptr, nullptr), "SkCanvas_peekPixels(nullptr)")) {
+        return 5;
+    }
 
     reskia_canvas_t *canvas = SkCanvas_new();
     if (!check(canvas != nullptr, "SkCanvas_new")) {
@@ -159,6 +165,11 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    SkCanvas_accessTopLayerPixels(canvas, nullptr, nullptr, nullptr);
+    if (!check(!SkCanvas_peekPixels(canvas, nullptr), "SkCanvas_peekPixels(canvas, nullptr)")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
     if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, nullptr, nullptr, 0, 0, 0), "SkCanvas_readPixelsWithImageInfo(null info)")) {
         SkCanvas_delete(canvas);
         return 8;
@@ -174,6 +185,8 @@ int main() {
         return 8;
     }
     uint32_t pixels[4] = {};
+    size_t top_layer_row_bytes = 0;
+    SkCanvas_accessTopLayerPixels(canvas, image_info, &top_layer_row_bytes, nullptr);
     if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, image_info, nullptr, SkImageInfo_minRowBytes(image_info), 0, 0), "SkCanvas_readPixelsWithImageInfo(null pixels)")) {
         static_sk_image_info_delete(image_info_handle);
         SkCanvas_delete(canvas);

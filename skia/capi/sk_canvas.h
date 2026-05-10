@@ -76,7 +76,7 @@ reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const reskia_s
 reskia_canvas_t *SkCanvas_newFromBitmap(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkCanvas *
 reskia_canvas_t *SkCanvas_newFromBitmapWithProps(const reskia_bitmap_t *bitmap, const reskia_surface_props_t *props); // (const SkBitmap *bitmap, const SkSurfaceProps *props) -> SkCanvas *
 void SkCanvas_delete(reskia_canvas_t *canvas); // (SkCanvas *canvas)
-void * SkCanvas_accessTopLayerPixels(reskia_canvas_t *canvas, reskia_image_info_t *info, size_t *rowBytes, reskia_i_point_t *origin); // borrowed raw pixels; pointer is owned by canvas/layer and valid only while that storage remains unchanged; info/rowBytes/origin are optional out params (SkCanvas *canvas, SkImageInfo *info, size_t *rowBytes, SkIPoint *origin) -> void *
+void * SkCanvas_accessTopLayerPixels(reskia_canvas_t *canvas, reskia_image_info_t *info, size_t *rowBytes, reskia_i_point_t *origin); // borrowed raw pixels; NULL canvas returns NULL; pointer is owned by canvas/layer and valid only while that storage remains unchanged; info/rowBytes/origin are optional out params (SkCanvas *canvas, SkImageInfo *info, size_t *rowBytes, SkIPoint *origin) -> void *
 void * SkCanvas_accessTopRasterHandle(reskia_canvas_t *canvas); // borrowed implementation-defined raster handle; caller must not free it (SkCanvas *canvas) -> SkRasterHandleAllocator::Handle
 void SkCanvas_androidFramework_setDeviceClipRestriction(reskia_canvas_t *canvas, const reskia_i_rect_t *rect); // rect: non-null (SkCanvas *canvas, const SkIRect *rect)
 void SkCanvas_clear(reskia_canvas_t *canvas, const reskia_color_4f_t *color); // color: non-null (SkCanvas *canvas, const SkColor4f *color)
@@ -167,7 +167,7 @@ sk_image_info_t SkCanvas_imageInfo(reskia_canvas_t *canvas); // (SkCanvas *canva
 bool SkCanvas_isClipEmpty(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
 bool SkCanvas_isClipRect(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
 sk_surface_t SkCanvas_makeSurface(reskia_canvas_t *canvas, const reskia_image_info_t *info, const reskia_surface_props_t *props); // info: non-null; props may be NULL; 生成不能なら 0 (SkCanvas *canvas, const SkImageInfo *info, const SkSurfaceProps *props) -> sk_surface_t
-bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t *pixmap); // pixmap: non-null out param (SkCanvas *canvas, SkPixmap *pixmap) -> bool
+bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t *pixmap); // pixmap: non-null out param; returned pixmap borrows canvas pixels and is valid only while canvas storage remains unchanged; invalid input returns false (SkCanvas *canvas, SkPixmap *pixmap) -> bool
 void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path_t *path, const reskia_draw_shadow_rec_t *rec); // path/rec: non-null (SkCanvas *canvas, const SkPath *path, const SkDrawShadowRec *rec)
 bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path); // path: non-null (SkCanvas *canvas, const SkPath *path) -> bool
 bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const reskia_rect_t *rect); // rect: non-null (SkCanvas *canvas, const SkRect *rect) -> bool
