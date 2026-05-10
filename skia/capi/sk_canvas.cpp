@@ -312,21 +312,30 @@ void SkCanvas_drawDRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *outer, 
 }
 
 void SkCanvas_drawGlyphs(reskia_canvas_t *canvas, int count, const uint16_t * glyphs, const reskia_point_t * positions, const uint32_t * clusters, int textByteCount, const char * utf8text, sk_point_t origin, const reskia_font_t * font, const reskia_paint_t * paint) {
-    if (canvas == nullptr || glyphs == nullptr || positions == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
+    if (canvas == nullptr || count <= 0) {
+        return;
+    }
+    if (glyphs == nullptr || positions == nullptr || clusters == nullptr || textByteCount < 0 || (textByteCount > 0 && utf8text == nullptr) || origin == 0 || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkPoint *>(positions), clusters, textByteCount, utf8text, static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawGlyphsAtPositions(reskia_canvas_t *canvas, int count, const uint16_t * glyphs, const reskia_point_t * positions, sk_point_t origin, const reskia_font_t * font, const reskia_paint_t * paint) {
-    if (canvas == nullptr || glyphs == nullptr || positions == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
+    if (canvas == nullptr || count <= 0) {
+        return;
+    }
+    if (glyphs == nullptr || positions == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkPoint *>(positions), static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawGlyphsWithXforms(reskia_canvas_t *canvas, int count, const uint16_t * glyphs, const reskia_rsxform_t * xforms, sk_point_t origin, const reskia_font_t * font, const reskia_paint_t * paint) {
-    if (canvas == nullptr || glyphs == nullptr || xforms == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
+    if (canvas == nullptr || count <= 0) {
+        return;
+    }
+    if (glyphs == nullptr || xforms == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkRSXform *>(xforms), static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
@@ -551,7 +560,10 @@ void SkCanvas_drawRRect(reskia_canvas_t *canvas, const reskia_r_rect_t * rrect, 
 }
 
 void SkCanvas_drawSimpleText(reskia_canvas_t *canvas, const void * text, size_t byteLength, reskia_canvas_text_encoding_t encoding, float x, float y, const reskia_font_t * font, const reskia_paint_t * paint) {
-    if (canvas == nullptr || (byteLength > 0 && text == nullptr) || font == nullptr || paint == nullptr) {
+    if (canvas == nullptr || byteLength == 0) {
+        return;
+    }
+    if (text == nullptr || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawSimpleText(text, byteLength, static_cast<SkTextEncoding>(encoding), x, y, * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));

@@ -1,10 +1,10 @@
 file,status,phase,owner,note
 skia/capi/sk_alpha_type.cpp,todo,P2,,
 skia/capi/sk_alpha_type.h,todo,P2,,
-skia/capi/sk_android_codec.cpp,done,P2,codex,step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
-skia/capi/sk_android_codec.h,done,P2,codex,step4: SkAndroidCodec_getAndroidGainmap を reskia_status_t + typed out pointer 規約へ統一
-skia/capi/sk_annotation.cpp,todo,P2,,
-skia/capi/sk_annotation.h,todo,P2,,
+skia/capi/sk_android_codec.cpp,done,P2,2026-05-10,Phase 2 batch BR: AndroidCodec null pointer and factory handle guards
+skia/capi/sk_android_codec.h,done,P2,2026-05-10,Phase 2 batch BR: documented AndroidCodec null pointer and handle 0 rules
+skia/capi/sk_annotation.cpp,done,P2,2026-05-10,Phase 2 batch BR: annotation canvas geometry data null guards
+skia/capi/sk_annotation.h,done,P2,2026-05-10,Phase 2 batch BR: documented annotation borrowed required pointer rules
 skia/capi/sk_auto_canvas_restore.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
 skia/capi/sk_auto_canvas_restore.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
 skia/capi/sk_avif_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-10,Phase 2 batch BI: canvas draw picture invalid handle and makeSurface null result recheck
-skia/capi/sk_canvas.h,done,P2,2026-05-10,Phase 2 batch BI: documented canvas draw picture invalid handle and makeSurface handle 0 rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-10,Phase 2 batch BS: canvas raw text and glyph array count guards
+skia/capi/sk_canvas.h,done,P2,2026-05-10,Phase 2 batch BS: documented canvas raw text and glyph array pointer rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
