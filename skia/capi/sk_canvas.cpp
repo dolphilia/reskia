@@ -78,6 +78,10 @@ bool has_text_blob_handle(sk_text_blob_t text_blob) {
     return text_blob != 0 && static_sk_text_blob_get_ptr(text_blob) != nullptr;
 }
 
+bool has_vertices_handle(sk_vertices_t vertices) {
+    return vertices != 0 && static_sk_vertices_get_ptr(vertices) != nullptr;
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -627,7 +631,7 @@ void SkCanvas_drawTextBlobPtr(reskia_canvas_t *canvas, const reskia_text_blob_t 
 }
 
 void SkCanvas_drawVertices(reskia_canvas_t *canvas, sk_vertices_t vertices, reskia_blend_mode_t mode, const reskia_paint_t * paint) {
-    if (canvas == nullptr || vertices == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_vertices_handle(vertices) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawVertices(static_sk_vertices_get_entity(vertices), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));

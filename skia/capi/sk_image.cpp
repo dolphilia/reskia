@@ -25,6 +25,14 @@
 #include "../handles/static_sk_data-internal.h"
 #include "../handles/static_sk_color_space-internal.h"
 
+namespace {
+
+bool has_i_size_handle(sk_i_size_t size) {
+    return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
+}
+
+}  // namespace
+
 extern "C" {
 
 void SkImage_release(reskia_image_t *image) {
@@ -245,7 +253,7 @@ void SkImage_asyncRescaleAndReadPixels(reskia_image_t *image, const reskia_image
 }
 
 void SkImage_asyncRescaleAndReadPixelsYUV420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!image || !srcRect || !callback) {
+    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }
@@ -261,7 +269,7 @@ void SkImage_asyncRescaleAndReadPixelsYUV420(reskia_image_t *image, reskia_image
 }
 
 void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!image || !srcRect || !callback) {
+    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }

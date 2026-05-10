@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch CG: verified canvas drawable and picture required pointer optional paint matrix rules
-skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch CG: documented canvas drawable and picture borrowed pointer no-op rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch CM: verified canvas drawPaint drawPath drawRegion guards
+skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch CM: documented canvas drawPaint drawPath drawRegion no-op rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
@@ -121,8 +121,8 @@ skia/capi/sk_icc.cpp,todo,P2,,
 skia/capi/sk_icc.h,todo,P2,,
 skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_image.cpp,done,P2,codex,stability Phase 2 Batch A: image C API implementation reviewed; null inputs now fail as no-op/false/0/nullptr and async callback keeps borrowed-result policy
-skia/capi/sk_image.h,done,P2,codex,stability Phase 2 Batch A: image C API ownership/lifetime reviewed; header already uses typed handles/opaque pointers with retained/owned/borrowed comments for key APIs
+skia/capi/sk_image.cpp,done,P2,2026-05-11,Phase 2 batch CK: image async read invalid dstSize fail callback guards
+skia/capi/sk_image.h,done,P2,2026-05-11,Phase 2 batch CK: documented image async read required input and fail callback rules
 skia/capi/sk_image_filter.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filter null guards factory handle 0 and serialize rules
 skia/capi/sk_image_filter.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filter null output and optional procs rules
 skia/capi/sk_image_filters.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filters optional cropRect and required factory pointer guards
@@ -229,8 +229,8 @@ skia/capi/sk_runtime_blend_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runt
 skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime blend builder null receiver and handle 0 rules
 skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime color filter builder invalid effect handle and null receiver guards
 skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime color filter builder null receiver and handle 0 rules
-skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime effect null receiver child pointer result handle guards
-skia/capi/sk_runtime_effect.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime effect null receiver child pointer and options rules
+skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-11,Phase 2 batch CL: runtime effect MakeFor source handle validity guards
+skia/capi/sk_runtime_effect.h,done,P2,2026-05-11,Phase 2 batch CL: documented runtime effect MakeFor source handle rules
 skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime effect builder null receiver guards
 skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime effect builder null receiver rules
 skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime shader builder invalid effect handle null receiver and result handle guards

@@ -1,9 +1,12 @@
 #include "capi/sk_image.h"
 #include "capi/sk_image_info.h"
 #include "capi/sk_i_rect.h"
+#include "capi/sk_i_size.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
 #include "handles/static_sk_i_rect.h"
+#include "handles/static_sk_i_size.h"
+#include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_surface.h"
 
@@ -163,6 +166,64 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 21;
     }
+    const sk_image_t image_handle = SkSurface_makeImageSnapshot(surface);
+    auto *image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(image_handle));
+    if (!check(image != nullptr, "SkSurface_makeImageSnapshot for image async")) {
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 22;
+    }
+    SkImage_asyncRescaleAndReadPixels(nullptr, info, src_rect, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 8, "SkImage_asyncRescaleAndReadPixels null image fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    SkImage_asyncRescaleAndReadPixels(image, nullptr, src_rect, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 9, "SkImage_asyncRescaleAndReadPixels null info fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 24;
+    }
+    SkImage_asyncRescaleAndReadPixels(image, info, nullptr, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 10, "SkImage_asyncRescaleAndReadPixels null srcRect fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 25;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, 0, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 11, "SkImage_asyncRescaleAndReadPixelsYUV420 invalid dstSize fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 26;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUVA420(image, 0, 0, src_rect, 999999, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 12, "SkImage_asyncRescaleAndReadPixelsYUVA420 invalid dstSize fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 27;
+    }
+    const sk_i_size_t valid_dst_size = SkISize_Make(1, 1);
+    if (!check(static_sk_i_size_get_ptr(valid_dst_size) != nullptr, "SkISize_Make for image async")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 28;
+    }
+    static_sk_i_size_delete(valid_dst_size);
+    static_sk_image_delete(image_handle);
     static_sk_i_rect_delete(src_rect_handle);
     SkSurface_writePixels(surface, nullptr, 0, 0);
     SkSurface_writePixelsWithBitmap(surface, nullptr, 0, 0);

@@ -54,6 +54,10 @@ sk_blender_t make_blender_handle(sk_sp<SkBlender> blender) {
     return blender ? static_sk_blender_make(blender) : 0;
 }
 
+bool has_string_handle(sk_string_t string) {
+    return string != 0 && static_sk_string_get_ptr(string) != nullptr;
+}
+
 } // namespace
 
 extern "C" {
@@ -168,27 +172,27 @@ void SkRuntimeEffect_unref(reskia_runtime_effect_t *runtime_effect) {
 // static
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter(sk_string_t string, const reskia_runtime_effect_options_t *options) {
-    return options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
+    return has_string_handle(string) && options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
 }
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilterDefault(sk_string_t string) {
-    return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string)));
+    return has_string_handle(string) ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForColorFilter(static_sk_string_get_entity(string))) : 0;
 }
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader(sk_string_t string, const reskia_runtime_effect_options_t *options) {
-    return options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
+    return has_string_handle(string) && options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
 }
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForShaderDefault(sk_string_t string) {
-    return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string)));
+    return has_string_handle(string) ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForShader(static_sk_string_get_entity(string))) : 0;
 }
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender(sk_string_t string, const reskia_runtime_effect_options_t *options) {
-    return options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
+    return has_string_handle(string) && options != nullptr ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string), *reinterpret_cast<const SkRuntimeEffect::Options *>(options))) : 0;
 }
 
 sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlenderDefault(sk_string_t string) {
-    return static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string)));
+    return has_string_handle(string) ? static_sk_runtime_effect_result_make(SkRuntimeEffect::MakeForBlender(static_sk_string_get_entity(string))) : 0;
 }
 
 sk_runtime_effect_traced_shader_t SkRuntimeEffect_MakeTraced(sk_shader_t shader, const reskia_i_point_t *traceCoord) {

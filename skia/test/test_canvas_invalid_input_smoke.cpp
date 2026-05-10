@@ -3,11 +3,15 @@
 #include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
 #include "capi/sk_paint.h"
+#include "capi/sk_path.h"
 #include "capi/sk_picture_recorder.h"
+#include "capi/sk_region.h"
 #include "capi/sk_rect.h"
+#include "capi/sk_string.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
 #include "capi/sk_text_blob.h"
+#include "capi/sk_vertices.h"
 #include "handles/static_sk_i_rect.h"
 #include "handles/static_sk_drawable.h"
 #include "handles/static_sk_image.h"
@@ -16,6 +20,8 @@
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
 #include "handles/static_sk_text_blob.h"
+#include "handles/static_sk_vertices.h"
+#include "include/core/SkPoint.h"
 
 #include <cstdio>
 
@@ -175,6 +181,28 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+    SkCanvas_drawPaint(canvas, nullptr);
+    SkCanvas_drawPaint(canvas, paint);
+    reskia_path_t *path = SkPath_new();
+    if (!check(path != nullptr, "SkPath_new for canvas drawPath")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawPath(canvas, nullptr, paint);
+    SkCanvas_drawPath(canvas, path, nullptr);
+    SkCanvas_drawPath(canvas, path, paint);
+    SkPath_delete(path);
+    reskia_region_t *region = SkRegion_new();
+    if (!check(region != nullptr, "SkRegion_new for canvas drawRegion")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawRegion(canvas, nullptr, paint);
+    SkCanvas_drawRegion(canvas, region, nullptr);
+    SkCanvas_drawRegion(canvas, region, paint);
+    SkRegion_delete(region);
     SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlob(canvas, 999999, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlobPtr(canvas, nullptr, 0.0f, 0.0f, paint);
@@ -197,6 +225,22 @@ int main() {
     SkCanvas_drawTextBlob(canvas, text_blob_handle, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlobPtr(canvas, text_blob, 0.0f, 0.0f, paint);
     static_sk_text_blob_delete(text_blob_handle);
+    SkCanvas_drawString(canvas, nullptr, 0.0f, 0.0f, font, paint);
+    SkCanvas_drawString(canvas, "A", 0.0f, 0.0f, nullptr, paint);
+    SkCanvas_drawString(canvas, "A", 0.0f, 0.0f, font, nullptr);
+    SkCanvas_drawString(canvas, "A", 0.0f, 0.0f, font, paint);
+    reskia_string_t *string = SkString_newFromText("A");
+    if (!check(string != nullptr, "SkString_newFromText for canvas string")) {
+        SkFont_delete(font);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawStringObject(canvas, nullptr, 0.0f, 0.0f, font, paint);
+    SkCanvas_drawStringObject(canvas, string, 0.0f, 0.0f, nullptr, paint);
+    SkCanvas_drawStringObject(canvas, string, 0.0f, 0.0f, font, nullptr);
+    SkCanvas_drawStringObject(canvas, string, 0.0f, 0.0f, font, paint);
+    SkString_delete(string);
     SkFont_delete(font);
 
     reskia_picture_recorder_t *picture_recorder = SkPictureRecorder_new();
@@ -227,6 +271,24 @@ int main() {
     SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, nullptr, paint);
     static_sk_picture_delete(picture_handle);
     SkPictureRecorder_delete(picture_recorder);
+
+    SkCanvas_drawVertices(canvas, 0, 0, paint);
+    SkCanvas_drawVertices(canvas, 999999, 0, paint);
+    SkCanvas_drawVerticesPtr(canvas, nullptr, 0, paint);
+    SkPoint vertex_positions[3] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, 1.0f}};
+    const auto *vertex_position_input = reinterpret_cast<const reskia_point_t *>(vertex_positions);
+    const sk_vertices_t vertices_handle = SkVertices_MakeCopyWithoutIndices(0, 3, vertex_position_input, nullptr, nullptr);
+    auto *vertices = static_cast<reskia_vertices_t *>(static_sk_vertices_get_ptr(vertices_handle));
+    if (!check(vertices != nullptr, "SkVertices_MakeCopyWithoutIndices for canvas")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawVertices(canvas, vertices_handle, 0, nullptr);
+    SkCanvas_drawVerticesPtr(canvas, vertices, 0, nullptr);
+    SkCanvas_drawVertices(canvas, vertices_handle, 0, paint);
+    SkCanvas_drawVerticesPtr(canvas, vertices, 0, paint);
+    static_sk_vertices_delete(vertices_handle);
 
     reskia_picture_recorder_t *drawable_recorder = SkPictureRecorder_new();
     if (!check(drawable_recorder != nullptr, "SkPictureRecorder_new for canvas drawable")) {

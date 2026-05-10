@@ -54,12 +54,12 @@ void SkRuntimeEffect_unref(reskia_runtime_effect_t *runtime_effect); // owned: �
 
 // static
 
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter(sk_string_t string, const reskia_runtime_effect_options_t *options); // options は非 NULL。NULL なら 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilterDefault(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader(sk_string_t string, const reskia_runtime_effect_options_t *options); // options は非 NULL。NULL なら 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForShaderDefault(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender(sk_string_t string, const reskia_runtime_effect_options_t *options); // options は非 NULL。NULL なら 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
-sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlenderDefault(sk_string_t string); // (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilter(sk_string_t string, const reskia_runtime_effect_options_t *options); // string must be a valid handle; options is non-null; invalid input returns 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForColorFilterDefault(sk_string_t string); // string must be a valid handle; invalid input returns 0 (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForShader(sk_string_t string, const reskia_runtime_effect_options_t *options); // string must be a valid handle; options is non-null; invalid input returns 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForShaderDefault(sk_string_t string); // string must be a valid handle; invalid input returns 0 (sk_string_t string) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlender(sk_string_t string, const reskia_runtime_effect_options_t *options); // string must be a valid handle; options is non-null; invalid input returns 0 (sk_string_t string, const SkRuntimeEffect::Options *options) -> sk_runtime_effect_result_t
+sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlenderDefault(sk_string_t string); // string must be a valid handle; invalid input returns 0 (sk_string_t string) -> sk_runtime_effect_result_t
 sk_runtime_effect_traced_shader_t SkRuntimeEffect_MakeTraced(sk_shader_t shader, const reskia_i_point_t *traceCoord); // traceCoord は非 NULL。NULL なら 0 (sk_shader_t shader, const SkIPoint *traceCoord) -> sk_runtime_effect_traced_shader_t
 void SkRuntimeEffect_RegisterFlattenables(); // ()
 

@@ -45,6 +45,19 @@ int main() {
     ok &= check(SkRuntimeEffect_MakeForColorFilter(0, nullptr) == 0, "MakeForColorFilter null options");
     ok &= check(SkRuntimeEffect_MakeForShader(0, nullptr) == 0, "MakeForShader null options");
     ok &= check(SkRuntimeEffect_MakeForBlender(0, nullptr) == 0, "MakeForBlender null options");
+    const auto *c_options = reinterpret_cast<const reskia_runtime_effect_options_t *>(1);
+    ok &= check(SkRuntimeEffect_MakeForColorFilter(0, c_options) == 0, "MakeForColorFilter zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForColorFilter(999999, c_options) == 0, "MakeForColorFilter invalid source handle");
+    ok &= check(SkRuntimeEffect_MakeForColorFilterDefault(0) == 0, "MakeForColorFilterDefault zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForColorFilterDefault(999999) == 0, "MakeForColorFilterDefault invalid source handle");
+    ok &= check(SkRuntimeEffect_MakeForShader(0, c_options) == 0, "MakeForShader zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForShader(999999, c_options) == 0, "MakeForShader invalid source handle");
+    ok &= check(SkRuntimeEffect_MakeForShaderDefault(0) == 0, "MakeForShaderDefault zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForShaderDefault(999999) == 0, "MakeForShaderDefault invalid source handle");
+    ok &= check(SkRuntimeEffect_MakeForBlender(0, c_options) == 0, "MakeForBlender zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForBlender(999999, c_options) == 0, "MakeForBlender invalid source handle");
+    ok &= check(SkRuntimeEffect_MakeForBlenderDefault(0) == 0, "MakeForBlenderDefault zero source handle");
+    ok &= check(SkRuntimeEffect_MakeForBlenderDefault(999999) == 0, "MakeForBlenderDefault invalid source handle");
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
 
     ok &= check(SkRuntimeShaderBuilder_new(0) == nullptr, "shader builder new invalid effect");
