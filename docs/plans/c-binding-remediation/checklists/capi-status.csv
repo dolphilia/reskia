@@ -267,10 +267,10 @@ skia/capi/sk_surfaces.cpp,done,P2,2026-05-10,Phase 2 batch BG: surfaces required
 skia/capi/sk_surfaces.h,done,P2,2026-05-10,Phase 2 batch BG: documented surfaces required pointer and nullable props rules
 skia/capi/sk_table_mask_filter.cpp,done,P2,codex,phase2-batch-t: raw table NULL guards and create NULL rule,
 skia/capi/sk_table_mask_filter.h,done,P2,codex,phase2-batch-t: 256-entry table and owned filter comments,
-skia/capi/sk_text_blob.cpp,done,P2,codex,phase2-batch-ak: SkTextBlob ref/query/serialize/static factory の NULL ガードと handle 0 規約を補強
-skia/capi/sk_text_blob.h,done,P2,codex,phase2-batch-ak: SkTextBlob borrowed pointer/text buffer/serialize procs の NULL 規約コメントを補強
-skia/capi/sk_text_blob_builder.cpp,done,P2,codex,phase2-batch-ak: SkTextBlobBuilder make/run-buffer allocation の NULL/count/textByteCount ガードを補強
-skia/capi/sk_text_blob_builder.h,done,P2,codex,phase2-batch-ak: SkTextBlobBuilder run-buffer allocation の必須入力規約コメントを補強
+skia/capi/sk_text_blob.cpp,done,P2,2026-05-10,Phase 2 batch CC: verified text blob text buffer encoding and position guards
+skia/capi/sk_text_blob.h,done,P2,2026-05-10,Phase 2 batch CC: documented text blob byteLength encoding and position buffer rules
+skia/capi/sk_text_blob_builder.cpp,done,P2,2026-05-10,Phase 2 batch CC: verified text blob builder textByteCount guards
+skia/capi/sk_text_blob_builder.h,done,P2,2026-05-10,Phase 2 batch CC: documented text blob builder textByteCount reserved text rules
 skia/capi/sk_text_blob_builder_run_handler.cpp,done,P2,2026-05-10,Phase 2 batch BB: text blob run handler null handler run info buffer and blob handle guards
 skia/capi/sk_text_blob_builder_run_handler.h,done,P2,2026-05-10,Phase 2 batch BB: documented text blob run handler null and required RunInfo rules
 skia/capi/sk_tiled_image_utils.cpp,done,P2,2026-05-10,Phase 2 batch BE: tiled image utils required canvas image rect sampling guards

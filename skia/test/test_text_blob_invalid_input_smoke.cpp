@@ -46,6 +46,9 @@ int main() {
     if (!check(SkTextBlob_MakeFromText(nullptr, 1, nullptr, 0) == 0, "SkTextBlob_MakeFromText invalid")) {
         return 8;
     }
+    if (!check(SkTextBlob_MakeFromText(nullptr, 0, nullptr, 0) == 0, "SkTextBlob_MakeFromText null font")) {
+        return 8;
+    }
     if (!check(SkTextBlob_MakeFromString(nullptr, nullptr, 0) == 0, "SkTextBlob_MakeFromString invalid")) {
         return 9;
     }
@@ -97,6 +100,31 @@ int main() {
     }
 
     const char text[] = "A";
+    const auto *raw_text = reinterpret_cast<const uint8_t *>(text);
+    if (!check(SkTextBlob_MakeFromText(raw_text, 1, font, -1) == 0, "SkTextBlob_MakeFromText invalid encoding low")) {
+        SkFont_delete(font);
+        return 24;
+    }
+    if (!check(SkTextBlob_MakeFromText(raw_text, 1, font, 4) == 0, "SkTextBlob_MakeFromText invalid encoding high")) {
+        SkFont_delete(font);
+        return 24;
+    }
+    if (!check(SkTextBlob_MakeFromString(text, font, -1) == 0, "SkTextBlob_MakeFromString invalid encoding low")) {
+        SkFont_delete(font);
+        return 24;
+    }
+    if (!check(SkTextBlob_MakeFromPosTextH(raw_text, 1, nullptr, 0.0f, font, 0) == 0, "SkTextBlob_MakeFromPosTextH null xpos")) {
+        SkFont_delete(font);
+        return 24;
+    }
+    if (!check(SkTextBlob_MakeFromPosText(raw_text, 1, nullptr, font, 0) == 0, "SkTextBlob_MakeFromPosText null positions")) {
+        SkFont_delete(font);
+        return 24;
+    }
+    if (!check(SkTextBlob_MakeFromRSXform(raw_text, 1, nullptr, font, 0) == 0, "SkTextBlob_MakeFromRSXform null xforms")) {
+        SkFont_delete(font);
+        return 24;
+    }
     const sk_text_blob_t blob_handle = SkTextBlob_MakeFromString(text, font, 0);
     if (!check(blob_handle != 0, "SkTextBlob_MakeFromString valid")) {
         SkFont_delete(font);
@@ -151,6 +179,21 @@ int main() {
         return 32;
     }
     if (!check(SkTextBlobBuilder_allocRunText(builder, font, 1, 0.0f, 0.0f, -1, nullptr) == nullptr, "SkTextBlobBuilder_allocRunText negative text")) {
+        SkTextBlobBuilder_delete(builder);
+        SkFont_delete(font);
+        return 33;
+    }
+    if (!check(SkTextBlobBuilder_allocRunTextPosH(builder, font, 1, 0.0f, -1, nullptr) == nullptr, "SkTextBlobBuilder_allocRunTextPosH negative text")) {
+        SkTextBlobBuilder_delete(builder);
+        SkFont_delete(font);
+        return 33;
+    }
+    if (!check(SkTextBlobBuilder_allocRunTextPos(builder, font, 1, -1, nullptr) == nullptr, "SkTextBlobBuilder_allocRunTextPos negative text")) {
+        SkTextBlobBuilder_delete(builder);
+        SkFont_delete(font);
+        return 33;
+    }
+    if (!check(SkTextBlobBuilder_allocRunTextRSXform(builder, font, 1, -1, nullptr) == nullptr, "SkTextBlobBuilder_allocRunTextRSXform negative text")) {
         SkTextBlobBuilder_delete(builder);
         SkFont_delete(font);
         return 33;
