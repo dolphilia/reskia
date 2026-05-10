@@ -5,6 +5,7 @@
 #include "sk_font.h"
 
 #include "include/core/SkFont.h"
+#include "include/core/SkFontTypes.h"
 
 #include "../handles/static_sk_typeface.h"
 #include "../handles/static_std_vector_sk_scalar.h"
@@ -56,8 +57,12 @@ const SkFont *as_font(const reskia_font_t *font) {
     return reinterpret_cast<const SkFont *>(font);
 }
 
-bool has_text_input(const void *text, size_t byteLength) {
-    return byteLength == 0 || text != nullptr;
+bool has_text_encoding(reskia_font_text_encoding_t encoding) {
+    return encoding >= 0 && encoding <= static_cast<reskia_font_text_encoding_t>(SkTextEncoding::kGlyphID);
+}
+
+bool has_text_input(const void *text, size_t byteLength, reskia_font_text_encoding_t encoding) {
+    return byteLength > 0 && text != nullptr && has_text_encoding(encoding);
 }
 
 bool has_required_glyph_input(const uint16_t *glyphs, int count) {
@@ -265,7 +270,7 @@ void SkFont_setSkewX(reskia_font_t *font, float skewX) {
 }
 
 int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount) {
-    if (font == nullptr || !has_text_input(text, byteLength) || maxGlyphCount < 0) {
+    if (font == nullptr || !has_text_input(text, byteLength, encoding) || maxGlyphCount < 0) {
         return 0;
     }
     return as_font(font)->textToGlyphs(text, byteLength, static_cast<SkTextEncoding>(encoding), glyphs, maxGlyphCount);
@@ -286,21 +291,21 @@ void SkFont_unicharsToGlyphs(reskia_font_t *font, const int32_t *uni, int count,
 }
 
 int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding) {
-    if (font == nullptr || !has_text_input(text, byteLength)) {
+    if (font == nullptr || !has_text_input(text, byteLength, encoding)) {
         return 0;
     }
     return as_font(font)->countText(text, byteLength, static_cast<SkTextEncoding>(encoding));
 }
 
 float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds) {
-    if (font == nullptr || !has_text_input(text, byteLength)) {
+    if (font == nullptr || !has_text_input(text, byteLength, encoding)) {
         return 0.0f;
     }
     return as_font(font)->measureText(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkRect *>(bounds));
 }
 
 float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint) {
-    if (font == nullptr || !has_text_input(text, byteLength)) {
+    if (font == nullptr || !has_text_input(text, byteLength, encoding)) {
         return 0.0f;
     }
     return as_font(font)->measureText(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));

@@ -155,6 +155,46 @@ int main() {
     static_sk_font_delete(sized_font_handle);
 
     const uint8_t text[] = {'A'};
+    if (!check(SkFont_textToGlyphs(font, nullptr, 0, 0, nullptr, 0) == 0, "SkFont_textToGlyphs(zero length)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_textToGlyphs(font, text, sizeof(text), -1, nullptr, 0) == 0, "SkFont_textToGlyphs(invalid encoding low)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_textToGlyphs(font, text, sizeof(text), 4, nullptr, 0) == 0, "SkFont_textToGlyphs(invalid encoding high)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_textToGlyphs(font, text, sizeof(text), 0, nullptr, -1) == 0, "SkFont_textToGlyphs(negative maxGlyphCount)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_countText(font, nullptr, 0, 0) == 0, "SkFont_countText(zero length)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_countText(font, text, sizeof(text), 4) == 0, "SkFont_countText(invalid encoding)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_measureText(font, nullptr, 0, 0, nullptr) == 0.0f, "SkFont_measureText(zero length)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_measureText(font, text, sizeof(text), 4, nullptr) == 0.0f, "SkFont_measureText(invalid encoding)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_measureTextWithPaint(font, nullptr, 0, 0, nullptr, nullptr) == 0.0f, "SkFont_measureTextWithPaint(zero length)")) {
+        SkFont_delete(font);
+        return 31;
+    }
+    if (!check(SkFont_measureTextWithPaint(font, text, sizeof(text), 4, nullptr, nullptr) == 0.0f, "SkFont_measureTextWithPaint(invalid encoding)")) {
+        SkFont_delete(font);
+        return 31;
+    }
     if (!check(SkFont_countText(font, text, sizeof(text), 0) == 1, "SkFont_countText(valid UTF8)")) {
         SkFont_delete(font);
         return 31;

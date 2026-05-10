@@ -64,12 +64,12 @@ sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // NULL 入力や未設�
 void SkFont_setSize(reskia_font_t *font, float textSize); // NULL 入力では no-op
 void SkFont_setScaleX(reskia_font_t *font, float scaleX); // NULL 入力では no-op
 void SkFont_setSkewX(reskia_font_t *font, float skewX); // NULL 入力では no-op
-int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // byteLength > 0 では text 非 NULL。glyphs は NULL 許可。invalid 入力では 0
+int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。glyphs は NULL 許可。invalid 入力では 0
 uint16_t SkFont_unicharToGlyph(reskia_font_t *font, reskia_unichar_t uni); // NULL 入力では 0
 void SkFont_unicharsToGlyphs(reskia_font_t *font, const int32_t *uni, int count, uint16_t *glyphs); // count > 0 では uni/glyphs は count 要素以上、非 NULL。invalid 入力では no-op
-int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding); // byteLength > 0 では text 非 NULL。invalid 入力では 0
-float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds); // bounds は NULL 許可。invalid 入力では 0
-float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint); // bounds/paint は NULL 許可。invalid 入力では 0
+int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding); // byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。invalid 入力では 0
+float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds); // byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。bounds は NULL 許可。invalid 入力では 0
+float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint); // byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。bounds/paint は NULL 許可。invalid 入力では 0
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds); // count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths/bounds は NULL 許可
 
 // TODO
