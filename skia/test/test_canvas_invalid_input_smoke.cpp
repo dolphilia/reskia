@@ -1,14 +1,18 @@
 #include "capi/sk_canvas.h"
+#include "capi/sk_font.h"
 #include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
+#include "capi/sk_paint.h"
 #include "capi/sk_rect.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
+#include "capi/sk_text_blob.h"
 #include "handles/static_sk_i_rect.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
+#include "handles/static_sk_text_blob.h"
 
 #include <cstdio>
 
@@ -133,6 +137,8 @@ int main() {
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, 999999, nullptr, nullptr);
     SkCanvas_drawPicturePtr(canvas, nullptr);
     SkCanvas_drawPicturePtrWithMatrixPaint(canvas, nullptr, nullptr, nullptr);
+    SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawTextBlobPtr(canvas, nullptr, 0.0f, 0.0f, nullptr);
     if (!check(SkCanvas_saveLayer(canvas, nullptr) == 0, "SkCanvas_saveLayer(canvas, nullptr)")) {
         SkCanvas_delete(canvas);
         return 7;
@@ -160,6 +166,36 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+
+    reskia_paint_t *paint = SkPaint_new();
+    if (!check(paint != nullptr, "SkPaint_new for canvas text blob")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, paint);
+    SkCanvas_drawTextBlob(canvas, 999999, 0.0f, 0.0f, paint);
+    SkCanvas_drawTextBlobPtr(canvas, nullptr, 0.0f, 0.0f, paint);
+    reskia_font_t *font = SkFont_new();
+    if (!check(font != nullptr, "SkFont_new for canvas text blob")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const sk_text_blob_t text_blob_handle = SkTextBlob_MakeFromString("A", font, 0);
+    auto *text_blob = static_cast<reskia_text_blob_t *>(static_sk_text_blob_get_ptr(text_blob_handle));
+    if (!check(text_blob != nullptr, "SkTextBlob_MakeFromString for canvas")) {
+        SkFont_delete(font);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawTextBlob(canvas, text_blob_handle, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawTextBlobPtr(canvas, text_blob, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawTextBlob(canvas, text_blob_handle, 0.0f, 0.0f, paint);
+    SkCanvas_drawTextBlobPtr(canvas, text_blob, 0.0f, 0.0f, paint);
+    static_sk_text_blob_delete(text_blob_handle);
+    SkFont_delete(font);
+    SkPaint_delete(paint);
 
     if (!check(!SkCanvas_readPixels(canvas, nullptr, 0, 0), "SkCanvas_readPixels(canvas, nullptr)")) {
         SkCanvas_delete(canvas);

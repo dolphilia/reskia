@@ -74,6 +74,10 @@ bool has_image_handle(sk_image_t image) {
     return image != 0 && static_sk_image_get_ptr(image) != nullptr;
 }
 
+bool has_text_blob_handle(sk_text_blob_t text_blob) {
+    return text_blob != 0 && static_sk_text_blob_get_ptr(text_blob) != nullptr;
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -609,7 +613,7 @@ void SkCanvas_drawStringObject(reskia_canvas_t *canvas, const reskia_string_t * 
 }
 
 void SkCanvas_drawTextBlob(reskia_canvas_t *canvas, sk_text_blob_t text_blob, float x, float y, const reskia_paint_t * paint) {
-    if (canvas == nullptr || text_blob == 0 || paint == nullptr) {
+    if (canvas == nullptr || !has_text_blob_handle(text_blob) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawTextBlob(static_sk_text_blob_get_entity(text_blob), x, y, * reinterpret_cast<const SkPaint *>(paint));
