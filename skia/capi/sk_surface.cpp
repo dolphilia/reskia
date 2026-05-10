@@ -32,6 +32,10 @@ bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_
     return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
 }
 
+bool has_i_size_handle(sk_i_size_t size) {
+    return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
+}
+
 }  // namespace
 
 extern "C" {
@@ -205,7 +209,7 @@ void SkSurface_asyncRescaleAndReadPixels(reskia_surface_t *surface, const reskia
 }
 
 void SkSurface_asyncRescaleAndReadPixelsYUV420(reskia_surface_t *surface, sk_color_space_t dstColorSpace, reskia_surface_yuv_color_space_t yuvColorSpace, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_surface_rescale_gamma_t rescaleGamma, reskia_surface_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!surface || !srcRect || !callback) {
+    if (!surface || !srcRect || !has_i_size_handle(dstSize) || !callback) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }
@@ -221,7 +225,7 @@ void SkSurface_asyncRescaleAndReadPixelsYUV420(reskia_surface_t *surface, sk_col
 }
 
 void SkSurface_asyncRescaleAndReadPixelsYUVA420(reskia_surface_t *surface, sk_color_space_t dstColorSpace, reskia_surface_yuv_color_space_t yuvColorSpace, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_surface_rescale_gamma_t rescaleGamma, reskia_surface_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!surface || !srcRect || !callback) {
+    if (!surface || !srcRect || !has_i_size_handle(dstSize) || !callback) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }

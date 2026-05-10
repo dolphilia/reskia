@@ -259,8 +259,8 @@ skia/capi/sk_string.cpp,todo,P2,,
 skia/capi/sk_string.h,todo,P2,,
 skia/capi/sk_stroke_rec.cpp,todo,P2,,
 skia/capi/sk_stroke_rec.h,todo,P2,,
-skia/capi/sk_surface.cpp,done,P2,2026-05-10,Phase 2 batch CE: surface readPixels ImageInfo pixel buffer and rowBytes guards
-skia/capi/sk_surface.h,done,P2,2026-05-10,Phase 2 batch CE: documented surface pixel buffer rowBytes and borrowed pixmap rules
+skia/capi/sk_surface.cpp,done,P2,2026-05-11,Phase 2 batch CH: surface async read fail callback and dstSize guards
+skia/capi/sk_surface.h,done,P2,2026-05-11,Phase 2 batch CH: documented surface async read required inputs and fail callback rules
 skia/capi/sk_surface_props.cpp,done,P2,2026-05-10,Phase 2 batch BG: surface props null receiver and clone handle guards
 skia/capi/sk_surface_props.h,done,P2,2026-05-10,Phase 2 batch BG: documented surface props null receiver rules
 skia/capi/sk_surfaces.cpp,done,P2,2026-05-10,Phase 2 batch BG: surfaces required image info pixmap pixels and null result handle guards

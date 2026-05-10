@@ -1,7 +1,9 @@
 #include "capi/sk_image.h"
 #include "capi/sk_image_info.h"
+#include "capi/sk_i_rect.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
+#include "handles/static_sk_i_rect.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_surface.h"
 
@@ -16,6 +18,17 @@ bool check(bool condition, const char *message) {
         return false;
     }
     return true;
+}
+
+struct AsyncFailState {
+    int calls = 0;
+};
+
+void async_fail_callback(void *context, const reskia_async_read_result_t *result) {
+    auto *state = static_cast<AsyncFailState *>(context);
+    if (state != nullptr && result == nullptr) {
+        ++state->calls;
+    }
 }
 
 }  // namespace
@@ -62,6 +75,19 @@ int main() {
     if (!check(!SkSurface_readPixelsWithImageInfoAndPixels(nullptr, nullptr, nullptr, 0, 0, 0), "SkSurface_readPixelsWithImageInfoAndPixels(nullptr)")) {
         return 10;
     }
+    AsyncFailState async_fail_state;
+    SkSurface_asyncRescaleAndReadPixels(nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 1, "SkSurface_asyncRescaleAndReadPixels invalid fail callback")) {
+        return 10;
+    }
+    SkSurface_asyncRescaleAndReadPixelsYUV420(nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 2, "SkSurface_asyncRescaleAndReadPixelsYUV420 invalid fail callback")) {
+        return 10;
+    }
+    SkSurface_asyncRescaleAndReadPixelsYUVA420(nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 3, "SkSurface_asyncRescaleAndReadPixelsYUVA420 invalid fail callback")) {
+        return 10;
+    }
 
     SkSurface_notifyContentWillChange(nullptr, 0);
     SkSurface_writePixels(nullptr, nullptr, 0, 0);
@@ -102,6 +128,42 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 16;
     }
+    const sk_i_rect_t src_rect_handle = SkIRect_MakeXYWH(0, 0, 1, 1);
+    auto *src_rect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(src_rect_handle));
+    if (!check(src_rect != nullptr, "SkIRect_MakeXYWH for surface async")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 17;
+    }
+    SkSurface_asyncRescaleAndReadPixels(surface, nullptr, src_rect, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 4, "SkSurface_asyncRescaleAndReadPixels null info fail callback")) {
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 18;
+    }
+    SkSurface_asyncRescaleAndReadPixels(surface, info, nullptr, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 5, "SkSurface_asyncRescaleAndReadPixels null srcRect fail callback")) {
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 19;
+    }
+    SkSurface_asyncRescaleAndReadPixelsYUV420(surface, 0, 0, src_rect, 0, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 6, "SkSurface_asyncRescaleAndReadPixelsYUV420 invalid dstSize fail callback")) {
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 20;
+    }
+    SkSurface_asyncRescaleAndReadPixelsYUVA420(surface, 0, 0, src_rect, 999999, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 7, "SkSurface_asyncRescaleAndReadPixelsYUVA420 invalid dstSize fail callback")) {
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 21;
+    }
+    static_sk_i_rect_delete(src_rect_handle);
     SkSurface_writePixels(surface, nullptr, 0, 0);
     SkSurface_writePixelsWithBitmap(surface, nullptr, 0, 0);
 
