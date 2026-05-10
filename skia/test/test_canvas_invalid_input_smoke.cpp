@@ -203,6 +203,14 @@ int main() {
     SkCanvas_drawRegion(canvas, region, nullptr);
     SkCanvas_drawRegion(canvas, region, paint);
     SkRegion_delete(region);
+    SkPoint patch_cubics[12] = {};
+    SkPoint patch_tex_coords[4] = {};
+    const auto *patch_cubics_input = reinterpret_cast<const reskia_point_t *>(patch_cubics);
+    const auto *patch_tex_coords_input = reinterpret_cast<const reskia_point_t *>(patch_tex_coords);
+    SkCanvas_drawPatch(canvas, nullptr, nullptr, patch_tex_coords_input, 0, paint);
+    SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, nullptr, 0, paint);
+    SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, nullptr);
+    SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, paint);
     SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlob(canvas, 999999, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlobPtr(canvas, nullptr, 0.0f, 0.0f, paint);

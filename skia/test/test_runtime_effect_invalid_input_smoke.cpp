@@ -3,6 +3,8 @@
 #include "capi/sk_runtime_effect.h"
 #include "capi/sk_runtime_effect_builder.h"
 #include "capi/sk_runtime_shader_builder.h"
+#include "capi/sk_i_point.h"
+#include "handles/static_sk_i_point.h"
 
 #include <cstdio>
 
@@ -59,6 +61,12 @@ int main() {
     ok &= check(SkRuntimeEffect_MakeForBlenderDefault(0) == 0, "MakeForBlenderDefault zero source handle");
     ok &= check(SkRuntimeEffect_MakeForBlenderDefault(999999) == 0, "MakeForBlenderDefault invalid source handle");
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
+    const sk_i_point_t trace_coord_handle = SkIPoint_Make(0, 0);
+    auto *trace_coord = static_cast<reskia_i_point_t *>(static_sk_i_point_get_ptr(trace_coord_handle));
+    ok &= check(trace_coord != nullptr, "traceCoord allocation");
+    ok &= check(SkRuntimeEffect_MakeTraced(0, trace_coord) == 0, "MakeTraced zero shader handle");
+    ok &= check(SkRuntimeEffect_MakeTraced(999999, trace_coord) == 0, "MakeTraced invalid shader handle");
+    static_sk_i_point_delete(trace_coord_handle);
 
     ok &= check(SkRuntimeShaderBuilder_new(0) == nullptr, "shader builder new invalid effect");
     ok &= check(SkRuntimeShaderBuilder_newCopy(nullptr) == nullptr, "shader builder newCopy null");

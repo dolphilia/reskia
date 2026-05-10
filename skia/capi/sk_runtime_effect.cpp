@@ -58,6 +58,10 @@ bool has_string_handle(sk_string_t string) {
     return string != 0 && static_sk_string_get_ptr(string) != nullptr;
 }
 
+bool has_shader_handle(sk_shader_t shader) {
+    return shader != 0 && static_sk_shader_get_ptr(shader) != nullptr;
+}
+
 } // namespace
 
 extern "C" {
@@ -196,7 +200,7 @@ sk_runtime_effect_result_t SkRuntimeEffect_MakeForBlenderDefault(sk_string_t str
 }
 
 sk_runtime_effect_traced_shader_t SkRuntimeEffect_MakeTraced(sk_shader_t shader, const reskia_i_point_t *traceCoord) {
-    if (traceCoord == nullptr) {
+    if (!has_shader_handle(shader) || traceCoord == nullptr) {
         return 0;
     }
     return static_sk_runtime_effect_traced_shader_make(SkRuntimeEffect::MakeTraced(static_sk_shader_get_entity(shader), *reinterpret_cast<const SkIPoint *>(traceCoord)));

@@ -107,6 +107,9 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `90-phase-2-batch-ck-image-async-read.md`
 - `91-phase-2-batch-cl-runtime-effect-source-handle.md`
 - `92-phase-2-batch-cm-canvas-paint-path-region.md`
+- `93-phase-2-batch-cn-image-shader-guards.md`
+- `94-phase-2-batch-co-runtime-effect-make-traced.md`
+- `95-phase-2-batch-cp-canvas-patch.md`
 
 ## 関連計画
 

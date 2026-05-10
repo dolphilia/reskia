@@ -2,12 +2,16 @@
 #include "capi/sk_image_info.h"
 #include "capi/sk_i_rect.h"
 #include "capi/sk_i_size.h"
+#include "capi/sk_matrix.h"
+#include "capi/sk_sampling_options.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
 #include "handles/static_sk_i_rect.h"
 #include "handles/static_sk_i_size.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_matrix.h"
+#include "handles/static_sk_shader.h"
 #include "handles/static_sk_surface.h"
 
 #include <cstdio>
@@ -223,6 +227,120 @@ int main() {
         return 28;
     }
     static_sk_i_size_delete(valid_dst_size);
+    reskia_sampling_options_t *sampling = SkSamplingOptions_new();
+    if (!check(sampling != nullptr, "SkSamplingOptions_new for image shaders")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 29;
+    }
+    const sk_matrix_t matrix_handle = SkMatrix_I();
+    auto *matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(matrix_handle));
+    if (!check(matrix != nullptr, "SkMatrix_I for image shaders")) {
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 30;
+    }
+    if (!check(SkImage_makeShader(nullptr, 0, 0, sampling, nullptr) == 0, "SkImage_makeShader null image")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 31;
+    }
+    if (!check(SkImage_makeShader(image, 0, 0, nullptr, nullptr) == 0, "SkImage_makeShader null sampling")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 32;
+    }
+    if (!check(SkImage_makeShaderWithTileModesAndLocalMatrix(image, 0, 0, sampling, nullptr) == 0, "SkImage_makeShaderWithTileModesAndLocalMatrix null matrix")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 33;
+    }
+    if (!check(SkImage_makeShaderWithSamplingAndLocalMatrix(nullptr, sampling, matrix) == 0, "SkImage_makeShaderWithSamplingAndLocalMatrix null image")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 34;
+    }
+    if (!check(SkImage_makeShaderWithSampling(image, nullptr, matrix) == 0, "SkImage_makeShaderWithSampling null sampling")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 35;
+    }
+    if (!check(SkImage_makeRawShader(nullptr, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShader null image")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 36;
+    }
+    if (!check(SkImage_makeRawShader(image, 0, 0, nullptr, nullptr) == 0, "SkImage_makeRawShader null sampling")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 37;
+    }
+    if (!check(SkImage_makeRawShaderWithTileModesAndLocalMatrix(image, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShaderWithTileModesAndLocalMatrix null matrix")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 38;
+    }
+    if (!check(SkImage_makeRawShaderWithSamplingAndLocalMatrix(nullptr, sampling, matrix) == 0, "SkImage_makeRawShaderWithSamplingAndLocalMatrix null image")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 39;
+    }
+    if (!check(SkImage_makeRawShaderWithSampling(image, nullptr, matrix) == 0, "SkImage_makeRawShaderWithSampling null sampling")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 40;
+    }
+    const sk_shader_t shader_handle = SkImage_makeShader(image, 0, 0, sampling, nullptr);
+    if (shader_handle != 0) {
+        static_sk_shader_delete(shader_handle);
+    }
+    static_sk_matrix_delete(matrix_handle);
+    SkSamplingOptions_delete(sampling);
     static_sk_image_delete(image_handle);
     static_sk_i_rect_delete(src_rect_handle);
     SkSurface_writePixels(surface, nullptr, 0, 0);
