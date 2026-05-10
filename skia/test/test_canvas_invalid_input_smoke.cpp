@@ -1,6 +1,14 @@
 #include "capi/sk_canvas.h"
+#include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
+#include "capi/sk_rect.h"
+#include "capi/sk_surface.h"
+#include "capi/sk_surfaces.h"
+#include "handles/static_sk_i_rect.h"
+#include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_rect.h"
+#include "handles/static_sk_surface.h"
 
 #include <cstdio>
 
@@ -110,6 +118,9 @@ int main() {
     SkCanvas_drawImage(canvas, 0, 0.0f, 0.0f);
     SkCanvas_drawImage(canvas, 999999, 0.0f, 0.0f);
     SkCanvas_drawImageHandleWithSampling(canvas, 999999, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawImageLattice(canvas, nullptr, nullptr, nullptr);
+    SkCanvas_drawImageLatticeWithFilter(canvas, nullptr, nullptr, nullptr, 0, nullptr);
+    SkCanvas_drawImageNine(canvas, nullptr, nullptr, nullptr, 0, nullptr);
     SkCanvas_drawImageRect(canvas, 999999, nullptr, nullptr, nullptr);
     SkCanvas_drawImageRectHandleWithSrcDst(canvas, 999999, nullptr, nullptr, nullptr, nullptr, 0);
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, 0, nullptr, nullptr);
@@ -183,6 +194,47 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+
+    const sk_surface_t surface_handle = SkSurfaces_RasterWithoutRowBytes(image_info, nullptr);
+    auto *surface = static_cast<reskia_surface_t *>(static_sk_surface_get_ptr(surface_handle));
+    if (!check(surface != nullptr, "SkSurfaces_RasterWithoutRowBytes for canvas image lattice")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    const sk_image_t image_handle = SkSurface_makeImageSnapshot(surface);
+    auto *image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(image_handle));
+    if (!check(image != nullptr, "SkSurface_makeImageSnapshot for canvas image lattice")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    const sk_rect_t dst_handle = SkRect_MakeXYWH(0.0f, 0.0f, 2.0f, 2.0f);
+    auto *dst = static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(dst_handle));
+    const sk_i_rect_t center_handle = SkIRect_MakeXYWH(0, 0, 1, 1);
+    auto *center = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(center_handle));
+    if (!check(dst != nullptr && center != nullptr, "canvas image lattice/nine rects")) {
+        static_sk_i_rect_delete(center_handle);
+        static_sk_rect_delete(dst_handle);
+        static_sk_image_delete(image_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkCanvas_drawImageLattice(canvas, image, nullptr, dst);
+    const auto *c_lattice = reinterpret_cast<const reskia_lattice_t *>(&pixels);
+    SkCanvas_drawImageLattice(canvas, image, c_lattice, nullptr);
+    SkCanvas_drawImageLatticeWithFilter(canvas, image, nullptr, dst, 0, nullptr);
+    SkCanvas_drawImageLatticeWithFilter(canvas, image, c_lattice, nullptr, 0, nullptr);
+    SkCanvas_drawImageNine(canvas, image, nullptr, dst, 0, nullptr);
+    SkCanvas_drawImageNine(canvas, image, center, nullptr, 0, nullptr);
+
+    static_sk_i_rect_delete(center_handle);
+    static_sk_rect_delete(dst_handle);
+    static_sk_image_delete(image_handle);
+    static_sk_surface_delete(surface_handle);
     static_sk_image_info_delete(image_info_handle);
     if (!check(!SkCanvas_quickReject(canvas, nullptr), "SkCanvas_quickReject(canvas, nullptr)")) {
         SkCanvas_delete(canvas);

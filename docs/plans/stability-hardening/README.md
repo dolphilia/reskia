@@ -95,6 +95,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `78-phase-2-batch-by-canvas-image-handles.md`
 - `79-phase-2-batch-bz-font-text-encoding.md`
 - `80-phase-2-batch-ca-canvas-pixels-rowbytes.md`
+- `81-phase-2-batch-cb-canvas-image-lattice-nine.md`
 
 ## 関連計画
 
