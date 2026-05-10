@@ -131,8 +131,8 @@ skia/capi/sk_image_generator.cpp,done,P2,2026-05-10,Phase 2 batch AV: image gene
 skia/capi/sk_image_generator.h,done,P2,2026-05-10,Phase 2 batch AV: documented image generator null output pointer and YUVA rules
 skia/capi/sk_image_info.cpp,done,P2,codex,phase2-batch-f: SkImageInfo NULL ガードと byte-size/color-space 規約を補強
 skia/capi/sk_image_info.h,done,P2,codex,phase2-batch-f: SkImageInfo borrowed color space と rowBytes/byte-size コメントを補強
-skia/capi/sk_images.cpp,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一（phase1 step2 実施済み）
-skia/capi/sk_images.h,done,P2,codex,step4: SkImages_MakeWithFilter を reskia_status_t + typed out pointer 規約へ統一
+skia/capi/sk_images.cpp,done,P2,2026-05-10,Phase 2 batch BH: images required pointer props handle and null result guards
+skia/capi/sk_images.h,done,P2,2026-05-10,Phase 2 batch BH: documented images required pointer props handle and out image rules
 skia/capi/sk_jpeg_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_jpeg_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_jpeg_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: stream pixmap image options guards and handle 0 rules
