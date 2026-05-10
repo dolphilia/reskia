@@ -25,23 +25,28 @@ void SkRuntimeEffectBuilder_delete(reskia_runtime_effect_builder_t *runtime_effe
 }
 
 const reskia_runtime_effect_t *SkRuntimeEffectBuilder_effect(reskia_runtime_effect_builder_t *runtime_effect_builder) {
-    return reinterpret_cast<const reskia_runtime_effect_t *>(reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->effect());
+    auto *native = reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder);
+    return native != nullptr ? reinterpret_cast<const reskia_runtime_effect_t *>(native->effect()) : nullptr;
 }
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeEffectBuilder_uniform(reskia_runtime_effect_builder_t *runtime_effect_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->uniform(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeEffectBuilder_child(reskia_runtime_effect_builder_t *runtime_effect_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->child(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
 }
 
 const_sk_data_t SkRuntimeEffectBuilder_uniforms(reskia_runtime_effect_builder_t *runtime_effect_builder) {
-    return static_const_sk_data_make(reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->uniforms());
+    auto *native = reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder);
+    return native != nullptr ? static_const_sk_data_make(native->uniforms()) : 0;
 }
 
 const_sk_runtime_effect_child_ptr_t SkRuntimeEffectBuilder_children(reskia_runtime_effect_builder_t *runtime_effect_builder) {
-    return static_const_sk_runtime_effect_child_ptr_make(reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder)->children());
+    auto *native = reinterpret_cast<SkRuntimeEffectBuilder *>(runtime_effect_builder);
+    return native != nullptr ? static_const_sk_runtime_effect_child_ptr_make(native->children()) : 0;
 }
 
 // static

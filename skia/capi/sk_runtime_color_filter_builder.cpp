@@ -28,7 +28,8 @@ extern "C" {
 //SkRuntimeColorFilterBuilder & operator=(const SkRuntimeColorFilterBuilder &)=delete
 
 reskia_runtime_color_filter_builder_t *SkRuntimeColorFilterBuilder_new(sk_runtime_effect_t runtime_effect) {
-    return reinterpret_cast<reskia_runtime_color_filter_builder_t *>(new SkRuntimeColorFilterBuilder(static_sk_runtime_effect_get_entity(runtime_effect)));
+    sk_sp<SkRuntimeEffect> native_effect = static_sk_runtime_effect_get_entity(runtime_effect);
+    return native_effect ? reinterpret_cast<reskia_runtime_color_filter_builder_t *>(new SkRuntimeColorFilterBuilder(native_effect)) : nullptr;
 }
 
 void SkRuntimeColorFilterBuilder_delete(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder) {
@@ -36,27 +37,37 @@ void SkRuntimeColorFilterBuilder_delete(reskia_runtime_color_filter_builder_t *r
 }
 
 sk_color_filter_t SkRuntimeColorFilterBuilder_makeColorFilter(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder) {
-    return static_sk_color_filter_make(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->makeColorFilter());
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    if (native == nullptr) {
+        return 0;
+    }
+    sk_sp<SkColorFilter> color_filter = native->makeColorFilter();
+    return color_filter ? static_sk_color_filter_make(color_filter) : 0;
 }
 
 const reskia_runtime_effect_t *SkRuntimeColorFilterBuilder_effect(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder) {
-    return reinterpret_cast<const reskia_runtime_effect_t *>(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->effect());
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    return native != nullptr ? reinterpret_cast<const reskia_runtime_effect_t *>(native->effect()) : nullptr;
 }
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeColorFilterBuilder_uniform(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->uniform(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeColorFilterBuilder_child(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->child(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
 }
 
 const_sk_data_t SkRuntimeColorFilterBuilder_uniforms(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder) {
-    return static_const_sk_data_make(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->uniforms());
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    return native != nullptr ? static_const_sk_data_make(native->uniforms()) : 0;
 }
 
 const_sk_runtime_effect_child_ptr_t SkRuntimeColorFilterBuilder_children(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder) {
-    return static_const_sk_runtime_effect_child_ptr_make(reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder)->children());
+    auto *native = reinterpret_cast<SkRuntimeColorFilterBuilder *>(runtime_color_filter_builder);
+    return native != nullptr ? static_const_sk_runtime_effect_child_ptr_make(native->children()) : 0;
 }
 
 }

@@ -17,15 +17,15 @@ typedef struct reskia_runtime_shader_builder_t reskia_runtime_shader_builder_t;
 extern "C" {
 #endif
 
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(int runtime_effect); // (sk_runtime_effect_t runtime_effect) -> SkRuntimeShaderBuilder *
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder); // (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *
-void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder)
-sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix); // (SkRuntimeShaderBuilder *runtime_shader_builder, const SkMatrix *localMatrix) -> sk_shader_t
-const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder) -> const SkRuntimeEffect *
-sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
-sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
-int SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_data_t
-int SkRuntimeShaderBuilder_children(reskia_runtime_shader_builder_t *runtime_shader_builder); // (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_runtime_effect_child_ptr_t
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(int runtime_effect); // invalid runtime_effect handle なら NULL (sk_runtime_effect_t runtime_effect) -> SkRuntimeShaderBuilder *
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder); // NULL builder なら NULL (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *
+void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder は no-op (SkRuntimeShaderBuilder *runtime_shader_builder)
+sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix); // localMatrix は NULL 許可。NULL builder/生成不能なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder, const SkMatrix *localMatrix) -> sk_shader_t
+const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder なら NULL (SkRuntimeShaderBuilder *runtime_shader_builder) -> const SkRuntimeEffect *
+sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
+sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
+int SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_data_t
+int SkRuntimeShaderBuilder_children(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_runtime_effect_child_ptr_t
 
 #ifdef __cplusplus
 }

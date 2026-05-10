@@ -26,11 +26,12 @@
 extern "C" {
 
 reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(sk_runtime_effect_t runtime_effect) {
-    return reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(static_sk_runtime_effect_get_entity(runtime_effect)));
+    sk_sp<SkRuntimeEffect> native_effect = static_sk_runtime_effect_get_entity(runtime_effect);
+    return native_effect ? reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(native_effect)) : nullptr;
 }
 
 reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder) {
-    return reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(*reinterpret_cast<const SkRuntimeShaderBuilder *>(builder)));
+    return builder != nullptr ? reinterpret_cast<reskia_runtime_shader_builder_t *>(new SkRuntimeShaderBuilder(*reinterpret_cast<const SkRuntimeShaderBuilder *>(builder))) : nullptr;
 }
 
 void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder) {
@@ -38,27 +39,37 @@ void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shad
 }
 
 sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix) {
-    return static_sk_shader_make(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->makeShader(reinterpret_cast<const SkMatrix *>(localMatrix)));
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    if (native == nullptr) {
+        return 0;
+    }
+    sk_sp<SkShader> shader = native->makeShader(reinterpret_cast<const SkMatrix *>(localMatrix));
+    return shader ? static_sk_shader_make(shader) : 0;
 }
 
 const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder) {
-    return reinterpret_cast<const reskia_runtime_effect_t *>(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->effect());
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    return native != nullptr ? reinterpret_cast<const reskia_runtime_effect_t *>(native->effect()) : nullptr;
 }
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_uniform_make(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->uniform(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, string_view_t name) {
-    return static_sk_runtime_effect_builder_builder_child_make(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->child(static_string_view_get_entity(name)));
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    return native != nullptr ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
 }
 
 const_sk_data_t SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder) {
-    return static_const_sk_data_make(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->uniforms());
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    return native != nullptr ? static_const_sk_data_make(native->uniforms()) : 0;
 }
 
 const_sk_runtime_effect_child_ptr_t SkRuntimeShaderBuilder_children(reskia_runtime_shader_builder_t *runtime_shader_builder) {
-    return static_const_sk_runtime_effect_child_ptr_make(reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder)->children());
+    auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
+    return native != nullptr ? static_const_sk_runtime_effect_child_ptr_make(native->children()) : 0;
 }
 
 }

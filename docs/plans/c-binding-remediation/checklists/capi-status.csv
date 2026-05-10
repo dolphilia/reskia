@@ -225,16 +225,16 @@ skia/capi/sk_region.cpp,done,P2,codex,phase2-batch-aj: SkRegion query/mutation/o
 skia/capi/sk_region.h,done,P2,codex,phase2-batch-aj: SkRegion borrowed pointer/raw array/op/serialization の NULL 規約コメントを補強
 skia/capi/sk_rsx_form.cpp,todo,P2,,
 skia/capi/sk_rsx_form.h,todo,P2,,
-skia/capi/sk_runtime_blend_builder.cpp,todo,P2,,
-skia/capi/sk_runtime_blend_builder.h,todo,P2,,
-skia/capi/sk_runtime_color_filter_builder.cpp,todo,P2,,
-skia/capi/sk_runtime_color_filter_builder.h,todo,P2,,
-skia/capi/sk_runtime_effect.cpp,todo,P2,,
-skia/capi/sk_runtime_effect.h,todo,P2,,
-skia/capi/sk_runtime_effect_builder.cpp,todo,P2,,
-skia/capi/sk_runtime_effect_builder.h,todo,P2,,
-skia/capi/sk_runtime_shader_builder.cpp,todo,P2,,
-skia/capi/sk_runtime_shader_builder.h,todo,P2,,
+skia/capi/sk_runtime_blend_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime blend builder invalid effect handle and null receiver guards
+skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime blend builder null receiver and handle 0 rules
+skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime color filter builder invalid effect handle and null receiver guards
+skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime color filter builder null receiver and handle 0 rules
+skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime effect null receiver child pointer result handle guards
+skia/capi/sk_runtime_effect.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime effect null receiver child pointer and options rules
+skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime effect builder null receiver guards
+skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime effect builder null receiver rules
+skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime shader builder invalid effect handle null receiver and result handle guards
+skia/capi/sk_runtime_shader_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime shader builder null receiver and handle 0 rules
 skia/capi/sk_sampling_options.cpp,todo,P2,,
 skia/capi/sk_sampling_options.h,todo,P2,,
 skia/capi/sk_shader.cpp,done,P2,2026-05-10,Phase 2 batch AY: shader null receiver guards factory handle 0 and serialize rules
