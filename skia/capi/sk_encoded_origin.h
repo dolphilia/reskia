@@ -15,8 +15,8 @@ extern "C" {
 // static
 typedef int32_t reskia_encoded_origin_t;
 
-sk_matrix_t SkEncodedOrigin_SkEncodedOriginToMatrix(reskia_encoded_origin_t origin, int w, int h); // (SkEncodedOrigin origin, int w, int h) -> sk_matrix_t
-bool SkEncodedOrigin_SkEncodedOriginSwapsWidthHeight(reskia_encoded_origin_t origin); // (SkEncodedOrigin origin) -> bool
+sk_matrix_t SkEncodedOrigin_SkEncodedOriginToMatrix(reskia_encoded_origin_t origin, int w, int h); // origin は SkEncodedOrigin 範囲内。invalid 入力では 0
+bool SkEncodedOrigin_SkEncodedOriginSwapsWidthHeight(reskia_encoded_origin_t origin); // origin は SkEncodedOrigin 範囲内。invalid 入力では false
 
 #ifdef __cplusplus
 }

@@ -84,6 +84,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `67-phase-2-batch-bn-op-builder.md`
 - `68-phase-2-batch-bo-pathops.md`
 - `69-phase-2-batch-bp-document-dynamic-stream.md`
+- `70-phase-2-batch-bq-encoded-cubic.md`
 
 ## 関連計画
 

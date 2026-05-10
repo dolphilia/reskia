@@ -57,10 +57,10 @@ skia/capi/sk_contour_measure_iter.cpp,done,P2,codex,phase2-batch-q: NULL path gu
 skia/capi/sk_contour_measure_iter.h,done,P2,codex,phase2-batch-q: iterator path/next NULL rules,
 skia/capi/sk_corner_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約と NULL delete no-op を補強
 skia/capi/sk_corner_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
-skia/capi/sk_cubic_map.cpp,todo,P2,,
-skia/capi/sk_cubic_map.h,todo,P2,,
-skia/capi/sk_cubic_resampler.cpp,todo,P2,,
-skia/capi/sk_cubic_resampler.h,todo,P2,,
+skia/capi/sk_cubic_map.cpp,done,P2,2026-05-10,Phase 2 batch BQ: cubic map point handle and null object guards
+skia/capi/sk_cubic_map.h,done,P2,2026-05-10,Phase 2 batch BQ: documented cubic map handle and null sentinel rules
+skia/capi/sk_cubic_resampler.cpp,done,P2,2026-05-10,Phase 2 batch BQ: cubic resampler handle factories rechecked
+skia/capi/sk_cubic_resampler.h,done,P2,2026-05-10,Phase 2 batch BQ: documented cubic resampler null delete and handle rules
 skia/capi/sk_dash_path_effect.cpp,done,P2,codex,phase2-batch-l: intervals NULL ガードと null sk_sp handle 規約を補強
 skia/capi/sk_dash_path_effect.h,done,P2,codex,phase2-batch-l: intervals raw array 規約を明記
 skia/capi/sk_data.cpp,done,P2,codex,phase2-batch-g: SkData NULL ガードと zero-length raw pointer 規約を補強
@@ -75,8 +75,8 @@ skia/capi/sk_drawable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable hand
 skia/capi/sk_drawable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_dynamic_memory_w_stream.cpp,done,P2,2026-05-10,Phase 2 batch BP: dynamic memory stream null transfer guard coverage rechecked
 skia/capi/sk_dynamic_memory_w_stream.h,done,P2,2026-05-10,Phase 2 batch BP: dynamic memory stream raw buffer and stream transfer rules rechecked
-skia/capi/sk_encoded_origin.cpp,todo,P2,,
-skia/capi/sk_encoded_origin.h,todo,P2,,
+skia/capi/sk_encoded_origin.cpp,done,P2,2026-05-10,Phase 2 batch BQ: encoded origin enum guards
+skia/capi/sk_encoded_origin.h,done,P2,2026-05-10,Phase 2 batch BQ: documented encoded origin enum sentinel rules
 skia/capi/sk_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: encoder null guard and encodeRows row count validation
 skia/capi/sk_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented encoder null and row count rules
 skia/capi/sk_executor.cpp,done,P2,codex,step4: SkExecutor_add を reskia_status_t 戻り値 + function_void_void_t key に統一

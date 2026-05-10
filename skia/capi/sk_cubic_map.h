@@ -13,14 +13,14 @@ extern "C" {
 
 typedef struct reskia_cubic_map_t reskia_cubic_map_t;
 
-reskia_cubic_map_t *SkCubicMap_new(sk_point_t p1, sk_point_t p2); // (sk_point_t p1, sk_point_t p2) -> SkCubicMap *
-void SkCubicMap_delete(reskia_cubic_map_t *cubic_map); // (SkCubicMap * cubic_map)
-float SkCubicMap_computeYFromX(reskia_cubic_map_t *cubic_map, float x); // (SkCubicMap * cubic_map, float x) -> float
-sk_point_t SkCubicMap_computeFromT(reskia_cubic_map_t *cubic_map, float t); // (SkCubicMap * cubic_map, float t) -> sk_point_t
+reskia_cubic_map_t *SkCubicMap_new(sk_point_t p1, sk_point_t p2); // p1/p2 は有効な sk_point_t handle。invalid 入力では NULL
+void SkCubicMap_delete(reskia_cubic_map_t *cubic_map); // NULL 入力では no-op
+float SkCubicMap_computeYFromX(reskia_cubic_map_t *cubic_map, float x); // NULL 入力では 0
+sk_point_t SkCubicMap_computeFromT(reskia_cubic_map_t *cubic_map, float t); // NULL 入力では 0
 
 // static
 
-bool SkCubicMap_IsLinear(sk_point_t p1, sk_point_t p2); // (sk_point_t p1, sk_point_t p2) -> bool
+bool SkCubicMap_IsLinear(sk_point_t p1, sk_point_t p2); // p1/p2 は有効な sk_point_t handle。invalid 入力では false
 
 #ifdef __cplusplus
 }
