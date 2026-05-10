@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-sk_blender_t SkBlenders_Arithmetic(float k1, float k2, float k3, float k4, bool enforcePremul); // (float k1, float k2, float k3, float k4, bool enforcePremul) -> sk_blender_t
+sk_blender_t SkBlenders_Arithmetic(float k1, float k2, float k3, float k4, bool enforcePremul); // NULL result returns 0.
 
 #ifdef __cplusplus
 }

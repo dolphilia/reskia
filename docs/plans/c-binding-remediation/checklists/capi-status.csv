@@ -17,8 +17,8 @@ skia/capi/sk_blend_mode.cpp,todo,P2,,
 skia/capi/sk_blend_mode.h,todo,P2,,
 skia/capi/sk_blender.cpp,todo,P2,,
 skia/capi/sk_blender.h,todo,P2,,
-skia/capi/sk_blenders.cpp,todo,P2,,
-skia/capi/sk_blenders.h,todo,P2,,
+skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory null result handle 0 rule
+skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_canvas.cpp,done,P2,codex,"stability Phase 2: query/read/state/draw/static factory NULL guards and typed pointer conventions applied; remaining void* are raw pixel/text/raster buffer style APIs"
