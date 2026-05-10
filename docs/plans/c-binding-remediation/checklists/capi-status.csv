@@ -273,8 +273,8 @@ skia/capi/sk_text_blob_builder.cpp,done,P2,codex,phase2-batch-ak: SkTextBlobBuil
 skia/capi/sk_text_blob_builder.h,done,P2,codex,phase2-batch-ak: SkTextBlobBuilder run-buffer allocation の必須入力規約コメントを補強
 skia/capi/sk_text_blob_builder_run_handler.cpp,done,P2,2026-05-10,Phase 2 batch BB: text blob run handler null handler run info buffer and blob handle guards
 skia/capi/sk_text_blob_builder_run_handler.h,done,P2,2026-05-10,Phase 2 batch BB: documented text blob run handler null and required RunInfo rules
-skia/capi/sk_tiled_image_utils.cpp,todo,P2,,
-skia/capi/sk_tiled_image_utils.h,todo,P2,,
+skia/capi/sk_tiled_image_utils.cpp,done,P2,2026-05-10,Phase 2 batch BE: tiled image utils required canvas image rect sampling guards
+skia/capi/sk_tiled_image_utils.h,done,P2,2026-05-10,Phase 2 batch BE: documented tiled image utils required pointer and key value rules
 skia/capi/sk_trace_memory_dump.cpp,todo,P2,,
 skia/capi/sk_trace_memory_dump.h,todo,P2,,
 skia/capi/sk_trim_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約と NULL delete no-op を補強
