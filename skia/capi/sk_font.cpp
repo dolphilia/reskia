@@ -60,8 +60,8 @@ bool has_text_input(const void *text, size_t byteLength) {
     return byteLength == 0 || text != nullptr;
 }
 
-bool has_glyph_input(const uint16_t *glyphs, int count) {
-    return count <= 0 || glyphs != nullptr;
+bool has_required_glyph_input(const uint16_t *glyphs, int count) {
+    return count > 0 && glyphs != nullptr;
 }
 
 }
@@ -307,7 +307,7 @@ float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size
 }
 
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds) {
-    if (font == nullptr || !has_glyph_input(glyphs, count)) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
     as_font(font)->getWidths(glyphs, count, widths, reinterpret_cast<SkRect *>(bounds));
@@ -322,21 +322,21 @@ void SkFont_getWidths_2(reskia_font_t *font, const void * glyphs, int count, voi
 }
 
 void SkFont_getWidthsWithoutBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths) {
-    if (font == nullptr || count <= 0 || glyphs == nullptr || widths == nullptr) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
     as_font(font)->getWidths(glyphs, count, widths);
 }
 
 void SkFont_getWidthsBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds, const reskia_paint_t *paint) {
-    if (font == nullptr || !has_glyph_input(glyphs, count)) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
     as_font(font)->getWidthsBounds(glyphs, count, widths, reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkFont_getBounds(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_rect_t *bounds, const reskia_paint_t *paint) {
-    if (font == nullptr || count <= 0 || glyphs == nullptr || bounds == nullptr) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
     as_font(font)->getBounds(glyphs, count, reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));

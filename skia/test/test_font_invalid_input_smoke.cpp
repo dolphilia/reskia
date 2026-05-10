@@ -186,8 +186,19 @@ int main() {
 
     float widths[1] = {0.0f};
     SkFont_getWidthsWithoutBounds(font, glyphs, 1, widths);
+    SkFont_getWidths(font, nullptr, 1, widths, nullptr);
     SkFont_getWidths(font, glyphs, 0, nullptr, nullptr);
+    SkFont_getWidths(font, glyphs, -1, nullptr, nullptr);
+    SkFont_getWidths(font, glyphs, 1, nullptr, nullptr);
+    SkFont_getWidthsWithoutBounds(font, nullptr, 1, widths);
+    SkFont_getWidthsWithoutBounds(font, glyphs, 0, nullptr);
+    SkFont_getWidthsWithoutBounds(font, glyphs, 1, nullptr);
+    SkFont_getWidthsBounds(font, nullptr, 1, widths, nullptr, nullptr);
     SkFont_getWidthsBounds(font, glyphs, 0, nullptr, nullptr, nullptr);
+    SkFont_getWidthsBounds(font, glyphs, 1, nullptr, nullptr, nullptr);
+    SkFont_getBounds(font, nullptr, 1, nullptr, nullptr);
+    SkFont_getBounds(font, glyphs, 0, nullptr, nullptr);
+    SkFont_getBounds(font, glyphs, 1, nullptr, nullptr);
     SkFont_delete(font);
     return 0;
 }
