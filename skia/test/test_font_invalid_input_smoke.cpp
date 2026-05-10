@@ -1,6 +1,8 @@
 #include "capi/sk_font.h"
 #include "handles/static_sk_font.h"
 
+#include "include/core/SkPoint.h"
+
 #include <cstdio>
 #include <cstdint>
 
@@ -199,6 +201,30 @@ int main() {
     SkFont_getBounds(font, nullptr, 1, nullptr, nullptr);
     SkFont_getBounds(font, glyphs, 0, nullptr, nullptr);
     SkFont_getBounds(font, glyphs, 1, nullptr, nullptr);
+    SkPoint positions[1] = {};
+    SkFont_getPos(font, nullptr, 1, reinterpret_cast<reskia_point_t *>(positions), 0);
+    SkFont_getPos(font, glyphs, 0, nullptr, 0);
+    SkFont_getPos(font, glyphs, -1, nullptr, 0);
+    SkFont_getPos(font, glyphs, 1, nullptr, 0);
+    SkFont_getPos(font, glyphs, 1, reinterpret_cast<reskia_point_t *>(positions), 0);
+    float xpos[1] = {0.0f};
+    SkFont_getXPos(font, nullptr, 1, xpos, 0.0f);
+    SkFont_getXPos(font, glyphs, 0, nullptr, 0.0f);
+    SkFont_getXPos(font, glyphs, -1, nullptr, 0.0f);
+    SkFont_getXPos(font, glyphs, 1, nullptr, 0.0f);
+    SkFont_getXPos(font, glyphs, 1, xpos, 0.0f);
+    if (!check(SkFont_getIntercepts(font, nullptr, 1, reinterpret_cast<const reskia_point_t *>(positions), 0.0f, 1.0f, nullptr) == 0, "SkFont_getIntercepts(null glyphs)")) {
+        SkFont_delete(font);
+        return 37;
+    }
+    if (!check(SkFont_getIntercepts(font, glyphs, 0, nullptr, 0.0f, 1.0f, nullptr) == 0, "SkFont_getIntercepts(zero count)")) {
+        SkFont_delete(font);
+        return 38;
+    }
+    if (!check(SkFont_getIntercepts(font, glyphs, 1, nullptr, 0.0f, 1.0f, nullptr) == 0, "SkFont_getIntercepts(null pos)")) {
+        SkFont_delete(font);
+        return 39;
+    }
     SkFont_delete(font);
     return 0;
 }

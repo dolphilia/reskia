@@ -90,6 +90,7 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `73-phase-2-batch-bt-font-widths-bounds.md`
 - `74-phase-2-batch-bu-auto-canvas-restore-bbox.md`
 - `75-phase-2-batch-bv-canvas-atlas-image-set.md`
+- `76-phase-2-batch-bw-font-positions-intercepts.md`
 
 ## 関連計画
 

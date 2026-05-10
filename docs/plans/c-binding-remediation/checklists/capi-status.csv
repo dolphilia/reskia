@@ -87,8 +87,8 @@ skia/capi/sk_file_w_stream.cpp,done,P2,2026-05-10,Phase 2 batch BM: file write s
 skia/capi/sk_file_w_stream.h,done,P2,2026-05-10,Phase 2 batch BM: documented file write stream null sentinel and input rules
 skia/capi/sk_flattenable.cpp,done,P2,phase2-batch-ad: NULL guards and nullable handle factories for SkFlattenable,
 skia/capi/sk_flattenable.h,done,P2,phase2-batch-ad: documented NULL/pointer/handle-0 conventions,
-skia/capi/sk_font.cpp,done,P2,2026-05-10,Phase 2 batch BT: font glyph widths and bounds optional output guards
-skia/capi/sk_font.h,done,P2,2026-05-10,Phase 2 batch BT: documented font glyph widths and bounds optional output rules
+skia/capi/sk_font.cpp,done,P2,2026-05-10,Phase 2 batch BW: font positions and intercepts output guards
+skia/capi/sk_font.h,done,P2,2026-05-10,Phase 2 batch BW: documented font positions and intercepts origin/output rules
 skia/capi/sk_font_arguments.cpp,done,P2,phase2-batch-ac: NULL guards for SkFontArguments setters/getters,
 skia/capi/sk_font_arguments.h,done,P2,phase2-batch-ac: documented NULL/default-handle/handle-0 conventions,
 skia/capi/sk_font_metrics.cpp,done,P2,phase2-batch-ac: NULL output guards for SkFontMetrics query helpers,

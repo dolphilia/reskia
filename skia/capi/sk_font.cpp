@@ -343,21 +343,21 @@ void SkFont_getBounds(reskia_font_t *font, const uint16_t *glyphs, int count, re
 }
 
 void SkFont_getPos(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_point_t *pos, sk_point_t origin) {
-    if (font == nullptr || count <= 0 || glyphs == nullptr || pos == nullptr) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count) || pos == nullptr) {
         return;
     }
     as_font(font)->getPos(glyphs, count, reinterpret_cast<SkPoint *>(pos), static_sk_point_get_entity(origin));
 }
 
 void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, float *xpos, float origin) {
-    if (font == nullptr || count <= 0 || glyphs == nullptr || xpos == nullptr) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count) || xpos == nullptr) {
         return;
     }
     as_font(font)->getXPos(glyphs, count, xpos, origin);
 }
 
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint) { // @TODO
-    if (font == nullptr || count <= 0 || glyphs == nullptr || pos == nullptr) {
+    if (font == nullptr || !has_required_glyph_input(glyphs, count) || pos == nullptr) {
         return 0;
     }
     std::vector<SkScalar> intercepts = as_font(font)->getIntercepts(glyphs, count, reinterpret_cast<const SkPoint *>(pos), top, bottom, reinterpret_cast<const SkPaint *>(paint));
