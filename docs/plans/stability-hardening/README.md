@@ -110,6 +110,9 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `93-phase-2-batch-cn-image-shader-guards.md`
 - `94-phase-2-batch-co-runtime-effect-make-traced.md`
 - `95-phase-2-batch-cp-canvas-patch.md`
+- `96-phase-2-batch-cq-image-read-pixels.md`
+- `97-phase-2-batch-cr-runtime-effect-data-child.md`
+- `98-phase-2-batch-cs-canvas-rrect-draw.md`
 
 ## 関連計画
 

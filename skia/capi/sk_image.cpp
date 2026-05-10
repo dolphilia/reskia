@@ -31,6 +31,13 @@ bool has_i_size_handle(sk_i_size_t size) {
     return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
 }
 
+bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
+    if (info == nullptr || pixels == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
+}
+
 }  // namespace
 
 extern "C" {
@@ -211,7 +218,7 @@ bool SkImage_isValid(reskia_image_t *image, reskia_recording_context_t *context)
 }
 
 bool SkImage_readPixels(reskia_image_t *image, reskia_direct_context_t *context, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
@@ -225,7 +232,7 @@ bool SkImage_readPixelsWithContextPixmap(reskia_image_t *image, reskia_direct_co
 }
 
 bool SkImage_readPixelsWithImageInfo(reskia_image_t *image, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || dstInfo == nullptr || dstPixels == nullptr) {
+    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));

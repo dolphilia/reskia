@@ -62,6 +62,10 @@ bool has_shader_handle(sk_shader_t shader) {
     return shader != 0 && static_sk_shader_get_ptr(shader) != nullptr;
 }
 
+bool has_optional_const_data_handle(sk_data_t data) {
+    return data == 0 || static_const_sk_data_get_ptr(data) != nullptr;
+}
+
 } // namespace
 
 extern "C" {
@@ -75,7 +79,7 @@ void SkRuntimeEffect_release(reskia_runtime_effect_t *runtime_effect) {
 
 sk_shader_t SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_shader_sp_t *children, size_t childCount, const reskia_matrix_t *localMatrix) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    if (native == nullptr || (children == nullptr && childCount != 0)) {
+    if (native == nullptr || !has_optional_const_data_handle(data) || (children == nullptr && childCount != 0)) {
         return 0;
     }
     return make_shader_handle(native->makeShader(static_const_sk_data_get_entity(data), reinterpret_cast<sk_sp<SkShader> *>(children), childCount, reinterpret_cast<const SkMatrix *>(localMatrix)));
@@ -83,17 +87,17 @@ sk_shader_t SkRuntimeEffect_makeShader(reskia_runtime_effect_t *runtime_effect, 
 
 sk_shader_t SkRuntimeEffect_makeShaderWithChildPtr(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr, const reskia_matrix_t *localMatrix) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? make_shader_handle(native->makeShader(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr), reinterpret_cast<const SkMatrix *>(localMatrix))) : 0;
+    return native != nullptr && has_optional_const_data_handle(data) ? make_shader_handle(native->makeShader(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr), reinterpret_cast<const SkMatrix *>(localMatrix))) : 0;
 }
 
 sk_color_filter_t SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runtime_effect, sk_data_t data) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? make_color_filter_handle(native->makeColorFilter(static_const_sk_data_get_entity(data))) : 0;
+    return native != nullptr && has_optional_const_data_handle(data) ? make_color_filter_handle(native->makeColorFilter(static_const_sk_data_get_entity(data))) : 0;
 }
 
 sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildren(reskia_runtime_effect_t *runtime_effect, sk_data_t data, reskia_color_filter_sp_t *children, size_t childCount) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    if (native == nullptr || (children == nullptr && childCount != 0)) {
+    if (native == nullptr || !has_optional_const_data_handle(data) || (children == nullptr && childCount != 0)) {
         return 0;
     }
     return make_color_filter_handle(native->makeColorFilter(static_const_sk_data_get_entity(data), reinterpret_cast<sk_sp<SkColorFilter> *>(children), childCount));
@@ -101,12 +105,12 @@ sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildren(reskia_runtime_eff
 
 sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildPtr(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? make_color_filter_handle(native->makeColorFilter(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr))) : 0;
+    return native != nullptr && has_optional_const_data_handle(data) ? make_color_filter_handle(native->makeColorFilter(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr))) : 0;
 }
 
 sk_blender_t SkRuntimeEffect_makeBlender(reskia_runtime_effect_t *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? make_blender_handle(native->makeBlender(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr))) : 0;
+    return native != nullptr && has_optional_const_data_handle(data) ? make_blender_handle(native->makeBlender(static_const_sk_data_get_entity(data), static_const_sk_runtime_effect_child_ptr_get_entity(runtime_effect_child_ptr))) : 0;
 }
 
 const reskia_std_string_t *SkRuntimeEffect_source(reskia_runtime_effect_t *runtime_effect) {

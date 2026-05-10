@@ -27,13 +27,19 @@ int main() {
     SkRuntimeEffect_RegisterFlattenables();
 
     ok &= check(SkRuntimeEffect_makeShader(nullptr, 0, nullptr, 0, nullptr) == 0, "makeShader null effect");
+    ok &= check(SkRuntimeEffect_makeShader(nullptr, 999999, nullptr, 0, nullptr) == 0, "makeShader null effect and invalid data");
     ok &= check(SkRuntimeEffect_makeShader(nullptr, 0, nullptr, 1, nullptr) == 0, "makeShader null effect and invalid children");
     ok &= check(SkRuntimeEffect_makeShaderWithChildPtr(nullptr, 0, 0, nullptr) == 0, "makeShaderWithChildPtr null effect");
+    ok &= check(SkRuntimeEffect_makeShaderWithChildPtr(nullptr, 999999, 999999, nullptr) == 0, "makeShaderWithChildPtr null effect invalid data child ptr");
     ok &= check(SkRuntimeEffect_makeColorFilter(nullptr, 0) == 0, "makeColorFilter null effect");
+    ok &= check(SkRuntimeEffect_makeColorFilter(nullptr, 999999) == 0, "makeColorFilter null effect invalid data");
     ok &= check(SkRuntimeEffect_makeColorFilterWithChildren(nullptr, 0, nullptr, 0) == 0, "makeColorFilterWithChildren null effect");
+    ok &= check(SkRuntimeEffect_makeColorFilterWithChildren(nullptr, 999999, nullptr, 0) == 0, "makeColorFilterWithChildren null effect invalid data");
     ok &= check(SkRuntimeEffect_makeColorFilterWithChildren(nullptr, 0, nullptr, 1) == 0, "makeColorFilterWithChildren null effect and invalid children");
     ok &= check(SkRuntimeEffect_makeColorFilterWithChildPtr(nullptr, 0, 0) == 0, "makeColorFilterWithChildPtr null effect");
+    ok &= check(SkRuntimeEffect_makeColorFilterWithChildPtr(nullptr, 999999, 999999) == 0, "makeColorFilterWithChildPtr null effect invalid data child ptr");
     ok &= check(SkRuntimeEffect_makeBlender(nullptr, 0, 0) == 0, "makeBlender null effect");
+    ok &= check(SkRuntimeEffect_makeBlender(nullptr, 999999, 999999) == 0, "makeBlender null effect invalid data child ptr");
     ok &= check(SkRuntimeEffect_source(nullptr) == nullptr, "source null effect");
     ok &= check(SkRuntimeEffect_uniformSize(nullptr) == 0, "uniformSize null effect");
     ok &= check(SkRuntimeEffect_uniforms(nullptr) == 0, "uniforms null effect");

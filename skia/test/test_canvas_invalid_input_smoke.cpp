@@ -7,6 +7,7 @@
 #include "capi/sk_picture_recorder.h"
 #include "capi/sk_region.h"
 #include "capi/sk_rect.h"
+#include "capi/sk_r_rect.h"
 #include "capi/sk_string.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
@@ -17,6 +18,7 @@
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_picture.h"
+#include "handles/static_sk_r_rect.h"
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
 #include "handles/static_sk_text_blob.h"
@@ -211,6 +213,33 @@ int main() {
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, nullptr, 0, paint);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, nullptr);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, paint);
+    const sk_rect_t round_rect_handle = SkRect_MakeXYWH(0.0f, 0.0f, 2.0f, 2.0f);
+    auto *round_rect = static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(round_rect_handle));
+    if (!check(round_rect != nullptr, "SkRect_MakeXYWH for canvas rounded rect")) {
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const sk_r_rect_t rrect_handle = SkRRect_MakeRect(round_rect);
+    auto *rrect = static_cast<reskia_r_rect_t *>(static_sk_r_rect_get_ptr(rrect_handle));
+    if (!check(rrect != nullptr, "SkRRect_MakeRect for canvas rrect")) {
+        static_sk_rect_delete(round_rect_handle);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawRoundRect(canvas, nullptr, 1.0f, 1.0f, paint);
+    SkCanvas_drawRoundRect(canvas, round_rect, 1.0f, 1.0f, nullptr);
+    SkCanvas_drawRoundRect(canvas, round_rect, 1.0f, 1.0f, paint);
+    SkCanvas_drawRRect(canvas, nullptr, paint);
+    SkCanvas_drawRRect(canvas, rrect, nullptr);
+    SkCanvas_drawRRect(canvas, rrect, paint);
+    SkCanvas_drawDRRect(canvas, nullptr, rrect, paint);
+    SkCanvas_drawDRRect(canvas, rrect, nullptr, paint);
+    SkCanvas_drawDRRect(canvas, rrect, rrect, nullptr);
+    SkCanvas_drawDRRect(canvas, rrect, rrect, paint);
+    static_sk_r_rect_delete(rrect_handle);
+    static_sk_rect_delete(round_rect_handle);
     SkCanvas_drawTextBlob(canvas, 0, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlob(canvas, 999999, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlobPtr(canvas, nullptr, 0.0f, 0.0f, paint);
