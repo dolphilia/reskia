@@ -387,6 +387,18 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 42;
     }
+    const sk_image_t non_texture_image_handle = SkImage_makeNonTextureImage(image, nullptr);
+    if (non_texture_image_handle != 0) {
+        if (!check(static_sk_image_get_ptr(non_texture_image_handle) != nullptr, "SkImage_makeNonTextureImage valid handle")) {
+            static_sk_image_delete(non_texture_image_handle);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 42;
+        }
+        static_sk_image_delete(non_texture_image_handle);
+    }
     if (!check(SkImage_makeRasterImage(nullptr, nullptr, 0) == 0, "SkImage_makeRasterImage null image")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -624,6 +636,21 @@ int main() {
             return 63;
         }
         static_sk_image_delete(reinterpreted);
+    }
+    const sk_image_t color_space_image_handle = SkImage_makeColorSpace(image, nullptr, srgb);
+    if (color_space_image_handle != 0) {
+        if (!check(static_sk_image_get_ptr(color_space_image_handle) != nullptr, "SkImage_makeColorSpace valid handle or factory failure 0")) {
+            static_sk_image_delete(color_space_image_handle);
+            static_sk_color_space_delete(srgb);
+            static_sk_matrix_delete(matrix_handle);
+            SkSamplingOptions_delete(sampling);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 63;
+        }
+        static_sk_image_delete(color_space_image_handle);
     }
     const sk_image_info_t srgb_info_handle = SkImageInfo_MakeN32PremulWithColorSpace(2, 2, srgb);
     auto *srgb_info = static_cast<reskia_image_info_t *>(static_sk_image_info_get_ptr(srgb_info_handle));

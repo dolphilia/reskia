@@ -104,6 +104,23 @@ int main() {
     auto *shader_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_shader_result));
     ok &= check(shader_result_entity != nullptr && shader_result_entity->effect != nullptr, "MakeForShaderDefault valid effect");
     if (shader_result_entity != nullptr && shader_result_entity->effect != nullptr) {
+        ok &= check(SkRuntimeEffect_makeShader(
+                reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
+                999999,
+                nullptr,
+                0,
+                nullptr) == 0, "SkRuntimeEffect_makeShader invalid data handle");
+        ok &= check(SkRuntimeEffect_makeShader(
+                reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
+                0,
+                nullptr,
+                1,
+                nullptr) == 0, "SkRuntimeEffect_makeShader missing children with positive count");
+        ok &= check(SkRuntimeEffect_makeShaderWithChildPtr(
+                reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
+                0,
+                999999,
+                nullptr) == 0, "SkRuntimeEffect_makeShaderWithChildPtr invalid child pointer handle");
         const sk_shader_t generated_shader = SkRuntimeEffect_makeShader(
                 reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
                 0,
@@ -127,6 +144,18 @@ int main() {
     auto *color_filter_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_color_filter_result));
     ok &= check(color_filter_result_entity != nullptr && color_filter_result_entity->effect != nullptr, "MakeForColorFilterDefault valid effect");
     if (color_filter_result_entity != nullptr && color_filter_result_entity->effect != nullptr) {
+        ok &= check(SkRuntimeEffect_makeColorFilter(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                999999) == 0, "SkRuntimeEffect_makeColorFilter invalid data handle");
+        ok &= check(SkRuntimeEffect_makeColorFilterWithChildren(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                0,
+                nullptr,
+                1) == 0, "SkRuntimeEffect_makeColorFilterWithChildren missing children with positive count");
+        ok &= check(SkRuntimeEffect_makeColorFilterWithChildPtr(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                0,
+                999999) == 0, "SkRuntimeEffect_makeColorFilterWithChildPtr invalid child pointer handle");
         const sk_color_filter_t generated_color_filter = SkRuntimeEffect_makeColorFilter(
                 reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
                 0);
@@ -147,6 +176,14 @@ int main() {
     auto *blender_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(generated_blender_result));
     ok &= check(blender_result_entity != nullptr && blender_result_entity->effect != nullptr, "MakeForBlenderDefault valid effect");
     if (blender_result_entity != nullptr && blender_result_entity->effect != nullptr) {
+        ok &= check(SkRuntimeEffect_makeBlender(
+                reinterpret_cast<reskia_runtime_effect_t *>(blender_result_entity->effect.get()),
+                999999,
+                0) == 0, "SkRuntimeEffect_makeBlender invalid data handle");
+        ok &= check(SkRuntimeEffect_makeBlender(
+                reinterpret_cast<reskia_runtime_effect_t *>(blender_result_entity->effect.get()),
+                0,
+                999999) == 0, "SkRuntimeEffect_makeBlender invalid child pointer handle");
         const sk_blender_t generated_blender = SkRuntimeEffect_makeBlender(
                 reinterpret_cast<reskia_runtime_effect_t *>(blender_result_entity->effect.get()),
                 0,

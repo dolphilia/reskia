@@ -18,6 +18,10 @@ void static_const_sk_runtime_effect_child_ptr_set(int key, SkSpan<const SkRuntim
     static_const_sk_runtime_effect_child_ptr.set(key, value);
 }
 
+bool static_const_sk_runtime_effect_child_ptr_contains(int key) {
+    return static_const_sk_runtime_effect_child_ptr.contains(key);
+}
+
 SkSpan<const SkRuntimeEffect::ChildPtr> static_const_sk_runtime_effect_child_ptr_get_entity(int key) {
     SkSpan<const SkRuntimeEffect::ChildPtr>* entity = static_const_sk_runtime_effect_child_ptr.get_ptr(key);
     if (entity == nullptr) {

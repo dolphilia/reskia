@@ -201,8 +201,58 @@ int main() {
     SkCanvas_drawColorU32(canvas, 0xFF000000u, -1);
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 999999);
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 0);
+    SkCanvas_clipIRect(canvas, nullptr, 0);
+    SkCanvas_clipRect(canvas, nullptr, false);
+    SkCanvas_clipRectWithOp(canvas, nullptr, 0);
+    SkCanvas_clipRectWithOpAA(canvas, nullptr, 0, false);
+    SkCanvas_clipRRect(canvas, nullptr, false);
+    SkCanvas_clipRRectWithOp(canvas, nullptr, 0);
+    SkCanvas_clipRRectWithOpAA(canvas, nullptr, 0, false);
+    SkCanvas_clipPath(canvas, nullptr, false);
+    SkCanvas_clipPathWithOp(canvas, nullptr, 0);
+    SkCanvas_clipPathWithOpAA(canvas, nullptr, 0, false);
     SkCanvas_clipShader(canvas, 0, 0);
     SkCanvas_clipShader(canvas, 999999, 0);
+    const sk_i_rect_t clip_irect_handle = SkIRect_MakeXYWH(0, 0, 1, 1);
+    auto *clip_irect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(clip_irect_handle));
+    if (!check(clip_irect != nullptr, "SkIRect_MakeXYWH for canvas clipIRect")) {
+        if (clip_irect_handle != 0) {
+            static_sk_i_rect_delete(clip_irect_handle);
+        }
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_clipIRect(canvas, clip_irect, 0);
+    static_sk_i_rect_delete(clip_irect_handle);
+    const sk_rect_t clip_rect_handle = SkRect_MakeWH(1.0f, 1.0f);
+    auto *clip_rect = static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(clip_rect_handle));
+    if (!check(clip_rect != nullptr, "SkRect_MakeWH for canvas clipRect")) {
+        if (clip_rect_handle != 0) {
+            static_sk_rect_delete(clip_rect_handle);
+        }
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_clipRect(canvas, clip_rect, false);
+    SkCanvas_clipRectWithOp(canvas, clip_rect, 0);
+    SkCanvas_clipRectWithOpAA(canvas, clip_rect, 0, false);
+    static_sk_rect_delete(clip_rect_handle);
+    const sk_r_rect_t clip_rrect_handle = SkRRect_MakeEmpty();
+    auto *clip_rrect = static_cast<reskia_r_rect_t *>(static_sk_r_rect_get_ptr(clip_rrect_handle));
+    if (!check(clip_rrect != nullptr, "SkRRect_MakeEmpty for canvas clipRRect")) {
+        if (clip_rrect_handle != 0) {
+            static_sk_r_rect_delete(clip_rrect_handle);
+        }
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_clipRRect(canvas, clip_rrect, false);
+    SkCanvas_clipRRectWithOp(canvas, clip_rrect, 0);
+    SkCanvas_clipRRectWithOpAA(canvas, clip_rrect, 0, false);
+    static_sk_r_rect_delete(clip_rrect_handle);
     const sk_shader_t clip_shader_handle = SkShaders_Color(0xFF00FF00u);
     if (!check(clip_shader_handle != 0 && static_sk_shader_get_ptr(clip_shader_handle) != nullptr, "SkShaders_Color for canvas clipShader")) {
         if (clip_shader_handle != 0) {
@@ -223,6 +273,9 @@ int main() {
     SkCanvas_drawPath(canvas, nullptr, paint);
     SkCanvas_drawPath(canvas, path, nullptr);
     SkCanvas_drawPath(canvas, path, paint);
+    SkCanvas_clipPath(canvas, path, false);
+    SkCanvas_clipPathWithOp(canvas, path, 0);
+    SkCanvas_clipPathWithOpAA(canvas, path, 0, false);
     SkPath_delete(path);
     reskia_region_t *region = SkRegion_new();
     if (!check(region != nullptr, "SkRegion_new for canvas drawRegion")) {
