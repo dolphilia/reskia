@@ -22,6 +22,14 @@
 #include "../handles/static_sk_data-internal.h"
 #include "../handles/static_sk_blender-internal.h"
 
+namespace {
+
+bool has_string_view_handle(string_view_t name) {
+    return name != 0 && static_string_view_contains(name);
+}
+
+} // namespace
+
 extern "C" {
 
 //SkRuntimeBlendBuilder(const SkRuntimeBlendBuilder &)=delete
@@ -52,12 +60,12 @@ const reskia_runtime_effect_t *SkRuntimeBlendBuilder_effect(reskia_runtime_blend
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeBlendBuilder_uniform(reskia_runtime_blend_builder_t *runtime_blend_builder, string_view_t name) {
     auto *native = reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder);
-    return native != nullptr ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
+    return native != nullptr && has_string_view_handle(name) ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeBlendBuilder_child(reskia_runtime_blend_builder_t *runtime_blend_builder, string_view_t name) {
     auto *native = reinterpret_cast<SkRuntimeBlendBuilder *>(runtime_blend_builder);
-    return native != nullptr ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
+    return native != nullptr && has_string_view_handle(name) ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
 }
 
 const_sk_data_t SkRuntimeBlendBuilder_uniforms(reskia_runtime_blend_builder_t *runtime_blend_builder) {

@@ -3,6 +3,8 @@
 #include "capi/sk_font.h"
 #include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
+#include "capi/sk_m_44.h"
+#include "capi/sk_matrix.h"
 #include "capi/sk_paint.h"
 #include "capi/sk_path.h"
 #include "capi/sk_picture_recorder.h"
@@ -20,6 +22,8 @@
 #include "handles/static_sk_data.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_m_44.h"
+#include "handles/static_sk_matrix.h"
 #include "handles/static_sk_picture.h"
 #include "handles/static_sk_point.h"
 #include "handles/static_sk_r_rect.h"
@@ -184,6 +188,34 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+    SkCanvas_concat(canvas, nullptr);
+    SkCanvas_concatMatrix(canvas, nullptr);
+    SkCanvas_setMatrix(canvas, nullptr);
+    SkCanvas_setMatrix3x3(canvas, nullptr);
+    const sk_m_44_t m44_handle = SkM44_Translate(1.0f, 2.0f, 0.0f);
+    auto *m44 = static_cast<reskia_m_44_t *>(static_sk_m_44_get_ptr(m44_handle));
+    if (!check(m44 != nullptr, "SkM44_Translate for canvas matrix")) {
+        if (m44_handle != 0) {
+            static_sk_m_44_delete(m44_handle);
+        }
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_concat(canvas, m44);
+    SkCanvas_setMatrix(canvas, m44);
+    static_sk_m_44_delete(m44_handle);
+    const sk_matrix_t canvas_matrix_handle = SkMatrix_I();
+    auto *canvas_matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(canvas_matrix_handle));
+    if (!check(canvas_matrix != nullptr, "SkMatrix_I for canvas matrix")) {
+        if (canvas_matrix_handle != 0) {
+            static_sk_matrix_delete(canvas_matrix_handle);
+        }
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_concatMatrix(canvas, canvas_matrix);
+    SkCanvas_setMatrix3x3(canvas, canvas_matrix);
+    static_sk_matrix_delete(canvas_matrix_handle);
 
     reskia_paint_t *paint = SkPaint_new();
     if (!check(paint != nullptr, "SkPaint_new for canvas text blob")) {
@@ -463,9 +495,26 @@ int main() {
     SkCanvas_drawPicture(canvas, picture_handle);
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, nullptr, nullptr);
     SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, nullptr, paint);
+    const sk_matrix_t picture_matrix_handle = SkMatrix_I();
+    auto *picture_matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(picture_matrix_handle));
+    if (!check(picture_matrix != nullptr, "SkMatrix_I for canvas drawPicture")) {
+        if (picture_matrix_handle != 0) {
+            static_sk_matrix_delete(picture_matrix_handle);
+        }
+        static_sk_picture_delete(picture_handle);
+        SkPictureRecorder_delete(picture_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, picture_matrix, nullptr);
+    SkCanvas_drawPictureHandleWithMatrixPaint(canvas, picture_handle, picture_matrix, paint);
     SkCanvas_drawPicturePtr(canvas, picture);
     SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, nullptr, nullptr);
     SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, nullptr, paint);
+    SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, picture_matrix, nullptr);
+    SkCanvas_drawPicturePtrWithMatrixPaint(canvas, picture, picture_matrix, paint);
+    static_sk_matrix_delete(picture_matrix_handle);
     static_sk_picture_delete(picture_handle);
     SkPictureRecorder_delete(picture_recorder);
 
@@ -508,6 +557,20 @@ int main() {
         return 7;
     }
     SkCanvas_drawDrawable(canvas, drawable, nullptr);
+    const sk_matrix_t drawable_matrix_handle = SkMatrix_I();
+    auto *drawable_matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(drawable_matrix_handle));
+    if (!check(drawable_matrix != nullptr, "SkMatrix_I for canvas drawDrawable")) {
+        if (drawable_matrix_handle != 0) {
+            static_sk_matrix_delete(drawable_matrix_handle);
+        }
+        static_sk_drawable_delete(drawable_handle);
+        SkPictureRecorder_delete(drawable_recorder);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawDrawable(canvas, drawable, drawable_matrix);
+    static_sk_matrix_delete(drawable_matrix_handle);
     SkCanvas_drawDrawableAt(canvas, drawable, 0.0f, 0.0f);
     static_sk_drawable_delete(drawable_handle);
     SkPictureRecorder_delete(drawable_recorder);

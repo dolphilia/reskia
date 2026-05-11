@@ -35,10 +35,18 @@ struct AsyncFailState {
     int calls = 0;
 };
 
+int async_null_context_calls = 0;
+
 void async_fail_callback(void *context, const reskia_async_read_result_t *result) {
     auto *state = static_cast<AsyncFailState *>(context);
     if (state != nullptr && result == nullptr) {
         ++state->calls;
+    }
+}
+
+void async_null_context_callback(void *context, const reskia_async_read_result_t *result) {
+    if (context == nullptr && result == nullptr) {
+        ++async_null_context_calls;
     }
 }
 
@@ -244,6 +252,22 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 23;
     }
+    SkImage_asyncRescaleAndReadPixels(nullptr, info, src_rect, 0, 0, nullptr, &async_fail_state);
+    if (!check(async_fail_state.calls == 8, "SkImage_asyncRescaleAndReadPixels null callback no-op")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    SkImage_asyncRescaleAndReadPixels(nullptr, info, src_rect, 0, 0, async_null_context_callback, nullptr);
+    if (!check(async_null_context_calls == 1, "SkImage_asyncRescaleAndReadPixels null context fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
     SkImage_asyncRescaleAndReadPixels(image, nullptr, src_rect, 0, 0, async_fail_callback, &async_fail_state);
     if (!check(async_fail_state.calls == 9, "SkImage_asyncRescaleAndReadPixels null info fail callback")) {
         static_sk_image_delete(image_handle);
@@ -306,6 +330,13 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 31;
     }
+    if (!check(SkImage_readPixels(image, nullptr, info, pixels, SkImageInfo_minRowBytes(info), 0, 0, 0), "SkImage_readPixels null context valid rowBytes")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 31;
+    }
     if (!check(!SkImage_readPixelsWithImageInfo(image, nullptr, pixels, 8, 0, 0, 0), "SkImage_readPixelsWithImageInfo null info")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -334,6 +365,24 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 35;
     }
+    uint32_t pixmap_pixels[4] = {};
+    reskia_pixmap_t *read_pixmap = SkPixmap_newWithImageInfoAddressAndRowBytes(info, pixmap_pixels, SkImageInfo_minRowBytes(info));
+    if (!check(read_pixmap != nullptr, "SkPixmap_newWithImageInfoAddressAndRowBytes for image readPixels")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 35;
+    }
+    if (!check(SkImage_readPixelsWithContextPixmap(image, nullptr, read_pixmap, 0, 0, 0), "SkImage_readPixelsWithContextPixmap null context valid pixmap")) {
+        SkPixmap_delete(read_pixmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 35;
+    }
+    SkPixmap_delete(read_pixmap);
     if (!check(!SkImage_readPixelsWithPixmap(image, nullptr, 0, 0, 0), "SkImage_readPixelsWithPixmap null pixmap")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);

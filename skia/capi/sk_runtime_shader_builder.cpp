@@ -23,6 +23,14 @@
 
 #include "../handles/static_sk_data-internal.h"
 
+namespace {
+
+bool has_string_view_handle(string_view_t name) {
+    return name != 0 && static_string_view_contains(name);
+}
+
+} // namespace
+
 extern "C" {
 
 reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(sk_runtime_effect_t runtime_effect) {
@@ -54,12 +62,12 @@ const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shad
 
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, string_view_t name) {
     auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
-    return native != nullptr ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
+    return native != nullptr && has_string_view_handle(name) ? static_sk_runtime_effect_builder_builder_uniform_make(native->uniform(static_string_view_get_entity(name))) : 0;
 }
 
 sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, string_view_t name) {
     auto *native = reinterpret_cast<SkRuntimeShaderBuilder *>(runtime_shader_builder);
-    return native != nullptr ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
+    return native != nullptr && has_string_view_handle(name) ? static_sk_runtime_effect_builder_builder_child_make(native->child(static_string_view_get_entity(name))) : 0;
 }
 
 const_sk_data_t SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder) {

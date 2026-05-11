@@ -93,8 +93,8 @@ void SkCanvas_clipRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, b
 void SkCanvas_clipRRectWithOp(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op); // rrect: non-null; invalid input is no-op (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op)
 void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias); // rrect: non-null; invalid input is no-op (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op, bool doAntiAlias)
 void SkCanvas_clipShader(reskia_canvas_t *canvas, sk_shader_t shader, reskia_canvas_clip_op_t op); // shader must be a valid handle; invalid input is no-op (SkCanvas *canvas, sk_shader_t shader, SkClipOp op)
-void SkCanvas_concat(reskia_canvas_t *canvas, const reskia_m_44_t *m44); // m44: non-null (SkCanvas *canvas, const SkM44 *m44)
-void SkCanvas_concatMatrix(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkMatrix *matrix)
+void SkCanvas_concat(reskia_canvas_t *canvas, const reskia_m_44_t *m44); // m44: non-null; invalid input is no-op (SkCanvas *canvas, const SkM44 *m44)
+void SkCanvas_concatMatrix(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null; invalid input is no-op (SkCanvas *canvas, const SkMatrix *matrix)
 void SkCanvas_discard(reskia_canvas_t *canvas); // (SkCanvas *canvas)
 void SkCanvas_drawAnnotation(reskia_canvas_t *canvas, const reskia_rect_t *rect, const char * key, sk_data_t data); // rect/key: non-null; data handle 0 is allowed; non-zero data must be valid; invalid input is no-op (SkCanvas *canvas, const SkRect *rect, const char key[], sk_data_t data)
 void SkCanvas_drawAnnotationWithDataPtr(reskia_canvas_t *canvas, const reskia_rect_t *rect, const char * key, reskia_data_t *value); // rect/key: non-null; value may be NULL (SkCanvas *canvas, const SkRect *rect, const char key[], SkData *value)
@@ -188,8 +188,8 @@ int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const reskia_r
 int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t *bounds, uint32_t alpha); // bounds may be NULL; NULL canvas returns 0 (SkCanvas *canvas, const SkRect *bounds, U8CPU alpha) -> int
 int SkCanvas_saveLayerAlphaf(reskia_canvas_t *canvas, const reskia_rect_t *bounds, float alpha); // bounds may be NULL; NULL canvas returns 0 (SkCanvas *canvas, const SkRect *bounds, float alpha) -> int
 void SkCanvas_scale(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *canvas, SkScalar sx, SkScalar sy)
-void SkCanvas_setMatrix(reskia_canvas_t *canvas, const reskia_m_44_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkM44 *matrix)
-void SkCanvas_setMatrix3x3(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkMatrix *matrix)
+void SkCanvas_setMatrix(reskia_canvas_t *canvas, const reskia_m_44_t *matrix); // matrix: non-null; invalid input is no-op (SkCanvas *canvas, const SkM44 *matrix)
+void SkCanvas_setMatrix3x3(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null; invalid input is no-op (SkCanvas *canvas, const SkMatrix *matrix)
 void SkCanvas_skew(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *canvas, SkScalar sx, SkScalar sy)
 void SkCanvas_temporary_internal_getRgnClip(reskia_canvas_t *canvas, reskia_region_t *region); // region: non-null out param (SkCanvas *canvas, SkRegion *region)
 void SkCanvas_translate(reskia_canvas_t *canvas, float dx, float dy); // (SkCanvas *canvas, SkScalar dx, SkScalar dy)

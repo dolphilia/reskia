@@ -13,6 +13,7 @@
 #include "handles/static_sk_runtime_effect.h"
 #include "handles/static_sk_runtime_effect-internal.h"
 #include "handles/static_sk_runtime_effect_child.h"
+#include "handles/static_sk_runtime_effect_traced_shader.h"
 #include "handles/static_sk_runtime_effect_uniform.h"
 #include "handles/static_sk_shader.h"
 #include "handles/static_sk_string.h"
@@ -23,6 +24,8 @@
 #include "include/effects/SkRuntimeEffect.h"
 
 #include <cstdio>
+
+extern "C" sk_shader_t SkShaders_Color(uint32_t color);
 
 namespace {
 bool check(bool condition, const char *message) {
@@ -210,6 +213,10 @@ int main() {
         reskia_runtime_shader_builder_t *builder = SkRuntimeShaderBuilder_new(effect_handle);
         ok &= check(builder != nullptr, "SkRuntimeShaderBuilder_new valid effect");
         if (builder != nullptr) {
+            ok &= check(SkRuntimeShaderBuilder_uniform(builder, 0) == 0, "shader builder uniform zero string_view handle");
+            ok &= check(SkRuntimeShaderBuilder_uniform(builder, 999999) == 0, "shader builder uniform invalid string_view handle");
+            ok &= check(SkRuntimeShaderBuilder_child(builder, 0) == 0, "shader builder child zero string_view handle");
+            ok &= check(SkRuntimeShaderBuilder_child(builder, 999999) == 0, "shader builder child invalid string_view handle");
             const sk_shader_t shader = SkRuntimeShaderBuilder_makeShader(builder, nullptr);
             ok &= check(shader != 0 && static_sk_shader_get_ptr(shader) != nullptr, "SkRuntimeShaderBuilder_makeShader generated handle ownership");
             if (shader != 0) {
@@ -236,6 +243,10 @@ int main() {
         reskia_runtime_color_filter_builder_t *builder = SkRuntimeColorFilterBuilder_new(effect_handle);
         ok &= check(builder != nullptr, "SkRuntimeColorFilterBuilder_new valid effect");
         if (builder != nullptr) {
+            ok &= check(SkRuntimeColorFilterBuilder_uniform(builder, 0) == 0, "color filter builder uniform zero string_view handle");
+            ok &= check(SkRuntimeColorFilterBuilder_uniform(builder, 999999) == 0, "color filter builder uniform invalid string_view handle");
+            ok &= check(SkRuntimeColorFilterBuilder_child(builder, 0) == 0, "color filter builder child zero string_view handle");
+            ok &= check(SkRuntimeColorFilterBuilder_child(builder, 999999) == 0, "color filter builder child invalid string_view handle");
             const sk_color_filter_t color_filter = SkRuntimeColorFilterBuilder_makeColorFilter(builder);
             ok &= check(color_filter != 0 && static_sk_color_filter_get_ptr(color_filter) != nullptr, "SkRuntimeColorFilterBuilder_makeColorFilter generated handle ownership");
             if (color_filter != 0) {
@@ -262,6 +273,10 @@ int main() {
         reskia_runtime_blend_builder_t *builder = SkRuntimeBlendBuilder_new(effect_handle);
         ok &= check(builder != nullptr, "SkRuntimeBlendBuilder_new valid effect");
         if (builder != nullptr) {
+            ok &= check(SkRuntimeBlendBuilder_uniform(builder, 0) == 0, "blend builder uniform zero string_view handle");
+            ok &= check(SkRuntimeBlendBuilder_uniform(builder, 999999) == 0, "blend builder uniform invalid string_view handle");
+            ok &= check(SkRuntimeBlendBuilder_child(builder, 0) == 0, "blend builder child zero string_view handle");
+            ok &= check(SkRuntimeBlendBuilder_child(builder, 999999) == 0, "blend builder child invalid string_view handle");
             const sk_blender_t blender = SkRuntimeBlendBuilder_makeBlender(builder);
             ok &= check(blender != 0 && static_sk_blender_get_ptr(blender) != nullptr, "SkRuntimeBlendBuilder_makeBlender generated handle ownership");
             if (blender != 0) {
@@ -329,6 +344,18 @@ int main() {
     ok &= check(trace_coord != nullptr, "traceCoord allocation");
     ok &= check(SkRuntimeEffect_MakeTraced(0, trace_coord) == 0, "MakeTraced zero shader handle");
     ok &= check(SkRuntimeEffect_MakeTraced(999999, trace_coord) == 0, "MakeTraced invalid shader handle");
+    const sk_shader_t trace_shader = SkShaders_Color(0xFF0000FFu);
+    ok &= check(trace_shader != 0 && static_sk_shader_get_ptr(trace_shader) != nullptr, "shader handle for MakeTraced");
+    if (trace_shader != 0 && trace_coord != nullptr) {
+        const sk_runtime_effect_traced_shader_t traced_shader = SkRuntimeEffect_MakeTraced(trace_shader, trace_coord);
+        ok &= check(traced_shader != 0 && static_sk_runtime_effect_traced_shader_get_ptr(traced_shader) != nullptr, "MakeTraced valid trace handle ownership");
+        if (traced_shader != 0) {
+            static_sk_runtime_effect_traced_shader_delete(traced_shader);
+        }
+    }
+    if (trace_shader != 0) {
+        static_sk_shader_delete(trace_shader);
+    }
     static_sk_i_point_delete(trace_coord_handle);
 
     ok &= check(SkRuntimeShaderBuilder_new(0) == nullptr, "shader builder new invalid effect");
@@ -362,7 +389,9 @@ int main() {
     SkRuntimeEffectBuilder_delete(nullptr);
     ok &= check(SkRuntimeEffectBuilder_effect(nullptr) == nullptr, "effect builder effect null");
     ok &= check(SkRuntimeEffectBuilder_uniform(nullptr, 0) == 0, "effect builder uniform null");
+    ok &= check(SkRuntimeEffectBuilder_uniform(nullptr, 999999) == 0, "effect builder uniform null invalid name");
     ok &= check(SkRuntimeEffectBuilder_child(nullptr, 0) == 0, "effect builder child null");
+    ok &= check(SkRuntimeEffectBuilder_child(nullptr, 999999) == 0, "effect builder child null invalid name");
     ok &= check(SkRuntimeEffectBuilder_uniforms(nullptr) == 0, "effect builder uniforms null");
     ok &= check(SkRuntimeEffectBuilder_children(nullptr) == 0, "effect builder children null");
 
