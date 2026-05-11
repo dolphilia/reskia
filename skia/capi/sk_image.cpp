@@ -37,6 +37,10 @@ sk_color_space_t make_color_space_handle(sk_sp<SkColorSpace> color_space) {
     return color_space ? static_sk_color_space_make(std::move(color_space)) : 0;
 }
 
+sk_data_t make_data_handle(sk_sp<SkData> data) {
+    return data ? static_sk_data_make(std::move(data)) : 0;
+}
+
 bool has_i_size_handle(sk_i_size_t size) {
     return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
 }
@@ -316,7 +320,7 @@ sk_data_t SkImage_refEncodedData(reskia_image_t *image) {
     if (image == nullptr) {
         return 0;
     }
-    return static_sk_data_make(reinterpret_cast<SkImage *>(image)->refEncodedData());
+    return make_data_handle(reinterpret_cast<SkImage *>(image)->refEncodedData());
 }
 
 sk_image_t SkImage_makeSubset(reskia_image_t *image, reskia_direct_context_t *direct, const reskia_i_rect_t *subset) {

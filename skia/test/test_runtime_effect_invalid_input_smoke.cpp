@@ -10,6 +10,8 @@
 #include "handles/static_sk_blender.h"
 #include "handles/static_sk_color_filter.h"
 #include "handles/static_sk_runtime_effect_result.h"
+#include "handles/static_sk_runtime_effect.h"
+#include "handles/static_sk_runtime_effect-internal.h"
 #include "handles/static_sk_shader.h"
 #include "handles/static_sk_string.h"
 #include "handles/static_sk_string-internal.h"
@@ -155,6 +157,84 @@ int main() {
     }
     if (blender_source != 0) {
         static_sk_string_delete(blender_source);
+    }
+    const sk_string_t builder_shader_source = static_sk_string_make(SkString("half4 main(float2 p) { return half4(1); }"));
+    ok &= check(builder_shader_source != 0 && static_sk_string_get_ptr(builder_shader_source) != nullptr, "string handle for shader builder source");
+    const sk_runtime_effect_result_t builder_shader_result = SkRuntimeEffect_MakeForShaderDefault(builder_shader_source);
+    auto *builder_shader_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(builder_shader_result));
+    ok &= check(builder_shader_result_entity != nullptr && builder_shader_result_entity->effect != nullptr, "MakeForShaderDefault builder valid effect");
+    if (builder_shader_result_entity != nullptr && builder_shader_result_entity->effect != nullptr) {
+        const sk_runtime_effect_t effect_handle = static_sk_runtime_effect_make(builder_shader_result_entity->effect);
+        ok &= check(effect_handle != 0 && static_sk_runtime_effect_get_ptr(effect_handle) != nullptr, "runtime effect handle for shader builder");
+        reskia_runtime_shader_builder_t *builder = SkRuntimeShaderBuilder_new(effect_handle);
+        ok &= check(builder != nullptr, "SkRuntimeShaderBuilder_new valid effect");
+        if (builder != nullptr) {
+            const sk_shader_t shader = SkRuntimeShaderBuilder_makeShader(builder, nullptr);
+            ok &= check(shader != 0 && static_sk_shader_get_ptr(shader) != nullptr, "SkRuntimeShaderBuilder_makeShader generated handle ownership");
+            if (shader != 0) {
+                static_sk_shader_delete(shader);
+            }
+            SkRuntimeShaderBuilder_delete(builder);
+        }
+        static_sk_runtime_effect_delete(effect_handle);
+    }
+    if (builder_shader_result != 0) {
+        static_sk_runtime_effect_result_delete(builder_shader_result);
+    }
+    if (builder_shader_source != 0) {
+        static_sk_string_delete(builder_shader_source);
+    }
+    const sk_string_t builder_color_filter_source = static_sk_string_make(SkString("half4 main(half4 c) { return c; }"));
+    ok &= check(builder_color_filter_source != 0 && static_sk_string_get_ptr(builder_color_filter_source) != nullptr, "string handle for color filter builder source");
+    const sk_runtime_effect_result_t builder_color_filter_result = SkRuntimeEffect_MakeForColorFilterDefault(builder_color_filter_source);
+    auto *builder_color_filter_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(builder_color_filter_result));
+    ok &= check(builder_color_filter_result_entity != nullptr && builder_color_filter_result_entity->effect != nullptr, "MakeForColorFilterDefault builder valid effect");
+    if (builder_color_filter_result_entity != nullptr && builder_color_filter_result_entity->effect != nullptr) {
+        const sk_runtime_effect_t effect_handle = static_sk_runtime_effect_make(builder_color_filter_result_entity->effect);
+        ok &= check(effect_handle != 0 && static_sk_runtime_effect_get_ptr(effect_handle) != nullptr, "runtime effect handle for color filter builder");
+        reskia_runtime_color_filter_builder_t *builder = SkRuntimeColorFilterBuilder_new(effect_handle);
+        ok &= check(builder != nullptr, "SkRuntimeColorFilterBuilder_new valid effect");
+        if (builder != nullptr) {
+            const sk_color_filter_t color_filter = SkRuntimeColorFilterBuilder_makeColorFilter(builder);
+            ok &= check(color_filter != 0 && static_sk_color_filter_get_ptr(color_filter) != nullptr, "SkRuntimeColorFilterBuilder_makeColorFilter generated handle ownership");
+            if (color_filter != 0) {
+                static_sk_color_filter_delete(color_filter);
+            }
+            SkRuntimeColorFilterBuilder_delete(builder);
+        }
+        static_sk_runtime_effect_delete(effect_handle);
+    }
+    if (builder_color_filter_result != 0) {
+        static_sk_runtime_effect_result_delete(builder_color_filter_result);
+    }
+    if (builder_color_filter_source != 0) {
+        static_sk_string_delete(builder_color_filter_source);
+    }
+    const sk_string_t builder_blender_source = static_sk_string_make(SkString("half4 main(half4 src, half4 dst) { return src; }"));
+    ok &= check(builder_blender_source != 0 && static_sk_string_get_ptr(builder_blender_source) != nullptr, "string handle for blend builder source");
+    const sk_runtime_effect_result_t builder_blender_result = SkRuntimeEffect_MakeForBlenderDefault(builder_blender_source);
+    auto *builder_blender_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(builder_blender_result));
+    ok &= check(builder_blender_result_entity != nullptr && builder_blender_result_entity->effect != nullptr, "MakeForBlenderDefault builder valid effect");
+    if (builder_blender_result_entity != nullptr && builder_blender_result_entity->effect != nullptr) {
+        const sk_runtime_effect_t effect_handle = static_sk_runtime_effect_make(builder_blender_result_entity->effect);
+        ok &= check(effect_handle != 0 && static_sk_runtime_effect_get_ptr(effect_handle) != nullptr, "runtime effect handle for blend builder");
+        reskia_runtime_blend_builder_t *builder = SkRuntimeBlendBuilder_new(effect_handle);
+        ok &= check(builder != nullptr, "SkRuntimeBlendBuilder_new valid effect");
+        if (builder != nullptr) {
+            const sk_blender_t blender = SkRuntimeBlendBuilder_makeBlender(builder);
+            ok &= check(blender != 0 && static_sk_blender_get_ptr(blender) != nullptr, "SkRuntimeBlendBuilder_makeBlender generated handle ownership");
+            if (blender != 0) {
+                static_sk_blender_delete(blender);
+            }
+            SkRuntimeBlendBuilder_delete(builder);
+        }
+        static_sk_runtime_effect_delete(effect_handle);
+    }
+    if (builder_blender_result != 0) {
+        static_sk_runtime_effect_result_delete(builder_blender_result);
+    }
+    if (builder_blender_source != 0) {
+        static_sk_string_delete(builder_blender_source);
     }
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
     const sk_i_point_t trace_coord_handle = SkIPoint_Make(0, 0);

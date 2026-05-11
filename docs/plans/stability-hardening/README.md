@@ -122,6 +122,9 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `105-phase-2-batch-cz-canvas-circle-arc.md`
 - `106-phase-2-batch-da-image-color-space-accessors.md`
 - `107-phase-2-batch-db-runtime-effect-blender-ownership.md`
+- `108-phase-2-batch-dc-canvas-color-draw.md`
+- `109-phase-2-batch-dd-image-encoded-data.md`
+- `110-phase-2-batch-de-runtime-effect-builder-generated-handles.md`
 
 ## 関連計画
 

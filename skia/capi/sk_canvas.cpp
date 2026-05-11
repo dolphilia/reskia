@@ -90,6 +90,10 @@ bool has_point_handle(sk_point_t point) {
     return point != 0 && static_sk_point_get_ptr(point) != nullptr;
 }
 
+bool valid_blend_mode(reskia_blend_mode_t mode) {
+    return mode >= 0 && mode <= static_cast<reskia_blend_mode_t>(SkBlendMode::kLastMode);
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -318,14 +322,14 @@ void SkCanvas_drawCircleAt(reskia_canvas_t *canvas, float cx, float cy, float ra
 }
 
 void SkCanvas_drawColor(reskia_canvas_t *canvas, const reskia_color_4f_t * color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr || color == nullptr) {
+    if (canvas == nullptr || color == nullptr || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawColor(* reinterpret_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
 void SkCanvas_drawColorU32(reskia_canvas_t *canvas, uint32_t color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr) {
+    if (canvas == nullptr || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawColor(color, static_cast<SkBlendMode>(mode));

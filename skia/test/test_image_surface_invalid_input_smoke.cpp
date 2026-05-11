@@ -13,6 +13,7 @@
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_matrix.h"
 #include "handles/static_sk_color_space.h"
+#include "handles/static_sk_data.h"
 #include "handles/static_sk_shader.h"
 #include "handles/static_sk_surface.h"
 
@@ -191,6 +192,13 @@ int main() {
         return 23;
     }
     if (!check(SkImage_refColorSpace(image) == 0, "SkImage_refColorSpace image without color space")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_refEncodedData(image) == 0, "SkImage_refEncodedData image without encoded data")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);

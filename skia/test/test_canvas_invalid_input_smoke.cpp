@@ -187,6 +187,15 @@ int main() {
     }
     SkCanvas_drawPaint(canvas, nullptr);
     SkCanvas_drawPaint(canvas, paint);
+    const float canvas_color[4] = {1.0f, 0.0f, 0.0f, 1.0f};
+    const auto *canvas_color_input = reinterpret_cast<const reskia_color_4f_t *>(canvas_color);
+    SkCanvas_drawColor(canvas, nullptr, 0);
+    SkCanvas_drawColor(canvas, canvas_color_input, -1);
+    SkCanvas_drawColor(canvas, canvas_color_input, 999999);
+    SkCanvas_drawColor(canvas, canvas_color_input, 0);
+    SkCanvas_drawColorU32(canvas, 0xFF000000u, -1);
+    SkCanvas_drawColorU32(canvas, 0xFF000000u, 999999);
+    SkCanvas_drawColorU32(canvas, 0xFF000000u, 0);
     reskia_path_t *path = SkPath_new();
     if (!check(path != nullptr, "SkPath_new for canvas drawPath")) {
         SkPaint_delete(paint);
