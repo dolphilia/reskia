@@ -1,4 +1,5 @@
 #include "capi/sk_canvas.h"
+#include "capi/sk_bitmap.h"
 #include "capi/sk_data.h"
 #include "capi/sk_font.h"
 #include "capi/sk_i_rect.h"
@@ -8,6 +9,7 @@
 #include "capi/sk_paint.h"
 #include "capi/sk_path.h"
 #include "capi/sk_picture_recorder.h"
+#include "capi/sk_pixmap.h"
 #include "capi/sk_point.h"
 #include "capi/sk_region.h"
 #include "capi/sk_rect.h"
@@ -581,6 +583,17 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    reskia_bitmap_t *empty_bitmap = SkBitmap_new();
+    if (!check(empty_bitmap != nullptr, "SkBitmap_new for canvas readPixels")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_readPixels(canvas, empty_bitmap, 0, 0), "SkCanvas_readPixels empty bitmap")) {
+        SkBitmap_delete(empty_bitmap);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkBitmap_delete(empty_bitmap);
     SkCanvas_accessTopLayerPixels(canvas, nullptr, nullptr, nullptr);
     if (!check(!SkCanvas_peekPixels(canvas, nullptr), "SkCanvas_peekPixels(canvas, nullptr)")) {
         SkCanvas_delete(canvas);
@@ -613,6 +626,24 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    if (!check(!SkCanvas_readPixelsWithPixmap(canvas, nullptr, 0, 0), "SkCanvas_readPixelsWithPixmap(null pixmap)")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    reskia_pixmap_t *empty_pixmap = SkPixmap_new();
+    if (!check(empty_pixmap != nullptr, "SkPixmap_new for canvas readPixels")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_readPixelsWithPixmap(canvas, empty_pixmap, 0, 0), "SkCanvas_readPixelsWithPixmap empty pixmap")) {
+        SkPixmap_delete(empty_pixmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkPixmap_delete(empty_pixmap);
     if (!check(!SkCanvas_writePixelsWithImageInfo(canvas, image_info, nullptr, SkImageInfo_minRowBytes(image_info), 0, 0), "SkCanvas_writePixelsWithImageInfo(null pixels)")) {
         static_sk_image_info_delete(image_info_handle);
         SkCanvas_delete(canvas);

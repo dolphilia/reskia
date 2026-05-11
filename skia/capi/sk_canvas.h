@@ -171,9 +171,9 @@ bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t *pixmap); // p
 void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path_t *path, const reskia_draw_shadow_rec_t *rec); // path/rec: non-null (SkCanvas *canvas, const SkPath *path, const SkDrawShadowRec *rec)
 bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path); // path: non-null (SkCanvas *canvas, const SkPath *path) -> bool
 bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const reskia_rect_t *rect); // rect: non-null (SkCanvas *canvas, const SkRect *rect) -> bool
-bool SkCanvas_readPixels(reskia_canvas_t *canvas, const reskia_bitmap_t *bitmap, int srcX, int srcY); // (SkCanvas *canvas, const SkBitmap *bitmap, int srcX, int srcY) -> bool
+bool SkCanvas_readPixels(reskia_canvas_t *canvas, const reskia_bitmap_t *bitmap, int srcX, int srcY); // bitmap: non-null output storage; invalid input returns false (SkCanvas *canvas, const SkBitmap *bitmap, int srcX, int srcY) -> bool
 bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // dstInfo/dstPixels: non-null; dstRowBytes must satisfy dstInfo.validRowBytes; dstPixels is caller-owned mutable buffer and is not retained; invalid input returns false (SkCanvas *canvas, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
-bool SkCanvas_readPixelsWithPixmap(reskia_canvas_t *canvas, const reskia_pixmap_t *pixmap, int srcX, int srcY); // pixmap: non-null (SkCanvas *canvas, const SkPixmap *pixmap, int srcX, int srcY) -> bool
+bool SkCanvas_readPixelsWithPixmap(reskia_canvas_t *canvas, const reskia_pixmap_t *pixmap, int srcX, int srcY); // pixmap: non-null output storage; invalid input returns false (SkCanvas *canvas, const SkPixmap *pixmap, int srcX, int srcY) -> bool
 reskia_graphite_recorder_t *SkCanvas_recorder(reskia_canvas_t *canvas); // borrowed: 解放不要の借用ポインタ (SkCanvas *canvas) -> skgpu::graphite::Recorder *
 reskia_recording_context_t *SkCanvas_recordingContext(reskia_canvas_t *canvas); // borrowed: 解放不要の借用ポインタ (SkCanvas *canvas) -> GrRecordingContext *
 void SkCanvas_resetMatrix(reskia_canvas_t *canvas); // (SkCanvas *canvas)

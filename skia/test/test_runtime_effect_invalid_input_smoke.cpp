@@ -9,6 +9,8 @@
 #include "handles/static_sk_r_rect.h"
 #include "handles/static_sk_blender.h"
 #include "handles/static_sk_color_filter.h"
+#include "handles/static_sk_data.h"
+#include "handles/static_sk_runtime_effect_child_ptr.h"
 #include "handles/static_sk_runtime_effect_result.h"
 #include "handles/static_sk_runtime_effect.h"
 #include "handles/static_sk_runtime_effect-internal.h"
@@ -217,6 +219,16 @@ int main() {
             ok &= check(SkRuntimeShaderBuilder_uniform(builder, 999999) == 0, "shader builder uniform invalid string_view handle");
             ok &= check(SkRuntimeShaderBuilder_child(builder, 0) == 0, "shader builder child zero string_view handle");
             ok &= check(SkRuntimeShaderBuilder_child(builder, 999999) == 0, "shader builder child invalid string_view handle");
+            const_sk_data_t uniforms = SkRuntimeShaderBuilder_uniforms(builder);
+            if (uniforms != 0) {
+                ok &= check(static_const_sk_data_get_ptr(uniforms) != nullptr, "SkRuntimeShaderBuilder_uniforms handle ownership");
+                static_const_sk_data_delete(uniforms);
+            }
+            const_sk_runtime_effect_child_ptr_t children = SkRuntimeShaderBuilder_children(builder);
+            if (children != 0) {
+                ok &= check(static_const_sk_runtime_effect_child_ptr_get_ptr(children, 0) == nullptr, "SkRuntimeShaderBuilder_children empty handle ownership");
+                static_const_sk_runtime_effect_child_ptr_delete(children);
+            }
             const sk_shader_t shader = SkRuntimeShaderBuilder_makeShader(builder, nullptr);
             ok &= check(shader != 0 && static_sk_shader_get_ptr(shader) != nullptr, "SkRuntimeShaderBuilder_makeShader generated handle ownership");
             if (shader != 0) {
@@ -247,6 +259,16 @@ int main() {
             ok &= check(SkRuntimeColorFilterBuilder_uniform(builder, 999999) == 0, "color filter builder uniform invalid string_view handle");
             ok &= check(SkRuntimeColorFilterBuilder_child(builder, 0) == 0, "color filter builder child zero string_view handle");
             ok &= check(SkRuntimeColorFilterBuilder_child(builder, 999999) == 0, "color filter builder child invalid string_view handle");
+            const_sk_data_t uniforms = SkRuntimeColorFilterBuilder_uniforms(builder);
+            if (uniforms != 0) {
+                ok &= check(static_const_sk_data_get_ptr(uniforms) != nullptr, "SkRuntimeColorFilterBuilder_uniforms handle ownership");
+                static_const_sk_data_delete(uniforms);
+            }
+            const_sk_runtime_effect_child_ptr_t children = SkRuntimeColorFilterBuilder_children(builder);
+            if (children != 0) {
+                ok &= check(static_const_sk_runtime_effect_child_ptr_get_ptr(children, 0) == nullptr, "SkRuntimeColorFilterBuilder_children empty handle ownership");
+                static_const_sk_runtime_effect_child_ptr_delete(children);
+            }
             const sk_color_filter_t color_filter = SkRuntimeColorFilterBuilder_makeColorFilter(builder);
             ok &= check(color_filter != 0 && static_sk_color_filter_get_ptr(color_filter) != nullptr, "SkRuntimeColorFilterBuilder_makeColorFilter generated handle ownership");
             if (color_filter != 0) {
@@ -277,6 +299,16 @@ int main() {
             ok &= check(SkRuntimeBlendBuilder_uniform(builder, 999999) == 0, "blend builder uniform invalid string_view handle");
             ok &= check(SkRuntimeBlendBuilder_child(builder, 0) == 0, "blend builder child zero string_view handle");
             ok &= check(SkRuntimeBlendBuilder_child(builder, 999999) == 0, "blend builder child invalid string_view handle");
+            const_sk_data_t uniforms = SkRuntimeBlendBuilder_uniforms(builder);
+            if (uniforms != 0) {
+                ok &= check(static_const_sk_data_get_ptr(uniforms) != nullptr, "SkRuntimeBlendBuilder_uniforms handle ownership");
+                static_const_sk_data_delete(uniforms);
+            }
+            const_sk_runtime_effect_child_ptr_t children = SkRuntimeBlendBuilder_children(builder);
+            if (children != 0) {
+                ok &= check(static_const_sk_runtime_effect_child_ptr_get_ptr(children, 0) == nullptr, "SkRuntimeBlendBuilder_children empty handle ownership");
+                static_const_sk_runtime_effect_child_ptr_delete(children);
+            }
             const sk_blender_t blender = SkRuntimeBlendBuilder_makeBlender(builder);
             ok &= check(blender != 0 && static_sk_blender_get_ptr(blender) != nullptr, "SkRuntimeBlendBuilder_makeBlender generated handle ownership");
             if (blender != 0) {
@@ -298,6 +330,21 @@ int main() {
     auto *uniform_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(uniform_result));
     ok &= check(uniform_result_entity != nullptr && uniform_result_entity->effect != nullptr, "MakeForShaderDefault uniform valid effect");
     if (uniform_result_entity != nullptr && uniform_result_entity->effect != nullptr) {
+        const sk_runtime_effect_t uniform_effect_handle = static_sk_runtime_effect_make(uniform_result_entity->effect);
+        ok &= check(uniform_effect_handle != 0 && static_sk_runtime_effect_get_ptr(uniform_effect_handle) != nullptr, "runtime effect handle for uniform builder spans");
+        reskia_runtime_shader_builder_t *uniform_builder = SkRuntimeShaderBuilder_new(uniform_effect_handle);
+        ok &= check(uniform_builder != nullptr, "SkRuntimeShaderBuilder_new uniform effect");
+        if (uniform_builder != nullptr) {
+            const_sk_data_t builder_uniforms = SkRuntimeShaderBuilder_uniforms(uniform_builder);
+            ok &= check(builder_uniforms != 0 && static_const_sk_data_get_ptr(builder_uniforms) != nullptr, "SkRuntimeShaderBuilder_uniforms returned handle ownership");
+            if (builder_uniforms != 0) {
+                static_const_sk_data_delete(builder_uniforms);
+            }
+            SkRuntimeShaderBuilder_delete(uniform_builder);
+        }
+        if (uniform_effect_handle != 0) {
+            static_sk_runtime_effect_delete(uniform_effect_handle);
+        }
         const_sk_runtime_effect_uniform_t uniforms = SkRuntimeEffect_uniforms(reinterpret_cast<reskia_runtime_effect_t *>(uniform_result_entity->effect.get()));
         ok &= check(uniforms != 0 && static_const_sk_runtime_effect_uniform_get_ptr(uniforms, 0) != nullptr, "SkRuntimeEffect_uniforms returned handle ownership");
         if (uniforms != 0) {
@@ -321,6 +368,21 @@ int main() {
     auto *child_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(child_result));
     ok &= check(child_result_entity != nullptr && child_result_entity->effect != nullptr, "MakeForShaderDefault child valid effect");
     if (child_result_entity != nullptr && child_result_entity->effect != nullptr) {
+        const sk_runtime_effect_t child_effect_handle = static_sk_runtime_effect_make(child_result_entity->effect);
+        ok &= check(child_effect_handle != 0 && static_sk_runtime_effect_get_ptr(child_effect_handle) != nullptr, "runtime effect handle for child builder spans");
+        reskia_runtime_shader_builder_t *child_builder = SkRuntimeShaderBuilder_new(child_effect_handle);
+        ok &= check(child_builder != nullptr, "SkRuntimeShaderBuilder_new child effect");
+        if (child_builder != nullptr) {
+            const_sk_runtime_effect_child_ptr_t builder_children = SkRuntimeShaderBuilder_children(child_builder);
+            ok &= check(builder_children != 0 && static_const_sk_runtime_effect_child_ptr_get_ptr(builder_children, 0) != nullptr, "SkRuntimeShaderBuilder_children returned handle ownership");
+            if (builder_children != 0) {
+                static_const_sk_runtime_effect_child_ptr_delete(builder_children);
+            }
+            SkRuntimeShaderBuilder_delete(child_builder);
+        }
+        if (child_effect_handle != 0) {
+            static_sk_runtime_effect_delete(child_effect_handle);
+        }
         const_sk_runtime_effect_child_t children = SkRuntimeEffect_children(reinterpret_cast<reskia_runtime_effect_t *>(child_result_entity->effect.get()));
         ok &= check(children != 0 && static_const_sk_runtime_effect_child_get_ptr(children, 0) != nullptr, "SkRuntimeEffect_children returned handle ownership");
         if (children != 0) {

@@ -80,6 +80,15 @@ int main() {
     if (!check(!SkImage_isValid(nullptr, nullptr), "SkImage_isValid(nullptr)")) {
         return 5;
     }
+    reskia_pixmap_t *null_image_peek_pixmap = SkPixmap_new();
+    if (!check(null_image_peek_pixmap != nullptr, "SkPixmap_new for null image peekPixels")) {
+        return 5;
+    }
+    if (!check(!SkImage_peekPixels(nullptr, null_image_peek_pixmap), "SkImage_peekPixels null image valid pixmap")) {
+        SkPixmap_delete(null_image_peek_pixmap);
+        return 5;
+    }
+    SkPixmap_delete(null_image_peek_pixmap);
 
     SkImage_ref(nullptr);
     SkImage_unref(nullptr);
@@ -244,6 +253,23 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 23;
     }
+    reskia_pixmap_t *peek_pixmap = SkPixmap_new();
+    if (!check(peek_pixmap != nullptr, "SkPixmap_new for image peekPixels")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_peekPixels(image, peek_pixmap), "SkImage_peekPixels raster image valid pixmap")) {
+        SkPixmap_delete(peek_pixmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    SkPixmap_delete(peek_pixmap);
     SkImage_asyncRescaleAndReadPixels(nullptr, info, src_rect, 0, 0, async_fail_callback, &async_fail_state);
     if (!check(async_fail_state.calls == 8, "SkImage_asyncRescaleAndReadPixels null image fail callback")) {
         static_sk_image_delete(image_handle);
@@ -576,6 +602,28 @@ int main() {
         return 52;
     }
     SkPixmap_delete(scale_pixmap);
+    uint32_t scale_pixels[4] = {};
+    reskia_pixmap_t *valid_scale_pixmap = SkPixmap_newWithImageInfoAddressAndRowBytes(info, scale_pixels, SkImageInfo_minRowBytes(info));
+    if (!check(valid_scale_pixmap != nullptr, "SkPixmap_newWithImageInfoAddressAndRowBytes for image scalePixels")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    if (!check(SkImage_scalePixels(image, valid_scale_pixmap, sampling, 0), "SkImage_scalePixels valid pixmap storage")) {
+        SkPixmap_delete(valid_scale_pixmap);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    SkPixmap_delete(valid_scale_pixmap);
     if (!check(SkImage_makeRawShader(nullptr, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShader null image")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);

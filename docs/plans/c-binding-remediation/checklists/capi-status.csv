@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch DR: canvas drawable picture optional matrix smoke
-skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch DR: documented canvas drawable picture optional pointer rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch DU: canvas readPixels output storage smoke
+skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch DU: documented canvas readPixels output storage rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
@@ -121,8 +121,8 @@ skia/capi/sk_icc.cpp,todo,P2,,
 skia/capi/sk_icc.h,todo,P2,,
 skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_image.cpp,done,P2,2026-05-11,Phase 2 batch DS: image readPixels nullable context smoke
-skia/capi/sk_image.h,done,P2,2026-05-11,Phase 2 batch DS: documented image readPixels nullable context rules
+skia/capi/sk_image.cpp,done,P2,2026-05-11,Phase 2 batch DV: image peek scale pixmap storage smoke
+skia/capi/sk_image.h,done,P2,2026-05-11,Phase 2 batch DV: documented image peek scale pixmap storage rules
 skia/capi/sk_image_filter.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filter null guards factory handle 0 and serialize rules
 skia/capi/sk_image_filter.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filter null output and optional procs rules
 skia/capi/sk_image_filters.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filters optional cropRect and required factory pointer guards
@@ -225,16 +225,16 @@ skia/capi/sk_region.cpp,done,P2,codex,phase2-batch-aj: SkRegion query/mutation/o
 skia/capi/sk_region.h,done,P2,codex,phase2-batch-aj: SkRegion borrowed pointer/raw array/op/serialization の NULL 規約コメントを補強
 skia/capi/sk_rsx_form.cpp,todo,P2,,
 skia/capi/sk_rsx_form.h,todo,P2,,
-skia/capi/sk_runtime_blend_builder.cpp,done,P2,2026-05-11,Phase 2 batch DT: runtime blend builder name handle validation
-skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-11,Phase 2 batch DT: documented runtime blend builder name handle rules
-skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-11,Phase 2 batch DT: runtime color filter builder name handle validation
-skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-11,Phase 2 batch DT: documented runtime color filter builder name handle rules
+skia/capi/sk_runtime_blend_builder.cpp,done,P2,2026-05-11,Phase 2 batch DW: runtime blend builder spans ownership smoke
+skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-11,Phase 2 batch DW: documented runtime blend builder spans ownership
+skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-11,Phase 2 batch DW: runtime color filter builder spans ownership smoke
+skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-11,Phase 2 batch DW: documented runtime color filter builder spans ownership
 skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-11,Phase 2 batch DQ: runtime effect traced shader smoke
 skia/capi/sk_runtime_effect.h,done,P2,2026-05-11,Phase 2 batch DQ: documented runtime effect traced shader handle rules
-skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-11,Phase 2 batch DT: runtime effect builder name handle validation
-skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-11,Phase 2 batch DT: documented runtime effect builder name handle rules
-skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-11,Phase 2 batch DT: runtime shader builder name handle validation
-skia/capi/sk_runtime_shader_builder.h,done,P2,2026-05-11,Phase 2 batch DT: documented runtime shader builder name handle rules
+skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-11,Phase 2 batch DW: runtime effect builder spans ownership docs
+skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-11,Phase 2 batch DW: documented runtime effect builder spans ownership
+skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-11,Phase 2 batch DW: runtime shader builder spans ownership smoke
+skia/capi/sk_runtime_shader_builder.h,done,P2,2026-05-11,Phase 2 batch DW: documented runtime shader builder spans ownership
 skia/capi/sk_sampling_options.cpp,todo,P2,,
 skia/capi/sk_sampling_options.h,todo,P2,,
 skia/capi/sk_shader.cpp,done,P2,2026-05-10,Phase 2 batch AY: shader null receiver guards factory handle 0 and serialize rules

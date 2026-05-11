@@ -25,8 +25,8 @@ sk_blender_t SkRuntimeBlendBuilder_makeBlender(reskia_runtime_blend_builder_t *r
 const reskia_runtime_effect_t *SkRuntimeBlendBuilder_effect(reskia_runtime_blend_builder_t *runtime_blend_builder); // NULL builder なら NULL (SkRuntimeBlendBuilder *runtime_blend_builder) -> const SkRuntimeEffect *
 sk_runtime_effect_builder_builder_uniform_t SkRuntimeBlendBuilder_uniform(reskia_runtime_blend_builder_t *runtime_blend_builder, int name); // builder/name must be valid; invalid input returns 0 (SkRuntimeBlendBuilder *runtime_blend_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
 sk_runtime_effect_builder_builder_child_t SkRuntimeBlendBuilder_child(reskia_runtime_blend_builder_t *runtime_blend_builder, int name); // builder/name must be valid; invalid input returns 0 (SkRuntimeBlendBuilder *runtime_blend_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
-int SkRuntimeBlendBuilder_uniforms(reskia_runtime_blend_builder_t *runtime_blend_builder); // NULL builder なら 0 (SkRuntimeBlendBuilder *runtime_blend_builder) -> const_sk_data_t
-int SkRuntimeBlendBuilder_children(reskia_runtime_blend_builder_t *runtime_blend_builder); // NULL builder なら 0 (SkRuntimeBlendBuilder *runtime_blend_builder) -> const_sk_runtime_effect_child_ptr_t
+int SkRuntimeBlendBuilder_uniforms(reskia_runtime_blend_builder_t *runtime_blend_builder); // returned handle is caller-owned and deleted with static_const_sk_data_delete; NULL builder なら 0 (SkRuntimeBlendBuilder *runtime_blend_builder) -> const_sk_data_t
+int SkRuntimeBlendBuilder_children(reskia_runtime_blend_builder_t *runtime_blend_builder); // returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete; NULL builder なら 0 (SkRuntimeBlendBuilder *runtime_blend_builder) -> const_sk_runtime_effect_child_ptr_t
 
 #ifdef __cplusplus
 }
