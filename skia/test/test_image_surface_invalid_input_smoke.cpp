@@ -63,6 +63,15 @@ int main() {
     if (!check(SkImage_refEncodedData(nullptr) == 0, "SkImage_refEncodedData(nullptr)")) {
         return 5;
     }
+    if (!check(!SkImage_isTextureBacked(nullptr), "SkImage_isTextureBacked(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkImage_textureSize(nullptr) == 0, "SkImage_textureSize(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkImage_isValid(nullptr, nullptr), "SkImage_isValid(nullptr)")) {
+        return 5;
+    }
 
     SkImage_ref(nullptr);
     SkImage_unref(nullptr);
@@ -200,6 +209,27 @@ int main() {
         return 23;
     }
     if (!check(SkImage_refEncodedData(image) == 0, "SkImage_refEncodedData image without encoded data")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(!SkImage_isTextureBacked(image), "SkImage_isTextureBacked raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_textureSize(image) == 0, "SkImage_textureSize raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_isValid(image, nullptr), "SkImage_isValid raster image null context")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);

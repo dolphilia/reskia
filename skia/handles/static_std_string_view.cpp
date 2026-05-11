@@ -17,6 +17,10 @@ void static_string_view_set(int key, std::string_view value) {
     static_string_view.set(key, value);
 }
 
+bool static_string_view_contains(int key) {
+    return static_string_view.contains(key);
+}
+
 std::string_view static_string_view_get_entity(int key) {
     std::string_view* entity = static_string_view.get_ptr(key);
     if (entity == nullptr) {

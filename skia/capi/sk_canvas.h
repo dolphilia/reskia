@@ -92,7 +92,7 @@ void SkCanvas_clipRegion(reskia_canvas_t *canvas, const reskia_region_t *deviceR
 void SkCanvas_clipRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, bool doAntiAlias); // rrect: non-null (SkCanvas *canvas, const SkRRect *rrect, bool doAntiAlias)
 void SkCanvas_clipRRectWithOp(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op); // rrect: non-null (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op)
 void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias); // rrect: non-null (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op, bool doAntiAlias)
-void SkCanvas_clipShader(reskia_canvas_t *canvas, sk_shader_t shader, reskia_canvas_clip_op_t op); // (SkCanvas *canvas, sk_shader_t shader, SkClipOp op)
+void SkCanvas_clipShader(reskia_canvas_t *canvas, sk_shader_t shader, reskia_canvas_clip_op_t op); // shader must be a valid handle; invalid input is no-op (SkCanvas *canvas, sk_shader_t shader, SkClipOp op)
 void SkCanvas_concat(reskia_canvas_t *canvas, const reskia_m_44_t *m44); // m44: non-null (SkCanvas *canvas, const SkM44 *m44)
 void SkCanvas_concatMatrix(reskia_canvas_t *canvas, const reskia_matrix_t *matrix); // matrix: non-null (SkCanvas *canvas, const SkMatrix *matrix)
 void SkCanvas_discard(reskia_canvas_t *canvas); // (SkCanvas *canvas)

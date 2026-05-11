@@ -17,6 +17,8 @@
 #include "handles/static_sk_shader.h"
 #include "handles/static_sk_string.h"
 #include "handles/static_sk_string-internal.h"
+#include "handles/static_std_string_view.h"
+#include "handles/static_std_string_view-internal.h"
 #include "include/core/SkString.h"
 #include "include/effects/SkRuntimeEffect.h"
 
@@ -249,6 +251,11 @@ int main() {
         if (uniforms != 0) {
             static_const_sk_runtime_effect_uniform_delete(uniforms);
         }
+        ok &= check(SkRuntimeEffect_findUniform(reinterpret_cast<reskia_runtime_effect_t *>(uniform_result_entity->effect.get()), 0) == nullptr, "findUniform zero string_view handle");
+        ok &= check(SkRuntimeEffect_findUniform(reinterpret_cast<reskia_runtime_effect_t *>(uniform_result_entity->effect.get()), 999999) == nullptr, "findUniform invalid string_view handle");
+        const string_view_t uniform_name = static_string_view_make(std::string_view("u"));
+        ok &= check(SkRuntimeEffect_findUniform(reinterpret_cast<reskia_runtime_effect_t *>(uniform_result_entity->effect.get()), uniform_name) != nullptr, "findUniform valid string_view handle");
+        static_string_view_delete(uniform_name);
     }
     if (uniform_result != 0) {
         static_sk_runtime_effect_result_delete(uniform_result);
@@ -267,6 +274,11 @@ int main() {
         if (children != 0) {
             static_const_sk_runtime_effect_child_delete(children);
         }
+        ok &= check(SkRuntimeEffect_findChild(reinterpret_cast<reskia_runtime_effect_t *>(child_result_entity->effect.get()), 0) == nullptr, "findChild zero string_view handle");
+        ok &= check(SkRuntimeEffect_findChild(reinterpret_cast<reskia_runtime_effect_t *>(child_result_entity->effect.get()), 999999) == nullptr, "findChild invalid string_view handle");
+        const string_view_t child_name = static_string_view_make(std::string_view("child"));
+        ok &= check(SkRuntimeEffect_findChild(reinterpret_cast<reskia_runtime_effect_t *>(child_result_entity->effect.get()), child_name) != nullptr, "findChild valid string_view handle");
+        static_string_view_delete(child_name);
     }
     if (child_result != 0) {
         static_sk_runtime_effect_result_delete(child_result);

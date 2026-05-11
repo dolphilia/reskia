@@ -58,6 +58,10 @@ bool has_string_handle(sk_string_t string) {
     return string != 0 && static_sk_string_get_ptr(string) != nullptr;
 }
 
+bool has_string_view_handle(string_view_t string_view) {
+    return string_view != 0 && static_string_view_contains(string_view);
+}
+
 bool has_shader_handle(sk_shader_t shader) {
     return shader != 0 && static_sk_shader_get_ptr(shader) != nullptr;
 }
@@ -135,12 +139,12 @@ const_sk_runtime_effect_child_t SkRuntimeEffect_children(reskia_runtime_effect_t
 
 const reskia_runtime_effect_uniform_t *SkRuntimeEffect_findUniform(reskia_runtime_effect_t *runtime_effect, string_view_t name) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? reinterpret_cast<const reskia_runtime_effect_uniform_t *>(native->findUniform(static_string_view_get_entity(name))) : nullptr;
+    return native != nullptr && has_string_view_handle(name) ? reinterpret_cast<const reskia_runtime_effect_uniform_t *>(native->findUniform(static_string_view_get_entity(name))) : nullptr;
 }
 
 const reskia_runtime_effect_child_t *SkRuntimeEffect_findChild(reskia_runtime_effect_t *runtime_effect, string_view_t name) {
     SkRuntimeEffect *native = as_effect(runtime_effect);
-    return native != nullptr ? reinterpret_cast<const reskia_runtime_effect_child_t *>(native->findChild(static_string_view_get_entity(name))) : nullptr;
+    return native != nullptr && has_string_view_handle(name) ? reinterpret_cast<const reskia_runtime_effect_child_t *>(native->findChild(static_string_view_get_entity(name))) : nullptr;
 }
 
 bool SkRuntimeEffect_allowShader(reskia_runtime_effect_t *runtime_effect) {

@@ -82,6 +82,10 @@ bool has_vertices_handle(sk_vertices_t vertices) {
     return vertices != 0 && static_sk_vertices_get_ptr(vertices) != nullptr;
 }
 
+bool has_shader_handle(sk_shader_t shader) {
+    return shader != 0 && static_sk_shader_get_ptr(shader) != nullptr;
+}
+
 bool has_rect_handle(sk_rect_t rect) {
     return rect != 0 && static_sk_rect_get_ptr(rect) != nullptr;
 }
@@ -248,7 +252,7 @@ void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const reskia_r_rect_t *
 }
 
 void SkCanvas_clipShader(reskia_canvas_t *canvas, sk_shader_t shader, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || shader == 0) {
+    if (canvas == nullptr || !has_shader_handle(shader)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipShader(static_sk_shader_get_entity(shader), static_cast<SkClipOp>(op));

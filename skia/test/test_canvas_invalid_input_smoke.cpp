@@ -25,11 +25,14 @@
 #include "handles/static_sk_r_rect.h"
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
+#include "handles/static_sk_shader.h"
 #include "handles/static_sk_text_blob.h"
 #include "handles/static_sk_vertices.h"
 #include "include/core/SkPoint.h"
 
 #include <cstdio>
+
+extern "C" sk_shader_t SkShaders_Color(uint32_t color);
 
 namespace {
 
@@ -198,6 +201,19 @@ int main() {
     SkCanvas_drawColorU32(canvas, 0xFF000000u, -1);
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 999999);
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 0);
+    SkCanvas_clipShader(canvas, 0, 0);
+    SkCanvas_clipShader(canvas, 999999, 0);
+    const sk_shader_t clip_shader_handle = SkShaders_Color(0xFF00FF00u);
+    if (!check(clip_shader_handle != 0 && static_sk_shader_get_ptr(clip_shader_handle) != nullptr, "SkShaders_Color for canvas clipShader")) {
+        if (clip_shader_handle != 0) {
+            static_sk_shader_delete(clip_shader_handle);
+        }
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_clipShader(canvas, clip_shader_handle, 0);
+    static_sk_shader_delete(clip_shader_handle);
     reskia_path_t *path = SkPath_new();
     if (!check(path != nullptr, "SkPath_new for canvas drawPath")) {
         SkPaint_delete(paint);
