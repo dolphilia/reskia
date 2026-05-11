@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch DC: canvas drawColor blend mode validation
-skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch DC: documented canvas color draw no-op rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-11,Phase 2 batch DF: canvas drawAnnotation data handle validation
+skia/capi/sk_canvas.h,done,P2,2026-05-11,Phase 2 batch DF: documented canvas annotation data rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
@@ -122,7 +122,7 @@ skia/capi/sk_icc.h,todo,P2,,
 skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_image.cpp,done,P2,2026-05-11,Phase 2 batch DD: image encoded data null handle normalization
-skia/capi/sk_image.h,done,P2,2026-05-11,Phase 2 batch DD: documented image encoded data ownership
+skia/capi/sk_image.h,done,P2,2026-05-11,Phase 2 batch DG: documented image scalePixels required inputs
 skia/capi/sk_image_filter.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filter null guards factory handle 0 and serialize rules
 skia/capi/sk_image_filter.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filter null output and optional procs rules
 skia/capi/sk_image_filters.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filters optional cropRect and required factory pointer guards
@@ -230,7 +230,7 @@ skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-11,Phase 2 batch DE: runtim
 skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-11,Phase 2 batch DE: runtime builder generated color filter ownership smoke
 skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-11,Phase 2 batch DE: runtime builder generated color filter ownership smoke
 skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-11,Phase 2 batch DB: runtime effect generated blender ownership smoke
-skia/capi/sk_runtime_effect.h,done,P2,2026-05-11,Phase 2 batch DB: runtime effect generated blender ownership smoke
+skia/capi/sk_runtime_effect.h,done,P2,2026-05-11,Phase 2 batch DH: documented runtime effect uniform/child span handles
 skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-10,Phase 2 batch BF: runtime effect builder null receiver guards
 skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-10,Phase 2 batch BF: documented runtime effect builder null receiver rules
 skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-11,Phase 2 batch DE: runtime builder generated shader ownership smoke

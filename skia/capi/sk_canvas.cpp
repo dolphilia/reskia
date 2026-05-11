@@ -90,6 +90,10 @@ bool has_point_handle(sk_point_t point) {
     return point != 0 && static_sk_point_get_ptr(point) != nullptr;
 }
 
+bool has_optional_data_handle(sk_data_t data) {
+    return data == 0 || static_sk_data_get_ptr(data) != nullptr;
+}
+
 bool valid_blend_mode(reskia_blend_mode_t mode) {
     return mode >= 0 && mode <= static_cast<reskia_blend_mode_t>(SkBlendMode::kLastMode);
 }
@@ -277,7 +281,7 @@ void SkCanvas_discard(reskia_canvas_t *canvas) {
 }
 
 void SkCanvas_drawAnnotation(reskia_canvas_t *canvas, const reskia_rect_t * rect, const char * key, sk_data_t data) {
-    if (canvas == nullptr || rect == nullptr || key == nullptr) {
+    if (canvas == nullptr || rect == nullptr || key == nullptr || !has_optional_data_handle(data)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawAnnotation(* reinterpret_cast<const SkRect *>(rect), key, static_sk_data_get_entity(data));

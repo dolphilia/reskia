@@ -4,6 +4,7 @@
 #include "capi/sk_i_rect.h"
 #include "capi/sk_i_size.h"
 #include "capi/sk_matrix.h"
+#include "capi/sk_pixmap.h"
 #include "capi/sk_sampling_options.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
@@ -445,6 +446,45 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 52;
     }
+    if (!check(!SkImage_scalePixels(nullptr, nullptr, sampling, 0), "SkImage_scalePixels null image")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    if (!check(!SkImage_scalePixels(image, nullptr, sampling, 0), "SkImage_scalePixels null pixmap")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    reskia_pixmap_t *scale_pixmap = SkPixmap_new();
+    if (!check(scale_pixmap != nullptr, "SkPixmap_new for image scalePixels")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    if (!check(!SkImage_scalePixels(image, scale_pixmap, nullptr, 0), "SkImage_scalePixels null sampling")) {
+        SkPixmap_delete(scale_pixmap);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    SkPixmap_delete(scale_pixmap);
     if (!check(SkImage_makeRawShader(nullptr, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShader null image")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);

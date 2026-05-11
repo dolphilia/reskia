@@ -1,4 +1,5 @@
 #include "capi/sk_canvas.h"
+#include "capi/sk_data.h"
 #include "capi/sk_font.h"
 #include "capi/sk_i_rect.h"
 #include "capi/sk_image_info.h"
@@ -16,6 +17,7 @@
 #include "capi/sk_vertices.h"
 #include "handles/static_sk_i_rect.h"
 #include "handles/static_sk_drawable.h"
+#include "handles/static_sk_data.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_picture.h"
@@ -265,6 +267,27 @@ int main() {
         SkCanvas_delete(canvas);
         return 7;
     }
+    const sk_data_t annotation_data_handle = SkData_MakeWithCString("annotation");
+    auto *annotation_data = static_cast<reskia_data_t *>(static_sk_data_get_ptr(annotation_data_handle));
+    if (!check(annotation_data != nullptr, "SkData_MakeWithCString for canvas annotation")) {
+        if (annotation_data_handle != 0) {
+            static_sk_data_delete(annotation_data_handle);
+        }
+        static_sk_rect_delete(round_rect_handle);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_drawAnnotation(canvas, nullptr, "k", annotation_data_handle);
+    SkCanvas_drawAnnotation(canvas, round_rect, nullptr, annotation_data_handle);
+    SkCanvas_drawAnnotation(canvas, round_rect, "k", 0);
+    SkCanvas_drawAnnotation(canvas, round_rect, "k", 999999);
+    SkCanvas_drawAnnotation(canvas, round_rect, "k", annotation_data_handle);
+    SkCanvas_drawAnnotationWithDataPtr(canvas, nullptr, "k", annotation_data);
+    SkCanvas_drawAnnotationWithDataPtr(canvas, round_rect, nullptr, annotation_data);
+    SkCanvas_drawAnnotationWithDataPtr(canvas, round_rect, "k", nullptr);
+    SkCanvas_drawAnnotationWithDataPtr(canvas, round_rect, "k", annotation_data);
+    static_sk_data_delete(annotation_data_handle);
     SkCanvas_drawArc(canvas, nullptr, 0.0f, 90.0f, false, paint);
     SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, nullptr);
     SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, paint);

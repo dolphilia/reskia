@@ -12,6 +12,8 @@
 #include "handles/static_sk_runtime_effect_result.h"
 #include "handles/static_sk_runtime_effect.h"
 #include "handles/static_sk_runtime_effect-internal.h"
+#include "handles/static_sk_runtime_effect_child.h"
+#include "handles/static_sk_runtime_effect_uniform.h"
 #include "handles/static_sk_shader.h"
 #include "handles/static_sk_string.h"
 #include "handles/static_sk_string-internal.h"
@@ -235,6 +237,42 @@ int main() {
     }
     if (builder_blender_source != 0) {
         static_sk_string_delete(builder_blender_source);
+    }
+    const sk_string_t uniform_source = static_sk_string_make(SkString("uniform float u; half4 main(float2 p) { return half4(u); }"));
+    ok &= check(uniform_source != 0 && static_sk_string_get_ptr(uniform_source) != nullptr, "string handle for uniform source");
+    const sk_runtime_effect_result_t uniform_result = SkRuntimeEffect_MakeForShaderDefault(uniform_source);
+    auto *uniform_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(uniform_result));
+    ok &= check(uniform_result_entity != nullptr && uniform_result_entity->effect != nullptr, "MakeForShaderDefault uniform valid effect");
+    if (uniform_result_entity != nullptr && uniform_result_entity->effect != nullptr) {
+        const_sk_runtime_effect_uniform_t uniforms = SkRuntimeEffect_uniforms(reinterpret_cast<reskia_runtime_effect_t *>(uniform_result_entity->effect.get()));
+        ok &= check(uniforms != 0 && static_const_sk_runtime_effect_uniform_get_ptr(uniforms, 0) != nullptr, "SkRuntimeEffect_uniforms returned handle ownership");
+        if (uniforms != 0) {
+            static_const_sk_runtime_effect_uniform_delete(uniforms);
+        }
+    }
+    if (uniform_result != 0) {
+        static_sk_runtime_effect_result_delete(uniform_result);
+    }
+    if (uniform_source != 0) {
+        static_sk_string_delete(uniform_source);
+    }
+    const sk_string_t child_source = static_sk_string_make(SkString("uniform shader child; half4 main(float2 p) { return child.eval(p); }"));
+    ok &= check(child_source != 0 && static_sk_string_get_ptr(child_source) != nullptr, "string handle for child source");
+    const sk_runtime_effect_result_t child_result = SkRuntimeEffect_MakeForShaderDefault(child_source);
+    auto *child_result_entity = static_cast<SkRuntimeEffect::Result *>(static_sk_runtime_effect_result_get_ptr(child_result));
+    ok &= check(child_result_entity != nullptr && child_result_entity->effect != nullptr, "MakeForShaderDefault child valid effect");
+    if (child_result_entity != nullptr && child_result_entity->effect != nullptr) {
+        const_sk_runtime_effect_child_t children = SkRuntimeEffect_children(reinterpret_cast<reskia_runtime_effect_t *>(child_result_entity->effect.get()));
+        ok &= check(children != 0 && static_const_sk_runtime_effect_child_get_ptr(children, 0) != nullptr, "SkRuntimeEffect_children returned handle ownership");
+        if (children != 0) {
+            static_const_sk_runtime_effect_child_delete(children);
+        }
+    }
+    if (child_result != 0) {
+        static_sk_runtime_effect_result_delete(child_result);
+    }
+    if (child_source != 0) {
+        static_sk_string_delete(child_source);
     }
     ok &= check(SkRuntimeEffect_MakeTraced(0, nullptr) == 0, "MakeTraced null traceCoord");
     const sk_i_point_t trace_coord_handle = SkIPoint_Make(0, 0);
