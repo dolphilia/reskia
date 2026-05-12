@@ -28,9 +28,18 @@ void SkDataTable_unref(reskia_data_table_t *data_table); // owned: 参照カウ�
 // static
 
 sk_data_table_t SkDataTable_MakeEmpty(); // () -> sk_data_table_t
-sk_data_table_t SkDataTable_MakeCopyArrays(const uint8_t * const *ptrs, const size_t *sizes, int count); // ptrs/sizes は count 要素以上。count <= 0 は空 table。NULL 入力では 0
-sk_data_table_t SkDataTable_MakeCopyArray(const uint8_t *array, size_t elemSize, int count); // array は elemSize*count バイト以上。count <= 0 は空 table。NULL/elemSize 0 では 0
-sk_data_table_t SkDataTable_MakeArrayProc(const uint8_t *array, size_t elemSize, int count, void (*proc)(void*), void *context); // array ownership を渡す。count <= 0 は空 table。NULL/elemSize 0 では 0
+/**
+ * ptrs/sizes は count 要素以上。count <= 0 は空 table。NULL 入力では 0
+ */
+sk_data_table_t SkDataTable_MakeCopyArrays(const uint8_t * const *ptrs, const size_t *sizes, int count);
+/**
+ * array は elemSize*count バイト以上。count <= 0 は空 table。NULL/elemSize 0 では 0
+ */
+sk_data_table_t SkDataTable_MakeCopyArray(const uint8_t *array, size_t elemSize, int count);
+/**
+ * array ownership を渡す。count <= 0 は空 table。NULL/elemSize 0 では 0
+ */
+sk_data_table_t SkDataTable_MakeArrayProc(const uint8_t *array, size_t elemSize, int count, void (*proc)(void*), void *context);
 
 #ifdef __cplusplus
 }

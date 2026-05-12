@@ -26,14 +26,20 @@ bool SkColorInfo_equals(reskia_color_info_t *color_info, const reskia_color_info
 bool SkColorInfo_notEquals(reskia_color_info_t *color_info, const reskia_color_info_t *other); // (SkColorInfo *color_info, const SkColorInfo *other) -> bool
 reskia_alpha_type_t SkColorInfo_alphaType(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> SkAlphaType
 int SkColorInfo_bytesPerPixel(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> int
-reskia_color_space_t *SkColorInfo_colorSpace(reskia_color_info_t *color_info); // borrowed: SkColorInfo 内部の SkColorSpace*。release/unref 不要。NULL color space なら NULL (SkColorInfo *color_info) -> SkColorSpace*
+/**
+ * borrowed: SkColorInfo 内部の SkColorSpace*。release/unref 不要。NULL color space なら NULL (SkColorInfo *color_info) -> SkColorSpace*
+ */
+reskia_color_space_t *SkColorInfo_colorSpace(reskia_color_info_t *color_info);
 reskia_color_info_color_type_t SkColorInfo_colorType(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> SkColorType
 bool SkColorInfo_gammaCloseToSRGB(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> bool
 bool SkColorInfo_isOpaque(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> bool
 sk_color_info_t SkColorInfo_makeAlphaType(reskia_color_info_t *color_info, reskia_alpha_type_t newAlphaType); // (SkColorInfo *color_info, SkAlphaType newAlphaType) -> sk_color_info_t
 sk_color_info_t SkColorInfo_makeColorSpace(reskia_color_info_t *color_info, sk_color_space_t color_space); // color_space は 0/無効で null color space (SkColorInfo *color_info, sk_color_space_t color_space) -> sk_color_info_t
 sk_color_info_t SkColorInfo_makeColorType(reskia_color_info_t *color_info, reskia_color_info_color_type_t newColorType); // (SkColorInfo *color_info, SkColorType newColorType) -> sk_color_info_t
-sk_color_space_t SkColorInfo_refColorSpace(reskia_color_info_t *color_info); // retained handle: 呼び出し側が static_sk_color_space_delete する。NULL color space なら 0 (SkColorInfo *color_info) -> sk_color_space_t
+/**
+ * retained handle: 呼び出し側が static_sk_color_space_delete する。NULL color space なら 0 (SkColorInfo *color_info) -> sk_color_space_t
+ */
+sk_color_space_t SkColorInfo_refColorSpace(reskia_color_info_t *color_info);
 int SkColorInfo_shiftPerPixel(reskia_color_info_t *color_info); // (SkColorInfo *color_info) -> int
 
 #ifdef __cplusplus

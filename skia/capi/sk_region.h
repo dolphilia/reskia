@@ -46,7 +46,10 @@ bool SkRegion_quickContains(reskia_region_t *region, const reskia_i_rect_t *r); 
 bool SkRegion_quickReject(reskia_region_t *region, const reskia_i_rect_t *rect); // (SkRegion *region, const SkIRect *rect) -> bool. inputs are required.
 bool SkRegion_quickRejectRegion(reskia_region_t *region, const reskia_region_t *rgn); // (SkRegion *region, const SkRegion *rgn) -> bool. inputs are required.
 void SkRegion_translate(reskia_region_t *region, int dx, int dy); // (SkRegion *region, int dx, int dy). NULL region is no-op.
-void SkRegion_translateToRegion(reskia_region_t *region, int dx, int dy, reskia_region_t *dst); // (SkRegion *region, int dx, int dy, SkRegion *dst). region/dst are required.
+/**
+ * (SkRegion *region, int dx, int dy, SkRegion *dst). region/dst are required.
+ */
+void SkRegion_translateToRegion(reskia_region_t *region, int dx, int dy, reskia_region_t *dst);
 bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, reskia_region_op_t op); // (SkRegion *region, const SkIRect *rect, SkRegion::Op op) -> bool. inputs and valid op are required.
 bool SkRegion_opWithRegion(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgn, SkRegion::Op op) -> bool. inputs and valid op are required.
 bool SkRegion_opWithIRectAndRegion(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkIRect *rect, const SkRegion *rgn, SkRegion::Op op) -> bool. inputs and valid op are required.

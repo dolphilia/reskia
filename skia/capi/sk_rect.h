@@ -72,7 +72,11 @@ sk_i_rect_t SkRect_roundOutToIRect(reskia_rect_t *rect); // (SkRect *rect) -> sk
 sk_i_rect_t SkRect_roundInToIRect(reskia_rect_t *rect); // (SkRect *rect) -> sk_i_rect_t
 void SkRect_sort(reskia_rect_t *rect); // (SkRect *rect)
 sk_rect_t SkRect_makeSorted(reskia_rect_t *rect); // (SkRect *rect) -> sk_rect_t
-const float * SkRect_asScalars(reskia_rect_t *rect); // borrowed scalar storage; valid while rect remains alive and unchanged
+/**
+ * borrowed scalar storage.
+ * valid while rect remains alive and unchanged.
+ */
+const float * SkRect_asScalars(reskia_rect_t *rect);
 void SkRect_dump(reskia_rect_t *rect, bool asHex); // (SkRect *rect, bool asHex)
 void SkRect_dumpDefault(reskia_rect_t *rect); // (SkRect *rect)
 void SkRect_dumpHex(reskia_rect_t *rect); // (SkRect *rect)

@@ -21,7 +21,10 @@ typedef int32_t reskia_mask_builder_format_t;
 typedef int32_t reskia_mask_builder_alloc_type_t;
 
 reskia_mask_builder_t *SkMaskBuilder_new(); // () -> SkMaskBuilder *
-reskia_mask_builder_t *SkMaskBuilder_newWithImageBoundsRowBytesFormat(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format); // img は borrowed mutable。bounds 非 NULL、format valid。invalid 入力では NULL
+/**
+ * img は borrowed mutable。bounds 非 NULL、format valid。invalid 入力では NULL
+ */
+reskia_mask_builder_t *SkMaskBuilder_newWithImageBoundsRowBytesFormat(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format);
 void SkMaskBuilder_delete(reskia_mask_builder_t *maskBuilder); // NULL 入力では no-op
 uint8_t *SkMaskBuilder_image(reskia_mask_builder_t *maskBuilder); // borrowed mutable。NULL 入力では NULL
 reskia_i_rect_t *SkMaskBuilder_bounds(reskia_mask_builder_t *maskBuilder); // borrowed mutable。NULL 入力では NULL

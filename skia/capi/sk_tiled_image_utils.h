@@ -19,13 +19,34 @@ typedef int32_t reskia_tiled_image_utils_src_rect_constraint_t;
 extern "C" {
 #endif
 
-void SkTiledImageUtils_DrawImageRect(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/src/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, const SkRect *src, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_DrawImageRectWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/src/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, const SkRect *src, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_DrawImageRectWithDst(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_DrawImageRectWithImageSpAndDst(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_DrawImage(reskia_canvas_t *canvas, const reskia_image_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_DrawImageWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint); // canvas/image/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
-void SkTiledImageUtils_GetImageKeyValues(const reskia_image_t *image, uint32_t * keyValues); // image/keyValues は NULL 許可。NULL image は keyValues を 0 で埋め、NULL keyValues は no-op (const SkImage *image, uint32_t keyValues[SkTiledImageUtils::kNumImageKeyValues])
+/**
+ * canvas/image/src/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, const SkRect *src, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImageRect(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * canvas/image/src/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, const SkRect *src, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImageRectWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * canvas/image/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImageRectWithDst(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * canvas/image/dst/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImageRectWithImageSpAndDst(reskia_canvas_t *canvas, const reskia_image_sp_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * canvas/image/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const SkImage *image, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImage(reskia_canvas_t *canvas, const reskia_image_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * canvas/image/sampling は非 NULL。paint は NULL 許可。invalid 入力は no-op (SkCanvas *canvas, const sk_sp< SkImage > *image, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint, SkCanvas::SrcRectConstraint constraint)
+ */
+void SkTiledImageUtils_DrawImageWithImageSp(reskia_canvas_t *canvas, const reskia_image_sp_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_tiled_image_utils_src_rect_constraint_t constraint);
+/**
+ * image/keyValues は NULL 許可。NULL image は keyValues を 0 で埋め、NULL keyValues は no-op (const SkImage *image, uint32_t keyValues[SkTiledImageUtils::kNumImageKeyValues])
+ */
+void SkTiledImageUtils_GetImageKeyValues(const reskia_image_t *image, uint32_t * keyValues);
 
 #ifdef __cplusplus
 }

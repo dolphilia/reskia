@@ -17,15 +17,59 @@ typedef struct reskia_runtime_shader_builder_t reskia_runtime_shader_builder_t;
 extern "C" {
 #endif
 
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(int runtime_effect); // invalid runtime_effect handle なら NULL (sk_runtime_effect_t runtime_effect) -> SkRuntimeShaderBuilder *
-reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder); // NULL builder なら NULL (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *
-void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder は no-op (SkRuntimeShaderBuilder *runtime_shader_builder)
-sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix); // localMatrix may be NULL; returned shader handle is caller-owned; NULL builder/factory failure returns 0 (SkRuntimeShaderBuilder *runtime_shader_builder, const SkMatrix *localMatrix) -> sk_shader_t
-const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder); // NULL builder なら NULL (SkRuntimeShaderBuilder *runtime_shader_builder) -> const SkRuntimeEffect *
-sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
-sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
-int SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder); // returned handle is caller-owned and deleted with static_const_sk_data_delete; NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_data_t
-int SkRuntimeShaderBuilder_children(reskia_runtime_shader_builder_t *runtime_shader_builder); // returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete; NULL builder なら 0 (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_runtime_effect_child_ptr_t
+/**
+ * Invalid runtime_effect handle returns NULL.
+ * Skia: (sk_runtime_effect_t runtime_effect) -> SkRuntimeShaderBuilder *.
+ */
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_new(int runtime_effect);
+/**
+ * NULL builder returns NULL.
+ * Skia: (const SkRuntimeShaderBuilder *builder) -> SkRuntimeShaderBuilder *.
+ */
+reskia_runtime_shader_builder_t *SkRuntimeShaderBuilder_newCopy(const reskia_runtime_shader_builder_t *builder);
+/**
+ * NULL builder is no-op.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder).
+ */
+void SkRuntimeShaderBuilder_delete(reskia_runtime_shader_builder_t *runtime_shader_builder);
+/**
+ * localMatrix may be NULL.
+ * Returns a caller-owned shader handle.
+ * NULL builder/factory failure returns 0.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder, const SkMatrix *localMatrix) -> sk_shader_t.
+ */
+sk_shader_t SkRuntimeShaderBuilder_makeShader(reskia_runtime_shader_builder_t *runtime_shader_builder, const reskia_matrix_t *localMatrix);
+/**
+ * NULL builder returns NULL.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder) -> const SkRuntimeEffect *.
+ */
+const reskia_runtime_effect_t *SkRuntimeShaderBuilder_effect(reskia_runtime_shader_builder_t *runtime_shader_builder);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t.
+ */
+sk_runtime_effect_builder_builder_uniform_t SkRuntimeShaderBuilder_uniform(reskia_runtime_shader_builder_t *runtime_shader_builder, int name);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t.
+ */
+sk_runtime_effect_builder_builder_child_t SkRuntimeShaderBuilder_child(reskia_runtime_shader_builder_t *runtime_shader_builder, int name);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_data_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_data_t.
+ */
+int SkRuntimeShaderBuilder_uniforms(reskia_runtime_shader_builder_t *runtime_shader_builder);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeShaderBuilder *runtime_shader_builder) -> const_sk_runtime_effect_child_ptr_t.
+ */
+int SkRuntimeShaderBuilder_children(reskia_runtime_shader_builder_t *runtime_shader_builder);
 
 #ifdef __cplusplus
 }

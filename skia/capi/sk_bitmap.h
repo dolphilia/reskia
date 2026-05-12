@@ -67,23 +67,53 @@ bool SkBitmap_extractAlpha(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst); // (S
 bool SkBitmap_extractAlpha_withPaintAllocatorOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_bitmap_allocator_t *allocator, reskia_i_point_t *offset); // (SkBitmap *bitmap, SkBitmap *dst, const SkPaint *paint, SkBitmap::Allocator *allocator, SkIPoint *offset) -> bool
 bool SkBitmap_extractAlpha_withPaintOffset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_paint_t *paint, reskia_i_point_t *offset); // (SkBitmap *bitmap, SkBitmap *dst, const SkPaint *paint, SkIPoint *offset) -> bool
 bool SkBitmap_extractSubset(reskia_bitmap_t *bitmap, reskia_bitmap_t *dst, const reskia_i_rect_t *subset); // (SkBitmap *bitmap, SkBitmap *dst, const SkIRect *subset) -> bool
-void *SkBitmap_getAddr(reskia_bitmap_t *bitmap, int x, int y); // borrowed mutable pixel address; valid while bitmap pixels/storage remain unchanged; caller must not free (SkBitmap *bitmap, int x, int y) -> void *
-uint16_t *SkBitmap_getAddr16(reskia_bitmap_t *bitmap, int x, int y); // borrowed mutable 16-bit pixel address; caller must not free (SkBitmap *bitmap, int x, int y) -> uint16_t *
-uint32_t *SkBitmap_getAddr32(reskia_bitmap_t *bitmap, int x, int y); // borrowed mutable 32-bit pixel address; caller must not free (SkBitmap *bitmap, int x, int y) -> uint32_t *
-uint8_t *SkBitmap_getAddr8(reskia_bitmap_t *bitmap, int x, int y); // borrowed mutable 8-bit pixel address; caller must not free (SkBitmap *bitmap, int x, int y) -> uint8_t *
+/**
+ * borrowed mutable pixel address.
+ * valid while bitmap pixels/storage remain unchanged.
+ * caller must not free (SkBitmap *bitmap, int x, int y) -> void *.
+ */
+void *SkBitmap_getAddr(reskia_bitmap_t *bitmap, int x, int y);
+/**
+ * borrowed mutable 16-bit pixel address.
+ * caller must not free (SkBitmap *bitmap, int x, int y) -> uint16_t *.
+ */
+uint16_t *SkBitmap_getAddr16(reskia_bitmap_t *bitmap, int x, int y);
+/**
+ * borrowed mutable 32-bit pixel address.
+ * caller must not free (SkBitmap *bitmap, int x, int y) -> uint32_t *.
+ */
+uint32_t *SkBitmap_getAddr32(reskia_bitmap_t *bitmap, int x, int y);
+/**
+ * borrowed mutable 8-bit pixel address.
+ * caller must not free (SkBitmap *bitmap, int x, int y) -> uint8_t *.
+ */
+uint8_t *SkBitmap_getAddr8(reskia_bitmap_t *bitmap, int x, int y);
 float SkBitmap_getAlphaf(reskia_bitmap_t *bitmap, int x, int y); // (SkBitmap *bitmap, int x, int y) -> float
 void SkBitmap_getBounds(reskia_bitmap_t *bitmap, reskia_i_rect_t *bounds); // (SkBitmap *bitmap, SkIRect *bounds)
 void SkBitmap_getBounds2(reskia_bitmap_t *bitmap, reskia_rect_t *bounds); // (SkBitmap *bitmap, SkRect *bounds)
 uint32_t SkBitmap_getColor(reskia_bitmap_t *bitmap, int x, int y); // (SkBitmap *bitmap, int x, int y) -> SkColor
 sk_color_4f_t SkBitmap_getColor4f(reskia_bitmap_t *bitmap, int x, int y); // (SkBitmap *bitmap, int x, int y) -> sk_color_4f_t
 uint32_t SkBitmap_getGenerationID(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> uint32_t
-void *SkBitmap_getPixels(reskia_bitmap_t *bitmap); // borrowed mutable pixel base address; valid while bitmap pixels/storage remain unchanged; caller must not free (SkBitmap *bitmap) -> void *
+/**
+ * borrowed mutable pixel base address.
+ * valid while bitmap pixels/storage remain unchanged.
+ * caller must not free (SkBitmap *bitmap) -> void *.
+ */
+void *SkBitmap_getPixels(reskia_bitmap_t *bitmap);
 sk_i_rect_t SkBitmap_getSubset(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_i_rect_t
 int SkBitmap_height(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
 sk_image_info_t SkBitmap_info(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_image_info_t
 bool SkBitmap_installMaskPixels(reskia_bitmap_t *bitmap, reskia_mask_builder_t *mask); // (SkBitmap *bitmap, SkMaskBuilder *mask) -> bool
-bool SkBitmap_installPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes); // pixels: caller-owned mutable backing store; must remain valid until bitmap storage changes or bitmap is reset/deleted (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes) -> bool
-bool SkBitmap_installPixels_withReleaseProc(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context); // pixels: transferred to bitmap with releaseProc callback; releaseProc may be NULL only if caller keeps storage alive externally (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) -> bool
+/**
+ * pixels: caller-owned mutable backing store.
+ * must remain valid until bitmap storage changes or bitmap is reset/deleted (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes) -> bool.
+ */
+bool SkBitmap_installPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes);
+/**
+ * pixels: transferred to bitmap with releaseProc callback.
+ * releaseProc may be NULL only if caller keeps storage alive externally (SkBitmap *bitmap, const SkImageInfo *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context) -> bool.
+ */
+bool SkBitmap_installPixels_withReleaseProc(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes, void(*releaseProc)(void *addr, void *context), void *context);
 bool SkBitmap_installPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *pixmap); // (SkBitmap *bitmap, const SkPixmap *pixmap) -> bool
 bool SkBitmap_isImmutable(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
 bool SkBitmap_isNull(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
@@ -97,7 +127,11 @@ bool SkBitmap_peekPixels(reskia_bitmap_t *bitmap, reskia_pixmap_t *pixmap); // (
 reskia_pixel_ref_t *SkBitmap_pixelRef(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkPixelRef *
 sk_i_point_t SkBitmap_pixelRefOrigin(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> sk_i_point_t
 int SkBitmap_pixmap(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
-bool SkBitmap_readPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // dstPixels: caller-owned mutable buffer, non-null and large enough for dstInfo/dstRowBytes; not retained (SkBitmap *bitmap, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool
+/**
+ * dstPixels: caller-owned mutable buffer, non-null and large enough for dstInfo/dstRowBytes.
+ * not retained (SkBitmap *bitmap, const SkImageInfo *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY) -> bool.
+ */
+bool SkBitmap_readPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY);
 bool SkBitmap_readPixels_withPixmap(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst); // (SkBitmap *bitmap, const SkPixmap *dst) -> bool
 bool SkBitmap_readPixels_withPixmapAt(reskia_bitmap_t *bitmap, const reskia_pixmap_t *dst, int srcX, int srcY); // (SkBitmap *bitmap, const SkPixmap *dst, int srcX, int srcY) -> bool
 bool SkBitmap_readyToDraw(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> bool
@@ -109,7 +143,11 @@ bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaTyp
 void SkBitmap_setImmutable(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 bool SkBitmap_setInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *imageInfo, size_t rowBytes); // (SkBitmap *bitmap, const SkImageInfo *imageInfo, size_t rowBytes) -> bool
 void SkBitmap_setPixelRef(reskia_bitmap_t *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy); // (SkBitmap *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy)
-void SkBitmap_setPixels(reskia_bitmap_t *bitmap, void *pixels); // pixels: caller-owned mutable backing store; must remain valid until bitmap storage changes or bitmap is reset/deleted (SkBitmap *bitmap, void *pixels)
+/**
+ * pixels: caller-owned mutable backing store.
+ * must remain valid until bitmap storage changes or bitmap is reset/deleted (SkBitmap *bitmap, void *pixels)
+ */
+void SkBitmap_setPixels(reskia_bitmap_t *bitmap, void *pixels);
 int SkBitmap_shiftPerPixel(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
 void SkBitmap_swap(reskia_bitmap_t *bitmap, reskia_bitmap_t *other); // (SkBitmap *bitmap, SkBitmap *other)
 bool SkBitmap_tryAllocN32Pixels(reskia_bitmap_t *bitmap, int width, int height, bool isOpaque); // (SkBitmap *bitmap, int width, int height, bool isOpaque) -> bool

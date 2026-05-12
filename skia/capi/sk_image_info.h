@@ -34,7 +34,12 @@ int SkImageInfo_width(reskia_image_info_t *image_info); // (SkImageInfo *image_i
 int SkImageInfo_height(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 reskia_image_info_color_type_t SkImageInfo_colorType(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkColorType
 reskia_image_info_alpha_type_t SkImageInfo_alphaType(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> SkAlphaType
-reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info); // borrowed; valid while image_info owns the color space; caller must not delete
+/**
+ * borrowed.
+ * valid while image_info owns the color space.
+ * caller must not delete.
+ */
+reskia_color_space_t *SkImageInfo_colorSpace(reskia_image_info_t *image_info);
 sk_color_space_t SkImageInfo_refColorSpace(reskia_image_info_t *image_info); // returns a retained handle, or 0 when image_info is null
 bool SkImageInfo_isEmpty(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> bool
 sk_color_info_t SkImageInfo_colorInfo(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> sk_color_info_t
@@ -51,8 +56,15 @@ int SkImageInfo_bytesPerPixel(reskia_image_info_t *image_info); // (SkImageInfo 
 int SkImageInfo_shiftPerPixel(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> int
 reskia_u64_t SkImageInfo_minRowBytes64(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> uint64_t
 size_t SkImageInfo_minRowBytes(reskia_image_info_t *image_info); // (SkImageInfo *image_info) -> size_t
-size_t SkImageInfo_computeOffset(reskia_image_info_t *image_info, int x, int y, size_t rowBytes); // caller must pass rowBytes large enough for the pixel buffer layout
-size_t SkImageInfo_computeByteSize(reskia_image_info_t *image_info, size_t rowBytes); // returns 0 on null image_info; use ByteSizeOverflowed to detect overflow sentinel values
+/**
+ * caller must pass rowBytes large enough for the pixel buffer layout
+ */
+size_t SkImageInfo_computeOffset(reskia_image_info_t *image_info, int x, int y, size_t rowBytes);
+/**
+ * returns 0 on null image_info.
+ * use ByteSizeOverflowed to detect overflow sentinel values.
+ */
+size_t SkImageInfo_computeByteSize(reskia_image_info_t *image_info, size_t rowBytes);
 size_t SkImageInfo_computeMinByteSize(reskia_image_info_t *image_info); // returns 0 on null image_info
 bool SkImageInfo_validRowBytes(reskia_image_info_t *image_info, size_t rowBytes); // validates rowBytes against width/color type
 void SkImageInfo_reset(reskia_image_info_t *image_info); // (SkImageInfo *image_info)

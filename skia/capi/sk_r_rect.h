@@ -45,9 +45,17 @@ void SkRRect_setOval(reskia_r_rect_t *rrect, const reskia_rect_t *oval); // (SkR
 void SkRRect_setRectXY(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float xRad, float yRad); // (SkRRect *rrect, const SkRect *rect, SkScalar xRad, SkScalar yRad)
 void SkRRect_setNinePatch(reskia_r_rect_t *rrect, const reskia_rect_t *rect, float leftRad, float topRad, float rightRad, float bottomRad); // (SkRRect *rrect, const SkRect *rect, SkScalar leftRad, SkScalar topRad, SkScalar rightRad, SkScalar bottomRad)
 void SkRRect_setRectRadii(reskia_r_rect_t *rrect, const reskia_rect_t *rect, const reskia_vector_t *radii); // radii: non-null caller-owned SkVector[4] input
-const reskia_rect_t *SkRRect_rect(reskia_r_rect_t *rrect); // borrowed; valid while rrect remains alive and unchanged
+/**
+ * borrowed.
+ * valid while rrect remains alive and unchanged.
+ */
+const reskia_rect_t *SkRRect_rect(reskia_r_rect_t *rrect);
 sk_point_t SkRRect_radii(reskia_r_rect_t *rrect, reskia_r_rect_corner_t corner); // (SkRRect *rrect, SkRRect::Corner corner) -> sk_point_t
-const reskia_rect_t *SkRRect_getBounds(reskia_r_rect_t *rrect); // borrowed; valid while rrect remains alive and unchanged
+/**
+ * borrowed.
+ * valid while rrect remains alive and unchanged.
+ */
+const reskia_rect_t *SkRRect_getBounds(reskia_r_rect_t *rrect);
 void SkRRect_inset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *dst); // (SkRRect *rrect, SkScalar dx, SkScalar dy, SkRRect *dst)
 void SkRRect_insetInPlace(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy)
 void SkRRect_outset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t *dst); // (SkRRect *rrect, SkScalar dx, SkScalar dy, SkRRect *dst)
@@ -56,7 +64,11 @@ void SkRRect_offset(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rr
 sk_r_rect_t SkRRect_makeOffset(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy) -> sk_r_rect_t
 bool SkRRect_contains(reskia_r_rect_t *rrect, const reskia_rect_t *rect); // (SkRRect *rrect, const SkRect *rect) -> bool
 bool SkRRect_isValid(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> bool
-size_t SkRRect_writeToMemory(reskia_r_rect_t *rrect, void *buffer); // buffer may be null to query required byte size; otherwise caller owns writable buffer with returned-size capacity
+/**
+ * buffer may be null to query required byte size.
+ * otherwise caller owns writable buffer with returned-size capacity.
+ */
+size_t SkRRect_writeToMemory(reskia_r_rect_t *rrect, void *buffer);
 size_t SkRRect_readFromMemory(reskia_r_rect_t *rrect, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
 bool SkRRect_transform(reskia_r_rect_t *rrect, const reskia_matrix_t *matrix, reskia_r_rect_t *dst); // matrix/dst: non-null
 void SkRRect_dump(reskia_r_rect_t *rrect, bool asHex); // (SkRRect *rrect, bool asHex)

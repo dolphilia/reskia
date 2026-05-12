@@ -14,9 +14,21 @@ typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_rect_t reskia_rect_t;
 
-void SkAnnotation_SkAnnotateLinkToDestination(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data); // borrowed: canvas/rect/data are non-null; invalid input is no-op (SkCanvas *canvas, const SkRect *rect, SkData *data)
-void SkAnnotation_SkAnnotateNamedDestination(reskia_canvas_t *canvas, const reskia_point_t *point, reskia_data_t *data); // borrowed: canvas/point/data are non-null; invalid input is no-op (SkCanvas *canvas, const SkPoint *point, SkData *data)
-void SkAnnotation_SkAnnotateRectWithURL(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data); // borrowed: canvas/rect/data are non-null; invalid input is no-op (SkCanvas *canvas, const SkRect *rect, SkData *data)
+/**
+ * borrowed: canvas/rect/data are non-null.
+ * invalid input is no-op (SkCanvas *canvas, const SkRect *rect, SkData *data)
+ */
+void SkAnnotation_SkAnnotateLinkToDestination(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data);
+/**
+ * borrowed: canvas/point/data are non-null.
+ * invalid input is no-op (SkCanvas *canvas, const SkPoint *point, SkData *data)
+ */
+void SkAnnotation_SkAnnotateNamedDestination(reskia_canvas_t *canvas, const reskia_point_t *point, reskia_data_t *data);
+/**
+ * borrowed: canvas/rect/data are non-null.
+ * invalid input is no-op (SkCanvas *canvas, const SkRect *rect, SkData *data)
+ */
+void SkAnnotation_SkAnnotateRectWithURL(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_data_t *data);
 
 #ifdef __cplusplus
 }

@@ -15,7 +15,10 @@ void SkDashPathEffect_delete(void * dashPathEffect); // owned: NULL 入力では
 
 // static
 
-sk_path_effect_t SkDashPathEffect_Make(const float * intervals, int count, float phase); // raw input array: intervals は count 要素以上、非 NULL。生成不能なら 0 (const SkScalar intervals[], int count, SkScalar phase) -> sk_path_effect_t
+/**
+ * raw input array: intervals は count 要素以上、非 NULL。生成不能なら 0 (const SkScalar intervals[], int count, SkScalar phase) -> sk_path_effect_t
+ */
+sk_path_effect_t SkDashPathEffect_Make(const float * intervals, int count, float phase);
 
 #ifdef __cplusplus
 }

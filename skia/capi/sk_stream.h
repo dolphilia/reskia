@@ -40,7 +40,11 @@ bool SkStream_seek(reskia_stream_t *stream, size_t size); // (SkStream *stream, 
 bool SkStream_move(reskia_stream_t *stream, long i); // (SkStream *stream, long i) -> bool
 bool SkStream_hasLength(reskia_stream_t *stream); // (SkStream *stream) -> bool
 size_t SkStream_getLength(reskia_stream_t *stream); // (SkStream *stream) -> size_t
-const void * SkStream_getMemoryBase(reskia_stream_t *stream); // borrowed memory base when supported; caller must not free
+/**
+ * borrowed memory base when supported.
+ * caller must not free.
+ */
+const void * SkStream_getMemoryBase(reskia_stream_t *stream);
 
 // static
 

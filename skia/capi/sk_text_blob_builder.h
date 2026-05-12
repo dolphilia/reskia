@@ -19,14 +19,57 @@ extern "C" {
 reskia_text_blob_builder_t *SkTextBlobBuilder_new(); // () -> SkTextBlobBuilder *
 void SkTextBlobBuilder_delete(reskia_text_blob_builder_t *text_blob_builder); // NULL builder is no-op.
 sk_text_blob_t SkTextBlobBuilder_make(reskia_text_blob_builder_t *text_blob_builder); // NULL builder or empty builder returns 0.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRun(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float x, float y, const reskia_rect_t *bounds); // builder/font required; count must be > 0; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunPosH(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float y, const reskia_rect_t *bounds); // builder/font required; count must be > 0; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunPos(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, const reskia_rect_t *bounds); // builder/font required; count must be > 0; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunRSXform(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count); // builder/font required; count must be > 0.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunText(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float x, float y, int textByteCount, const reskia_rect_t *bounds); // builder/font required; count > 0; textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextPosH(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float y, int textByteCount, const reskia_rect_t *bounds); // builder/font required; count > 0; textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextPos(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, int textByteCount, const reskia_rect_t *bounds); // builder/font required; count > 0; textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes; bounds may be NULL.
-const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextRSXform(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, int textByteCount, const reskia_rect_t *bounds); // builder/font required; count > 0; textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes; bounds may be NULL.
+/**
+ * builder/font required.
+ * count must be > 0.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRun(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float x, float y, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count must be > 0.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunPosH(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float y, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count must be > 0.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunPos(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count must be > 0.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunRSXform(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count);
+/**
+ * builder/font required.
+ * count > 0.
+ * textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunText(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float x, float y, int textByteCount, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count > 0.
+ * textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextPosH(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, float y, int textByteCount, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count > 0.
+ * textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextPos(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, int textByteCount, const reskia_rect_t *bounds);
+/**
+ * builder/font required.
+ * count > 0.
+ * textByteCount must be >= 0 and reserves caller-filled UTF-8 cluster text bytes.
+ * bounds may be NULL.
+ */
+const reskia_text_blob_builder_run_buffer_t *SkTextBlobBuilder_allocRunTextRSXform(reskia_text_blob_builder_t *text_blob_builder, const reskia_font_t *font, int count, int textByteCount, const reskia_rect_t *bounds);
 
 #ifdef __cplusplus
 }

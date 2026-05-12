@@ -29,13 +29,35 @@ extern "C" {
 #endif
 
 reskia_pixmap_t *SkPixmap_new(); // () -> SkPixmap *
-reskia_pixmap_t *SkPixmap_newWithImageInfoAddressAndRowBytes(const reskia_image_info_t *info, const void *addr, size_t rowBytes); // info: non-null; addr may be null; returns null on invalid input
+/**
+ * info: non-null.
+ * addr may be null.
+ * returns null on invalid input.
+ */
+reskia_pixmap_t *SkPixmap_newWithImageInfoAddressAndRowBytes(const reskia_image_info_t *info, const void *addr, size_t rowBytes);
 void SkPixmap_delete(reskia_pixmap_t *pixmap); // null pixmap is a no-op
 void SkPixmap_reset(reskia_pixmap_t *pixmap); // null pixmap is a no-op
-void SkPixmap_resetWithImageInfoAddressAndRowBytes(reskia_pixmap_t *pixmap, const reskia_image_info_t *info, const void *addr, size_t rowBytes); // pixmap/info: non-null; addr may be null; invalid input is a no-op
-bool SkPixmap_resetFromMask(reskia_pixmap_t *pixmap, const reskia_mask_t *mask); // pixmap/mask: non-null; false on invalid input
-void SkPixmap_setColorSpace(reskia_pixmap_t *pixmap, sk_color_space_t color_space); // null pixmap is a no-op; color_space handle 0 clears the color space
-bool SkPixmap_extractSubset(reskia_pixmap_t *pixmap, reskia_pixmap_t *subset, const reskia_i_rect_t *area); // pixmap/subset/area: non-null; false on invalid input
+/**
+ * pixmap/info: non-null.
+ * addr may be null.
+ * invalid input is a no-op.
+ */
+void SkPixmap_resetWithImageInfoAddressAndRowBytes(reskia_pixmap_t *pixmap, const reskia_image_info_t *info, const void *addr, size_t rowBytes);
+/**
+ * pixmap/mask: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_resetFromMask(reskia_pixmap_t *pixmap, const reskia_mask_t *mask);
+/**
+ * null pixmap is a no-op.
+ * color_space handle 0 clears the color space.
+ */
+void SkPixmap_setColorSpace(reskia_pixmap_t *pixmap, sk_color_space_t color_space);
+/**
+ * pixmap/subset/area: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_extractSubset(reskia_pixmap_t *pixmap, reskia_pixmap_t *subset, const reskia_i_rect_t *area);
 const reskia_image_info_t *SkPixmap_info(reskia_pixmap_t *pixmap); // returns null on null pixmap
 size_t SkPixmap_rowBytes(reskia_pixmap_t *pixmap); // returns 0 on null pixmap
 const void *SkPixmap_addr(reskia_pixmap_t *pixmap); // returns null on null pixmap
@@ -44,8 +66,16 @@ int SkPixmap_height(reskia_pixmap_t *pixmap); // returns 0 on null pixmap
 sk_i_size_t SkPixmap_dimensions(reskia_pixmap_t *pixmap); // returns handle 0 on null pixmap
 reskia_pixmap_color_type_t SkPixmap_colorType(reskia_pixmap_t *pixmap); // returns -1 on null pixmap
 reskia_pixmap_alpha_type_t SkPixmap_alphaType(reskia_pixmap_t *pixmap); // returns -1 on null pixmap
-reskia_color_space_t *SkPixmap_colorSpace(reskia_pixmap_t *pixmap); // borrowed; returns null on null pixmap or no color space
-sk_color_space_t SkPixmap_refColorSpace(reskia_pixmap_t *pixmap); // retained handle; returns 0 on null pixmap or no color space
+/**
+ * borrowed.
+ * returns null on null pixmap or no color space.
+ */
+reskia_color_space_t *SkPixmap_colorSpace(reskia_pixmap_t *pixmap);
+/**
+ * retained handle.
+ * returns 0 on null pixmap or no color space.
+ */
+sk_color_space_t SkPixmap_refColorSpace(reskia_pixmap_t *pixmap);
 bool SkPixmap_isOpaque(reskia_pixmap_t *pixmap); // returns false on null pixmap
 sk_i_rect_t SkPixmap_bounds(reskia_pixmap_t *pixmap); // returns handle 0 on null pixmap
 int SkPixmap_rowBytesAsPixels(reskia_pixmap_t *pixmap); // returns 0 on null pixmap
@@ -73,14 +103,43 @@ uint16_t *SkPixmap_writable_addr16(reskia_pixmap_t *pixmap, int x, int y); // re
 uint32_t *SkPixmap_writable_addr32(reskia_pixmap_t *pixmap, int x, int y); // returns null on invalid input, out-of-bounds x/y, or non-32-bit pixels
 uint64_t *SkPixmap_writable_addr64(reskia_pixmap_t *pixmap, int x, int y); // returns null on invalid input, out-of-bounds x/y, or non-64-bit pixels
 uint16_t *SkPixmap_writable_addrF16(reskia_pixmap_t *pixmap, int x, int y); // returns null on invalid input, out-of-bounds x/y, or non-F16 pixels
-bool SkPixmap_readPixels(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes); // pixmap/dstInfo/dstPixels: non-null; false on invalid input
-bool SkPixmap_readPixelsWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY); // pixmap/dstInfo/dstPixels: non-null; false on invalid input
-bool SkPixmap_readPixelsToPixmapWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, int srcX, int srcY); // pixmap/dst: non-null; false on invalid input
-bool SkPixmap_readPixelsToPixmap(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst); // pixmap/dst: non-null; false on invalid input
-bool SkPixmap_scalePixels(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, const reskia_sampling_options_t *options); // pixmap/dst/options: non-null; false on invalid input
-bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect_t *subset); // pixmap/subset: non-null; false on invalid input
+/**
+ * pixmap/dstInfo/dstPixels: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_readPixels(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes);
+/**
+ * pixmap/dstInfo/dstPixels: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_readPixelsWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY);
+/**
+ * pixmap/dst: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_readPixelsToPixmapWithSourceOffset(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, int srcX, int srcY);
+/**
+ * pixmap/dst: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_readPixelsToPixmap(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst);
+/**
+ * pixmap/dst/options: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_scalePixels(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, const reskia_sampling_options_t *options);
+/**
+ * pixmap/subset: non-null.
+ * false on invalid input.
+ */
+bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect_t *subset);
 bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color); // returns false on null pixmap
-bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset); // pixmap/color: non-null; subset may be null; false on invalid input
+/**
+ * pixmap/color: non-null.
+ * subset may be null.
+ * false on invalid input.
+ */
+bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset);
 
 #ifdef __cplusplus
 }

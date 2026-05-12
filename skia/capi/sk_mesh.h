@@ -46,8 +46,14 @@ const_sk_mesh_child_ptr_t SkMesh_children(reskia_mesh_t * mesh); // NULL mesh �
 sk_rect_t SkMesh_bounds(reskia_mesh_t * mesh); // NULL mesh では 0
 bool SkMesh_isValid(reskia_mesh_t * mesh); // NULL mesh では false
 // static
-sk_mesh_result_t SkMesh_Make(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds); // bounds は非 NULL。invalid 入力では 0 または invalid result
-sk_mesh_result_t SkMesh_MakeIndexed(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, sk_mesh_index_buffer_t iBuffer, size_t indexCount, size_t indexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds); // bounds は非 NULL。invalid 入力では 0 または invalid result
+/**
+ * bounds は非 NULL。invalid 入力では 0 または invalid result
+ */
+sk_mesh_result_t SkMesh_Make(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds);
+/**
+ * bounds は非 NULL。invalid 入力では 0 または invalid result
+ */
+sk_mesh_result_t SkMesh_MakeIndexed(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, sk_mesh_index_buffer_t iBuffer, size_t indexCount, size_t indexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds);
 
 #ifdef __cplusplus
 }

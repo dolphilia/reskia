@@ -24,9 +24,15 @@ reskia_surface_props_t *SkSurfaceProps_new(); // () -> SkSurfaceProps *
 reskia_surface_props_t *SkSurfaceProps_newWithFlagsAndGeometry(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry); // (uint32_t flags, SkPixelGeometry geometry) -> SkSurfaceProps *
 reskia_surface_props_t *SkSurfaceProps_newCopy(const reskia_surface_props_t *props); // NULL props なら NULL (const SkSurfaceProps *props) -> SkSurfaceProps *
 void SkSurfaceProps_delete(reskia_surface_props_t *surface_props); // NULL surface_props は no-op (SkSurfaceProps *surface_props)
-sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(reskia_surface_props_t *surface_props, reskia_surface_props_pixel_geometry_t newPixelGeometry); // NULL surface_props なら 0 (SkSurfaceProps *surface_props, SkPixelGeometry newPixelGeometry) -> sk_surface_props_t
+/**
+ * NULL surface_props なら 0 (SkSurfaceProps *surface_props, SkPixelGeometry newPixelGeometry) -> sk_surface_props_t
+ */
+sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(reskia_surface_props_t *surface_props, reskia_surface_props_pixel_geometry_t newPixelGeometry);
 uint32_t SkSurfaceProps_flags(reskia_surface_props_t *surface_props); // NULL surface_props なら 0 (SkSurfaceProps *surface_props) -> uint32_t
-reskia_surface_props_pixel_geometry_t SkSurfaceProps_pixelGeometry(reskia_surface_props_t *surface_props); // NULL surface_props なら 0 (SkSurfaceProps *surface_props) -> SkPixelGeometry
+/**
+ * NULL surface_props なら 0 (SkSurfaceProps *surface_props) -> SkPixelGeometry
+ */
+reskia_surface_props_pixel_geometry_t SkSurfaceProps_pixelGeometry(reskia_surface_props_t *surface_props);
 bool SkSurfaceProps_isUseDeviceIndependentFonts(reskia_surface_props_t *surface_props); // NULL surface_props なら false (SkSurfaceProps *surface_props) -> bool
 bool SkSurfaceProps_isAlwaysDither(reskia_surface_props_t *surface_props); // NULL surface_props なら false (SkSurfaceProps *surface_props) -> bool
 

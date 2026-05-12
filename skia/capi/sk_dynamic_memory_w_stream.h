@@ -26,9 +26,15 @@ void SkDynamicMemoryWStream_delete(reskia_dynamic_memory_w_stream_t *dynamic_mem
 bool SkDynamicMemoryWStream_write(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, const uint8_t *buffer, size_t size); // buffer may be null only when size == 0
 size_t SkDynamicMemoryWStream_bytesWritten(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> size_t
 bool SkDynamicMemoryWStream_read(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *buffer, size_t offset, size_t size); // buffer may be null only when size == 0
-void SkDynamicMemoryWStream_copyTo(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *dst); // dst: non-null caller-owned buffer with bytesWritten capacity
+/**
+ * dst: non-null caller-owned buffer with bytesWritten capacity
+ */
+void SkDynamicMemoryWStream_copyTo(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *dst);
 bool SkDynamicMemoryWStream_writeToStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkWStream *dst) -> bool
-void SkDynamicMemoryWStream_copyToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *dst); // dst: non-null caller-owned buffer with bytesWritten capacity
+/**
+ * dst: non-null caller-owned buffer with bytesWritten capacity
+ */
+void SkDynamicMemoryWStream_copyToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, uint8_t *dst);
 bool SkDynamicMemoryWStream_writeToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkWStream *dst) -> bool
 bool SkDynamicMemoryWStream_writeToAndResetDynamicStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst) -> bool
 void SkDynamicMemoryWStream_prependToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst)

@@ -17,7 +17,10 @@ typedef struct reskia_path_t reskia_path_t;
 reskia_contour_measure_iter_t *SkContourMeasureIter_new(); // () -> SkContourMeasureIter *
 reskia_contour_measure_iter_t *SkContourMeasureIter_newWithPath(const reskia_path_t *path, bool forceClosed, float resScale); // path は非 NULL。NULL 入力では NULL
 void SkContourMeasureIter_delete(reskia_contour_measure_iter_t *contour_measure_iter); // (SkContourMeasureIter *contour_measure_iter)
-void SkContourMeasureIter_reset(reskia_contour_measure_iter_t *contour_measure_iter, const reskia_path_t *path, bool forceClosed, float resScale); // contour_measure_iter/path は非 NULL。NULL 入力では no-op
+/**
+ * contour_measure_iter/path は非 NULL。NULL 入力では no-op
+ */
+void SkContourMeasureIter_reset(reskia_contour_measure_iter_t *contour_measure_iter, const reskia_path_t *path, bool forceClosed, float resScale);
 sk_contour_measure_t SkContourMeasureIter_next(reskia_contour_measure_iter_t *contour_measure_iter); // 終了または NULL 入力では 0
 
 #ifdef __cplusplus

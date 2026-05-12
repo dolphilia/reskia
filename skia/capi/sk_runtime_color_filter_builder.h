@@ -19,14 +19,53 @@ extern "C" {
 //SkRuntimeColorFilterBuilder(const SkRuntimeColorFilterBuilder &)=delete
 //SkRuntimeColorFilterBuilder & operator=(const SkRuntimeColorFilterBuilder &)=delete
 
-reskia_runtime_color_filter_builder_t *SkRuntimeColorFilterBuilder_new(int runtime_effect); // invalid runtime_effect handle なら NULL (sk_runtime_effect_t runtime_effect) -> SkRuntimeColorFilterBuilder *
-void SkRuntimeColorFilterBuilder_delete(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder); // NULL builder は no-op (SkRuntimeColorFilterBuilder *runtime_color_filter_builder)
-sk_color_filter_t SkRuntimeColorFilterBuilder_makeColorFilter(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder); // returned color filter handle is caller-owned; NULL builder/factory failure returns 0 (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> sk_color_filter_t
-const reskia_runtime_effect_t *SkRuntimeColorFilterBuilder_effect(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder); // NULL builder なら NULL (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const SkRuntimeEffect *
-sk_runtime_effect_builder_builder_uniform_t SkRuntimeColorFilterBuilder_uniform(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeColorFilterBuilder *runtime_color_filter_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
-sk_runtime_effect_builder_builder_child_t SkRuntimeColorFilterBuilder_child(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeColorFilterBuilder *runtime_color_filter_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
-int SkRuntimeColorFilterBuilder_uniforms(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder); // returned handle is caller-owned and deleted with static_const_sk_data_delete; NULL builder なら 0 (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const_sk_data_t
-int SkRuntimeColorFilterBuilder_children(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder); // returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete; NULL builder なら 0 (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const_sk_runtime_effect_child_ptr_t
+/**
+ * Invalid runtime_effect handle returns NULL.
+ * Skia: (sk_runtime_effect_t runtime_effect) -> SkRuntimeColorFilterBuilder *.
+ */
+reskia_runtime_color_filter_builder_t *SkRuntimeColorFilterBuilder_new(int runtime_effect);
+/**
+ * NULL builder is no-op.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder).
+ */
+void SkRuntimeColorFilterBuilder_delete(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder);
+/**
+ * Returned color filter handle is caller-owned.
+ * NULL builder/factory failure returns 0.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> sk_color_filter_t.
+ */
+sk_color_filter_t SkRuntimeColorFilterBuilder_makeColorFilter(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder);
+/**
+ * NULL builder returns NULL.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const SkRuntimeEffect *.
+ */
+const reskia_runtime_effect_t *SkRuntimeColorFilterBuilder_effect(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t.
+ */
+sk_runtime_effect_builder_builder_uniform_t SkRuntimeColorFilterBuilder_uniform(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, int name);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t.
+ */
+sk_runtime_effect_builder_builder_child_t SkRuntimeColorFilterBuilder_child(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder, int name);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_data_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const_sk_data_t.
+ */
+int SkRuntimeColorFilterBuilder_uniforms(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeColorFilterBuilder *runtime_color_filter_builder) -> const_sk_runtime_effect_child_ptr_t.
+ */
+int SkRuntimeColorFilterBuilder_children(reskia_runtime_color_filter_builder_t *runtime_color_filter_builder);
 
 #ifdef __cplusplus
 }

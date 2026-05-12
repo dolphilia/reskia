@@ -18,7 +18,11 @@ extern "C" {
 #endif
 
 void SkStreamMemory_delete(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory)
-const void *SkStreamMemory_getMemoryBase(reskia_stream_memory_t *stream_memory); // borrowed memory base; caller must not free
+/**
+ * borrowed memory base.
+ * caller must not free.
+ */
+const void *SkStreamMemory_getMemoryBase(reskia_stream_memory_t *stream_memory);
 sk_stream_memory_t SkStreamMemory_duplicate(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
 sk_stream_memory_t SkStreamMemory_fork(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> sk_stream_memory_t
 bool SkStreamMemory_hasLength(reskia_stream_memory_t *stream_memory); // (SkStreamMemory *stream_memory) -> bool

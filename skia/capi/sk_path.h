@@ -98,7 +98,11 @@ reskia_path_t *SkPath_addRoundRectWithRadii(reskia_path_t *path, const reskia_re
 reskia_path_t *SkPath_addRRect(reskia_path_t *path, const reskia_r_rect_t *rrect, int dir); // (SkPath *path, const SkRRect *rrect, SkPathDirection dir) -> SkPath *
 reskia_path_t *SkPath_addRRectWithStart(reskia_path_t *path, const reskia_r_rect_t *rrect, int dir, unsigned start); // (SkPath *path, const SkRRect *rrect, SkPathDirection dir, unsigned start) -> SkPath *
 reskia_path_t *SkPath_addPoly(reskia_path_t *path, const reskia_point_t *pts, int count, bool close); // pts may be null only when count == 0
-reskia_path_t *SkPath_addPolyFromList(reskia_path_t *path, const void *list, bool close); // list: non-null pointer to std::initializer_list<SkPoint>; C++ ABI helper, not a raw SkPoint buffer
+/**
+ * list: non-null pointer to std::initializer_list<SkPoint>.
+ * C++ ABI helper, not a raw SkPoint buffer.
+ */
+reskia_path_t *SkPath_addPolyFromList(reskia_path_t *path, const void *list, bool close);
 reskia_path_t *SkPath_addPath(reskia_path_t *path, const reskia_path_t *src, float dx, float dy, int mode); // (SkPath *path, const SkPath *src, SkScalar dx, SkScalar dy, SkPath::AddPathMode mode) -> SkPath *
 reskia_path_t *SkPath_addPathWithMode(reskia_path_t *path, const reskia_path_t *src, int modeSkPath); // (SkPath *path, const SkPath *src, SkPath::AddPathMode modeSkPath) -> SkPath *
 reskia_path_t *SkPath_addPathWithMatrixAndMode(reskia_path_t *path, const reskia_path_t *src, const reskia_matrix_t *matrix, int mode); // (SkPath *path, const SkPath *src, const SkMatrix *matrix, SkPath::AddPathMode mode) -> SkPath *
@@ -119,12 +123,19 @@ void SkPath_dumpDefault(reskia_path_t *path); // (SkPath *path)
 void SkPath_dumpHex(reskia_path_t *path); // (SkPath *path)
 void SkPath_dumpArrays(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex); // (SkPath *path, SkWStream *stream, bool dumpAsHex)
 void SkPath_dumpArraysDefault(reskia_path_t *path); // (SkPath *path)
-size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer); // buffer may be null to query required byte size; otherwise caller owns writable buffer with returned-size capacity
+/**
+ * buffer may be null to query required byte size.
+ * otherwise caller owns writable buffer with returned-size capacity.
+ */
+size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer);
 sk_data_t SkPath_serialize(reskia_path_t *path); // (SkPath *path) -> sk_data_t
 size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
 unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
-bool SkPathOps_Op(const reskia_path_t *one, const reskia_path_t *two, reskia_path_op_t op, reskia_path_t *result); // one/two/result は非 NULL、op は SkPathOp 範囲内。invalid 入力では false
+/**
+ * one/two/result は非 NULL、op は SkPathOp 範囲内。invalid 入力では false
+ */
+bool SkPathOps_Op(const reskia_path_t *one, const reskia_path_t *two, reskia_path_op_t op, reskia_path_t *result);
 bool SkPathOps_Simplify(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
 bool SkPathOps_TightBounds(const reskia_path_t *path, reskia_rect_t *result); // path/result は非 NULL。invalid 入力では false
 bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
@@ -140,7 +151,11 @@ sk_path_t SkPath_RRect(const reskia_r_rect_t *rrect, reskia_path_direction_t dir
 sk_path_t SkPath_RRectWithStart(const reskia_r_rect_t *rrect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRRect *rrect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
 sk_path_t SkPath_RRectFromRectAndRadii(const reskia_rect_t *bounds, float rx, float ry, reskia_path_direction_t dir); // (const SkRect *bounds, SkScalar rx, SkScalar ry, SkPathDirection dir) -> sk_path_t
 sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, reskia_path_fill_type_t type, bool isVolatile); // pts may be null only when count == 0
-sk_path_t SkPath_PolygonFromList(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile); // list: non-null pointer to std::initializer_list<SkPoint>; C++ ABI helper, not a raw SkPoint buffer
+/**
+ * list: non-null pointer to std::initializer_list<SkPoint>.
+ * C++ ABI helper, not a raw SkPoint buffer.
+ */
+sk_path_t SkPath_PolygonFromList(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile);
 sk_path_t SkPath_Line(sk_point_t a, sk_point_t b); // (sk_point_t a, sk_point_t b) -> sk_path_t
 bool SkPath_IsLineDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, bool exact); // (const SkPoint *p1, const SkPoint *p2, bool exact) -> bool
 bool SkPath_IsQuadDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, bool exact) -> bool

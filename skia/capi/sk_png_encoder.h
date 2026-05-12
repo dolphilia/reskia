@@ -18,9 +18,22 @@ typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_png_encoder_options_t reskia_png_encoder_options_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
 
-bool SkPngEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options); // dst/src/options are required; invalid input returns false.
-sk_data_t SkPngEncoder_EncodeFromImage(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_png_encoder_options_t *options); // img/options are required; ctx may be NULL; invalid input or encode failure returns 0.
-sk_encoder_t SkPngEncoder_Make(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options); // dst/src/options are required; invalid input or unsupported src returns 0.
+/**
+ * dst/src/options are required.
+ * invalid input returns false.
+ */
+bool SkPngEncoder_Encode(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options);
+/**
+ * img/options are required.
+ * ctx may be NULL.
+ * invalid input or encode failure returns 0.
+ */
+sk_data_t SkPngEncoder_EncodeFromImage(reskia_direct_context_t *ctx, const reskia_image_t *img, const reskia_png_encoder_options_t *options);
+/**
+ * dst/src/options are required.
+ * invalid input or unsupported src returns 0.
+ */
+sk_encoder_t SkPngEncoder_Make(reskia_w_stream_t *dst, const reskia_pixmap_t *src, const reskia_png_encoder_options_t *options);
 
 #ifdef __cplusplus
 }

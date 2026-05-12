@@ -39,23 +39,44 @@ sk_font_style_t SkTypeface_fontStyle(reskia_typeface_t *typeface); // NULL 入�
 bool SkTypeface_isBold(reskia_typeface_t *typeface); // NULL 入力では false
 bool SkTypeface_isItalic(reskia_typeface_t *typeface); // NULL 入力では false
 bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface); // NULL 入力では false
-int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount); // coordinates は NULL 許可。negative count/NULL typeface では -1
-int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount); // parameters は NULL 許可。negative count/NULL typeface では -1
+/**
+ * coordinates は NULL 許可。negative count/NULL typeface では -1
+ */
+int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount);
+/**
+ * parameters は NULL 許可。negative count/NULL typeface では -1
+ */
+int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount);
 uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface); // NULL 入力では 0
 sk_typeface_t SkTypeface_makeClone(reskia_typeface_t *typeface, const reskia_font_arguments_t *arguments); // arguments は非 NULL。invalid 入力や生成不能では 0
-void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior); // stream は非 NULL。invalid 入力では no-op
+/**
+ * stream は非 NULL。invalid 入力では no-op
+ */
+void SkTypeface_serialize(reskia_typeface_t *typeface, reskia_w_stream_t *stream, reskia_typeface_serialize_behavior_t behavior);
 sk_data_t SkTypeface_serializeToData(reskia_typeface_t *typeface, reskia_typeface_serialize_behavior_t behavior); // invalid 入力や生成不能では 0
-void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs); // count > 0 では uni/glyphs は count 要素以上、非 NULL。invalid 入力では no-op
-int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount); // byteLength > 0 では text 非 NULL。glyphs は NULL 許可。invalid 入力では 0
+/**
+ * count > 0 では uni/glyphs は count 要素以上、非 NULL。invalid 入力では no-op
+ */
+void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni, int count, uint16_t *glyphs);
+/**
+ * byteLength > 0 では text 非 NULL。glyphs は NULL 許可。invalid 入力では 0
+ */
+int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount);
 uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar); // NULL 入力では 0
 int SkTypeface_countGlyphs(reskia_typeface_t *typeface); // NULL 入力では 0
 int SkTypeface_countTables(reskia_typeface_t *typeface); // NULL 入力では 0
 int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags); // tags は NULL 許可。NULL typeface では 0
 size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag); // NULL 入力では 0
-size_t SkTypeface_getTableData(reskia_typeface_t *typeface, uint32_t tag, size_t offset, size_t length, void *data); // length > 0 では data 非 NULL。invalid 入力では 0
+/**
+ * length > 0 では data 非 NULL。invalid 入力では 0
+ */
+size_t SkTypeface_getTableData(reskia_typeface_t *typeface, uint32_t tag, size_t offset, size_t length, void *data);
 sk_data_t SkTypeface_copyTableData(reskia_typeface_t *typeface, uint32_t tag); // NULL 入力や生成不能では 0
 int SkTypeface_getUnitsPerEm(reskia_typeface_t *typeface); // NULL 入力では 0
-bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uint16_t *glyphs, int count, int32_t *adjustments); // count == 0 では glyphs/adjustments NULL 許可。count > 0 では両方非 NULL
+/**
+ * count == 0 では glyphs/adjustments NULL 許可。count > 0 では両方非 NULL
+ */
+bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uint16_t *glyphs, int count, int32_t *adjustments);
 reskia_typeface_localized_strings_t *SkTypeface_createFamilyNameIterator(reskia_typeface_t *typeface); // NULL 入力では NULL。caller は iterator を unref する
 void SkTypeface_getFamilyName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では no-op
 bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では false

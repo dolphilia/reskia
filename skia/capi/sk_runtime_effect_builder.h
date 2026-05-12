@@ -15,12 +15,42 @@ typedef struct reskia_runtime_effect_t reskia_runtime_effect_t;
 extern "C" {
 #endif
 
-void SkRuntimeEffectBuilder_delete(reskia_runtime_effect_builder_t *runtime_effect_builder); // NULL builder は no-op (SkRuntimeEffectBuilder *runtime_effect_builder)
-const reskia_runtime_effect_t *SkRuntimeEffectBuilder_effect(reskia_runtime_effect_builder_t *runtime_effect_builder); // NULL builder なら NULL (SkRuntimeEffectBuilder *runtime_effect_builder) -> const SkRuntimeEffect *
-sk_runtime_effect_builder_builder_uniform_t SkRuntimeEffectBuilder_uniform(reskia_runtime_effect_builder_t *runtime_effect_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeEffectBuilder *runtime_effect_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t
-sk_runtime_effect_builder_builder_child_t SkRuntimeEffectBuilder_child(reskia_runtime_effect_builder_t *runtime_effect_builder, int name); // builder/name must be valid; returned proxy handle is caller-owned; invalid input returns 0 (SkRuntimeEffectBuilder *runtime_effect_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t
-int SkRuntimeEffectBuilder_uniforms(reskia_runtime_effect_builder_t *runtime_effect_builder); // returned handle is caller-owned and deleted with static_const_sk_data_delete; NULL builder なら 0 (SkRuntimeEffectBuilder *runtime_effect_builder) -> const_sk_data_t
-int SkRuntimeEffectBuilder_children(reskia_runtime_effect_builder_t *runtime_effect_builder); // returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete; NULL builder なら 0 (SkRuntimeEffectBuilder *runtime_effect_builder) -> const_sk_runtime_effect_child_ptr_t
+/**
+ * NULL builder is no-op.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder).
+ */
+void SkRuntimeEffectBuilder_delete(reskia_runtime_effect_builder_t *runtime_effect_builder);
+/**
+ * NULL builder returns NULL.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> const SkRuntimeEffect *.
+ */
+const reskia_runtime_effect_t *SkRuntimeEffectBuilder_effect(reskia_runtime_effect_builder_t *runtime_effect_builder);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder, string_view_t name) -> sk_runtime_effect_builder_builder_uniform_t.
+ */
+sk_runtime_effect_builder_builder_uniform_t SkRuntimeEffectBuilder_uniform(reskia_runtime_effect_builder_t *runtime_effect_builder, int name);
+/**
+ * builder/name must be valid.
+ * Returned proxy handle is caller-owned.
+ * Invalid input returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder, string_view_t name) -> sk_runtime_effect_builder_builder_child_t.
+ */
+sk_runtime_effect_builder_builder_child_t SkRuntimeEffectBuilder_child(reskia_runtime_effect_builder_t *runtime_effect_builder, int name);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_data_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> const_sk_data_t.
+ */
+int SkRuntimeEffectBuilder_uniforms(reskia_runtime_effect_builder_t *runtime_effect_builder);
+/**
+ * Returned handle is caller-owned and deleted with static_const_sk_runtime_effect_child_ptr_delete.
+ * NULL builder returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> const_sk_runtime_effect_child_ptr_t.
+ */
+int SkRuntimeEffectBuilder_children(reskia_runtime_effect_builder_t *runtime_effect_builder);
 
 // static
 

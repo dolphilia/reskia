@@ -20,9 +20,21 @@ extern "C" {
 typedef struct reskia_codec_result_t reskia_codec_result_t;
 typedef struct reskia_codecs_decode_context_t reskia_codecs_decode_context_t;
 
-bool SkJpegxlDecoder_IsJpegxl(const uint8_t *ptr, size_t size); // ptr is required when size > 0; invalid input returns false.
-sk_codec_t SkJpegxlDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // stream must be a valid owned stream handle; invalid input returns 0 and sets result to kInvalidInput.
-sk_codec_t SkJpegxlDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext); // data must be a valid SkData handle; invalid input returns 0 and sets result to kInvalidInput.
+/**
+ * ptr is required when size > 0.
+ * invalid input returns false.
+ */
+bool SkJpegxlDecoder_IsJpegxl(const uint8_t *ptr, size_t size);
+/**
+ * stream must be a valid owned stream handle.
+ * invalid input returns 0 and sets result to kInvalidInput.
+ */
+sk_codec_t SkJpegxlDecoder_Decode(sk_stream_t stream, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext);
+/**
+ * data must be a valid SkData handle.
+ * invalid input returns 0 and sets result to kInvalidInput.
+ */
+sk_codec_t SkJpegxlDecoder_DecodeFromData(sk_data_t data, reskia_codec_result_t *result, reskia_codecs_decode_context_t *decodeContext);
 sk_codecs_decoder_t SkJpegxlDecoder_Decoder();
 
 #ifdef __cplusplus

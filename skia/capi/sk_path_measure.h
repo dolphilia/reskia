@@ -21,13 +21,28 @@ extern "C" {
 // SkPathMeasure & operator=(SkPathMeasure &&)
 
 reskia_path_measure_t *SkPathMeasure_new(); // () -> SkPathMeasure *
-reskia_path_measure_t *SkPathMeasure_newWithPathForceClosedAndResScale(const reskia_path_t *path, bool forceClosed, float resScale); // path NULL では空の SkPathMeasure を返す
+/**
+ * path NULL では空の SkPathMeasure を返す
+ */
+reskia_path_measure_t *SkPathMeasure_newWithPathForceClosedAndResScale(const reskia_path_t *path, bool forceClosed, float resScale);
 void SkPathMeasure_delete(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure)
-void SkPathMeasure_setPath(reskia_path_measure_t *path_measure, const reskia_path_t *path, bool forceClosed); // path は NULL 許可で reset。path_measure NULL では no-op
+/**
+ * path は NULL 許可で reset。path_measure NULL では no-op
+ */
+void SkPathMeasure_setPath(reskia_path_measure_t *path_measure, const reskia_path_t *path, bool forceClosed);
 float SkPathMeasure_getLength(reskia_path_measure_t *path_measure); // NULL 入力では 0
-bool SkPathMeasure_getPosTan(reskia_path_measure_t *path_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent); // position/tangent は非 NULL。NULL 入力では false
-bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance, reskia_matrix_t *matrix, reskia_path_measure_matrix_flags_t flags); // matrix は非 NULL。NULL 入力では false
-bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo); // dst は非 NULL。NULL 入力では false
+/**
+ * position/tangent は非 NULL。NULL 入力では false
+ */
+bool SkPathMeasure_getPosTan(reskia_path_measure_t *path_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent);
+/**
+ * matrix は非 NULL。NULL 入力では false
+ */
+bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance, reskia_matrix_t *matrix, reskia_path_measure_matrix_flags_t flags);
+/**
+ * dst は非 NULL。NULL 入力では false
+ */
+bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo);
 bool SkPathMeasure_isClosed(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
 bool SkPathMeasure_nextContour(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
 

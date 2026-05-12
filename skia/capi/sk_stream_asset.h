@@ -39,7 +39,11 @@ bool SkStreamAsset_readU32(reskia_stream_asset_t *stream_asset, uint32_t *i); //
 bool SkStreamAsset_readBool(reskia_stream_asset_t *stream_asset, bool *b); // (SkStreamAsset *stream_asset, bool *b) -> bool
 bool SkStreamAsset_readScalar(reskia_stream_asset_t *stream_asset, float *v); // (SkStreamAsset *stream_asset, SkScalar *v) -> bool
 bool SkStreamAsset_readPackedUInt(reskia_stream_asset_t *stream_asset, size_t *size); // (SkStreamAsset *stream_asset, size_t *size) -> bool
-const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset); // borrowed memory base when supported; caller must not free
+/**
+ * borrowed memory base when supported.
+ * caller must not free.
+ */
+const void *SkStreamAsset_getMemoryBase(reskia_stream_asset_t *stream_asset);
 
 // static
 

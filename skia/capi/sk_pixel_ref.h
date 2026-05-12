@@ -18,7 +18,10 @@ typedef struct reskia_pixel_ref_t reskia_pixel_ref_t;
 extern "C" {
 #endif
 
-reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes); // owned: negative width/height returns NULL. addr may be NULL if caller intentionally creates an empty/borrowed pixel ref.
+/**
+ * owned: negative width/height returns NULL. addr may be NULL if caller intentionally creates an empty/borrowed pixel ref.
+ */
+reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes);
 void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref); // owned: caller が保持する参照を release する。NULL 入力では no-op。
 sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
 int SkPixelRef_width(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
@@ -29,7 +32,11 @@ uint32_t SkPixelRef_getGenerationID(reskia_pixel_ref_t *pixel_ref); // NULL 入�
 void SkPixelRef_notifyPixelsChanged(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
 bool SkPixelRef_isImmutable(reskia_pixel_ref_t *pixel_ref); // NULL 入力では false。
 void SkPixelRef_setImmutable(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
-void SkPixelRef_addGenIDChangeListener(reskia_pixel_ref_t *pixel_ref, sk_id_change_listener_t id_change_listener); // pixel_ref and listener handle are required; invalid input is no-op.
+/**
+ * pixel_ref and listener handle are required.
+ * invalid input is no-op.
+ */
+void SkPixelRef_addGenIDChangeListener(reskia_pixel_ref_t *pixel_ref, sk_id_change_listener_t id_change_listener);
 void SkPixelRef_notifyAddedToCache(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
 reskia_discardable_memory_t * SkPixelRef_diagnostic_only_getDiscardable(reskia_pixel_ref_t *pixel_ref); // borrowed: 解放不要の借用ポインタ。NULL 入力では NULL。
 bool SkPixelRef_unique(reskia_pixel_ref_t *pixel_ref); // NULL 入力では false。

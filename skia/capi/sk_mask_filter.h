@@ -32,7 +32,10 @@ const char *SkMaskFilter_getTypeName(reskia_mask_filter_t *mask_filter); // borr
 void SkMaskFilter_flatten(reskia_mask_filter_t *mask_filter, reskia_write_buffer_t *buffer); // buffer は非 NULL。NULL 入力では no-op
 reskia_mask_filter_type_t SkMaskFilter_getFlattenableType(reskia_mask_filter_t *mask_filter); // NULL 入力では -1
 sk_data_t SkMaskFilter_serialize(reskia_mask_filter_t *mask_filter, const reskia_serial_procs_t *procs); // procs は NULL 許可。NULL 入力や生成不能では 0
-size_t SkMaskFilter_serializeToMemory(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // memory は memory_size > 0 で非 NULL。NULL 入力では 0
+/**
+ * memory は memory_size > 0 で非 NULL。NULL 入力では 0
+ */
+size_t SkMaskFilter_serializeToMemory(reskia_mask_filter_t *mask_filter, void *memory, size_t memory_size, const reskia_serial_procs_t *procs);
 bool SkMaskFilter_unique(reskia_mask_filter_t *mask_filter); // NULL 入力では false
 void SkMaskFilter_ref(reskia_mask_filter_t *mask_filter); // retained: 参照カウントを増やす。NULL 入力では no-op
 void SkMaskFilter_unref(reskia_mask_filter_t *mask_filter); // owned: 参照カウントを減らす。NULL 入力では no-op

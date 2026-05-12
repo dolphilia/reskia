@@ -19,7 +19,10 @@ typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_mask_t reskia_mask_t;
 typedef int32_t reskia_mask_format_t;
 
-sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_format_t format); // img は borrowed。bounds 非 NULL、format valid。invalid 入力では 0
+/**
+ * img は borrowed。bounds 非 NULL、format valid。invalid 入力では 0
+ */
+sk_mask_t SkMask_new(const uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_format_t format);
 void SkMask_delete(reskia_mask_t *mask); // NULL 入力では no-op
 
 // member

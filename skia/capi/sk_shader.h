@@ -29,17 +29,45 @@ extern "C" {
 
 void SkShader_release(reskia_shader_t *shader); // owned: NULL shader is no-op.
 bool SkShader_isOpaque(reskia_shader_t *shader); // NULL shader returns false.
-reskia_image_t *SkShader_isAImage(reskia_shader_t *shader, reskia_matrix_t *localMatrix, int *xy); // localMatrix/xy may be NULL; NULL shader returns NULL.
+/**
+ * localMatrix/xy may be NULL.
+ * NULL shader returns NULL.
+ */
+reskia_image_t *SkShader_isAImage(reskia_shader_t *shader, reskia_matrix_t *localMatrix, int *xy);
 bool SkShader_isAImageWithoutLocalMatrixAndTileModes(reskia_shader_t *shader); // NULL shader returns false.
-sk_shader_t SkShader_makeWithLocalMatrix(reskia_shader_t *shader, const reskia_matrix_t *matrix); // shader/matrix are required; NULL result returns 0.
-sk_shader_t SkShader_makeWithColorFilter(reskia_shader_t *shader, sk_color_filter_t color_filter); // color_filter may be 0; NULL shader/result returns 0.
-sk_shader_t SkShader_makeWithWorkingColorSpace(reskia_shader_t *shader, sk_color_space_t color_space); // color_space may be 0; NULL shader/result returns 0.
+/**
+ * shader/matrix are required.
+ * NULL result returns 0.
+ */
+sk_shader_t SkShader_makeWithLocalMatrix(reskia_shader_t *shader, const reskia_matrix_t *matrix);
+/**
+ * color_filter may be 0.
+ * NULL shader/result returns 0.
+ */
+sk_shader_t SkShader_makeWithColorFilter(reskia_shader_t *shader, sk_color_filter_t color_filter);
+/**
+ * color_space may be 0.
+ * NULL shader/result returns 0.
+ */
+sk_shader_t SkShader_makeWithWorkingColorSpace(reskia_shader_t *shader, sk_color_space_t color_space);
 sk_flattenable_factory_t SkShader_getFactory(reskia_shader_t *shader); // NULL shader or missing factory returns 0.
 const char *SkShader_getTypeName(reskia_shader_t *shader); // NULL shader returns NULL.
-void SkShader_flatten(reskia_shader_t *shader, reskia_write_buffer_t *buffer); // shader/buffer are required; NULL input is no-op.
+/**
+ * shader/buffer are required.
+ * NULL input is no-op.
+ */
+void SkShader_flatten(reskia_shader_t *shader, reskia_write_buffer_t *buffer);
 reskia_shader_type_t SkShader_getFlattenableType(reskia_shader_t *shader); // NULL shader returns 0.
-sk_data_t SkShader_serialize(reskia_shader_t *shader, const reskia_serial_procs_t *procs); // procs may be NULL; NULL shader/result returns 0.
-size_t SkShader_serializeToMemory(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs); // procs may be NULL; NULL shader or NULL memory with nonzero size returns 0.
+/**
+ * procs may be NULL.
+ * NULL shader/result returns 0.
+ */
+sk_data_t SkShader_serialize(reskia_shader_t *shader, const reskia_serial_procs_t *procs);
+/**
+ * procs may be NULL.
+ * NULL shader or NULL memory with nonzero size returns 0.
+ */
+size_t SkShader_serializeToMemory(reskia_shader_t *shader, void *memory, size_t memory_size, const reskia_serial_procs_t *procs);
 bool SkShader_unique(reskia_shader_t *shader); // NULL shader returns false.
 void SkShader_ref(reskia_shader_t *shader); // retained: NULL shader is no-op.
 void SkShader_unref(reskia_shader_t *shader); // owned: NULL shader is no-op.
@@ -48,8 +76,16 @@ void SkShader_unref(reskia_shader_t *shader); // owned: NULL shader is no-op.
 
 sk_flattenable_factory_t SkShader_NameToFactory(const char name[]); // NULL name or missing factory returns 0.
 const char *SkShader_FactoryToName(sk_flattenable_factory_t factory); // invalid factory returns NULL.
-void SkShader_Register(const char name[], sk_flattenable_factory_t factory); // name/factory are required; invalid input is no-op.
-sk_flattenable_t SkShader_Deserialize(reskia_shader_type_t type, const void *data, size_t length, const reskia_deserial_procs_t *procs); // procs may be NULL; NULL data or zero length returns 0.
+/**
+ * name/factory are required.
+ * invalid input is no-op.
+ */
+void SkShader_Register(const char name[], sk_flattenable_factory_t factory);
+/**
+ * procs may be NULL.
+ * NULL data or zero length returns 0.
+ */
+sk_flattenable_t SkShader_Deserialize(reskia_shader_type_t type, const void *data, size_t length, const reskia_deserial_procs_t *procs);
 
 #ifdef __cplusplus
 }

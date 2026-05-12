@@ -36,8 +36,14 @@ bool SkVertices_refCntGreaterThan(reskia_vertices_t *vertices, int32_t threadIso
 
 // static
 
-sk_vertices_t SkVertices_MakeCopy(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors, int indexCount, const uint16_t *indices); // positions は vertexCount 要素以上、非 NULL。texs/colors は NULL 許可。indices は indexCount > 0 で非 NULL。invalid 入力や生成不能では 0
-sk_vertices_t SkVertices_MakeCopyWithoutIndices(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors); // positions は vertexCount 要素以上、非 NULL。texs/colors は NULL 許可。invalid 入力や生成不能では 0
+/**
+ * positions は vertexCount 要素以上、非 NULL。texs/colors は NULL 許可。indices は indexCount > 0 で非 NULL。invalid 入力や生成不能では 0
+ */
+sk_vertices_t SkVertices_MakeCopy(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors, int indexCount, const uint16_t *indices);
+/**
+ * positions は vertexCount 要素以上、非 NULL。texs/colors は NULL 許可。invalid 入力や生成不能では 0
+ */
+sk_vertices_t SkVertices_MakeCopyWithoutIndices(reskia_vertices_vertex_mode_t mode, int vertexCount, const reskia_point_t *positions, const reskia_point_t *texs, const reskia_color_t *colors);
 
 #ifdef __cplusplus
 }

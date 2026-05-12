@@ -39,7 +39,11 @@ typedef int32_t reskia_paint_blend_mode_t;
 //SkPaint & operator=(SkPaint &&paint)
 
 reskia_paint_t *SkPaint_new(); // () -> SkPaint *
-reskia_paint_t *SkPaint_newWithColor4fAndColorSpace(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // color: non-null; colorSpace may be null
+/**
+ * color: non-null.
+ * colorSpace may be null.
+ */
+reskia_paint_t *SkPaint_newWithColor4fAndColorSpace(const reskia_color_4f_t *color, reskia_color_space_t *colorSpace);
 reskia_paint_t *SkPaint_newCopy(const reskia_paint_t *paint); // (const SkPaint *paint) -> SkPaint *
 void SkPaint_delete(reskia_paint_t *paint); // (SkPaint *paint)
 void SkPaint_reset(reskia_paint_t *paint); // (SkPaint *paint)
@@ -53,8 +57,16 @@ void SkPaint_setStroke(reskia_paint_t *paint, bool v); // (SkPaint *paint, bool 
 reskia_color_t SkPaint_getColor(reskia_paint_t *paint); // (SkPaint *paint) -> SkColor
 sk_color_4f_t SkPaint_getColor4f(reskia_paint_t *paint); // (SkPaint *paint) -> sk_color_4f_t
 void SkPaint_setColor(reskia_paint_t *paint, reskia_color_t color); // (SkPaint *paint, SkColor color)
-void SkPaint_setColorWithColor4fAndColorSpace(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // color: non-null; colorSpace may be null
-void SkPaint_setColor4f(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace); // color: non-null; colorSpace may be null
+/**
+ * color: non-null.
+ * colorSpace may be null.
+ */
+void SkPaint_setColorWithColor4fAndColorSpace(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace);
+/**
+ * color: non-null.
+ * colorSpace may be null.
+ */
+void SkPaint_setColor4f(reskia_paint_t *paint, const reskia_color_4f_t *color, reskia_color_space_t *colorSpace);
 float SkPaint_getAlphaf(reskia_paint_t *paint); // (SkPaint *paint) -> float
 uint8_t SkPaint_getAlpha(reskia_paint_t *paint); // (SkPaint *paint) -> uint8_t
 void SkPaint_setAlphaf(reskia_paint_t *paint, float a); // (SkPaint *paint, float a)
@@ -68,33 +80,75 @@ reskia_paint_cap_t SkPaint_getStrokeCap(reskia_paint_t *paint); // (SkPaint *pai
 void SkPaint_setStrokeCap(reskia_paint_t *paint, reskia_paint_cap_t cap); // (SkPaint *paint, SkPaint::Cap cap)
 reskia_paint_join_t SkPaint_getStrokeJoin(reskia_paint_t *paint); // (SkPaint *paint) -> SkPaint::Join
 void SkPaint_setStrokeJoin(reskia_paint_t *paint, reskia_paint_join_t join); // (SkPaint *paint, SkPaint::Join join)
-reskia_shader_t * SkPaint_getShader(reskia_paint_t *paint); // borrowed; valid while paint owns the shader; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the shader.
+ * caller must not delete.
+ */
+reskia_shader_t * SkPaint_getShader(reskia_paint_t *paint);
 sk_shader_t SkPaint_refShader(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setShader(reskia_paint_t *paint, sk_shader_t shader); // shader handle 0 clears
-reskia_color_filter_t * SkPaint_getColorFilter(reskia_paint_t *paint); // borrowed; valid while paint owns the filter; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the filter.
+ * caller must not delete.
+ */
+reskia_color_filter_t * SkPaint_getColorFilter(reskia_paint_t *paint);
 sk_color_filter_t SkPaint_refColorFilter(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setColorFilter(reskia_paint_t *paint, sk_color_filter_t color_filter); // color_filter handle 0 clears
 int SkPaint_asBlendMode(reskia_paint_t *paint); // (SkPaint *paint) -> int
 reskia_paint_blend_mode_t SkPaint_getBlendMode_or(reskia_paint_t *paint, reskia_paint_blend_mode_t defaultMode); // (SkPaint *paint, SkBlendMode defaultMode) -> SkBlendMode
 bool SkPaint_isSrcOver(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 void SkPaint_setBlendMode(reskia_paint_t *paint, reskia_paint_blend_mode_t mode); // (SkPaint *paint, SkBlendMode mode)
-reskia_blender_t * SkPaint_getBlender(reskia_paint_t *paint); // borrowed; valid while paint owns the blender; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the blender.
+ * caller must not delete.
+ */
+reskia_blender_t * SkPaint_getBlender(reskia_paint_t *paint);
 sk_blender_t SkPaint_refBlender(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setBlender(reskia_paint_t *paint, sk_blender_t blender); // blender handle 0 clears
-reskia_path_effect_t * SkPaint_getPathEffect(reskia_paint_t *paint); // borrowed; valid while paint owns the effect; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the effect.
+ * caller must not delete.
+ */
+reskia_path_effect_t * SkPaint_getPathEffect(reskia_paint_t *paint);
 sk_path_effect_t SkPaint_refPathEffect(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setPathEffect(reskia_paint_t *paint, sk_path_effect_t path_effect); // path_effect handle 0 clears
-reskia_mask_filter_t * SkPaint_getMaskFilter(reskia_paint_t *paint); // borrowed; valid while paint owns the filter; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the filter.
+ * caller must not delete.
+ */
+reskia_mask_filter_t * SkPaint_getMaskFilter(reskia_paint_t *paint);
 sk_mask_filter_t SkPaint_refMaskFilter(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setMaskFilter(reskia_paint_t *paint, sk_mask_filter_t mask_filter); // mask_filter handle 0 clears
-reskia_image_filter_t * SkPaint_getImageFilter(reskia_paint_t *paint); // borrowed; valid while paint owns the filter; caller must not delete
+/**
+ * borrowed.
+ * valid while paint owns the filter.
+ * caller must not delete.
+ */
+reskia_image_filter_t * SkPaint_getImageFilter(reskia_paint_t *paint);
 sk_image_filter_t SkPaint_refImageFilter(reskia_paint_t *paint); // returns a retained handle, or 0 when paint is null
 void SkPaint_setImageFilter(reskia_paint_t *paint, sk_image_filter_t image_filter); // image_filter handle 0 clears
 bool SkPaint_nothingToDraw(reskia_paint_t *paint); // (SkPaint *paint) -> bool
 bool SkPaint_canComputeFastBounds(reskia_paint_t *paint); // (SkPaint *paint) -> bool
-const reskia_rect_t * SkPaint_computeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage); // orig/storage: non-null; returns storage or orig per Skia contract
-const reskia_rect_t * SkPaint_computeFastStrokeBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage); // orig/storage: non-null; returns storage or orig per Skia contract
-const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, reskia_paint_style_t style); // orig/storage: non-null; returns storage or orig per Skia contract
+/**
+ * orig/storage: non-null.
+ * returns storage or orig per Skia contract.
+ */
+const reskia_rect_t * SkPaint_computeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage);
+/**
+ * orig/storage: non-null.
+ * returns storage or orig per Skia contract.
+ */
+const reskia_rect_t * SkPaint_computeFastStrokeBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage);
+/**
+ * orig/storage: non-null.
+ * returns storage or orig per Skia contract.
+ */
+const reskia_rect_t * SkPaint_doComputeFastBounds(reskia_paint_t *paint, const reskia_rect_t *orig, reskia_rect_t *storage, reskia_paint_style_t style);
 
 #ifdef __cplusplus
 }

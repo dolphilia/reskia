@@ -14,7 +14,10 @@ typedef struct reskia_document_t reskia_document_t;
 typedef struct reskia_rect_t reskia_rect_t;
 
 void SkDocument_release(reskia_document_t *document); // owned: caller が保持する参照を release する。NULL 入力では no-op
-reskia_canvas_t * SkDocument_beginPage(reskia_document_t *document, float width, float height, const reskia_rect_t *content); // borrowed: 解放不要の借用ポインタ。content は NULL 許可。NULL document では NULL
+/**
+ * borrowed: 解放不要の借用ポインタ。content は NULL 許可。NULL document では NULL
+ */
+reskia_canvas_t * SkDocument_beginPage(reskia_document_t *document, float width, float height, const reskia_rect_t *content);
 void SkDocument_endPage(reskia_document_t *document); // NULL 入力では no-op
 void SkDocument_close(reskia_document_t *document); // NULL 入力では no-op
 void SkDocument_abort(reskia_document_t *document); // NULL 入力では no-op

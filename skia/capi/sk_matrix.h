@@ -93,27 +93,51 @@ sk_matrix_t SkMatrix_postRotateDegrees(reskia_matrix_t *matrix, float degrees); 
 sk_matrix_t SkMatrix_postSkew(reskia_matrix_t *matrix, float kx, float ky, float px, float py); // (SkMatrix *matrix, SkScalar kx, SkScalar ky, SkScalar px, SkScalar py) -> sk_matrix_t
 sk_matrix_t SkMatrix_postSkewXY(reskia_matrix_t *matrix, float kx, float ky); // (SkMatrix *matrix, SkScalar kx, SkScalar ky) -> sk_matrix_t
 sk_matrix_t SkMatrix_postConcat(reskia_matrix_t *matrix, const reskia_matrix_t *other); // other は非 NULL。NULL 入力では 0
-bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf); // src/dst は非 NULL。NULL 入力では false
-bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, const reskia_point_t *dst, int count); // count は 0..4。count > 0 では src/dst 非 NULL。invalid 入力では false
+/**
+ * src/dst は非 NULL。NULL 入力では false
+ */
+bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf);
+/**
+ * count は 0..4。count > 0 では src/dst 非 NULL。invalid 入力では false
+ */
+bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, const reskia_point_t *dst, int count);
 bool SkMatrix_invert(reskia_matrix_t *matrix, reskia_matrix_t *inverse); // inverse は NULL 許可。matrix NULL では false
 bool SkMatrix_asAffine(reskia_matrix_t *matrix, float *affine); // affine は 6 要素以上、非 NULL。NULL 入力では false
 sk_matrix_t SkMatrix_setAffine(reskia_matrix_t *matrix, const float *affine); // affine は 6 要素以上、非 NULL。NULL 入力では 0
 void SkMatrix_normalizePerspective(reskia_matrix_t *matrix); // NULL 入力では no-op
-void SkMatrix_mapPoints(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_point_t *src, int count); // dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+/**
+ * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+ */
+void SkMatrix_mapPoints(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_point_t *src, int count);
 void SkMatrix_mapPointsInPlace(reskia_matrix_t *matrix, reskia_point_t *pts, int count); // pts は count 要素以上。count <= 0 や NULL 入力では no-op
-void SkMatrix_mapHomogeneousPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src, int count); // dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
-void SkMatrix_mapHomogeneousPointsFromPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count); // dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+/**
+ * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+ */
+void SkMatrix_mapHomogeneousPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src, int count);
+/**
+ * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+ */
+void SkMatrix_mapHomogeneousPointsFromPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count);
 sk_point_t SkMatrix_mapPoint(reskia_matrix_t *matrix, sk_point_t pt); // (SkMatrix *matrix, sk_point_t pt) -> sk_point_t
 void SkMatrix_mapXY(reskia_matrix_t *matrix, float x, float y, reskia_point_t *result); // result は非 NULL。NULL 入力では no-op
 sk_point_t SkMatrix_mapXYToPoint(reskia_matrix_t *matrix, float x, float y); // (SkMatrix *matrix, SkScalar x, SkScalar y) -> sk_point_t
 sk_point_t SkMatrix_mapOrigin(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> sk_point_t
-void SkMatrix_mapVectors(reskia_matrix_t *matrix, reskia_vector_t *dst, const reskia_vector_t *src, int count); // dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+/**
+ * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
+ */
+void SkMatrix_mapVectors(reskia_matrix_t *matrix, reskia_vector_t *dst, const reskia_vector_t *src, int count);
 void SkMatrix_mapVectorsInPlace(reskia_matrix_t *matrix, reskia_vector_t *vecs, int count); // vecs は count 要素以上。count <= 0 や NULL 入力では no-op
 void SkMatrix_mapVector(reskia_matrix_t *matrix, float dx, float dy, reskia_vector_t *result); // result は非 NULL。NULL 入力では no-op
 sk_point_t SkMatrix_mapVectorToPoint(reskia_matrix_t *matrix, float dx, float dy); // (SkMatrix *matrix, SkScalar dx, SkScalar dy) -> sk_point_t
-bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc); // dst/src は非 NULL。NULL 入力では false
+/**
+ * dst/src は非 NULL。NULL 入力では false
+ */
+bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc);
 bool SkMatrix_mapRectInPlace(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc); // rect は非 NULL。NULL 入力では false
-sk_rect_t SkMatrix_mapRectFromSource(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc); // src は非 NULL。NULL 入力では empty rect handle
+/**
+ * src は非 NULL。NULL 入力では empty rect handle
+ */
+sk_rect_t SkMatrix_mapRectFromSource(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc);
 void SkMatrix_mapRectToQuad(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_rect_t *rect); // dst は 4 要素以上、rect 非 NULL。NULL 入力では no-op
 void SkMatrix_mapRectScaleTranslate(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_rect_t *src); // dst/src は非 NULL。NULL 入力では no-op
 float SkMatrix_mapRadius(reskia_matrix_t *matrix, float radius); // (SkMatrix *matrix, SkScalar radius) -> SkScalar

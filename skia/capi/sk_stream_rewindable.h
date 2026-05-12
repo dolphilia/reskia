@@ -41,7 +41,11 @@ bool SkStreamRewindable_seek(reskia_stream_rewindable_t *stream_rewindable, size
 bool SkStreamRewindable_move(reskia_stream_rewindable_t *stream_rewindable, long i); // (SkStreamRewindable *stream_rewindable, long i) -> bool
 bool SkStreamRewindable_hasLength(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> bool
 size_t SkStreamRewindable_getLength(reskia_stream_rewindable_t *stream_rewindable); // (SkStreamRewindable *stream_rewindable) -> size_t
-const void *SkStreamRewindable_getMemoryBase(reskia_stream_rewindable_t *stream_rewindable); // borrowed memory base when supported; caller must not free
+/**
+ * borrowed memory base when supported.
+ * caller must not free.
+ */
+const void *SkStreamRewindable_getMemoryBase(reskia_stream_rewindable_t *stream_rewindable);
 
 // static
 

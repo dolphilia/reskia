@@ -23,10 +23,27 @@ extern "C" {
 
 sk_shader_t SkShaders_Empty(); // NULL result returns 0.
 sk_shader_t SkShaders_Color(reskia_color_t color); // NULL result returns 0.
-sk_shader_t SkShaders_ColorWithColor4fAndColorSpace(const reskia_color_4f_t *color4f, sk_color_space_t color_space); // color4f is required; color_space may be 0.
-sk_shader_t SkShaders_Blend(reskia_shaders_blend_mode_t mode, sk_shader_t dst, sk_shader_t src); // dst/src may be 0; NULL result returns 0.
-sk_shader_t SkShaders_BlendWithBlender(reskia_blender_t value, sk_shader_t dst, sk_shader_t src); // value/dst/src may be 0; NULL result returns 0.
-sk_shader_t SkShaders_CoordClamp(sk_shader_t shader, const reskia_rect_t *subset); // subset is required; shader may be 0; NULL result returns 0.
+/**
+ * color4f is required.
+ * color_space may be 0.
+ */
+sk_shader_t SkShaders_ColorWithColor4fAndColorSpace(const reskia_color_4f_t *color4f, sk_color_space_t color_space);
+/**
+ * dst/src may be 0.
+ * NULL result returns 0.
+ */
+sk_shader_t SkShaders_Blend(reskia_shaders_blend_mode_t mode, sk_shader_t dst, sk_shader_t src);
+/**
+ * value/dst/src may be 0.
+ * NULL result returns 0.
+ */
+sk_shader_t SkShaders_BlendWithBlender(reskia_blender_t value, sk_shader_t dst, sk_shader_t src);
+/**
+ * subset is required.
+ * shader may be 0.
+ * NULL result returns 0.
+ */
+sk_shader_t SkShaders_CoordClamp(sk_shader_t shader, const reskia_rect_t *subset);
 
 //sk_sp< SkShader > SkShaders_MakeFractalNoise(SkScalar baseFrequencyX, SkScalar baseFrequencyY, int numOctaves, SkScalar seed, const SkISize *tileSize);
 //sk_sp< SkShader > SkShaders_MakeTurbulence(SkScalar baseFrequencyX, SkScalar baseFrequencyY, int numOctaves, SkScalar seed, const SkISize *tileSize);

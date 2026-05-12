@@ -256,6 +256,44 @@ bool SkImage_isTextureBacked(reskia_image_t *image); // NULL image returns false
 
 ただし、行が長くなりすぎる場合、または安全性規約が 2 文以上になる場合は複数行へ昇格する。
 
+### 既存コメントの機械整形
+
+既存ヘッダーの長い行末コメントを複数行へ移す場合は、`scripts/format_capi_header_comments.py` を使える。このスクリプトは宣言の意味を書き換えず、` ; // ...` の行末コメントを宣言直前の `/** ... */` block comment に移すだけに限定している。
+
+高頻度ヘッダーをやや広めに整形する例:
+
+```bash
+python3 scripts/format_capi_header_comments.py --dry-run --mode moderate --min-length 120 \
+  skia/capi/sk_canvas.h \
+  skia/capi/sk_image.h \
+  skia/capi/sk_runtime_effect.h \
+  skia/capi/sk_runtime_shader_builder.h \
+  skia/capi/sk_runtime_color_filter_builder.h \
+  skia/capi/sk_runtime_blend_builder.h \
+  skia/capi/sk_runtime_effect_builder.h
+```
+
+全 `skia/capi/*.h` に対して安全性 keyword を含む長いコメントだけを保守的に整形する例:
+
+```bash
+python3 scripts/format_capi_header_comments.py --dry-run --mode strict --min-length 160 --all-capi
+```
+
+`--apply` は dry-run の候補数と内容を確認してから使う。整形後は、少なくとも次を確認する。
+
+```bash
+git diff --check
+python3 scripts/format_capi_header_comments.py --dry-run --mode strict --min-length 160 --all-capi
+cmake --build skia/cmake-build-stability-prebuilt -j 8
+```
+
+既に複数行化した高頻度ヘッダーについて、行末に残った Skia signature 断片、長すぎる Skia signature 行、定型的な日英混在句を追加で整える場合は、`scripts/refine_capi_header_comments.py` を使う。この pass は既存の `/** ... */` 内だけを編集し、宣言本体には触れない。対象はまず `--default-set` の高頻度ヘッダーに限定し、dry-run と diff review を挟む。
+
+```bash
+python3 scripts/refine_capi_header_comments.py --dry-run --default-set
+python3 scripts/refine_capi_header_comments.py --apply --default-set
+```
+
 ### コメントの語彙
 
 コメントでは次の語彙を優先する。
