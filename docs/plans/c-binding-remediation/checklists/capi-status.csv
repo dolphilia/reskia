@@ -229,8 +229,8 @@ skia/capi/sk_runtime_blend_builder.cpp,done,P2,2026-05-12,Phase 2 batch EC: runt
 skia/capi/sk_runtime_blend_builder.h,done,P2,2026-05-12,Phase 2 batch EC: documented runtime blend builder make handle ownership
 skia/capi/sk_runtime_color_filter_builder.cpp,done,P2,2026-05-12,Phase 2 batch EC: runtime color filter builder make handle ownership smoke
 skia/capi/sk_runtime_color_filter_builder.h,done,P2,2026-05-12,Phase 2 batch EC: documented runtime color filter builder make handle ownership
-skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-12,Phase 2 batch EF: runtime effect makeShader child ptr ownership smoke
-skia/capi/sk_runtime_effect.h,done,P2,2026-05-12,Phase 2 batch EF: documented runtime effect makeShader ownership rules
+skia/capi/sk_runtime_effect.cpp,done,P2,2026-05-13,Phase 2 batch EG: runtime effect color filter blender ownership smoke
+skia/capi/sk_runtime_effect.h,done,P2,2026-05-13,Phase 2 batch EG: documented runtime effect color filter blender ownership rules
 skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-12,Phase 2 batch DZ: runtime effect builder proxy handle ownership docs
 skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-12,Phase 2 batch DZ: documented runtime effect builder proxy handle ownership
 skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-12,Phase 2 batch EC: runtime shader builder makeShader localMatrix ownership smoke

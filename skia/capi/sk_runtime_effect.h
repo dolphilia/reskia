@@ -68,6 +68,7 @@ sk_shader_t SkRuntimeEffect_makeShaderWithChildPtr(reskia_runtime_effect_t *runt
 /**
  * data handle 0 is allowed as empty data.
  * Non-zero data must be a valid handle.
+ * Returns a caller-owned color filter handle.
  * NULL runtime_effect/invalid input/factory failure returns 0.
  * Skia: (SkRuntimeEffect *runtime_effect, sk_data_t data) -> sk_color_filter_t.
  */
@@ -76,6 +77,7 @@ sk_color_filter_t SkRuntimeEffect_makeColorFilter(reskia_runtime_effect_t *runti
  * data handle 0 is allowed as empty data.
  * Non-zero data must be a valid handle.
  * children must be non-null when childCount > 0.
+ * Returns a caller-owned color filter handle.
  * NULL runtime_effect/invalid input/factory failure returns 0.
  * Skia: (SkRuntimeEffect *runtime_effect, sk_data_t data, sk_sp<SkColorFilter> children[], size_t childCount) -> sk_color_filter_t.
  */
@@ -83,6 +85,7 @@ sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildren(reskia_runtime_eff
 /**
  * data handle 0 and child pointer handle 0 are allowed as empty inputs.
  * Non-zero data/child pointer must be valid handles.
+ * Returns a caller-owned color filter handle.
  * NULL runtime_effect/invalid input/factory failure returns 0.
  * Skia: (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_color_filter_t.
  */
@@ -90,6 +93,7 @@ sk_color_filter_t SkRuntimeEffect_makeColorFilterWithChildPtr(reskia_runtime_eff
 /**
  * data handle 0 and child pointer handle 0 are allowed as empty inputs.
  * Non-zero data/child pointer must be valid handles.
+ * Returns a caller-owned blender handle.
  * NULL runtime_effect/invalid input/factory failure returns 0.
  * Skia: (SkRuntimeEffect *runtime_effect, sk_data_t data, const_sk_runtime_effect_child_ptr_t runtime_effect_child_ptr) -> sk_blender_t.
  */

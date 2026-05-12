@@ -187,6 +187,23 @@ int main() {
         if (generated_color_filter != 0) {
             static_sk_color_filter_delete(generated_color_filter);
         }
+        const sk_color_filter_t generated_children_color_filter = SkRuntimeEffect_makeColorFilterWithChildren(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                0,
+                nullptr,
+                0);
+        ok &= check(generated_children_color_filter != 0 && static_sk_color_filter_get_ptr(generated_children_color_filter) != nullptr, "SkRuntimeEffect_makeColorFilterWithChildren empty children handle ownership");
+        if (generated_children_color_filter != 0) {
+            static_sk_color_filter_delete(generated_children_color_filter);
+        }
+        const sk_color_filter_t generated_child_ptr_color_filter = SkRuntimeEffect_makeColorFilterWithChildPtr(
+                reinterpret_cast<reskia_runtime_effect_t *>(color_filter_result_entity->effect.get()),
+                0,
+                0);
+        ok &= check(generated_child_ptr_color_filter != 0 && static_sk_color_filter_get_ptr(generated_child_ptr_color_filter) != nullptr, "SkRuntimeEffect_makeColorFilterWithChildPtr empty child pointer handle ownership");
+        if (generated_child_ptr_color_filter != 0) {
+            static_sk_color_filter_delete(generated_child_ptr_color_filter);
+        }
     }
     if (generated_color_filter_result != 0) {
         static_sk_runtime_effect_result_delete(generated_color_filter_result);
