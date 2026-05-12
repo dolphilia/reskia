@@ -15,6 +15,7 @@
 #include "capi/sk_region.h"
 #include "capi/sk_rect.h"
 #include "capi/sk_r_rect.h"
+#include "capi/sk_rsx_form.h"
 #include "capi/sk_sampling_options.h"
 #include "capi/sk_string.h"
 #include "capi/sk_surface.h"
@@ -35,6 +36,7 @@
 #include "handles/static_sk_rect.h"
 #include "handles/static_sk_surface.h"
 #include "handles/static_sk_shader.h"
+#include "handles/static_sk_rsx_form.h"
 #include "handles/static_sk_text_blob.h"
 #include "handles/static_sk_vertices.h"
 #include "include/core/SkPoint.h"
@@ -331,6 +333,8 @@ int main() {
     SkCanvas_drawPatch(canvas, nullptr, nullptr, patch_tex_coords_input, 0, paint);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, nullptr, 0, paint);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, nullptr);
+    SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, -1, paint);
+    SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 999999, paint);
     SkCanvas_drawPatch(canvas, patch_cubics_input, nullptr, patch_tex_coords_input, 0, paint);
     const sk_point_t point0_handle = SkPoint_Make(0.0f, 0.0f);
     const sk_point_t point1_handle = SkPoint_Make(1.0f, 1.0f);
@@ -397,6 +401,15 @@ int main() {
     SkCanvas_drawArc(canvas, nullptr, 0.0f, 90.0f, false, paint);
     SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, nullptr);
     SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, paint);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, nullptr, nullptr, 0, canvas_color_input, 0);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, nullptr, 0);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, -1);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, 999999);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, 0);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, nullptr, nullptr, 0, 0xFF000000u, 0);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, -1);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, 999999);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, 0);
     const sk_i_rect_t irect_handle = SkIRect_MakeXYWH(0, 0, 2, 2);
     auto *irect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(irect_handle));
     if (!check(irect != nullptr, "SkIRect_MakeXYWH for canvas irect")) {
@@ -536,7 +549,11 @@ int main() {
         return 7;
     }
     SkCanvas_drawVertices(canvas, vertices_handle, 0, nullptr);
+    SkCanvas_drawVertices(canvas, vertices_handle, -1, paint);
+    SkCanvas_drawVertices(canvas, vertices_handle, 999999, paint);
     SkCanvas_drawVerticesPtr(canvas, vertices, 0, nullptr);
+    SkCanvas_drawVerticesPtr(canvas, vertices, -1, paint);
+    SkCanvas_drawVerticesPtr(canvas, vertices, 999999, paint);
     SkCanvas_drawVertices(canvas, vertices_handle, 0, paint);
     SkCanvas_drawVerticesPtr(canvas, vertices, 0, paint);
     static_sk_vertices_delete(vertices_handle);
@@ -788,6 +805,31 @@ int main() {
     SkCanvas_drawImageRectHandleWithSrcDst(canvas, image_handle, dst, dst, image_sampling, nullptr, 0);
     SkCanvas_drawImageHandleWithSampling(canvas, image_handle, 0.0f, 0.0f, nullptr, nullptr);
     SkCanvas_drawImageRect(canvas, image_handle, dst, nullptr, nullptr);
+    const sk_rsx_form_t atlas_xform_handle = SkRSXform_Make(1.0f, 0.0f, 0.0f, 0.0f);
+    auto *atlas_xform = static_cast<reskia_rsxform_t *>(static_sk_rsx_form_get_ptr(atlas_xform_handle));
+    if (!check(atlas_xform != nullptr, "SkRSXform_Make for canvas drawAtlas")) {
+        if (atlas_xform_handle != 0) {
+            static_sk_rsx_form_delete(atlas_xform_handle);
+        }
+        SkSamplingOptions_delete(image_sampling);
+        static_sk_i_rect_delete(center_handle);
+        static_sk_rect_delete(dst_handle);
+        static_sk_image_delete(image_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkCanvas_drawAtlas(canvas, nullptr, atlas_xform, dst, nullptr, 1, 0, image_sampling, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, nullptr, dst, nullptr, 1, 0, image_sampling, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, atlas_xform, nullptr, nullptr, 1, 0, image_sampling, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, atlas_xform, dst, nullptr, 1, 0, nullptr, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, atlas_xform, dst, nullptr, 1, -1, image_sampling, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, atlas_xform, dst, nullptr, 1, 999999, image_sampling, nullptr, nullptr);
+    SkCanvas_drawAtlas(canvas, image, atlas_xform, dst, nullptr, 1, 0, image_sampling, nullptr, nullptr);
+    const auto *fake_image_set = reinterpret_cast<const reskia_image_set_entry_t *>(1);
+    SkCanvas_experimental_DrawEdgeAAImageSet(canvas, fake_image_set, 1, nullptr, nullptr, nullptr, nullptr, 0);
+    static_sk_rsx_form_delete(atlas_xform_handle);
     SkSamplingOptions_delete(image_sampling);
 
     static_sk_i_rect_delete(center_handle);

@@ -309,7 +309,7 @@ void SkCanvas_drawAtlas(reskia_canvas_t *canvas, const reskia_image_t * atlas, c
     if (canvas == nullptr || count <= 0) {
         return;
     }
-    if (atlas == nullptr || xform == nullptr || tex == nullptr || sampling == nullptr) {
+    if (atlas == nullptr || xform == nullptr || tex == nullptr || !valid_blend_mode(mode) || sampling == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawAtlas(reinterpret_cast<const SkImage *>(atlas), reinterpret_cast<const SkRSXform *>(xform), reinterpret_cast<const SkRect *>(tex), reinterpret_cast<const SkColor *>(colors), count, static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkRect *>(cullRect), reinterpret_cast<const SkPaint *>(paint));
@@ -514,7 +514,7 @@ void SkCanvas_drawPaint(reskia_canvas_t *canvas, const reskia_paint_t * paint) {
 }
 
 void SkCanvas_drawPatch(reskia_canvas_t *canvas, const reskia_point_t * cubics, const uint32_t colors[4], const reskia_point_t * texCoords, reskia_blend_mode_t mode, const reskia_paint_t * paint) {
-    if (canvas == nullptr || cubics == nullptr || texCoords == nullptr || paint == nullptr) {
+    if (canvas == nullptr || cubics == nullptr || texCoords == nullptr || !valid_blend_mode(mode) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawPatch(reinterpret_cast<const SkPoint *>(cubics), colors, reinterpret_cast<const SkPoint *>(texCoords), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
@@ -651,14 +651,14 @@ void SkCanvas_drawTextBlobPtr(reskia_canvas_t *canvas, const reskia_text_blob_t 
 }
 
 void SkCanvas_drawVertices(reskia_canvas_t *canvas, sk_vertices_t vertices, reskia_blend_mode_t mode, const reskia_paint_t * paint) {
-    if (canvas == nullptr || !has_vertices_handle(vertices) || paint == nullptr) {
+    if (canvas == nullptr || !has_vertices_handle(vertices) || !valid_blend_mode(mode) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawVertices(static_sk_vertices_get_entity(vertices), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const reskia_vertices_t * vertices, reskia_blend_mode_t mode, const reskia_paint_t * paint) {
-    if (canvas == nullptr || vertices == nullptr || paint == nullptr) {
+    if (canvas == nullptr || vertices == nullptr || !valid_blend_mode(mode) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawVertices(reinterpret_cast<const SkVertices *>(vertices), static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkPaint *>(paint));
@@ -675,14 +675,14 @@ void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const res
 }
 
 void SkCanvas_experimental_DrawEdgeAAQuad(reskia_canvas_t *canvas, const reskia_rect_t * rect, const reskia_point_t * clip, reskia_canvas_quad_aa_flags_t aaFlags, const reskia_color_4f_t * color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr || rect == nullptr || color == nullptr) {
+    if (canvas == nullptr || rect == nullptr || color == nullptr || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), * reinterpret_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
 void SkCanvas_experimental_DrawEdgeAAQuadU32Color(reskia_canvas_t *canvas, const reskia_rect_t * rect, const reskia_point_t * clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr || rect == nullptr) {
+    if (canvas == nullptr || rect == nullptr || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), color, static_cast<SkBlendMode>(mode));

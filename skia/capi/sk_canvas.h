@@ -208,6 +208,7 @@ void SkCanvas_drawArc(reskia_canvas_t *canvas, const reskia_rect_t *oval, float 
 /**
  * count <= 0 is no-op.
  * atlas/xform/tex/sampling are non-null when count > 0.
+ * mode must be a valid SkBlendMode when count > 0.
  * colors/cullRect/paint may be NULL.
  * Skia:
  *   (SkCanvas *canvas,
@@ -442,6 +443,7 @@ void SkCanvas_drawOval(reskia_canvas_t *canvas, const reskia_rect_t *oval, const
 void SkCanvas_drawPaint(reskia_canvas_t *canvas, const reskia_paint_t *paint);
 /**
  * cubics/texCoords/paint: non-null.
+ * mode must be a valid SkBlendMode.
  * colors may be NULL.
  * Invalid input is no-op.
  * Skia:
@@ -568,6 +570,7 @@ void SkCanvas_drawTextBlob(reskia_canvas_t *canvas, sk_text_blob_t text_blob, fl
 void SkCanvas_drawTextBlobPtr(reskia_canvas_t *canvas, const reskia_text_blob_t *blob, float x, float y, const reskia_paint_t *paint);
 /**
  * vertices must be a valid handle.
+ * mode must be a valid SkBlendMode.
  * paint: non-null.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, sk_vertices_t vertices, SkBlendMode mode, const SkPaint *paint).
@@ -575,6 +578,7 @@ void SkCanvas_drawTextBlobPtr(reskia_canvas_t *canvas, const reskia_text_blob_t 
 void SkCanvas_drawVertices(reskia_canvas_t *canvas, sk_vertices_t vertices, reskia_blend_mode_t mode, const reskia_paint_t *paint);
 /**
  * vertices: borrowed non-null.
+ * mode must be a valid SkBlendMode.
  * paint: non-null.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkVertices *vertices, SkBlendMode mode, const SkPaint *paint).
@@ -597,7 +601,9 @@ void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const reskia_vertices_t *
 void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const reskia_image_set_entry_t *imageSet, int cnt, const reskia_point_t *dstClips, const reskia_matrix_t *preViewMatrices, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_canvas_src_rect_constraint_t constraint);
 /**
  * rect/color: non-null.
+ * mode must be a valid SkBlendMode.
  * clip may be NULL.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    const SkRect *rect,
@@ -609,7 +615,9 @@ void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const res
 void SkCanvas_experimental_DrawEdgeAAQuad(reskia_canvas_t *canvas, const reskia_rect_t *rect, const reskia_point_t *clip, reskia_canvas_quad_aa_flags_t aaFlags, const reskia_color_4f_t *color, reskia_blend_mode_t mode);
 /**
  * rect: non-null.
+ * mode must be a valid SkBlendMode.
  * clip may be NULL.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRect *rect, const SkPoint clip[4], SkCanvas::QuadAAFlags aaFlags, SkColor color, SkBlendMode mode).
  */
 void SkCanvas_experimental_DrawEdgeAAQuadU32Color(reskia_canvas_t *canvas, const reskia_rect_t *rect, const reskia_point_t *clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode);
