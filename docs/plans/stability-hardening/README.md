@@ -136,6 +136,10 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - `docs/plans/gpu-enablement/`
 - `docs/plans/skparagraph-enablement/`
 
+## 関連ガイド
+
+- `docs/guides/c-api-safety-guidelines.md`
+
 ## 引き継ぎ
 
 - `handoff-2026-05-10-0805.md`
