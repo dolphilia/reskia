@@ -318,6 +318,22 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 26;
     }
+    SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, 0, 0, 0, nullptr, &async_fail_state);
+    if (!check(async_fail_state.calls == 11, "SkImage_asyncRescaleAndReadPixelsYUV420 null callback no-op")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 26;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, 0, 0, 0, async_null_context_callback, nullptr);
+    if (!check(async_null_context_calls == 2, "SkImage_asyncRescaleAndReadPixelsYUV420 null context fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 26;
+    }
     SkImage_asyncRescaleAndReadPixelsYUVA420(image, 0, 0, src_rect, 999999, 0, 0, async_fail_callback, &async_fail_state);
     if (!check(async_fail_state.calls == 12, "SkImage_asyncRescaleAndReadPixelsYUVA420 invalid dstSize fail callback")) {
         static_sk_image_delete(image_handle);
@@ -448,12 +464,36 @@ int main() {
         return 40;
     }
     static_sk_i_rect_delete(invalid_subset_handle);
+    const sk_image_t subset_image_handle = SkImage_makeSubset(image, nullptr, src_rect);
+    if (!check(subset_image_handle != 0 && static_sk_image_get_ptr(subset_image_handle) != nullptr, "SkImage_makeSubset valid returned handle ownership")) {
+        if (subset_image_handle != 0) {
+            static_sk_image_delete(subset_image_handle);
+        }
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 40;
+    }
+    static_sk_image_delete(subset_image_handle);
     if (!check(SkImage_withDefaultMipmaps(nullptr) == 0, "SkImage_withDefaultMipmaps null image")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
         static_sk_image_info_delete(info_handle);
         return 41;
+    }
+    const sk_image_t mipmap_image_handle = SkImage_withDefaultMipmaps(image);
+    if (mipmap_image_handle != 0) {
+        if (!check(static_sk_image_get_ptr(mipmap_image_handle) != nullptr, "SkImage_withDefaultMipmaps valid returned handle ownership")) {
+            static_sk_image_delete(mipmap_image_handle);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 41;
+        }
+        static_sk_image_delete(mipmap_image_handle);
     }
     if (!check(SkImage_makeNonTextureImage(nullptr, nullptr) == 0, "SkImage_makeNonTextureImage null image")) {
         static_sk_image_delete(image_handle);
@@ -480,6 +520,18 @@ int main() {
         static_sk_surface_delete(surface_handle);
         static_sk_image_info_delete(info_handle);
         return 43;
+    }
+    const sk_image_t raster_context_image_handle = SkImage_makeRasterImage(image, nullptr, 0);
+    if (raster_context_image_handle != 0) {
+        if (!check(static_sk_image_get_ptr(raster_context_image_handle) != nullptr, "SkImage_makeRasterImage null context valid handle")) {
+            static_sk_image_delete(raster_context_image_handle);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 43;
+        }
+        static_sk_image_delete(raster_context_image_handle);
     }
     if (!check(SkImage_makeRasterImageWithoutContext(nullptr, 0) == 0, "SkImage_makeRasterImageWithoutContext null image")) {
         static_sk_image_delete(image_handle);
@@ -563,6 +615,34 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 52;
     }
+    const sk_shader_t image_shader_handle = SkImage_makeShader(image, 0, 0, sampling, nullptr);
+    if (!check(image_shader_handle != 0 && static_sk_shader_get_ptr(image_shader_handle) != nullptr, "SkImage_makeShader null localMatrix returned shader ownership")) {
+        if (image_shader_handle != 0) {
+            static_sk_shader_delete(image_shader_handle);
+        }
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    static_sk_shader_delete(image_shader_handle);
+    const sk_shader_t image_sampling_shader_handle = SkImage_makeShaderWithSampling(image, sampling, nullptr);
+    if (!check(image_sampling_shader_handle != 0 && static_sk_shader_get_ptr(image_sampling_shader_handle) != nullptr, "SkImage_makeShaderWithSampling null localMatrix returned shader ownership")) {
+        if (image_sampling_shader_handle != 0) {
+            static_sk_shader_delete(image_sampling_shader_handle);
+        }
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
+    static_sk_shader_delete(image_sampling_shader_handle);
     if (!check(!SkImage_scalePixels(nullptr, nullptr, sampling, 0), "SkImage_scalePixels null image")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);
@@ -669,10 +749,34 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 57;
     }
-    const sk_shader_t shader_handle = SkImage_makeShader(image, 0, 0, sampling, nullptr);
-    if (shader_handle != 0) {
-        static_sk_shader_delete(shader_handle);
+    const sk_shader_t raw_shader_handle = SkImage_makeRawShader(image, 0, 0, sampling, nullptr);
+    if (!check(raw_shader_handle != 0 && static_sk_shader_get_ptr(raw_shader_handle) != nullptr, "SkImage_makeRawShader null localMatrix returned shader ownership")) {
+        if (raw_shader_handle != 0) {
+            static_sk_shader_delete(raw_shader_handle);
+        }
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 57;
     }
+    static_sk_shader_delete(raw_shader_handle);
+    const sk_shader_t raw_sampling_shader_handle = SkImage_makeRawShaderWithSampling(image, sampling, nullptr);
+    if (!check(raw_sampling_shader_handle != 0 && static_sk_shader_get_ptr(raw_sampling_shader_handle) != nullptr, "SkImage_makeRawShaderWithSampling null localMatrix returned shader ownership")) {
+        if (raw_sampling_shader_handle != 0) {
+            static_sk_shader_delete(raw_sampling_shader_handle);
+        }
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 57;
+    }
+    static_sk_shader_delete(raw_sampling_shader_handle);
     if (!check(SkImage_makeColorSpace(nullptr, nullptr, 0) == 0, "SkImage_makeColorSpace null image")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);

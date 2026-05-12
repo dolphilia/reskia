@@ -4,8 +4,10 @@
 #include "capi/sk_runtime_effect_builder.h"
 #include "capi/sk_runtime_shader_builder.h"
 #include "capi/sk_i_point.h"
+#include "capi/sk_matrix.h"
 #include "capi/sk_r_rect.h"
 #include "handles/static_sk_i_point.h"
+#include "handles/static_sk_matrix.h"
 #include "handles/static_sk_r_rect.h"
 #include "handles/static_sk_blender.h"
 #include "handles/static_sk_color_filter.h"
@@ -15,6 +17,8 @@
 #include "handles/static_sk_runtime_effect.h"
 #include "handles/static_sk_runtime_effect-internal.h"
 #include "handles/static_sk_runtime_effect_child.h"
+#include "handles/static_sk_runtime_effect_builder_builder_child.h"
+#include "handles/static_sk_runtime_effect_builder_builder_uniform.h"
 #include "handles/static_sk_runtime_effect_traced_shader.h"
 #include "handles/static_sk_runtime_effect_uniform.h"
 #include "handles/static_sk_shader.h"
@@ -136,6 +140,21 @@ int main() {
         if (generated_shader != 0) {
             static_sk_shader_delete(generated_shader);
         }
+        const sk_matrix_t runtime_effect_matrix_handle = SkMatrix_I();
+        auto *runtime_effect_matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(runtime_effect_matrix_handle));
+        ok &= check(runtime_effect_matrix != nullptr, "SkMatrix_I for SkRuntimeEffect_makeShaderWithChildPtr");
+        const sk_shader_t generated_child_ptr_shader = SkRuntimeEffect_makeShaderWithChildPtr(
+                reinterpret_cast<reskia_runtime_effect_t *>(shader_result_entity->effect.get()),
+                0,
+                0,
+                runtime_effect_matrix);
+        ok &= check(generated_child_ptr_shader != 0 && static_sk_shader_get_ptr(generated_child_ptr_shader) != nullptr, "SkRuntimeEffect_makeShaderWithChildPtr generated handle ownership");
+        if (generated_child_ptr_shader != 0) {
+            static_sk_shader_delete(generated_child_ptr_shader);
+        }
+        if (runtime_effect_matrix_handle != 0) {
+            static_sk_matrix_delete(runtime_effect_matrix_handle);
+        }
     }
     if (generated_shader_result != 0) {
         static_sk_runtime_effect_result_delete(generated_shader_result);
@@ -233,6 +252,17 @@ int main() {
             ok &= check(shader != 0 && static_sk_shader_get_ptr(shader) != nullptr, "SkRuntimeShaderBuilder_makeShader generated handle ownership");
             if (shader != 0) {
                 static_sk_shader_delete(shader);
+            }
+            const sk_matrix_t local_matrix_handle = SkMatrix_I();
+            auto *local_matrix = static_cast<reskia_matrix_t *>(static_sk_matrix_get_ptr(local_matrix_handle));
+            ok &= check(local_matrix != nullptr, "SkMatrix_I for SkRuntimeShaderBuilder_makeShader localMatrix");
+            const sk_shader_t matrix_shader = SkRuntimeShaderBuilder_makeShader(builder, local_matrix);
+            ok &= check(matrix_shader != 0 && static_sk_shader_get_ptr(matrix_shader) != nullptr, "SkRuntimeShaderBuilder_makeShader localMatrix generated handle ownership");
+            if (matrix_shader != 0) {
+                static_sk_shader_delete(matrix_shader);
+            }
+            if (local_matrix_handle != 0) {
+                static_sk_matrix_delete(local_matrix_handle);
             }
             SkRuntimeShaderBuilder_delete(builder);
         }
@@ -340,6 +370,13 @@ int main() {
             if (builder_uniforms != 0) {
                 static_const_sk_data_delete(builder_uniforms);
             }
+            const string_view_t builder_uniform_name = static_string_view_make(std::string_view("u"));
+            const sk_runtime_effect_builder_builder_uniform_t builder_uniform = SkRuntimeShaderBuilder_uniform(uniform_builder, builder_uniform_name);
+            ok &= check(builder_uniform != 0 && static_sk_runtime_effect_builder_builder_uniform_get_ptr(builder_uniform) != nullptr, "SkRuntimeShaderBuilder_uniform returned proxy handle ownership");
+            if (builder_uniform != 0) {
+                static_sk_runtime_effect_builder_builder_uniform_delete(builder_uniform);
+            }
+            static_string_view_delete(builder_uniform_name);
             SkRuntimeShaderBuilder_delete(uniform_builder);
         }
         if (uniform_effect_handle != 0) {
@@ -378,6 +415,13 @@ int main() {
             if (builder_children != 0) {
                 static_const_sk_runtime_effect_child_ptr_delete(builder_children);
             }
+            const string_view_t builder_child_name = static_string_view_make(std::string_view("child"));
+            const sk_runtime_effect_builder_builder_child_t builder_child = SkRuntimeShaderBuilder_child(child_builder, builder_child_name);
+            ok &= check(builder_child != 0 && static_sk_runtime_effect_builder_builder_child_get_ptr(builder_child) != nullptr, "SkRuntimeShaderBuilder_child returned proxy handle ownership");
+            if (builder_child != 0) {
+                static_sk_runtime_effect_builder_builder_child_delete(builder_child);
+            }
+            static_string_view_delete(builder_child_name);
             SkRuntimeShaderBuilder_delete(child_builder);
         }
         if (child_effect_handle != 0) {

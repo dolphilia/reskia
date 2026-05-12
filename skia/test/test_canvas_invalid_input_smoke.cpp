@@ -3,6 +3,7 @@
 #include "capi/sk_data.h"
 #include "capi/sk_font.h"
 #include "capi/sk_i_rect.h"
+#include "capi/sk_i_point.h"
 #include "capi/sk_image_info.h"
 #include "capi/sk_m_44.h"
 #include "capi/sk_matrix.h"
@@ -14,6 +15,7 @@
 #include "capi/sk_region.h"
 #include "capi/sk_rect.h"
 #include "capi/sk_r_rect.h"
+#include "capi/sk_sampling_options.h"
 #include "capi/sk_string.h"
 #include "capi/sk_surface.h"
 #include "capi/sk_surfaces.h"
@@ -24,6 +26,7 @@
 #include "handles/static_sk_data.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_i_point.h"
 #include "handles/static_sk_m_44.h"
 #include "handles/static_sk_matrix.h"
 #include "handles/static_sk_picture.h"
@@ -594,6 +597,21 @@ int main() {
         return 8;
     }
     SkBitmap_delete(empty_bitmap);
+    if (!check(!SkCanvas_writePixels(canvas, nullptr, 0, 0), "SkCanvas_writePixels(canvas, nullptr)")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    reskia_bitmap_t *empty_write_bitmap = SkBitmap_new();
+    if (!check(empty_write_bitmap != nullptr, "SkBitmap_new for canvas writePixels")) {
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(!SkCanvas_writePixels(canvas, empty_write_bitmap, 0, 0), "SkCanvas_writePixels empty bitmap")) {
+        SkBitmap_delete(empty_write_bitmap);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkBitmap_delete(empty_write_bitmap);
     SkCanvas_accessTopLayerPixels(canvas, nullptr, nullptr, nullptr);
     if (!check(!SkCanvas_peekPixels(canvas, nullptr), "SkCanvas_peekPixels(canvas, nullptr)")) {
         SkCanvas_delete(canvas);
@@ -616,6 +634,70 @@ int main() {
     uint32_t pixels[4] = {};
     size_t top_layer_row_bytes = 0;
     SkCanvas_accessTopLayerPixels(canvas, image_info, &top_layer_row_bytes, nullptr);
+    reskia_bitmap_t *layer_bitmap = SkBitmap_new();
+    if (!check(layer_bitmap != nullptr, "SkBitmap_new for canvas borrowed pixels")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkBitmap_allocN32Pixels(layer_bitmap, 2, 2, false);
+    reskia_canvas_t *layer_canvas = SkCanvas_newFromBitmap(layer_bitmap);
+    if (!check(layer_canvas != nullptr, "SkCanvas_newFromBitmap for borrowed pixels")) {
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    const sk_i_point_t origin_handle = SkIPoint_Make(0, 0);
+    auto *origin = static_cast<reskia_i_point_t *>(static_sk_i_point_get_ptr(origin_handle));
+    if (!check(origin != nullptr, "SkIPoint_Make for canvas borrowed pixels")) {
+        static_sk_i_point_delete(origin_handle);
+        SkCanvas_delete(layer_canvas);
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    size_t borrowed_row_bytes = 0;
+    void *borrowed_pixels = SkCanvas_accessTopLayerPixels(layer_canvas, image_info, &borrowed_row_bytes, origin);
+    if (!check(borrowed_pixels != nullptr && borrowed_row_bytes >= SkImageInfo_minRowBytes(image_info), "SkCanvas_accessTopLayerPixels borrowed storage and optional outs")) {
+        static_sk_i_point_delete(origin_handle);
+        SkCanvas_delete(layer_canvas);
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(SkCanvas_accessTopLayerPixels(layer_canvas, nullptr, nullptr, nullptr) != nullptr, "SkCanvas_accessTopLayerPixels optional outs null")) {
+        static_sk_i_point_delete(origin_handle);
+        SkCanvas_delete(layer_canvas);
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    reskia_pixmap_t *borrowed_pixmap = SkPixmap_new();
+    if (!check(borrowed_pixmap != nullptr, "SkPixmap_new for canvas peekPixels")) {
+        static_sk_i_point_delete(origin_handle);
+        SkCanvas_delete(layer_canvas);
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(SkCanvas_peekPixels(layer_canvas, borrowed_pixmap), "SkCanvas_peekPixels borrowed storage")) {
+        SkPixmap_delete(borrowed_pixmap);
+        static_sk_i_point_delete(origin_handle);
+        SkCanvas_delete(layer_canvas);
+        SkBitmap_delete(layer_bitmap);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkPixmap_delete(borrowed_pixmap);
+    static_sk_i_point_delete(origin_handle);
+    SkCanvas_delete(layer_canvas);
+    SkBitmap_delete(layer_bitmap);
     if (!check(!SkCanvas_readPixelsWithImageInfo(canvas, image_info, nullptr, SkImageInfo_minRowBytes(image_info), 0, 0), "SkCanvas_readPixelsWithImageInfo(null pixels)")) {
         static_sk_image_info_delete(image_info_handle);
         SkCanvas_delete(canvas);
@@ -690,6 +772,23 @@ int main() {
     SkCanvas_drawImageLatticeWithFilter(canvas, image, c_lattice, nullptr, 0, nullptr);
     SkCanvas_drawImageNine(canvas, image, nullptr, dst, 0, nullptr);
     SkCanvas_drawImageNine(canvas, image, center, nullptr, 0, nullptr);
+    reskia_sampling_options_t *image_sampling = SkSamplingOptions_new();
+    if (!check(image_sampling != nullptr, "SkSamplingOptions_new for canvas drawImage")) {
+        static_sk_i_rect_delete(center_handle);
+        static_sk_rect_delete(dst_handle);
+        static_sk_image_delete(image_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    SkCanvas_drawImage(canvas, image_handle, 0.0f, 0.0f);
+    SkCanvas_drawImageHandleWithSampling(canvas, image_handle, 0.0f, 0.0f, image_sampling, nullptr);
+    SkCanvas_drawImageRect(canvas, image_handle, dst, image_sampling, nullptr);
+    SkCanvas_drawImageRectHandleWithSrcDst(canvas, image_handle, dst, dst, image_sampling, nullptr, 0);
+    SkCanvas_drawImageHandleWithSampling(canvas, image_handle, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawImageRect(canvas, image_handle, dst, nullptr, nullptr);
+    SkSamplingOptions_delete(image_sampling);
 
     static_sk_i_rect_delete(center_handle);
     static_sk_rect_delete(dst_handle);
