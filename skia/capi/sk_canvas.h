@@ -270,8 +270,10 @@ void SkCanvas_drawDrawableAt(reskia_canvas_t *canvas, reskia_drawable_t *drawabl
 void SkCanvas_drawDRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *outer, const reskia_r_rect_t *inner, const reskia_paint_t *paint);
 /**
  * count <= 0 is no-op.
- * glyphs/positions/clusters/origin/font/paint are non-null when count > 0.
+ * glyphs/positions/clusters/font/paint are non-null when count > 0.
+ * origin must be a valid handle when count > 0.
  * utf8text is non-null when textByteCount > 0.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    int count,
@@ -287,7 +289,9 @@ void SkCanvas_drawDRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *outer, 
 void SkCanvas_drawGlyphs(reskia_canvas_t *canvas, int count, const uint16_t *glyphs, const reskia_point_t *positions, const uint32_t *clusters, int textByteCount, const char *utf8text, sk_point_t origin, const reskia_font_t *font, const reskia_paint_t *paint);
 /**
  * count <= 0 is no-op.
- * glyphs/positions/origin/font/paint are non-null when count > 0.
+ * glyphs/positions/font/paint are non-null when count > 0.
+ * origin must be a valid handle when count > 0.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    int count,
@@ -300,7 +304,9 @@ void SkCanvas_drawGlyphs(reskia_canvas_t *canvas, int count, const uint16_t *gly
 void SkCanvas_drawGlyphsAtPositions(reskia_canvas_t *canvas, int count, const uint16_t *glyphs, const reskia_point_t *positions, sk_point_t origin, const reskia_font_t *font, const reskia_paint_t *paint);
 /**
  * count <= 0 is no-op.
- * glyphs/xforms/origin/font/paint are non-null when count > 0.
+ * glyphs/xforms/font/paint are non-null when count > 0.
+ * origin must be a valid handle when count > 0.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    int count,
@@ -472,13 +478,15 @@ void SkCanvas_drawPicture(reskia_canvas_t *canvas, sk_picture_t picture);
  */
 void SkCanvas_drawPictureHandleWithMatrixPaint(reskia_canvas_t *canvas, sk_picture_t picture, const reskia_matrix_t *matrix, const reskia_paint_t *paint);
 /**
- * picture: borrowed non-null.
+ * picture is a borrowed non-null pointer.
+ * Caller must not free it through this API.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkPicture *picture).
  */
 void SkCanvas_drawPicturePtr(reskia_canvas_t *canvas, const reskia_picture_t *picture);
 /**
- * picture: borrowed non-null.
+ * picture is a borrowed non-null pointer.
+ * Caller must not free it through this API.
  * matrix/paint may be NULL.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkPicture *picture, const SkMatrix *matrix, const SkPaint *paint).
@@ -530,7 +538,9 @@ void SkCanvas_drawRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, c
 /**
  * byteLength == 0 is no-op.
  * Borrowed raw text bytes must be non-null and readable for byteLength during call.
+ * encoding must be a valid SkTextEncoding.
  * font/paint: non-null when byteLength > 0.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    const void *text,
@@ -562,7 +572,8 @@ void SkCanvas_drawStringObject(reskia_canvas_t *canvas, const reskia_string_t *s
  */
 void SkCanvas_drawTextBlob(reskia_canvas_t *canvas, sk_text_blob_t text_blob, float x, float y, const reskia_paint_t *paint);
 /**
- * blob is borrowed and non-null.
+ * blob is a borrowed non-null pointer.
+ * Caller must not free it through this API.
  * paint: non-null.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkTextBlob *blob, SkScalar x, SkScalar y, const SkPaint *paint).
@@ -739,12 +750,14 @@ int SkCanvas_saveLayerWithBoundsPaintRef(reskia_canvas_t *canvas, const reskia_r
 int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const reskia_rect_t *bounds, const reskia_paint_t *paint);
 /**
  * bounds may be NULL.
+ * alpha must be between 0 and 255.
  * NULL canvas returns 0.
  * Skia: (SkCanvas *canvas, const SkRect *bounds, U8CPU alpha) -> int.
  */
 int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t *bounds, uint32_t alpha);
 /**
  * bounds may be NULL.
+ * alpha must be finite and between 0.0 and 1.0.
  * NULL canvas returns 0.
  * Skia: (SkCanvas *canvas, const SkRect *bounds, float alpha) -> int.
  */

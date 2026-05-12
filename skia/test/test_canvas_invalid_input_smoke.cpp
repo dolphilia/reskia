@@ -181,11 +181,23 @@ int main() {
         return 7;
     }
     SkCanvas_restore(canvas);
+    if (!check(SkCanvas_saveLayerAlpha(canvas, nullptr, 256) == 0, "SkCanvas_saveLayerAlpha invalid alpha")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
     if (!check(SkCanvas_saveLayerAlpha(canvas, nullptr, 255) > 0, "SkCanvas_saveLayerAlpha optional bounds")) {
         SkCanvas_delete(canvas);
         return 7;
     }
     SkCanvas_restore(canvas);
+    if (!check(SkCanvas_saveLayerAlphaf(canvas, nullptr, -0.1f) == 0, "SkCanvas_saveLayerAlphaf negative alpha")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    if (!check(SkCanvas_saveLayerAlphaf(canvas, nullptr, 1.1f) == 0, "SkCanvas_saveLayerAlphaf high alpha")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
     if (!check(SkCanvas_saveLayerAlphaf(canvas, nullptr, 1.0f) > 0, "SkCanvas_saveLayerAlphaf optional bounds")) {
         SkCanvas_delete(canvas);
         return 7;
@@ -472,6 +484,53 @@ int main() {
     SkCanvas_drawTextBlob(canvas, text_blob_handle, 0.0f, 0.0f, paint);
     SkCanvas_drawTextBlobPtr(canvas, text_blob, 0.0f, 0.0f, paint);
     static_sk_text_blob_delete(text_blob_handle);
+    const sk_point_t glyph_origin_handle = SkPoint_Make(0.0f, 0.0f);
+    auto *glyph_origin = static_cast<reskia_point_t *>(static_sk_point_get_ptr(glyph_origin_handle));
+    if (!check(glyph_origin != nullptr, "SkPoint_Make for canvas glyph origin")) {
+        if (glyph_origin_handle != 0) {
+            static_sk_point_delete(glyph_origin_handle);
+        }
+        SkFont_delete(font);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const sk_rsx_form_t glyph_xform_handle = SkRSXform_Make(1.0f, 0.0f, 0.0f, 0.0f);
+    auto *glyph_xform = static_cast<reskia_rsxform_t *>(static_sk_rsx_form_get_ptr(glyph_xform_handle));
+    if (!check(glyph_xform != nullptr, "SkRSXform_Make for canvas glyph xforms")) {
+        if (glyph_xform_handle != 0) {
+            static_sk_rsx_form_delete(glyph_xform_handle);
+        }
+        static_sk_point_delete(glyph_origin_handle);
+        SkFont_delete(font);
+        SkPaint_delete(paint);
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    const uint16_t glyphs[] = {0};
+    const SkPoint glyph_positions[] = {SkPoint::Make(0.0f, 0.0f)};
+    const uint32_t glyph_clusters[] = {0};
+    const char glyph_text[] = "A";
+    SkCanvas_drawGlyphs(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_clusters, 1, nullptr, glyph_origin_handle, font, paint);
+    SkCanvas_drawGlyphs(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_clusters, 1, glyph_text, 999999, font, paint);
+    SkCanvas_drawGlyphs(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_clusters, 1, glyph_text, glyph_origin_handle, nullptr, paint);
+    SkCanvas_drawGlyphs(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_clusters, 1, glyph_text, glyph_origin_handle, font, nullptr);
+    SkCanvas_drawGlyphs(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_clusters, 1, glyph_text, glyph_origin_handle, font, paint);
+    SkCanvas_drawGlyphsAtPositions(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), 999999, font, paint);
+    SkCanvas_drawGlyphsAtPositions(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_origin_handle, nullptr, paint);
+    SkCanvas_drawGlyphsAtPositions(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_origin_handle, font, nullptr);
+    SkCanvas_drawGlyphsAtPositions(canvas, 1, glyphs, reinterpret_cast<const reskia_point_t *>(glyph_positions), glyph_origin_handle, font, paint);
+    SkCanvas_drawGlyphsWithXforms(canvas, 1, glyphs, glyph_xform, 999999, font, paint);
+    SkCanvas_drawGlyphsWithXforms(canvas, 1, glyphs, glyph_xform, glyph_origin_handle, nullptr, paint);
+    SkCanvas_drawGlyphsWithXforms(canvas, 1, glyphs, glyph_xform, glyph_origin_handle, font, nullptr);
+    SkCanvas_drawGlyphsWithXforms(canvas, 1, glyphs, glyph_xform, glyph_origin_handle, font, paint);
+    static_sk_rsx_form_delete(glyph_xform_handle);
+    static_sk_point_delete(glyph_origin_handle);
+    const char simple_text[] = "A";
+    SkCanvas_drawSimpleText(canvas, simple_text, 1, 999999, 0.0f, 0.0f, font, paint);
+    SkCanvas_drawSimpleText(canvas, simple_text, 1, 0, 0.0f, 0.0f, nullptr, paint);
+    SkCanvas_drawSimpleText(canvas, simple_text, 1, 0, 0.0f, 0.0f, font, nullptr);
+    SkCanvas_drawSimpleText(canvas, simple_text, 1, 0, 0.0f, 0.0f, font, paint);
     SkCanvas_drawString(canvas, nullptr, 0.0f, 0.0f, font, paint);
     SkCanvas_drawString(canvas, "A", 0.0f, 0.0f, nullptr, paint);
     SkCanvas_drawString(canvas, "A", 0.0f, 0.0f, font, nullptr);

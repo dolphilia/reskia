@@ -256,9 +256,9 @@ void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_imag
  */
 bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, const reskia_sampling_options_t *sampling, reskia_image_caching_hint_t cachingHint);
 /**
- * retained handle.
+ * Returns a caller-owned retained data handle.
  * Caller deletes with static_sk_data_delete.
- * NULL image or no encoded data returns 0.
+ * Returns 0 when image is NULL or no encoded data is available.
  * Skia: (SkImage *image) -> sk_data_t.
  */
 sk_data_t SkImage_refEncodedData(reskia_image_t *image);

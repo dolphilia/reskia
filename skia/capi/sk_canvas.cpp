@@ -23,6 +23,7 @@
 #include "include/core/SkVertices.h"
 #include "include/core/SkMesh.h"
 
+#include <cmath>
 #include <utility>
 
 #include "../handles/static_sk_canvas.h"
@@ -100,6 +101,10 @@ bool has_optional_data_handle(sk_data_t data) {
 
 bool valid_blend_mode(reskia_blend_mode_t mode) {
     return mode >= 0 && mode <= static_cast<reskia_blend_mode_t>(SkBlendMode::kLastMode);
+}
+
+bool valid_text_encoding(reskia_canvas_text_encoding_t encoding) {
+    return encoding >= 0 && encoding <= static_cast<reskia_canvas_text_encoding_t>(SkTextEncoding::kGlyphID);
 }
 
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
@@ -368,7 +373,7 @@ void SkCanvas_drawGlyphs(reskia_canvas_t *canvas, int count, const uint16_t * gl
     if (canvas == nullptr || count <= 0) {
         return;
     }
-    if (glyphs == nullptr || positions == nullptr || clusters == nullptr || textByteCount < 0 || (textByteCount > 0 && utf8text == nullptr) || origin == 0 || font == nullptr || paint == nullptr) {
+    if (glyphs == nullptr || positions == nullptr || clusters == nullptr || textByteCount < 0 || (textByteCount > 0 && utf8text == nullptr) || !has_point_handle(origin) || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkPoint *>(positions), clusters, textByteCount, utf8text, static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
@@ -378,7 +383,7 @@ void SkCanvas_drawGlyphsAtPositions(reskia_canvas_t *canvas, int count, const ui
     if (canvas == nullptr || count <= 0) {
         return;
     }
-    if (glyphs == nullptr || positions == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
+    if (glyphs == nullptr || positions == nullptr || !has_point_handle(origin) || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkPoint *>(positions), static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
@@ -388,7 +393,7 @@ void SkCanvas_drawGlyphsWithXforms(reskia_canvas_t *canvas, int count, const uin
     if (canvas == nullptr || count <= 0) {
         return;
     }
-    if (glyphs == nullptr || xforms == nullptr || origin == 0 || font == nullptr || paint == nullptr) {
+    if (glyphs == nullptr || xforms == nullptr || !has_point_handle(origin) || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawGlyphs(count, reinterpret_cast<const SkGlyphID *>(glyphs), reinterpret_cast<const SkRSXform *>(xforms), static_sk_point_get_entity(origin), * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
@@ -616,7 +621,7 @@ void SkCanvas_drawSimpleText(reskia_canvas_t *canvas, const void * text, size_t 
     if (canvas == nullptr || byteLength == 0) {
         return;
     }
-    if (text == nullptr || font == nullptr || paint == nullptr) {
+    if (text == nullptr || !valid_text_encoding(encoding) || font == nullptr || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawSimpleText(text, byteLength, static_cast<SkTextEncoding>(encoding), x, y, * reinterpret_cast<const SkFont *>(font), * reinterpret_cast<const SkPaint *>(paint));
@@ -935,14 +940,14 @@ int SkCanvas_saveLayerWithBoundsPaintPtr(reskia_canvas_t *canvas, const reskia_r
 }
 
 int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t * bounds, uint32_t alpha) {
-    if (canvas == nullptr) {
+    if (canvas == nullptr || alpha > 255) {
         return 0;
     }
     return reinterpret_cast<SkCanvas *>(canvas)->saveLayerAlpha(reinterpret_cast<const SkRect *>(bounds), alpha);
 }
 
 int SkCanvas_saveLayerAlphaf(reskia_canvas_t *canvas, const reskia_rect_t * bounds, float alpha) {
-    if (canvas == nullptr) {
+    if (canvas == nullptr || !std::isfinite(alpha) || alpha < 0.0f || alpha > 1.0f) {
         return 0;
     }
     return reinterpret_cast<SkCanvas *>(canvas)->saveLayerAlphaf(reinterpret_cast<const SkRect *>(bounds), alpha);
