@@ -25,6 +25,9 @@ float SkPoint_y(sk_point_t point) {
 }
 
 float SkPoint_dot(sk_point_t point, const reskia_vector_t *vec) {
+    if (vec == nullptr) {
+        return 0.0f;
+    }
     return static_sk_point_get_entity(point).dot(* reinterpret_cast<const SkVector *>(vec));
 }
 
@@ -53,6 +56,9 @@ void SkPoint_scale(sk_point_t point, float value) {
 }
 
 void SkPoint_scaleTo(sk_point_t point, float scale, reskia_point_t *dst) {
+    if (dst == nullptr) {
+        return;
+    }
     static_sk_point_get_entity(point).scale(scale, reinterpret_cast<SkPoint *>(dst));
 }
 
@@ -65,6 +71,9 @@ float SkPoint_distanceToOrigin(sk_point_t point) {
 }
 
 void SkPoint_iset(sk_point_t point, const reskia_i_point_t *p) {
+    if (p == nullptr) {
+        return;
+    }
     static_sk_point_get_entity(point).iset(* reinterpret_cast<const SkIPoint *>(p));
 }
 
@@ -77,6 +86,9 @@ void SkPoint_negate(sk_point_t point) {
 }
 
 void SkPoint_setAbs(sk_point_t point, const reskia_point_t *pt) {
+    if (pt == nullptr) {
+        return;
+    }
     static_sk_point_get_entity(point).setAbs(* reinterpret_cast<const SkPoint *>(pt));
 }
 
@@ -103,22 +115,37 @@ float SkPoint_Length(float x, float y) {
 }
 
 float SkPoint_CrossProduct(const reskia_vector_t *a, const reskia_vector_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return 0.0f;
+    }
     return SkPoint::CrossProduct(* reinterpret_cast<const SkVector *>(a), * reinterpret_cast<const SkVector *>(b));
 }
 
 float SkPoint_DotProduct(const reskia_vector_t *a, const reskia_vector_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return 0.0f;
+    }
     return SkPoint::DotProduct(* reinterpret_cast<const SkVector *>(a), * reinterpret_cast<const SkVector *>(b));
 }
 
 float SkPoint_Distance(const reskia_point_t *a, const reskia_point_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return 0.0f;
+    }
     return SkPoint::Distance(* reinterpret_cast<const SkPoint *>(a), * reinterpret_cast<const SkPoint *>(b));
 }
 
 void SkPoint_Offset(reskia_point_t *points, int count, float dx, float dy) {
+    if (points == nullptr || count <= 0) {
+        return;
+    }
     SkPoint::Offset(reinterpret_cast<SkPoint *>(points), count, dx, dy);
 }
 
 void SkPoint_OffsetByVector(reskia_point_t *points, int count, const reskia_vector_t *offset) {
+    if (points == nullptr || count <= 0 || offset == nullptr) {
+        return;
+    }
     SkPoint::Offset(reinterpret_cast<SkPoint *>(points), count, * reinterpret_cast<const SkVector *>(offset));
 }
 

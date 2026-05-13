@@ -107,18 +107,18 @@ skia/capi/sk_gradient_shader.cpp,done,P2,2026-05-13,Phase 2 batch HI: gradient s
 skia/capi/sk_gradient_shader.h,done,P2,2026-05-13,Phase 2 batch HI: documented gradient shader factory safety rules
 skia/capi/sk_graphics.cpp,done,P2,2026-05-13,Phase 2 batch HI: graphics global cache invalid input guards
 skia/capi/sk_graphics.h,done,P2,2026-05-13,Phase 2 batch HI: documented graphics global side effect and invalid input rules
-skia/capi/sk_high_contrast_config.cpp,todo,P2,,
-skia/capi/sk_high_contrast_config.h,todo,P2,,
+skia/capi/sk_high_contrast_config.cpp,done,P2,2026-05-13,Phase 2 batch HJ: high contrast config invalid enum and null isValid rules
+skia/capi/sk_high_contrast_config.h,done,P2,2026-05-13,Phase 2 batch HJ: documented high contrast config invalid enum rules
 skia/capi/sk_high_contrast_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一
 skia/capi/sk_high_contrast_filter.h,done,P2,codex,step5: RefCounted delete 規約確認（実装 unref 化）
 skia/capi/sk_i_point.cpp,done,P2,codex,step5: non-ref型 delete 維持、delete static_cast を除去
 skia/capi/sk_i_point.h,done,P2,codex,step5: non-ref型 delete 規約確認（実装側 cast 修正）
-skia/capi/sk_i_rect.cpp,todo,P2,,
-skia/capi/sk_i_rect.h,todo,P2,,
-skia/capi/sk_i_size.cpp,todo,P2,,
-skia/capi/sk_i_size.h,todo,P2,,
-skia/capi/sk_icc.cpp,todo,P2,,
-skia/capi/sk_icc.h,todo,P2,,
+skia/capi/sk_i_rect.cpp,done,P2,2026-05-13,Phase 2 batch HJ: representative value handle null sentinel rules
+skia/capi/sk_i_rect.h,done,P2,2026-05-13,Phase 2 batch HJ: documented representative irect null sentinel rules
+skia/capi/sk_i_size.cpp,done,P2,2026-05-13,Phase 2 batch HJ: isize null sentinel and no-op rules
+skia/capi/sk_i_size.h,done,P2,2026-05-13,Phase 2 batch HJ: documented isize null sentinel rules
+skia/capi/sk_icc.cpp,done,P2,2026-05-13,Phase 2 batch HJ: ICC null input and output buffer guards
+skia/capi/sk_icc.h,done,P2,2026-05-13,Phase 2 batch HJ: documented ICC input ownership and failure rules
 skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_image.cpp,done,P2,2026-05-13,Phase 2 batch HH: image dimension color space and raster factory rules
@@ -185,10 +185,10 @@ skia/capi/sk_path_effect.cpp,done,P2,2026-05-10,Phase 2 batch BA: path effect se
 skia/capi/sk_path_effect.h,done,P2,2026-05-10,Phase 2 batch BA: documented path effect serialize null result and nonzero output buffer rules
 skia/capi/sk_path_measure.cpp,done,P2,codex,phase2-batch-q: NULL guards for path measure APIs,
 skia/capi/sk_path_measure.h,done,P2,codex,phase2-batch-q: path/output pointer comments,
-skia/capi/sk_pdf.cpp,todo,P2,,
-skia/capi/sk_pdf.h,todo,P2,,
-skia/capi/sk_perlin_noise_shader.cpp,todo,P2,,
-skia/capi/sk_perlin_noise_shader.h,todo,P2,,
+skia/capi/sk_pdf.cpp,done,P2,2026-05-13,Phase 2 batch HJ: PDF null canvas and stream guards
+skia/capi/sk_pdf.h,done,P2,2026-05-13,Phase 2 batch HJ: documented PDF stream metadata and failure rules
+skia/capi/sk_perlin_noise_shader.cpp,done,P2,2026-05-13,Phase 2 batch HJ: perlin shader numeric guards and failure 0 rules
+skia/capi/sk_perlin_noise_shader.h,done,P2,2026-05-13,Phase 2 batch HJ: documented perlin shader numeric and tileSize rules
 skia/capi/sk_picture.cpp,done,P2,phase2-batch-ae: NULL guards and nullable handle factories for SkPicture,
 skia/capi/sk_picture.h,done,P2,phase2-batch-ae: documented NULL/pointer/handle-0 conventions,
 skia/capi/sk_picture_recorder.cpp,done,P2,phase2-batch-ae: NULL/bounds guards and nullable finish handles,
@@ -203,8 +203,8 @@ skia/capi/sk_png_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw bu
 skia/capi/sk_png_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_png_encoder.cpp,done,P2,2026-05-10,Phase 2 batch AU: stream pixmap image options guards and handle 0 rules
 skia/capi/sk_png_encoder.h,done,P2,2026-05-10,Phase 2 batch AU: documented PNG encoder pointer and handle rules
-skia/capi/sk_point.cpp,todo,P2,,
-skia/capi/sk_point.h,todo,P2,,
+skia/capi/sk_point.cpp,done,P2,2026-05-13,Phase 2 batch HJ: representative point null pointer helper rules
+skia/capi/sk_point.h,done,P2,2026-05-13,Phase 2 batch HJ: documented representative point null pointer helper rules
 skia/capi/sk_point_3.cpp,todo,P2,,
 skia/capi/sk_point_3.h,todo,P2,,
 skia/capi/sk_r_rect.cpp,done,P2,codex,phase2-batch-e: SkRRect NULL ガードと memory/borrowed pointer 規約を補強
@@ -243,8 +243,8 @@ skia/capi/sk_shader_mask_filter.cpp,done,P2,codex,phase2-batch-t: shader handle 
 skia/capi/sk_shader_mask_filter.h,done,P2,codex,phase2-batch-t: shader handle 0 comment,
 skia/capi/sk_shaders.cpp,done,P2,2026-05-10,Phase 2 batch AY: shaders factory required pointer guards and null result handle 0 rules
 skia/capi/sk_shaders.h,done,P2,2026-05-10,Phase 2 batch AY: documented shaders optional handle and required pointer rules
-skia/capi/sk_size.cpp,todo,P2,,
-skia/capi/sk_size.h,todo,P2,,
+skia/capi/sk_size.cpp,done,P2,2026-05-13,Phase 2 batch HJ: size null sentinel and handle conversion rules
+skia/capi/sk_size.h,done,P2,2026-05-13,Phase 2 batch HJ: documented size null sentinel rules
 skia/capi/sk_stream.cpp,done,P2,codex,phase2-batch-h: SkStream NULL ガードと read/peek/output pointer 規約を補強
 skia/capi/sk_stream.h,done,P2,codex,phase2-batch-h: SkStream read/peek/memory-base コメントを補強
 skia/capi/sk_stream_asset.cpp,done,P2,codex,phase2-batch-j: SkStreamAsset NULL ガードと read/peek/file 規約を補強

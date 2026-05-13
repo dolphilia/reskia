@@ -13,21 +13,33 @@
 extern "C" {
 
 sk_data_t SkICC_SkWriteICCProfile(const reskia_transfer_function_t *transferFunction, const reskia_matrix3x3_t *toXYZD50) {
+    if (transferFunction == nullptr || toXYZD50 == nullptr) {
+        return 0;
+    }
     return static_sk_data_make(SkWriteICCProfile(
         *reinterpret_cast<const skcms_TransferFunction *>(transferFunction),
         *reinterpret_cast<const skcms_Matrix3x3 *>(toXYZD50)));
 }
 
 const_sk_data_t SkICC_SkWriteICCProfileFromICCProfile(const reskia_icc_profile_t *iccProfile, const char *description) {
+    if (iccProfile == nullptr) {
+        return 0;
+    }
     return static_const_sk_data_make(SkWriteICCProfile(
         reinterpret_cast<const skcms_ICCProfile *>(iccProfile), description));
 }
 
 void SkICC_SkICCFloatXYZD50ToGrid16Lab(const float *float_xyz, uint8_t *grid16_lab) {
+    if (float_xyz == nullptr || grid16_lab == nullptr) {
+        return;
+    }
     SkICCFloatXYZD50ToGrid16Lab(float_xyz, grid16_lab);
 }
 
 void SkICC_SkICCFloatToTable16(float f, uint8_t *table_16) {
+    if (table_16 == nullptr) {
+        return;
+    }
     SkICCFloatToTable16(f, table_16);
 }
 

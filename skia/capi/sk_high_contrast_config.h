@@ -11,10 +11,10 @@ extern "C" {
 
 typedef struct reskia_high_contrast_config_t reskia_high_contrast_config_t;
 
-reskia_high_contrast_config_t *SkHighContrastConfig_new(); // () -> SkHighContrastConfig *
-reskia_high_contrast_config_t *SkHighContrastConfig_newWithGrayscaleInvertStyleContrast(bool grayscale, int invertStyle, float contrast); // (bool grayscale, SkHighContrastConfig::InvertStyle invertStyle, SkScalar contrast) -> SkHighContrastConfig *
+reskia_high_contrast_config_t *SkHighContrastConfig_new(); // Returns caller-owned default config.
+reskia_high_contrast_config_t *SkHighContrastConfig_newWithGrayscaleInvertStyleContrast(bool grayscale, int invertStyle, float contrast); // invalid invertStyle returns NULL; caller owns result.
 void SkHighContrastConfig_delete(reskia_high_contrast_config_t *highContrastConfig); // (SkHighContrastConfig * highContrastConfig)
-bool isValid(reskia_high_contrast_config_t *high_contrast_config); // (SkHighContrastConfig *high_contrast_config) -> bool
+bool isValid(reskia_high_contrast_config_t *high_contrast_config); // NULL config returns false.
 
 #ifdef __cplusplus
 }

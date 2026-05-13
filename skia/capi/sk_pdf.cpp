@@ -99,10 +99,16 @@ static SkPDF::Metadata to_sk_pdf_metadata(const reskia_pdf_metadata_t *src) {
 extern "C" {
 
 void SkPDF_SetNodeId(reskia_canvas_t *dst, int nodeID) {
+    if (dst == nullptr) {
+        return;
+    }
     SkPDF::SetNodeId(reinterpret_cast<SkCanvas *>(dst), nodeID);
 }
 
 sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_metadata_t *metadata) {
+    if (stream == nullptr) {
+        return 0;
+    }
     if (metadata == nullptr) {
         return static_sk_document_make(SkPDF::MakeDocument(reinterpret_cast<SkWStream *>(stream)));
     }
@@ -110,6 +116,9 @@ sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_met
 }
 
 sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream) {
+    if (stream == nullptr) {
+        return 0;
+    }
     return static_sk_document_make(SkPDF::MakeDocument(reinterpret_cast<SkWStream *>(stream)));
 }
 

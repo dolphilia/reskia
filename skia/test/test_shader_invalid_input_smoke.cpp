@@ -1,5 +1,6 @@
 #include "capi/sk_shader.h"
 #include "capi/sk_gradient_shader.h"
+#include "capi/sk_perlin_noise_shader.h"
 #include "capi/sk_shaders.h"
 #include "handles/static_sk_point_two.h"
 #include "handles/static_sk_shader.h"
@@ -69,6 +70,14 @@ int main() {
     ok &= check(gradient != 0 && static_sk_shader_get_ptr(gradient) != nullptr, "Gradient linear valid returned handle");
     static_sk_shader_delete(gradient);
     static_sk_point_two_delete(gradient_points);
+
+    ok &= check(SkPerlinNoiseShader_MakeFractalNoise(0.0f, 0.05f, 4, 0.0f, nullptr) == 0, "Perlin fractal invalid frequency");
+    ok &= check(SkPerlinNoiseShader_MakeFractalNoise(0.05f, 0.05f, 0, 0.0f, nullptr) == 0, "Perlin fractal invalid octaves");
+    ok &= check(SkPerlinNoiseShader_MakeTurbulence(0.0f, 0.05f, 4, 0.0f, nullptr) == 0, "Perlin turbulence invalid frequency");
+    ok &= check(SkPerlinNoiseShader_MakeTurbulence(0.05f, 0.05f, 0, 0.0f, nullptr) == 0, "Perlin turbulence invalid octaves");
+    const sk_shader_t perlin = SkPerlinNoiseShader_MakeFractalNoise(0.05f, 0.05f, 4, 0.0f, nullptr);
+    ok &= check(perlin != 0 && static_sk_shader_get_ptr(perlin) != nullptr, "Perlin fractal valid returned handle");
+    static_sk_shader_delete(perlin);
 
     return ok ? 0 : 1;
 }

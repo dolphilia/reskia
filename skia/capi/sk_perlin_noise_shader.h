@@ -15,8 +15,8 @@ extern "C" {
 
 // static
 
-sk_shader_t SkPerlinNoiseShader_MakeFractalNoise(float baseFrequencyX, float baseFrequencyY, int numOctaves, float seed, const reskia_i_size_t *tileSize); // (SkScalar baseFrequencyX, SkScalar baseFrequencyY, int numOctaves, SkScalar seed, const SkISize *tileSize) -> sk_shader_t
-sk_shader_t SkPerlinNoiseShader_MakeTurbulence(float baseFrequencyX, float baseFrequencyY, int numOctaves, float seed, const reskia_i_size_t *tileSize); // (SkScalar baseFrequencyX, SkScalar baseFrequencyY, int numOctaves, SkScalar seed, const SkISize *tileSize) -> sk_shader_t
+sk_shader_t SkPerlinNoiseShader_MakeFractalNoise(float baseFrequencyX, float baseFrequencyY, int numOctaves, float seed, const reskia_i_size_t *tileSize); // positive frequencies/octaves required; tileSize may be NULL; failure returns 0.
+sk_shader_t SkPerlinNoiseShader_MakeTurbulence(float baseFrequencyX, float baseFrequencyY, int numOctaves, float seed, const reskia_i_size_t *tileSize); // positive frequencies/octaves required; tileSize may be NULL; failure returns 0.
 
 #ifdef __cplusplus
 }

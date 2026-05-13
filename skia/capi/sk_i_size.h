@@ -15,14 +15,14 @@ extern "C" {
 typedef struct reskia_i_size_t reskia_i_size_t;
 
 void SkISize_delete(reskia_i_size_t *i_size); // (SkISize *i_size)
-void SkISize_set(reskia_i_size_t *i_size, int w, int h); // (SkISize *i_size, int32_t w, int32_t h)
-bool SkISize_isZero(reskia_i_size_t *i_size); // (SkISize *i_size) -> bool
-bool SkISize_isEmpty(reskia_i_size_t *i_size); // (SkISize *i_size) -> bool
-void SkISize_setEmpty(reskia_i_size_t *i_size); // (SkISize *i_size)
-int SkISize_width(reskia_i_size_t *i_size); // (SkISize *i_size) -> int32_t
-int SkISize_height(reskia_i_size_t *i_size); // (SkISize *i_size) -> int32_t
-int64_t SkISize_area(reskia_i_size_t *i_size); // (SkISize *i_size) -> int64_t
-bool SkISize_equals(reskia_i_size_t *i_size, int w, int h); // (SkISize *i_size, int32_t w, int32_t h) -> bool
+void SkISize_set(reskia_i_size_t *i_size, int w, int h); // NULL i_size is no-op.
+bool SkISize_isZero(reskia_i_size_t *i_size); // NULL i_size returns true.
+bool SkISize_isEmpty(reskia_i_size_t *i_size); // NULL i_size returns true.
+void SkISize_setEmpty(reskia_i_size_t *i_size); // NULL i_size is no-op.
+int SkISize_width(reskia_i_size_t *i_size); // NULL i_size returns 0.
+int SkISize_height(reskia_i_size_t *i_size); // NULL i_size returns 0.
+int64_t SkISize_area(reskia_i_size_t *i_size); // NULL i_size returns 0.
+bool SkISize_equals(reskia_i_size_t *i_size, int w, int h); // NULL i_size returns false.
 
 // static
 

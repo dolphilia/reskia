@@ -19,42 +19,72 @@ void SkSize_delete(reskia_size_t *size) {
 }
 
 void SkSize_set(reskia_size_t *size, float w, float h) {
+    if (size == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSize *>(size)->set(w, h);
 }
 
 bool SkSize_isZero(reskia_size_t *size) {
+    if (size == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkSize *>(size)->isZero();
 }
 
 bool SkSize_isEmpty(reskia_size_t *size) {
+    if (size == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkSize *>(size)->isEmpty();
 }
 
 void SkSize_setEmpty(reskia_size_t *size) {
+    if (size == nullptr) {
+        return;
+    }
     reinterpret_cast<SkSize *>(size)->setEmpty();
 }
 
 float SkSize_width(reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkSize *>(size)->width();
 }
 
 float SkSize_height(reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0.0f;
+    }
     return reinterpret_cast<SkSize *>(size)->height();
 }
 
 bool SkSize_equals(reskia_size_t *size, float w, float h) {
+    if (size == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkSize *>(size)->equals(w, h);
 }
 
 sk_i_size_t SkSize_toRound(reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_i_size_make(reinterpret_cast<SkSize *>(size)->toRound());
 }
 
 sk_i_size_t SkSize_toCeil(reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_i_size_make(reinterpret_cast<SkSize *>(size)->toCeil());
 }
 
 sk_i_size_t SkSize_toFloor(reskia_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_i_size_make(reinterpret_cast<SkSize *>(size)->toFloor());
 }
 
@@ -65,6 +95,9 @@ sk_size_t SkSize_Make(float w, float h) {
 }
 
 sk_size_t SkSize_MakeFromISize(const reskia_i_size_t *src) {
+    if (src == nullptr) {
+        return 0;
+    }
     return static_sk_size_make(SkSize::Make(*reinterpret_cast<const SkISize *>(src)));
 }
 

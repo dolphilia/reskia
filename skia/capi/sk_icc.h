@@ -16,10 +16,10 @@ typedef struct reskia_transfer_function_t reskia_transfer_function_t;
 typedef struct reskia_matrix3x3_t reskia_matrix3x3_t;
 typedef struct reskia_icc_profile_t reskia_icc_profile_t;
 
-sk_data_t SkICC_SkWriteICCProfile(const reskia_transfer_function_t *transferFunction, const reskia_matrix3x3_t *toXYZD50); // (const skcms_TransferFunction* transferFunction, const skcms_Matrix3x3* toXYZD50) -> sk_data_t
-int SkICC_SkWriteICCProfileFromICCProfile(const reskia_icc_profile_t *iccProfile, const char *description); // (const skcms_ICCProfile* iccProfile, const char* description) -> const_sk_data_t
-void SkICC_SkICCFloatXYZD50ToGrid16Lab(const float *float_xyz, uint8_t *grid16_lab); // (const float* float_xyz, uint8_t* grid16_lab)
-void SkICC_SkICCFloatToTable16(float f, uint8_t *table_16); // (const float f, uint8_t* table_16)
+sk_data_t SkICC_SkWriteICCProfile(const reskia_transfer_function_t *transferFunction, const reskia_matrix3x3_t *toXYZD50); // required inputs; invalid/failure returns 0.
+int SkICC_SkWriteICCProfileFromICCProfile(const reskia_icc_profile_t *iccProfile, const char *description); // iccProfile required; description may be NULL; invalid/failure returns 0.
+void SkICC_SkICCFloatXYZD50ToGrid16Lab(const float *float_xyz, uint8_t *grid16_lab); // required input/output; invalid input is no-op.
+void SkICC_SkICCFloatToTable16(float f, uint8_t *table_16); // table_16 required; invalid input is no-op.
 
 #ifdef __cplusplus
 }

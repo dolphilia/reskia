@@ -21,6 +21,9 @@ void SkIRect_delete(reskia_i_rect_t *i_rect) {
 }
 
 int32_t SkIRect_left(reskia_i_rect_t *i_rect) {
+    if (i_rect == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkIRect *>(i_rect)->left();
 }
 
@@ -73,10 +76,16 @@ bool SkIRect_isEmpty64(reskia_i_rect_t *i_rect) {
 }
 
 bool SkIRect_isEmpty(reskia_i_rect_t *i_rect) {
+    if (i_rect == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkIRect *>(i_rect)->isEmpty();
 }
 
 void SkIRect_setEmpty(reskia_i_rect_t *i_rect) {
+    if (i_rect == nullptr) {
+        return;
+    }
     reinterpret_cast<SkIRect *>(i_rect)->setEmpty();
 }
 
@@ -97,6 +106,9 @@ void SkIRect_setSize(reskia_i_rect_t *i_rect, sk_i_size_t size) {
 }
 
 sk_i_rect_t SkIRect_makeOffset(reskia_i_rect_t *i_rect, int32_t dx, int32_t dy) {
+    if (i_rect == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(reinterpret_cast<SkIRect *>(i_rect)->makeOffset(dx, dy));
 }
 
@@ -141,6 +153,9 @@ bool SkIRect_contains(reskia_i_rect_t *i_rect, int32_t x, int32_t y) {
 }
 
 bool SkIRect_containsIRect(reskia_i_rect_t *i_rect, const reskia_i_rect_t *r) {
+    if (i_rect == nullptr || r == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkIRect *>(i_rect)->contains(* reinterpret_cast<const SkIRect *>(r));
 }
 
@@ -183,6 +198,9 @@ sk_i_rect_t SkIRect_MakeWH(int32_t w, int32_t h) {
 }
 
 sk_i_rect_t SkIRect_MakeSize(const reskia_i_size_t *size) {
+    if (size == nullptr) {
+        return 0;
+    }
     return static_sk_i_rect_make(SkIRect::MakeSize(* reinterpret_cast<const SkISize *>(size)));
 }
 
@@ -199,6 +217,9 @@ sk_i_rect_t SkIRect_MakeXYWH(int32_t x, int32_t y, int32_t w, int32_t h) {
 }
 
 bool SkIRect_Intersects(const reskia_i_rect_t *a, const reskia_i_rect_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return false;
+    }
     return SkIRect::Intersects(* reinterpret_cast<const SkIRect *>(a), * reinterpret_cast<const SkIRect *>(b));
 }
 

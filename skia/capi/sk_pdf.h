@@ -65,9 +65,9 @@ typedef struct reskia_pdf_metadata_t {
 extern "C" {
 #endif
 
-void SkPDF_SetNodeId(reskia_canvas_t *dst, int nodeID);
-sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_metadata_t *metadata);
-sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream);
+void SkPDF_SetNodeId(reskia_canvas_t *dst, int nodeID); // NULL canvas is no-op.
+sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_metadata_t *metadata); // stream required; metadata may be NULL; invalid/failure returns 0.
+sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream); // stream required; invalid/failure returns 0.
 
 #ifdef __cplusplus
 }

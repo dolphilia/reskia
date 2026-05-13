@@ -17,34 +17,58 @@ void SkISize_delete(reskia_i_size_t *i_size) {
 }
 
 void SkISize_set(reskia_i_size_t *i_size, int32_t w, int32_t h) {
+    if (i_size == nullptr) {
+        return;
+    }
     reinterpret_cast<SkISize *>(i_size)->set(w, h);
 }
 
 bool SkISize_isZero(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkISize *>(i_size)->isZero();
 }
 
 bool SkISize_isEmpty(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkISize *>(i_size)->isEmpty();
 }
 
 void SkISize_setEmpty(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return;
+    }
     return reinterpret_cast<SkISize *>(i_size)->setEmpty();
 }
 
 int32_t SkISize_width(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkISize *>(i_size)->width();
 }
 
 int32_t SkISize_height(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkISize *>(i_size)->height();
 }
 
 int64_t SkISize_area(reskia_i_size_t *i_size) {
+    if (i_size == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkISize *>(i_size)->area();
 }
 
 bool SkISize_equals(reskia_i_size_t *i_size, int32_t w, int32_t h) {
+    if (i_size == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkISize *>(i_size)->equals(w, h);
 }
 
