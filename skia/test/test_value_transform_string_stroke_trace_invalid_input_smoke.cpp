@@ -66,6 +66,12 @@ int main() {
     auto *size = static_cast<reskia_size_t *>(static_sk_size_get_ptr(size_handle));
     SkRSXform_toQuadWithSize(rsx, size, reinterpret_cast<reskia_point_t *>(quad));
     ok &= check(size != nullptr && quad[0].x() == 2.0f && quad[0].y() == 3.0f, "RSXform valid toQuadWithSize");
+    SkPoint strip[4] = {};
+    SkRSXform_toTriStrip(rsx, 2.0f, 3.0f, reinterpret_cast<reskia_point_t *>(strip));
+    ok &= check(strip[0].x() == 2.0f && strip[0].y() == 3.0f, "RSXform valid toTriStrip");
+    const sk_rsx_form_t radians_handle = SkRSXform_MakeFromRadians(1.0f, 0.0f, 2.0f, 3.0f, 0.0f, 0.0f);
+    auto *radians_rsx = static_cast<reskia_rsxform_t *>(static_sk_rsx_form_get_ptr(radians_handle));
+    ok &= check(radians_rsx != nullptr && SkRSXform_rectStaysRect(radians_rsx), "RSXform MakeFromRadians valid handle");
 
     ok &= check(SkString_newFromText(nullptr) == nullptr, "String newFromText null");
     ok &= check(SkString_newFromTextWithLength(nullptr, 1) == nullptr, "String newFromTextWithLength null");
@@ -91,6 +97,13 @@ int main() {
     SkString_swap(nullptr, nullptr);
     auto *string = SkString_newFromText("abc");
     ok &= check(string != nullptr && SkString_size(string) == 3 && std::strcmp(SkString_c_str(string), "abc") == 0, "String valid construction");
+    char *mutable_data = SkString_dataMutable(string);
+    ok &= check(mutable_data != nullptr && SkString_data(string) != nullptr, "String borrowed data valid");
+    mutable_data[0] = 'z';
+    ok &= check(std::strcmp(SkString_c_str(string), "zbc") == 0, "String mutable borrowed data reflects change");
+    SkString_append(string, "d");
+    SkString_prepend(string, "y");
+    ok &= check(std::strcmp(SkString_c_str(string), "yzbcd") == 0, "String valid append prepend");
 
     ok &= check(SkStrokeRec_static(-1) == 0, "StrokeRec invalid init style");
     ok &= check(SkStrokeRec_staticWithPaintStyleAndResScale(nullptr, 0, 1.0f) == 0, "StrokeRec null paint style constructor");
@@ -129,6 +142,7 @@ int main() {
 
     SkString_delete(string);
     static_sk_stroke_rec_delete(stroke_handle);
+    static_sk_rsx_form_delete(radians_handle);
     static_sk_size_delete(size_handle);
     static_sk_rsx_form_delete(rsx_handle);
     static_sk_point_3_delete(point3_handle);

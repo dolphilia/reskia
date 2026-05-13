@@ -345,6 +345,16 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 23;
     }
+    const bool image_unique = SkImage_unique(image);
+    if (!check(image_unique == SkImage_unique(image), "SkImage_unique raster image stable")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    SkImage_ref(image);
+    SkImage_unref(image);
     if (!check(SkImage_alphaType(image) != 0, "SkImage_alphaType raster image")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -411,6 +421,14 @@ int main() {
         return 23;
     }
     if (!check(!SkImage_asLegacyBitmap(image, legacy_bitmap, 999999), "SkImage_asLegacyBitmap invalid legacyBitmapMode")) {
+        SkBitmap_delete(legacy_bitmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_asLegacyBitmap(image, legacy_bitmap, 0), "SkImage_asLegacyBitmap raster image valid bitmap")) {
         SkBitmap_delete(legacy_bitmap);
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -792,6 +810,15 @@ int main() {
             static_sk_image_info_delete(info_handle);
             return 43;
         }
+        auto *raster_context_image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(raster_context_image_handle));
+        if (!check(SkImage_width(raster_context_image) == 2 && SkImage_height(raster_context_image) == 2, "SkImage_makeRasterImage valid dimensions")) {
+            static_sk_image_delete(raster_context_image_handle);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 43;
+        }
         static_sk_image_delete(raster_context_image_handle);
     }
     if (!check(SkImage_makeRasterImageWithoutContext(nullptr, 0) == 0, "SkImage_makeRasterImageWithoutContext null image")) {
@@ -811,6 +838,15 @@ int main() {
     const sk_image_t raster_image_handle = SkImage_makeRasterImageWithoutContext(image, 0);
     if (raster_image_handle != 0) {
         if (!check(static_sk_image_get_ptr(raster_image_handle) != nullptr, "SkImage_makeRasterImageWithoutContext valid handle")) {
+            static_sk_image_delete(raster_image_handle);
+            static_sk_image_delete(image_handle);
+            static_sk_i_rect_delete(src_rect_handle);
+            static_sk_surface_delete(surface_handle);
+            static_sk_image_info_delete(info_handle);
+            return 45;
+        }
+        auto *raster_image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(raster_image_handle));
+        if (!check(SkImage_width(raster_image) == 2 && SkImage_height(raster_image) == 2, "SkImage_makeRasterImageWithoutContext valid dimensions")) {
             static_sk_image_delete(raster_image_handle);
             static_sk_image_delete(image_handle);
             static_sk_i_rect_delete(src_rect_handle);

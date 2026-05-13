@@ -1012,7 +1012,6 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
-
     const sk_surface_t surface_handle = SkSurfaces_RasterWithoutRowBytes(image_info, nullptr);
     auto *surface = static_cast<reskia_surface_t *>(static_sk_surface_get_ptr(surface_handle));
     if (!check(surface != nullptr, "SkSurfaces_RasterWithoutRowBytes for canvas image lattice")) {
@@ -1022,6 +1021,27 @@ int main() {
     }
     auto *surface_canvas = SkSurface_getCanvas(surface);
     if (!check(surface_canvas != nullptr, "SkSurface_getCanvas for canvas surface/context getters")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    uint32_t write_pixels[4] = {0xff112233u, 0xff445566u, 0xff778899u, 0xffaabbccu};
+    uint32_t readback_pixels[4] = {};
+    const size_t image_info_row_bytes = SkImageInfo_minRowBytes(image_info);
+    if (!check(SkCanvas_writePixelsWithImageInfo(surface_canvas, image_info, write_pixels, image_info_row_bytes, 0, 0), "SkCanvas_writePixelsWithImageInfo valid pixels")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(SkCanvas_readPixelsWithImageInfo(surface_canvas, image_info, readback_pixels, image_info_row_bytes, 0, 0), "SkCanvas_readPixelsWithImageInfo after valid writePixels")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(readback_pixels[0] == write_pixels[0], "SkCanvas writePixels/readPixels round-trip first pixel")) {
         static_sk_surface_delete(surface_handle);
         static_sk_image_info_delete(image_info_handle);
         SkCanvas_delete(canvas);
