@@ -30,18 +30,30 @@ reskia_string_t *SkString_newWithLength(size_t len) {
 }
 
 reskia_string_t *SkString_newFromText(const char text[]) {
+    if (text == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_string_t *>(new SkString(text));
 }
 
 reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len) {
+    if (text == nullptr && len > 0) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_string_t *>(new SkString(text, len));
 }
 
 reskia_string_t *SkString_new_5(const reskia_string_t *str) {
+    if (str == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_string_t *>(new SkString(* reinterpret_cast<const SkString *>(str)));
 }
 
 reskia_string_t *SkString_new_6(const reskia_std_string_t *str) {
+    if (str == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_string_t *>(new SkString(* reinterpret_cast<const std::string *>(str)));
 }
 
@@ -53,42 +65,72 @@ void SkString_delete(reskia_string_t *string) {
     delete reinterpret_cast<SkString *>(string);
 }
 bool SkString_isEmpty(reskia_string_t *string) {
+    if (string == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkString *>(string)->isEmpty();
 }
 
 size_t SkString_size(reskia_string_t *string) {
+    if (string == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkString *>(string)->size();
 }
 
 const char * SkString_data(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkString *>(string)->data();
 }
 
 char * SkString_dataMutable(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkString *>(string)->data();
 }
 
 const char * SkString_c_str(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
     return reinterpret_cast<SkString *>(string)->c_str();
 }
 
 bool SkString_equals(reskia_string_t *string, const reskia_string_t *str) {
+    if (string == nullptr || str == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->equals(* reinterpret_cast<const SkString *>(str));
 }
 
 bool SkString_equalsText(reskia_string_t *string, const char text[]) {
+    if (string == nullptr || text == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->equals(text);
 }
 
 bool SkString_equalsTextWithLength(reskia_string_t *string, const char text[], size_t len) {
+    if (string == nullptr || (text == nullptr && len > 0)) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->equals(text, len);
 }
 
 bool SkString_startsWith(reskia_string_t *string, const char prefixStr[]) {
+    if (string == nullptr || prefixStr == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->startsWith(prefixStr);
 }
 
 bool SkString_startsWithChar(reskia_string_t *string, const char prefixChar) {
+    if (string == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->startsWith(prefixChar);
 }
 
@@ -101,170 +143,296 @@ bool SkString_startsWithChar(reskia_string_t *string, const char prefixChar) {
 //}
 
 bool SkString_contains(reskia_string_t *string, const char substring[]) {
+    if (string == nullptr || substring == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->contains(substring);
 }
 
 bool SkString_containsChar(reskia_string_t *string, const char subchar) {
+    if (string == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkString *>(string)->contains(subchar);
 }
 
 int SkString_find(reskia_string_t *string, const char substring[]) {
+    if (string == nullptr || substring == nullptr) {
+        return -1;
+    }
     return reinterpret_cast<SkString *>(string)->find(substring);
 }
 
 int SkString_findLastOf(reskia_string_t *string, const char subchar) {
+    if (string == nullptr) {
+        return -1;
+    }
     return reinterpret_cast<SkString *>(string)->findLastOf(subchar);
 }
 
 void SkString_reset(reskia_string_t *string) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->reset();
 }
 
 void SkString_resize(reskia_string_t *string, size_t len) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->resize(len);
 }
 
 void SkString_set(reskia_string_t *string, const reskia_string_t *src) {
+    if (string == nullptr || src == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->set(* reinterpret_cast<const SkString *>(src));
 }
 
 void SkString_setText(reskia_string_t *string, const char text[]) {
+    if (string == nullptr || text == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->set(text);
 }
 
 void SkString_setTextWithLength(reskia_string_t *string, const char text[], size_t len) {
+    if (string == nullptr || (text == nullptr && len > 0)) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->set(text, len);
 }
 
 void SkString_setStringView(reskia_string_t *string, string_view_t str) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->set(static_string_view_get_entity(str));
 }
 
 void SkString_insert(reskia_string_t *string, size_t offset, const char text[]) {
+    if (string == nullptr || text == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insert(offset, text);
 }
 
 void SkString_insertTextWithLength(reskia_string_t *string, size_t offset, const char text[], size_t len) {
+    if (string == nullptr || (text == nullptr && len > 0)) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insert(offset, text, len);
 }
 
 void SkString_insertString(reskia_string_t *string, size_t offset, const reskia_string_t *str) {
+    if (string == nullptr || str == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insert(offset, * reinterpret_cast<const SkString *>(str));
 }
 
 void SkString_insertStringView(reskia_string_t *string, size_t offset, string_view_t str) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insert(offset, static_string_view_get_entity(str));
 }
 
 void SkString_insertUnichar(reskia_string_t *string, size_t offset, reskia_string_unichar_t unichar) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertUnichar(offset, unichar);
 }
 
 void SkString_insertS32(reskia_string_t *string, size_t offset, int32_t value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertS32(offset, value);
 }
 
 void SkString_insertS64(reskia_string_t *string, size_t offset, int64_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertS64(offset, value, minDigits);
 }
 
 void SkString_insertU32(reskia_string_t *string, size_t offset, uint32_t value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertU32(offset, value);
 }
 
 void SkString_insertU64(reskia_string_t *string, size_t offset, uint64_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertU64(offset, value, minDigits);
 }
 
 void SkString_insertHex(reskia_string_t *string, size_t offset, uint32_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertHex(offset, value, minDigits);
 }
 
 void SkString_insertScalar(reskia_string_t *string, size_t offset, float v) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->insertScalar(offset, v);
 }
 
 void SkString_append(reskia_string_t *string, const char text[]) {
+    if (string == nullptr || text == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->append(text);
 }
 
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len) {
+    if (string == nullptr || (text == nullptr && len > 0)) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->append(text, len);
 }
 
 void SkString_appendString(reskia_string_t *string, const reskia_string_t *str) {
+    if (string == nullptr || str == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->append(* reinterpret_cast<const SkString *>(str));
 }
 
 void SkString_appendStringView(reskia_string_t *string, string_view_t str) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->append(static_string_view_get_entity(str));
 }
 
 void SkString_appendUnichar(reskia_string_t *string, reskia_string_unichar_t uni) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendUnichar(uni);
 }
 
 void SkString_appendS32(reskia_string_t *string, int32_t value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendS32(value);
 }
 
 void SkString_appendS64(reskia_string_t *string, int64_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendS64(value, minDigits);
 }
 
 void SkString_appendU32(reskia_string_t *string, uint32_t value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendU32(value);
 }
 
 void SkString_appendU64(reskia_string_t *string, uint64_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendU64(value, minDigits);
 }
 
 void SkString_appendHex(reskia_string_t *string, uint32_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendHex(value, minDigits);
 }
 
 void SkString_appendScalar(reskia_string_t *string, float value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendScalar(value);
 }
 
 void SkString_prepend(reskia_string_t *string, const char text[]) {
+    if (string == nullptr || text == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prepend(text);
 }
 
 void SkString_prependTextWithLength(reskia_string_t *string, const char text[], size_t len) {
+    if (string == nullptr || (text == nullptr && len > 0)) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prepend(text, len);
 }
 
 void SkString_prependString(reskia_string_t *string, const reskia_string_t *str) {
+    if (string == nullptr || str == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prepend(* reinterpret_cast<const SkString *>(str));
 }
 
 void SkString_prependStringView(reskia_string_t *string, string_view_t str) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prepend(static_string_view_get_entity(str));
 }
 
 void SkString_prependUnichar(reskia_string_t *string, reskia_string_unichar_t uni) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependUnichar(uni);
 }
 
 void SkString_prependS32(reskia_string_t *string, int32_t value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependS32(value);
 }
 
 void SkString_prependS64(reskia_string_t *string, int32_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependS64(value, minDigits);
 }
 
 void SkString_prependHex(reskia_string_t *string, uint32_t value, int minDigits) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependHex(value, minDigits);
 }
 
 void SkString_prependScalar(reskia_string_t *string, float value) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependScalar(value);
 }
 
 void SkString_printf(reskia_string_t *string, const char format[], ...) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     va_list args;
     va_start(args, format);
     reinterpret_cast<SkString *>(string)->printVAList(format, args);
@@ -272,10 +440,16 @@ void SkString_printf(reskia_string_t *string, const char format[], ...) {
 }
 
 void SkString_printVAList(reskia_string_t *string, const char format[], va_list args) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->printVAList(format, args);
 }
 
 void SkString_appendf(reskia_string_t *string, const char format[], ...) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     va_list args;
     va_start(args, format);
     reinterpret_cast<SkString *>(string)->appendVAList(format, args);
@@ -283,10 +457,16 @@ void SkString_appendf(reskia_string_t *string, const char format[], ...) {
 }
 
 void SkString_appendVAList(reskia_string_t *string, const char format[], va_list args) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->appendVAList(format, args);
 }
 
 void SkString_prependf(reskia_string_t *string, const char format[], ...) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     va_list args;
     va_start(args, format);
     reinterpret_cast<SkString *>(string)->prependVAList(format, args);
@@ -294,14 +474,23 @@ void SkString_prependf(reskia_string_t *string, const char format[], ...) {
 }
 
 void SkString_prependVAList(reskia_string_t *string, const char format[], va_list args) {
+    if (string == nullptr || format == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->prependVAList(format, args);
 }
 
 void SkString_remove(reskia_string_t *string, size_t offset, size_t length) {
+    if (string == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->remove(offset, length);
 }
 
 void SkString_swap(reskia_string_t *string, reskia_string_t *other) {
+    if (string == nullptr || other == nullptr) {
+        return;
+    }
     reinterpret_cast<SkString *>(string)->swap(* reinterpret_cast<SkString *>(other));
 }
 

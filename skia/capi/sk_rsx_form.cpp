@@ -17,26 +17,44 @@ void SkRSXform_delete(reskia_rsxform_t *rsx_form) {
 }
 
 bool SkRSXform_rectStaysRect(reskia_rsxform_t *rsx_form) {
+    if (rsx_form == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkRSXform *>(rsx_form)->rectStaysRect();
 }
 
 void SkRSXform_setIdentity(reskia_rsxform_t *rsx_form) {
+    if (rsx_form == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRSXform *>(rsx_form)->setIdentity();
 }
 
 void SkRSXform_set(reskia_rsxform_t *rsx_form, float scos, float ssin, float tx, float ty) {
+    if (rsx_form == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRSXform *>(rsx_form)->set(scos, ssin, tx, ty);
 }
 
 void SkRSXform_toQuad(reskia_rsxform_t *rsx_form, float width, float height, reskia_point_t *quad) {
+    if (rsx_form == nullptr || quad == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRSXform *>(rsx_form)->toQuad(width, height, reinterpret_cast<SkPoint *>(quad));
 }
 
 void SkRSXform_toQuadWithSize(reskia_rsxform_t *rsx_form, const reskia_size_t *size, reskia_point_t *quad) {
+    if (rsx_form == nullptr || size == nullptr || quad == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRSXform *>(rsx_form)->toQuad(* reinterpret_cast<const SkSize *>(size), reinterpret_cast<SkPoint *>(quad));
 }
 
 void SkRSXform_toTriStrip(reskia_rsxform_t *rsx_form, float width, float height, reskia_point_t *strip) {
+    if (rsx_form == nullptr || strip == nullptr) {
+        return;
+    }
     reinterpret_cast<SkRSXform *>(rsx_form)->toTriStrip(width, height, reinterpret_cast<SkPoint *>(strip));
 }
 

@@ -17,22 +17,37 @@ void SkIPoint_delete(void * i_point) {
 }
 
 int32_t SkIPoint_x(void * i_point) {
+    if (i_point == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkIPoint *>(i_point)->x();
 }
 
 int32_t SkIPoint_y(void * i_point) {
+    if (i_point == nullptr) {
+        return 0;
+    }
     return reinterpret_cast<SkIPoint *>(i_point)->y();
 }
 
 bool SkIPoint_isZero(void * i_point) {
+    if (i_point == nullptr) {
+        return true;
+    }
     return reinterpret_cast<SkIPoint *>(i_point)->isZero();
 }
 
 void SkIPoint_set(void *  i_point, int32_t x, int32_t y) {
+    if (i_point == nullptr) {
+        return;
+    }
     reinterpret_cast<SkIPoint *>(i_point)->set(x, y);
 }
 
 bool SkIPoint_equals(void * i_point, int32_t x, int32_t y) {
+    if (i_point == nullptr) {
+        return false;
+    }
     return reinterpret_cast<SkIPoint *>(i_point)->equals(x, y);
 }
 
