@@ -73,8 +73,20 @@ typedef int32_t reskia_canvas_text_encoding_t;
 
 reskia_canvas_t *SkCanvas_new(void); // () -> SkCanvas *
 reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const reskia_surface_props_t *props); // (int width, int height, const SkSurfaceProps *props) -> SkCanvas *
-reskia_canvas_t *SkCanvas_newFromBitmap(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> SkCanvas *
-reskia_canvas_t *SkCanvas_newFromBitmapWithProps(const reskia_bitmap_t *bitmap, const reskia_surface_props_t *props); // (const SkBitmap *bitmap, const SkSurfaceProps *props) -> SkCanvas *
+/**
+ * bitmap is required.
+ * Returns a caller-owned canvas pointer.
+ * Returns NULL on invalid input.
+ * Skia: (SkBitmap *bitmap) -> SkCanvas *.
+ */
+reskia_canvas_t *SkCanvas_newFromBitmap(reskia_bitmap_t *bitmap);
+/**
+ * bitmap/props: non-null.
+ * Returns a caller-owned canvas pointer.
+ * Returns NULL on invalid input.
+ * Skia: (const SkBitmap *bitmap, const SkSurfaceProps *props) -> SkCanvas *.
+ */
+reskia_canvas_t *SkCanvas_newFromBitmapWithProps(const reskia_bitmap_t *bitmap, const reskia_surface_props_t *props);
 void SkCanvas_delete(reskia_canvas_t *canvas); // (SkCanvas *canvas)
 /**
  * Borrowed raw pixels.
@@ -97,10 +109,11 @@ void * SkCanvas_accessTopRasterHandle(reskia_canvas_t *canvas);
 void SkCanvas_androidFramework_setDeviceClipRestriction(reskia_canvas_t *canvas, const reskia_i_rect_t *rect);
 /**
  * color: non-null.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkColor4f *color).
  */
 void SkCanvas_clear(reskia_canvas_t *canvas, const reskia_color_4f_t *color);
-void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color); // (SkCanvas *canvas, SkColor color)
+void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color); // NULL canvas is no-op.
 /**
  * irect: non-null.
  * op must be a valid SkClipOp.
@@ -206,6 +219,7 @@ void SkCanvas_drawAnnotation(reskia_canvas_t *canvas, const reskia_rect_t *rect,
 /**
  * rect/key: non-null.
  * value may be NULL.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRect *rect, const char key[], SkData *value).
  */
 void SkCanvas_drawAnnotationWithDataPtr(reskia_canvas_t *canvas, const reskia_rect_t *rect, const char * key, reskia_data_t *value);
@@ -220,6 +234,7 @@ void SkCanvas_drawArc(reskia_canvas_t *canvas, const reskia_rect_t *oval, float 
  * atlas/xform/tex/sampling are non-null when count > 0.
  * mode must be a valid SkBlendMode when count > 0.
  * colors/cullRect/paint may be NULL.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    const SkImage *atlas,
@@ -341,14 +356,15 @@ void SkCanvas_drawImage(reskia_canvas_t *canvas, sk_image_t image, float left, f
  */
 void SkCanvas_drawImageHandleWithSampling(reskia_canvas_t *canvas, sk_image_t image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint);
 /**
- * canvas/image/sampling: non-null.
+ * image is a borrowed non-null pointer.
+ * sampling: non-null.
  * paint may be NULL.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkImage *image, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint).
  */
 void SkCanvas_drawImagePtrWithSampling(reskia_canvas_t *canvas, const reskia_image_t *image, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint);
 /**
- * canvas/image: non-null.
+ * image is a borrowed non-null pointer.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkImage *image, SkScalar left, SkScalar top).
  */
@@ -404,14 +420,14 @@ void SkCanvas_drawImageRect(reskia_canvas_t *canvas, sk_image_t image, const res
  */
 void SkCanvas_drawImageRectHandleWithSrcDst(reskia_canvas_t *canvas, sk_image_t image, const reskia_rect_t *src, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_canvas_src_rect_constraint_t constraint);
 /**
- * canvas/image/dst/sampling: non-null.
+ * image/dst/sampling are non-null borrowed pointers.
  * paint may be NULL.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkImage *image, const SkRect *dst, const SkSamplingOptions *sampling, const SkPaint *paint).
  */
 void SkCanvas_drawImageRectPtr(reskia_canvas_t *canvas, const reskia_image_t *image, const reskia_rect_t *dst, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint);
 /**
- * canvas/image/src/dst/sampling: non-null.
+ * image/src/dst/sampling are non-null borrowed pointers.
  * paint may be NULL.
  * constraint must be a valid SkCanvas::SrcRectConstraint.
  * Invalid input is no-op.
@@ -441,11 +457,13 @@ void SkCanvas_drawLine(reskia_canvas_t *canvas, sk_point_t p0, sk_point_t p1, co
 /**
  * paint: non-null.
  * Invalid input is no-op.
- * Skia: (SkCanvas *canvas, SkScalar x0, SkScalar y0, SkScalar x1, const SkPaint *paint).
+ * Skia: (SkCanvas *canvas, SkScalar x0, SkScalar y0, SkScalar x1, SkScalar y1, const SkPaint *paint).
  */
 void SkCanvas_drawLineXY(reskia_canvas_t *canvas, float x0, float y0, float x1, float y1, const reskia_paint_t *paint);
 /**
- * mesh/blender/paint: non-null.
+ * mesh/paint: non-null.
+ * blender must be a valid handle.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkMesh *mesh, sk_blender_t blender, const SkPaint *paint).
  */
 void SkCanvas_drawMesh(reskia_canvas_t *canvas, const reskia_mesh_t *mesh, sk_blender_t blender, const reskia_paint_t *paint);
@@ -520,7 +538,11 @@ void SkCanvas_drawPoint(reskia_canvas_t *canvas, sk_point_t p, const reskia_pain
  */
 void SkCanvas_drawPointXY(reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint);
 /**
- * pts/paint: non-null when count > 0.
+ * mode must be a valid SkCanvas::PointMode.
+ * count == 0 is no-op.
+ * pts is non-null when count > 0.
+ * paint: non-null.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, SkCanvas::PointMode mode, size_t count, const SkPoint pts[], const SkPaint *paint).
  */
 void SkCanvas_drawPoints(reskia_canvas_t *canvas, reskia_canvas_point_mode_t mode, size_t count, const reskia_point_t *pts, const reskia_paint_t *paint);
@@ -613,6 +635,8 @@ void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const reskia_vertices_t *
  * cnt <= 0 is no-op.
  * imageSet/sampling are non-null when cnt > 0.
  * dstClips/preViewMatrices/paint may be NULL.
+ * constraint must be a valid SkCanvas::SrcRectConstraint.
+ * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
  *    const SkCanvas::ImageSetEntry imageSet[],
@@ -626,6 +650,7 @@ void SkCanvas_drawVerticesPtr(reskia_canvas_t *canvas, const reskia_vertices_t *
 void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const reskia_image_set_entry_t *imageSet, int cnt, const reskia_point_t *dstClips, const reskia_matrix_t *preViewMatrices, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint, reskia_canvas_src_rect_constraint_t constraint);
 /**
  * rect/color: non-null.
+ * aaFlags must be between kNone_QuadAAFlags and kAll_QuadAAFlags.
  * mode must be a valid SkBlendMode.
  * clip may be NULL.
  * Invalid input is no-op.
@@ -640,44 +665,93 @@ void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const res
 void SkCanvas_experimental_DrawEdgeAAQuad(reskia_canvas_t *canvas, const reskia_rect_t *rect, const reskia_point_t *clip, reskia_canvas_quad_aa_flags_t aaFlags, const reskia_color_4f_t *color, reskia_blend_mode_t mode);
 /**
  * rect: non-null.
+ * aaFlags must be between kNone_QuadAAFlags and kAll_QuadAAFlags.
  * mode must be a valid SkBlendMode.
  * clip may be NULL.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRect *rect, const SkPoint clip[4], SkCanvas::QuadAAFlags aaFlags, SkColor color, SkBlendMode mode).
  */
 void SkCanvas_experimental_DrawEdgeAAQuadU32Color(reskia_canvas_t *canvas, const reskia_rect_t *rect, const reskia_point_t *clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode);
-sk_i_size_t SkCanvas_getBaseLayerSize(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_i_size_t
-sk_surface_props_t SkCanvas_getBaseProps(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_surface_props_t
-sk_i_rect_t SkCanvas_getDeviceClipBounds(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_i_rect_t
+/**
+ * Returns a caller-owned i-size handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_i_size_t.
+ */
+sk_i_size_t SkCanvas_getBaseLayerSize(reskia_canvas_t *canvas);
+/**
+ * Returns a caller-owned surface props handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_surface_props_t.
+ */
+sk_surface_props_t SkCanvas_getBaseProps(reskia_canvas_t *canvas);
+/**
+ * Returns a caller-owned irect handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_i_rect_t.
+ */
+sk_i_rect_t SkCanvas_getDeviceClipBounds(reskia_canvas_t *canvas);
 /**
  * bounds: non-null out param.
+ * Invalid input returns false.
  * Skia: (SkCanvas *canvas, SkIRect *bounds) -> bool.
  */
 bool SkCanvas_getDeviceClipBoundsInto(reskia_canvas_t *canvas, reskia_i_rect_t *bounds);
-sk_rect_t SkCanvas_getLocalClipBounds(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_rect_t
+/**
+ * Returns a caller-owned rect handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_rect_t.
+ */
+sk_rect_t SkCanvas_getLocalClipBounds(reskia_canvas_t *canvas);
 /**
  * bounds: non-null out param.
+ * Invalid input returns false.
  * Skia: (SkCanvas *canvas, SkRect *bounds) -> bool.
  */
 bool SkCanvas_getLocalClipBoundsInto(reskia_canvas_t *canvas, reskia_rect_t *bounds);
-sk_m_44_t SkCanvas_getLocalToDevice(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_m_44_t
-sk_matrix_t SkCanvas_getLocalToDeviceAs3x3(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_matrix_t
+/**
+ * Returns a caller-owned matrix handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_m_44_t.
+ */
+sk_m_44_t SkCanvas_getLocalToDevice(reskia_canvas_t *canvas);
+/**
+ * Returns a caller-owned matrix handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_matrix_t.
+ */
+sk_matrix_t SkCanvas_getLocalToDeviceAs3x3(reskia_canvas_t *canvas);
 /**
  * props: non-null out param.
+ * Invalid input returns false.
  * Skia: (SkCanvas *canvas, SkSurfaceProps *props) -> bool.
  */
 bool SkCanvas_getProps(reskia_canvas_t *canvas, reskia_surface_props_t *props);
-int SkCanvas_getSaveCount(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> int
+int SkCanvas_getSaveCount(reskia_canvas_t *canvas); // NULL canvas returns 0.
 /**
  * Borrowed pointer; caller must not free.
  * Skia: (SkCanvas *canvas) -> SkSurface *.
  */
 reskia_surface_t *SkCanvas_getSurface(reskia_canvas_t *canvas);
-sk_surface_props_t SkCanvas_getTopProps(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_surface_props_t
-sk_matrix_t SkCanvas_getTotalMatrix(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_matrix_t
-sk_image_info_t SkCanvas_imageInfo(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> sk_image_info_t
-bool SkCanvas_isClipEmpty(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
-bool SkCanvas_isClipRect(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> bool
+/**
+ * Returns a caller-owned surface props handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_surface_props_t.
+ */
+sk_surface_props_t SkCanvas_getTopProps(reskia_canvas_t *canvas);
+/**
+ * Returns a caller-owned matrix handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_matrix_t.
+ */
+sk_matrix_t SkCanvas_getTotalMatrix(reskia_canvas_t *canvas);
+/**
+ * Returns a caller-owned image info handle.
+ * Returns 0 when canvas is NULL.
+ * Skia: (SkCanvas *canvas) -> sk_image_info_t.
+ */
+sk_image_info_t SkCanvas_imageInfo(reskia_canvas_t *canvas);
+bool SkCanvas_isClipEmpty(reskia_canvas_t *canvas); // NULL canvas returns false.
+bool SkCanvas_isClipRect(reskia_canvas_t *canvas); // NULL canvas returns false.
 /**
  * info: non-null.
  * props may be NULL.
@@ -694,6 +768,7 @@ sk_surface_t SkCanvas_makeSurface(reskia_canvas_t *canvas, const reskia_image_in
 bool SkCanvas_peekPixels(reskia_canvas_t *canvas, reskia_pixmap_t *pixmap);
 /**
  * path/rec: non-null.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkPath *path, const SkDrawShadowRec *rec).
  */
 void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path_t *path, const reskia_draw_shadow_rec_t *rec);
@@ -701,12 +776,12 @@ void SkCanvas_private_draw_shadow_rec(reskia_canvas_t *canvas, const reskia_path
  * path: non-null.
  * Skia: (SkCanvas *canvas, const SkPath *path) -> bool.
  */
-bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path);
+bool SkCanvas_quickReject(reskia_canvas_t *canvas, const reskia_path_t *path); // Invalid input returns false.
 /**
  * rect: non-null.
  * Skia: (SkCanvas *canvas, const SkRect *rect) -> bool.
  */
-bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const reskia_rect_t *rect);
+bool SkCanvas_quickRejectRect(reskia_canvas_t *canvas, const reskia_rect_t *rect); // Invalid input returns false.
 /**
  * bitmap: non-null output storage.
  * Invalid input returns false.
@@ -737,12 +812,12 @@ reskia_graphite_recorder_t *SkCanvas_recorder(reskia_canvas_t *canvas);
  * Skia: (SkCanvas *canvas) -> GrRecordingContext *.
  */
 reskia_recording_context_t *SkCanvas_recordingContext(reskia_canvas_t *canvas);
-void SkCanvas_resetMatrix(reskia_canvas_t *canvas); // (SkCanvas *canvas)
-void SkCanvas_restore(reskia_canvas_t *canvas); // (SkCanvas *canvas)
-void SkCanvas_restoreToCount(reskia_canvas_t *canvas, int saveCount); // (SkCanvas *canvas, int saveCount)
-void SkCanvas_rotate(reskia_canvas_t *canvas, float degrees); // (SkCanvas *canvas, SkScalar degrees)
-void SkCanvas_rotateAround(reskia_canvas_t *canvas, float degrees, float px, float py); // (SkCanvas *canvas, SkScalar degrees, SkScalar px, SkScalar py)
-int SkCanvas_save(reskia_canvas_t *canvas); // (SkCanvas *canvas) -> int
+void SkCanvas_resetMatrix(reskia_canvas_t *canvas); // NULL canvas is no-op.
+void SkCanvas_restore(reskia_canvas_t *canvas); // NULL canvas is no-op.
+void SkCanvas_restoreToCount(reskia_canvas_t *canvas, int saveCount); // NULL canvas is no-op.
+void SkCanvas_rotate(reskia_canvas_t *canvas, float degrees); // NULL canvas is no-op.
+void SkCanvas_rotateAround(reskia_canvas_t *canvas, float degrees, float px, float py); // NULL canvas is no-op.
+int SkCanvas_save(reskia_canvas_t *canvas); // NULL canvas returns 0.
 /**
  * canvas/layerRec: non-null.
  * Invalid input returns 0.
@@ -776,7 +851,7 @@ int SkCanvas_saveLayerAlpha(reskia_canvas_t *canvas, const reskia_rect_t *bounds
  * Skia: (SkCanvas *canvas, const SkRect *bounds, float alpha) -> int.
  */
 int SkCanvas_saveLayerAlphaf(reskia_canvas_t *canvas, const reskia_rect_t *bounds, float alpha);
-void SkCanvas_scale(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *canvas, SkScalar sx, SkScalar sy)
+void SkCanvas_scale(reskia_canvas_t *canvas, float sx, float sy); // NULL canvas is no-op.
 /**
  * matrix: non-null.
  * Invalid input is no-op.
@@ -789,13 +864,13 @@ void SkCanvas_setMatrix(reskia_canvas_t *canvas, const reskia_m_44_t *matrix);
  * Skia: (SkCanvas *canvas, const SkMatrix *matrix).
  */
 void SkCanvas_setMatrix3x3(reskia_canvas_t *canvas, const reskia_matrix_t *matrix);
-void SkCanvas_skew(reskia_canvas_t *canvas, float sx, float sy); // (SkCanvas *canvas, SkScalar sx, SkScalar sy)
+void SkCanvas_skew(reskia_canvas_t *canvas, float sx, float sy); // NULL canvas is no-op.
 /**
  * region: non-null out param.
  * Skia: (SkCanvas *canvas, SkRegion *region).
  */
 void SkCanvas_temporary_internal_getRgnClip(reskia_canvas_t *canvas, reskia_region_t *region);
-void SkCanvas_translate(reskia_canvas_t *canvas, float dx, float dy); // (SkCanvas *canvas, SkScalar dx, SkScalar dy)
+void SkCanvas_translate(reskia_canvas_t *canvas, float dx, float dy); // NULL canvas is no-op.
 /**
  * bitmap: non-null input storage.
  * Invalid input returns false.
@@ -813,6 +888,7 @@ bool SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_ima
 // static
 /**
  * info/pixels: non-null.
+ * rowBytes must satisfy info.validRowBytes.
  * pixels are caller-owned mutable backing store and must outlive returned canvas.
  * props may be NULL.
  * Invalid input/factory failure returns 0.
@@ -822,6 +898,7 @@ sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t *info, void *pix
 /**
  * width/height must be >= 0.
  * pixels are caller-owned mutable N32 backing store and must outlive returned canvas.
+ * rowBytes must be at least width * sizeof(SkPMColor).
  * Invalid input/factory failure returns 0.
  * Skia: (int width, int height, SkPMColor *pixels, size_t rowBytes) -> sk_canvas_t}.
  */

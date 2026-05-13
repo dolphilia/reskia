@@ -61,7 +61,28 @@ int main() {
     if (!check(SkCanvas_getSaveCount(nullptr) == 0, "SkCanvas_getSaveCount(nullptr)")) {
         return 1;
     }
+    if (!check(SkCanvas_getDeviceClipBounds(nullptr) == 0, "SkCanvas_getDeviceClipBounds(nullptr)")) {
+        return 1;
+    }
+    if (!check(!SkCanvas_getDeviceClipBoundsInto(nullptr, nullptr), "SkCanvas_getDeviceClipBoundsInto(nullptr)")) {
+        return 1;
+    }
+    if (!check(SkCanvas_getLocalClipBounds(nullptr) == 0, "SkCanvas_getLocalClipBounds(nullptr)")) {
+        return 1;
+    }
+    if (!check(!SkCanvas_getLocalClipBoundsInto(nullptr, nullptr), "SkCanvas_getLocalClipBoundsInto(nullptr)")) {
+        return 1;
+    }
     if (!check(!SkCanvas_readPixels(nullptr, nullptr, 0, 0), "SkCanvas_readPixels(nullptr)")) {
+        return 2;
+    }
+    if (!check(!SkCanvas_readPixelsWithPixmap(nullptr, nullptr, 0, 0), "SkCanvas_readPixelsWithPixmap(nullptr)")) {
+        return 2;
+    }
+    if (!check(!SkCanvas_writePixels(nullptr, nullptr, 0, 0), "SkCanvas_writePixels(nullptr)")) {
+        return 2;
+    }
+    if (!check(!SkCanvas_writePixelsWithImageInfo(nullptr, nullptr, nullptr, 0, 0, 0), "SkCanvas_writePixelsWithImageInfo(nullptr)")) {
         return 2;
     }
     if (!check(!SkCanvas_quickReject(nullptr, nullptr), "SkCanvas_quickReject(nullptr)")) {
@@ -70,9 +91,66 @@ int main() {
     if (!check(!SkCanvas_quickRejectRect(nullptr, nullptr), "SkCanvas_quickRejectRect(nullptr)")) {
         return 4;
     }
+    if (!check(SkCanvas_getLocalToDevice(nullptr) == 0, "SkCanvas_getLocalToDevice(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getLocalToDeviceAs3x3(nullptr) == 0, "SkCanvas_getLocalToDeviceAs3x3(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getTotalMatrix(nullptr) == 0, "SkCanvas_getTotalMatrix(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getBaseLayerSize(nullptr) == 0, "SkCanvas_getBaseLayerSize(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getBaseProps(nullptr) == 0, "SkCanvas_getBaseProps(nullptr)")) {
+        return 4;
+    }
+    if (!check(!SkCanvas_getProps(nullptr, nullptr), "SkCanvas_getProps(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getSurface(nullptr) == nullptr, "SkCanvas_getSurface(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_getTopProps(nullptr) == 0, "SkCanvas_getTopProps(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkCanvas_imageInfo(nullptr) == 0, "SkCanvas_imageInfo(nullptr)")) {
+        return 4;
+    }
+    if (!check(!SkCanvas_isClipEmpty(nullptr), "SkCanvas_isClipEmpty(nullptr)")) {
+        return 4;
+    }
+    if (!check(!SkCanvas_isClipRect(nullptr), "SkCanvas_isClipRect(nullptr)")) {
+        return 4;
+    }
 
+    SkCanvas_resetMatrix(nullptr);
+    SkCanvas_restore(nullptr);
+    SkCanvas_restoreToCount(nullptr, 1);
+    SkCanvas_rotate(nullptr, 1.0f);
+    SkCanvas_rotateAround(nullptr, 1.0f, 0.0f, 0.0f);
+    if (!check(SkCanvas_save(nullptr) == 0, "SkCanvas_save(nullptr)")) {
+        return 5;
+    }
+    SkCanvas_scale(nullptr, 1.0f, 1.0f);
+    SkCanvas_setMatrix(nullptr, nullptr);
+    SkCanvas_setMatrix3x3(nullptr, nullptr);
+    SkCanvas_skew(nullptr, 1.0f, 1.0f);
     SkCanvas_translate(nullptr, 1.0f, 1.0f);
     SkCanvas_drawPath(nullptr, nullptr, nullptr);
+    SkCanvas_drawRegion(nullptr, nullptr, nullptr);
+    SkCanvas_drawPaint(nullptr, nullptr);
+    SkCanvas_private_draw_shadow_rec(nullptr, nullptr, nullptr);
+    SkCanvas_drawAnnotation(nullptr, nullptr, nullptr, 0);
+    SkCanvas_drawAnnotationWithDataPtr(nullptr, nullptr, nullptr, nullptr);
+    SkCanvas_drawArc(nullptr, nullptr, 0.0f, 0.0f, false, nullptr);
+    SkCanvas_drawOval(nullptr, nullptr, nullptr);
+    SkCanvas_drawRect(nullptr, 0, nullptr);
+    SkCanvas_drawRoundRect(nullptr, nullptr, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawRRect(nullptr, nullptr, nullptr);
+    SkCanvas_drawDRRect(nullptr, nullptr, nullptr, nullptr);
+    SkCanvas_drawMesh(nullptr, nullptr, 0, nullptr);
     SkCanvas_drawPoints(nullptr, 0, 1, nullptr, nullptr);
     SkCanvas_drawLine(nullptr, 0, 0, nullptr);
     SkCanvas_drawLineXY(nullptr, 0.0f, 0.0f, 1.0f, 1.0f, nullptr);
@@ -81,6 +159,8 @@ int main() {
     SkCanvas_drawCircle(nullptr, 0, 1.0f, nullptr);
     SkCanvas_drawCircleAt(nullptr, 0.0f, 0.0f, 1.0f, nullptr);
     SkCanvas_drawSimpleText(nullptr, nullptr, 1, 0, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawString(nullptr, nullptr, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawStringObject(nullptr, nullptr, 0.0f, 0.0f, nullptr, nullptr);
     SkCanvas_drawGlyphs(nullptr, 1, nullptr, nullptr, nullptr, 0, nullptr, 0, nullptr, nullptr);
     SkCanvas_drawGlyphsAtPositions(nullptr, 1, nullptr, nullptr, 0, nullptr, nullptr);
     SkCanvas_drawGlyphsWithXforms(nullptr, 1, nullptr, nullptr, 0, nullptr, nullptr);
@@ -88,12 +168,18 @@ int main() {
     SkCanvas_drawAtlas(nullptr, nullptr, nullptr, nullptr, nullptr, 1, 0, nullptr, nullptr, nullptr);
     SkCanvas_experimental_DrawEdgeAAImageSet(nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, 0);
     SkCanvas_experimental_DrawEdgeAAImageSet(nullptr, nullptr, 1, nullptr, nullptr, nullptr, nullptr, 0);
+    SkCanvas_experimental_DrawEdgeAAQuad(nullptr, nullptr, nullptr, 0, nullptr, 0);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(nullptr, nullptr, nullptr, 0, 0, 0);
     SkCanvas_drawDrawable(nullptr, nullptr, nullptr);
     SkCanvas_drawDrawableAt(nullptr, nullptr, 0.0f, 0.0f);
     SkCanvas_drawPicture(nullptr, 0);
     SkCanvas_drawPictureHandleWithMatrixPaint(nullptr, 0, nullptr, nullptr);
     SkCanvas_drawPicturePtr(nullptr, nullptr);
     SkCanvas_drawPicturePtrWithMatrixPaint(nullptr, nullptr, nullptr, nullptr);
+    SkCanvas_drawTextBlob(nullptr, 0, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawTextBlobPtr(nullptr, nullptr, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawVertices(nullptr, 0, 0, nullptr);
+    SkCanvas_drawVerticesPtr(nullptr, nullptr, 0, nullptr);
     if (!check(SkCanvas_saveLayer(nullptr, nullptr) == 0, "SkCanvas_saveLayer(nullptr)")) {
         return 5;
     }
@@ -119,6 +205,12 @@ int main() {
         return 5;
     }
     if (!check(SkCanvas_MakeRasterDirectN32(1, 1, nullptr, 0) == 0, "SkCanvas_MakeRasterDirectN32(null pixels)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_newFromBitmap(nullptr) == nullptr, "SkCanvas_newFromBitmap(nullptr)")) {
+        return 5;
+    }
+    if (!check(SkCanvas_newFromBitmapWithProps(nullptr, nullptr) == nullptr, "SkCanvas_newFromBitmapWithProps(nullptr)")) {
         return 5;
     }
     if (!check(SkCanvas_makeSurface(nullptr, nullptr, nullptr) == 0, "SkCanvas_makeSurface(nullptr)")) {
@@ -156,8 +248,10 @@ int main() {
     SkCanvas_experimental_DrawEdgeAAImageSet(canvas, nullptr, 0, nullptr, nullptr, nullptr, nullptr, 0);
     SkCanvas_experimental_DrawEdgeAAImageSet(canvas, nullptr, -1, nullptr, nullptr, nullptr, nullptr, 0);
     SkCanvas_experimental_DrawEdgeAAImageSet(canvas, nullptr, 1, nullptr, nullptr, nullptr, nullptr, 0);
+    SkCanvas_experimental_DrawEdgeAAImageSet(canvas, nullptr, 1, nullptr, nullptr, nullptr, nullptr, 999999);
     SkCanvas_drawDrawable(canvas, nullptr, nullptr);
     SkCanvas_drawDrawableAt(canvas, nullptr, 0.0f, 0.0f);
+    SkCanvas_drawMesh(canvas, nullptr, 0, nullptr);
     SkCanvas_drawPicture(canvas, 0);
     SkCanvas_drawPicture(canvas, 999999);
     SkCanvas_drawImage(canvas, 0, 0.0f, 0.0f);
@@ -241,12 +335,51 @@ int main() {
     SkCanvas_concatMatrix(canvas, canvas_matrix);
     SkCanvas_setMatrix3x3(canvas, canvas_matrix);
     static_sk_matrix_delete(canvas_matrix_handle);
+    const sk_m_44_t local_to_device = SkCanvas_getLocalToDevice(canvas);
+    if (!check(local_to_device != 0 && static_sk_m_44_get_ptr(local_to_device) != nullptr, "SkCanvas_getLocalToDevice valid canvas")) {
+        if (local_to_device != 0) {
+            static_sk_m_44_delete(local_to_device);
+        }
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    static_sk_m_44_delete(local_to_device);
+    const sk_matrix_t local_to_device_3x3 = SkCanvas_getLocalToDeviceAs3x3(canvas);
+    if (!check(local_to_device_3x3 != 0 && static_sk_matrix_get_ptr(local_to_device_3x3) != nullptr, "SkCanvas_getLocalToDeviceAs3x3 valid canvas")) {
+        if (local_to_device_3x3 != 0) {
+            static_sk_matrix_delete(local_to_device_3x3);
+        }
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    static_sk_matrix_delete(local_to_device_3x3);
+    const sk_matrix_t total_matrix = SkCanvas_getTotalMatrix(canvas);
+    if (!check(total_matrix != 0 && static_sk_matrix_get_ptr(total_matrix) != nullptr, "SkCanvas_getTotalMatrix valid canvas")) {
+        if (total_matrix != 0) {
+            static_sk_matrix_delete(total_matrix);
+        }
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    static_sk_matrix_delete(total_matrix);
+    const int saved = SkCanvas_save(canvas);
+    if (!check(saved > 0, "SkCanvas_save valid canvas")) {
+        SkCanvas_delete(canvas);
+        return 7;
+    }
+    SkCanvas_scale(canvas, 1.0f, 1.0f);
+    SkCanvas_rotate(canvas, 0.0f);
+    SkCanvas_rotateAround(canvas, 0.0f, 0.0f, 0.0f);
+    SkCanvas_skew(canvas, 0.0f, 0.0f);
+    SkCanvas_resetMatrix(canvas);
+    SkCanvas_restoreToCount(canvas, saved);
 
     reskia_paint_t *paint = SkPaint_new();
     if (!check(paint != nullptr, "SkPaint_new for canvas text blob")) {
         SkCanvas_delete(canvas);
         return 7;
     }
+    SkCanvas_drawMesh(canvas, reinterpret_cast<const reskia_mesh_t *>(1), 999999, paint);
     SkCanvas_drawPaint(canvas, nullptr);
     SkCanvas_drawPaint(canvas, paint);
     const float canvas_color[4] = {1.0f, 0.0f, 0.0f, 1.0f};
@@ -391,6 +524,13 @@ int main() {
     SkCanvas_drawPoint(canvas, point0_handle, paint);
     SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, nullptr);
     SkCanvas_drawPointXY(canvas, 0.0f, 0.0f, paint);
+    const SkPoint draw_points[] = {SkPoint::Make(0.0f, 0.0f), SkPoint::Make(1.0f, 1.0f)};
+    SkCanvas_drawPoints(canvas, 999999, 0, nullptr, paint);
+    SkCanvas_drawPoints(canvas, 999999, 1, reinterpret_cast<const reskia_point_t *>(draw_points), paint);
+    SkCanvas_drawPoints(canvas, 0, 1, nullptr, paint);
+    SkCanvas_drawPoints(canvas, 0, 1, reinterpret_cast<const reskia_point_t *>(draw_points), nullptr);
+    SkCanvas_drawPoints(canvas, 0, 0, nullptr, paint);
+    SkCanvas_drawPoints(canvas, 0, 2, reinterpret_cast<const reskia_point_t *>(draw_points), paint);
     SkCanvas_drawCircle(canvas, 0, 1.0f, paint);
     SkCanvas_drawCircle(canvas, 999999, 1.0f, paint);
     SkCanvas_drawCircle(canvas, point0_handle, 1.0f, nullptr);
@@ -432,10 +572,12 @@ int main() {
     SkCanvas_drawArc(canvas, round_rect, 0.0f, 90.0f, false, paint);
     SkCanvas_experimental_DrawEdgeAAQuad(canvas, nullptr, nullptr, 0, canvas_color_input, 0);
     SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, nullptr, 0);
+    SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 999999, canvas_color_input, 0);
     SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, -1);
     SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, 999999);
     SkCanvas_experimental_DrawEdgeAAQuad(canvas, round_rect, nullptr, 0, canvas_color_input, 0);
     SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, nullptr, nullptr, 0, 0xFF000000u, 0);
+    SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 999999, 0xFF000000u, 0);
     SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, -1);
     SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, 999999);
     SkCanvas_experimental_DrawEdgeAAQuadU32Color(canvas, round_rect, nullptr, 0, 0xFF000000u, 0);
@@ -725,6 +867,16 @@ int main() {
         return 8;
     }
     uint32_t pixels[4] = {};
+    if (!check(SkCanvas_MakeRasterDirect(image_info, pixels, 1, nullptr) == 0, "SkCanvas_MakeRasterDirect invalid rowBytes")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(SkCanvas_MakeRasterDirectN32(2, 2, pixels, 1) == 0, "SkCanvas_MakeRasterDirectN32 invalid rowBytes")) {
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
     size_t top_layer_row_bytes = 0;
     SkCanvas_accessTopLayerPixels(canvas, image_info, &top_layer_row_bytes, nullptr);
     reskia_bitmap_t *layer_bitmap = SkBitmap_new();
@@ -931,6 +1083,36 @@ int main() {
         SkCanvas_delete(canvas);
         return 10;
     }
+    const sk_i_rect_t device_clip_bounds = SkCanvas_getDeviceClipBounds(canvas);
+    if (!check(device_clip_bounds != 0 && static_sk_i_rect_get_ptr(device_clip_bounds) != nullptr, "SkCanvas_getDeviceClipBounds returned handle")) {
+        if (device_clip_bounds != 0) {
+            static_sk_i_rect_delete(device_clip_bounds);
+        }
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    if (!check(!SkCanvas_getDeviceClipBoundsInto(canvas, nullptr), "SkCanvas_getDeviceClipBoundsInto null out")) {
+        static_sk_i_rect_delete(device_clip_bounds);
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    SkCanvas_getDeviceClipBoundsInto(canvas, static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(device_clip_bounds)));
+    static_sk_i_rect_delete(device_clip_bounds);
+    const sk_rect_t local_clip_bounds = SkCanvas_getLocalClipBounds(canvas);
+    if (!check(local_clip_bounds != 0 && static_sk_rect_get_ptr(local_clip_bounds) != nullptr, "SkCanvas_getLocalClipBounds returned handle")) {
+        if (local_clip_bounds != 0) {
+            static_sk_rect_delete(local_clip_bounds);
+        }
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    if (!check(!SkCanvas_getLocalClipBoundsInto(canvas, nullptr), "SkCanvas_getLocalClipBoundsInto null out")) {
+        static_sk_rect_delete(local_clip_bounds);
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    SkCanvas_getLocalClipBoundsInto(canvas, static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(local_clip_bounds)));
+    static_sk_rect_delete(local_clip_bounds);
 
     SkCanvas_delete(canvas);
     return 0;

@@ -1,4 +1,5 @@
 #include "capi/sk_image.h"
+#include "capi/sk_bitmap.h"
 #include "capi/sk_color_space.h"
 #include "capi/sk_image_info.h"
 #include "capi/sk_i_rect.h"
@@ -53,10 +54,34 @@ void async_null_context_callback(void *context, const reskia_async_read_result_t
 }  // namespace
 
 int main() {
+    if (!check(SkImage_imageInfo(nullptr) == 0, "SkImage_imageInfo(nullptr)")) {
+        return 1;
+    }
     if (!check(SkImage_width(nullptr) == 0, "SkImage_width(nullptr)")) {
         return 1;
     }
     if (!check(SkImage_height(nullptr) == 0, "SkImage_height(nullptr)")) {
+        return 2;
+    }
+    if (!check(SkImage_dimensions(nullptr) == 0, "SkImage_dimensions(nullptr)")) {
+        return 2;
+    }
+    if (!check(SkImage_bounds(nullptr) == 0, "SkImage_bounds(nullptr)")) {
+        return 2;
+    }
+    if (!check(SkImage_uniqueID(nullptr) == 0, "SkImage_uniqueID(nullptr)")) {
+        return 2;
+    }
+    if (!check(SkImage_alphaType(nullptr) == 0, "SkImage_alphaType(nullptr)")) {
+        return 2;
+    }
+    if (!check(SkImage_colorType(nullptr) == 0, "SkImage_colorType(nullptr)")) {
+        return 2;
+    }
+    if (!check(!SkImage_isAlphaOnly(nullptr), "SkImage_isAlphaOnly(nullptr)")) {
+        return 2;
+    }
+    if (!check(!SkImage_isOpaque(nullptr), "SkImage_isOpaque(nullptr)")) {
         return 2;
     }
     if (!check(!SkImage_peekPixels(nullptr, nullptr), "SkImage_peekPixels(nullptr)")) {
@@ -74,10 +99,31 @@ int main() {
     if (!check(!SkImage_isTextureBacked(nullptr), "SkImage_isTextureBacked(nullptr)")) {
         return 5;
     }
+    if (!check(!SkImage_hasMipmaps(nullptr), "SkImage_hasMipmaps(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkImage_isProtected(nullptr), "SkImage_isProtected(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkImage_isLazyGenerated(nullptr), "SkImage_isLazyGenerated(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkImage_asLegacyBitmap(nullptr, nullptr, 0), "SkImage_asLegacyBitmap nullptr image")) {
+        return 5;
+    }
     if (!check(SkImage_textureSize(nullptr) == 0, "SkImage_textureSize(nullptr)")) {
         return 5;
     }
     if (!check(!SkImage_isValid(nullptr, nullptr), "SkImage_isValid(nullptr)")) {
+        return 5;
+    }
+    if (!check(!SkImage_readPixelsWithContextPixmap(nullptr, nullptr, nullptr, 0, 0, 0), "SkImage_readPixelsWithContextPixmap nullptr image")) {
+        return 5;
+    }
+    if (!check(!SkImage_readPixelsWithPixmap(nullptr, nullptr, 0, 0, 0), "SkImage_readPixelsWithPixmap nullptr image")) {
+        return 5;
+    }
+    if (!check(!SkImage_scalePixels(nullptr, nullptr, nullptr, 0), "SkImage_scalePixels nullptr image")) {
         return 5;
     }
     reskia_pixmap_t *null_image_peek_pixmap = SkPixmap_new();
@@ -93,6 +139,9 @@ int main() {
     SkImage_ref(nullptr);
     SkImage_unref(nullptr);
     SkImage_release(nullptr);
+    if (!check(!SkImage_unique(nullptr), "SkImage_unique(nullptr)")) {
+        return 5;
+    }
 
     if (!check(SkSurface_width(nullptr) == 0, "SkSurface_width(nullptr)")) {
         return 6;
@@ -232,6 +281,55 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 23;
     }
+    if (!check(SkImage_width(image) == 2, "SkImage_width raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_height(image) == 2, "SkImage_height raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_uniqueID(image) != 0, "SkImage_uniqueID raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_alphaType(image) != 0, "SkImage_alphaType raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(SkImage_colorType(image) != 0, "SkImage_colorType raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(!SkImage_isAlphaOnly(image), "SkImage_isAlphaOnly raster premul image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(!SkImage_isOpaque(image), "SkImage_isOpaque raster premul image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
     if (!check(!SkImage_isTextureBacked(image), "SkImage_isTextureBacked raster image")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -246,6 +344,38 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 23;
     }
+    if (!check(!SkImage_isProtected(image), "SkImage_isProtected raster image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    reskia_bitmap_t *legacy_bitmap = SkBitmap_new();
+    if (!check(legacy_bitmap != nullptr, "SkBitmap_new for image legacy bitmap")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(!SkImage_asLegacyBitmap(image, nullptr, 0), "SkImage_asLegacyBitmap null bitmap")) {
+        SkBitmap_delete(legacy_bitmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    if (!check(!SkImage_asLegacyBitmap(image, legacy_bitmap, 999999), "SkImage_asLegacyBitmap invalid legacyBitmapMode")) {
+        SkBitmap_delete(legacy_bitmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    SkBitmap_delete(legacy_bitmap);
     if (!check(SkImage_isValid(image, nullptr), "SkImage_isValid raster image null context")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -310,8 +440,24 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 25;
     }
+    SkImage_asyncRescaleAndReadPixels(image, info, src_rect, 999999, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 11, "SkImage_asyncRescaleAndReadPixels invalid rescaleGamma fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 25;
+    }
+    SkImage_asyncRescaleAndReadPixels(image, info, src_rect, 0, 999999, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 12, "SkImage_asyncRescaleAndReadPixels invalid rescaleMode fail callback")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 25;
+    }
     SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, 0, 0, 0, async_fail_callback, &async_fail_state);
-    if (!check(async_fail_state.calls == 11, "SkImage_asyncRescaleAndReadPixelsYUV420 invalid dstSize fail callback")) {
+    if (!check(async_fail_state.calls == 13, "SkImage_asyncRescaleAndReadPixelsYUV420 invalid dstSize fail callback")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -319,7 +465,7 @@ int main() {
         return 26;
     }
     SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, 0, 0, 0, nullptr, &async_fail_state);
-    if (!check(async_fail_state.calls == 11, "SkImage_asyncRescaleAndReadPixelsYUV420 null callback no-op")) {
+    if (!check(async_fail_state.calls == 13, "SkImage_asyncRescaleAndReadPixelsYUV420 null callback no-op")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -335,7 +481,7 @@ int main() {
         return 26;
     }
     SkImage_asyncRescaleAndReadPixelsYUVA420(image, 0, 0, src_rect, 999999, 0, 0, async_fail_callback, &async_fail_state);
-    if (!check(async_fail_state.calls == 12, "SkImage_asyncRescaleAndReadPixelsYUVA420 invalid dstSize fail callback")) {
+    if (!check(async_fail_state.calls == 14, "SkImage_asyncRescaleAndReadPixelsYUVA420 invalid dstSize fail callback")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -344,6 +490,33 @@ int main() {
     }
     const sk_i_size_t valid_dst_size = SkISize_Make(1, 1);
     if (!check(static_sk_i_size_get_ptr(valid_dst_size) != nullptr, "SkISize_Make for image async")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 28;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUV420(image, 999999, 0, src_rect, valid_dst_size, 0, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 15, "SkImage_asyncRescaleAndReadPixelsYUV420 invalid yuvColorSpace fail callback")) {
+        static_sk_i_size_delete(valid_dst_size);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 28;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUV420(image, 0, 0, src_rect, valid_dst_size, 999999, 0, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 16, "SkImage_asyncRescaleAndReadPixelsYUV420 invalid rescaleGamma fail callback")) {
+        static_sk_i_size_delete(valid_dst_size);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 28;
+    }
+    SkImage_asyncRescaleAndReadPixelsYUVA420(image, 0, 0, src_rect, valid_dst_size, 0, 999999, async_fail_callback, &async_fail_state);
+    if (!check(async_fail_state.calls == 17, "SkImage_asyncRescaleAndReadPixelsYUVA420 invalid rescaleMode fail callback")) {
+        static_sk_i_size_delete(valid_dst_size);
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -379,6 +552,13 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 31;
     }
+    if (!check(!SkImage_readPixels(image, nullptr, info, pixels, SkImageInfo_minRowBytes(info), 0, 0, 999999), "SkImage_readPixels invalid cachingHint")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 31;
+    }
     if (!check(!SkImage_readPixelsWithImageInfo(image, nullptr, pixels, 8, 0, 0, 0), "SkImage_readPixelsWithImageInfo null info")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
@@ -394,6 +574,13 @@ int main() {
         return 33;
     }
     if (!check(!SkImage_readPixelsWithImageInfo(image, info, pixels, 1, 0, 0, 0), "SkImage_readPixelsWithImageInfo invalid rowBytes")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 34;
+    }
+    if (!check(!SkImage_readPixelsWithImageInfo(image, info, pixels, SkImageInfo_minRowBytes(info), 0, 0, 999999), "SkImage_readPixelsWithImageInfo invalid cachingHint")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -424,6 +611,22 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 35;
     }
+    if (!check(!SkImage_readPixelsWithContextPixmap(image, nullptr, read_pixmap, 0, 0, 999999), "SkImage_readPixelsWithContextPixmap invalid cachingHint")) {
+        SkPixmap_delete(read_pixmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 35;
+    }
+    if (!check(!SkImage_readPixelsWithPixmap(image, read_pixmap, 0, 0, 999999), "SkImage_readPixelsWithPixmap invalid cachingHint")) {
+        SkPixmap_delete(read_pixmap);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 35;
+    }
     SkPixmap_delete(read_pixmap);
     if (!check(!SkImage_readPixelsWithPixmap(image, nullptr, 0, 0, 0), "SkImage_readPixelsWithPixmap null pixmap")) {
         static_sk_image_delete(image_handle);
@@ -440,6 +643,14 @@ int main() {
         return 37;
     }
     if (!check(SkImage_makeSubset(image, nullptr, nullptr) == 0, "SkImage_makeSubset null subset")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 38;
+    }
+    auto *fake_recorder = reinterpret_cast<reskia_graphite_recorder_t *>(1);
+    if (!check(SkImage_makeSubsetWithRecorder(image, fake_recorder, src_rect, 999999) == 0, "SkImage_makeSubsetWithRecorder invalid properties")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -521,6 +732,13 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 43;
     }
+    if (!check(SkImage_makeRasterImage(image, nullptr, 999999) == 0, "SkImage_makeRasterImage invalid cachingHint")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 43;
+    }
     const sk_image_t raster_context_image_handle = SkImage_makeRasterImage(image, nullptr, 0);
     if (raster_context_image_handle != 0) {
         if (!check(static_sk_image_get_ptr(raster_context_image_handle) != nullptr, "SkImage_makeRasterImage null context valid handle")) {
@@ -534,6 +752,13 @@ int main() {
         static_sk_image_delete(raster_context_image_handle);
     }
     if (!check(SkImage_makeRasterImageWithoutContext(nullptr, 0) == 0, "SkImage_makeRasterImageWithoutContext null image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 44;
+    }
+    if (!check(SkImage_makeRasterImageWithoutContext(image, 999999) == 0, "SkImage_makeRasterImageWithoutContext invalid cachingHint")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);
         static_sk_surface_delete(surface_handle);
@@ -730,6 +955,16 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 52;
     }
+    if (!check(!SkImage_scalePixels(image, valid_scale_pixmap, sampling, 999999), "SkImage_scalePixels invalid cachingHint")) {
+        SkPixmap_delete(valid_scale_pixmap);
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 52;
+    }
     SkPixmap_delete(valid_scale_pixmap);
     if (!check(SkImage_makeRawShader(nullptr, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShader null image")) {
         static_sk_matrix_delete(matrix_handle);
@@ -849,7 +1084,34 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 59;
     }
+    if (!check(SkImage_makeColorSpaceWithRecorder(image, fake_recorder, 0, 999999) == 0, "SkImage_makeColorSpaceWithRecorder invalid properties")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 59;
+    }
     if (!check(SkImage_makeColorTypeAndColorSpace(image, nullptr, 4, 999999) == 0, "SkImage_makeColorTypeAndColorSpace invalid color space")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 60;
+    }
+    if (!check(SkImage_makeColorTypeAndColorSpace(image, nullptr, 999999, 0) == 0, "SkImage_makeColorTypeAndColorSpace invalid color type")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 60;
+    }
+    if (!check(SkImage_makeColorTypeAndColorSpaceWithRecorder(image, fake_recorder, 4, 0, 999999) == 0, "SkImage_makeColorTypeAndColorSpaceWithRecorder invalid properties")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);
         static_sk_image_delete(image_handle);

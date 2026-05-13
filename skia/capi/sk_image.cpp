@@ -8,6 +8,8 @@
 #include <utility>
 
 #include "include/core/SkImage.h"
+#include "include/core/SkColorType.h"
+#include "include/core/SkImageInfo.h"
 #include "include/core/SkTileMode.h"
 
 #include "../handles/static_sk_image.h"
@@ -50,6 +52,10 @@ bool has_optional_color_space_handle(sk_color_space_t color_space) {
     return color_space == 0 || static_sk_color_space_get_ptr(color_space) != nullptr;
 }
 
+bool has_required_properties_handle(sk_image_required_properties_t properties) {
+    return properties != 0 && static_sk_image_required_properties_get_ptr(properties) != nullptr;
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -59,6 +65,34 @@ bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_
 
 bool valid_tile_mode(reskia_image_tile_mode_t mode) {
     return mode >= 0 && mode <= static_cast<reskia_image_tile_mode_t>(SkTileMode::kLastTileMode);
+}
+
+bool valid_caching_hint(reskia_image_caching_hint_t hint) {
+    return hint == static_cast<reskia_image_caching_hint_t>(SkImage::kAllow_CachingHint) ||
+           hint == static_cast<reskia_image_caching_hint_t>(SkImage::kDisallow_CachingHint);
+}
+
+bool valid_color_type(reskia_image_color_type_t colorType) {
+    return colorType >= 0 && colorType <= static_cast<reskia_image_color_type_t>(kLastEnum_SkColorType);
+}
+
+bool valid_legacy_bitmap_mode(reskia_image_legacy_bitmap_mode_t mode) {
+    return mode == static_cast<reskia_image_legacy_bitmap_mode_t>(SkImage::kRO_LegacyBitmapMode);
+}
+
+bool valid_rescale_gamma(reskia_image_rescale_gamma_t gamma) {
+    return gamma == static_cast<reskia_image_rescale_gamma_t>(SkImage::RescaleGamma::kSrc) ||
+           gamma == static_cast<reskia_image_rescale_gamma_t>(SkImage::RescaleGamma::kLinear);
+}
+
+bool valid_rescale_mode(reskia_image_rescale_mode_t mode) {
+    return mode >= static_cast<reskia_image_rescale_mode_t>(SkImage::RescaleMode::kNearest) &&
+           mode <= static_cast<reskia_image_rescale_mode_t>(SkImage::RescaleMode::kRepeatedCubic);
+}
+
+bool valid_yuv_color_space(reskia_image_yuv_color_space_t yuvColorSpace) {
+    return yuvColorSpace >= 0 &&
+           yuvColorSpace <= static_cast<reskia_image_yuv_color_space_t>(kLastEnum_SkYUVColorSpace);
 }
 
 }  // namespace
@@ -241,35 +275,35 @@ bool SkImage_isValid(reskia_image_t *image, reskia_recording_context_t *context)
 }
 
 bool SkImage_readPixels(reskia_image_t *image, reskia_direct_context_t *context, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
+    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes) || !valid_caching_hint(cachingHint)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
 bool SkImage_readPixelsWithContextPixmap(reskia_image_t *image, reskia_direct_context_t *context, const reskia_pixmap_t *dst, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || dst == nullptr) {
+    if (image == nullptr || dst == nullptr || !valid_caching_hint(cachingHint)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
 bool SkImage_readPixelsWithImageInfo(reskia_image_t *image, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes)) {
+    if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes) || !valid_caching_hint(cachingHint)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkImageInfo *>(dstInfo), dstPixels, dstRowBytes, srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
 bool SkImage_readPixelsWithPixmap(reskia_image_t *image, const reskia_pixmap_t *dst, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || dst == nullptr) {
+    if (image == nullptr || dst == nullptr || !valid_caching_hint(cachingHint)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->readPixels(* reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
 void SkImage_asyncRescaleAndReadPixels(reskia_image_t *image, const reskia_image_info_t *info, const reskia_i_rect_t *srcRect, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!image || !info || !srcRect || !callback) {
+    if (!image || !info || !srcRect || !callback || !valid_rescale_gamma(rescaleGamma) || !valid_rescale_mode(rescaleMode)) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }
@@ -283,7 +317,7 @@ void SkImage_asyncRescaleAndReadPixels(reskia_image_t *image, const reskia_image
 }
 
 void SkImage_asyncRescaleAndReadPixelsYUV420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback) {
+    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback || !valid_yuv_color_space(yuvColorSpace) || !valid_rescale_gamma(rescaleGamma) || !valid_rescale_mode(rescaleMode)) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }
@@ -299,7 +333,7 @@ void SkImage_asyncRescaleAndReadPixelsYUV420(reskia_image_t *image, reskia_image
 }
 
 void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_image_yuv_color_space_t yuvColorSpace, sk_color_space_t color_space, const reskia_i_rect_t *srcRect, sk_i_size_t dstSize, reskia_image_rescale_gamma_t rescaleGamma, reskia_image_rescale_mode_t rescaleMode, reskia_async_read_pixels_callback_t callback, void *context) {
-    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback) {
+    if (!image || !srcRect || !has_i_size_handle(dstSize) || !callback || !valid_yuv_color_space(yuvColorSpace) || !valid_rescale_gamma(rescaleGamma) || !valid_rescale_mode(rescaleMode)) {
         reskia_async_read_pixels_fail(callback, context);
         return;
     }
@@ -315,7 +349,7 @@ void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_imag
 }
 
 bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, const reskia_sampling_options_t *sampling, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr || dst == nullptr || sampling == nullptr) {
+    if (image == nullptr || dst == nullptr || sampling == nullptr || !valid_caching_hint(cachingHint)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->scalePixels(* reinterpret_cast<const SkPixmap *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));
@@ -336,7 +370,7 @@ sk_image_t SkImage_makeSubset(reskia_image_t *image, reskia_direct_context_t *di
 }
 
 sk_image_t SkImage_makeSubsetWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_i_rect_t *subset, sk_image_required_properties_t properties) {
-    if (image == nullptr || recorder == nullptr || subset == nullptr) {
+    if (image == nullptr || recorder == nullptr || subset == nullptr || !has_required_properties_handle(properties)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), * reinterpret_cast<const SkIRect *>(subset), static_sk_image_required_properties_get_entity(properties)));
@@ -371,21 +405,21 @@ sk_image_t SkImage_makeNonTextureImage(reskia_image_t *image, reskia_direct_cont
 }
 
 sk_image_t SkImage_makeRasterImage(reskia_image_t *image, reskia_direct_context_t *context, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr) {
+    if (image == nullptr || !valid_caching_hint(cachingHint)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeRasterImage(reinterpret_cast<GrDirectContext *>(context), static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
 sk_image_t SkImage_makeRasterImageWithoutContext(reskia_image_t *image, reskia_image_caching_hint_t cachingHint) {
-    if (image == nullptr) {
+    if (image == nullptr || !valid_caching_hint(cachingHint)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeRasterImage(static_cast<SkImage::CachingHint>(cachingHint)));
 }
 
 bool SkImage_asLegacyBitmap(reskia_image_t *image, reskia_bitmap_t *bitmap, reskia_image_legacy_bitmap_mode_t legacyBitmapMode) {
-    if (image == nullptr || bitmap == nullptr) {
+    if (image == nullptr || bitmap == nullptr || !valid_legacy_bitmap_mode(legacyBitmapMode)) {
         return false;
     }
     return reinterpret_cast<SkImage *>(image)->asLegacyBitmap(reinterpret_cast<SkBitmap *>(bitmap), static_cast<SkImage::LegacyBitmapMode>(legacyBitmapMode));
@@ -406,21 +440,21 @@ sk_image_t SkImage_makeColorSpace(reskia_image_t *image, reskia_direct_context_t
 }
 
 sk_image_t SkImage_makeColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space)) {
+    if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space) || !has_required_properties_handle(properties)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, reskia_image_color_type_t targetColorType, sk_color_space_t color_space) {
-    if (image == nullptr || !has_optional_color_space_handle(color_space)) {
+    if (image == nullptr || !valid_color_type(targetColorType) || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, reskia_image_color_type_t targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) {
-    if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space)) {
+    if (image == nullptr || recorder == nullptr || !valid_color_type(targetColorType) || !has_optional_color_space_handle(color_space) || !has_required_properties_handle(properties)) {
         return 0;
     }
     return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));

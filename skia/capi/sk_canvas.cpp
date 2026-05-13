@@ -87,6 +87,10 @@ bool has_shader_handle(sk_shader_t shader) {
     return shader != 0 && static_sk_shader_get_ptr(shader) != nullptr;
 }
 
+bool has_blender_handle(sk_blender_t blender) {
+    return blender != 0 && static_sk_blender_get_ptr(blender) != nullptr;
+}
+
 bool has_rect_handle(sk_rect_t rect) {
     return rect != 0 && static_sk_rect_get_ptr(rect) != nullptr;
 }
@@ -119,6 +123,17 @@ bool valid_src_rect_constraint(reskia_canvas_src_rect_constraint_t constraint) {
 
 bool valid_filter_mode(reskia_canvas_filter_mode_t filter) {
     return filter >= 0 && filter <= static_cast<reskia_canvas_filter_mode_t>(SkFilterMode::kLast);
+}
+
+bool valid_point_mode(reskia_canvas_point_mode_t mode) {
+    return mode == static_cast<reskia_canvas_point_mode_t>(SkCanvas::kPoints_PointMode) ||
+           mode == static_cast<reskia_canvas_point_mode_t>(SkCanvas::kLines_PointMode) ||
+           mode == static_cast<reskia_canvas_point_mode_t>(SkCanvas::kPolygon_PointMode);
+}
+
+bool valid_quad_aa_flags(reskia_canvas_quad_aa_flags_t flags) {
+    return flags >= static_cast<reskia_canvas_quad_aa_flags_t>(SkCanvas::kNone_QuadAAFlags) &&
+           flags <= static_cast<reskia_canvas_quad_aa_flags_t>(SkCanvas::kAll_QuadAAFlags);
 }
 
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
@@ -512,7 +527,7 @@ void SkCanvas_drawLineXY(reskia_canvas_t *canvas, float x0, float y0, float x1, 
 }
 
 void SkCanvas_drawMesh(reskia_canvas_t *canvas, const reskia_mesh_t * mesh, sk_blender_t blender, const reskia_paint_t * paint) {
-    if (canvas == nullptr || mesh == nullptr || blender == 0 || paint == nullptr) {
+    if (canvas == nullptr || mesh == nullptr || !has_blender_handle(blender) || paint == nullptr) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawMesh(* reinterpret_cast<const SkMesh *>(mesh), static_sk_blender_get_entity(blender), * reinterpret_cast<const SkPaint *>(paint));
@@ -597,7 +612,7 @@ void SkCanvas_drawPointXY(reskia_canvas_t *canvas, float x, float y, const reski
 }
 
 void SkCanvas_drawPoints(reskia_canvas_t *canvas, reskia_canvas_point_mode_t mode, size_t count, const reskia_point_t * pts, const reskia_paint_t * paint) {
-    if (canvas == nullptr || paint == nullptr || (count > 0 && pts == nullptr)) {
+    if (canvas == nullptr || !valid_point_mode(mode) || paint == nullptr || (count > 0 && pts == nullptr)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawPoints(static_cast<SkCanvas::PointMode>(mode), count, reinterpret_cast<const SkPoint *>(pts), * reinterpret_cast<const SkPaint *>(paint));
@@ -687,21 +702,21 @@ void SkCanvas_experimental_DrawEdgeAAImageSet(reskia_canvas_t *canvas, const res
     if (canvas == nullptr || cnt <= 0) {
         return;
     }
-    if (imageSet == nullptr || sampling == nullptr) {
+    if (imageSet == nullptr || sampling == nullptr || !valid_src_rect_constraint(constraint)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAImageSet(reinterpret_cast<const SkCanvas::ImageSetEntry *>(imageSet), cnt, reinterpret_cast<const SkPoint *>(dstClips), reinterpret_cast<const SkMatrix *>(preViewMatrices), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
 }
 
 void SkCanvas_experimental_DrawEdgeAAQuad(reskia_canvas_t *canvas, const reskia_rect_t * rect, const reskia_point_t * clip, reskia_canvas_quad_aa_flags_t aaFlags, const reskia_color_4f_t * color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr || rect == nullptr || color == nullptr || !valid_blend_mode(mode)) {
+    if (canvas == nullptr || rect == nullptr || color == nullptr || !valid_quad_aa_flags(aaFlags) || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), * reinterpret_cast<const SkColor4f *>(color), static_cast<SkBlendMode>(mode));
 }
 
 void SkCanvas_experimental_DrawEdgeAAQuadU32Color(reskia_canvas_t *canvas, const reskia_rect_t * rect, const reskia_point_t * clip, reskia_canvas_quad_aa_flags_t aaFlags, uint32_t color, reskia_blend_mode_t mode) {
-    if (canvas == nullptr || rect == nullptr || !valid_blend_mode(mode)) {
+    if (canvas == nullptr || rect == nullptr || !valid_quad_aa_flags(aaFlags) || !valid_blend_mode(mode)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->experimental_DrawEdgeAAQuad(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkPoint *>(clip), static_cast<SkCanvas::QuadAAFlags>(aaFlags), color, static_cast<SkBlendMode>(mode));
@@ -807,7 +822,7 @@ sk_image_info_t SkCanvas_imageInfo(reskia_canvas_t *canvas) {
 
 bool SkCanvas_isClipEmpty(reskia_canvas_t *canvas) {
     if (canvas == nullptr) {
-        return true;
+        return false;
     }
     return reinterpret_cast<SkCanvas *>(canvas)->isClipEmpty();
 }
@@ -1027,7 +1042,7 @@ SkCanvas_writePixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_image_in
 // static
 
 sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t * info, void *pixels, size_t rowBytes, const reskia_surface_props_t * props) {
-    if (info == nullptr || pixels == nullptr) {
+    if (!has_valid_pixels(info, pixels, rowBytes)) {
         return 0;
     }
     return make_canvas_handle(SkCanvas::MakeRasterDirect(* reinterpret_cast<const SkImageInfo *>(info), pixels, rowBytes, reinterpret_cast<const SkSurfaceProps *>(props)));
@@ -1035,6 +1050,9 @@ sk_canvas_t SkCanvas_MakeRasterDirect(const reskia_image_info_t * info, void *pi
 
 sk_canvas_t SkCanvas_MakeRasterDirectN32(int width, int height, void * pixels, size_t rowBytes) {
     if (width < 0 || height < 0 || pixels == nullptr) {
+        return 0;
+    }
+    if (rowBytes < static_cast<size_t>(width) * sizeof(SkPMColor)) {
         return 0;
     }
     return make_canvas_handle(SkCanvas::MakeRasterDirectN32(width, height, static_cast<SkPMColor *>(pixels), rowBytes));
