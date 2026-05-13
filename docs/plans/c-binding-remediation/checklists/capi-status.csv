@@ -235,8 +235,8 @@ skia/capi/sk_runtime_effect_builder.cpp,done,P2,2026-05-12,Phase 2 batch DZ: run
 skia/capi/sk_runtime_effect_builder.h,done,P2,2026-05-12,Phase 2 batch DZ: documented runtime effect builder proxy handle ownership
 skia/capi/sk_runtime_shader_builder.cpp,done,P2,2026-05-12,Phase 2 batch EC: runtime shader builder makeShader localMatrix ownership smoke
 skia/capi/sk_runtime_shader_builder.h,done,P2,2026-05-12,Phase 2 batch EC: documented runtime shader builder makeShader ownership rules
-skia/capi/sk_sampling_options.cpp,todo,P2,,
-skia/capi/sk_sampling_options.h,todo,P2,,
+skia/capi/sk_sampling_options.cpp,done,P2,2026-05-13,Phase 2 batch HL: sampling options enum pointer and Aniso handle rules
+skia/capi/sk_sampling_options.h,done,P2,2026-05-13,Phase 2 batch HL: documented sampling options invalid enum pointer and ownership rules
 skia/capi/sk_shader.cpp,done,P2,2026-05-10,Phase 2 batch AY: shader null receiver guards factory handle 0 and serialize rules
 skia/capi/sk_shader.h,done,P2,2026-05-10,Phase 2 batch AY: documented shader null optional pointer and factory rules
 skia/capi/sk_shader_mask_filter.cpp,done,P2,codex,phase2-batch-t: shader handle 0 guard and null mask-filter handle rule,
@@ -255,10 +255,10 @@ skia/capi/sk_stream_rewindable.cpp,done,P2,codex,phase2-batch-j: SkStreamRewinda
 skia/capi/sk_stream_rewindable.h,done,P2,codex,phase2-batch-j: SkStreamRewindable read/peek/memory-base コメントを補強
 skia/capi/sk_stream_seekable.cpp,done,P2,codex,phase2-batch-j: SkStreamSeekable NULL ガードと read/peek/position 規約を補強
 skia/capi/sk_stream_seekable.h,done,P2,codex,phase2-batch-j: SkStreamSeekable read/peek/memory-base コメントを補強
-skia/capi/sk_string.cpp,done,P2,2026-05-13,Phase 2 batch HK: string null input and borrowed pointer sentinel rules
-skia/capi/sk_string.h,done,P2,2026-05-13,Phase 2 batch HK: documented string null input and borrowed pointer rules
-skia/capi/sk_stroke_rec.cpp,done,P2,2026-05-13,Phase 2 batch HK: stroke rec null pointer enum and scalar guards
-skia/capi/sk_stroke_rec.h,done,P2,2026-05-13,Phase 2 batch HK: documented stroke rec enum pointer and scalar rules
+skia/capi/sk_string.cpp,done,P2,2026-05-13,Phase 2 batch HL: string_view handle validity and format no-op rules
+skia/capi/sk_string.h,done,P2,2026-05-13,Phase 2 batch HL: documented string_view handle validity and format no-op rules
+skia/capi/sk_stroke_rec.cpp,done,P2,2026-05-13,Phase 2 batch HL: stroke rec paint path valid integration smoke
+skia/capi/sk_stroke_rec.h,done,P2,2026-05-13,Phase 2 batch HL: documented stroke rec pointer enum and valid integration rules
 skia/capi/sk_surface.cpp,done,P2,2026-05-11,Phase 2 batch CH: surface async read fail callback and dstSize guards
 skia/capi/sk_surface.h,done,P2,2026-05-11,Phase 2 batch CH: documented surface async read required inputs and fail callback rules
 skia/capi/sk_surface_props.cpp,done,P2,2026-05-10,Phase 2 batch BG: surface props null receiver and clone handle guards
@@ -275,16 +275,16 @@ skia/capi/sk_text_blob_builder_run_handler.cpp,done,P2,2026-05-10,Phase 2 batch 
 skia/capi/sk_text_blob_builder_run_handler.h,done,P2,2026-05-10,Phase 2 batch BB: documented text blob run handler null and required RunInfo rules
 skia/capi/sk_tiled_image_utils.cpp,done,P2,2026-05-10,Phase 2 batch BE: tiled image utils required canvas image rect sampling guards
 skia/capi/sk_tiled_image_utils.h,done,P2,2026-05-10,Phase 2 batch BE: documented tiled image utils required pointer and key value rules
-skia/capi/sk_trace_memory_dump.cpp,done,P2,2026-05-13,Phase 2 batch HK: trace memory dump null no-op and getter sentinels
-skia/capi/sk_trace_memory_dump.h,done,P2,2026-05-13,Phase 2 batch HK: documented trace memory dump borrowed pointer and no-op rules
+skia/capi/sk_trace_memory_dump.cpp,done,P2,2026-05-13,Phase 2 batch HL: trace memory dump concrete forwarding and invalid string no-op smoke
+skia/capi/sk_trace_memory_dump.h,done,P2,2026-05-13,Phase 2 batch HL: documented trace memory dump borrowed pointer and required string rules
 skia/capi/sk_trim_path_effect.cpp,done,P2,codex,phase2-batch-l: null sk_sp handle 規約と NULL delete no-op を補強
 skia/capi/sk_trim_path_effect.h,done,P2,codex,phase2-batch-l: factory の生成不能時 0 規約を明記
 skia/capi/sk_typeface.cpp,done,P2,phase2-batch-ab: NULL/raw-buffer guards and nullable handle factories,
 skia/capi/sk_typeface.h,done,P2,phase2-batch-ab: documented NULL/raw-buffer/output-pointer/handle-0 conventions,
 skia/capi/sk_typeface_mac.cpp,done,P2,phase2-batch-ag: NULL CTFont/typeface guards and nullable handle factory,
 skia/capi/sk_typeface_mac.h,done,P2,phase2-batch-ag: documented CTFontRef/typeface NULL and borrowed pointer conventions,
-skia/capi/sk_un_pre_multiply.cpp,todo,P2,,
-skia/capi/sk_un_pre_multiply.h,todo,P2,,
+skia/capi/sk_un_pre_multiply.cpp,done,P2,2026-05-13,Phase 2 batch HL: unpremultiply U8 sentinel and static table rules
+skia/capi/sk_un_pre_multiply.h,done,P2,2026-05-13,Phase 2 batch HL: documented unpremultiply borrowed table and invalid U8 rules
 skia/capi/sk_v2.cpp,done,P2,codex,phase2-batch-x: NULL guards and borrowed vector pointer rules,
 skia/capi/sk_v2.h,done,P2,codex,phase2-batch-x: 2-entry pointer and default vector comments,
 skia/capi/sk_v3.cpp,done,P2,codex,phase2-batch-x: NULL guards for dot/cross/normalize and pointer access,

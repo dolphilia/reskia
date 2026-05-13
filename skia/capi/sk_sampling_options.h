@@ -18,17 +18,17 @@ extern "C" {
 //bool operator!=(const SkSamplingOptions &other)
 //SkSamplingOptions *SkSamplingOptions_newCopy & operator=(const SkSamplingOptions &that)
 
-reskia_sampling_options_t *SkSamplingOptions_new(); // () -> SkSamplingOptions *
-reskia_sampling_options_t *SkSamplingOptions_newCopy(const reskia_sampling_options_t *options); // (const SkSamplingOptions *options) -> SkSamplingOptions *
-reskia_sampling_options_t *SkSamplingOptions_newWithFilterAndMipmapModes(int fm, int mm); // (SkFilterMode fm, SkMipmapMode mm) -> SkSamplingOptions *
-reskia_sampling_options_t *SkSamplingOptions_newWithFilterMode(int fm); // (SkFilterMode fm) -> SkSamplingOptions *
-reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_t *c); // (const SkCubicResampler *c) -> SkSamplingOptions *
-void SkSamplingOptions_delete(reskia_sampling_options_t *sampling_options); // (SkSamplingOptions *sampling_options)
-bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options); // (SkSamplingOptions *sampling_options) -> bool
+reskia_sampling_options_t *SkSamplingOptions_new(); // Returns a caller-owned sampling options pointer.
+reskia_sampling_options_t *SkSamplingOptions_newCopy(const reskia_sampling_options_t *options); // options is required; NULL returns NULL.
+reskia_sampling_options_t *SkSamplingOptions_newWithFilterAndMipmapModes(int fm, int mm); // Invalid filter or mipmap mode returns NULL.
+reskia_sampling_options_t *SkSamplingOptions_newWithFilterMode(int fm); // Invalid filter mode returns NULL.
+reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_t *c); // c is required; NULL returns NULL.
+void SkSamplingOptions_delete(reskia_sampling_options_t *sampling_options); // NULL sampling_options is no-op.
+bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options); // NULL sampling_options returns false.
 
 // static
 
-sk_sampling_options_t SkSamplingOptions_Aniso(int maxAniso); // (int maxAniso) -> sk_sampling_options_t
+sk_sampling_options_t SkSamplingOptions_Aniso(int maxAniso); // Returns a caller-owned handle; Skia clamps maxAniso to at least 1.
 
 #ifdef __cplusplus
 }

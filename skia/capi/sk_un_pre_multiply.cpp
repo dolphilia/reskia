@@ -19,10 +19,16 @@ const reskia_un_pre_multiply_scale_t *SkUnPreMultiply_GetScaleTable() {
 }
 
 reskia_un_pre_multiply_scale_t SkUnPreMultiply_GetScale(uint32_t alpha) {
+    if (alpha > 255) {
+        return 0;
+    }
     return SkUnPreMultiply::GetScale(alpha);
 }
 
 uint32_t SkUnPreMultiply_ApplyScale(reskia_un_pre_multiply_scale_t scale, uint32_t component) {
+    if (component > 255) {
+        return 0;
+    }
     return SkUnPreMultiply::ApplyScale(scale, component);
 }
 

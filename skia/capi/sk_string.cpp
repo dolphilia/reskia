@@ -58,6 +58,9 @@ reskia_string_t *SkString_new_6(const reskia_std_string_t *str) {
 }
 
 reskia_string_t *SkString_new_7(string_view_t view) {
+    if (!static_string_view_contains(view)) {
+        return nullptr;
+    }
     return reinterpret_cast<reskia_string_t *>(new SkString(static_string_view_get_entity(view)));
 }
 
@@ -206,7 +209,7 @@ void SkString_setTextWithLength(reskia_string_t *string, const char text[], size
 }
 
 void SkString_setStringView(reskia_string_t *string, string_view_t str) {
-    if (string == nullptr) {
+    if (string == nullptr || !static_string_view_contains(str)) {
         return;
     }
     reinterpret_cast<SkString *>(string)->set(static_string_view_get_entity(str));
@@ -234,7 +237,7 @@ void SkString_insertString(reskia_string_t *string, size_t offset, const reskia_
 }
 
 void SkString_insertStringView(reskia_string_t *string, size_t offset, string_view_t str) {
-    if (string == nullptr) {
+    if (string == nullptr || !static_string_view_contains(str)) {
         return;
     }
     reinterpret_cast<SkString *>(string)->insert(offset, static_string_view_get_entity(str));
@@ -311,7 +314,7 @@ void SkString_appendString(reskia_string_t *string, const reskia_string_t *str) 
 }
 
 void SkString_appendStringView(reskia_string_t *string, string_view_t str) {
-    if (string == nullptr) {
+    if (string == nullptr || !static_string_view_contains(str)) {
         return;
     }
     reinterpret_cast<SkString *>(string)->append(static_string_view_get_entity(str));
@@ -388,7 +391,7 @@ void SkString_prependString(reskia_string_t *string, const reskia_string_t *str)
 }
 
 void SkString_prependStringView(reskia_string_t *string, string_view_t str) {
-    if (string == nullptr) {
+    if (string == nullptr || !static_string_view_contains(str)) {
         return;
     }
     reinterpret_cast<SkString *>(string)->prepend(static_string_view_get_entity(str));

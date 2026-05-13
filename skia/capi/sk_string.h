@@ -33,7 +33,7 @@ reskia_string_t *SkString_newFromText(const char text[]); // text is required; N
 reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len); // text is required when len > 0; invalid input returns NULL.
 reskia_string_t *SkString_new_5(const reskia_string_t *str); // str is required; NULL returns NULL.
 reskia_string_t *SkString_new_6(const reskia_std_string_t *str); // str is required; NULL returns NULL.
-reskia_string_t *SkString_new_7(int view); // (string_view_t view) -> SkString *
+reskia_string_t *SkString_new_7(int view); // view must be a valid string_view handle; invalid handle returns NULL.
 void SkString_delete(reskia_string_t *string); // (SkString *string)
 bool SkString_isEmpty(reskia_string_t *string); // NULL string returns true.
 size_t SkString_size(reskia_string_t *string); // NULL string returns 0.
@@ -58,11 +58,11 @@ void SkString_resize(reskia_string_t *string, size_t len); // NULL string is no-
 void SkString_set(reskia_string_t *string, const reskia_string_t *src); // NULL input is no-op.
 void SkString_setText(reskia_string_t *string, const char text[]); // NULL input is no-op.
 void SkString_setTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
-void SkString_setStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_setStringView(reskia_string_t *string, int str); // NULL string or invalid string_view handle is no-op.
 void SkString_insert(reskia_string_t *string, size_t offset, const char text[]); // NULL input is no-op.
 void SkString_insertTextWithLength(reskia_string_t *string, size_t offset, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
 void SkString_insertString(reskia_string_t *string, size_t offset, const reskia_string_t *str); // NULL input is no-op.
-void SkString_insertStringView(reskia_string_t *string, size_t offset, int str); // (SkString *string, size_t offset, string_view_t str)
+void SkString_insertStringView(reskia_string_t *string, size_t offset, int str); // NULL string or invalid string_view handle is no-op.
 void SkString_insertUnichar(reskia_string_t *string, size_t offset, reskia_string_unichar_t unichar); // (SkString *string, size_t offset, SkUnichar unichar)
 void SkString_insertS32(reskia_string_t *string, size_t offset, int value); // (SkString *string, size_t offset, int32_t value)
 void SkString_insertS64(reskia_string_t *string, size_t offset, long long value, int minDigits); // (SkString *string, size_t offset, int64_t value, int minDigits)
@@ -73,7 +73,7 @@ void SkString_insertScalar(reskia_string_t *string, size_t offset, float v); // 
 void SkString_append(reskia_string_t *string, const char text[]); // NULL input is no-op.
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
 void SkString_appendString(reskia_string_t *string, const reskia_string_t *str); // NULL input is no-op.
-void SkString_appendStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_appendStringView(reskia_string_t *string, int str); // NULL string or invalid string_view handle is no-op.
 void SkString_appendUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_appendS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_appendS64(reskia_string_t *string, long long value, int minDigits); // (SkString *string, int64_t value, int minDigits)
@@ -84,7 +84,7 @@ void SkString_appendScalar(reskia_string_t *string, float value); // (SkString *
 void SkString_prepend(reskia_string_t *string, const char text[]); // NULL input is no-op.
 void SkString_prependTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
 void SkString_prependString(reskia_string_t *string, const reskia_string_t *str); // NULL input is no-op.
-void SkString_prependStringView(reskia_string_t *string, int str); // (SkString *string, string_view_t str)
+void SkString_prependStringView(reskia_string_t *string, int str); // NULL string or invalid string_view handle is no-op.
 void SkString_prependUnichar(reskia_string_t *string, reskia_string_unichar_t uni); // (SkString *string, SkUnichar uni)
 void SkString_prependS32(reskia_string_t *string, int value); // (SkString *string, int32_t value)
 void SkString_prependS64(reskia_string_t *string, int value, int minDigits); // (SkString *string, int32_t value, int minDigits)

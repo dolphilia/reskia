@@ -69,6 +69,16 @@ int main() {
     const sk_shader_t gradient = SkGradientShader_MakeLinear(points, gradient_colors, nullptr, 2, 0, 0, nullptr);
     ok &= check(gradient != 0 && static_sk_shader_get_ptr(gradient) != nullptr, "Gradient linear valid returned handle");
     static_sk_shader_delete(gradient);
+    const sk_shader_t radial_gradient = SkGradientShader_MakeRadial(points, 8.0f, gradient_colors, nullptr, 2, 0, 0, nullptr);
+    ok &= check(radial_gradient != 0 && static_sk_shader_get_ptr(radial_gradient) != nullptr, "Gradient radial valid returned handle");
+    static_sk_shader_delete(radial_gradient);
+    const auto *end_point = reinterpret_cast<const reskia_point_t *>(reinterpret_cast<const char *>(points) + sizeof(float) * 2);
+    const sk_shader_t conical_gradient = SkGradientShader_MakeTwoPointConical(points, 2.0f, end_point, 8.0f, gradient_colors, nullptr, 2, 0, 0, nullptr);
+    ok &= check(conical_gradient != 0 && static_sk_shader_get_ptr(conical_gradient) != nullptr, "Gradient two-point conical valid returned handle");
+    static_sk_shader_delete(conical_gradient);
+    const sk_shader_t sweep_gradient = SkGradientShader_MakeSweep(8.0f, 8.0f, gradient_colors, nullptr, 2, 0, 0.0f, 360.0f, 0, nullptr);
+    ok &= check(sweep_gradient != 0 && static_sk_shader_get_ptr(sweep_gradient) != nullptr, "Gradient sweep valid returned handle");
+    static_sk_shader_delete(sweep_gradient);
     static_sk_point_two_delete(gradient_points);
 
     ok &= check(SkPerlinNoiseShader_MakeFractalNoise(0.0f, 0.05f, 4, 0.0f, nullptr) == 0, "Perlin fractal invalid frequency");

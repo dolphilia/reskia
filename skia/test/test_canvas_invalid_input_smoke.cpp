@@ -56,6 +56,16 @@ bool check(bool condition, const char *message) {
     return true;
 }
 
+struct TestCanvasLattice {
+    const int *xDivs;
+    const int *yDivs;
+    const uint8_t *rectTypes;
+    int xCount;
+    int yCount;
+    const void *bounds;
+    const uint32_t *colors;
+};
+
 }  // namespace
 
 int main() {
@@ -878,6 +888,26 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    const sk_canvas_t direct_canvas_handle = SkCanvas_MakeRasterDirect(image_info, pixels, SkImageInfo_minRowBytes(image_info), nullptr);
+    if (!check(direct_canvas_handle != 0 && static_sk_canvas_get_ptr(direct_canvas_handle) != nullptr, "SkCanvas_MakeRasterDirect valid borrowed storage")) {
+        if (direct_canvas_handle != 0) {
+            static_sk_canvas_delete(direct_canvas_handle);
+        }
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    static_sk_canvas_delete(direct_canvas_handle);
+    const sk_canvas_t direct_n32_canvas_handle = SkCanvas_MakeRasterDirectN32(2, 2, pixels, 2 * sizeof(uint32_t));
+    if (!check(direct_n32_canvas_handle != 0 && static_sk_canvas_get_ptr(direct_n32_canvas_handle) != nullptr, "SkCanvas_MakeRasterDirectN32 valid borrowed storage")) {
+        if (direct_n32_canvas_handle != 0) {
+            static_sk_canvas_delete(direct_n32_canvas_handle);
+        }
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    static_sk_canvas_delete(direct_n32_canvas_handle);
     size_t top_layer_row_bytes = 0;
     SkCanvas_accessTopLayerPixels(canvas, image_info, &top_layer_row_bytes, nullptr);
     reskia_bitmap_t *layer_bitmap = SkBitmap_new();
@@ -990,6 +1020,30 @@ int main() {
         SkCanvas_delete(canvas);
         return 8;
     }
+    auto *surface_canvas = SkSurface_getCanvas(surface);
+    if (!check(surface_canvas != nullptr, "SkSurface_getCanvas for canvas surface/context getters")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    if (!check(SkCanvas_getSurface(surface_canvas) == surface, "SkCanvas_getSurface borrowed surface")) {
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    const sk_surface_t canvas_surface_handle = SkCanvas_makeSurface(surface_canvas, image_info, nullptr);
+    if (!check(canvas_surface_handle != 0 && static_sk_surface_get_ptr(canvas_surface_handle) != nullptr, "SkCanvas_makeSurface valid returned handle")) {
+        if (canvas_surface_handle != 0) {
+            static_sk_surface_delete(canvas_surface_handle);
+        }
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(image_info_handle);
+        SkCanvas_delete(canvas);
+        return 8;
+    }
+    static_sk_surface_delete(canvas_surface_handle);
     const sk_image_t image_handle = SkSurface_makeImageSnapshot(surface);
     auto *image = static_cast<reskia_image_t *>(static_sk_image_get_ptr(image_handle));
     if (!check(image != nullptr, "SkSurface_makeImageSnapshot for canvas image lattice")) {
@@ -1020,6 +1074,20 @@ int main() {
     SkCanvas_drawImageNine(canvas, image, nullptr, dst, 0, nullptr);
     SkCanvas_drawImageNine(canvas, image, center, nullptr, 0, nullptr);
     SkCanvas_drawImageNine(canvas, image, center, dst, 999999, nullptr);
+    const int lattice_x_divs[] = {1};
+    const int lattice_y_divs[] = {1};
+    const TestCanvasLattice valid_lattice{
+            lattice_x_divs,
+            lattice_y_divs,
+            nullptr,
+            1,
+            1,
+            nullptr,
+            nullptr};
+    const auto *valid_c_lattice = reinterpret_cast<const reskia_lattice_t *>(&valid_lattice);
+    SkCanvas_drawImageLattice(canvas, image, valid_c_lattice, dst);
+    SkCanvas_drawImageLatticeWithFilter(canvas, image, valid_c_lattice, dst, 0, nullptr);
+    SkCanvas_drawImageNine(canvas, image, center, dst, 0, nullptr);
     reskia_sampling_options_t *image_sampling = SkSamplingOptions_new();
     if (!check(image_sampling != nullptr, "SkSamplingOptions_new for canvas drawImage")) {
         static_sk_i_rect_delete(center_handle);
@@ -1123,6 +1191,27 @@ int main() {
     }
     SkCanvas_getLocalClipBoundsInto(canvas, static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(local_clip_bounds)));
     static_sk_rect_delete(local_clip_bounds);
+    const sk_rect_t quick_rect_handle = SkRect_MakeXYWH(0.0f, 0.0f, 1.0f, 1.0f);
+    auto *quick_rect = static_cast<reskia_rect_t *>(static_sk_rect_get_ptr(quick_rect_handle));
+    if (!check(quick_rect != nullptr, "SkCanvas_quickRejectRect valid rect input")) {
+        if (quick_rect_handle != 0) {
+            static_sk_rect_delete(quick_rect_handle);
+        }
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    (void)SkCanvas_quickRejectRect(canvas, quick_rect);
+    reskia_path_t *quick_path = SkPath_new();
+    if (!check(quick_path != nullptr, "SkPath_new for SkCanvas_quickReject valid path")) {
+        static_sk_rect_delete(quick_rect_handle);
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    SkPath_moveTo(quick_path, 0.0f, 0.0f);
+    SkPath_lineTo(quick_path, 1.0f, 1.0f);
+    (void)SkCanvas_quickReject(canvas, quick_path);
+    SkPath_delete(quick_path);
+    static_sk_rect_delete(quick_rect_handle);
 
     SkCanvas_delete(canvas);
     return 0;

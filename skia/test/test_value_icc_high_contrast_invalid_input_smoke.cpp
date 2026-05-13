@@ -88,6 +88,15 @@ int main() {
     ok &= check(SkICC_SkWriteICCProfileFromICCProfile(nullptr, nullptr) == 0, "ICC WriteICCProfileFromProfile null");
     SkICC_SkICCFloatXYZD50ToGrid16Lab(nullptr, nullptr);
     SkICC_SkICCFloatToTable16(0.0f, nullptr);
+    float xyz_d50[3] = {0.5f, 0.5f, 0.5f};
+    uint8_t grid16_lab[6] = {};
+    SkICC_SkICCFloatXYZD50ToGrid16Lab(xyz_d50, grid16_lab);
+    ok &= check(grid16_lab[0] != 0 || grid16_lab[1] != 0 || grid16_lab[2] != 0 ||
+                grid16_lab[3] != 0 || grid16_lab[4] != 0 || grid16_lab[5] != 0,
+                "ICC Grid16Lab valid output");
+    uint8_t table16[2] = {};
+    SkICC_SkICCFloatToTable16(0.5f, table16);
+    ok &= check(table16[0] != 0 || table16[1] != 0, "ICC Table16 valid output");
 
     static_sk_point_delete(point_handle);
     static_sk_i_rect_delete(irect_handle);

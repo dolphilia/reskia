@@ -16,14 +16,14 @@ typedef uint32_t reskia_pmcolor_t;
 extern "C" {
 #endif
 
-void SkUnPreMultiply_delete(reskia_un_pre_multiply_t *unPreMultiply); // (SkUnPreMultiply *unPreMultiply)
+void SkUnPreMultiply_delete(reskia_un_pre_multiply_t *unPreMultiply); // No-op for non-owned static helper pointers.
 
 // static
 
-const reskia_un_pre_multiply_scale_t *SkUnPreMultiply_GetScaleTable(); // () -> const SkUnPreMultiply::Scale *
-reskia_un_pre_multiply_scale_t SkUnPreMultiply_GetScale(uint32_t alpha); // (U8CPU alpha) -> SkUnPreMultiply::Scale
-uint32_t SkUnPreMultiply_ApplyScale(reskia_un_pre_multiply_scale_t scale, uint32_t component); // (SkUnPreMultiply::Scale scale, U8CPU component) -> U8CPU
-reskia_color_t SkUnPreMultiply_PMColorToColor(reskia_pmcolor_t c); // (SkPMColor c) -> SkColor
+const reskia_un_pre_multiply_scale_t *SkUnPreMultiply_GetScaleTable(); // Returns a borrowed static 256-entry scale table.
+reskia_un_pre_multiply_scale_t SkUnPreMultiply_GetScale(uint32_t alpha); // alpha must be <= 255; invalid alpha returns 0.
+uint32_t SkUnPreMultiply_ApplyScale(reskia_un_pre_multiply_scale_t scale, uint32_t component); // component must be <= 255; invalid component returns 0.
+reskia_color_t SkUnPreMultiply_PMColorToColor(reskia_pmcolor_t c); // Converts a packed premultiplied color value.
 
 #ifdef __cplusplus
 }
