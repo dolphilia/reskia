@@ -74,6 +74,12 @@ int main() {
     SkCanvas_translate(nullptr, 1.0f, 1.0f);
     SkCanvas_drawPath(nullptr, nullptr, nullptr);
     SkCanvas_drawPoints(nullptr, 0, 1, nullptr, nullptr);
+    SkCanvas_drawLine(nullptr, 0, 0, nullptr);
+    SkCanvas_drawLineXY(nullptr, 0.0f, 0.0f, 1.0f, 1.0f, nullptr);
+    SkCanvas_drawPoint(nullptr, 0, nullptr);
+    SkCanvas_drawPointXY(nullptr, 0.0f, 0.0f, nullptr);
+    SkCanvas_drawCircle(nullptr, 0, 1.0f, nullptr);
+    SkCanvas_drawCircleAt(nullptr, 0.0f, 0.0f, 1.0f, nullptr);
     SkCanvas_drawSimpleText(nullptr, nullptr, 1, 0, 0.0f, 0.0f, nullptr, nullptr);
     SkCanvas_drawGlyphs(nullptr, 1, nullptr, nullptr, nullptr, 0, nullptr, 0, nullptr, nullptr);
     SkCanvas_drawGlyphsAtPositions(nullptr, 1, nullptr, nullptr, 0, nullptr, nullptr);
@@ -253,17 +259,25 @@ int main() {
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 999999);
     SkCanvas_drawColorU32(canvas, 0xFF000000u, 0);
     SkCanvas_clipIRect(canvas, nullptr, 0);
+    SkCanvas_clipIRect(canvas, reinterpret_cast<const reskia_i_rect_t *>(1), 999999);
     SkCanvas_clipRect(canvas, nullptr, false);
     SkCanvas_clipRectWithOp(canvas, nullptr, 0);
+    SkCanvas_clipRectWithOp(canvas, reinterpret_cast<const reskia_rect_t *>(1), 999999);
     SkCanvas_clipRectWithOpAA(canvas, nullptr, 0, false);
+    SkCanvas_clipRectWithOpAA(canvas, reinterpret_cast<const reskia_rect_t *>(1), 999999, false);
     SkCanvas_clipRRect(canvas, nullptr, false);
     SkCanvas_clipRRectWithOp(canvas, nullptr, 0);
+    SkCanvas_clipRRectWithOp(canvas, reinterpret_cast<const reskia_r_rect_t *>(1), 999999);
     SkCanvas_clipRRectWithOpAA(canvas, nullptr, 0, false);
+    SkCanvas_clipRRectWithOpAA(canvas, reinterpret_cast<const reskia_r_rect_t *>(1), 999999, false);
     SkCanvas_clipPath(canvas, nullptr, false);
     SkCanvas_clipPathWithOp(canvas, nullptr, 0);
+    SkCanvas_clipPathWithOp(canvas, reinterpret_cast<const reskia_path_t *>(1), 999999);
     SkCanvas_clipPathWithOpAA(canvas, nullptr, 0, false);
+    SkCanvas_clipPathWithOpAA(canvas, reinterpret_cast<const reskia_path_t *>(1), 999999, false);
     SkCanvas_clipShader(canvas, 0, 0);
     SkCanvas_clipShader(canvas, 999999, 0);
+    SkCanvas_clipShader(canvas, 999999, 999999);
     const sk_i_rect_t clip_irect_handle = SkIRect_MakeXYWH(0, 0, 1, 1);
     auto *clip_irect = static_cast<reskia_i_rect_t *>(static_sk_i_rect_get_ptr(clip_irect_handle));
     if (!check(clip_irect != nullptr, "SkIRect_MakeXYWH for canvas clipIRect")) {
@@ -337,6 +351,9 @@ int main() {
     SkCanvas_drawRegion(canvas, nullptr, paint);
     SkCanvas_drawRegion(canvas, region, nullptr);
     SkCanvas_drawRegion(canvas, region, paint);
+    SkCanvas_clipRegion(canvas, nullptr, 0);
+    SkCanvas_clipRegion(canvas, reinterpret_cast<const reskia_region_t *>(1), 999999);
+    SkCanvas_clipRegion(canvas, region, 0);
     SkRegion_delete(region);
     SkPoint patch_cubics[12] = {};
     SkPoint patch_tex_coords[4] = {};
@@ -846,8 +863,10 @@ int main() {
     SkCanvas_drawImageLattice(canvas, image, c_lattice, nullptr);
     SkCanvas_drawImageLatticeWithFilter(canvas, image, nullptr, dst, 0, nullptr);
     SkCanvas_drawImageLatticeWithFilter(canvas, image, c_lattice, nullptr, 0, nullptr);
+    SkCanvas_drawImageLatticeWithFilter(canvas, image, c_lattice, dst, 999999, nullptr);
     SkCanvas_drawImageNine(canvas, image, nullptr, dst, 0, nullptr);
     SkCanvas_drawImageNine(canvas, image, center, nullptr, 0, nullptr);
+    SkCanvas_drawImageNine(canvas, image, center, dst, 999999, nullptr);
     reskia_sampling_options_t *image_sampling = SkSamplingOptions_new();
     if (!check(image_sampling != nullptr, "SkSamplingOptions_new for canvas drawImage")) {
         static_sk_i_rect_delete(center_handle);
@@ -862,6 +881,14 @@ int main() {
     SkCanvas_drawImageHandleWithSampling(canvas, image_handle, 0.0f, 0.0f, image_sampling, nullptr);
     SkCanvas_drawImageRect(canvas, image_handle, dst, image_sampling, nullptr);
     SkCanvas_drawImageRectHandleWithSrcDst(canvas, image_handle, dst, dst, image_sampling, nullptr, 0);
+    SkCanvas_drawImageRectHandleWithSrcDst(canvas, image_handle, dst, dst, image_sampling, nullptr, 999999);
+    SkCanvas_drawImagePtr(canvas, image, 0.0f, 0.0f);
+    SkCanvas_drawImagePtrWithSampling(canvas, image, 0.0f, 0.0f, image_sampling, nullptr);
+    SkCanvas_drawImagePtrWithSampling(canvas, image, 0.0f, 0.0f, nullptr, nullptr);
+    SkCanvas_drawImageRectPtr(canvas, image, dst, image_sampling, nullptr);
+    SkCanvas_drawImageRectPtr(canvas, image, dst, nullptr, nullptr);
+    SkCanvas_drawImageRectPtrWithSrcDst(canvas, image, dst, dst, image_sampling, nullptr, 0);
+    SkCanvas_drawImageRectPtrWithSrcDst(canvas, image, dst, dst, image_sampling, nullptr, 999999);
     SkCanvas_drawImageHandleWithSampling(canvas, image_handle, 0.0f, 0.0f, nullptr, nullptr);
     SkCanvas_drawImageRect(canvas, image_handle, dst, nullptr, nullptr);
     const sk_rsx_form_t atlas_xform_handle = SkRSXform_Make(1.0f, 0.0f, 0.0f, 0.0f);

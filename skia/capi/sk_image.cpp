@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "include/core/SkImage.h"
+#include "include/core/SkTileMode.h"
 
 #include "../handles/static_sk_image.h"
 #include "../handles/static_sk_shader.h"
@@ -54,6 +55,10 @@ bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_
         return false;
     }
     return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
+}
+
+bool valid_tile_mode(reskia_image_tile_mode_t mode) {
+    return mode >= 0 && mode <= static_cast<reskia_image_tile_mode_t>(SkTileMode::kLastTileMode);
 }
 
 }  // namespace
@@ -152,14 +157,14 @@ bool SkImage_isOpaque(reskia_image_t *image) {
 }
 
 sk_shader_t SkImage_makeShader(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
-    if (image == nullptr || sampling == nullptr) {
+    if (image == nullptr || !valid_tile_mode(tmx) || !valid_tile_mode(tmy) || sampling == nullptr) {
         return 0;
     }
     return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
 sk_shader_t SkImage_makeShaderWithTileModesAndLocalMatrix(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
-    if (image == nullptr || sampling == nullptr || lm == nullptr) {
+    if (image == nullptr || !valid_tile_mode(tmx) || !valid_tile_mode(tmy) || sampling == nullptr || lm == nullptr) {
         return 0;
     }
     return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));
@@ -180,14 +185,14 @@ sk_shader_t SkImage_makeShaderWithSampling(reskia_image_t *image, const reskia_s
 }
 
 sk_shader_t SkImage_makeRawShader(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix) {
-    if (image == nullptr || sampling == nullptr) {
+    if (image == nullptr || !valid_tile_mode(tmx) || !valid_tile_mode(tmy) || sampling == nullptr) {
         return 0;
     }
     return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
 sk_shader_t SkImage_makeRawShaderWithTileModesAndLocalMatrix(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm) {
-    if (image == nullptr || sampling == nullptr || lm == nullptr) {
+    if (image == nullptr || !valid_tile_mode(tmx) || !valid_tile_mode(tmy) || sampling == nullptr || lm == nullptr) {
         return 0;
     }
     return static_sk_shader_make(reinterpret_cast<SkImage *>(image)->makeRawShader(static_cast<SkTileMode>(tmx), static_cast<SkTileMode>(tmy), * reinterpret_cast<const SkSamplingOptions *>(sampling), * reinterpret_cast<const SkMatrix *>(lm)));

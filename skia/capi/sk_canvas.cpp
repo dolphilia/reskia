@@ -107,6 +107,20 @@ bool valid_text_encoding(reskia_canvas_text_encoding_t encoding) {
     return encoding >= 0 && encoding <= static_cast<reskia_canvas_text_encoding_t>(SkTextEncoding::kGlyphID);
 }
 
+bool valid_clip_op(reskia_canvas_clip_op_t op) {
+    return op == static_cast<reskia_canvas_clip_op_t>(SkClipOp::kDifference) ||
+           op == static_cast<reskia_canvas_clip_op_t>(SkClipOp::kIntersect);
+}
+
+bool valid_src_rect_constraint(reskia_canvas_src_rect_constraint_t constraint) {
+    return constraint == static_cast<reskia_canvas_src_rect_constraint_t>(SkCanvas::kStrict_SrcRectConstraint) ||
+           constraint == static_cast<reskia_canvas_src_rect_constraint_t>(SkCanvas::kFast_SrcRectConstraint);
+}
+
+bool valid_filter_mode(reskia_canvas_filter_mode_t filter) {
+    return filter >= 0 && filter <= static_cast<reskia_canvas_filter_mode_t>(SkFilterMode::kLast);
+}
+
 bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_t rowBytes) {
     if (info == nullptr || pixels == nullptr) {
         return false;
@@ -180,7 +194,7 @@ void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color) {
 }
 
 void SkCanvas_clipIRect(reskia_canvas_t *canvas, const reskia_i_rect_t * irect, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || irect == nullptr) {
+    if (canvas == nullptr || irect == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipIRect(* reinterpret_cast<const SkIRect *>(irect), static_cast<SkClipOp>(op));
@@ -194,14 +208,14 @@ void SkCanvas_clipPath(reskia_canvas_t *canvas, const reskia_path_t *path, bool 
 }
 
 void SkCanvas_clipPathWithOp(reskia_canvas_t *canvas, const reskia_path_t *path, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || path == nullptr) {
+    if (canvas == nullptr || path == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipPath(* reinterpret_cast<const SkPath *>(path), static_cast<SkClipOp>(op));
 }
 
 void SkCanvas_clipPathWithOpAA(reskia_canvas_t *canvas, const reskia_path_t *path, reskia_canvas_clip_op_t op, bool doAntiAlias) {
-    if (canvas == nullptr || path == nullptr) {
+    if (canvas == nullptr || path == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipPath(* reinterpret_cast<const SkPath *>(path), static_cast<SkClipOp>(op), doAntiAlias);
@@ -215,21 +229,21 @@ void SkCanvas_clipRect(reskia_canvas_t *canvas, const reskia_rect_t * rect, bool
 }
 
 void SkCanvas_clipRectWithOp(reskia_canvas_t *canvas, const reskia_rect_t * rect, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || rect == nullptr) {
+    if (canvas == nullptr || rect == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipRect(* reinterpret_cast<const SkRect *>(rect), static_cast<SkClipOp>(op));
 }
 
 void SkCanvas_clipRectWithOpAA(reskia_canvas_t *canvas, const reskia_rect_t * rect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
-    if (canvas == nullptr || rect == nullptr) {
+    if (canvas == nullptr || rect == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipRect(* reinterpret_cast<const SkRect *>(rect), static_cast<SkClipOp>(op), doAntiAlias);
 }
 
 void SkCanvas_clipRegion(reskia_canvas_t *canvas, const reskia_region_t * deviceRgn, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || deviceRgn == nullptr) {
+    if (canvas == nullptr || deviceRgn == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipRegion(* reinterpret_cast<const SkRegion *>(deviceRgn), static_cast<SkClipOp>(op));
@@ -243,21 +257,21 @@ void SkCanvas_clipRRect(reskia_canvas_t *canvas, const reskia_r_rect_t * rrect, 
 }
 
 void SkCanvas_clipRRectWithOp(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || rrect == nullptr) {
+    if (canvas == nullptr || rrect == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipRRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkClipOp>(op));
 }
 
 void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias) {
-    if (canvas == nullptr || rrect == nullptr) {
+    if (canvas == nullptr || rrect == nullptr || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipRRect(* reinterpret_cast<const SkRRect *>(rrect), static_cast<SkClipOp>(op), doAntiAlias);
 }
 
 void SkCanvas_clipShader(reskia_canvas_t *canvas, sk_shader_t shader, reskia_canvas_clip_op_t op) {
-    if (canvas == nullptr || !has_shader_handle(shader)) {
+    if (canvas == nullptr || !has_shader_handle(shader) || !valid_clip_op(op)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->clipShader(static_sk_shader_get_entity(shader), static_cast<SkClipOp>(op));
@@ -435,14 +449,14 @@ void SkCanvas_drawImageLattice(reskia_canvas_t *canvas, const reskia_image_t * i
 }
 
 void SkCanvas_drawImageLatticeWithFilter(reskia_canvas_t *canvas, const reskia_image_t * image, const reskia_lattice_t * lattice, const reskia_rect_t * dst, reskia_canvas_filter_mode_t filter, const reskia_paint_t * paint) {
-    if (canvas == nullptr || image == nullptr || lattice == nullptr || dst == nullptr) {
+    if (canvas == nullptr || image == nullptr || lattice == nullptr || dst == nullptr || !valid_filter_mode(filter)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageLattice(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkCanvas::Lattice *>(lattice), * reinterpret_cast<const SkRect *>(dst), static_cast<SkFilterMode>(filter), reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawImageNine(reskia_canvas_t *canvas, const reskia_image_t * image, const reskia_i_rect_t * center, const reskia_rect_t * dst, reskia_canvas_filter_mode_t filter, const reskia_paint_t * paint) {
-    if (canvas == nullptr || image == nullptr || center == nullptr || dst == nullptr) {
+    if (canvas == nullptr || image == nullptr || center == nullptr || dst == nullptr || !valid_filter_mode(filter)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageNine(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkIRect *>(center), * reinterpret_cast<const SkRect *>(dst), static_cast<SkFilterMode>(filter), reinterpret_cast<const SkPaint *>(paint));
@@ -456,7 +470,7 @@ void SkCanvas_drawImageRect(reskia_canvas_t *canvas, sk_image_t image, const res
 }
 
 void SkCanvas_drawImageRectHandleWithSrcDst(reskia_canvas_t *canvas, sk_image_t image, const reskia_rect_t * src, const reskia_rect_t * dst, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint, reskia_canvas_src_rect_constraint_t constraint) {
-    if (canvas == nullptr || !has_image_handle(image) || src == nullptr || dst == nullptr || sampling == nullptr) {
+    if (canvas == nullptr || !has_image_handle(image) || src == nullptr || dst == nullptr || sampling == nullptr || !valid_src_rect_constraint(constraint)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(static_sk_image_get_entity(image), * reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));
@@ -470,7 +484,7 @@ void SkCanvas_drawImageRectPtr(reskia_canvas_t *canvas, const reskia_image_t * i
 }
 
 void SkCanvas_drawImageRectPtrWithSrcDst(reskia_canvas_t *canvas, const reskia_image_t * image, const reskia_rect_t * src, const reskia_rect_t * dst, const reskia_sampling_options_t * sampling, const reskia_paint_t * paint, reskia_canvas_src_rect_constraint_t constraint) {
-    if (canvas == nullptr || image == nullptr || src == nullptr || dst == nullptr || sampling == nullptr) {
+    if (canvas == nullptr || image == nullptr || src == nullptr || dst == nullptr || sampling == nullptr || !valid_src_rect_constraint(constraint)) {
         return;
     }
     reinterpret_cast<SkCanvas *>(canvas)->drawImageRect(reinterpret_cast<const SkImage *>(image), * reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkPaint *>(paint), static_cast<SkCanvas::SrcRectConstraint>(constraint));

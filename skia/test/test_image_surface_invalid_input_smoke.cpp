@@ -588,7 +588,34 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 49;
     }
+    if (!check(SkImage_makeShader(image, -1, 0, sampling, nullptr) == 0, "SkImage_makeShader invalid tmx")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 49;
+    }
+    if (!check(SkImage_makeShader(image, 0, 999999, sampling, nullptr) == 0, "SkImage_makeShader invalid tmy")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 49;
+    }
     if (!check(SkImage_makeShaderWithTileModesAndLocalMatrix(image, 0, 0, sampling, nullptr) == 0, "SkImage_makeShaderWithTileModesAndLocalMatrix null matrix")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 50;
+    }
+    if (!check(SkImage_makeShaderWithTileModesAndLocalMatrix(image, 999999, 0, sampling, matrix) == 0, "SkImage_makeShaderWithTileModesAndLocalMatrix invalid tile")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);
         static_sk_image_delete(image_handle);
@@ -722,7 +749,34 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 54;
     }
+    if (!check(SkImage_makeRawShader(image, -1, 0, sampling, nullptr) == 0, "SkImage_makeRawShader invalid tmx")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 54;
+    }
+    if (!check(SkImage_makeRawShader(image, 0, 999999, sampling, nullptr) == 0, "SkImage_makeRawShader invalid tmy")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 54;
+    }
     if (!check(SkImage_makeRawShaderWithTileModesAndLocalMatrix(image, 0, 0, sampling, nullptr) == 0, "SkImage_makeRawShaderWithTileModesAndLocalMatrix null matrix")) {
+        static_sk_matrix_delete(matrix_handle);
+        SkSamplingOptions_delete(sampling);
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 55;
+    }
+    if (!check(SkImage_makeRawShaderWithTileModesAndLocalMatrix(image, 999999, 0, sampling, matrix) == 0, "SkImage_makeRawShaderWithTileModesAndLocalMatrix invalid tile")) {
         static_sk_matrix_delete(matrix_handle);
         SkSamplingOptions_delete(sampling);
         static_sk_image_delete(image_handle);

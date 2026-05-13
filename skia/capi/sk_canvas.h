@@ -103,6 +103,7 @@ void SkCanvas_clear(reskia_canvas_t *canvas, const reskia_color_4f_t *color);
 void SkCanvas_clearColor(reskia_canvas_t *canvas, uint32_t color); // (SkCanvas *canvas, SkColor color)
 /**
  * irect: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkIRect *irect, SkClipOp op).
  */
@@ -115,12 +116,14 @@ void SkCanvas_clipIRect(reskia_canvas_t *canvas, const reskia_i_rect_t *irect, r
 void SkCanvas_clipPath(reskia_canvas_t *canvas, const reskia_path_t *path, bool doAntiAlias);
 /**
  * path: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkPath *path, SkClipOp op).
  */
 void SkCanvas_clipPathWithOp(reskia_canvas_t *canvas, const reskia_path_t *path, reskia_canvas_clip_op_t op);
 /**
  * path: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkPath *path, SkClipOp op, bool doAntiAlias).
  */
@@ -133,18 +136,22 @@ void SkCanvas_clipPathWithOpAA(reskia_canvas_t *canvas, const reskia_path_t *pat
 void SkCanvas_clipRect(reskia_canvas_t *canvas, const reskia_rect_t *rect, bool doAntiAlias);
 /**
  * rect: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRect *rect, SkClipOp op).
  */
 void SkCanvas_clipRectWithOp(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_canvas_clip_op_t op);
 /**
  * rect: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRect *rect, SkClipOp op, bool doAntiAlias).
  */
 void SkCanvas_clipRectWithOpAA(reskia_canvas_t *canvas, const reskia_rect_t *rect, reskia_canvas_clip_op_t op, bool doAntiAlias);
 /**
  * deviceRgn: non-null.
+ * op must be a valid SkClipOp.
+ * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRegion *deviceRgn, SkClipOp op).
  */
 void SkCanvas_clipRegion(reskia_canvas_t *canvas, const reskia_region_t *deviceRgn, reskia_canvas_clip_op_t op);
@@ -156,18 +163,21 @@ void SkCanvas_clipRegion(reskia_canvas_t *canvas, const reskia_region_t *deviceR
 void SkCanvas_clipRRect(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, bool doAntiAlias);
 /**
  * rrect: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op).
  */
 void SkCanvas_clipRRectWithOp(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op);
 /**
  * rrect: non-null.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkRRect *rrect, SkClipOp op, bool doAntiAlias).
  */
 void SkCanvas_clipRRectWithOpAA(reskia_canvas_t *canvas, const reskia_r_rect_t *rrect, reskia_canvas_clip_op_t op, bool doAntiAlias);
 /**
  * shader must be a valid handle.
+ * op must be a valid SkClipOp.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, sk_shader_t shader, SkClipOp op).
  */
@@ -352,6 +362,7 @@ void SkCanvas_drawImageLattice(reskia_canvas_t *canvas, const reskia_image_t *im
 /**
  * image/lattice/dst: non-null borrowed pointers.
  * paint may be NULL.
+ * filter must be a valid SkFilterMode.
  * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
@@ -365,6 +376,7 @@ void SkCanvas_drawImageLatticeWithFilter(reskia_canvas_t *canvas, const reskia_i
 /**
  * image/center/dst: non-null borrowed pointers.
  * paint may be NULL.
+ * filter must be a valid SkFilterMode.
  * Invalid input is no-op.
  * Skia: (SkCanvas *canvas, const SkImage *image, const SkIRect *center, const SkRect *dst, SkFilterMode filter, const SkPaint *paint).
  */
@@ -379,6 +391,7 @@ void SkCanvas_drawImageRect(reskia_canvas_t *canvas, sk_image_t image, const res
 /**
  * canvas/valid image handle/src/dst/sampling: non-null.
  * paint may be NULL.
+ * constraint must be a valid SkCanvas::SrcRectConstraint.
  * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,
@@ -400,6 +413,7 @@ void SkCanvas_drawImageRectPtr(reskia_canvas_t *canvas, const reskia_image_t *im
 /**
  * canvas/image/src/dst/sampling: non-null.
  * paint may be NULL.
+ * constraint must be a valid SkCanvas::SrcRectConstraint.
  * Invalid input is no-op.
  * Skia:
  *   (SkCanvas *canvas,

@@ -72,6 +72,7 @@ bool SkImage_isAlphaOnly(reskia_image_t *image); // (SkImage *image) -> bool
 bool SkImage_isOpaque(reskia_image_t *image); // (SkImage *image) -> bool
 /**
  * image/sampling: non-null.
+ * tmx/tmy must be valid SkTileMode values.
  * localMatrix may be NULL.
  * Returns a caller-owned shader handle.
  * Invalid input or factory failure returns 0.
@@ -80,6 +81,7 @@ bool SkImage_isOpaque(reskia_image_t *image); // (SkImage *image) -> bool
 sk_shader_t SkImage_makeShader(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix);
 /**
  * image/sampling/lm: non-null.
+ * tmx/tmy must be valid SkTileMode values.
  * Returns a caller-owned shader handle.
  * Invalid input or factory failure returns 0.
  * Skia: (SkImage *image, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t.
@@ -102,6 +104,7 @@ sk_shader_t SkImage_makeShaderWithSamplingAndLocalMatrix(reskia_image_t *image, 
 sk_shader_t SkImage_makeShaderWithSampling(reskia_image_t *image, const reskia_sampling_options_t *sampling, const reskia_matrix_t *lm);
 /**
  * image/sampling: non-null.
+ * tmx/tmy must be valid SkTileMode values.
  * localMatrix may be NULL.
  * Returns a caller-owned shader handle.
  * Invalid input or factory failure returns 0.
@@ -110,6 +113,7 @@ sk_shader_t SkImage_makeShaderWithSampling(reskia_image_t *image, const reskia_s
 sk_shader_t SkImage_makeRawShader(reskia_image_t *image, reskia_image_tile_mode_t tmx, reskia_image_tile_mode_t tmy, const reskia_sampling_options_t *sampling, const reskia_matrix_t *localMatrix);
 /**
  * image/sampling/lm: non-null.
+ * tmx/tmy must be valid SkTileMode values.
  * Returns a caller-owned shader handle.
  * Invalid input or factory failure returns 0.
  * Skia: (SkImage *image, SkTileMode tmx, SkTileMode tmy, const SkSamplingOptions *sampling, const SkMatrix *lm) -> sk_shader_t.

@@ -21,8 +21,8 @@ skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory 
 skia/capi/sk_blenders.h,done,P2,2026-05-10,Phase 2 batch AZ: documented blenders factory handle 0 rule
 skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_canvas.cpp,done,P2,2026-05-13,Phase 2 batch EO: canvas saveLayer optional bounds and alpha range smoke
-skia/capi/sk_canvas.h,done,P2,2026-05-13,Phase 2 batch EO: documented canvas saveLayer return and alpha range rules
+skia/capi/sk_canvas.cpp,done,P2,2026-05-13,Phase 2 batch ET: canvas line point handle guard verification smoke
+skia/capi/sk_canvas.h,done,P2,2026-05-13,Phase 2 batch ET: verified canvas line point handle rules
 skia/capi/sk_capabilities.cpp,todo,P2,,
 skia/capi/sk_capabilities.h,todo,P2,,
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
@@ -121,8 +121,8 @@ skia/capi/sk_icc.cpp,todo,P2,,
 skia/capi/sk_icc.h,todo,P2,,
 skia/capi/sk_ico_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_ico_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_image.cpp,done,P2,2026-05-13,Phase 2 batch EL: image encoded data null and no-data 0 smoke
-skia/capi/sk_image.h,done,P2,2026-05-13,Phase 2 batch EL: documented image encoded data ownership and failure rules
+skia/capi/sk_image.cpp,done,P2,2026-05-13,Phase 2 batch EQ: image shader tile mode guards smoke
+skia/capi/sk_image.h,done,P2,2026-05-13,Phase 2 batch EQ: documented image shader tile mode and sampling rules
 skia/capi/sk_image_filter.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filter null guards factory handle 0 and serialize rules
 skia/capi/sk_image_filter.h,done,P2,2026-05-10,Phase 2 batch AX: documented image filter null output and optional procs rules
 skia/capi/sk_image_filters.cpp,done,P2,2026-05-10,Phase 2 batch AX: image filters optional cropRect and required factory pointer guards
