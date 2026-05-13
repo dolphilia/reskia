@@ -1,6 +1,6 @@
 file,status,phase,owner,note
-skia/capi/sk_alpha_type.cpp,todo,P2,,
-skia/capi/sk_alpha_type.h,todo,P2,,
+skia/capi/sk_alpha_type.cpp,done,P2,2026-05-13,Phase 2 batch HI: enum helper invalid value sentinel rules
+skia/capi/sk_alpha_type.h,done,P2,2026-05-13,Phase 2 batch HI: documented alpha type invalid value sentinel rule
 skia/capi/sk_android_codec.cpp,done,P2,2026-05-10,Phase 2 batch BR: AndroidCodec null pointer and factory handle guards
 skia/capi/sk_android_codec.h,done,P2,2026-05-10,Phase 2 batch BR: documented AndroidCodec null pointer and handle 0 rules
 skia/capi/sk_annotation.cpp,done,P2,2026-05-10,Phase 2 batch BR: annotation canvas geometry data null guards
@@ -13,8 +13,8 @@ skia/capi/sk_b_box_hierarchy.cpp,done,P2,2026-05-10,Phase 2 batch BU: bbox hiera
 skia/capi/sk_b_box_hierarchy.h,done,P2,2026-05-10,Phase 2 batch BU: documented bbox hierarchy lifecycle and pointer rules
 skia/capi/sk_bitmap.cpp,done,P2,codex,"stability Phase 2 Batch B: NULL guards added across SkBitmap and bitmap invalid input smoke passes"
 skia/capi/sk_bitmap.h,done,P2,codex,"stability Phase 2 Batch B: typed pointer review retained; raw pixel buffer lifetime/mutability comments added"
-skia/capi/sk_blend_mode.cpp,todo,P2,,
-skia/capi/sk_blend_mode.h,todo,P2,,
+skia/capi/sk_blend_mode.cpp,done,P2,2026-05-13,Phase 2 batch HI: blend mode enum helper out-param guards
+skia/capi/sk_blend_mode.h,done,P2,2026-05-13,Phase 2 batch HI: documented blend mode enum helper sentinel rules
 skia/capi/sk_blender.cpp,done,P2,2026-05-10,Phase 2 batch BC: blender null receiver refcount serialize factory and deserialize guards
 skia/capi/sk_blender.h,done,P2,2026-05-10,Phase 2 batch BC: documented blender null receiver memory output and factory rules
 skia/capi/sk_blenders.cpp,done,P2,2026-05-10,Phase 2 batch AZ: blenders factory null result handle 0 rule
@@ -23,12 +23,12 @@ skia/capi/sk_bmp_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw bu
 skia/capi/sk_bmp_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
 skia/capi/sk_canvas.cpp,done,P2,2026-05-13,Phase 2 batch HH: canvas clip bounds top-layer pixels and image draw rules
 skia/capi/sk_canvas.h,done,P2,2026-05-13,Phase 2 batch HH: documented canvas clip bounds top-layer pixels and image draw rules
-skia/capi/sk_capabilities.cpp,todo,P2,,
-skia/capi/sk_capabilities.h,todo,P2,,
+skia/capi/sk_capabilities.cpp,done,P2,2026-05-13,Phase 2 batch HI: capabilities null receiver and raster backend handle rules
+skia/capi/sk_capabilities.h,done,P2,2026-05-13,Phase 2 batch HI: documented capabilities null receiver and handle rules
 skia/capi/sk_codec.cpp,done,P2,2026-05-10,Phase 2 batch AS: null guards output pointer validation and codec handle 0 rules
 skia/capi/sk_codec.h,done,P2,2026-05-10,Phase 2 batch AS: documented codec null output pointer stream and data handle rules
-skia/capi/sk_codecs.cpp,todo,P2,,
-skia/capi/sk_codecs.h,todo,P2,,
+skia/capi/sk_codecs.cpp,done,P2,2026-05-13,Phase 2 batch HI: confirmed no direct SkCodecs C API functions
+skia/capi/sk_codecs.h,done,P2,2026-05-13,Phase 2 batch HI: documented decoder-specific SkCodecs delegation
 skia/capi/sk_color.cpp,done,P2,codex,phase2-batch-p: HSV raw array NULL guards,
 skia/capi/sk_color.h,done,P2,codex,phase2-batch-p: HSV raw array comments,
 skia/capi/sk_color_4f.cpp,done,P2,codex,phase2-batch-n: NULL guards and raw vec pointer rules,
@@ -103,10 +103,10 @@ skia/capi/sk_font_style_set.cpp,done,P2,phase2-batch-z: NULL/range guards and nu
 skia/capi/sk_font_style_set.h,done,P2,phase2-batch-z: documented NULL/range/no-op/handle-0 conventions,
 skia/capi/sk_gif_decoder.cpp,done,P2,2026-05-10,Phase 2 batch AT: decoder raw buffer stream/data handle guards and codec handle 0 rules
 skia/capi/sk_gif_decoder.h,done,P2,2026-05-10,Phase 2 batch AT: documented decoder raw buffer stream/data handle rules
-skia/capi/sk_gradient_shader.cpp,todo,P2,,
-skia/capi/sk_gradient_shader.h,todo,P2,,
-skia/capi/sk_graphics.cpp,todo,P2,,
-skia/capi/sk_graphics.h,todo,P2,,
+skia/capi/sk_gradient_shader.cpp,done,P2,2026-05-13,Phase 2 batch HI: gradient shader factory guards and handle 0 rules
+skia/capi/sk_gradient_shader.h,done,P2,2026-05-13,Phase 2 batch HI: documented gradient shader factory safety rules
+skia/capi/sk_graphics.cpp,done,P2,2026-05-13,Phase 2 batch HI: graphics global cache invalid input guards
+skia/capi/sk_graphics.h,done,P2,2026-05-13,Phase 2 batch HI: documented graphics global side effect and invalid input rules
 skia/capi/sk_high_contrast_config.cpp,todo,P2,,
 skia/capi/sk_high_contrast_config.h,todo,P2,,
 skia/capi/sk_high_contrast_filter.cpp,done,P2,codex,step5: RefCounted delete を unref 委譲へ統一

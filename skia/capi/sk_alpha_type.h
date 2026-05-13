@@ -13,7 +13,12 @@ extern "C" {
 
 typedef int32_t reskia_alpha_type_t;
 
-bool SkAlphaType_SkAlphaTypeIsOpaque(reskia_alpha_type_t at); // (SkAlphaType at) -> bool
+/**
+ * at must be a valid SkAlphaType.
+ * Invalid values return false.
+ * Skia: (SkAlphaType at) -> bool.
+ */
+bool SkAlphaType_SkAlphaTypeIsOpaque(reskia_alpha_type_t at);
 
 #ifdef __cplusplus
 }

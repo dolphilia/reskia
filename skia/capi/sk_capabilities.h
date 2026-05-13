@@ -13,15 +13,15 @@ extern "C" {
 
 typedef int32_t reskia_sksl_version_t;
 
-void SkCapabilities_release(void * capabilities); // owned: caller が保持する参照を release する (SkCapabilities *capabilities)
-void SkCapabilities_ref(void * capabilities); // retained: 参照カウントを増やす (SkCapabilities *capabilities)
-reskia_sksl_version_t SkCapabilities_skslVersion(void * capabilities); // (SkCapabilities *capabilities) -> SkSL::Version
-bool SkCapabilities_unique(void * capabilities); // (SkCapabilities *capabilities) -> bool
-void SkCapabilities_unref(void * capabilities); // owned: 参照カウントを減らす (SkCapabilities *capabilities)
+void SkCapabilities_release(void *capabilities); // NULL capabilities is no-op.
+void SkCapabilities_ref(void *capabilities); // NULL capabilities is no-op.
+reskia_sksl_version_t SkCapabilities_skslVersion(void *capabilities); // NULL capabilities returns 0.
+bool SkCapabilities_unique(void *capabilities); // NULL capabilities returns false.
+void SkCapabilities_unref(void *capabilities); // NULL capabilities is no-op.
 
 // static
 
-int SkCapabilities_RasterBackend(); // () -> const_sk_capabilities_t
+int SkCapabilities_RasterBackend(); // Returns a caller-owned const_sk_capabilities_t handle.
 
 #ifdef __cplusplus
 }

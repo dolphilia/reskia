@@ -1,5 +1,7 @@
 #include "capi/sk_shader.h"
+#include "capi/sk_gradient_shader.h"
 #include "capi/sk_shaders.h"
+#include "handles/static_sk_point_two.h"
 #include "handles/static_sk_shader.h"
 
 #include <cstdio>
@@ -51,6 +53,22 @@ int main() {
     ok &= check(SkShaders_Blend(0, 0, 0) == 0, "Blend null shaders");
     ok &= check(SkShaders_BlendWithBlender(0, 0, 0) == 0, "BlendWithBlender null shaders");
     ok &= check(SkShaders_CoordClamp(0, nullptr) == 0, "CoordClamp null subset");
+
+    reskia_color_t gradient_colors[2] = {0xff336699u, 0xffddaa44u};
+    ok &= check(SkGradientShader_MakeLinear(nullptr, gradient_colors, nullptr, 2, 0, 0, nullptr) == 0, "Gradient linear null points");
+    ok &= check(SkGradientShader_MakeLinear(reinterpret_cast<const reskia_point_t *>(1), nullptr, nullptr, 2, 0, 0, nullptr) == 0, "Gradient linear null colors");
+    ok &= check(SkGradientShader_MakeLinear(reinterpret_cast<const reskia_point_t *>(1), gradient_colors, nullptr, 0, 0, 0, nullptr) == 0, "Gradient linear invalid count");
+    ok &= check(SkGradientShader_MakeLinear(reinterpret_cast<const reskia_point_t *>(1), gradient_colors, nullptr, 2, 999999, 0, nullptr) == 0, "Gradient linear invalid tile mode");
+    ok &= check(SkGradientShader_MakeRadial(nullptr, 1.0f, gradient_colors, nullptr, 2, 0, 0, nullptr) == 0, "Gradient radial null center");
+    ok &= check(SkGradientShader_MakeSweep(0.0f, 0.0f, nullptr, nullptr, 2, 0, 0.0f, 360.0f, 0, nullptr) == 0, "Gradient sweep null colors");
+    ok &= check(SkGradientShader_MakeSweep(0.0f, 0.0f, gradient_colors, nullptr, 2, 999999, 0.0f, 360.0f, 0, nullptr) == 0, "Gradient sweep invalid tile mode");
+
+    const int gradient_points = static_sk_point_two_make_float(0.0f, 0.0f, 16.0f, 16.0f);
+    const auto *points = static_cast<const reskia_point_t *>(static_sk_point_two_get_ptr(gradient_points));
+    const sk_shader_t gradient = SkGradientShader_MakeLinear(points, gradient_colors, nullptr, 2, 0, 0, nullptr);
+    ok &= check(gradient != 0 && static_sk_shader_get_ptr(gradient) != nullptr, "Gradient linear valid returned handle");
+    static_sk_shader_delete(gradient);
+    static_sk_point_two_delete(gradient_points);
 
     return ok ? 0 : 1;
 }

@@ -39,6 +39,9 @@ int SkGraphics_GetFontCacheCountLimit() {
 }
 
 int SkGraphics_SetFontCacheCountLimit(int count) {
+    if (count < 0) {
+        return SkGraphics::GetFontCacheCountLimit();
+    }
     return SkGraphics::SetFontCacheCountLimit(count);
 }
 
@@ -74,6 +77,9 @@ size_t SkGraphics_SetResourceCacheSingleAllocationByteLimit(size_t newLimit) {
 }
 
 void SkGraphics_DumpMemoryStatistics(reskia_trace_memory_dump_t *dump) {
+    if (dump == nullptr) {
+        return;
+    }
     SkGraphics::DumpMemoryStatistics(reinterpret_cast<SkTraceMemoryDump *>(dump));
 }
 

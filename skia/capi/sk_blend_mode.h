@@ -13,8 +13,20 @@ extern "C" {
 
 typedef int32_t reskia_blend_mode_t;
 
-bool SkBlendMode_SkBlendMode_AsCoeff(reskia_blend_mode_t mode, void * src, void * dst); // (SkBlendMode mode, SkBlendModeCoeff *src, SkBlendModeCoeff *dst) -> bool
-const char * SkBlendMode_SkBlendMode_Name(reskia_blend_mode_t blendMode); // (SkBlendMode blendMode) -> const char *
+/**
+ * mode must be a valid SkBlendMode.
+ * src/dst: non-null out params.
+ * Invalid input returns false.
+ * Skia: (SkBlendMode mode, SkBlendModeCoeff *src, SkBlendModeCoeff *dst) -> bool.
+ */
+bool SkBlendMode_SkBlendMode_AsCoeff(reskia_blend_mode_t mode, void *src, void *dst);
+/**
+ * blendMode must be a valid SkBlendMode.
+ * Invalid input returns NULL.
+ * Returned pointer is borrowed static storage.
+ * Skia: (SkBlendMode blendMode) -> const char *.
+ */
+const char *SkBlendMode_SkBlendMode_Name(reskia_blend_mode_t blendMode);
 
 #ifdef __cplusplus
 }
