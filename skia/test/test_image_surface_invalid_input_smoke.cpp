@@ -260,6 +260,49 @@ int main() {
         static_sk_image_info_delete(info_handle);
         return 22;
     }
+    const sk_image_info_t image_info_handle = SkImage_imageInfo(image);
+    if (!check(image_info_handle != 0 && static_sk_image_info_get_ptr(image_info_handle) != nullptr, "SkImage_imageInfo valid returned handle")) {
+        if (image_info_handle != 0) {
+            static_sk_image_info_delete(image_info_handle);
+        }
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    static_sk_image_info_delete(image_info_handle);
+    if (!check(SkImage_width(image) == 2 && SkImage_height(image) == 2, "SkImage width/height valid image")) {
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    const sk_i_size_t image_dimensions = SkImage_dimensions(image);
+    if (!check(image_dimensions != 0 && static_sk_i_size_get_ptr(image_dimensions) != nullptr, "SkImage_dimensions valid returned handle")) {
+        if (image_dimensions != 0) {
+            static_sk_i_size_delete(image_dimensions);
+        }
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    static_sk_i_size_delete(image_dimensions);
+    const sk_i_rect_t image_bounds = SkImage_bounds(image);
+    if (!check(image_bounds != 0 && static_sk_i_rect_get_ptr(image_bounds) != nullptr, "SkImage_bounds valid returned handle")) {
+        if (image_bounds != 0) {
+            static_sk_i_rect_delete(image_bounds);
+        }
+        static_sk_image_delete(image_handle);
+        static_sk_i_rect_delete(src_rect_handle);
+        static_sk_surface_delete(surface_handle);
+        static_sk_image_info_delete(info_handle);
+        return 23;
+    }
+    static_sk_i_rect_delete(image_bounds);
     if (!check(SkImage_colorSpace(image) == nullptr, "SkImage_colorSpace image without color space")) {
         static_sk_image_delete(image_handle);
         static_sk_i_rect_delete(src_rect_handle);

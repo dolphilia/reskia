@@ -357,6 +357,7 @@ sk_image_t SkImage_makeRasterImage(reskia_image_t *image, reskia_direct_context_
 sk_image_t SkImage_makeRasterImageWithoutContext(reskia_image_t *image, reskia_image_caching_hint_t cachingHint);
 /**
  * image/bitmap: non-null.
+ * bitmap is caller-owned output storage.
  * legacyBitmapMode must be a valid SkImage::LegacyBitmapMode.
  * Invalid input returns false.
  * Skia: (SkImage *image, SkBitmap *bitmap, SkImage::LegacyBitmapMode legacyBitmapMode) -> bool.

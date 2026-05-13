@@ -28,6 +28,7 @@
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 #include "handles/static_sk_i_point.h"
+#include "handles/static_sk_i_size.h"
 #include "handles/static_sk_m_44.h"
 #include "handles/static_sk_matrix.h"
 #include "handles/static_sk_picture.h"
@@ -1083,6 +1084,15 @@ int main() {
         SkCanvas_delete(canvas);
         return 10;
     }
+    const sk_i_size_t base_layer_size = SkCanvas_getBaseLayerSize(canvas);
+    if (!check(base_layer_size != 0 && static_sk_i_size_get_ptr(base_layer_size) != nullptr, "SkCanvas_getBaseLayerSize returned handle")) {
+        if (base_layer_size != 0) {
+            static_sk_i_size_delete(base_layer_size);
+        }
+        SkCanvas_delete(canvas);
+        return 10;
+    }
+    static_sk_i_size_delete(base_layer_size);
     const sk_i_rect_t device_clip_bounds = SkCanvas_getDeviceClipBounds(canvas);
     if (!check(device_clip_bounds != 0 && static_sk_i_rect_get_ptr(device_clip_bounds) != nullptr, "SkCanvas_getDeviceClipBounds returned handle")) {
         if (device_clip_bounds != 0) {

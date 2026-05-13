@@ -3,6 +3,7 @@
 進捗トラッキング用CSVです。
 
 - `capi-status.csv`
+- `capi-safety-detail-status.csv`
 - `handles-status.csv`
 - `phase2-type-classification.md`（Phase 2 Step1 の型分類表）
 - `phase2-release-api-status.csv`（Phase 2 Step2 の解放API統一専用チェックリスト）
@@ -11,6 +12,17 @@
 - `phase2-handle-key-typing-status.csv`（Phase 2 Step3 の static handle key の int 露出改善専用チェックリスト）
 - `public-api-coverage-matrix.csv`（vendored Skia 公開 class/struct method と Reskia C API 関数名の機械照合マトリクス）
 - `public-api-core-effects-missing-triage.csv`（`include/core` / `include/effects` の missing method を `real_gap` / `na` / `false_positive` に仕分けたもの）
+
+## C API safety detail checklist
+
+- `capi-status.csv`
+  - ファイル単位の集約ステータス。最新 batch と大まかな完了状態を記録する。
+- `capi-safety-detail-status.csv`
+  - API 群 + 安全性規約単位の詳細ステータス。重複作業を避けるため、Phase 2 stability hardening の着手前に必ず検索する。
+  - `implementation_status` / `header_status` / `smoke_status` / `valid_path_status` を別々に持つ。例えば「実装は確認済みだが valid path smoke は代表のみ」のような状態を残す。
+  - 同じ `area` / `api_pattern` / `rule_category` が既に記録済みなら、同じ再確認を繰り返さず、不足している列だけ補う。
+  - 新しい stability batch で API 群を確認したら、該当 row を追加または更新し、`last_batch` / `last_checked_at` / `evidence` を最新にする。
+  - 更新後は `python3 scripts/validate_capi_safety_detail_status.py` で列、status 値、重複 ID、evidence 参照を確認する。
 
 ## `handles` 系チェックリストの役割
 

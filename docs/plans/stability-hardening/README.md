@@ -12,6 +12,12 @@ Reskia の安全性と安定性を高めるための横断計画です。
 - platform / dependency / feature flag の制約を、失敗しやすい暗黙条件から明示条件へ寄せる。
 - 機能追加より先に、既存 API の運用リスクを下げる。
 
+## 進捗記録
+
+Phase 2 の C API safety batch では、従来の `docs/plans/c-binding-remediation/checklists/capi-status.csv` に加えて、`docs/plans/c-binding-remediation/checklists/capi-safety-detail-status.csv` を更新する。`capi-status.csv` はファイル単位の集約、`capi-safety-detail-status.csv` は API 群 + 安全性規約単位の詳細台帳である。
+
+バッチ開始前には詳細台帳を検索し、同じ `area` / `api_pattern` / `rule_category` が確認済みでないかを見る。バッチ完了時には、確認した API 群ごとに implementation / header / smoke / valid path の状態を残し、バッチ記録の「変更内容」に更新した detail row の `id` を書く。
+
 ## 計画書一覧
 
 - `00-plan.md`

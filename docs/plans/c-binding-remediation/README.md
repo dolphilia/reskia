@@ -25,10 +25,13 @@
 - `manifests/capi-files.txt`
 - `manifests/handles-files.txt`
 - `checklists/capi-status.csv`
+- `checklists/capi-safety-detail-status.csv`
 - `checklists/handles-status.csv`
 - `checklists/public-api-coverage-matrix.csv`
 
 `public-api-coverage-matrix.csv` は `scripts/generate_public_api_coverage.py` で生成する method-level の coverage 確認用マトリクスです。手編集せず、C API 追加後や `vendor/skia-upstream` 同期後に再生成します。
+
+`capi-status.csv` はファイル単位の集約ステータスです。Phase 2 stability hardening では、これに加えて `capi-safety-detail-status.csv` を更新し、API 群ごとの NULL 規約、所有権、borrowed lifetime、rowBytes、callback、smoke 状態を具体的に残します。同じ作業を繰り返さないため、バッチ着手前に詳細台帳を検索してください。
 
 ## 実施順
 

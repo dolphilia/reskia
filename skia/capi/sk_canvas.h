@@ -75,6 +75,7 @@ reskia_canvas_t *SkCanvas_new(void); // () -> SkCanvas *
 reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const reskia_surface_props_t *props); // (int width, int height, const SkSurfaceProps *props) -> SkCanvas *
 /**
  * bitmap is required.
+ * Bitmap pixel storage must outlive the returned canvas.
  * Returns a caller-owned canvas pointer.
  * Returns NULL on invalid input.
  * Skia: (SkBitmap *bitmap) -> SkCanvas *.
@@ -82,6 +83,7 @@ reskia_canvas_t *SkCanvas_newWithSizeProps(int width, int height, const reskia_s
 reskia_canvas_t *SkCanvas_newFromBitmap(reskia_bitmap_t *bitmap);
 /**
  * bitmap/props: non-null.
+ * Bitmap pixel storage must outlive the returned canvas.
  * Returns a caller-owned canvas pointer.
  * Returns NULL on invalid input.
  * Skia: (const SkBitmap *bitmap, const SkSurfaceProps *props) -> SkCanvas *.
@@ -729,6 +731,7 @@ bool SkCanvas_getProps(reskia_canvas_t *canvas, reskia_surface_props_t *props);
 int SkCanvas_getSaveCount(reskia_canvas_t *canvas); // NULL canvas returns 0.
 /**
  * Borrowed pointer; caller must not free.
+ * Returns NULL when canvas is NULL or no surface is available.
  * Skia: (SkCanvas *canvas) -> SkSurface *.
  */
 reskia_surface_t *SkCanvas_getSurface(reskia_canvas_t *canvas);
@@ -804,11 +807,13 @@ bool SkCanvas_readPixelsWithImageInfo(reskia_canvas_t *canvas, const reskia_imag
 bool SkCanvas_readPixelsWithPixmap(reskia_canvas_t *canvas, const reskia_pixmap_t *pixmap, int srcX, int srcY);
 /**
  * Borrowed pointer; caller must not free.
+ * Returns NULL when canvas is NULL or no recorder is available.
  * Skia: (SkCanvas *canvas) -> skgpu::graphite::Recorder *.
  */
 reskia_graphite_recorder_t *SkCanvas_recorder(reskia_canvas_t *canvas);
 /**
  * Borrowed pointer; caller must not free.
+ * Returns NULL when canvas is NULL or no recording context is available.
  * Skia: (SkCanvas *canvas) -> GrRecordingContext *.
  */
 reskia_recording_context_t *SkCanvas_recordingContext(reskia_canvas_t *canvas);
