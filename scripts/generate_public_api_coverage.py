@@ -27,6 +27,7 @@ API_MACROS = (
     "SKSL_API",
     "SKPARAGRAPH_API",
     "SK_RESOURCES_API",
+    "SK_TRIVIAL_ABI",
 )
 
 
@@ -124,6 +125,9 @@ def class_definitions(repo: Path, path: Path) -> list[tuple[str, str, str, int, 
         start = match.start()
         if any(a < start < b for a, b in occupied):
             continue
+        before = text[max(0, start - 200) : start]
+        if re.search(r"template\s*<[^>{;]*>\s*$", before, flags=re.S):
+            continue
         open_pos = text.find("{", match.start(), match.end())
         close_pos = find_matching_brace(text, open_pos)
         if close_pos < 0:
@@ -186,9 +190,11 @@ def method_name(class_name: str, statement: str) -> str | None:
     s = normalize_statement(statement).rstrip(";{").strip()
     if not s or "(" not in s:
         return None
-    if s.startswith(("using ", "typedef ", "friend ", "enum ", "class ", "struct ")):
+    if s.startswith(("using ", "typedef ", "friend ", "enum ", "class ", "struct ", "template ")):
         return None
     if s.startswith(("static_assert", "SK_DECL", "SK_FLATTENABLE")):
+        return None
+    if re.search(r"=\s*delete\b", s):
         return None
     if "=" in s.split("(", 1)[0] and "operator" not in s:
         return None
@@ -201,7 +207,7 @@ def method_name(class_name: str, statement: str) -> str | None:
     op = re.search(r"\boperator\s*([^\s(]+)", before)
     if op:
         op_name = "operator" + op.group(1)
-        if op_name in {"operatornew", "operatordelete", "operatornew[]", "operatordelete[]"}:
+        if op_name in {"operatornew", "operatordelete", "operatornew[]", "operatordelete[]", "operator="}:
             return None
         return op_name
 

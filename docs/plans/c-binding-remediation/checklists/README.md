@@ -12,6 +12,10 @@
 - `phase2-handle-key-typing-status.csv`（Phase 2 Step3 の static handle key の int 露出改善専用チェックリスト）
 - `public-api-coverage-matrix.csv`（vendored Skia 公開 class/struct method と Reskia C API 関数名の機械照合マトリクス）
 - `public-api-core-effects-missing-triage.csv`（`include/core` / `include/effects` の missing method を `real_gap` / `na` / `false_positive` に仕分けたもの）
+- `public-api-gpu-missing-triage.csv`（`include/gpu` の missing method の triage 台帳）
+- `public-api-svg-missing-triage.csv`（`include/svg` / `modules/svg` の missing method の triage 台帳）
+- `public-api-paragraph-unicode-shaper-missing-triage.csv`（`modules/skparagraph` / `modules/skunicode` / `modules/skshaper` の missing method の triage 台帳）
+- `public-api-skottie-sksg-resources-missing-triage.csv`（`modules/skottie` / `modules/sksg` / `modules/skresources` の missing method の triage 台帳）
 
 ## C API safety detail checklist
 
