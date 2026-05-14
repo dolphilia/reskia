@@ -180,6 +180,9 @@ if(RESKIA_ENABLE_PDF)
 endif()
 
 if(RESKIA_ENABLE_SKPARAGRAPH)
+    list(APPEND SOURCE_FILES capi/sk_paragraph_font_collection.cpp)
+    list(APPEND SOURCE_FILES capi/sk_paragraph_style.cpp)
+    list(APPEND SOURCE_FILES capi/sk_paragraph_text_style.cpp)
     list(APPEND SOURCE_FILES capi/sk_text_blob_builder_run_handler.cpp)
 endif()
 

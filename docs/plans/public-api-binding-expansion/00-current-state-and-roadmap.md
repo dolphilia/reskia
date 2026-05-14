@@ -458,6 +458,28 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - `SkUnicode_computeCodeUnitFlagsUtf8`
 - `SkUnicode_computeCodeUnitFlagsUtf16`
 - `SkUnicode_reorderVisual`
+- `SkParagraph_FontCollection_*`
+  - create/ref/unref/release
+  - font manager setters
+  - fallback manager/typeface helpers
+  - `findTypefaces`
+  - fallback enable/disable and cache access/clear
+- `SkParagraph_StrutStyle_*`
+  - create/copy/delete/equals
+  - font families count/index/set
+  - font style, font size, height, leading, strut flags
+- `SkParagraph_ParagraphStyle_*`
+  - create/copy/delete/equals
+  - strut/text style get/set
+  - text direction/align, max lines, ellipsis, height, text height behavior
+  - hinting, replace-tab, rounding-hack helpers
+- `SkParagraph_TextStyle_*`
+  - create/copy/delete/cloneForPlaceholder
+  - color, foreground/background presence clear
+  - decoration scalar/enum/color helpers
+  - font style, font size, font families, typeface ref/set, locale
+  - baseline shift, height, half leading, spacing, font metrics, placeholder
+  - shadow/font-feature count/reset and font-feature add
 
 設計メモ:
 
@@ -468,6 +490,9 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - `SkBreakIterator::setText`、`SkUnicode::makeBidiIterator`、`SkUnicode::computeCodeUnitFlags` は UTF-8/UTF-16 別 C ABI 名で公開したため、coverage generator 上は overload-specific `partial` として残る。
 - `SkUnicode::extractBidi` は public static 宣言があるが、この source 構成では実体 symbol がリンクされないため、backend factory と同じく feature/linkage 判定が必要な残件として残す。
 - `SkUnicode_MakeIcuBasedUnicode` / `MakeClientBasedUnicode` / `MakeLibgraphemeBasedUnicode` / `MakeIcu4xBasedUnicode` は、対象実装ソースが有効な build かどうかを CMake 側で判定する必要があるため次 batch へ残す。
+- `FontCollection` は `sk_font_mgr_t` handle から `sk_sp<SkFontMgr>` を borrow して設定する。caller の font manager handle 所有権は奪わない。
+- `ParagraphStyle` / `StrutStyle` / `TextStyle` は heap-owned value wrapper とし、`*_delete` で破棄する。value getter が C++ reference を返すものは、C ABI では copy または count/index accessor で表す。
+- `TextStyle` の foreground/background paint と `ParagraphPainter::PaintID` は、paint ownership と custom painter ID 設計が必要なため今回の batch では presence clear のみに留めた。
 
 検証:
 
@@ -475,15 +500,20 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - `cmake -S skia -B skia/cmake-build-codex-phase4-unicode-source -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
 - `cmake --build skia/cmake-build-codex-phase4-unicode-source --target test_unicode_capi_smoke -j 8`
 - `ctest --test-dir skia/cmake-build-codex-phase4-unicode-source -R c_skia_unicode_capi_smoke --output-on-failure`
+- `cmake -S skia -B skia/cmake-build-stability-skparagraph-tests -DRESKIA_DEPS_MODE=source -DRESKIA_ENABLE_SKPARAGRAPH=ON -DRESKIA_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug`
+- `cmake --build skia/cmake-build-stability-skparagraph-tests --target test_paragraph_font_collection_capi_smoke test_paragraph_style_capi_smoke test_paragraph_text_style_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skparagraph-tests -R 'c_skia_paragraph_(font_collection|style|text_style)_capi_smoke' --output-on-failure`
 - `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
 - `python3 scripts/generate_public_api_coverage.py`
 
 台帳更新:
 
-- `public-api-coverage-matrix.csv`: `missing=1342`, `covered=1963`, `partial=12`, `no_public_methods_found=104`
+- `public-api-coverage-matrix.csv`: `missing=1219`, `covered=2083`, `partial=15`, `no_public_methods_found=104`
 - `modules/skunicode`: 48 行中 `covered 37`、`partial 6`、`missing 5`
-- `public-api-paragraph-unicode-shaper-missing-triage.csv`: covered 行を削除し、残 `290` 行。内訳は `real_gap 251`、`na 27`、`false_positive 12`
+- `modules/skparagraph`: `covered 120`、`partial 3`、`missing 133`
+- `public-api-paragraph-unicode-shaper-missing-triage.csv`: covered 行を削除し、残 `170` 行。内訳は `real_gap 134`、`na 27`、`false_positive 9`
 - `modules/skunicode` の残件は 11 行。`partial` は UTF-8/UTF-16 別名で公開済みの overload 6 行、`missing` は `extractBidi` と backend/client factory 4 行。
+- `modules/skparagraph` の残件は 136 行。大きい塊は `Paragraph` 26 行、`ParagraphBuilder` 20 行、`TextStyle` の paint / vector / optional 周辺 18 行、provider/cache/painter 周辺である。
 
 ## Phase 5: Skottie / skresources / sksg
 
