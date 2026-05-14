@@ -125,6 +125,7 @@ list(APPEND SOURCE_FILES
         capi/sk_stream.cpp
         capi/sk_string.cpp
         capi/sk_stroke_rec.cpp
+        capi/sk_svg_canvas.cpp
         capi/sk_surface_props.cpp
         capi/sk_surface.cpp
         capi/sk_surface_gpu.cpp
@@ -188,6 +189,11 @@ endif()
 
 if(RESKIA_ENABLE_SKSG)
     list(APPEND SOURCE_FILES capi/sk_sksg.cpp)
+endif()
+
+if(APPLE AND TARGET svg)
+    list(APPEND SOURCE_FILES capi/sk_svg_dom.cpp)
+    list(APPEND SOURCE_FILES capi/sk_svg_node.cpp)
 endif()
 
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)
