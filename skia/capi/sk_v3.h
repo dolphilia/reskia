@@ -13,17 +13,16 @@ typedef struct reskia_v3_t reskia_v3_t;
 extern "C" {
 #endif
 
-// bool operator==(const SkV3 &v)
-// bool operator!=(const SkV3 &v)
-// SkV3 operator-()
-// SkV3 operator+(const SkV3 &v)
-// SkV3 operator-(const SkV3 &v)
-// SkV3 operator*(const SkV3 &v)
-// void operator+=(SkV3 v)
-// void operator-=(SkV3 v)
-// void operator*=(SkV3 v)
-// void operator*=(SkScalar s)
-
+bool SkV3_equals(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input returns false.
+bool SkV3_notEquals(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input returns false.
+sk_v3_t SkV3_negate(reskia_v3_t *v3); // NULL input returns default vector handle.
+sk_v3_t SkV3_add(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input returns default vector handle.
+sk_v3_t SkV3_subtract(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input returns default vector handle.
+sk_v3_t SkV3_multiply(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input returns default vector handle.
+void SkV3_addAssign(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input is no-op.
+void SkV3_subtractAssign(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input is no-op.
+void SkV3_multiplyAssign(reskia_v3_t *v3, const reskia_v3_t *v); // NULL input is no-op.
+void SkV3_multiplyScalarAssign(reskia_v3_t *v3, float s); // NULL v3 is no-op.
 void SkV3_delete(reskia_v3_t *v3); // NULL 入力では no-op
 float SkV3_lengthSquared(reskia_v3_t *v3); // NULL 入力では 0
 float SkV3_length(reskia_v3_t *v3); // NULL 入力では 0

@@ -214,6 +214,8 @@ def method_name(class_name: str, statement: str) -> str | None:
     token = before.split()[-1]
     token = token.split("::")[-1]
     token = token.lstrip("*&")
+    if token == "operator":
+        return "operator()"
     if token.startswith(("SkDEBUGCODE", "SG_ATTRIBUTE")):
         return None
     if token in ("const", "volatile", "override", "final"):
@@ -317,7 +319,8 @@ def class_prefix_candidates(class_name: str, path: str) -> set[str]:
     return names
 
 
-def method_token(name: str) -> str:
+def method_token(method: Method) -> str:
+    name = method.name
     if name.startswith("~"):
         return "delete"
     if name == "operator==":
@@ -326,6 +329,28 @@ def method_token(name: str) -> str:
         return "notEquals"
     if name == "operator=":
         return "assign"
+    if name == "operator()":
+        return "call"
+    if name == "operator+":
+        return "add"
+    if name == "operator-":
+        if re.search(r"\(\s*\)", method.signature):
+            return "negate"
+        return "subtract"
+    if name == "operator*":
+        return "multiply"
+    if name == "operator+=":
+        return "addAssign"
+    if name == "operator-=":
+        return "subtractAssign"
+    if name == "operator*=":
+        if "SkScalar" in method.signature:
+            return "multiplyScalarAssign"
+        return "multiplyAssign"
+    if name == "operator/=":
+        return "divideScalarAssign"
+    if name == "operator[]":
+        return "at"
     if name.startswith("operator"):
         return name.replace("operator", "operator_").replace("=", "assign").replace("==", "eq")
     return name
@@ -333,7 +358,7 @@ def method_token(name: str) -> str:
 
 def status_for_method(cls: PublicClass, method: Method, functions: set[str]) -> tuple[str, str]:
     prefixes = class_prefix_candidates(cls.name, cls.path)
-    token = method_token(method.name)
+    token = method_token(method)
     exact: list[str] = []
     loose: list[str] = []
 

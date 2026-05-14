@@ -82,6 +82,8 @@ int main() {
         SkPathMeasure_delete(empty_measure);
         return 16;
     }
+    SkPathMeasure_dump(nullptr);
+    SkPathMeasure_dump(empty_measure);
 
     reskia_path_t *path = SkPath_new();
     if (!check(path != nullptr, "SkPath_new")) {

@@ -45,6 +45,7 @@ bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance
 bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo);
 bool SkPathMeasure_isClosed(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
 bool SkPathMeasure_nextContour(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
+void SkPathMeasure_dump(reskia_path_measure_t *path_measure); // NULL input is no-op
 
 #ifdef __cplusplus
 }

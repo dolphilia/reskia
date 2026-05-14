@@ -78,6 +78,8 @@ int main() {
     ok &= check(SkSamplingOptions_newWithFilterAndMipmapModes(0, 99) == nullptr, "SamplingOptions invalid mipmap");
     ok &= check(SkSamplingOptions_newWithFilterMode(99) == nullptr, "SamplingOptions invalid single filter");
     ok &= check(SkSamplingOptions_new_5(nullptr) == nullptr, "SamplingOptions null cubic");
+    ok &= check(!SkSamplingOptions_equals(nullptr, nullptr), "SamplingOptions equals null");
+    ok &= check(!SkSamplingOptions_notEquals(nullptr, nullptr), "SamplingOptions notEquals null");
     ok &= check(!SkSamplingOptions_isAniso(nullptr), "SamplingOptions isAniso null");
     const sk_cubic_resampler_t cubic_handle = SkCubicResampler_Mitchell();
     auto *cubic = static_cast<reskia_cubic_resampler_t *>(static_sk_cubic_resampler_get_ptr(cubic_handle));
@@ -88,6 +90,10 @@ int main() {
     ok &= check(aniso != nullptr && SkSamplingOptions_isAniso(aniso), "SamplingOptions Aniso clamps to valid handle");
     auto *filter_options = SkSamplingOptions_newWithFilterAndMipmapModes(1, 2);
     ok &= check(filter_options != nullptr, "SamplingOptions valid filter/mipmap");
+    auto *filter_options_copy = SkSamplingOptions_newCopy(filter_options);
+    ok &= check(filter_options_copy != nullptr, "SamplingOptions copy valid");
+    ok &= check(SkSamplingOptions_equals(filter_options, filter_options_copy), "SamplingOptions equals valid");
+    ok &= check(SkSamplingOptions_notEquals(filter_options, aniso), "SamplingOptions notEquals valid");
 
     const reskia_un_pre_multiply_scale_t *table = SkUnPreMultiply_GetScaleTable();
     ok &= check(table != nullptr, "UnPreMultiply borrowed table");
@@ -98,6 +104,11 @@ int main() {
     ok &= check(SkString_new_7(999999) == nullptr, "String invalid string_view constructor");
     auto *string = SkString_newFromText("base");
     ok &= check(string != nullptr, "String base allocation");
+    ok &= check(!SkString_endsWith(nullptr, "se"), "String endsWith null string");
+    ok &= check(!SkString_endsWith(string, nullptr), "String endsWith null suffix");
+    ok &= check(!SkString_endsWithChar(nullptr, 'e'), "String endsWithChar null string");
+    ok &= check(SkString_endsWith(string, "se"), "String endsWith valid suffix");
+    ok &= check(SkString_endsWithChar(string, 'e'), "String endsWithChar valid suffix");
     const size_t before_invalid_view = SkString_size(string);
     SkString_setStringView(string, 999999);
     SkString_insertStringView(string, 0, 999999);
@@ -152,6 +163,7 @@ int main() {
     static_string_view_delete(view);
     SkString_delete(string);
     SkSamplingOptions_delete(filter_options);
+    SkSamplingOptions_delete(filter_options_copy);
     static_sk_sampling_options_delete(aniso_handle);
     SkSamplingOptions_delete(cubic_options);
     static_sk_cubic_resampler_delete(cubic_handle);

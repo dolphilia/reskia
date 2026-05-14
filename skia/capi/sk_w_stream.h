@@ -16,6 +16,9 @@ extern "C" {
 #endif
 
 reskia_w_stream_t *SkNullWStream_new(); // () -> SkNullWStream *
+bool SkNullWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size); // buffer may be null only when size == 0
+void SkNullWStream_flush(reskia_w_stream_t *w_stream); // NULL input is no-op
+size_t SkNullWStream_bytesWritten(reskia_w_stream_t *w_stream); // NULL input returns 0
 void SkWStream_delete(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)
 bool SkWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size); // buffer may be null only when size == 0
 void SkWStream_flush(reskia_w_stream_t *w_stream); // (SkWStream *w_stream)

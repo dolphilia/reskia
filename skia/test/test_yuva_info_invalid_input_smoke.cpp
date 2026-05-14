@@ -86,6 +86,8 @@ int main() {
     reskia_yuva_location_t locations[4] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     ok &= check(!SkYUVAInfo_GetYUVALocations(99, nullptr, locations), "locations rejects invalid input");
     ok &= check(locations[0].plane == -1 && locations[1].plane == -1 && locations[2].plane == -1 && locations[3].plane == -1, "locations clears output");
+    ok &= check(!SkYUVAInfo_toYUVALocations(nullptr, nullptr, locations), "instance locations rejects null input");
+    ok &= check(locations[0].plane == -1 && locations[1].plane == -1 && locations[2].plane == -1 && locations[3].plane == -1, "instance locations clears output");
     ok &= check(!SkYUVAInfo_HasAlpha(99), "has alpha rejects invalid config");
 
     const sk_i_size_t size = SkISize_Make(4, 2);
@@ -134,6 +136,8 @@ int main() {
     };
     ok &= check(SkYUVAInfo_GetYUVALocations(1, flags, locations), "locations valid");
     ok &= check(locations[0].plane == 0 && locations[1].plane == 1 && locations[2].plane == 2 && locations[3].plane == -1, "locations output valid");
+    ok &= check(SkYUVAInfo_toYUVALocations(info, flags, locations), "instance locations valid");
+    ok &= check(locations[0].plane == 0 && locations[1].plane == 1 && locations[2].plane == 2 && locations[3].plane == -1, "instance locations output valid");
     ok &= check(!SkYUVAInfo_HasAlpha(1), "has alpha false");
     ok &= check(SkYUVAInfo_HasAlpha(7), "has alpha true");
 

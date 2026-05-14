@@ -45,9 +45,8 @@ bool SkString_equalsText(reskia_string_t *string, const char text[]); // NULL in
 bool SkString_equalsTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 returns false.
 bool SkString_startsWith(reskia_string_t *string, const char prefixStr[]); // NULL input returns false.
 bool SkString_startsWithChar(reskia_string_t *string, char prefixChar); // NULL string returns false.
-
-//bool SkString_endsWith(SkString *string, const char suffixStr[]);
-//bool SkString_endsWith_2(SkString *string, const char suffixChar);
+bool SkString_endsWith(reskia_string_t *string, const char suffixStr[]); // NULL input returns false.
+bool SkString_endsWithChar(reskia_string_t *string, char suffixChar); // NULL string returns false.
 
 bool SkString_contains(reskia_string_t *string, const char substring[]); // NULL input returns false.
 bool SkString_containsChar(reskia_string_t *string, char subchar); // NULL string returns false.

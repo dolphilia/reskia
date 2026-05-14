@@ -42,14 +42,25 @@ int main() {
     ok &= check(SkPoint3_length(nullptr) == 0.0f, "Point3 null length");
     ok &= check(!SkPoint3_normalize(nullptr), "Point3 null normalize");
     ok &= check(SkPoint3_makeScale(nullptr, 2.0f) == 0, "Point3 null makeScale");
+    ok &= check(SkPoint3_negate(nullptr) == 0, "Point3 null negate");
+    SkPoint3_addAssign(nullptr, nullptr);
+    SkPoint3_subtractAssign(nullptr, nullptr);
     ok &= check(!SkPoint3_isFinite(nullptr), "Point3 null isFinite");
     ok &= check(SkPoint3_dot(nullptr, nullptr) == 0.0f, "Point3 null dot");
     ok &= check(SkPoint3_cross(nullptr, nullptr) == 0, "Point3 null cross");
     ok &= check(SkPoint3_DotProduct(nullptr, nullptr) == 0.0f, "Point3 static null dot");
     ok &= check(SkPoint3_CrossProduct(nullptr, nullptr) == 0, "Point3 static null cross");
     const sk_point_3_t point3_handle = SkPoint3_Make(1.0f, 2.0f, 2.0f);
+    const sk_point_3_t point3_other_handle = SkPoint3_Make(1.0f, 1.0f, 1.0f);
     auto *point3 = static_cast<reskia_point_3_t *>(static_sk_point_3_get_ptr(point3_handle));
+    auto *point3_other = static_cast<reskia_point_3_t *>(static_sk_point_3_get_ptr(point3_other_handle));
     ok &= check(point3 != nullptr && SkPoint3_length(point3) == 3.0f, "Point3 valid handle");
+    const sk_point_3_t point3_negate_handle = SkPoint3_negate(point3);
+    auto *point3_negate = static_cast<reskia_point_3_t *>(static_sk_point_3_get_ptr(point3_negate_handle));
+    ok &= check(point3_negate != nullptr && SkPoint3_x(point3_negate) == -1.0f, "Point3 negate valid");
+    SkPoint3_addAssign(point3, point3_other);
+    SkPoint3_subtractAssign(point3, point3_other);
+    ok &= check(SkPoint3_x(point3) == 1.0f && SkPoint3_y(point3) == 2.0f, "Point3 assign ops valid");
 
     SkRSXform_setIdentity(nullptr);
     SkRSXform_set(nullptr, 1.0f, 0.0f, 2.0f, 3.0f);
@@ -145,6 +156,8 @@ int main() {
     static_sk_rsx_form_delete(radians_handle);
     static_sk_size_delete(size_handle);
     static_sk_rsx_form_delete(rsx_handle);
+    static_sk_point_3_delete(point3_negate_handle);
+    static_sk_point_3_delete(point3_other_handle);
     static_sk_point_3_delete(point3_handle);
     static_sk_i_point_delete(ipoint_handle);
     return ok ? 0 : 1;

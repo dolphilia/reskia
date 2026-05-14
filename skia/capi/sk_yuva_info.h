@@ -53,7 +53,7 @@ int SkYUVAInfo_planeDimensions(reskia_yuva_info_t *yuva_info, reskia_i_size_t *p
 size_t SkYUVAInfo_computeTotalBytes(reskia_yuva_info_t *yuva_info, const size_t *rowBytes, size_t *planeSizes); // (SkYUVAInfo *yuva_info, const size_t rowBytes[SkYUVAInfo::kMaxPlanes], size_t planeSizes[SkYUVAInfo::kMaxPlanes]) -> size_t
 int SkYUVAInfo_numPlanes(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> int
 int SkYUVAInfo_numChannelsInPlane(reskia_yuva_info_t *yuva_info, int i); // (SkYUVAInfo *yuva_info, int i) -> int
-// SkYUVAInfo::YUVALocations SkYUVAInfo_toYUVALocations(SkYUVAInfo *yuva_info, const uint32_t *channelFlags); // (SkYUVAInfo *yuva_info, const uint32_t *channelFlags) -> SkYUVAInfo::YUVALocations
+bool SkYUVAInfo_toYUVALocations(reskia_yuva_info_t *yuva_info, const uint32_t *channelFlags, reskia_yuva_location_t *locations); // locations[4]. invalid input clears locations and returns false
 sk_yuva_info_t SkYUVAInfo_makeSubsampling(reskia_yuva_info_t *yuva_info, reskia_yuva_info_subsampling_t subsampling); // (SkYUVAInfo *yuva_info, SkYUVAInfo::Subsampling subsampling) -> sk_yuva_info_t
 sk_yuva_info_t SkYUVAInfo_makeDimensions(reskia_yuva_info_t *yuva_info, sk_i_size_t size); // (SkYUVAInfo *yuva_info, sk_i_size_t size) -> sk_yuva_info_t
 bool SkYUVAInfo_isValid(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> bool

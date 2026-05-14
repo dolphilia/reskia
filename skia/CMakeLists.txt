@@ -248,7 +248,7 @@ if(APPLE AND RESKIA_ENABLE_GPU_METAL)
     endforeach()
     if(_reskia_gpu_mtl_sources)
         set_source_files_properties(${_reskia_gpu_mtl_sources}
-                PROPERTIES COMPILE_OPTIONS "-fno-objc-arc")
+                PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
     endif()
 endif()
 target_compile_features(reskia PRIVATE cxx_std_17)

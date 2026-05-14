@@ -37,6 +37,33 @@ int main() {
     if (!check(null_stream != nullptr, "SkNullWStream_new")) {
         return 6;
     }
+    if (!check(!SkNullWStream_write(nullptr, nullptr, 1), "SkNullWStream_write(nullptr)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    if (!check(SkNullWStream_bytesWritten(nullptr) == 0, "SkNullWStream_bytesWritten(nullptr)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    SkNullWStream_flush(nullptr);
+    if (!check(SkNullWStream_write(null_stream, nullptr, 0), "SkNullWStream_write(null_stream, nullptr, 0)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    if (!check(!SkNullWStream_write(null_stream, nullptr, 1), "SkNullWStream_write(null_stream, nullptr, 1)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    const uint8_t direct_bytes[] = {1, 2, 3};
+    if (!check(SkNullWStream_write(null_stream, direct_bytes, sizeof(direct_bytes)), "SkNullWStream_write(null_stream, bytes)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    if (!check(SkNullWStream_bytesWritten(null_stream) == sizeof(direct_bytes), "SkNullWStream_bytesWritten(null_stream)")) {
+        SkWStream_delete(null_stream);
+        return 6;
+    }
+    SkNullWStream_flush(null_stream);
     if (!check(SkWStream_write(null_stream, nullptr, 0), "SkWStream_write(null_stream, nullptr, 0)")) {
         SkWStream_delete(null_stream);
         return 7;

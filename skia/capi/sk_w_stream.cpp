@@ -12,6 +12,27 @@ reskia_w_stream_t *SkNullWStream_new() {
     return reinterpret_cast<reskia_w_stream_t *>(new SkNullWStream());
 }
 
+bool SkNullWStream_write(reskia_w_stream_t *w_stream, const void *buffer, size_t size) {
+    if (w_stream == nullptr || (buffer == nullptr && size > 0)) {
+        return false;
+    }
+    return reinterpret_cast<SkNullWStream *>(w_stream)->write(buffer, size);
+}
+
+void SkNullWStream_flush(reskia_w_stream_t *w_stream) {
+    if (w_stream == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkNullWStream *>(w_stream)->flush();
+}
+
+size_t SkNullWStream_bytesWritten(reskia_w_stream_t *w_stream) {
+    if (w_stream == nullptr) {
+        return 0;
+    }
+    return reinterpret_cast<SkNullWStream *>(w_stream)->bytesWritten();
+}
+
 void SkWStream_delete(reskia_w_stream_t *w_stream) {
     delete reinterpret_cast<SkWStream *>(w_stream);
 }

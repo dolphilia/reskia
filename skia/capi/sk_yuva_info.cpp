@@ -226,9 +226,19 @@ int SkYUVAInfo_numChannelsInPlane(reskia_yuva_info_t *yuva_info, int i) {
     return native != nullptr ? native->numChannelsInPlane(i) : 0;
 }
 
-//SkYUVAInfo::YUVALocations SkYUVAInfo_toYUVALocations(SkYUVAInfo * yuva_info, const uint32_t *channelFlags) {
-//    return yuva_info->toYUVALocations(channelFlags);
-//}
+bool SkYUVAInfo_toYUVALocations(reskia_yuva_info_t *yuva_info, const uint32_t *channelFlags, reskia_yuva_location_t *locations) {
+    const SkYUVAInfo *native = as_yuva_info(yuva_info);
+    if (native == nullptr || channelFlags == nullptr || locations == nullptr) {
+        clear_yuva_locations(locations);
+        return false;
+    }
+    auto yuvaLocations = native->toYUVALocations(channelFlags);
+    for (int i = 0; i < SkYUVAInfo::kYUVAChannelCount; ++i) {
+        locations[i].plane = yuvaLocations[i].fPlane;
+        locations[i].channel = static_cast<int32_t>(yuvaLocations[i].fChannel);
+    }
+    return SkYUVAInfo::YUVALocation::AreValidLocations(yuvaLocations);
+}
 
 sk_yuva_info_t SkYUVAInfo_makeSubsampling(reskia_yuva_info_t *yuva_info, reskia_yuva_info_subsampling_t subsampling) {
     const SkYUVAInfo *native = as_yuva_info(yuva_info);

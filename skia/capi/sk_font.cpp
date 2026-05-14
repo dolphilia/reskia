@@ -243,9 +243,11 @@ sk_typeface_t SkFont_refTypeface(reskia_font_t *font) {
     return make_typeface_handle(as_font(font)->refTypeface());
 }
 
-// TODO
 void SkFont_setTypeface(reskia_font_t *font, sk_typeface_t typeface) {
-    //reinterpret_cast<SkFont *>(font)->setTypeface(static_sk_typeface_move(typeface));
+    if (font == nullptr) {
+        return;
+    }
+    as_font(font)->setTypeface(static_sk_typeface_get_entity(typeface));
 }
 
 void SkFont_setSize(reskia_font_t *font, float textSize) {

@@ -41,6 +41,20 @@ int main() {
     }
     SkBBoxHierarchy_ref(nullptr);
     SkBBoxHierarchy_unref(nullptr);
+    if (!check(SkRTreeFactory_call(nullptr) == nullptr, "SkRTreeFactory_call(nullptr)")) {
+        return 4;
+    }
+    auto *factory = SkRTreeFactory_new();
+    if (!check(factory != nullptr, "SkRTreeFactory_new")) {
+        return 5;
+    }
+    auto *hierarchy = SkRTreeFactory_call(factory);
+    if (!check(hierarchy != nullptr, "SkRTreeFactory_call(valid)")) {
+        SkRTreeFactory_delete(factory);
+        return 6;
+    }
+    SkBBoxHierarchy_release(hierarchy);
+    SkRTreeFactory_delete(factory);
 
     return 0;
 }

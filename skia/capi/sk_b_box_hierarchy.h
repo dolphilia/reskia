@@ -13,6 +13,7 @@ extern "C" {
 
 typedef struct reskia_b_box_hierarchy_t reskia_b_box_hierarchy_t;
 typedef struct reskia_b_box_hierarchy_metadata_t reskia_b_box_hierarchy_metadata_t;
+typedef struct reskia_bbh_factory_t reskia_bbh_factory_t;
 typedef struct reskia_rect_t reskia_rect_t;
 
 /**
@@ -47,6 +48,10 @@ void SkBBoxHierarchy_ref(reskia_b_box_hierarchy_t *b_box_hierarchy);
  * owned: 参照カウントを減らす (SkBBoxHierarchy *b_box_hierarchy)
  */
 void SkBBoxHierarchy_unref(reskia_b_box_hierarchy_t *b_box_hierarchy);
+
+reskia_bbh_factory_t *SkRTreeFactory_new(); // caller-owned; release with SkRTreeFactory_delete
+void SkRTreeFactory_delete(reskia_bbh_factory_t *factory); // NULL input is no-op
+reskia_b_box_hierarchy_t *SkRTreeFactory_call(reskia_bbh_factory_t *factory); // owned result; release with SkBBoxHierarchy_release. NULL input returns NULL
 
 #ifdef __cplusplus
 }

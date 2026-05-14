@@ -80,4 +80,11 @@ bool SkPathMeasure_nextContour(reskia_path_measure_t *path_measure) {
     return reinterpret_cast<SkPathMeasure *>(path_measure)->nextContour();
 }
 
+void SkPathMeasure_dump(reskia_path_measure_t *path_measure) {
+    if (path_measure == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkPathMeasure *>(path_measure)->dump();
+}
+
 }

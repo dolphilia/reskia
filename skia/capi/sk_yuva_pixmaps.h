@@ -10,6 +10,7 @@
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_yuva_pixmap_info.h"
 #include "../handles/static_sk_yuva_pixmaps.h"
+#include "sk_yuva_info.h"
 
 typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_yuva_info_t reskia_yuva_info_t;
@@ -47,7 +48,7 @@ const reskia_pixmap_t *SkYUVAPixmaps_planes(reskia_yuva_pixmaps_t *yuva_pixmaps)
  * returns null on null pixmaps or out-of-range plane index.
  */
 const reskia_pixmap_t *SkYUVAPixmaps_plane(reskia_yuva_pixmaps_t *yuva_pixmaps, int i);
-// SkYUVAInfo::YUVALocations SkYUVAPixmaps_toYUVALocations(SkYUVAPixmaps *yuva_pixmaps); // (SkYUVAPixmaps *yuva_pixmaps) -> SkYUVAInfo::YUVALocations
+bool SkYUVAPixmaps_toYUVALocations(reskia_yuva_pixmaps_t *yuva_pixmaps, reskia_yuva_location_t *locations); // locations[4]. invalid input clears locations and returns false
 bool SkYUVAPixmaps_ownsStorage(reskia_yuva_pixmaps_t *yuva_pixmaps); // returns false on null pixmaps
 
 // static

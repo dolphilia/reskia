@@ -13,9 +13,9 @@ typedef struct reskia_point_3_t reskia_point_3_t;
 extern "C" {
 #endif
 
-// SkPoint3 operator-()
-// void operator+=(const SkPoint3 &v)
-// void operator-=(const SkPoint3 &v)
+sk_point_3_t SkPoint3_negate(reskia_point_3_t *point3); // NULL point3 returns 0.
+void SkPoint3_addAssign(reskia_point_3_t *point3, const reskia_point_3_t *v); // NULL input is no-op.
+void SkPoint3_subtractAssign(reskia_point_3_t *point3, const reskia_point_3_t *v); // NULL input is no-op.
 void SkPoint3_delete(reskia_point_3_t *point3); // NULL point3 is no-op.
 float SkPoint3_x(reskia_point_3_t *point3); // NULL point3 returns 0.
 float SkPoint3_y(reskia_point_3_t *point3); // NULL point3 returns 0.

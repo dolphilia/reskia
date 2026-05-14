@@ -137,13 +137,19 @@ bool SkString_startsWithChar(reskia_string_t *string, const char prefixChar) {
     return reinterpret_cast<SkString *>(string)->startsWith(prefixChar);
 }
 
-//bool SkString_endsWith(SkString *string, const char suffixStr[]) {
-//    return string->endsWith(suffixStr);
-//}
+bool SkString_endsWith(reskia_string_t *string, const char suffixStr[]) {
+    if (string == nullptr || suffixStr == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkString *>(string)->endsWith(suffixStr);
+}
 
-//bool SkString_endsWith_2(SkString *string, const char suffixChar) {
-//    return string->endsWith(suffixChar);
-//}
+bool SkString_endsWithChar(reskia_string_t *string, const char suffixChar) {
+    if (string == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkString *>(string)->endsWith(suffixChar);
+}
 
 bool SkString_contains(reskia_string_t *string, const char substring[]) {
     if (string == nullptr || substring == nullptr) {

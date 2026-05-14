@@ -14,8 +14,6 @@ typedef struct reskia_sampling_options_t reskia_sampling_options_t;
 extern "C" {
 #endif
 
-//bool operator==(const SkSamplingOptions &other)
-//bool operator!=(const SkSamplingOptions &other)
 //SkSamplingOptions *SkSamplingOptions_newCopy & operator=(const SkSamplingOptions &that)
 
 reskia_sampling_options_t *SkSamplingOptions_new(); // Returns a caller-owned sampling options pointer.
@@ -24,6 +22,8 @@ reskia_sampling_options_t *SkSamplingOptions_newWithFilterAndMipmapModes(int fm,
 reskia_sampling_options_t *SkSamplingOptions_newWithFilterMode(int fm); // Invalid filter mode returns NULL.
 reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_t *c); // c is required; NULL returns NULL.
 void SkSamplingOptions_delete(reskia_sampling_options_t *sampling_options); // NULL sampling_options is no-op.
+bool SkSamplingOptions_equals(reskia_sampling_options_t *sampling_options, const reskia_sampling_options_t *other); // NULL input returns false.
+bool SkSamplingOptions_notEquals(reskia_sampling_options_t *sampling_options, const reskia_sampling_options_t *other); // NULL input returns false.
 bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options); // NULL sampling_options returns false.
 
 // static

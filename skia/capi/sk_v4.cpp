@@ -11,12 +11,48 @@
 
 extern "C" {
 
-// bool operator==(const SkV4 &v)
-// bool operator!=(const SkV4 &v)
-// SkV4 operator-()
-// SkV4 operator+(const SkV4 &v)
-// SkV4 operator-(const SkV4 &v)
-// SkV4 operator*(const SkV4 &v)
+bool SkV4_equals(reskia_v4_t *v4, const reskia_v4_t *v) {
+    if (v4 == nullptr || v == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV4 *>(v4) == *reinterpret_cast<const SkV4 *>(v);
+}
+
+bool SkV4_notEquals(reskia_v4_t *v4, const reskia_v4_t *v) {
+    if (v4 == nullptr || v == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV4 *>(v4) != *reinterpret_cast<const SkV4 *>(v);
+}
+
+sk_v4_t SkV4_negate(reskia_v4_t *v4) {
+    if (v4 == nullptr) {
+        return static_sk_v4_make({});
+    }
+    return static_sk_v4_make(-*reinterpret_cast<SkV4 *>(v4));
+}
+
+sk_v4_t SkV4_add(reskia_v4_t *v4, const reskia_v4_t *v) {
+    if (v4 == nullptr || v == nullptr) {
+        return static_sk_v4_make({});
+    }
+    return static_sk_v4_make(*reinterpret_cast<SkV4 *>(v4) + *reinterpret_cast<const SkV4 *>(v));
+}
+
+sk_v4_t SkV4_subtract(reskia_v4_t *v4, const reskia_v4_t *v) {
+    if (v4 == nullptr || v == nullptr) {
+        return static_sk_v4_make({});
+    }
+    return static_sk_v4_make(*reinterpret_cast<SkV4 *>(v4) - *reinterpret_cast<const SkV4 *>(v));
+}
+
+sk_v4_t SkV4_multiply(reskia_v4_t *v4, const reskia_v4_t *v) {
+    if (v4 == nullptr || v == nullptr) {
+        return static_sk_v4_make({});
+    }
+    return static_sk_v4_make(*reinterpret_cast<SkV4 *>(v4) * *reinterpret_cast<const SkV4 *>(v));
+}
+
 // float operator[](int i)
 // float & operator[](int i)
 

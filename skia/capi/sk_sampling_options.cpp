@@ -24,8 +24,6 @@ bool is_valid_mipmap_mode(int mm) {
 
 extern "C" {
 
-//bool operator==(const SkSamplingOptions &other)
-//bool operator!=(const SkSamplingOptions &other)
 //SkSamplingOptions *SkSamplingOptions_newCopy & operator=(const SkSamplingOptions &that) {
 //    return new SkSamplingOptions();
 //}
@@ -64,6 +62,20 @@ reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_
 
 void SkSamplingOptions_delete(reskia_sampling_options_t *sampling_options) {
     delete reinterpret_cast<SkSamplingOptions *>(sampling_options);
+}
+
+bool SkSamplingOptions_equals(reskia_sampling_options_t *sampling_options, const reskia_sampling_options_t *other) {
+    if (sampling_options == nullptr || other == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkSamplingOptions *>(sampling_options) == *reinterpret_cast<const SkSamplingOptions *>(other);
+}
+
+bool SkSamplingOptions_notEquals(reskia_sampling_options_t *sampling_options, const reskia_sampling_options_t *other) {
+    if (sampling_options == nullptr || other == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkSamplingOptions *>(sampling_options) != *reinterpret_cast<const SkSamplingOptions *>(other);
 }
 
 bool SkSamplingOptions_isAniso(reskia_sampling_options_t *sampling_options) {

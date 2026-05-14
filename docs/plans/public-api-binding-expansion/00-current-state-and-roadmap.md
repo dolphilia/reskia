@@ -150,6 +150,50 @@ Phase 0 で `scripts/generate_public_api_coverage.py` を再実行し、`SkAutoC
 - invalid input smoke を追加または既存 smoke に追記する。
 - prebuilt 既定 build で configure/build が通る。
 
+### Phase 1 progress 2026-05-14
+
+低リスクで既存 C API 型に自然に載せられる core 残件から、次を実装した。
+
+- `SkFontStyle::Normal` / `Bold` / `Italic` / `BoldItalic`
+- `SkFont::setTypeface`
+- `SkString::endsWith(const char[])` / `endsWith(char)`
+- `SkNullWStream::write` / `flush` / `bytesWritten`
+- `SkYUVAInfo::toYUVALocations`
+- `SkYUVAPixmaps::toYUVALocations`
+
+`public-api-coverage-matrix.csv` を再生成し、全体 missing は `1538` から `1526` へ減った。`include/core` / `include/effects` の triage 台帳は現行 matrix の missing 行に同期し、`83` 行から `71` 行へ更新した。内訳は `real_gap 43`、`na 8`、`false_positive 20`、`untriaged 0`。
+
+検証:
+
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `cmake -S skia -B skia/cmake-build-codex-phase1-tests -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-phase1-tests --target test_wstream_invalid_input_smoke test_sampling_unpremul_string_stroke_trace_invalid_input_smoke test_font_style_set_invalid_input_smoke test_font_invalid_input_smoke test_yuva_pixmaps_invalid_input_smoke test_yuva_info_invalid_input_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase1-tests -R 'c_skia_(wstream|sampling_unpremul_string_stroke_trace|font_style_set|font|yuva_pixmaps|yuva_info)_invalid_input_smoke' --output-on-failure`
+
+次の Phase 1 batch は、P2 の callback/global registration を避け、P3 の value comparison/operator helper または legacy flattenable helper から選ぶ。`SkGraphics::SetImageGeneratorFromEncodedDataFactory` と `SkTypeface::Register` は callback ownership 設計が必要なため、Phase 1 の即時実装対象からは外す。
+
+### Phase 1 continuation 2026-05-14
+
+網羅率を先に上げるため、既存の value wrapper と smoke に載せられる operator/helper を追加で実装した。
+
+- `SkV2` / `SkV3` / `SkV4` の comparison、unary/binary arithmetic、assign arithmetic
+- `SkPoint3::operator-` / `operator+=` / `operator-=`
+- `SkSamplingOptions::operator==` / `operator!=`
+- `SkFontMetrics::operator==`
+- `SkRTreeFactory::operator()`
+- `SkPathMeasure::dump`
+
+operator 系の C API 名は `equals`、`notEquals`、`negate`、`add`、`subtract`、`multiply`、`addAssign`、`subtractAssign`、`multiplyAssign` のように C ABI で明確な名前へ正規化した。これに合わせて `generate_public_api_coverage.py` の operator token 正規化も更新した。
+
+`public-api-coverage-matrix.csv` を再生成し、全体 missing は `1491` まで減った。`include/core` / `include/effects` の missing は `36` 行、triage 内訳は `real_gap 2`、`na 14`、`false_positive 20`、`untriaged 0`。残る `real_gap` は callback/global registration 設計が必要な `SkGraphics::SetImageGeneratorFromEncodedDataFactory` と `SkTypeface::Register` のみ。`SkDrawLooper` は `SK_SUPPORT_LEGACY_DRAWLOOPER` guard の unsupported legacy API として `na` に更新した。
+
+callback/global registration は Phase 1 では実装しない。設計メモは `01-callback-global-registration-design.md` に固定し、実装は Phase 3 の SVG DOM 最小公開後、Phase 5 の skottie/skresources provider 実装前に `Phase 5A: Callback / Resource Provider Foundation` としてまとめる。
+
+追加検証:
+
+- `ctest --test-dir skia/cmake-build-codex-phase1-tests -R 'c_skia_(wstream|sampling_unpremul_string_stroke_trace|font_style_set|font|yuva_pixmaps|yuva_info|vector|value_transform_string_stroke_trace|font_arguments_metrics|auto_canvas_restore_bbox|contour_path_measure)_invalid_input_smoke' --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+
 ## Phase 2: GPU C API の実用入口
 
 目的: `include/gpu` の全面公開ではなく、Ganesh/Graphite の context、surface、backend object の最小実用経路を安定させる。
@@ -158,23 +202,16 @@ Phase 0 で `scripts/generate_public_api_coverage.py` を再実行し、`SkAutoC
 
 - `skia/capi/sk_gpu_context.*` は Ganesh/Graphite context 作成と release を提供している。
 - `skia/capi/sk_surface_gpu.*` は Ganesh/Graphite surface 作成と backend texture/render target wrap を提供している。
-- matrix 上は `GrDirectContext`、`GrBackendTexture`、`GrBackendRenderTarget`、`GrBackendSemaphore`、`GrBackendFormat` がほぼ未対応として残る。
+- 2026-05-14 に Phase 2 着手。`GrDirectContext` lifecycle/query/cache/flush の低リスク subset は C API に追加済み。
+- matrix 上は `GrDirectContext` の backend texture/state/callback 系、`GrBackendTexture`、`GrBackendRenderTarget`、`GrBackendSemaphore`、`GrBackendFormat` が主な残作業として残る。
 
 優先順:
 
 1. `GrDirectContext` lifecycle/query/cache/flush
-   - `resetContext`
-   - `abandonContext`
-   - `abandoned`
-   - `isDeviceLost`
-   - `oomed`
-   - `getResourceCacheLimits`
-   - `getResourceCacheUsage`
-   - `setResourceCacheLimits`
-   - `freeGpuResources`
-   - `performDeferredCleanup`
-   - `flush`
-   - `submit`
+   - 完了: `resetContext`, `abandonContext`, `abandoned`, `isDeviceLost`, `oomed`
+   - 完了: `releaseResourcesAndAbandonContext`, cache limit/usage query/set, GPU resource purge/cleanup
+   - 完了: simple `flush`, `flushAndSubmit`, `submit`, `checkAsyncWorkCompletion`, `dumpMemoryStatistics`, `supportsDistanceFieldText`, `storeVkPipelineCacheData`
+   - 残: `wait`, `threadSafeProxy`, `directContextID`, backend texture create/update/delete/state, callback 付き finished proc 系、image/surface 指定 flush の ABI 設計
 2. `GrBackendTexture` / `GrBackendRenderTarget` value wrapper
    - opaque wrapper を用意し、backend tag と validity を C ABI 側で表す。
    - 既存の `const void *backend_texture` pass-through は互換維持しつつ、新 API へ誘導する。
@@ -196,6 +233,63 @@ Phase 0 で `scripts/generate_public_api_coverage.py` を再実行し、`SkAutoC
 - Graphite を触る場合は Graphite smoke も通る。
 - backend object の lifetime と mutability が C API コメントで明示される。
 - CMake option 無効時に C API source が未解決 symbol を出さない。
+
+Phase 2 着手時の検証:
+
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+- `cmake -S skia -B skia/cmake-build-codex-phase2-gpu-metal -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON -DRESKIA_ENABLE_GPU_GANESH=ON -DRESKIA_ENABLE_GPU_METAL=ON`
+- `cmake --build skia/cmake-build-codex-phase2-gpu-metal --target test_gpu_context_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase2-gpu-metal -R c_skia_gpu_context_capi_smoke --output-on-failure`
+
+Phase 2 着手時の台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1458`, `covered=1856`, `partial=3`, `no_public_methods_found=104`
+- `public-api-gpu-missing-triage.csv`: `GrDirectContext` の covered 33 行を削除し、残 `375` 行
+- Metal `.mm` source の ARC 設定が既存 GPU 計画メモと逆向きだったため、`RESKIA_ENABLE_GPU_METAL=ON` 時は `-fobjc-arc` でコンパイルする設定に修正した。
+
+### Phase 2 continuation 2026-05-14
+
+backend object の C ABI 足場として、`GrBackendFormat` / `GrBackendTexture` / `GrBackendRenderTarget` の owned value wrapper を追加した。既存 `Reskia_GaneshSurface_WrapBackendTexture` / `WrapBackendRenderTarget` の `reskia_gpu_backend_*_handle_t` は維持し、新 wrapper から borrowed handle を生成する API を追加して互換性を保つ。
+
+追加済み:
+
+- `GrBackendFormat`: default/copy/mock/Metal factory、equality、backend、textureType、channelMask、mock query、`makeTexture2D`、`isValid`
+- `GrBackendTexture`: default/copy/mock factory、width/height、mipmapped、hasMipmaps/hasMipMaps、backend、textureType、backend format、protected/valid query、same-texture query、borrowed handle 化
+- `GrBackendRenderTarget`: default/copy/mock factory、width/height、sample/stencil、backend、framebuffer-only、backend format、protected/valid query、borrowed handle 化
+- `GrRecordingContext`: abandoned、surface/image color type support、texture/render-target size、protected content、sample count query
+- `GrContextThreadSafeProxy`: release、default/compressed backend format、sample count、valid/equality query
+- `GrDirectContext`: `threadSafeProxy` と opaque `DirectContextID` wrapper
+
+残すもの:
+
+- `GrDirectContext::createBackendTexture` / `updateBackendTexture` / `deleteBackendTexture` は callback finished proc と backend resource lifetime の設計が必要なため、Phase 5A の callback 規約に寄せる。
+- `GrContextThreadSafeProxy::createCharacterization` は `GrSurfaceCharacterization` wrapper とセットで扱う。
+- Vulkan / Metal の native texture info accessor と mutable texture state は backend-specific ABI を切ってから追加する。
+- Phase 2 の残件分類と `GrSurfaceCharacterization` / backend-specific ABI 方針は `02-phase2-gpu-residual-design.md` を正とする。
+
+検証:
+
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `cmake --build skia/cmake-build-codex-phase2-gpu-metal --target test_gpu_context_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase2-gpu-metal -R c_skia_gpu_context_capi_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1396`, `covered=1918`, `partial=3`, `no_public_methods_found=104`
+- `public-api-gpu-missing-triage.csv`: covered 62 行を削除し、残 `313` 行
+
+### Phase 2 residual planning 2026-05-14
+
+Phase 2 の残 P1 は、実装単位ごとに triage CSV の note を更新した。
+
+- Phase 2B: no-callback allocation、`GrMockOptions`、`GrSurfaceCharacterization`、`precompileShader` など次 batch 候補
+- Phase 2C: `GrContextOptions`、`SkCapabilities` など wrapper 方針待ち
+- Phase 2D: semaphore、mutable texture state、Metal/Vulkan native info など backend-specific ABI 待ち
+- Phase 5A: finished proc / upload callback / semaphore delete policy など callback foundation 待ち
+
+詳細は `02-phase2-gpu-residual-design.md` に切り出した。現時点で追加実装へ進むなら、`GrMockOptions` と `GrSurfaceCharacterization` wrapper を先に入れ、その後 `createBackendTexture` の no-callback allocation overload と `precompileShader` を追加する順がよい。
 
 ## Phase 3: SVG DOM の最小公開
 
@@ -272,6 +366,35 @@ Phase 0 で `scripts/generate_public_api_coverage.py` を再実行し、`SkAutoC
 ## Phase 5: Skottie / skresources / sksg
 
 目的: 既存 minimal bridge を実用 API に拡張する。
+
+## Phase 5A: Callback / Resource Provider Foundation
+
+目的: Phase 1 で残した callback/global registration と、optional module の provider / observer callback を同じ C ABI 規約で実装する。
+
+実行位置: Phase 3 の SVG DOM 最小公開後、Phase 5 の skottie/skresources/sksg 拡張に入る前に行う。Phase 4 の paragraph/unicode/shaper は依存が重いため、Phase 5A と並行または前後してよいが、callback/provider API を追加する場合は Phase 5A の規約を先に適用する。
+
+対象:
+
+- `SkGraphics::SetImageGeneratorFromEncodedDataFactory`
+- `SkTypeface::Register`
+- skresources image/data/font resource provider
+- skottie resource provider
+- skottie property observer / text property callback
+- SVG DOM resource provider hook が必要になった場合の provider bridge
+
+方針:
+
+- 詳細設計は `01-callback-global-registration-design.md` を正とする。
+- callback は function pointer + `void *user_data` + optional release proc の形に統一する。
+- global registration は初期化時 API とみなし、登録解除不能な Skia API は replacement のみ提供する。
+- callback が返す object の ownership transfer は API ごとに header コメントで明示する。
+
+受け入れ条件:
+
+- callback context release が一度だけ走ることを smoke で検証する。
+- callback failure path を smoke で検証する。
+- registration replacement の旧 context release を smoke で検証する。
+- SkGraphics、SkTypeface、skresources/skottie provider の説明文と failure mode が同じ語彙で揃っている。
 
 Skottie:
 

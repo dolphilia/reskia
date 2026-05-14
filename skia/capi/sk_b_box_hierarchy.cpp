@@ -71,4 +71,20 @@ void SkBBoxHierarchy_unref(reskia_b_box_hierarchy_t *b_box_hierarchy) {
     reinterpret_cast<SkBBoxHierarchy *>(b_box_hierarchy)->unref();
 }
 
+reskia_bbh_factory_t *SkRTreeFactory_new() {
+    return reinterpret_cast<reskia_bbh_factory_t *>(new SkRTreeFactory());
+}
+
+void SkRTreeFactory_delete(reskia_bbh_factory_t *factory) {
+    delete reinterpret_cast<SkRTreeFactory *>(factory);
+}
+
+reskia_b_box_hierarchy_t *SkRTreeFactory_call(reskia_bbh_factory_t *factory) {
+    if (factory == nullptr) {
+        return nullptr;
+    }
+    sk_sp<SkBBoxHierarchy> hierarchy = (*reinterpret_cast<SkRTreeFactory *>(factory))();
+    return reinterpret_cast<reskia_b_box_hierarchy_t *>(hierarchy.release());
+}
+
 }

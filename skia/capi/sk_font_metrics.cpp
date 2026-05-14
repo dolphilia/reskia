@@ -12,6 +12,13 @@ void SkFontMetrics_delete(reskia_font_metrics_t *font_metrics) {
     delete reinterpret_cast<SkFontMetrics *>(font_metrics);
 }
 
+bool SkFontMetrics_equals(reskia_font_metrics_t *font_metrics, const reskia_font_metrics_t *other) {
+    if (font_metrics == nullptr || other == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkFontMetrics *>(font_metrics) == *reinterpret_cast<const SkFontMetrics *>(other);
+}
+
 bool SkFontMetrics_hasUnderlineThickness(reskia_font_metrics_t *font_metrics, float *thickness) {
     if (font_metrics == nullptr || thickness == nullptr) {
         return false;

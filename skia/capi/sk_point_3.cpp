@@ -12,9 +12,26 @@
 
 extern "C" {
 
-// SkPoint3 operator-()
-// void operator+=(const SkPoint3 &v)
-// void operator-=(const SkPoint3 &v)
+sk_point_3_t SkPoint3_negate(reskia_point_3_t *point3) {
+    if (point3 == nullptr) {
+        return 0;
+    }
+    return static_sk_point_3_make(-*reinterpret_cast<SkPoint3 *>(point3));
+}
+
+void SkPoint3_addAssign(reskia_point_3_t *point3, const reskia_point_3_t *v) {
+    if (point3 == nullptr || v == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkPoint3 *>(point3) += *reinterpret_cast<const SkPoint3 *>(v);
+}
+
+void SkPoint3_subtractAssign(reskia_point_3_t *point3, const reskia_point_3_t *v) {
+    if (point3 == nullptr || v == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkPoint3 *>(point3) -= *reinterpret_cast<const SkPoint3 *>(v);
+}
 
 void SkPoint3_delete(reskia_point_3_t *point3) {
     delete reinterpret_cast<SkPoint3 *>(point3);

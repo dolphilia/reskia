@@ -33,6 +33,30 @@ int main() {
         return 3;
     }
 
+    auto *normal = SkFontStyle_Normal();
+    auto *bold = SkFontStyle_Bold();
+    auto *italic = SkFontStyle_Italic();
+    auto *bold_italic = SkFontStyle_BoldItalic();
+    if (!check(normal != nullptr && bold != nullptr && italic != nullptr && bold_italic != nullptr, "SkFontStyle static factories")) {
+        SkFontStyle_delete(normal);
+        SkFontStyle_delete(bold);
+        SkFontStyle_delete(italic);
+        SkFontStyle_delete(bold_italic);
+        return 4;
+    }
+    bool factory_values_ok = true;
+    factory_values_ok &= check(SkFontStyle_weight(normal) == 400 && SkFontStyle_slant(normal) == 0, "SkFontStyle_Normal");
+    factory_values_ok &= check(SkFontStyle_weight(bold) == 700 && SkFontStyle_slant(bold) == 0, "SkFontStyle_Bold");
+    factory_values_ok &= check(SkFontStyle_weight(italic) == 400 && SkFontStyle_slant(italic) == 1, "SkFontStyle_Italic");
+    factory_values_ok &= check(SkFontStyle_weight(bold_italic) == 700 && SkFontStyle_slant(bold_italic) == 1, "SkFontStyle_BoldItalic");
+    SkFontStyle_delete(normal);
+    SkFontStyle_delete(bold);
+    SkFontStyle_delete(italic);
+    SkFontStyle_delete(bold_italic);
+    if (!factory_values_ok) {
+        return 4;
+    }
+
     const sk_font_style_t style_handle = static_sk_font_style_make(SkFontStyle());
     auto *style = static_cast<reskia_font_style_t *>(static_sk_font_style_get_ptr(style_handle));
     if (!check(style_handle != 0 && style != nullptr, "static_sk_font_style_make(valid)")) {

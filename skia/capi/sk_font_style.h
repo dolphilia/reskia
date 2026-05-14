@@ -18,6 +18,10 @@ void SkFontStyle_delete(reskia_font_style_t *font_style); // NULL 入力では n
 int SkFontStyle_weight(reskia_font_style_t *font_style); // NULL 入力では 0
 int SkFontStyle_width(reskia_font_style_t *font_style); // NULL 入力では 0
 reskia_font_style_slant_t SkFontStyle_slant(reskia_font_style_t *font_style); // NULL 入力では -1
+reskia_font_style_t *SkFontStyle_Normal(); // caller-owned; release with SkFontStyle_delete
+reskia_font_style_t *SkFontStyle_Bold(); // caller-owned; release with SkFontStyle_delete
+reskia_font_style_t *SkFontStyle_Italic(); // caller-owned; release with SkFontStyle_delete
+reskia_font_style_t *SkFontStyle_BoldItalic(); // caller-owned; release with SkFontStyle_delete
 
 #ifdef __cplusplus
 }

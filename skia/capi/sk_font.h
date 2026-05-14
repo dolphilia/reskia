@@ -59,8 +59,7 @@ float SkFont_getScaleX(reskia_font_t *font); // NULL 入力では 0
 float SkFont_getSkewX(reskia_font_t *font); // NULL 入力では 0
 sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // NULL 入力や未設定では 0
 
-// TODO
-//void SkFont_setTypeface(void *font, sk_typeface_t typeface); // (SkFont *font, sk_typeface_t typeface)
+void SkFont_setTypeface(reskia_font_t *font, sk_typeface_t typeface); // NULL font では no-op。invalid/0 typeface handle は null typeface として設定
 void SkFont_setSize(reskia_font_t *font, float textSize); // NULL 入力では no-op
 void SkFont_setScaleX(reskia_font_t *font, float scaleX); // NULL 入力では no-op
 void SkFont_setSkewX(reskia_font_t *font, float skewX); // NULL 入力では no-op

@@ -85,6 +85,7 @@ int main() {
     SkFont_setBaselineSnap(nullptr, true);
     SkFont_setEdging(nullptr, 1);
     SkFont_setHinting(nullptr, 1);
+    SkFont_setTypeface(nullptr, 0);
     SkFont_setSize(nullptr, 12.0f);
     SkFont_setScaleX(nullptr, 1.0f);
     SkFont_setSkewX(nullptr, 0.0f);
@@ -143,6 +144,11 @@ int main() {
     }
     SkFont_setSize(font, 18.0f);
     if (!check(SkFont_getSize(font) == 18.0f, "SkFont_setSize(valid)")) {
+        SkFont_delete(font);
+        return 29;
+    }
+    SkFont_setTypeface(font, 0);
+    if (!check(SkFont_refTypeface(font) == 0, "SkFont_setTypeface(null handle)")) {
         SkFont_delete(font);
         return 29;
     }

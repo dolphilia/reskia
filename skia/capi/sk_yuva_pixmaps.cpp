@@ -6,6 +6,7 @@
 
 #include "include/core/SkData.h"
 #include "include/core/SkYUVAPixmaps.h"
+#include "src/core/SkYUVAInfoLocation.h"
 
 #include "../handles/static_sk_yuva_pixmap_info.h"
 #include "../handles/static_sk_yuva_pixmaps.h"
@@ -41,6 +42,16 @@ const SkPixmap *as_pixmaps(const reskia_pixmap_t *pixmaps) {
 
 bool is_valid_data_type(reskia_yuva_pixmaps_data_type_t type) {
     return type >= 0 && type <= static_cast<reskia_yuva_pixmaps_data_type_t>(SkYUVAPixmapInfo::DataType::kLast);
+}
+
+void clear_yuva_locations(reskia_yuva_location_t *locations) {
+    if (locations == nullptr) {
+        return;
+    }
+    for (int i = 0; i < SkYUVAInfo::kYUVAChannelCount; ++i) {
+        locations[i].plane = -1;
+        locations[i].channel = -1;
+    }
 }
 
 sk_yuva_pixmaps_t make_yuva_pixmaps_handle_if_valid(SkYUVAPixmaps pixmaps) {
@@ -123,9 +134,19 @@ const reskia_pixmap_t *SkYUVAPixmaps_plane(reskia_yuva_pixmaps_t *yuva_pixmaps, 
     return reinterpret_cast<const reskia_pixmap_t *>(&native->plane(i));
 }
 
-//SkYUVAInfo::YUVALocations SkYUVAPixmaps_toYUVALocations(SkYUVAPixmaps *yuva_pixmaps) {
-//    return yuva_pixmaps->toYUVALocations();
-//}
+bool SkYUVAPixmaps_toYUVALocations(reskia_yuva_pixmaps_t *yuva_pixmaps, reskia_yuva_location_t *locations) {
+    const SkYUVAPixmaps *native = as_yuva_pixmaps(yuva_pixmaps);
+    if (native == nullptr || locations == nullptr || !native->isValid()) {
+        clear_yuva_locations(locations);
+        return false;
+    }
+    auto yuvaLocations = native->toYUVALocations();
+    for (int i = 0; i < SkYUVAInfo::kYUVAChannelCount; ++i) {
+        locations[i].plane = yuvaLocations[i].fPlane;
+        locations[i].channel = static_cast<int32_t>(yuvaLocations[i].fChannel);
+    }
+    return SkYUVAInfo::YUVALocation::AreValidLocations(yuvaLocations);
+}
 
 bool SkYUVAPixmaps_ownsStorage(reskia_yuva_pixmaps_t *yuva_pixmaps) {
     const SkYUVAPixmaps *native = as_yuva_pixmaps(yuva_pixmaps);

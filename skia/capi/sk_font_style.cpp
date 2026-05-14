@@ -36,4 +36,20 @@ reskia_font_style_slant_t SkFontStyle_slant(reskia_font_style_t *font_style) {
     return static_cast<reskia_font_style_slant_t>(reinterpret_cast<SkFontStyle *>(font_style)->slant());
 }
 
+reskia_font_style_t *SkFontStyle_Normal() {
+    return reinterpret_cast<reskia_font_style_t *>(new SkFontStyle(SkFontStyle::Normal()));
+}
+
+reskia_font_style_t *SkFontStyle_Bold() {
+    return reinterpret_cast<reskia_font_style_t *>(new SkFontStyle(SkFontStyle::Bold()));
+}
+
+reskia_font_style_t *SkFontStyle_Italic() {
+    return reinterpret_cast<reskia_font_style_t *>(new SkFontStyle(SkFontStyle::Italic()));
+}
+
+reskia_font_style_t *SkFontStyle_BoldItalic() {
+    return reinterpret_cast<reskia_font_style_t *>(new SkFontStyle(SkFontStyle::BoldItalic()));
+}
+
 }

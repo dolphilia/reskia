@@ -12,17 +12,82 @@
 
 extern "C" {
 
-// bool operator==(const SkV2 v)
-// bool operator!=(const SkV2 v)
-// SkV2 operator-()
-// SkV2 operator+(SkV2 v)
-// SkV2 operator-(SkV2 v)
-// SkV2 operator*(SkV2 v)
-// void operator+=(SkV2 v)
-// void operator-=(SkV2 v)
-// void operator*=(SkV2 v)
-// void operator*=(SkScalar s)
-// void operator/=(SkScalar s)
+bool SkV2_equals(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV2 *>(v2) == static_sk_v2_get_entity(v);
+}
+
+bool SkV2_notEquals(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV2 *>(v2) != static_sk_v2_get_entity(v);
+}
+
+sk_v2_t SkV2_negate(reskia_v2_t *v2) {
+    if (v2 == nullptr) {
+        return static_sk_v2_make({});
+    }
+    return static_sk_v2_make(-*reinterpret_cast<SkV2 *>(v2));
+}
+
+sk_v2_t SkV2_add(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return static_sk_v2_make({});
+    }
+    return static_sk_v2_make(*reinterpret_cast<SkV2 *>(v2) + static_sk_v2_get_entity(v));
+}
+
+sk_v2_t SkV2_subtract(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return static_sk_v2_make({});
+    }
+    return static_sk_v2_make(*reinterpret_cast<SkV2 *>(v2) - static_sk_v2_get_entity(v));
+}
+
+sk_v2_t SkV2_multiply(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return static_sk_v2_make({});
+    }
+    return static_sk_v2_make(*reinterpret_cast<SkV2 *>(v2) * static_sk_v2_get_entity(v));
+}
+
+void SkV2_addAssign(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV2 *>(v2) += static_sk_v2_get_entity(v);
+}
+
+void SkV2_subtractAssign(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV2 *>(v2) -= static_sk_v2_get_entity(v);
+}
+
+void SkV2_multiplyAssign(reskia_v2_t *v2, sk_v2_t v) {
+    if (v2 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV2 *>(v2) *= static_sk_v2_get_entity(v);
+}
+
+void SkV2_multiplyScalarAssign(reskia_v2_t *v2, float s) {
+    if (v2 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV2 *>(v2) *= s;
+}
+
+void SkV2_divideScalarAssign(reskia_v2_t *v2, float s) {
+    if (v2 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV2 *>(v2) /= s;
+}
 
 void SkV2_delete(reskia_v2_t *v2) {
     if (v2 == nullptr) {

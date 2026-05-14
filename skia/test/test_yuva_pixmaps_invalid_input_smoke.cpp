@@ -59,6 +59,9 @@ int main() {
     ok &= check(SkYUVAPixmaps_numPlanes(nullptr) == 0, "pixmaps numPlanes null");
     ok &= check(SkYUVAPixmaps_planes(nullptr) == nullptr, "planes null");
     ok &= check(SkYUVAPixmaps_plane(nullptr, 0) == nullptr, "plane null");
+    reskia_yuva_location_t null_locations[4] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
+    ok &= check(!SkYUVAPixmaps_toYUVALocations(nullptr, null_locations), "pixmaps toYUVALocations null");
+    ok &= check(null_locations[0].plane == -1 && null_locations[1].plane == -1 && null_locations[2].plane == -1 && null_locations[3].plane == -1, "pixmaps toYUVALocations clears output");
     ok &= check(!SkYUVAPixmaps_ownsStorage(nullptr), "ownsStorage null");
     ok &= check(SkYUVAPixmaps_RecommendedRGBAColorType(99) == -1, "recommended color type rejects invalid data type");
     ok &= check(SkYUVAPixmaps_Allocate(nullptr) == 0, "allocate rejects null");
@@ -107,6 +110,9 @@ int main() {
     ok &= check(SkYUVAPixmaps_plane(allocated_ptr, 0) != nullptr, "allocated plane valid");
     ok &= check(SkYUVAPixmaps_plane(allocated_ptr, -1) == nullptr, "allocated plane negative");
     ok &= check(SkYUVAPixmaps_plane(allocated_ptr, 3) == nullptr, "allocated plane out of range");
+    reskia_yuva_location_t locations[4] = {};
+    ok &= check(SkYUVAPixmaps_toYUVALocations(allocated_ptr, locations), "allocated toYUVALocations valid");
+    ok &= check(locations[0].plane == 0 && locations[1].plane == 1 && locations[2].plane == 2 && locations[3].plane == -1, "allocated toYUVALocations output");
     const sk_yuva_pixmap_info_t allocated_info = SkYUVAPixmaps_pixmapsInfo(allocated_ptr);
     ok &= check(allocated_info != 0, "allocated pixmapsInfo valid");
     static_sk_yuva_pixmap_info_delete(allocated_info);

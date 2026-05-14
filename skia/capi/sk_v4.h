@@ -13,12 +13,12 @@ typedef struct reskia_v4_t reskia_v4_t;
 extern "C" {
 #endif
 
-// bool operator==(const SkV4 &v)
-// bool operator!=(const SkV4 &v)
-// SkV4 operator-()
-// SkV4 operator+(const SkV4 &v)
-// SkV4 operator-(const SkV4 &v)
-// SkV4 operator*(const SkV4 &v)
+bool SkV4_equals(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns false.
+bool SkV4_notEquals(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns false.
+sk_v4_t SkV4_negate(reskia_v4_t *v4); // NULL input returns default vector handle.
+sk_v4_t SkV4_add(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
+sk_v4_t SkV4_subtract(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
+sk_v4_t SkV4_multiply(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
 // float operator[](int i)
 // float & operator[](int i)
 

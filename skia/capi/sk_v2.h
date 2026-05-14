@@ -13,18 +13,17 @@ typedef struct reskia_v2_t reskia_v2_t;
 extern "C" {
 #endif
 
-// bool operator==(const SkV2 v)
-// bool operator!=(const SkV2 v)
-// SkV2 operator-()
-// SkV2 operator+(SkV2 v)
-// SkV2 operator-(SkV2 v)
-// SkV2 operator*(SkV2 v)
-// void operator+=(SkV2 v)
-// void operator-=(SkV2 v)
-// void operator*=(SkV2 v)
-// void operator*=(SkScalar s)
-// void operator/=(SkScalar s)
-
+bool SkV2_equals(reskia_v2_t *v2, sk_v2_t v); // v handle 0 is default vector. NULL v2 returns false.
+bool SkV2_notEquals(reskia_v2_t *v2, sk_v2_t v); // v handle 0 is default vector. NULL v2 returns false.
+sk_v2_t SkV2_negate(reskia_v2_t *v2); // NULL input returns default vector handle.
+sk_v2_t SkV2_add(reskia_v2_t *v2, sk_v2_t v); // v handle 0 is default vector. NULL v2 returns default vector handle.
+sk_v2_t SkV2_subtract(reskia_v2_t *v2, sk_v2_t v); // v handle 0 is default vector. NULL v2 returns default vector handle.
+sk_v2_t SkV2_multiply(reskia_v2_t *v2, sk_v2_t v); // v handle 0 is default vector. NULL v2 returns default vector handle.
+void SkV2_addAssign(reskia_v2_t *v2, sk_v2_t v); // NULL v2 is no-op.
+void SkV2_subtractAssign(reskia_v2_t *v2, sk_v2_t v); // NULL v2 is no-op.
+void SkV2_multiplyAssign(reskia_v2_t *v2, sk_v2_t v); // NULL v2 is no-op.
+void SkV2_multiplyScalarAssign(reskia_v2_t *v2, float s); // NULL v2 is no-op.
+void SkV2_divideScalarAssign(reskia_v2_t *v2, float s); // NULL v2 is no-op.
 void SkV2_delete(reskia_v2_t *v2); // NULL 入力では no-op
 float SkV2_lengthSquared(reskia_v2_t *v2); // NULL 入力では 0
 float SkV2_length(reskia_v2_t *v2); // NULL 入力では 0

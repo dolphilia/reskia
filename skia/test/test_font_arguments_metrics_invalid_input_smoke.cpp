@@ -75,6 +75,9 @@ int main() {
 
     SkFontMetrics_delete(nullptr);
     float value = 0.0f;
+    if (!check(!SkFontMetrics_equals(nullptr, nullptr), "SkFontMetrics_equals(nullptr)")) {
+        return 12;
+    }
     if (!check(!SkFontMetrics_hasUnderlineThickness(nullptr, &value), "SkFontMetrics_hasUnderlineThickness(nullptr)")) {
         return 12;
     }
@@ -95,7 +98,9 @@ int main() {
     }
 
     SkFontMetrics metrics = {};
+    SkFontMetrics same_metrics = {};
     auto *reskia_metrics = reinterpret_cast<reskia_font_metrics_t *>(&metrics);
+    auto *reskia_same_metrics = reinterpret_cast<reskia_font_metrics_t *>(&same_metrics);
     metrics.fFlags = SkFontMetrics::kUnderlineThicknessIsValid_Flag |
                      SkFontMetrics::kUnderlinePositionIsValid_Flag |
                      SkFontMetrics::kStrikeoutThicknessIsValid_Flag |
@@ -104,6 +109,11 @@ int main() {
     metrics.fUnderlinePosition = 2.0f;
     metrics.fStrikeoutThickness = 3.0f;
     metrics.fStrikeoutPosition = 4.0f;
+    same_metrics = metrics;
+
+    if (!check(SkFontMetrics_equals(reskia_metrics, reskia_same_metrics), "SkFontMetrics_equals(valid)")) {
+        return 18;
+    }
 
     if (!check(SkFontMetrics_hasUnderlineThickness(reskia_metrics, &value) && value == 1.0f, "SkFontMetrics_hasUnderlineThickness(valid)")) {
         return 18;

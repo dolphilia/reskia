@@ -43,16 +43,75 @@ void SkV3_StarAssign(SkV3 &v1, const SkV3 &v2) {
 
 extern "C" {
 
-// bool operator==(const SkV3 &v)
-// bool operator!=(const SkV3 &v)
-// SkV3 operator-()
-// SkV3 operator+(const SkV3 &v)
-// SkV3 operator-(const SkV3 &v)
-// SkV3 operator*(const SkV3 &v)
-// void operator+=(SkV3 v)
-// void operator-=(SkV3 v)
-// void operator*=(SkV3 v)
-// void operator*=(SkScalar s)
+bool SkV3_equals(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV3 *>(v3) == *reinterpret_cast<const SkV3 *>(v);
+}
+
+bool SkV3_notEquals(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkV3 *>(v3) != *reinterpret_cast<const SkV3 *>(v);
+}
+
+sk_v3_t SkV3_negate(reskia_v3_t *v3) {
+    if (v3 == nullptr) {
+        return static_sk_v3_make({});
+    }
+    return static_sk_v3_make(-*reinterpret_cast<SkV3 *>(v3));
+}
+
+sk_v3_t SkV3_add(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return static_sk_v3_make({});
+    }
+    return static_sk_v3_make(*reinterpret_cast<SkV3 *>(v3) + *reinterpret_cast<const SkV3 *>(v));
+}
+
+sk_v3_t SkV3_subtract(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return static_sk_v3_make({});
+    }
+    return static_sk_v3_make(*reinterpret_cast<SkV3 *>(v3) - *reinterpret_cast<const SkV3 *>(v));
+}
+
+sk_v3_t SkV3_multiply(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return static_sk_v3_make({});
+    }
+    return static_sk_v3_make(*reinterpret_cast<SkV3 *>(v3) * *reinterpret_cast<const SkV3 *>(v));
+}
+
+void SkV3_addAssign(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV3 *>(v3) += *reinterpret_cast<const SkV3 *>(v);
+}
+
+void SkV3_subtractAssign(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV3 *>(v3) -= *reinterpret_cast<const SkV3 *>(v);
+}
+
+void SkV3_multiplyAssign(reskia_v3_t *v3, const reskia_v3_t *v) {
+    if (v3 == nullptr || v == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV3 *>(v3) *= *reinterpret_cast<const SkV3 *>(v);
+}
+
+void SkV3_multiplyScalarAssign(reskia_v3_t *v3, float s) {
+    if (v3 == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkV3 *>(v3) *= s;
+}
 
 void SkV3_delete(reskia_v3_t *v3) {
     if (v3 == nullptr) {
