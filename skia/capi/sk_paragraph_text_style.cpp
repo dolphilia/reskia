@@ -5,13 +5,19 @@
 #include "sk_paragraph_text_style.h"
 
 #include "include/core/SkFontMetrics.h"
+#include "include/core/SkPaint.h"
 #include "include/core/SkString.h"
+#include "include/core/SkFontArguments.h"
+#include "modules/skparagraph/include/TextShadow.h"
 #include "modules/skparagraph/include/TextStyle.h"
 
 #include "../handles/static_sk_font_style-internal.h"
 #include "../handles/static_sk_typeface-internal.h"
 
 #include <vector>
+#include <algorithm>
+#include <optional>
+#include <cstring>
 #include <utility>
 
 namespace {
@@ -21,6 +27,7 @@ using skia::textlayout::TextBaseline;
 using skia::textlayout::TextDecoration;
 using skia::textlayout::TextDecorationMode;
 using skia::textlayout::TextDecorationStyle;
+using skia::textlayout::TextShadow;
 using skia::textlayout::TextStyle;
 
 TextStyle *as_text_style(reskia_paragraph_text_style_t *style) {
@@ -29,6 +36,27 @@ TextStyle *as_text_style(reskia_paragraph_text_style_t *style) {
 
 const TextStyle *as_text_style(const reskia_paragraph_text_style_t *style) {
     return reinterpret_cast<const TextStyle *>(style);
+}
+
+const SkPaint *as_paint(const reskia_paint_t *paint) {
+    return reinterpret_cast<const SkPaint *>(paint);
+}
+
+const SkFontArguments *as_font_arguments(const reskia_font_arguments_t *arguments) {
+    return reinterpret_cast<const SkFontArguments *>(arguments);
+}
+
+TextShadow as_text_shadow(const reskia_paragraph_text_shadow_t& shadow) {
+    return TextShadow(static_cast<SkColor>(shadow.color), SkPoint::Make(shadow.offset_x, shadow.offset_y), shadow.blur_sigma);
+}
+
+reskia_paragraph_text_shadow_t from_text_shadow(const TextShadow& shadow) {
+    return {
+        static_cast<reskia_color_t>(shadow.fColor),
+        shadow.fOffset.x(),
+        shadow.fOffset.y(),
+        shadow.fBlurSigma,
+    };
 }
 
 bool valid_decoration(reskia_paragraph_text_decoration_t decoration) {
@@ -141,6 +169,25 @@ bool SkParagraph_TextStyle_hasForeground(const reskia_paragraph_text_style_t *st
     return style != nullptr && as_text_style(style)->hasForeground();
 }
 
+reskia_paint_t *SkParagraph_TextStyle_getForeground(const reskia_paragraph_text_style_t *style) {
+    if (style == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_paint_t *>(new SkPaint(as_text_style(style)->getForeground()));
+}
+
+bool SkParagraph_TextStyle_setForegroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
+    if (style == nullptr || paint == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setForegroundPaint(*as_paint(paint));
+    return true;
+}
+
+bool SkParagraph_TextStyle_setForegroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
+    return SkParagraph_TextStyle_setForegroundPaint(style, paint);
+}
+
 void SkParagraph_TextStyle_clearForegroundColor(reskia_paragraph_text_style_t *style) {
     if (style != nullptr) {
         as_text_style(style)->clearForegroundColor();
@@ -149,6 +196,25 @@ void SkParagraph_TextStyle_clearForegroundColor(reskia_paragraph_text_style_t *s
 
 bool SkParagraph_TextStyle_hasBackground(const reskia_paragraph_text_style_t *style) {
     return style != nullptr && as_text_style(style)->hasBackground();
+}
+
+reskia_paint_t *SkParagraph_TextStyle_getBackground(const reskia_paragraph_text_style_t *style) {
+    if (style == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_paint_t *>(new SkPaint(as_text_style(style)->getBackground()));
+}
+
+bool SkParagraph_TextStyle_setBackgroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
+    if (style == nullptr || paint == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setBackgroundPaint(*as_paint(paint));
+    return true;
+}
+
+bool SkParagraph_TextStyle_setBackgroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
+    return SkParagraph_TextStyle_setBackgroundPaint(style, paint);
 }
 
 void SkParagraph_TextStyle_clearBackgroundColor(reskia_paragraph_text_style_t *style) {
@@ -232,6 +298,40 @@ size_t SkParagraph_TextStyle_getShadowNumber(const reskia_paragraph_text_style_t
     return style == nullptr ? 0 : as_text_style(style)->getShadowNumber();
 }
 
+bool SkParagraph_TextStyle_getShadowAt(const reskia_paragraph_text_style_t *style, size_t index, reskia_paragraph_text_shadow_t *out_shadow) {
+    if (style == nullptr || out_shadow == nullptr) {
+        return false;
+    }
+    const auto shadows = as_text_style(style)->getShadows();
+    if (index >= shadows.size()) {
+        return false;
+    }
+    *out_shadow = from_text_shadow(shadows[index]);
+    return true;
+}
+
+int32_t SkParagraph_TextStyle_getShadows(const reskia_paragraph_text_style_t *style, reskia_paragraph_text_shadow_t *dst, int32_t dst_count) {
+    if (style == nullptr || dst_count < 0) {
+        return -1;
+    }
+    const auto shadows = as_text_style(style)->getShadows();
+    if (dst != nullptr && dst_count > 0) {
+        const int32_t copy_count = std::min<int32_t>(dst_count, static_cast<int32_t>(shadows.size()));
+        for (int32_t i = 0; i < copy_count; ++i) {
+            dst[i] = from_text_shadow(shadows[i]);
+        }
+    }
+    return static_cast<int32_t>(shadows.size());
+}
+
+bool SkParagraph_TextStyle_addShadow(reskia_paragraph_text_style_t *style, const reskia_paragraph_text_shadow_t *shadow) {
+    if (style == nullptr || shadow == nullptr) {
+        return false;
+    }
+    as_text_style(style)->addShadow(as_text_shadow(*shadow));
+    return true;
+}
+
 void SkParagraph_TextStyle_resetShadows(reskia_paragraph_text_style_t *style) {
     if (style != nullptr) {
         as_text_style(style)->resetShadows();
@@ -242,11 +342,51 @@ size_t SkParagraph_TextStyle_getFontFeatureNumber(const reskia_paragraph_text_st
     return style == nullptr ? 0 : as_text_style(style)->getFontFeatureNumber();
 }
 
+int32_t SkParagraph_TextStyle_getFontFeatures(const reskia_paragraph_text_style_t *style, reskia_paragraph_font_feature_t *dst, int32_t dst_count) {
+    if (style == nullptr || dst_count < 0) {
+        return -1;
+    }
+    const auto features = as_text_style(style)->getFontFeatures();
+    if (dst != nullptr && dst_count > 0) {
+        const int32_t copy_count = std::min<int32_t>(dst_count, static_cast<int32_t>(features.size()));
+        for (int32_t i = 0; i < copy_count; ++i) {
+            dst[i].name[0] = '\0';
+            const char *name = features[i].fName.c_str();
+            if (name != nullptr) {
+                std::strncpy(dst[i].name, name, sizeof(dst[i].name) - 1);
+                dst[i].name[sizeof(dst[i].name) - 1] = '\0';
+            }
+            dst[i].value = features[i].fValue;
+        }
+    }
+    return static_cast<int32_t>(features.size());
+}
+
 bool SkParagraph_TextStyle_addFontFeature(reskia_paragraph_text_style_t *style, const char *font_feature, int32_t value) {
     if (style == nullptr || font_feature == nullptr) {
         return false;
     }
     as_text_style(style)->addFontFeature(SkString(font_feature), value);
+    return true;
+}
+
+bool SkParagraph_TextStyle_getFontArguments(const reskia_paragraph_text_style_t *style) {
+    return style != nullptr && as_text_style(style)->getFontArguments().has_value();
+}
+
+bool SkParagraph_TextStyle_setFontArguments(reskia_paragraph_text_style_t *style, const reskia_font_arguments_t *arguments) {
+    if (style == nullptr || arguments == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setFontArguments(*as_font_arguments(arguments));
+    return true;
+}
+
+bool SkParagraph_TextStyle_clearFontArguments(reskia_paragraph_text_style_t *style) {
+    if (style == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setFontArguments(std::nullopt);
     return true;
 }
 
@@ -352,6 +492,10 @@ sk_typeface_t SkParagraph_TextStyle_refTypeface(const reskia_paragraph_text_styl
     return make_typeface_handle(as_text_style(style)->refTypeface());
 }
 
+sk_typeface_t SkParagraph_TextStyle_getTypeface(const reskia_paragraph_text_style_t *style) {
+    return SkParagraph_TextStyle_refTypeface(style);
+}
+
 bool SkParagraph_TextStyle_setTypeface(reskia_paragraph_text_style_t *style, sk_typeface_t typeface) {
     if (style == nullptr) {
         return false;
@@ -404,6 +548,22 @@ void SkParagraph_TextStyle_setPlaceholder(reskia_paragraph_text_style_t *style) 
     if (style != nullptr) {
         as_text_style(style)->setPlaceholder();
     }
+}
+
+bool SkParagraph_TextShadow_Make(reskia_color_t color, float offset_x, float offset_y, double blur_sigma, reskia_paragraph_text_shadow_t *out_shadow) {
+    if (out_shadow == nullptr) {
+        return false;
+    }
+    *out_shadow = {color, offset_x, offset_y, blur_sigma};
+    return true;
+}
+
+bool SkParagraph_TextShadow_equals(const reskia_paragraph_text_shadow_t *shadow, const reskia_paragraph_text_shadow_t *other) {
+    return shadow != nullptr && other != nullptr && as_text_shadow(*shadow) == as_text_shadow(*other);
+}
+
+bool SkParagraph_TextShadow_hasShadow(const reskia_paragraph_text_shadow_t *shadow) {
+    return shadow != nullptr && as_text_shadow(*shadow).hasShadow();
 }
 
 } // extern "C"

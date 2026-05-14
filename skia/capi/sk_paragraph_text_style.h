@@ -14,6 +14,8 @@
 #include "../handles/static_sk_typeface.h"
 
 typedef struct reskia_font_metrics_t reskia_font_metrics_t;
+typedef struct reskia_font_arguments_t reskia_font_arguments_t;
+typedef struct reskia_paint_t reskia_paint_t;
 typedef struct reskia_paragraph_text_style_t reskia_paragraph_text_style_t;
 typedef struct reskia_string_t reskia_string_t;
 typedef int32_t reskia_paragraph_style_type_t;
@@ -21,6 +23,18 @@ typedef int32_t reskia_paragraph_text_baseline_t;
 typedef int32_t reskia_paragraph_text_decoration_mode_t;
 typedef int32_t reskia_paragraph_text_decoration_style_t;
 typedef int32_t reskia_paragraph_text_decoration_t;
+
+typedef struct reskia_paragraph_text_shadow_t {
+    reskia_color_t color;
+    float offset_x;
+    float offset_y;
+    double blur_sigma;
+} reskia_paragraph_text_shadow_t;
+
+typedef struct reskia_paragraph_font_feature_t {
+    char name[5];
+    int32_t value;
+} reskia_paragraph_font_feature_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -74,8 +88,14 @@ bool SkParagraph_TextStyle_matchOneAttribute(const reskia_paragraph_text_style_t
 reskia_color_t SkParagraph_TextStyle_getColor(const reskia_paragraph_text_style_t *style);
 void SkParagraph_TextStyle_setColor(reskia_paragraph_text_style_t *style, reskia_color_t color);
 bool SkParagraph_TextStyle_hasForeground(const reskia_paragraph_text_style_t *style);
+reskia_paint_t *SkParagraph_TextStyle_getForeground(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_setForegroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
+bool SkParagraph_TextStyle_setForegroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
 void SkParagraph_TextStyle_clearForegroundColor(reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_hasBackground(const reskia_paragraph_text_style_t *style);
+reskia_paint_t *SkParagraph_TextStyle_getBackground(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_setBackgroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
+bool SkParagraph_TextStyle_setBackgroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
 void SkParagraph_TextStyle_clearBackgroundColor(reskia_paragraph_text_style_t *style);
 reskia_paragraph_text_decoration_t SkParagraph_TextStyle_getDecorationType(const reskia_paragraph_text_style_t *style);
 reskia_paragraph_text_decoration_mode_t SkParagraph_TextStyle_getDecorationMode(const reskia_paragraph_text_style_t *style);
@@ -90,9 +110,16 @@ void SkParagraph_TextStyle_setDecorationThicknessMultiplier(reskia_paragraph_tex
 sk_font_style_t SkParagraph_TextStyle_getFontStyle(const reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_setFontStyle(reskia_paragraph_text_style_t *style, sk_font_style_t font_style);
 size_t SkParagraph_TextStyle_getShadowNumber(const reskia_paragraph_text_style_t *style);
+int32_t SkParagraph_TextStyle_getShadows(const reskia_paragraph_text_style_t *style, reskia_paragraph_text_shadow_t *dst, int32_t dst_count);
+bool SkParagraph_TextStyle_getShadowAt(const reskia_paragraph_text_style_t *style, size_t index, reskia_paragraph_text_shadow_t *out_shadow);
+bool SkParagraph_TextStyle_addShadow(reskia_paragraph_text_style_t *style, const reskia_paragraph_text_shadow_t *shadow);
 void SkParagraph_TextStyle_resetShadows(reskia_paragraph_text_style_t *style);
 size_t SkParagraph_TextStyle_getFontFeatureNumber(const reskia_paragraph_text_style_t *style);
+int32_t SkParagraph_TextStyle_getFontFeatures(const reskia_paragraph_text_style_t *style, reskia_paragraph_font_feature_t *dst, int32_t dst_count);
 bool SkParagraph_TextStyle_addFontFeature(reskia_paragraph_text_style_t *style, const char *font_feature, int32_t value);
+bool SkParagraph_TextStyle_getFontArguments(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_setFontArguments(reskia_paragraph_text_style_t *style, const reskia_font_arguments_t *arguments);
+bool SkParagraph_TextStyle_clearFontArguments(reskia_paragraph_text_style_t *style);
 void SkParagraph_TextStyle_resetFontFeatures(reskia_paragraph_text_style_t *style);
 float SkParagraph_TextStyle_getFontSize(const reskia_paragraph_text_style_t *style);
 void SkParagraph_TextStyle_setFontSize(reskia_paragraph_text_style_t *style, float size);
@@ -112,6 +139,7 @@ void SkParagraph_TextStyle_setLetterSpacing(reskia_paragraph_text_style_t *style
 float SkParagraph_TextStyle_getWordSpacing(const reskia_paragraph_text_style_t *style);
 void SkParagraph_TextStyle_setWordSpacing(reskia_paragraph_text_style_t *style, float word_spacing);
 sk_typeface_t SkParagraph_TextStyle_refTypeface(const reskia_paragraph_text_style_t *style);
+sk_typeface_t SkParagraph_TextStyle_getTypeface(const reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_setTypeface(reskia_paragraph_text_style_t *style, sk_typeface_t typeface);
 reskia_string_t *SkParagraph_TextStyle_getLocale(const reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_setLocale(reskia_paragraph_text_style_t *style, const char *locale);
@@ -120,6 +148,10 @@ bool SkParagraph_TextStyle_setTextBaseline(reskia_paragraph_text_style_t *style,
 reskia_font_metrics_t *SkParagraph_TextStyle_getFontMetrics(const reskia_paragraph_text_style_t *style); // owned; delete with SkFontMetrics_delete
 bool SkParagraph_TextStyle_isPlaceholder(const reskia_paragraph_text_style_t *style);
 void SkParagraph_TextStyle_setPlaceholder(reskia_paragraph_text_style_t *style);
+
+bool SkParagraph_TextShadow_Make(reskia_color_t color, float offset_x, float offset_y, double blur_sigma, reskia_paragraph_text_shadow_t *out_shadow);
+bool SkParagraph_TextShadow_equals(const reskia_paragraph_text_shadow_t *shadow, const reskia_paragraph_text_shadow_t *other);
+bool SkParagraph_TextShadow_hasShadow(const reskia_paragraph_text_shadow_t *shadow);
 
 #ifdef __cplusplus
 }

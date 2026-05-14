@@ -1,9 +1,12 @@
 #include <cstdio>
+#include <cstring>
 
 #include "capi/sk_color.h"
+#include "capi/sk_font_arguments.h"
 #include "capi/sk_font_metrics.h"
 #include "capi/sk_paragraph_style.h"
 #include "capi/sk_paragraph_text_style.h"
+#include "capi/sk_paint.h"
 #include "capi/sk_string.h"
 
 namespace {
@@ -22,7 +25,13 @@ bool smoke_null_inputs() {
            check(!SkParagraph_TextStyle_equals(nullptr, nullptr), "equals null") &&
            check(SkParagraph_TextStyle_getColor(nullptr) == 0, "color null") &&
            check(!SkParagraph_TextStyle_hasForeground(nullptr), "foreground null") &&
+           check(SkParagraph_TextStyle_getForeground(nullptr) == nullptr, "get foreground null") &&
+           check(!SkParagraph_TextStyle_setForegroundPaint(nullptr, nullptr), "set foreground paint null") &&
+           check(!SkParagraph_TextStyle_setForegroundColor(nullptr, nullptr), "set foreground color null") &&
            check(!SkParagraph_TextStyle_hasBackground(nullptr), "background null") &&
+           check(SkParagraph_TextStyle_getBackground(nullptr) == nullptr, "get background null") &&
+           check(!SkParagraph_TextStyle_setBackgroundPaint(nullptr, nullptr), "set background paint null") &&
+           check(!SkParagraph_TextStyle_setBackgroundColor(nullptr, nullptr), "set background color null") &&
            check(SkParagraph_TextStyle_getFontSize(nullptr) == 0.0f, "font size null") &&
            check(SkParagraph_TextStyle_getFontFamiliesCount(nullptr) == 0, "families null") &&
            check(SkParagraph_TextStyle_getFontFamilyAt(nullptr, 0) == nullptr, "family at null") &&
@@ -32,7 +41,18 @@ bool smoke_null_inputs() {
            check(SkParagraph_TextStyle_getLocale(nullptr) == nullptr, "locale null") &&
            check(!SkParagraph_TextStyle_setLocale(nullptr, "en"), "set locale null") &&
            check(SkParagraph_TextStyle_getFontMetrics(nullptr) == nullptr, "font metrics null") &&
-           check(!SkParagraph_TextStyle_isPlaceholder(nullptr), "placeholder null");
+           check(!SkParagraph_TextStyle_isPlaceholder(nullptr), "placeholder null") &&
+           check(!SkParagraph_TextStyle_getShadowAt(nullptr, 0, nullptr), "shadow at null") &&
+           check(SkParagraph_TextStyle_getShadows(nullptr, nullptr, 0) == -1, "get shadows null") &&
+           check(!SkParagraph_TextStyle_addShadow(nullptr, nullptr), "add shadow null") &&
+           check(SkParagraph_TextStyle_getFontFeatures(nullptr, nullptr, 0) == -1, "get font features null") &&
+           check(!SkParagraph_TextStyle_getFontArguments(nullptr), "get font arguments null") &&
+           check(!SkParagraph_TextStyle_setFontArguments(nullptr, nullptr), "set font arguments null") &&
+           check(!SkParagraph_TextStyle_clearFontArguments(nullptr), "clear font arguments null") &&
+           check(SkParagraph_TextStyle_getTypeface(nullptr) == 0, "get typeface null") &&
+           check(!SkParagraph_TextShadow_Make(0, 0.0f, 0.0f, 0.0, nullptr), "make shadow null") &&
+           check(!SkParagraph_TextShadow_equals(nullptr, nullptr), "shadow equals null") &&
+           check(!SkParagraph_TextShadow_hasShadow(nullptr), "shadow has null");
 }
 
 bool smoke_text_style() {
@@ -92,11 +112,100 @@ bool smoke_text_style() {
         return false;
     }
 
+    reskia_paint_t *paint = SkPaint_new();
+    if (!check(paint != nullptr, "paint new")) {
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    SkPaint_setColor(paint, 0xffabcdef);
+    if (!check(SkParagraph_TextStyle_setForegroundPaint(style, paint), "set foreground paint") ||
+        !check(SkParagraph_TextStyle_hasForeground(style), "has foreground")) {
+        SkPaint_delete(paint);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_paint_t *foreground = SkParagraph_TextStyle_getForeground(style);
+    if (!check(foreground != nullptr, "get foreground") ||
+        !check(SkPaint_getColor(foreground) == 0xffabcdef, "foreground color")) {
+        SkPaint_delete(foreground);
+        SkPaint_delete(paint);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    SkPaint_delete(foreground);
+    SkPaint_setColor(paint, 0xff123456);
+    if (!check(SkParagraph_TextStyle_setBackgroundColor(style, paint), "set background color") ||
+        !check(SkParagraph_TextStyle_hasBackground(style), "has background")) {
+        SkPaint_delete(paint);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_paint_t *background = SkParagraph_TextStyle_getBackground(style);
+    if (!check(background != nullptr, "get background") ||
+        !check(SkPaint_getColor(background) == 0xff123456, "background color")) {
+        SkPaint_delete(background);
+        SkPaint_delete(paint);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    SkPaint_delete(background);
+    SkParagraph_TextStyle_clearForegroundColor(style);
+    SkParagraph_TextStyle_clearBackgroundColor(style);
+    if (!check(!SkParagraph_TextStyle_hasForeground(style), "clear foreground") ||
+        !check(!SkParagraph_TextStyle_hasBackground(style), "clear background")) {
+        SkPaint_delete(paint);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    SkPaint_delete(paint);
+
     if (!check(SkParagraph_TextStyle_addFontFeature(style, "kern", 1), "add font feature") ||
         !check(SkParagraph_TextStyle_getFontFeatureNumber(style) == 1, "font feature count")) {
         SkParagraph_TextStyle_delete(style);
         return false;
     }
+    reskia_paragraph_font_feature_t font_features[2] = {};
+    if (!check(SkParagraph_TextStyle_getFontFeatures(style, font_features, 2) == 1, "get font features") ||
+        !check(std::strcmp(font_features[0].name, "kern") == 0, "font feature name") ||
+        !check(font_features[0].value == 1, "font feature value")) {
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_paragraph_text_shadow_t shadow = {};
+    if (!check(SkParagraph_TextShadow_Make(0xff010203, 1.0f, 2.0f, 3.0, &shadow), "make shadow") ||
+        !check(SkParagraph_TextShadow_hasShadow(&shadow), "shadow has") ||
+        !check(SkParagraph_TextStyle_addShadow(style, &shadow), "add shadow") ||
+        !check(SkParagraph_TextStyle_getShadowNumber(style) == 1, "shadow count")) {
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_paragraph_text_shadow_t shadows[2] = {};
+    if (!check(SkParagraph_TextStyle_getShadows(style, shadows, 2) == 1, "get shadows") ||
+        !check(SkParagraph_TextShadow_equals(&shadow, &shadows[0]), "get shadows equals")) {
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_paragraph_text_shadow_t out_shadow = {};
+    if (!check(SkParagraph_TextStyle_getShadowAt(style, 0, &out_shadow), "get shadow") ||
+        !check(SkParagraph_TextShadow_equals(&shadow, &out_shadow), "shadow equals")) {
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    reskia_font_arguments_t *font_arguments = SkFontArguments_new();
+    if (!check(font_arguments != nullptr, "font arguments new") ||
+        !check(SkParagraph_TextStyle_setFontArguments(style, font_arguments), "set font arguments") ||
+        !check(SkParagraph_TextStyle_getFontArguments(style), "get font arguments") ||
+        !check(SkParagraph_TextStyle_clearFontArguments(style), "clear font arguments")) {
+        SkFontArguments_delete(font_arguments);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    if (!check(!SkParagraph_TextStyle_getFontArguments(style), "font arguments cleared")) {
+        SkFontArguments_delete(font_arguments);
+        SkParagraph_TextStyle_delete(style);
+        return false;
+    }
+    SkFontArguments_delete(font_arguments);
     SkParagraph_TextStyle_resetFontFeatures(style);
     SkParagraph_TextStyle_resetShadows(style);
     if (!check(SkParagraph_TextStyle_getFontFeatureNumber(style) == 0, "font feature reset") ||
