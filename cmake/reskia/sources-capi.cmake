@@ -196,6 +196,10 @@ if(APPLE AND TARGET svg)
     list(APPEND SOURCE_FILES capi/sk_svg_node.cpp)
 endif()
 
+if(TARGET skunicode)
+    list(APPEND SOURCE_FILES capi/sk_unicode.cpp)
+endif()
+
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)
 
 if(RESKIA_ENABLE_FONTCONFIG_CAPI)

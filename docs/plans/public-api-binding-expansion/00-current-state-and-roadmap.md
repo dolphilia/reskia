@@ -411,6 +411,80 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - 文字列入力の encoding と lifetime が明示される。
 - paragraph smoke が C API 経由で作成、layout、paint まで到達する。
 
+### Phase 4 progress 2026-05-15
+
+`SkUnicode` の土台 API から着手した。個別 backend factory は `skunicode` target の実装ソース追加条件に依存するため、この batch では `SkUnicode::Make()` 経由と instance helper に限定し、`TARGET skunicode` が存在する source-mode build だけで C API source を組み込む。
+
+追加済み:
+
+- `SkUnicode_Make`
+- `SkUnicode_delete`
+- `SkUnicode_copy`
+- `SkUnicode_toUpper`
+- `SkUnicode_isControl`
+- `SkUnicode_isWhitespace`
+- `SkUnicode_isSpace`
+- `SkUnicode_isTabulation`
+- `SkUnicode_isHardBreak`
+- `SkUnicode_isEmoji`
+- `SkUnicode_isIdeographic`
+- `SkUnicode_hasTabulationFlag`
+- `SkUnicode_hasHardLineBreakFlag`
+- `SkUnicode_hasSoftLineBreakFlag`
+- `SkUnicode_hasGraphemeStartFlag`
+- `SkUnicode_hasControlFlag`
+- `SkUnicode_hasPartOfWhiteSpaceBreakFlag`
+- `SkUnicode_convertUtf16ToUtf8`
+- `SkUnicode_convertUtf8ToUtf16`
+- `SkUnicode_makeBidiIteratorUtf8`
+- `SkUnicode_makeBidiIteratorUtf16`
+- `SkBidiIterator_delete`
+- `SkBidiIterator_getLength`
+- `SkBidiIterator_getLevelAt`
+- `SkUnicode_makeBreakIterator`
+- `SkUnicode_makeBreakIteratorWithLocale`
+- `SkBreakIterator_delete`
+- `SkBreakIterator_first`
+- `SkBreakIterator_current`
+- `SkBreakIterator_next`
+- `SkBreakIterator_status`
+- `SkBreakIterator_isDone`
+- `SkBreakIterator_setTextUtf8`
+- `SkBreakIterator_setTextUtf16`
+- `SkUnicode_getBidiRegions`
+- `SkUnicode_getWords`
+- `SkUnicode_getUtf8Words`
+- `SkUnicode_getSentences`
+- `SkUnicode_computeCodeUnitFlagsUtf8`
+- `SkUnicode_computeCodeUnitFlagsUtf16`
+- `SkUnicode_reorderVisual`
+
+設計メモ:
+
+- `reskia_unicode_t` は `std::unique_ptr<SkUnicode>` から release した owned pointer として扱い、`SkUnicode_delete` で破棄する。
+- `reskia_bidi_iterator_t` / `reskia_break_iterator_t` も `std::unique_ptr` から release した owned pointer として扱い、それぞれ `SkBidiIterator_delete` / `SkBreakIterator_delete` で破棄する。
+- UTF-16 C ABI は `uint16_t*` / unit count で表す。`convertUtf8ToUtf16` は必要 unit 数を返し、出力 buffer は任意とする。
+- vector 出力系 API は caller-owned array にコピーし、戻り値で必要要素数を返す。`dst == NULL` は count query として扱う。
+- `SkBreakIterator::setText`、`SkUnicode::makeBidiIterator`、`SkUnicode::computeCodeUnitFlags` は UTF-8/UTF-16 別 C ABI 名で公開したため、coverage generator 上は overload-specific `partial` として残る。
+- `SkUnicode::extractBidi` は public static 宣言があるが、この source 構成では実体 symbol がリンクされないため、backend factory と同じく feature/linkage 判定が必要な残件として残す。
+- `SkUnicode_MakeIcuBasedUnicode` / `MakeClientBasedUnicode` / `MakeLibgraphemeBasedUnicode` / `MakeIcu4xBasedUnicode` は、対象実装ソースが有効な build かどうかを CMake 側で判定する必要があるため次 batch へ残す。
+
+検証:
+
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `cmake -S skia -B skia/cmake-build-codex-phase4-unicode-source -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-phase4-unicode-source --target test_unicode_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase4-unicode-source -R c_skia_unicode_capi_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1342`, `covered=1963`, `partial=12`, `no_public_methods_found=104`
+- `modules/skunicode`: 48 行中 `covered 37`、`partial 6`、`missing 5`
+- `public-api-paragraph-unicode-shaper-missing-triage.csv`: covered 行を削除し、残 `290` 行。内訳は `real_gap 251`、`na 27`、`false_positive 12`
+- `modules/skunicode` の残件は 11 行。`partial` は UTF-8/UTF-16 別名で公開済みの overload 6 行、`missing` は `extractBidi` と backend/client factory 4 行。
+
 ## Phase 5: Skottie / skresources / sksg
 
 目的: 既存 minimal bridge を実用 API に拡張する。
