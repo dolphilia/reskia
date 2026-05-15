@@ -43,6 +43,7 @@ list(APPEND SOURCE_FILES
         capi/sk_dynamic_memory_w_stream.cpp
         capi/sk_encoded_origin.cpp
         capi/sk_encoder.cpp
+        capi/sk_event_tracer.cpp
         capi/sk_executor.cpp
         capi/sk_file_stream.cpp
         capi/sk_file_w_stream.cpp
@@ -90,6 +91,7 @@ list(APPEND SOURCE_FILES
         capi/sk_overdraw_canvas.cpp
         capi/sk_overdraw_color_filter.cpp
         capi/sk_paint.cpp
+        capi/sk_paint_filter_canvas.cpp
         capi/sk_parse.cpp
         capi/sk_parse_path.cpp
         capi/sk_path_1d_path_effect.cpp
@@ -114,6 +116,7 @@ list(APPEND SOURCE_FILES
         capi/sk_rect.cpp
         capi/sk_ref_cnt_base.cpp
         capi/sk_ref_cnt.cpp
+        capi/sk_remotable_font_mgr.cpp
         capi/reskia_ffi.cpp
         capi/sk_region.cpp
         capi/sk_rsx_form.cpp

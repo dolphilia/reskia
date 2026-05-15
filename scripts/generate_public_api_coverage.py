@@ -365,10 +365,12 @@ def status_for_method(cls: PublicClass, method: Method, functions: set[str]) -> 
     if method.name == cls.name:
         constructor_terms = ("new", "make", "Make", "Create", "New")
         for fn in functions:
-            if any(fn.startswith(prefix + "_") for prefix in prefixes):
-                suffix = fn.split("_", 1)[1] if "_" in fn else ""
+            matching_prefixes = [prefix for prefix in prefixes if fn.startswith(prefix + "_")]
+            for prefix in matching_prefixes:
+                suffix = fn[len(prefix) + 1:]
                 if suffix.startswith(constructor_terms) or suffix in constructor_terms:
                     exact.append(fn)
+                    break
         return ("covered" if exact else "missing", "|".join(sorted(exact)[:8]))
 
     for prefix in prefixes:

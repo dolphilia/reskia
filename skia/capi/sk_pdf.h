@@ -6,11 +6,14 @@
 #define RAIA_SKIA_SK_PDF_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include "../handles/static_sk_document.h"
 
 typedef struct reskia_canvas_t reskia_canvas_t;
+typedef struct reskia_pdf_attribute_list_t reskia_pdf_attribute_list_t;
+typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
 
 typedef struct reskia_pdf_date_time_t {
@@ -68,6 +71,14 @@ extern "C" {
 void SkPDF_SetNodeId(reskia_canvas_t *dst, int nodeID); // NULL canvas is no-op.
 sk_document_t SkPDF_MakeDocument(reskia_w_stream_t *stream, const reskia_pdf_metadata_t *metadata); // stream required; metadata may be NULL; invalid/failure returns 0.
 sk_document_t SkPDF_MakeDocumentWithoutMetadata(reskia_w_stream_t *stream); // stream required; invalid/failure returns 0.
+reskia_pdf_attribute_list_t *AttributeList_new(void);
+void AttributeList_delete(reskia_pdf_attribute_list_t *attributes);
+void AttributeList_appendInt(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], int value);
+void AttributeList_appendFloat(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], float value);
+void AttributeList_appendName(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const char value[]);
+void AttributeList_appendFloatArray(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], const float values[], size_t count);
+void AttributeList_appendNodeIdArray(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const int nodeIds[], size_t count);
+void DateTime_toISO8601(const reskia_pdf_date_time_t *date_time, reskia_string_t *dst);
 
 #ifdef __cplusplus
 }

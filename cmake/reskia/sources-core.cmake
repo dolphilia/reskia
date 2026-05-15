@@ -237,6 +237,8 @@ list(APPEND SOURCE_FILES
         src/core/SkTypeface_remote.cpp
         src/core/SkTypeface.cpp
         src/core/SkTypefaceCache.cpp
+        src/fonts/SkFontMgr_indirect.cpp
+        src/fonts/SkRemotableFontMgr.cpp
         src/core/SkUnPreMultiply.cpp
         src/core/SkVertices.cpp
         src/core/SkVertState.cpp

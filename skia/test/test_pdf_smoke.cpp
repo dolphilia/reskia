@@ -11,6 +11,7 @@
 #include "capi/sk_dynamic_memory_w_stream.h"
 #include "capi/sk_graphics.h"
 #include "capi/sk_pdf.h"
+#include "capi/sk_string.h"
 
 #include "handles/static_sk_data.h"
 #include "handles/static_sk_document.h"
@@ -150,6 +151,42 @@ bool smoke_with_metadata() {
     return ok;
 }
 
+bool smoke_pdf_value_helpers() {
+    reskia_pdf_attribute_list_t *attributes = AttributeList_new();
+    if (!check(attributes != nullptr, "AttributeList_new")) {
+        return false;
+    }
+
+    AttributeList_appendInt(attributes, "Layout", "RowSpan", 2);
+    AttributeList_appendFloat(attributes, "Layout", "Width", 12.5f);
+    AttributeList_appendName(attributes, "Layout", "Placement", "Block");
+    const float bounds[] = {0.0f, 1.0f, 2.0f, 3.0f};
+    AttributeList_appendFloatArray(attributes, "Layout", "BBox", bounds, sizeof(bounds) / sizeof(bounds[0]));
+    const int node_ids[] = {1, 2, 3};
+    AttributeList_appendNodeIdArray(attributes, "Table", "Headers", node_ids, sizeof(node_ids) / sizeof(node_ids[0]));
+    AttributeList_delete(attributes);
+
+    reskia_pdf_date_time_t date_time{};
+    date_time.timezone_minutes = 9 * 60;
+    date_time.year = 2026;
+    date_time.month = 5;
+    date_time.day = 16;
+    date_time.hour = 12;
+    date_time.minute = 34;
+    date_time.second = 56;
+
+    reskia_string_t *iso = SkString_new();
+    if (!check(iso != nullptr, "SkString_new for DateTime_toISO8601")) {
+        return false;
+    }
+    DateTime_toISO8601(&date_time, iso);
+    const char *text = SkString_c_str(iso);
+    const bool ok = check(text != nullptr && std::strstr(text, "2026-05-16T12:34:56") != nullptr,
+                          "DateTime_toISO8601");
+    SkString_delete(iso);
+    return ok;
+}
+
 }  // namespace
 
 int main() {
@@ -159,6 +196,9 @@ int main() {
         return 1;
     }
     if (!smoke_with_metadata()) {
+        return 1;
+    }
+    if (!smoke_pdf_value_helpers()) {
         return 1;
     }
 

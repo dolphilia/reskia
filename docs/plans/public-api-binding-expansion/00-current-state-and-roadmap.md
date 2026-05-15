@@ -1155,6 +1155,219 @@ Phase 6 の canvas wrapper batch として、`SkNoDrawCanvas` と `SkNWayCanvas`
 - `public-api-phase-6-remaining-triage.csv` を追加し、`Sk3DView` Android-only methods、`SkEventTracer`、`SkPaintFilterCanvas`、`SkCustomTypefaceBuilder` overload partial を分類した。
 - Phase 6 の default build utility 実装はほぼ一段落。残る `SkEventTracer` と `SkPaintFilterCanvas` は callback/global/subclass design batch に回す。
 
+### Phase 6 callback / subclass remainder progress 2026-05-16
+
+Phase 5A の callback foundation 方針を使い、Phase 6 に残っていた `SkEventTracer` と `SkPaintFilterCanvas` を追加した。
+
+追加済み:
+
+- `SkEventTracer_new`
+- `SkEventTracer_delete`
+- `SkEventTracer_SetInstance`
+- `SkEventTracer_GetInstance`
+- `SkEventTracer_getCategoryGroupEnabled`
+- `SkEventTracer_getCategoryGroupName`
+- `SkEventTracer_addTraceEvent`
+- `SkEventTracer_updateTraceEventDuration`
+- `SkEventTracer_newTracingSection`
+- `SkPaintFilterCanvas_new`
+- `SkPaintFilterCanvas_delete`
+- `SkPaintFilterCanvas_asCanvas`
+- `SkPaintFilterCanvas_getBaseLayerSize`
+- `SkPaintFilterCanvas_recordingContext`
+
+設計メモ:
+
+- `SkEventTracer_new` は concrete C callback bridge を作る。各 callback は `void *user_data` を最後に受け取る。
+- `SkEventTracer_delete` は `SkEventTracer_new` で作った未登録 tracer を破棄する。
+- `SkEventTracer_SetInstance` は tracer を消費する。Skia 側の仕様に従い、登録失敗時も渡した tracer は Skia 側で破棄される。
+- `SkEventTracer_GetInstance` は borrowed singleton を返す。caller は削除しない。
+- `SkPaintFilterCanvas_new` は wrapped canvas を借用し、`onFilter(SkPaint&)` を C callback に渡す concrete subclass を作る。
+- `SkPaintFilterCanvas_asCanvas` は borrowed `SkCanvas` view を返す。多重継承の pointer adjustment を避けるため、実装では `static_cast<SkCanvas*>` を使う。
+- `SkPaintFilterCanvas_recordingContext` は borrowed pointer を返す。raster/no-draw target では `nullptr`。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_event_paint_filter_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_event_paint_filter_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1027`、`covered=2273`、`partial=17`、`no_public_methods_found=104`
+- `SkEventTracer`: `covered 3`
+- `SkPaintFilterCanvas`: `covered 3`
+- `public-api-phase-6-remaining-triage.csv` は、残る `Sk3DView` Android-only methods と `SkCustomTypefaceBuilder` overload heuristic partial だけに整理した。
+- Phase 6 の default build `include/utils` 実装候補は、Android framework-only 条件付き API を除いて一段落。
+
+### Phase 6 PDF / ports guarded value progress 2026-05-16
+
+PDF と ports のうち、既定 build または既存 source import で無理なく進められるものを追加した。
+
+追加済み:
+
+- `AttributeList_new`
+- `AttributeList_delete`
+- `AttributeList_appendInt`
+- `AttributeList_appendFloat`
+- `AttributeList_appendName`
+- `AttributeList_appendFloatArray`
+- `AttributeList_appendNodeIdArray`
+- `DateTime_toISO8601`
+- `SkFontIdentity_InvalidDataId`
+- `SkRemotableFontIdentitySet_new`
+- `SkRemotableFontIdentitySet_unref`
+- `SkRemotableFontIdentitySet_count`
+- `SkRemotableFontIdentitySet_at`
+- `SkRemotableFontIdentitySet_NewEmpty`
+- `SkRemotableFontMgr_ref`
+- `SkRemotableFontMgr_unref`
+- `SkRemotableFontMgr_getIndex`
+- `SkRemotableFontMgr_matchIndexStyle`
+- `SkRemotableFontMgr_matchName`
+- `SkRemotableFontMgr_matchNameStyle`
+- `SkRemotableFontMgr_matchNameStyleCharacter`
+- `SkRemotableFontMgr_getData`
+- `SkFontMgr_Indirect_new`
+
+設計メモ:
+
+- `SkPDF::AttributeList` は standalone value helper として raw owned pointer にした。PDF document tagging への接続 API は別 batch で扱う。
+- `SkPDF::DateTime::toISO8601` は caller-owned `SkString` に書き込む。
+- `SkRemotableFontIdentitySet` は ref-counted object なので `*_unref` で解放する。
+- `SkRemotableFontMgr` は抽象 provider pointer に対する薄い call wrapper に留めた。C callback provider 実装は callback/provider batch に残す。
+- `SkFontMgr_Indirect_new` は `sk_font_mgr_t` の impl を retain し、raw `SkRemotableFontMgr*` proxy も retain して `sk_font_mgr_t` として返す。
+- coverage generator は underscore を含む class 名の constructor 判定が壊れていたため、prefix 長で suffix を取るよう修正した。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase6-pdf -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON -DRESKIA_ENABLE_PDF=ON`
+- `cmake --build skia/cmake-build-codex-phase6-pdf --target test_pdf_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase6-pdf -R c_skia_pdf_smoke --output-on-failure`
+- `cmake -S skia -B skia/cmake-build-codex-phase6-ports -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-phase6-ports --target test_remotable_font_mgr_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase6-ports -R c_skia_remotable_font_mgr_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=998`、`covered=2302`、`partial=17`、`no_public_methods_found=104`
+- `include/docs` の Phase 6 対象は covered。
+- `SkRemotableFontIdentitySet`: `covered 4`
+- `SkRemotableFontMgr`: `covered 6`
+- `SkFontMgr_Indirect`: `covered 1`
+- 残る Android 18 行と `SkFontConfigInterface` 7 行は、platform/import-source/provider-ownership 待ちとして `public-api-phase-6-remaining-triage.csv` に分類した。
+
+### Phase 6 completion 2026-05-16
+
+Phase 6 は完了扱いとする。
+
+完了判断:
+
+- 既定 build で実装可能な utils / docs / ports thin wrapper は実装済み。
+- callback/subclass 系の `SkEventTracer` / `SkPaintFilterCanvas` は Phase 5A 方針に沿って実装済み。
+- `Sk3DView` Android framework-only methods は default build では member が存在しないため `na`。
+- `SkCustomTypefaceBuilder::setGlyph` overload は C API 実装済みで、coverage generator の overload-disambiguation heuristic により `partial` として残る。
+- `SkAnimatedImage`、`SkAndroidFrameworkUtils`、`SkFontConfigInterface` は platform/import-source/provider-ownership が必要なため、Phase 8 以降に分離する。
+
+Phase 6 完了時点の残件 snapshot:
+
+| area | missing/partial | 次の扱い |
+| --- | ---: | --- |
+| `modules/svg` | 357 | Phase 9 optional module expansion |
+| `include/gpu` | 314 | Phase 9 GPU residual / `02-phase2-gpu-residual-design.md` 更新 |
+| `modules/sksg` | 123 | Phase 9 graph ownership batch |
+| `modules/skparagraph` | 46 | Phase 9 paragraph painter / value helper batch |
+| `include/core` | 32 | Phase 7 triage refresh / Phase 10 generator polish |
+| `modules/skplaintexteditor` | 26 | Phase 9 low-priority editor batch |
+| `modules/bentleyottmann` | 24 | Phase 9 value-confirmation batch |
+| `modules/skottie` | 23 | Phase 9 callback/provider residual |
+| `modules/skshaper` | 23 | Phase 9 shaper run-handler batch |
+| `include/android` | 18 | Phase 8 guarded Android/import-source batch |
+| `include/ports` | 7 | Phase 8 FontConfig guarded provider batch |
+
+## Phase 7: Post-Phase 6 residual triage refresh
+
+目的: Phase 1-6 で実装済みになった行を triage 台帳から落とし、残った `missing` / `partial` を Phase 8 以降の実装単位へ再分類する。
+
+詳細計画: `07-post-phase6-residual-plan-2026-05-16.md`
+
+作業:
+
+- `scripts/generate_public_api_coverage.py` を再実行し、coverage snapshot を固定する。
+- optional module triage CSV を現行 matrix に同期する。
+- `partial` を「実装済みだが generator limitation」と「未実装 overload」に分ける。
+- `real_gap` を Phase 8 / Phase 9 / Phase 10 に再分類する。
+- priority を現状の実装価値で付け直す。
+
+受け入れ条件:
+
+- 各 triage CSV の `untriaged` が 0。
+- Phase 8 / Phase 9 / Phase 10 の対象が triage note から追える。
+- Phase 6 の残件が platform/provider/generator polish として説明できる。
+
+## Phase 8: Guarded platform / import-source APIs
+
+目的: 既定 build に混ぜられない Android / FontConfig / platform source import 系 API を feature guard 付きで扱う。
+
+対象:
+
+- `SkAnimatedImage`
+- `SkAndroidFrameworkUtils`
+- `SkFontConfigInterface`
+- `Sk3DView` Android framework-only camera location methods
+
+方針:
+
+- source import が必要な API は、upstream ref と import 差分を文書化してから C API を追加する。
+- `SK_BUILD_FOR_ANDROID_FRAMEWORK` や platform library 依存を default build へ混ぜない。
+- global registration と provider ownership は `01-callback-global-registration-design.md` の語彙に合わせる。
+- smoke test は feature guard と同じ条件でのみ登録する。
+
+受け入れ条件:
+
+- feature option OFF で configure/build が通る。
+- feature option ON の環境では smoke が実行される。
+- source import / platform dependency / ownership が計画書に残る。
+
+## Phase 9: High-volume optional module expansion
+
+目的: 残件の大きい optional module を、実用 entry point、value/helper、callback/provider に分けて継続実装する。
+
+推奨順:
+
+1. SVG residual: `SkSVGTypes` value/helper、node attribute mutation、filter/render context、resource provider。
+2. GPU residual: Ganesh residual と Graphite residual を分け、no-callback value/query から進める。
+3. SKSG residual: graph ownership と invalidation model を設計してから node factory を広げる。
+4. paragraph/unicode/shaper residual: value helper と custom painter/run-handler callback を分ける。
+5. skottie/skresources residual: property observer、expression evaluator、resource provider。
+6. skplaintexteditor/bentleyottmann: 実用 entry point が明確になってから低優先で進める。
+
+受け入れ条件:
+
+- optional module ごとに CMake option、source registration、依存検出、smoke test が揃う。
+- callback/provider API は release proc と failure path を smoke で検証する。
+- SVG、skottie、skresources の provider 設計が矛盾しない。
+
+## Phase 10: Coverage quality / ABI polish
+
+目的: 実装済みなのに `partial` / `missing` に残る行を減らし、C ABI の命名・所有権コメント・enum 定数を整える。
+
+対象:
+
+- overload-disambiguated C API の generator matching
+- platform guard の `na` 表現
+- named operator API と coverage token の対応
+- C enum 定数化
+- ownership comment の語彙統一
+
+受け入れ条件:
+
+- `partial` が真の未実装 overload だけを表す。
+- platform guard 由来の未実装が triage CSV と note で説明できる。
+- 新規 C API の header comment が `owned` / `borrowed` / `consumed` / `retained` の語彙で揃う。
+
 ## 実装 batch の標準手順
 
 1. `date '+%Y-%m-%d %H:%M:%S %Z'` で作業開始時刻を記録する。
