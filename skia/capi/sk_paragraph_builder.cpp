@@ -71,6 +71,11 @@ bool valid_text_baseline(reskia_paragraph_text_baseline_t baseline) {
            baseline == RESKIA_PARAGRAPH_TEXT_BASELINE_IDEOGRAPHIC;
 }
 
+bool valid_text_direction(reskia_paragraph_text_direction_t direction) {
+    return direction == RESKIA_PARAGRAPH_TEXT_DIRECTION_RTL ||
+           direction == RESKIA_PARAGRAPH_TEXT_DIRECTION_LTR;
+}
+
 bool valid_text_align(reskia_paragraph_text_align_t align) {
     return align >= RESKIA_PARAGRAPH_TEXT_ALIGN_LEFT && align <= RESKIA_PARAGRAPH_TEXT_ALIGN_END;
 }
@@ -147,6 +152,62 @@ std::vector<SkUnicode::LineBreakBefore> make_line_breaks(const size_t *positions
 }  // namespace
 
 extern "C" {
+
+bool SkParagraph_PositionWithAffinity_Make(int32_t position, reskia_paragraph_affinity_t affinity, reskia_paragraph_position_with_affinity_t *out_position) {
+    if (out_position == nullptr ||
+        (affinity != RESKIA_PARAGRAPH_AFFINITY_UPSTREAM && affinity != RESKIA_PARAGRAPH_AFFINITY_DOWNSTREAM)) {
+        return false;
+    }
+    out_position->position = position;
+    out_position->affinity = affinity;
+    return true;
+}
+
+bool SkParagraph_TextBox_Make(float left, float top, float right, float bottom, reskia_paragraph_text_direction_t direction, reskia_paragraph_text_box_t *out_box) {
+    if (out_box == nullptr || !valid_text_direction(direction)) {
+        return false;
+    }
+    out_box->left = left;
+    out_box->top = top;
+    out_box->right = right;
+    out_box->bottom = bottom;
+    out_box->direction = direction;
+    return true;
+}
+
+bool SkParagraph_PlaceholderStyle_Make(float width, float height, reskia_paragraph_placeholder_alignment_t alignment, reskia_paragraph_text_baseline_t baseline, float baseline_offset, reskia_paragraph_placeholder_style_t *out_style) {
+    if (out_style == nullptr || !valid_placeholder_alignment(alignment) || !valid_text_baseline(baseline) || width < 0.0f || height < 0.0f) {
+        return false;
+    }
+    out_style->width = width;
+    out_style->height = height;
+    out_style->alignment = alignment;
+    out_style->baseline = baseline;
+    out_style->baseline_offset = baseline_offset;
+    return true;
+}
+
+bool SkParagraph_PlaceholderStyle_equals(const reskia_paragraph_placeholder_style_t *style, const reskia_paragraph_placeholder_style_t *other) {
+    return style != nullptr && other != nullptr &&
+           style->width == other->width &&
+           style->height == other->height &&
+           style->alignment == other->alignment &&
+           style->baseline == other->baseline &&
+           style->baseline_offset == other->baseline_offset;
+}
+
+bool SkParagraph_LineMetrics_Make(size_t start, size_t end, size_t end_excluding_whitespaces, size_t end_including_newline, bool hard_break, reskia_paragraph_line_metrics_t *out_metrics) {
+    if (out_metrics == nullptr || end < start || end_excluding_whitespaces < start || end_including_newline < start) {
+        return false;
+    }
+    *out_metrics = {};
+    out_metrics->start_index = start;
+    out_metrics->end_index = end;
+    out_metrics->end_excluding_whitespaces = end_excluding_whitespaces;
+    out_metrics->end_including_newline = end_including_newline;
+    out_metrics->hard_break = hard_break;
+    return true;
+}
 
 reskia_paragraph_builder_t *SkParagraph_ParagraphBuilder_make(const reskia_paragraph_style_t *style, reskia_paragraph_font_collection_t *font_collection) {
     if (style == nullptr || font_collection == nullptr) {

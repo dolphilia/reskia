@@ -43,6 +43,14 @@ bool SkParagraph_FontCollection_fontFallbackEnabled(reskia_paragraph_font_collec
 reskia_paragraph_cache_t *SkParagraph_FontCollection_getParagraphCache(reskia_paragraph_font_collection_t *collection); // borrowed; NULL input returns NULL
 void SkParagraph_FontCollection_clearCaches(reskia_paragraph_font_collection_t *collection); // NULL input is no-op
 
+reskia_paragraph_cache_t *SkParagraph_ParagraphCache_new(void); // owned; delete with SkParagraph_ParagraphCache_delete
+void SkParagraph_ParagraphCache_delete(reskia_paragraph_cache_t *cache); // NULL input is no-op
+void SkParagraph_ParagraphCache_abandon(reskia_paragraph_cache_t *cache); // NULL input is no-op
+void SkParagraph_ParagraphCache_reset(reskia_paragraph_cache_t *cache); // NULL input is no-op
+void SkParagraph_ParagraphCache_printStatistics(reskia_paragraph_cache_t *cache); // NULL input is no-op
+void SkParagraph_ParagraphCache_turnOn(reskia_paragraph_cache_t *cache, bool value); // NULL input is no-op
+int SkParagraph_ParagraphCache_count(reskia_paragraph_cache_t *cache); // NULL input returns 0
+
 #ifdef __cplusplus
 }
 #endif

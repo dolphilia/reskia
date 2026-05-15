@@ -219,4 +219,40 @@ void SkParagraph_FontCollection_clearCaches(reskia_paragraph_font_collection_t *
     as_font_collection(collection)->clearCaches();
 }
 
+reskia_paragraph_cache_t *SkParagraph_ParagraphCache_new(void) {
+    return reinterpret_cast<reskia_paragraph_cache_t *>(new ParagraphCache());
+}
+
+void SkParagraph_ParagraphCache_delete(reskia_paragraph_cache_t *cache) {
+    delete reinterpret_cast<ParagraphCache *>(cache);
+}
+
+void SkParagraph_ParagraphCache_abandon(reskia_paragraph_cache_t *cache) {
+    if (cache != nullptr) {
+        reinterpret_cast<ParagraphCache *>(cache)->abandon();
+    }
+}
+
+void SkParagraph_ParagraphCache_reset(reskia_paragraph_cache_t *cache) {
+    if (cache != nullptr) {
+        reinterpret_cast<ParagraphCache *>(cache)->reset();
+    }
+}
+
+void SkParagraph_ParagraphCache_printStatistics(reskia_paragraph_cache_t *cache) {
+    if (cache != nullptr) {
+        reinterpret_cast<ParagraphCache *>(cache)->printStatistics();
+    }
+}
+
+void SkParagraph_ParagraphCache_turnOn(reskia_paragraph_cache_t *cache, bool value) {
+    if (cache != nullptr) {
+        reinterpret_cast<ParagraphCache *>(cache)->turnOn(value);
+    }
+}
+
+int SkParagraph_ParagraphCache_count(reskia_paragraph_cache_t *cache) {
+    return cache == nullptr ? 0 : reinterpret_cast<ParagraphCache *>(cache)->count();
+}
+
 } // extern "C"

@@ -57,6 +57,10 @@ enum {
 };
 
 reskia_unicode_t *SkUnicode_Make(void); // owned: delete with SkUnicode_delete; returns NULL when no backend is available
+reskia_unicode_t *SkUnicode_MakeIcuBasedUnicode(void); // owned; returns NULL when ICU backend is unavailable
+reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count); // owned; returns NULL when client backend is unavailable
+reskia_unicode_t *SkUnicode_MakeLibgraphemeBasedUnicode(void); // owned; returns NULL when libgrapheme backend is unavailable
+reskia_unicode_t *SkUnicode_MakeIcu4xBasedUnicode(void); // owned; returns NULL when ICU4X backend is unavailable
 void SkUnicode_delete(reskia_unicode_t *unicode); // NULL input is no-op
 reskia_unicode_t *SkUnicode_copy(reskia_unicode_t *unicode); // owned: NULL input returns NULL
 reskia_string_t *SkUnicode_toUpper(reskia_unicode_t *unicode, const reskia_string_t *text); // owned SkString; NULL input returns NULL

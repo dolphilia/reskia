@@ -781,6 +781,16 @@ if(RESKIA_BUILD_TESTS)
         endif()
         target_link_libraries(test_paragraph_builder_capi_smoke reskia ${RESKIA_DEP_LIBS})
         add_test(NAME c_skia_paragraph_builder_capi_smoke COMMAND test_paragraph_builder_capi_smoke)
+
+        add_executable(test_paragraph_typeface_font_provider_capi_smoke test/test_paragraph_typeface_font_provider_capi_smoke.cpp)
+        target_include_directories(test_paragraph_typeface_font_provider_capi_smoke PRIVATE
+                ${RESKIA_PUBLIC_INCLUDE_DIRS}
+        )
+        if(RESKIA_DEP_LINK_DIRS)
+            target_link_directories(test_paragraph_typeface_font_provider_capi_smoke PRIVATE ${RESKIA_DEP_LINK_DIRS})
+        endif()
+        target_link_libraries(test_paragraph_typeface_font_provider_capi_smoke reskia ${RESKIA_DEP_LIBS})
+        add_test(NAME c_skia_paragraph_typeface_font_provider_capi_smoke COMMAND test_paragraph_typeface_font_provider_capi_smoke)
     endif()
 
     if(APPLE AND RESKIA_ENABLE_GPU_GANESH AND RESKIA_ENABLE_GPU_METAL)

@@ -418,6 +418,10 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 追加済み:
 
 - `SkUnicode_Make`
+- `SkUnicode_MakeIcuBasedUnicode`
+- `SkUnicode_MakeClientBasedUnicode`
+- `SkUnicode_MakeLibgraphemeBasedUnicode`
+- `SkUnicode_MakeIcu4xBasedUnicode`
 - `SkUnicode_delete`
 - `SkUnicode_copy`
 - `SkUnicode_toUpper`
@@ -464,6 +468,9 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
   - fallback manager/typeface helpers
   - `findTypefaces`
   - fallback enable/disable and cache access/clear
+- `SkParagraph_ParagraphCache_*`
+  - create/delete
+  - abandon/reset/printStatistics/turnOn/count
 - `SkParagraph_StrutStyle_*`
   - create/copy/delete/equals
   - font families count/index/set
@@ -491,6 +498,11 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
   - `getText` / `getParagraphStyle`
   - word/grapheme/line-break array setters
   - `SetUnicode` consuming helper and `Reset`
+- paragraph value helper
+  - `PositionWithAffinity` make helper
+  - `TextBox` make helper
+  - `PlaceholderStyle` make/equals helper
+  - `LineMetrics` make helper
 - `SkParagraph_Paragraph_*`
   - owned paragraph delete
   - layout / SkCanvas paint
@@ -499,6 +511,14 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
   - text box array helpers for range/placeholders
   - glyph coordinate, word boundary, unresolved codepoint array helper
   - text align and font size update helpers
+- `SkParagraph_TypefaceFontProvider_*`
+  - create/ref/unref/release
+  - `SkFontMgr` handle ref bridge for `FontCollection`
+  - typeface registration with optional alias
+  - family/style query wrappers and null-returning SkFontMgr override wrappers
+- `SkParagraph_TypefaceFontStyleSet_*`
+  - family name / alias query
+  - append typeface helper
 
 設計メモ:
 
@@ -508,7 +528,7 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - vector 出力系 API は caller-owned array にコピーし、戻り値で必要要素数を返す。`dst == NULL` は count query として扱う。
 - `SkBreakIterator::setText`、`SkUnicode::makeBidiIterator`、`SkUnicode::computeCodeUnitFlags` は UTF-8/UTF-16 別 C ABI 名で公開したため、coverage generator 上は overload-specific `partial` として残る。
 - `SkUnicode::extractBidi` は public static 宣言があるが、この source 構成では実体 symbol がリンクされないため、backend factory と同じく feature/linkage 判定が必要な残件として残す。
-- `SkUnicode_MakeIcuBasedUnicode` / `MakeClientBasedUnicode` / `MakeLibgraphemeBasedUnicode` / `MakeIcu4xBasedUnicode` は、対象実装ソースが有効な build かどうかを CMake 側で判定する必要があるため次 batch へ残す。
+- `SkUnicode_MakeIcuBasedUnicode` / `MakeClientBasedUnicode` / `MakeLibgraphemeBasedUnicode` / `MakeIcu4xBasedUnicode` は、`skunicode` target の compile definition を `reskia` 側にも伝播し、該当 backend が有効な場合だけ実体を呼ぶ。無効な backend は C ABI 関数自体は存在するが `NULL` を返す。
 - `FontCollection` は `sk_font_mgr_t` handle から `sk_sp<SkFontMgr>` を borrow して設定する。caller の font manager handle 所有権は奪わない。
 - `ParagraphStyle` / `StrutStyle` / `TextStyle` は heap-owned value wrapper とし、`*_delete` で破棄する。value getter が C++ reference を返すものは、C ABI では copy または count/index/array accessor で表す。
 - `TextStyle` の foreground/background `SkPaint` getter は owned copy を返し、既存 `SkPaint_delete` で破棄する。setter は caller の `SkPaint` を copy し、所有権を奪わない。
@@ -518,6 +538,11 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - `ParagraphBuilder` / `Paragraph` は `std::unique_ptr` から release した owned pointer とし、`*_delete` で破棄する。
 - `ParagraphBuilder::make` は `FontCollection` の raw pointer から `sk_ref_sp` で追加参照を取る。caller の `FontCollection` 所有権は維持される。
 - `Paragraph::paint` はまず `SkCanvas*` 版だけ公開した。`ParagraphPainter*` 版は custom painter callback 設計が必要なため後続に残す。
+- `TypefaceFontProvider` は `SkFontMgr` 派生だが、C ABI では paragraph 専用 opaque pointer として保持する。`SkParagraph_TypefaceFontProvider_refFontMgr` は追加参照を持つ `sk_font_mgr_t` handle を返し、既存 `FontCollection` API へ渡せる。provider 本体の所有権は caller が `release` / `unref` で管理する。
+- `TypefaceFontProvider` の `onMakeFrom*` / `onLegacyMakeTypeface` は upstream 実装が nullptr を返す override であり、C ABI でも invalid/unsupported 経路は 0 を返す。
+- `TypefaceFontStyleSet` は standalone owner としては公開せず、`TypefaceFontProvider_onMatchFamily` が返す `sk_font_style_set_t` に対する paragraph-specific helper と、既存 `SkFontStyleSet_*` API の組み合わせで扱う。
+- `ParagraphCache` は owned cache を `SkParagraph_ParagraphCache_new/delete` で扱えるようにし、`FontCollection_getParagraphCache` から得る borrowed cache に対しても同じ helper を使えるようにした。`updateParagraph` / `findParagraph` / `isPossiblyTextEditing` は `ParagraphImpl*` を要求する内部寄り API なので、現段階では対象外寄りとして残す。
+- `PositionWithAffinity`、`TextBox`、`PlaceholderStyle`、`LineMetrics` は C value struct として表す。constructor 相当の helper は field validation と初期化だけを行い、heap allocation はしない。
 
 検証:
 
@@ -526,19 +551,19 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - `cmake --build skia/cmake-build-codex-phase4-unicode-source --target test_unicode_capi_smoke -j 8`
 - `ctest --test-dir skia/cmake-build-codex-phase4-unicode-source -R c_skia_unicode_capi_smoke --output-on-failure`
 - `cmake -S skia -B skia/cmake-build-stability-skparagraph-tests -DRESKIA_DEPS_MODE=source -DRESKIA_ENABLE_SKPARAGRAPH=ON -DRESKIA_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug`
-- `cmake --build skia/cmake-build-stability-skparagraph-tests --target test_paragraph_font_collection_capi_smoke test_paragraph_style_capi_smoke test_paragraph_text_style_capi_smoke test_paragraph_builder_capi_smoke -j 8`
-- `ctest --test-dir skia/cmake-build-stability-skparagraph-tests -R 'c_skia_paragraph_(font_collection|style|text_style|builder)_capi_smoke' --output-on-failure`
+- `cmake --build skia/cmake-build-stability-skparagraph-tests --target test_paragraph_font_collection_capi_smoke test_paragraph_style_capi_smoke test_paragraph_text_style_capi_smoke test_paragraph_builder_capi_smoke test_paragraph_typeface_font_provider_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skparagraph-tests -R 'c_skia_paragraph_(font_collection|style|text_style|builder|typeface_font_provider)_capi_smoke' --output-on-failure`
 - `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
 - `python3 scripts/generate_public_api_coverage.py`
 
 台帳更新:
 
-- `public-api-coverage-matrix.csv`: `missing=1162`, `covered=2140`, `partial=15`, `no_public_methods_found=104`
-- `modules/skunicode`: 48 行中 `covered 37`、`partial 6`、`missing 5`
-- `modules/skparagraph`: `covered 177`、`partial 3`、`missing 76`
-- `public-api-paragraph-unicode-shaper-missing-triage.csv`: covered 行を削除し、残 `104` 行。内訳は `real_gap 71`、`na 27`、`false_positive 6`
-- `modules/skunicode` の残件は 11 行。`partial` は UTF-8/UTF-16 別名で公開済みの overload 6 行、`missing` は `extractBidi` と backend/client factory 4 行。
-- `modules/skparagraph` の triage 上の real gap は 44 行。大きい塊は `TypefaceFontProvider` 13 行、`TextStyle` の `ParagraphPainter::PaintID` 周辺 4 行、`Paragraph` の custom paint update 周辺 3 行、`FontArguments` / `LineMetrics` / `TextShadow` / `FontFeature` の value helper 周辺、`ParagraphCache` の低リスク query である。
+- `public-api-coverage-matrix.csv`: `missing=1135`, `covered=2167`, `partial=15`, `no_public_methods_found=104`
+- `modules/skunicode`: 48 行中 `covered 41`、`partial 6`、`missing 1`
+- `modules/skparagraph`: `covered 200`、`partial 3`、`missing 53`
+- `public-api-paragraph-unicode-shaper-missing-triage.csv`: covered 行を削除し、constructor / inherited generic wrapper / value helper 実装済み行を分類し直した結果、残 `77` 行。内訳は `real_gap 41`、`na 15`、`false_positive 21`
+- `modules/skunicode` の残件は 7 行。`partial` は UTF-8/UTF-16 別名で公開済みの overload 6 行、`missing` は `extractBidi` 1 行。
+- `modules/skparagraph` の triage 上の real gap は 18 行。大きい塊は `TextStyle` の `ParagraphPainter::PaintID` 周辺 4 行、`Paragraph` の custom paint update 周辺 3 行、`FontArguments` の wrapper/clone 周辺、`Block` / `StyleMetrics` / `Placeholder` の内部 value helper 周辺である。これらは custom painter、private wrapper、または internal layout model に近く、Phase 5A の callback/provider foundation 後または明確な利用経路が出てから扱う。
 
 ## Phase 5: Skottie / skresources / sksg
 

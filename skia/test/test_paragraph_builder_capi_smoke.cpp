@@ -38,7 +38,12 @@ bool has_non_white_pixel(reskia_bitmap_t *bitmap) {
 }
 
 bool smoke_null_inputs() {
-    return check(SkParagraph_ParagraphBuilder_make(nullptr, nullptr) == nullptr, "make null") &&
+    return check(!SkParagraph_PositionWithAffinity_Make(0, RESKIA_PARAGRAPH_AFFINITY_DOWNSTREAM, nullptr), "position make null") &&
+           check(!SkParagraph_TextBox_Make(0, 0, 1, 1, RESKIA_PARAGRAPH_TEXT_DIRECTION_LTR, nullptr), "text box make null") &&
+           check(!SkParagraph_PlaceholderStyle_Make(1, 1, RESKIA_PARAGRAPH_PLACEHOLDER_ALIGNMENT_BASELINE, RESKIA_PARAGRAPH_TEXT_BASELINE_ALPHABETIC, 0, nullptr), "placeholder style make null") &&
+           check(!SkParagraph_PlaceholderStyle_equals(nullptr, nullptr), "placeholder style equals null") &&
+           check(!SkParagraph_LineMetrics_Make(0, 0, 0, 0, false, nullptr), "line metrics make null") &&
+           check(SkParagraph_ParagraphBuilder_make(nullptr, nullptr) == nullptr, "make null") &&
            check(!SkParagraph_ParagraphBuilder_pushStyle(nullptr, nullptr), "push null") &&
            check(SkParagraph_ParagraphBuilder_peekStyle(nullptr) == nullptr, "peek null") &&
            check(!SkParagraph_ParagraphBuilder_addTextUtf8(nullptr, "x", 1), "add utf8 null") &&
@@ -61,6 +66,23 @@ bool smoke_null_inputs() {
 
 bool smoke_layout_and_paint() {
     SkGraphics_Init();
+
+    reskia_paragraph_position_with_affinity_t made_position = {};
+    reskia_paragraph_text_box_t made_box = {};
+    reskia_paragraph_placeholder_style_t placeholder_style = {};
+    reskia_paragraph_placeholder_style_t placeholder_style_copy = {};
+    reskia_paragraph_line_metrics_t made_metrics = {};
+    if (!check(SkParagraph_PositionWithAffinity_Make(7, RESKIA_PARAGRAPH_AFFINITY_UPSTREAM, &made_position), "position make") ||
+        !check(made_position.position == 7 && made_position.affinity == RESKIA_PARAGRAPH_AFFINITY_UPSTREAM, "position fields") ||
+        !check(SkParagraph_TextBox_Make(1.0f, 2.0f, 3.0f, 4.0f, RESKIA_PARAGRAPH_TEXT_DIRECTION_LTR, &made_box), "text box make") ||
+        !check(made_box.left == 1.0f && made_box.direction == RESKIA_PARAGRAPH_TEXT_DIRECTION_LTR, "text box fields") ||
+        !check(SkParagraph_PlaceholderStyle_Make(10.0f, 20.0f, RESKIA_PARAGRAPH_PLACEHOLDER_ALIGNMENT_BASELINE, RESKIA_PARAGRAPH_TEXT_BASELINE_ALPHABETIC, 4.0f, &placeholder_style), "placeholder style make") ||
+        !check(SkParagraph_PlaceholderStyle_Make(10.0f, 20.0f, RESKIA_PARAGRAPH_PLACEHOLDER_ALIGNMENT_BASELINE, RESKIA_PARAGRAPH_TEXT_BASELINE_ALPHABETIC, 4.0f, &placeholder_style_copy), "placeholder style make copy") ||
+        !check(SkParagraph_PlaceholderStyle_equals(&placeholder_style, &placeholder_style_copy), "placeholder style equals") ||
+        !check(SkParagraph_LineMetrics_Make(1, 5, 4, 5, true, &made_metrics), "line metrics make") ||
+        !check(made_metrics.start_index == 1 && made_metrics.hard_break, "line metrics fields")) {
+        return false;
+    }
 
     reskia_paragraph_font_collection_t *collection = SkParagraph_FontCollection_new();
     reskia_paragraph_style_t *paragraph_style = SkParagraph_ParagraphStyle_new();

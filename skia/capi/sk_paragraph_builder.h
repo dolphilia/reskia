@@ -36,6 +36,14 @@ typedef struct reskia_paragraph_position_with_affinity_t {
     reskia_paragraph_affinity_t affinity;
 } reskia_paragraph_position_with_affinity_t;
 
+typedef struct reskia_paragraph_placeholder_style_t {
+    float width;
+    float height;
+    reskia_paragraph_placeholder_alignment_t alignment;
+    reskia_paragraph_text_baseline_t baseline;
+    float baseline_offset;
+} reskia_paragraph_placeholder_style_t;
+
 typedef struct reskia_paragraph_line_metrics_t {
     size_t start_index;
     size_t end_index;
@@ -89,6 +97,12 @@ enum {
     RESKIA_PARAGRAPH_RECT_WIDTH_STYLE_TIGHT = 0,
     RESKIA_PARAGRAPH_RECT_WIDTH_STYLE_MAX = 1,
 };
+
+bool SkParagraph_PositionWithAffinity_Make(int32_t position, reskia_paragraph_affinity_t affinity, reskia_paragraph_position_with_affinity_t *out_position);
+bool SkParagraph_TextBox_Make(float left, float top, float right, float bottom, reskia_paragraph_text_direction_t direction, reskia_paragraph_text_box_t *out_box);
+bool SkParagraph_PlaceholderStyle_Make(float width, float height, reskia_paragraph_placeholder_alignment_t alignment, reskia_paragraph_text_baseline_t baseline, float baseline_offset, reskia_paragraph_placeholder_style_t *out_style);
+bool SkParagraph_PlaceholderStyle_equals(const reskia_paragraph_placeholder_style_t *style, const reskia_paragraph_placeholder_style_t *other);
+bool SkParagraph_LineMetrics_Make(size_t start, size_t end, size_t end_excluding_whitespaces, size_t end_including_newline, bool hard_break, reskia_paragraph_line_metrics_t *out_metrics);
 
 reskia_paragraph_builder_t *SkParagraph_ParagraphBuilder_make(const reskia_paragraph_style_t *style, reskia_paragraph_font_collection_t *font_collection);
 reskia_paragraph_builder_t *ParagraphBuilder_make(const reskia_paragraph_style_t *style, reskia_paragraph_font_collection_t *font_collection); // compatibility alias for coverage tooling

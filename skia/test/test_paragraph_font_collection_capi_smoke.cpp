@@ -30,7 +30,8 @@ bool smoke_null_inputs() {
            check(SkParagraph_FontCollection_defaultFallback(nullptr) == 0, "default fallback null") &&
            check(SkParagraph_FontCollection_defaultFallbackForChar(nullptr, 'A', 0, nullptr) == 0, "default fallback char null") &&
            check(!SkParagraph_FontCollection_fontFallbackEnabled(nullptr), "fallback enabled null") &&
-           check(SkParagraph_FontCollection_getParagraphCache(nullptr) == nullptr, "paragraph cache null");
+           check(SkParagraph_FontCollection_getParagraphCache(nullptr) == nullptr, "paragraph cache null") &&
+           check(SkParagraph_ParagraphCache_count(nullptr) == 0, "cache count null");
 }
 
 bool smoke_collection() {
@@ -111,13 +112,31 @@ bool smoke_collection() {
         return false;
     }
     SkParagraph_FontCollection_enableFontFallback(collection);
+    reskia_paragraph_cache_t *borrowed_cache = SkParagraph_FontCollection_getParagraphCache(collection);
     if (!check(SkParagraph_FontCollection_fontFallbackEnabled(collection), "fallback enabled") ||
-        !check(SkParagraph_FontCollection_getParagraphCache(collection) != nullptr, "get paragraph cache")) {
+        !check(borrowed_cache != nullptr, "get paragraph cache") ||
+        !check(SkParagraph_ParagraphCache_count(borrowed_cache) == 0, "borrowed cache count")) {
         static_sk_font_mgr_delete(font_mgr);
         SkParagraph_FontCollection_release(collection);
         return false;
     }
+    SkParagraph_ParagraphCache_turnOn(borrowed_cache, false);
+    SkParagraph_ParagraphCache_turnOn(borrowed_cache, true);
+    SkParagraph_ParagraphCache_reset(borrowed_cache);
     SkParagraph_FontCollection_clearCaches(collection);
+
+    reskia_paragraph_cache_t *owned_cache = SkParagraph_ParagraphCache_new();
+    if (!check(owned_cache != nullptr, "cache new") ||
+        !check(SkParagraph_ParagraphCache_count(owned_cache) == 0, "owned cache count")) {
+        SkParagraph_ParagraphCache_delete(owned_cache);
+        static_sk_font_mgr_delete(font_mgr);
+        SkParagraph_FontCollection_release(collection);
+        return false;
+    }
+    SkParagraph_ParagraphCache_turnOn(owned_cache, true);
+    SkParagraph_ParagraphCache_reset(owned_cache);
+    SkParagraph_ParagraphCache_abandon(owned_cache);
+    SkParagraph_ParagraphCache_delete(owned_cache);
 
     static_sk_font_mgr_delete(font_mgr);
     SkParagraph_FontCollection_release(collection);

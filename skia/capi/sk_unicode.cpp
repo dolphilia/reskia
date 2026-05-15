@@ -76,12 +76,77 @@ reskia_break_iterator_t *release_break_iterator(std::unique_ptr<SkBreakIterator>
     return reinterpret_cast<reskia_break_iterator_t *>(iterator.release());
 }
 
+std::vector<SkUnicode::Position> make_positions(const size_t *positions, int32_t count) {
+    std::vector<SkUnicode::Position> out;
+    out.reserve(static_cast<size_t>(count));
+    for (int32_t i = 0; i < count; ++i) {
+        out.push_back(positions[i]);
+    }
+    return out;
+}
+
+std::vector<SkUnicode::LineBreakBefore> make_line_breaks(const size_t *positions, int32_t count) {
+    std::vector<SkUnicode::LineBreakBefore> out;
+    out.reserve(static_cast<size_t>(count));
+    for (int32_t i = 0; i < count; ++i) {
+        out.emplace_back(positions[i], SkUnicode::LineBreakType::kSoftLineBreak);
+    }
+    return out;
+}
+
 }  // namespace
 
 extern "C" {
 
 reskia_unicode_t *SkUnicode_Make(void) {
     return release_unicode(SkUnicode::Make());
+}
+
+reskia_unicode_t *SkUnicode_MakeIcuBasedUnicode(void) {
+#if defined(SK_UNICODE_ICU_IMPLEMENTATION)
+    return release_unicode(SkUnicode::MakeIcuBasedUnicode());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count) {
+    if (text_units < 0 || words_count < 0 || grapheme_breaks_count < 0 || line_breaks_count < 0 ||
+        (text == nullptr && text_units != 0) ||
+        (words == nullptr && words_count != 0) ||
+        (grapheme_breaks == nullptr && grapheme_breaks_count != 0) ||
+        (line_breaks == nullptr && line_breaks_count != 0)) {
+        return nullptr;
+    }
+#if defined(SK_UNICODE_ICU_IMPLEMENTATION)
+    std::string text_copy;
+    if (text_units > 0) {
+        text_copy.assign(text, static_cast<size_t>(text_units));
+    }
+    return release_unicode(SkUnicode::MakeClientBasedUnicode(
+            SkSpan<char>(text_copy.data(), text_copy.size()),
+            make_positions(words, words_count),
+            make_positions(grapheme_breaks, grapheme_breaks_count),
+            make_line_breaks(line_breaks, line_breaks_count)));
+#else
+    return nullptr;
+#endif
+}
+
+reskia_unicode_t *SkUnicode_MakeLibgraphemeBasedUnicode(void) {
+#if defined(SK_UNICODE_LIBGRAPHEME_IMPLEMENTATION)
+    return release_unicode(SkUnicode::MakeLibgraphemeBasedUnicode());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_unicode_t *SkUnicode_MakeIcu4xBasedUnicode(void) {
+#if defined(SK_UNICODE_ICU4X_IMPLEMENTATION)
+    return release_unicode(SkUnicode::MakeIcu4xBasedUnicode());
+#else
+    return nullptr;
+#endif
 }
 
 void SkUnicode_delete(reskia_unicode_t *unicode) {
