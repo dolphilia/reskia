@@ -1,5 +1,6 @@
 list(APPEND SOURCE_FILES
         capi/sk_alpha_type.cpp
+        capi/sk_anim_codec_player.cpp
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
         capi/sk_async_read_result.cpp
@@ -11,6 +12,8 @@ list(APPEND SOURCE_FILES
         capi/sk_blenders.cpp
         capi/sk_bmp_decoder.cpp
         capi/sk_canvas.cpp
+        capi/sk_canvas_state_utils.cpp
+        capi/sk_camera.cpp
         capi/sk_capabilities.cpp
         capi/sk_codec.cpp
         capi/sk_codecs.cpp
@@ -30,6 +33,7 @@ list(APPEND SOURCE_FILES
         capi/sk_corner_path_effect.cpp
         capi/sk_cubic_map.cpp
         capi/sk_cubic_resampler.cpp
+        capi/sk_custom_typeface.cpp
         capi/sk_dash_path_effect.cpp
         capi/sk_data_table.cpp
         capi/sk_data.cpp
@@ -79,10 +83,15 @@ list(APPEND SOURCE_FILES
         capi/sk_mesh.cpp
         capi/sk_mesh_specification.cpp
         capi/sk_meshes.cpp
+        capi/sk_no_draw_canvas.cpp
+        capi/sk_nway_canvas.cpp
         capi/sk_op_builder.cpp
+        capi/sk_ordered_font_mgr.cpp
         capi/sk_overdraw_canvas.cpp
         capi/sk_overdraw_color_filter.cpp
         capi/sk_paint.cpp
+        capi/sk_parse.cpp
+        capi/sk_parse_path.cpp
         capi/sk_path_1d_path_effect.cpp
         capi/sk_path_2d_path_effect.cpp
         capi/sk_path_builder.cpp
@@ -114,6 +123,7 @@ list(APPEND SOURCE_FILES
         capi/sk_runtime_effect.cpp
         capi/sk_runtime_shader_builder.cpp
         capi/sk_sampling_options.cpp
+        capi/sk_shadow_utils.cpp
         capi/sk_shader_mask_filter.cpp
         capi/sk_shader.cpp
         capi/sk_shaders.cpp
@@ -131,6 +141,7 @@ list(APPEND SOURCE_FILES
         capi/sk_surface_gpu.cpp
         capi/sk_surfaces.cpp
         capi/sk_table_mask_filter.cpp
+        capi/sk_text_utils.cpp
         capi/sk_text_blob_builder.cpp
         capi/sk_text_blob.cpp
         capi/sk_tiled_image_utils.cpp

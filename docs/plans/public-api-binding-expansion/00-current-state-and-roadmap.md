@@ -871,6 +871,290 @@ sksg:
 - utility API は C ABI での利用価値が明確なものから追加する。
 - docs/android/ports は optional module と同じく CMake guard と smoke を必須にする。
 
+### Phase 6 parse utilities progress 2026-05-15
+
+Phase 6 の初手として、既定 build に既に入っており callback / platform handle を伴わない `SkParse` と `SkParsePath` を C API に追加した。どちらも static utility surface で、所有権は output buffer または owned `SkString` copy に閉じる。
+
+追加済み:
+
+- `SkParse_Count`
+- `SkParse_CountWithSeparator`
+- `SkParse_FindColor`
+- `SkParse_FindHex`
+- `SkParse_FindMSec`
+- `SkParse_FindNamedColor`
+- `SkParse_FindS32`
+- `SkParse_FindScalar`
+- `SkParse_FindScalars`
+- `SkParse_FindBool`
+- `SkParse_FindList`
+- `SkParsePath_FromSVGString`
+- `SkParsePath_ToSVGString`
+
+設計メモ:
+
+- `SkParse_Find*` は upstream と同じく入力文字列内の終端位置を borrowed `const char*` として返す。invalid input は `nullptr` / `false` / `-1` に正規化する。
+- `SkParse_FindScalars` は `count > 0` の場合のみ output 配列を必須にする。
+- `SkParsePath_FromSVGString` は caller-owned `SkPath` に書き込む。
+- `SkParsePath_ToSVGString` は owned `SkString` copy を返し、`SkString_delete` で破棄する。
+- `SkParsePath::PathEncoding` は upstream enum ordinal を `int32_t` として受け渡す。C enum 定数化は後続の polish batch で追加可能。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_parse_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_parse_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1089`、`covered=2213`、`partial=15`、`no_public_methods_found=104`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `123` から `110` に減少した。
+- 次候補は `SkTextUtils` / `SkShadowUtils` の pure static helpers、または `SkNWayCanvas` / `SkNoDrawCanvas` の canvas wrapper。platform 固有の Android / ports font manager は guard と smoke 方針を先に固める。
+
+### Phase 6 text / shadow utilities progress 2026-05-15
+
+`SkParse` / `SkParsePath` に続く pure static helper batch として、既定 build の `SkTextUtils` と `SkShadowUtils` を追加した。どちらも既存の `SkCanvas`、`SkFont`、`SkPaint`、`SkPath`、`SkMatrix`、`SkPoint3`、`SkRect` C API 型だけで表現できるため、platform guard や callback lifetime を増やさずに公開できる。
+
+追加済み:
+
+- `SkTextUtils_Draw`
+- `SkTextUtils_DrawString`
+- `SkTextUtils_GetPath`
+- `SkShadowUtils_DrawShadow`
+- `SkShadowUtils_GetLocalBounds`
+- `SkShadowUtils_ComputeTonalColors`
+
+設計メモ:
+
+- `SkTextUtils_Draw` / `GetPath` の `SkTextEncoding` と `SkTextUtils::Align` は upstream enum ordinal を `int32_t` で受け渡す。範囲外入力は no-op。
+- `SkTextUtils_Draw` は `size == 0` の場合だけ `text == nullptr` を許容する。
+- `SkTextUtils_GetPath` は caller-owned `SkPath` に書き込む。
+- `SkShadowUtils_GetLocalBounds` は caller-owned `SkRect` に書き込み、invalid input は `false`。
+- `SkShadowUtils_ComputeTonalColors` は output color pointer を必須にし、invalid input は no-op。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_text_shadow_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_text_shadow_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1083`、`covered=2219`、`partial=15`、`no_public_methods_found=104`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `110` から `104` に減少した。
+- 次候補は `SkNWayCanvas` / `SkNoDrawCanvas` の canvas wrapper。`SkCamera` は値型と matrix interaction の API surface が広く、`SkCustomTypefaceBuilder` と `SkAnimCodecPlayer` は stream/codec/font ownership を含むため、必要なら小さな設計メモを先に置く。
+
+### Phase 6 canvas utilities progress 2026-05-15
+
+Phase 6 の canvas wrapper batch として、`SkNoDrawCanvas` と `SkNWayCanvas` を追加した。どちらも `SkCanvas` 派生だが、既存の `SkCanvas_delete` へ混ぜると派生型の intent が曖昧になるため、型ごとの owned wrapper と borrowed `asCanvas` view を用意した。
+
+追加済み:
+
+- `SkNoDrawCanvas_new`
+- `SkNoDrawCanvas_newWithIRect`
+- `SkNoDrawCanvas_delete`
+- `SkNoDrawCanvas_asCanvas`
+- `SkNoDrawCanvas_resetCanvas`
+- `SkNoDrawCanvas_resetCanvasWithIRect`
+- `SkNWayCanvas_new`
+- `SkNWayCanvas_delete`
+- `SkNWayCanvas_asCanvas`
+- `SkNWayCanvas_addCanvas`
+- `SkNWayCanvas_removeCanvas`
+- `SkNWayCanvas_removeAll`
+
+設計メモ:
+
+- `SkNoDrawCanvas_asCanvas` / `SkNWayCanvas_asCanvas` は borrowed view を返す。caller は返された `reskia_canvas_t*` を削除しない。
+- `SkNWayCanvas_addCanvas` は child canvas を borrow する。caller は登録中の child canvas を生存させ、削除前に `removeCanvas` または `removeAll` で解除する。
+- `SkNoDrawCanvas_newWithIRect` / `resetCanvasWithIRect` は caller-owned `SkIRect` をコピーして使う。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_canvas_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_canvas_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1074`、`covered=2228`、`partial=15`、`no_public_methods_found=104`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `104` から `95` に減少した。
+- 次候補は `SkCanvasStateUtils`。`SkPaintFilterCanvas` は subclass/protected override 寄り、`SkEventTracer` は global tracer/callback 登録、`SkCamera` は値型 API が広いため、どれも小さな設計メモを先に置くのがよい。
+
+### Phase 6 canvas state utilities progress 2026-05-15
+
+`SkCanvasStateUtils` は raster-backed canvas の state を library boundary 越しに渡すための opaque state API である。C ABI では `SkCanvasState` を opaque owned pointer とし、state から復元した `SkCanvas` は caller-owned raw canvas として返す。
+
+追加済み:
+
+- `SkCanvasStateUtils_CaptureCanvasState`
+- `SkCanvasStateUtils_MakeFromCanvasState`
+- `SkCanvasStateUtils_ReleaseCanvasState`
+
+設計メモ:
+
+- `SkCanvasStateUtils_CaptureCanvasState` は owned state を返す。失敗時は `nullptr`。
+- `SkCanvasStateUtils_MakeFromCanvasState` は owned `reskia_canvas_t*` を返し、`SkCanvas_delete` で破棄する。
+- state は、state から作成した canvas を破棄した後に `SkCanvasStateUtils_ReleaseCanvasState` で解放する。
+- upstream 実装は raster-backed device などの条件を満たす canvas だけ capture できるため、smoke では bitmap-backed canvas を使う。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_canvas_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_canvas_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1071`、`covered=2231`、`partial=15`、`no_public_methods_found=104`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `95` から `92` に減少した。
+- 既定 build で小さく進めやすい Phase 6 utility はここまでで一段落。残る大きな塊は `SkCamera`、`SkCustomTypefaceBuilder`、`SkAnimCodecPlayer`、Android/ports font manager、global callback/subclass 系であり、次は分類・設計メモを先に進めるのがよい。
+
+### Phase 6 design memo / custom typeface progress 2026-05-15
+
+大きめの残件に入る前に、`phase-6-design-memos-2026-05-15.md` を追加し、`SkCamera`、`SkCustomTypefaceBuilder`、`SkAnimCodecPlayer`、`SkOrderedFontMgr`、`SkPaintFilterCanvas`、`SkEventTracer`、Android / ports 系の所有権と推奨順を整理した。
+
+この設計メモに従い、まず `SkCustomTypefaceBuilder` の path glyph subset を追加した。drawable glyph と stream deserialize は、それぞれ `SkDrawable` ref ownership と `SkStreamAsset` consume semantics を API 名で明示してから後続で扱う。
+
+追加済み:
+
+- `SkCustomTypefaceBuilder_new`
+- `SkCustomTypefaceBuilder_delete`
+- `SkCustomTypefaceBuilder_setGlyphPath`
+- `SkCustomTypefaceBuilder_setMetrics`
+- `SkCustomTypefaceBuilder_setFontStyle`
+- `SkCustomTypefaceBuilder_detach`
+
+設計メモ:
+
+- builder は heap-owned value とし、`SkCustomTypefaceBuilder_delete` で破棄する。
+- `setGlyphPath` は caller-owned `SkPath` を借用し、Skia 側で path をコピーする。
+- `setMetrics` / `setFontStyle` は caller-owned value object を借用し、Skia 側で値をコピーする。
+- `detach` は caller-owned `sk_typeface_t` handle を返し、`static_sk_typeface_delete` で破棄する。
+- `setGlyph` drawable overload は未実装のため coverage 上は `partial`。`MakeFromStream` は stream handle consume policy の確定まで残す。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_custom_typeface_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R c_skia_custom_typeface_utils_smoke --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1065`、`covered=2235`、`partial=17`、`no_public_methods_found=104`
+- `SkCustomTypefaceBuilder`: `covered 4`、`partial 2`、`missing 1`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `92` から `86` に減少した。
+
+### Phase 6 ordered font manager / anim codec player progress 2026-05-15
+
+設計メモの推奨順に従い、`SkOrderedFontMgr` minimal wrapper と `SkAnimCodecPlayer` codec-consuming wrapper を追加した。
+
+追加済み:
+
+- `SkOrderedFontMgr_new`
+- `SkOrderedFontMgr_delete`
+- `SkOrderedFontMgr_asFontMgr`
+- `SkOrderedFontMgr_refAsFontMgr`
+- `SkOrderedFontMgr_append`
+- `SkAnimCodecPlayer_new`
+- `SkAnimCodecPlayer_delete`
+- `SkAnimCodecPlayer_getFrame`
+- `SkAnimCodecPlayer_dimensions`
+- `SkAnimCodecPlayer_duration`
+- `SkAnimCodecPlayer_seek`
+
+設計メモ:
+
+- `SkOrderedFontMgr_asFontMgr` は borrowed view を返す。caller は削除しない。
+- `SkOrderedFontMgr_refAsFontMgr` は retained `sk_font_mgr_t` handle を返し、`static_sk_font_mgr_delete` で破棄する。
+- `SkOrderedFontMgr_append` は child font manager handle を borrow して `sk_sp` copy を保持する。
+- `SkAnimCodecPlayer_new` は valid `sk_codec_t` handle を consume する。生成後、元 codec handle は無効になる。
+- `SkAnimCodecPlayer_getFrame` は retained `sk_image_t` handle を返し、`static_sk_image_delete` で破棄する。
+- `SkAnimCodecPlayer_dimensions` は owned `sk_i_size_t` handle を返し、`static_sk_i_size_delete` で破棄する。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_anim_codec_player_utils_smoke test_ordered_font_mgr_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R 'c_skia_(ordered_font_mgr|anim_codec_player)_utils_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1056`、`covered=2244`、`partial=17`、`no_public_methods_found=104`
+- `SkOrderedFontMgr`: `covered 3`
+- `SkAnimCodecPlayer`: `covered 6`
+- Phase 6 候補として抽出される `include/utils` / `include/ports` / `include/android` / `include/docs` の missing は `86` から `77` に減少した。
+- 次候補は `SkCamera` non-Android deprecated subset、または `SkCustomTypefaceBuilder` の drawable / stream 残件。ただし callback/global/subclass 系と platform guard 系は引き続き設計待ちとする。
+
+### Phase 6 camera / custom typeface remainder progress 2026-05-16
+
+`SkCamera.h` の deprecated 3D utility subset と、`SkCustomTypefaceBuilder` の残っていた stream / drawable entry point を追加した。`Sk3DView` の Android framework-only camera location methods は default build では member 自体が存在しないため、`public-api-phase-6-remaining-triage.csv` で `na` に分類した。
+
+追加済み:
+
+- `SkPatch3D_new`
+- `SkPatch3D_delete`
+- `SkPatch3D_reset`
+- `SkPatch3D_transform`
+- `SkPatch3D_dotWith`
+- `SkPatch3D_dotWithV3`
+- `SkPatch3D_rotate`
+- `SkPatch3D_rotateDegrees`
+- `SkPatch3D_getU` / `SkPatch3D_getV` / `SkPatch3D_getOrigin`
+- `SkPatch3D_setU` / `SkPatch3D_setV` / `SkPatch3D_setOrigin`
+- `SkCamera3D_new`
+- `SkCamera3D_delete`
+- `SkCamera3D_reset`
+- `SkCamera3D_update`
+- `SkCamera3D_patchToMatrix`
+- `SkCamera3D_getLocation` / `SkCamera3D_getAxis` / `SkCamera3D_getZenith` / `SkCamera3D_getObserver`
+- `SkCamera3D_setLocation` / `SkCamera3D_setAxis` / `SkCamera3D_setZenith` / `SkCamera3D_setObserver`
+- `Sk3DView_new`
+- `Sk3DView_delete`
+- `Sk3DView_save`
+- `Sk3DView_restore`
+- `Sk3DView_translate`
+- `Sk3DView_rotateX`
+- `Sk3DView_rotateY`
+- `Sk3DView_rotateZ`
+- `Sk3DView_getMatrix`
+- `Sk3DView_applyToCanvas`
+- `Sk3DView_dotWithNormal`
+- `SkCustomTypefaceBuilder_setGlyphDrawable`
+- `SkCustomTypefaceBuilder_MakeFromStream`
+
+設計メモ:
+
+- `SkPatch3D` / `SkCamera3D` / `Sk3DView` は heap-owned wrapper とし、対応する delete API で破棄する。
+- `SkPatch3D_transform` は `SkM44` を借用し、`dst` が非 NULL の場合は caller-owned destination に書き込む。`dst == NULL` では upstream と同じく self transform として扱う。
+- `SkCamera3D_patchToMatrix` と `Sk3DView_getMatrix` は caller-owned `SkMatrix` に書き込む。
+- `Sk3DView_applyToCanvas` は canvas を借用し、保持しない。
+- `SkCustomTypefaceBuilder_setGlyphDrawable` は `sk_drawable_t` から retained `sk_sp<SkDrawable>` を渡す。caller の drawable handle は消費しない。
+- `SkCustomTypefaceBuilder_MakeFromStream` は `sk_stream_asset_t` を消費し、成功時も失敗時も入力 stream handle は無効になる。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-codex-project-survey-prebuilt -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt --target test_custom_typeface_utils_smoke test_camera_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-project-survey-prebuilt -R 'c_skia_(custom_typeface_utils|camera_utils)_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1033`、`covered=2267`、`partial=17`、`no_public_methods_found=104`
+- `SkPatch3D`: `covered 7`
+- `SkCamera3D`: `covered 4`
+- `Sk3DView`: `covered 11`、`missing 4`
+- `SkCustomTypefaceBuilder`: `covered 5`、`partial 2`
+- `public-api-phase-6-remaining-triage.csv` を追加し、`Sk3DView` Android-only methods、`SkEventTracer`、`SkPaintFilterCanvas`、`SkCustomTypefaceBuilder` overload partial を分類した。
+- Phase 6 の default build utility 実装はほぼ一段落。残る `SkEventTracer` と `SkPaintFilterCanvas` は callback/global/subclass design batch に回す。
+
 ## 実装 batch の標準手順
 
 1. `date '+%Y-%m-%d %H:%M:%S %Z'` で作業開始時刻を記録する。
