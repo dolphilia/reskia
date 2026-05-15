@@ -192,6 +192,10 @@ if(RESKIA_ENABLE_SKOTTIE)
     list(APPEND SOURCE_FILES capi/sk_skottie.cpp)
 endif()
 
+if(TARGET skresources)
+    list(APPEND SOURCE_FILES capi/sk_resources.cpp)
+endif()
+
 if(RESKIA_ENABLE_SKSG)
     list(APPEND SOURCE_FILES capi/sk_sksg.cpp)
 endif()

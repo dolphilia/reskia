@@ -673,6 +673,159 @@ callback / global registration foundation の最初の concrete API として、
 - `public-api-core-effects-missing-triage.csv`: covered 行を削除し、残 `35` 行。内訳は `real_gap 1`、`na 14`、`false_positive 20`
 - core/effects の残 `real_gap` は `SkTypeface::Register` のみ。
 
+### Phase 5 skresources progress 2026-05-15
+
+skottie の `SlotManager::setImageSlot` と skottie / SVG resource provider bridge の前提として、skresources の concrete provider / asset API を先に追加した。
+
+追加済み:
+
+- `ImageAsset_ref` / `unref` / `release`
+- `ImageAsset_isMultiFrame`
+- `ImageAsset_getFrame`
+- `ImageAsset_getFrameData`
+- `MultiFrameImageAsset_Make`
+- `MultiFrameImageAsset_isMultiFrame`
+- `MultiFrameImageAsset_getFrame`
+- `ResourceProvider_ref` / `unref` / `release`
+- `ResourceProvider_load`
+- `ResourceProvider_loadImageAsset`
+- `ResourceProvider_loadFont`
+- `ResourceProvider_loadTypeface`
+- `FileResourceProvider_Make`
+- `FileResourceProvider_load`
+- `FileResourceProvider_loadImageAsset`
+- `CachingResourceProvider_Make`
+- `DataURIResourceProviderProxy_Make`
+
+設計メモ:
+
+- `ImageAsset` / `ResourceProvider` は SkRefCnt 派生の opaque pointer として扱い、caller の owned ref は `*_release` で破棄する。
+- `MultiFrameImageAsset_Make` は `sk_data_t` を borrow し、生成された asset は caller-owned ref として返す。
+- `ResourceProvider` / `FileResourceProvider` から返る `SkData`、`SkImage`、`SkTypeface` は既存 handle に載せ、caller が handle delete で破棄する。
+- `ImageAsset_getFrameData` は `image` / `sampling` / `matrix` を caller-owned handle として返す。caller は各 handle を delete する。
+- source-mode の現在の codec 構成では `MultiFrameImageAsset::Make` が fixture PNG から codec を生成できない場合があるため、smoke は asset 生成成功時だけ frame helper を追加検証する。`FileResourceProvider_load` など provider 本体の動作は必須検証にしている。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-stability-skresources-tests -DRESKIA_DEPS_MODE=source -DRESKIA_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug`
+- `cmake --build skia/cmake-build-stability-skresources-tests --target test_skresources_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skresources-tests -R c_skia_skresources_capi_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1115`、`covered=2187`、`partial=15`、`no_public_methods_found=104`
+- `modules/skresources`: `covered 15`、`missing 2`、`no_public_methods_found 2`
+- `public-api-skottie-sksg-resources-missing-triage.csv`: covered 行を削除し、残 `159` 行。内訳は `real_gap 80`、`na 53`、`false_positive 26`
+- skresources の残件は `ExternalTrackAsset::seek` と `ResourceProvider::loadAudioAsset`。どちらも audio track callback/subclass surface なので、後続 callback provider batch まで残す。
+
+### Phase 5 skottie builder / SlotManager progress 2026-05-15
+
+`SlotManager` は直接 construct しても実用にならず、`Animation::Builder::make()` 後の `Builder::getSlotManager()` が公開経路であるため、builder wrapper と slot manager value subset を同じ batch で追加した。
+
+追加済み:
+
+- `Skottie_AnimationBuilder_new`
+- `Skottie_AnimationBuilder_delete`
+- `Skottie_AnimationBuilder_setResourceProvider`
+- `Skottie_AnimationBuilder_make`
+- `Skottie_AnimationBuilder_makeFromFile`
+- `Skottie_AnimationBuilder_getSlotManager`
+- `SlotManager_ref` / `unref` / `release`
+- `SlotManager_setColorSlot` / `getColorSlot`
+- `SlotManager_setScalarSlot` / `getScalarSlot`
+- `SlotManager_setVec2Slot` / `getVec2Slot`
+- `SlotManager_setImageSlot` / `getImageSlot`
+- `SlotManager_getSlotInfo`
+- `SlotInfo_*` count / id copy helpers
+
+設計メモ:
+
+- `AnimationBuilder` は heap-owned value wrapper とし、`Skottie_AnimationBuilder_delete` で破棄する。
+- `AnimationBuilder_setResourceProvider` は skresources provider を borrow して `sk_ref_sp` で保持する。
+- `AnimationBuilder_getSlotManager` は `sk_sp` を copy して release し、caller-owned ref を返す。
+- `SlotManager` は SkRefCnt 派生の opaque pointer とし、caller-owned ref は `SlotManager_release` で破棄する。
+- `SlotManager_getVec2Slot` は caller-owned `sk_v2_t` handle を返す。
+- `SlotManager_getImageSlot` は caller-owned `ImageAsset` ref を返し、`ImageAsset_release` で破棄する。
+- `SlotInfo_*Id` は owned `SkString` copy を返し、`SkString_delete` で破棄する。
+- `SlotManager` の直接 constructor は internal `SceneGraphRevalidator` を必要とするため C ABI では直接公開せず、`AnimationBuilder_getSlotManager` を取得経路にする。
+- `setTextSlot` / `getTextSlot` は `TextPropertyValue` の C ABI wrapper 設計が必要なため、次の focused batch で扱う。
+
+検証:
+
+- `cmake --build skia/cmake-build-stability-skottie-tests --target test_skottie_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skottie-tests -R c_skia_skottie_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1106`、`covered=2196`、`partial=15`、`no_public_methods_found=104`
+- `modules/skottie`: `covered 22`、`partial 1`、`missing 26`、`no_public_methods_found 1`
+- `public-api-skottie-sksg-resources-missing-triage.csv`: covered 行を削除し、残 `150` 行。内訳は `real_gap 70`、`na 54`、`false_positive 26`
+- skottie の残 `real_gap` は `setTextSlot` / `getTextSlot`、TextShaper `Shape` overload、template expression evaluator、skresources audio provider である。次に進める場合は `TextPropertyValue` の value struct 設計または sksg の graph ownership 設計を先に行う。
+
+### Phase 5 skottie TextPropertyValue / text slot progress 2026-05-15
+
+`TextPropertyValue` は `SkString`、`sk_sp<SkTypeface>`、`GlyphDecorator` を含むため、C ABI では raw struct ではなく opaque な heap-owned wrapper として追加した。`GlyphDecorator` の新規 callback 注入は callback/observer batch へ残し、今回の wrapper は既存値のコピーと C 側から扱いやすい scalar/string/color/typeface fields の set/get に限定する。
+
+追加済み:
+
+- `TextPropertyValue_new`
+- `TextPropertyValue_newCopy`
+- `TextPropertyValue_delete`
+- `TextPropertyValue_equals` / `notEquals`
+- `TextPropertyValue_setTypeface` / `getTypeface`
+- `TextPropertyValue_setText` / `getText`
+- `TextPropertyValue_setTextSize` / `getTextSize`
+- `TextPropertyValue_setMinTextSize` / `getMinTextSize`
+- `TextPropertyValue_setMaxTextSize` / `getMaxTextSize`
+- `TextPropertyValue_setStrokeWidth` / `getStrokeWidth`
+- `TextPropertyValue_setLineHeight` / `getLineHeight`
+- `TextPropertyValue_setLineShift` / `getLineShift`
+- `TextPropertyValue_setAscent` / `getAscent`
+- `TextPropertyValue_setMaxLines` / `getMaxLines`
+- `TextPropertyValue_setHAlign` / `getHAlign`
+- `TextPropertyValue_setVAlign` / `getVAlign`
+- `TextPropertyValue_setResizePolicy` / `getResizePolicy`
+- `TextPropertyValue_setLinebreakPolicy` / `getLinebreakPolicy`
+- `TextPropertyValue_setDirection` / `getDirection`
+- `TextPropertyValue_setCapitalization` / `getCapitalization`
+- `TextPropertyValue_setBox` / `getBox`
+- `TextPropertyValue_setFillColor` / `getFillColor`
+- `TextPropertyValue_setStrokeColor` / `getStrokeColor`
+- `TextPropertyValue_setPaintOrder` / `getPaintOrder`
+- `TextPropertyValue_setStrokeJoin` / `getStrokeJoin`
+- `TextPropertyValue_setHasFill` / `hasFill`
+- `TextPropertyValue_setHasStroke` / `hasStroke`
+- `TextPropertyValue_setLocale` / `getLocale`
+- `SlotManager_setTextSlot`
+- `SlotManager_getTextSlot`
+
+設計メモ:
+
+- `TextPropertyValue_newCopy` と `SlotManager_getTextSlot` は caller-owned wrapper を返し、`TextPropertyValue_delete` で破棄する。
+- `TextPropertyValue_getText` / `getLocale` は owned `SkString` copy を返し、`SkString_delete` で破棄する。
+- `TextPropertyValue_setTypeface` は `sk_typeface_t` handle を borrow して `sk_sp` copy を保持する。
+- `TextPropertyValue_getTypeface` は owned `sk_typeface_t` handle を返し、`static_sk_typeface_delete` で破棄する。
+- enum fields は Skia の enum ordinal を `int32_t` として受け渡す。定数名の C enum 化は別 batch で追加可能だが、slot set/get の実用には必須ではない。
+- `GlyphDecorator` は callback lifetime と draw-time canvas/thread の設計が必要なため、この batch では C 側 setter を追加しない。
+
+検証:
+
+- `cmake --build skia/cmake-build-stability-skottie-tests --target test_skottie_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skottie-tests -R c_skia_skottie_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1102`、`covered=2200`、`partial=15`、`no_public_methods_found=104`
+- `modules/skottie`: `covered 26`、`partial 1`、`missing 22`、`no_public_methods_found 1`
+- `public-api-skottie-sksg-resources-missing-triage.csv`: covered 行を削除し、残 `146` 行。内訳は `real_gap 68`、`na 54`、`false_positive 24`
+- skottie の残 `real_gap` は TextShaper `Shape` overload と template expression evaluator に絞られた。skresources 側の audio provider は callback provider batch、sksg 側は graph ownership 設計後に扱う。
+
 Skottie:
 
 - 既存 `Skottie_Animation_*` は基本 API を提供している。
