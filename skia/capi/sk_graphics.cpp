@@ -6,6 +6,47 @@
 
 #include "include/core/SkGraphics.h"
 
+#include <memory>
+#include <mutex>
+
+#include "../handles/static_sk_data-internal.h"
+#include "../handles/static_sk_image_generator-internal.h"
+
+namespace {
+
+struct ImageGeneratorFactoryContext {
+    reskia_image_generator_from_encoded_data_factory_t callback = nullptr;
+    void *user_data = nullptr;
+    reskia_callback_release_proc_t release_proc = nullptr;
+
+    ~ImageGeneratorFactoryContext() {
+        if (release_proc != nullptr) {
+            release_proc(user_data);
+        }
+    }
+};
+
+std::mutex g_image_generator_factory_mutex;
+std::shared_ptr<const ImageGeneratorFactoryContext> g_image_generator_factory_context;
+
+std::unique_ptr<SkImageGenerator> reskia_image_generator_from_encoded_data_factory(sk_sp<SkData> data) {
+    std::shared_ptr<const ImageGeneratorFactoryContext> context;
+    {
+        std::lock_guard<std::mutex> lock(g_image_generator_factory_mutex);
+        context = g_image_generator_factory_context;
+    }
+    if (!context || context->callback == nullptr) {
+        return nullptr;
+    }
+
+    const_sk_data_t data_handle = static_const_sk_data_make(std::move(data));
+    sk_image_generator_t generator_handle = context->callback(data_handle, context->user_data);
+    static_const_sk_data_delete(data_handle);
+    return static_sk_image_generator_take_entity(generator_handle);
+}
+
+} // namespace
+
 extern "C" {
 
 void SkGraphics_delete(reskia_graphics_t *graphics) {
@@ -87,8 +128,29 @@ void SkGraphics_PurgeAllCaches() {
     SkGraphics::PurgeAllCaches();
 }
 
-void * SkGraphics_SetImageGeneratorFromEncodedDataFactory(SkGraphics::ImageGeneratorFromEncodedDataFactory factory) {
-    return reinterpret_cast<SkGraphics::ImageGeneratorFromEncodedDataFactory *>(SkGraphics::SetImageGeneratorFromEncodedDataFactory(factory));
+bool SkGraphics_SetImageGeneratorFromEncodedDataFactory(
+        reskia_image_generator_from_encoded_data_factory_t callback,
+        void *user_data,
+        reskia_callback_release_proc_t release_proc) {
+    if (callback == nullptr) {
+        return false;
+    }
+
+    auto next_context = std::make_shared<ImageGeneratorFactoryContext>();
+    next_context->callback = callback;
+    next_context->user_data = user_data;
+    next_context->release_proc = release_proc;
+
+    std::shared_ptr<const ImageGeneratorFactoryContext> previous_context;
+    {
+        std::lock_guard<std::mutex> lock(g_image_generator_factory_mutex);
+        previous_context = std::move(g_image_generator_factory_context);
+        g_image_generator_factory_context = std::move(next_context);
+    }
+
+    SkGraphics::SetImageGeneratorFromEncodedDataFactory(
+            reskia_image_generator_from_encoded_data_factory);
+    return true;
 }
 
 SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory) {

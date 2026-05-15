@@ -2,7 +2,10 @@
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkRect.h"
+#include "include/core/SkString.h"
 #include "modules/skottie/include/Skottie.h"
+
+#include "../handles/static_sk_size_t-internal.h"
 
 namespace {
 
@@ -104,6 +107,34 @@ double Skottie_Animation_fps(const reskia_skottie_animation_t *animation) {
         return 0.0;
     }
     return to_animation(animation)->fps();
+}
+
+double Skottie_Animation_inPoint(const reskia_skottie_animation_t *animation) {
+    if (animation == nullptr) {
+        return 0.0;
+    }
+    return to_animation(animation)->inPoint();
+}
+
+double Skottie_Animation_outPoint(const reskia_skottie_animation_t *animation) {
+    if (animation == nullptr) {
+        return 0.0;
+    }
+    return to_animation(animation)->outPoint();
+}
+
+reskia_string_t *Skottie_Animation_version(const reskia_skottie_animation_t *animation) {
+    if (animation == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_string_t *>(new SkString(to_animation(animation)->version()));
+}
+
+sk_size_t Skottie_Animation_size(const reskia_skottie_animation_t *animation) {
+    if (animation == nullptr) {
+        return 0;
+    }
+    return static_sk_size_make(to_animation(animation)->size());
 }
 
 float Skottie_Animation_width(const reskia_skottie_animation_t *animation) {

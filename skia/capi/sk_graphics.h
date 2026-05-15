@@ -7,6 +7,10 @@
 
 #include <stddef.h>
 
+#include "reskia_callback.h"
+#include "../handles/static_sk_data.h"
+#include "../handles/static_sk_image_generator.h"
+
 #ifdef __cplusplus
 #include "include/core/SkGraphics.h"
 extern "C" {
@@ -14,6 +18,10 @@ extern "C" {
 
 typedef struct reskia_graphics_t reskia_graphics_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
+
+typedef sk_image_generator_t (*reskia_image_generator_from_encoded_data_factory_t)(
+        const_sk_data_t encoded_data,
+        void *user_data);
 
 void SkGraphics_delete(reskia_graphics_t *graphics); // (SkGraphics *graphics)
 
@@ -37,8 +45,20 @@ size_t SkGraphics_SetResourceCacheSingleAllocationByteLimit(size_t newLimit); //
 void SkGraphics_DumpMemoryStatistics(reskia_trace_memory_dump_t *dump); // NULL dump is no-op.
 void SkGraphics_PurgeAllCaches(); // Process-wide cache purge.
 
-// TODO
-//void * SkGraphics_SetImageGeneratorFromEncodedDataFactory(void * factory); // (SkGraphics::ImageGeneratorFromEncodedDataFactory factory) -> SkGraphics::ImageGeneratorFromEncodedDataFactory
+/**
+ * Installs a process-wide image-generator factory bridge.
+ *
+ * callback must remain valid for process lifetime or until replaced by another call.
+ * user_data is retained by Reskia after a successful call. release_proc, when non-NULL,
+ * is called exactly once when this registration is replaced and no in-flight callback is using it.
+ *
+ * encoded_data passed to callback is a borrowed const SkData handle, valid only during callback.
+ * callback returns a transferred sk_image_generator_t handle, or 0 to fall back to Skia default decoding.
+ *
+ * Skia does not provide a full deregistration API for this hook; pass a callback that returns 0
+ * when custom generation should be disabled while keeping fallback decoding.
+ */
+bool SkGraphics_SetImageGeneratorFromEncodedDataFactory(reskia_image_generator_from_encoded_data_factory_t callback, void *user_data, reskia_callback_release_proc_t release_proc);
 #ifdef __cplusplus
 SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_SetOpenTypeSVGDecoderFactory(SkGraphics::OpenTypeSVGDecoderFactory factory); // (SkGraphics::OpenTypeSVGDecoderFactory factory) -> SkGraphics::OpenTypeSVGDecoderFactory
 SkGraphics::OpenTypeSVGDecoderFactory SkGraphics_GetOpenTypeSVGDecoderFactory(); // () -> SkGraphics::OpenTypeSVGDecoderFactory

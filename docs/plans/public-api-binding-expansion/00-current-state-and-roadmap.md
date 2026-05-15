@@ -569,11 +569,54 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 
 目的: 既存 minimal bridge を実用 API に拡張する。
 
+開始: 2026-05-15 09:28:34 JST
+
+実行順:
+
+1. callback / provider を伴わない `Skottie_Animation` の残 accessor を先に追加する。
+2. `Phase 5A: Callback / Resource Provider Foundation` で callback context、release proc、global registration、provider bridge の共通規約を確定する。
+3. Phase 5A の規約に沿って、`SlotManager`、skresources provider、skottie property observer / resource provider をまとめて追加する。
+4. sksg は SceneGraph node ownership と invalidation model を決めてから、単純 node factory と render/revalidate helper を小さく追加する。
+
+### Phase 5 progress 2026-05-15
+
+callback / provider 設計を待たずに安全に追加できる `skottie::Animation` の simple accessor から着手した。
+
+追加済み:
+
+- `Skottie_Animation_inPoint`
+- `Skottie_Animation_outPoint`
+- `Skottie_Animation_version`
+- `Skottie_Animation_size`
+
+設計メモ:
+
+- `version()` は `SkString` の owned copy を返し、caller は既存 `SkString_delete` で破棄する。
+- `size()` は `SkSize` の owned handle を返し、caller は `static_sk_size_delete` で破棄する。
+- `NULL` 入力は既存 `Skottie_Animation_duration` / `fps` と同じく、scalar は `0`、owned object は `NULL` を返す。
+- `SlotManager`、resource provider、property observer、expression evaluator、text shaper は callback / provider ownership と resource lifetime に触れるため Phase 5A 後に扱う。
+
+検証:
+
+- `cmake -S skia -B skia/cmake-build-stability-skottie-tests -DRESKIA_DEPS_MODE=source -DRESKIA_ENABLE_SKOTTIE=ON -DRESKIA_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug`
+- `cmake --build skia/cmake-build-stability-skottie-tests --target test_skottie_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-stability-skottie-tests -R c_skia_skottie_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1131`、`covered=2171`、`partial=15`、`no_public_methods_found=104`
+- `modules/skottie`: `covered 13`、`partial 1`、`missing 35`、`no_public_methods_found 1`
+- `modules/skresources`: `missing 17`、`no_public_methods_found 2`
+- `modules/sksg`: `covered 2`、`partial 1`、`missing 122`、`no_public_methods_found 4`
+- `public-api-skottie-sksg-resources-missing-triage.csv`: covered 行を削除し、残 `174` 行。内訳は `real_gap 95`、`na 53`、`false_positive 26`
+
 ## Phase 5A: Callback / Resource Provider Foundation
 
 目的: Phase 1 で残した callback/global registration と、optional module の provider / observer callback を同じ C ABI 規約で実装する。
 
-実行位置: Phase 3 の SVG DOM 最小公開後、Phase 5 の skottie/skresources/sksg 拡張に入る前に行う。Phase 4 の paragraph/unicode/shaper は依存が重いため、Phase 5A と並行または前後してよいが、callback/provider API を追加する場合は Phase 5A の規約を先に適用する。
+実行位置: Phase 3 の SVG DOM 最小公開後、Phase 5 の simple accessor batch の次に行う。Phase 4 の paragraph/unicode/shaper は依存が重いため、Phase 5A と並行または前後してよいが、callback/provider API を追加する場合は Phase 5A の規約を先に適用する。
 
 対象:
 
@@ -597,6 +640,38 @@ CMake registration は `APPLE AND TARGET svg` に限定した。これは `RESKI
 - callback failure path を smoke で検証する。
 - registration replacement の旧 context release を smoke で検証する。
 - SkGraphics、SkTypeface、skresources/skottie provider の説明文と failure mode が同じ語彙で揃っている。
+
+### Phase 5A progress 2026-05-15
+
+callback / global registration foundation の最初の concrete API として、`SkGraphics::SetImageGeneratorFromEncodedDataFactory` を C ABI に公開した。
+
+追加済み:
+
+- `reskia_callback_release_proc_t`
+- `reskia_image_generator_from_encoded_data_factory_t`
+- `SkGraphics_SetImageGeneratorFromEncodedDataFactory`
+
+設計メモ:
+
+- callback context は Reskia 側で retained として保持し、登録置換時に旧 context の `release_proc` を一度だけ呼ぶ。
+- callback 実行中の context は `shared_ptr` で保持し、置換が同時に起きても callback 終了まで生存する。
+- encoded data は callback 中だけ有効な borrowed `const_sk_data_t` として渡す。
+- callback が返す `sk_image_generator_t` は transferred handle として consume する。
+- callback が `0` を返した場合は Skia default decoder への fallback として扱う。
+- Skia 側に完全 deregistration API がないため、custom generator を止める場合は `0` を返す callback で置換する。
+
+検証:
+
+- `cmake --build skia/cmake-build-codex-phase1-tests --target test_enum_capabilities_graphics_invalid_input_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase1-tests -R c_skia_enum_capabilities_graphics_invalid_input_smoke --output-on-failure`
+- `cmake --build skia/cmake-build-codex-project-survey-prebuilt -j 8`
+- `python3 scripts/generate_public_api_coverage.py`
+
+台帳更新:
+
+- `public-api-coverage-matrix.csv`: `missing=1130`、`covered=2172`、`partial=15`、`no_public_methods_found=104`
+- `public-api-core-effects-missing-triage.csv`: covered 行を削除し、残 `35` 行。内訳は `real_gap 1`、`na 14`、`false_positive 20`
+- core/effects の残 `real_gap` は `SkTypeface::Register` のみ。
 
 Skottie:
 

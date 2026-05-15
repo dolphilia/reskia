@@ -1,7 +1,10 @@
 #include "capi/sk_alpha_type.h"
 #include "capi/sk_blend_mode.h"
 #include "capi/sk_capabilities.h"
+#include "capi/sk_data.h"
 #include "capi/sk_graphics.h"
+#include "capi/sk_images.h"
+#include "handles/static_sk_data.h"
 #include "handles/static_sk_capabilities.h"
 #include "include/core/SkBlendMode.h"
 
@@ -9,12 +12,38 @@
 
 namespace {
 
+struct GraphicsFactoryContext {
+    int *callback_count;
+    int *release_count;
+    const void **last_data_ptr;
+};
+
 bool check(bool condition, const char *message) {
     if (!condition) {
         std::fprintf(stderr, "[enum-capabilities-graphics-invalid-input-smoke] FAIL: %s\n", message);
         return false;
     }
     return true;
+}
+
+sk_image_generator_t null_image_generator_factory(const_sk_data_t encoded_data, void *user_data) {
+    auto *context = static_cast<GraphicsFactoryContext *>(user_data);
+    if (context != nullptr) {
+        if (context->callback_count != nullptr) {
+            ++*context->callback_count;
+        }
+        if (context->last_data_ptr != nullptr) {
+            *context->last_data_ptr = static_const_sk_data_get_ptr(encoded_data);
+        }
+    }
+    return 0;
+}
+
+void release_graphics_factory_context(void *user_data) {
+    auto *context = static_cast<GraphicsFactoryContext *>(user_data);
+    if (context != nullptr && context->release_count != nullptr) {
+        ++*context->release_count;
+    }
 }
 
 }  // namespace
@@ -75,6 +104,52 @@ int main() {
     SkGraphics_PurgePinnedFontCache();
     SkGraphics_PurgeResourceCache();
     SkGraphics_PurgeAllCaches();
+
+    int first_callback_count = 0;
+    int first_release_count = 0;
+    const void *first_data_ptr = nullptr;
+    GraphicsFactoryContext first_context{&first_callback_count, &first_release_count, &first_data_ptr};
+    ok &= check(SkGraphics_SetImageGeneratorFromEncodedDataFactory(
+                        null_image_generator_factory,
+                        &first_context,
+                        release_graphics_factory_context),
+                "SkGraphics image generator factory install");
+    const uint8_t invalid_encoded[] = {0x52, 0x53, 0x4b, 0x00};
+    sk_data_t invalid_data = SkData_MakeWithCopy(invalid_encoded, sizeof(invalid_encoded));
+    sk_image_t invalid_image = SkImages_DeferredFromEncodedData(invalid_data);
+    ok &= check(invalid_image == 0, "SkGraphics image generator factory null fallback result");
+    ok &= check(first_callback_count == 1, "SkGraphics image generator factory callback called");
+    ok &= check(first_data_ptr != nullptr, "SkGraphics image generator factory borrowed data");
+    ok &= check(first_release_count == 0, "SkGraphics image generator factory retained context before replace");
+    static_sk_data_delete(invalid_data);
+
+    int second_callback_count = 0;
+    int second_release_count = 0;
+    const void *second_data_ptr = nullptr;
+    GraphicsFactoryContext second_context{&second_callback_count, &second_release_count, &second_data_ptr};
+    ok &= check(SkGraphics_SetImageGeneratorFromEncodedDataFactory(
+                        null_image_generator_factory,
+                        &second_context,
+                        release_graphics_factory_context),
+                "SkGraphics image generator factory replace");
+    ok &= check(first_release_count == 1, "SkGraphics image generator factory replaced context released once");
+    invalid_data = SkData_MakeWithCopy(invalid_encoded, sizeof(invalid_encoded));
+    invalid_image = SkImages_DeferredFromEncodedData(invalid_data);
+    ok &= check(invalid_image == 0, "SkGraphics image generator factory second null fallback result");
+    ok &= check(second_callback_count == 1, "SkGraphics image generator factory replacement callback called");
+    ok &= check(second_data_ptr != nullptr, "SkGraphics image generator factory replacement borrowed data");
+    ok &= check(second_release_count == 0, "SkGraphics image generator factory replacement retained");
+    static_sk_data_delete(invalid_data);
+
+    ok &= check(!SkGraphics_SetImageGeneratorFromEncodedDataFactory(nullptr, nullptr, nullptr),
+                "SkGraphics image generator factory rejects null callback");
+    ok &= check(second_release_count == 0, "SkGraphics image generator factory null callback does not replace");
+    ok &= check(SkGraphics_SetImageGeneratorFromEncodedDataFactory(
+                        null_image_generator_factory,
+                        nullptr,
+                        nullptr),
+                "SkGraphics image generator factory final no-op replacement");
+    ok &= check(second_release_count == 1, "SkGraphics image generator factory replacement context released once");
 
     return ok ? 0 : 1;
 }

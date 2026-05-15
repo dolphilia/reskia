@@ -5,9 +5,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../handles/static_sk_size_t.h"
+
 typedef struct reskia_canvas_t reskia_canvas_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_skottie_animation_t reskia_skottie_animation_t;
+typedef struct reskia_string_t reskia_string_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +30,11 @@ void Skottie_Animation_renderWithFlags(reskia_skottie_animation_t *animation, re
 
 double Skottie_Animation_duration(const reskia_skottie_animation_t *animation);
 double Skottie_Animation_fps(const reskia_skottie_animation_t *animation);
+double Skottie_Animation_inPoint(const reskia_skottie_animation_t *animation);
+double Skottie_Animation_outPoint(const reskia_skottie_animation_t *animation);
+reskia_string_t *Skottie_Animation_version(const reskia_skottie_animation_t *animation);
+// Returns an owned SkSize handle. Release it with static_sk_size_delete().
+sk_size_t Skottie_Animation_size(const reskia_skottie_animation_t *animation);
 float Skottie_Animation_width(const reskia_skottie_animation_t *animation);
 float Skottie_Animation_height(const reskia_skottie_animation_t *animation);
 

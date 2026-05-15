@@ -3,7 +3,10 @@
 
 #include "capi/sk_canvas.h"
 #include "capi/sk_graphics.h"
+#include "capi/sk_size.h"
 #include "capi/sk_skottie.h"
+#include "capi/sk_string.h"
+#include "handles/static_sk_size_t.h"
 
 namespace {
 
@@ -37,6 +40,8 @@ bool smoke_skottie_minimal() {
 
     const double duration = Skottie_Animation_duration(animation);
     const double fps = Skottie_Animation_fps(animation);
+    const double in_point = Skottie_Animation_inPoint(animation);
+    const double out_point = Skottie_Animation_outPoint(animation);
     const float width = Skottie_Animation_width(animation);
     const float height = Skottie_Animation_height(animation);
 
@@ -52,6 +57,25 @@ bool smoke_skottie_minimal() {
         Skottie_Animation_release(animation);
         return false;
     }
+    if (!check(in_point == 0.0 && out_point == 60.0, "Skottie_Animation in/out points")) {
+        Skottie_Animation_release(animation);
+        return false;
+    }
+    reskia_string_t *version = Skottie_Animation_version(animation);
+    if (!check(version != nullptr && SkString_equalsText(version, "5.7.4"), "Skottie_Animation_version")) {
+        SkString_delete(version);
+        Skottie_Animation_release(animation);
+        return false;
+    }
+    SkString_delete(version);
+    sk_size_t size_handle = Skottie_Animation_size(animation);
+    auto *size = reinterpret_cast<reskia_size_t *>(static_sk_size_get_ptr(size_handle));
+    if (!check(size != nullptr && SkSize_width(size) == 64.0f && SkSize_height(size) == 64.0f, "Skottie_Animation_size")) {
+        static_sk_size_delete(size_handle);
+        Skottie_Animation_release(animation);
+        return false;
+    }
+    static_sk_size_delete(size_handle);
 
     if (!check(Skottie_Animation_seek(animation, 0.0f), "Skottie_Animation_seek(0.0)")) {
         Skottie_Animation_release(animation);
