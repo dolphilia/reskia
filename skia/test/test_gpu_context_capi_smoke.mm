@@ -156,8 +156,14 @@ bool smoke_context_create_destroy() {
                GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, 4, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColor(nullptr, 1, 1, nullptr, nullptr, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, 4, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureFromPixmaps(nullptr, nullptr, 1, 0, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureFromPixmap(nullptr, nullptr, 0, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureFromPixmapsTopLeft(nullptr, nullptr, 1, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureFromPixmapTopLeft(nullptr, nullptr, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createCompressedBackendTexture(nullptr, 1, 1, nullptr, nullptr, false, false) == nullptr &&
                GrDirectContext_createCompressedBackendTextureWithCompressionType(nullptr, 1, 1, 0, nullptr, false, false) == nullptr &&
+               GrDirectContext_createCompressedBackendTextureWithData(nullptr, 1, 1, nullptr, nullptr, 0, false, false) == nullptr &&
+               GrDirectContext_createCompressedBackendTextureWithCompressionTypeData(nullptr, 1, 1, 0, nullptr, 0, false, false) == nullptr &&
                GrContextThreadSafeProxy_createCharacterization(nullptr, 0, nullptr, nullptr, 0, 0, nullptr, false, false, false, false, false, false) == nullptr,
                "GrDirectContext null input helpers")) {
         return false;

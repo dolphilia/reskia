@@ -18,6 +18,7 @@ typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characteri
 typedef struct reskia_graphite_context_t reskia_graphite_context_t;
 typedef struct reskia_graphite_recorder_t reskia_graphite_recorder_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
+typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
@@ -74,8 +75,14 @@ reskia_gr_backend_texture_t *GrDirectContext_createBackendTexture(reskia_direct_
 reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorType(reskia_direct_context_t *ctx, int width, int height, int color_type, bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColor(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorTypeColor(reskia_direct_context_t *ctx, int width, int height, int color_type, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmaps(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int num_levels, int surface_origin, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmap(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int surface_origin, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmapsTopLeft(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int num_levels, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmapTopLeft(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool is_protected); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionType(reskia_direct_context_t *ctx, int width, int height, int compression_type, const float color[4], bool mipmapped, bool is_protected); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithData(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const void *data, size_t data_size, bool mipmapped, bool is_protected); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionTypeData(reskia_direct_context_t *ctx, int width, int height, int compression_type, const void *data, size_t data_size, bool mipmapped, bool is_protected); // owned; invalid input returns NULL
 void GrDirectContext_deleteBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture); // NULL input is no-op
 
 bool GrRecordingContext_abandoned(reskia_direct_context_t *ctx); // NULL input returns true

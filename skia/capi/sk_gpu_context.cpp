@@ -6,6 +6,7 @@
 
 #include "include/core/SkColor.h"
 #include "include/core/SkImageInfo.h"
+#include "include/core/SkPixmap.h"
 #include "include/core/SkString.h"
 #include "include/core/SkSurfaceProps.h"
 #include "include/gpu/GrDirectContext.h"
@@ -72,6 +73,10 @@ const GrBackendTexture *as_backend_texture(const reskia_gr_backend_texture_t *te
     return reinterpret_cast<const GrBackendTexture *>(texture);
 }
 
+const SkPixmap *as_pixmap(const reskia_pixmap_t *pixmap) {
+    return reinterpret_cast<const SkPixmap *>(pixmap);
+}
+
 const SkImageInfo *as_image_info(const reskia_image_info_t *image_info) {
     return reinterpret_cast<const SkImageInfo *>(image_info);
 }
@@ -111,6 +116,15 @@ GrRenderable to_renderable(bool renderable) {
 
 GrProtected to_protected(bool is_protected) {
     return is_protected ? GrProtected::kYes : GrProtected::kNo;
+}
+
+bool is_valid_surface_origin(int surface_origin) {
+    return surface_origin == static_cast<int>(kTopLeft_GrSurfaceOrigin) ||
+           surface_origin == static_cast<int>(kBottomLeft_GrSurfaceOrigin);
+}
+
+GrSurfaceOrigin to_surface_origin(int surface_origin) {
+    return static_cast<GrSurfaceOrigin>(surface_origin);
 }
 
 SkColor4f to_color4f(const float color[4]) {
@@ -600,6 +614,78 @@ reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorTypeCo
 #endif
 }
 
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmaps(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int num_levels, int surface_origin, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || src_data == nullptr || num_levels <= 0 || !is_valid_surface_origin(surface_origin)) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(as_pixmap(src_data), num_levels, to_surface_origin(surface_origin), to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) src_data;
+    (void) num_levels;
+    (void) surface_origin;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmap(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int surface_origin, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || src_data == nullptr || !is_valid_surface_origin(surface_origin)) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(*as_pixmap(src_data), to_surface_origin(surface_origin), to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) src_data;
+    (void) surface_origin;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmapsTopLeft(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, int num_levels, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || src_data == nullptr || num_levels <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(as_pixmap(src_data), num_levels, to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) src_data;
+    (void) num_levels;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureFromPixmapTopLeft(reskia_direct_context_t *ctx, const reskia_pixmap_t *src_data, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || src_data == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(*as_pixmap(src_data), to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) src_data;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool is_protected) {
 #if defined(SK_GANESH)
     if (ctx == nullptr || format == nullptr || width <= 0 || height <= 0) {
@@ -630,6 +716,44 @@ reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithC
     (void) height;
     (void) compression_type;
     (void) color;
+    (void) mipmapped;
+    (void) is_protected;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithData(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const void *data, size_t data_size, bool mipmapped, bool is_protected) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || format == nullptr || data == nullptr || data_size == 0 || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createCompressedBackendTexture(width, height, *as_backend_format(format), data, data_size, to_mipmapped(mipmapped), to_protected(is_protected), nullptr, nullptr)));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) format;
+    (void) data;
+    (void) data_size;
+    (void) mipmapped;
+    (void) is_protected;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionTypeData(reskia_direct_context_t *ctx, int width, int height, int compression_type, const void *data, size_t data_size, bool mipmapped, bool is_protected) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || data == nullptr || data_size == 0 || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createCompressedBackendTexture(width, height, static_cast<SkTextureCompressionType>(compression_type), data, data_size, to_mipmapped(mipmapped), to_protected(is_protected), nullptr, nullptr)));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) compression_type;
+    (void) data;
+    (void) data_size;
     (void) mipmapped;
     (void) is_protected;
     return nullptr;

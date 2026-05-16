@@ -483,3 +483,81 @@ Phase 10 backlog の `partial` 18 行を再分類し、coverage matrix の曖昧
 
 - `overcovered` 6 行: `GrDirectContext::createBackendTexture` / `createCompressedBackendTexture` の pixmap / raw data upload overload。
 - `deferred` 2 行: generic `SkSG::Scene::Make(RenderNode)`、`SkSVGNode::setAttribute(SkSVGValue)`。
+
+### Phase 10 SVG Value Attribute Progress 2026-05-16
+
+`SkSVGNode::setAttribute(SkSVGAttribute, const SkSVGValue&)` は、C ABI 用の owned `reskia_svg_value_t` holder を経由して公開した。`SkSVGWrapperValue` は stack-only なので、holder は color / length / number / string の基本値を保持し、呼び出し時に Skia の wrapper value へ変換する。
+
+実施内容:
+
+- `SkSVGValue_newColor` / `SkSVGValue_newLength` / `SkSVGValue_newNumber` / `SkSVGValue_newString` / `SkSVGValue_delete` / `SkSVGValue_type` を追加。
+- `SkSVGNode_setAttribute` を追加。
+- SVG DOM smoke test に value lifecycle と typed attribute set path を追加。
+- `SkSVGNode::setAttribute(SkSVGValue)` と `SkSVGValue::type` を Phase 7 residual index / Phase 7 routing index / SVG triage から削除。
+- `SkSVGNode::setAttribute(SkSVGValue)` を Phase 10 backlog から削除。
+
+更新後 snapshot:
+
+| status | count |
+| --- | ---: |
+| `covered` | 2406 |
+| `missing` | 719 |
+| `false_positive` | 162 |
+| `split_covered` | 13 |
+| `na` | 10 |
+| `overcovered` | 6 |
+| `deferred` | 1 |
+| `partial` | 0 |
+| `no_public_methods_found` | 104 |
+
+台帳:
+
+| file | rows | note |
+| --- | ---: | --- |
+| `public-api-phase-10-generator-polish-backlog.csv` | 192 | `false_positive` / `split_covered` / `na` / `overcovered` / `deferred` |
+| `public-api-phase-7-residual-index.csv` | 911 | matrix status 同期済み |
+| `public-api-phase-7-triage-routing-index.csv` | 860 | matrix status 同期済み |
+| `public-api-svg-missing-triage.csv` | 279 | `SkSVGNode::setAttribute(SkSVGValue)` / `SkSVGValue::type` covered rows 削除済み |
+
+残る Phase 10 実装・設計候補:
+
+- `overcovered` 6 行: `GrDirectContext::createBackendTexture` / `createCompressedBackendTexture` の pixmap / raw data upload overload。
+- `deferred` 1 行: generic `SkSG::Scene::Make(RenderNode)`。
+
+### Phase 10 GPU Upload / SkSG Scene Closeout 2026-05-16
+
+Phase 10 backlog の `overcovered` と `deferred` をすべて解消した。
+
+実施内容:
+
+- `GrDirectContext_createBackendTextureFromPixmaps` / `FromPixmap` / `FromPixmapsTopLeft` / `FromPixmapTopLeft` を追加。
+- `GrDirectContext_createCompressedBackendTextureWithData` / `WithCompressionTypeData` を追加。
+- `SkSG_RenderNode_MakeSimpleRect` と render node ref/unref/release を追加。
+- `SkSG_Scene_Make` を追加し、`SkSG::Scene::Make(sk_sp<RenderNode>)` に対応。
+- GPU context smoke test に upload overload の null input path を追加。
+- SkSG C API smoke test に generic Scene::Make path を追加。
+- Phase 10 backlog から `overcovered` / `deferred` 行を削除。
+
+更新後 snapshot:
+
+| status | count |
+| --- | ---: |
+| `covered` | 2413 |
+| `missing` | 719 |
+| `false_positive` | 162 |
+| `split_covered` | 13 |
+| `na` | 10 |
+| `overcovered` | 0 |
+| `deferred` | 0 |
+| `partial` | 0 |
+| `no_public_methods_found` | 104 |
+
+台帳:
+
+| file | rows | note |
+| --- | ---: | --- |
+| `public-api-phase-10-generator-polish-backlog.csv` | 185 | `false_positive` / `split_covered` / `na` のみ |
+| `public-api-phase-7-residual-index.csv` | 904 | matrix status 同期済み |
+| `public-api-phase-7-triage-routing-index.csv` | 853 | matrix status 同期済み |
+
+Phase 10 の coverage quality / overload polish / deferred small-gap cleanup は完了。残る `missing` 719 行は後続 phase の実装・分類対象として扱う。

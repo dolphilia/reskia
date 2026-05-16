@@ -65,6 +65,47 @@ bool smoke_svg_dom() {
         SkSVGDOM_release(dom);
         return false;
     }
+    SkSVGValue_delete(nullptr);
+    reskia_svg_value_t *width_value = SkSVGValue_newLength(24.0f, 1);
+    reskia_svg_value_t *opacity_value = SkSVGValue_newNumber(0.5f);
+    reskia_svg_value_t *text_value = SkSVGValue_newString("label");
+    reskia_svg_value_t *color_value = SkSVGValue_newColor(0xFF0000FFu);
+    if (!check(width_value != nullptr &&
+               opacity_value != nullptr &&
+               text_value != nullptr &&
+               color_value != nullptr &&
+               SkSVGValue_newString(nullptr) == nullptr &&
+               SkSVGValue_type(nullptr) == -1 &&
+               SkSVGValue_type(width_value) == 2 &&
+               SkSVGValue_type(opacity_value) == 3 &&
+               SkSVGValue_type(text_value) == 7 &&
+               SkSVGValue_type(color_value) == 0,
+               "SkSVGValue lifecycle")) {
+        SkSVGValue_delete(color_value);
+        SkSVGValue_delete(text_value);
+        SkSVGValue_delete(opacity_value);
+        SkSVGValue_delete(width_value);
+        SkSVGDOM_release(dom);
+        return false;
+    }
+    if (!check(!SkSVGNode_setAttribute(nullptr, 41, width_value), "SkSVGNode_setAttribute(null node)") ||
+        !check(!SkSVGNode_setAttribute(rect, -1, width_value), "SkSVGNode_setAttribute(invalid attr)") ||
+        !check(!SkSVGNode_setAttribute(rect, 41, nullptr), "SkSVGNode_setAttribute(null value)") ||
+        !check(SkSVGNode_setAttribute(rect, 41, width_value), "SkSVGNode_setAttribute(width length)") ||
+        !check(SkSVGNode_setAttribute(rect, 21, opacity_value), "SkSVGNode_setAttribute(opacity number)") ||
+        !check(SkSVGNode_setAttribute(rect, 20, text_value), "SkSVGNode_setAttribute(href string)") ||
+        !check(SkSVGNode_setAttribute(rect, 1, color_value), "SkSVGNode_setAttribute(color value)")) {
+        SkSVGValue_delete(color_value);
+        SkSVGValue_delete(text_value);
+        SkSVGValue_delete(opacity_value);
+        SkSVGValue_delete(width_value);
+        SkSVGDOM_release(dom);
+        return false;
+    }
+    SkSVGValue_delete(color_value);
+    SkSVGValue_delete(text_value);
+    SkSVGValue_delete(opacity_value);
+    SkSVGValue_delete(width_value);
     if (!check(!SkSVGNode_setAttributeString(nullptr, "fill", "blue"), "SkSVGNode_setAttributeString(null node)") ||
         !check(!SkSVGNode_setAttributeString(rect, nullptr, "blue"), "SkSVGNode_setAttributeString(null name)") ||
         !check(!SkSVGNode_setAttributeString(rect, "fill", nullptr), "SkSVGNode_setAttributeString(null value)") ||

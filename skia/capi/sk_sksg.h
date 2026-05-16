@@ -6,6 +6,7 @@
 #include "sk_color.h"
 
 typedef struct reskia_canvas_t reskia_canvas_t;
+typedef struct reskia_sksg_render_node_t reskia_sksg_render_node_t;
 typedef struct reskia_sksg_scene_t reskia_sksg_scene_t;
 
 #ifdef __cplusplus
@@ -13,6 +14,12 @@ extern "C" {
 #endif
 
 reskia_sksg_scene_t *SkSG_Scene_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color);
+reskia_sksg_scene_t *SkSG_Scene_Make(reskia_sksg_render_node_t *root);
+
+reskia_sksg_render_node_t *SkSG_RenderNode_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color);
+void SkSG_RenderNode_release(reskia_sksg_render_node_t *node);
+void SkSG_RenderNode_ref(reskia_sksg_render_node_t *node);
+void SkSG_RenderNode_unref(reskia_sksg_render_node_t *node);
 
 void SkSG_Scene_release(reskia_sksg_scene_t *scene);
 void SkSG_Scene_ref(reskia_sksg_scene_t *scene);

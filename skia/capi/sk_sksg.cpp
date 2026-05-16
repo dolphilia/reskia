@@ -23,6 +23,14 @@ public:
     std::unique_ptr<sksg::Scene> scene;
 };
 
+class ReskiaSkSGRenderNode final : public SkRefCnt {
+public:
+    explicit ReskiaSkSGRenderNode(sk_sp<sksg::RenderNode> node_in)
+            : node(std::move(node_in)) {}
+
+    sk_sp<sksg::RenderNode> node;
+};
+
 inline ReskiaSkSGScene *to_scene_holder(reskia_sksg_scene_t *scene) {
     return reinterpret_cast<ReskiaSkSGScene *>(scene);
 }
@@ -31,15 +39,18 @@ inline const ReskiaSkSGScene *to_scene_holder(const reskia_sksg_scene_t *scene) 
     return reinterpret_cast<const ReskiaSkSGScene *>(scene);
 }
 
-} // namespace
+inline ReskiaSkSGRenderNode *to_render_node_holder(reskia_sksg_render_node_t *node) {
+    return reinterpret_cast<ReskiaSkSGRenderNode *>(node);
+}
 
-extern "C" {
+inline const ReskiaSkSGRenderNode *to_render_node_holder(const reskia_sksg_render_node_t *node) {
+    return reinterpret_cast<const ReskiaSkSGRenderNode *>(node);
+}
 
-reskia_sksg_scene_t *SkSG_Scene_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color) {
+sk_sp<sksg::RenderNode> make_simple_rect_render_node(float x, float y, float width, float height, reskia_color_t color) {
     if (!(width > 0.0f) || !(height > 0.0f)) {
         return nullptr;
     }
-
     auto root = sksg::Group::Make();
     auto rect = sksg::Rect::Make(SkRect::MakeXYWH(x, y, width, height));
     auto paint = sksg::Color::Make(static_cast<SkColor>(color));
@@ -48,7 +59,15 @@ reskia_sksg_scene_t *SkSG_Scene_MakeSimpleRect(float x, float y, float width, fl
         return nullptr;
     }
     root->addChild(draw);
+    return root;
+}
 
+} // namespace
+
+extern "C" {
+
+reskia_sksg_scene_t *SkSG_Scene_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color) {
+    auto root = make_simple_rect_render_node(x, y, width, height, color);
     auto scene = sksg::Scene::Make(root);
     if (scene == nullptr) {
         return nullptr;
@@ -56,6 +75,48 @@ reskia_sksg_scene_t *SkSG_Scene_MakeSimpleRect(float x, float y, float width, fl
 
     auto holder = sk_make_sp<ReskiaSkSGScene>(std::move(scene));
     return reinterpret_cast<reskia_sksg_scene_t *>(holder.release());
+}
+
+reskia_sksg_scene_t *SkSG_Scene_Make(reskia_sksg_render_node_t *root) {
+    if (root == nullptr || to_render_node_holder(root)->node == nullptr) {
+        return nullptr;
+    }
+    auto scene = sksg::Scene::Make(to_render_node_holder(root)->node);
+    if (scene == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGScene>(std::move(scene));
+    return reinterpret_cast<reskia_sksg_scene_t *>(holder.release());
+}
+
+reskia_sksg_render_node_t *SkSG_RenderNode_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color) {
+    auto node = make_simple_rect_render_node(x, y, width, height, color);
+    if (node == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGRenderNode>(std::move(node));
+    return reinterpret_cast<reskia_sksg_render_node_t *>(holder.release());
+}
+
+void SkSG_RenderNode_release(reskia_sksg_render_node_t *node) {
+    if (node == nullptr) {
+        return;
+    }
+    to_render_node_holder(node)->unref();
+}
+
+void SkSG_RenderNode_ref(reskia_sksg_render_node_t *node) {
+    if (node == nullptr) {
+        return;
+    }
+    to_render_node_holder(node)->ref();
+}
+
+void SkSG_RenderNode_unref(reskia_sksg_render_node_t *node) {
+    if (node == nullptr) {
+        return;
+    }
+    to_render_node_holder(node)->unref();
 }
 
 void SkSG_Scene_release(reskia_sksg_scene_t *scene) {
