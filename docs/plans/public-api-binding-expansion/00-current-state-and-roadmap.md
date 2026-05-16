@@ -1707,6 +1707,23 @@ SkSG 側は `reskia_sksg_render_node_t` holder を追加し、generic `SkSG_Scen
 
 Phase 10 は、当初対象だった coverage quality / overload polish / deferred small-gap cleanup を完了した。残る `missing` 719 行は Phase 10 の generator polish ではなく、後続 phase の実装・分類対象として扱う。
 
+## Phase 11+: Post-Phase10 coverage expansion
+
+Phase 10 完了時点で `partial` / `overcovered` / `deferred` は 0 になった。一方で `missing` は 719 行残っており、これは generator polish ではなく、追加実装・callback/provider 設計・platform/internal `na` 整理の対象である。
+
+詳細計画は `08-post-phase10-coverage-expansion-plan-2026-05-16.md` に分離する。概要は以下。
+
+| phase | theme | primary target |
+| --- | --- | --- |
+| Phase 11 | GPU backend and context expansion | `include/gpu` 283 行 |
+| Phase 12 | SVG and SkSG graph expansion | `modules/svg` 191 行、`modules/sksg` 102 行 |
+| Phase 13 | Text stack expansion | paragraph / shaper / unicode / plaintext editor |
+| Phase 14 | Callback / provider / registration batch | codec/core/skresources/skottie callback and global registration |
+| Phase 15 | Platform/internal NA sweep | Android-only、D3D-only、priv/testing/debug、internal helper |
+| Phase 16 | Coverage audit and generator refresh | stale triage cleanup、status vocabulary、smoke matrix |
+
+推奨順は Phase 11A の GPU backend value wrappers、Phase 11D の GPU `na` sweep、Phase 13A の paragraph `P1` rows、Phase 12 の SkSG graph expansion、Phase 14 の callback/provider batch とする。
+
 ## 実装 batch の標準手順
 
 1. `date '+%Y-%m-%d %H:%M:%S %Z'` で作業開始時刻を記録する。

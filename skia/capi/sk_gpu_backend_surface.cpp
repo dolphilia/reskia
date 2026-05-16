@@ -5,9 +5,14 @@
 #include "sk_gpu_backend_surface.h"
 
 #if defined(SK_GANESH)
+#include "include/core/SkString.h"
+#include "include/gpu/GrBackendSemaphore.h"
 #include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/MutableTextureState.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #include "include/core/SkTextureCompressionType.h"
+
+#include "../handles/static_sk_i_size-internal.h"
 #endif
 
 #if defined(SK_METAL)
@@ -33,6 +38,22 @@ const GrBackendRenderTarget *as_render_target(const reskia_gr_backend_render_tar
     return reinterpret_cast<const GrBackendRenderTarget *>(render_target);
 }
 
+GrBackendSemaphore *as_semaphore(reskia_gr_backend_semaphore_t *semaphore) {
+    return reinterpret_cast<GrBackendSemaphore *>(semaphore);
+}
+
+const GrBackendSemaphore *as_semaphore(const reskia_gr_backend_semaphore_t *semaphore) {
+    return reinterpret_cast<const GrBackendSemaphore *>(semaphore);
+}
+
+skgpu::MutableTextureState *as_mutable_texture_state(reskia_skgpu_mutable_texture_state_t *state) {
+    return reinterpret_cast<skgpu::MutableTextureState *>(state);
+}
+
+const skgpu::MutableTextureState *as_mutable_texture_state(const reskia_skgpu_mutable_texture_state_t *state) {
+    return reinterpret_cast<const skgpu::MutableTextureState *>(state);
+}
+
 skgpu::Mipmapped to_mipmapped(reskia_skgpu_mipmapped_t mipmapped) {
     return mipmapped ? skgpu::Mipmapped::kYes : skgpu::Mipmapped::kNo;
 }
@@ -50,6 +71,21 @@ reskia_gpu_backend_api_t to_reskia_backend_api(GrBackendApi backend) {
         default:
             return RESKIA_GPU_BACKEND_API_UNKNOWN;
     }
+}
+
+reskia_gpu_backend_api_t to_reskia_backend_api(skgpu::BackendApi backend) {
+    switch (backend) {
+        case skgpu::BackendApi::kMetal:
+            return RESKIA_GPU_BACKEND_API_METAL;
+        case skgpu::BackendApi::kVulkan:
+            return RESKIA_GPU_BACKEND_API_VULKAN;
+        default:
+            return RESKIA_GPU_BACKEND_API_UNKNOWN;
+    }
+}
+
+reskia_skgpu_protected_t to_reskia_protected(skgpu::Protected is_protected) {
+    return is_protected == skgpu::Protected::kYes ? 1 : 0;
 }
 #endif
 
@@ -152,6 +188,37 @@ uint32_t GrBackendFormat_channelMask(const reskia_gr_backend_format_t *format) {
 #endif
 }
 
+bool GrBackendFormat_desc(const reskia_gr_backend_format_t *format, reskia_gr_color_format_desc_t *out_desc) {
+    if (out_desc != nullptr) {
+        *out_desc = {};
+    }
+#if defined(SK_GANESH)
+    if (format == nullptr || out_desc == nullptr || !as_format(format)->isValid()) {
+        return false;
+    }
+    GrColorFormatDesc desc = as_format(format)->desc();
+    out_desc->r_bits = desc.r();
+    out_desc->g_bits = desc.g();
+    out_desc->b_bits = desc.b();
+    out_desc->a_bits = desc.a();
+    out_desc->gray_bits = desc.gray();
+    out_desc->encoding = static_cast<int>(desc.encoding());
+    return true;
+#else
+    (void) format;
+    return false;
+#endif
+}
+
+int GrBackendFormat_asMtlFormat(const reskia_gr_backend_format_t *format) {
+#if defined(SK_GANESH) && defined(SK_METAL)
+    return format != nullptr ? static_cast<int>(as_format(format)->asMtlFormat()) : 0;
+#else
+    (void) format;
+    return 0;
+#endif
+}
+
 reskia_gr_color_type_t GrBackendFormat_asMockColorType(const reskia_gr_backend_format_t *format) {
 #if defined(SK_GANESH)
     return format != nullptr ? static_cast<reskia_gr_color_type_t>(as_format(format)->asMockColorType()) : 0;
@@ -197,6 +264,15 @@ bool GrBackendFormat_isValid(const reskia_gr_backend_format_t *format) {
 #endif
 }
 
+reskia_string_t *GrBackendFormat_toStr(const reskia_gr_backend_format_t *format) {
+#if defined(SK_GANESH) && (defined(SK_DEBUG) || defined(GR_TEST_UTILS))
+    return format != nullptr ? reinterpret_cast<reskia_string_t *>(new SkString(as_format(format)->toStr())) : nullptr;
+#else
+    (void) format;
+    return nullptr;
+#endif
+}
+
 reskia_gr_backend_texture_t *GrBackendTexture_new() {
 #if defined(SK_GANESH)
     return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture());
@@ -238,6 +314,15 @@ void GrBackendTexture_delete(reskia_gr_backend_texture_t *texture) {
     delete reinterpret_cast<GrBackendTexture *>(texture);
 #else
     (void) texture;
+#endif
+}
+
+sk_i_size_t GrBackendTexture_dimensions(const reskia_gr_backend_texture_t *texture) {
+#if defined(SK_GANESH)
+    return texture != nullptr ? static_sk_i_size_make(as_texture(texture)->dimensions()) : 0;
+#else
+    (void) texture;
+    return 0;
 #endif
 }
 
@@ -299,12 +384,79 @@ reskia_gr_texture_type_t GrBackendTexture_textureType(const reskia_gr_backend_te
 #endif
 }
 
+bool GrBackendTexture_getMtlTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mtl_texture_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GANESH) && defined(SK_METAL)
+    if (texture == nullptr || out_info == nullptr) {
+        return false;
+    }
+    GrMtlTextureInfo info;
+    if (!as_texture(texture)->getMtlTextureInfo(&info)) {
+        return false;
+    }
+    out_info->texture = const_cast<void *>(info.fTexture.get());
+    return true;
+#else
+    (void) texture;
+    return false;
+#endif
+}
+
 reskia_gr_backend_format_t *GrBackendTexture_getBackendFormat(const reskia_gr_backend_texture_t *texture) {
 #if defined(SK_GANESH)
     return texture != nullptr ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(as_texture(texture)->getBackendFormat())) : nullptr;
 #else
     (void) texture;
     return nullptr;
+#endif
+}
+
+bool GrBackendTexture_getMockTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mock_texture_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GANESH)
+    if (texture == nullptr || out_info == nullptr) {
+        return false;
+    }
+    GrMockTextureInfo info;
+    if (!as_texture(texture)->getMockTextureInfo(&info)) {
+        return false;
+    }
+    out_info->color_type = static_cast<reskia_gr_color_type_t>(info.colorType());
+    out_info->compression_type = static_cast<reskia_sk_texture_compression_type_t>(info.compressionType());
+    out_info->id = info.id();
+    out_info->is_protected = to_reskia_protected(info.getProtected());
+    return true;
+#else
+    (void) texture;
+    return false;
+#endif
+}
+
+reskia_string_t *GrBackendTexture_getLabel(const reskia_gr_backend_texture_t *texture) {
+#if defined(SK_GANESH)
+    if (texture == nullptr) {
+        return nullptr;
+    }
+    std::string_view label = as_texture(texture)->getLabel();
+    return reinterpret_cast<reskia_string_t *>(new SkString(label.data(), label.size()));
+#else
+    (void) texture;
+    return nullptr;
+#endif
+}
+
+void GrBackendTexture_setMutableState(reskia_gr_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    if (texture != nullptr && state != nullptr && as_mutable_texture_state(state)->isValid()) {
+        as_texture(texture)->setMutableState(*as_mutable_texture_state(state));
+    }
+#else
+    (void) texture;
+    (void) state;
 #endif
 }
 
@@ -398,6 +550,15 @@ void GrBackendRenderTarget_delete(reskia_gr_backend_render_target_t *render_targ
 #endif
 }
 
+sk_i_size_t GrBackendRenderTarget_dimensions(const reskia_gr_backend_render_target_t *render_target) {
+#if defined(SK_GANESH)
+    return render_target != nullptr ? static_sk_i_size_make(as_render_target(render_target)->dimensions()) : 0;
+#else
+    (void) render_target;
+    return 0;
+#endif
+}
+
 int GrBackendRenderTarget_width(const reskia_gr_backend_render_target_t *render_target) {
 #if defined(SK_GANESH)
     return render_target != nullptr ? as_render_target(render_target)->width() : 0;
@@ -452,12 +613,65 @@ bool GrBackendRenderTarget_isFramebufferOnly(const reskia_gr_backend_render_targ
 #endif
 }
 
+bool GrBackendRenderTarget_getMtlTextureInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mtl_texture_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GANESH) && defined(SK_METAL)
+    if (render_target == nullptr || out_info == nullptr) {
+        return false;
+    }
+    GrMtlTextureInfo info;
+    if (!as_render_target(render_target)->getMtlTextureInfo(&info)) {
+        return false;
+    }
+    out_info->texture = const_cast<void *>(info.fTexture.get());
+    return true;
+#else
+    (void) render_target;
+    return false;
+#endif
+}
+
 reskia_gr_backend_format_t *GrBackendRenderTarget_getBackendFormat(const reskia_gr_backend_render_target_t *render_target) {
 #if defined(SK_GANESH)
     return render_target != nullptr ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(as_render_target(render_target)->getBackendFormat())) : nullptr;
 #else
     (void) render_target;
     return nullptr;
+#endif
+}
+
+bool GrBackendRenderTarget_getMockRenderTargetInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mock_render_target_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GANESH)
+    if (render_target == nullptr || out_info == nullptr) {
+        return false;
+    }
+    GrMockRenderTargetInfo info;
+    if (!as_render_target(render_target)->getMockRenderTargetInfo(&info)) {
+        return false;
+    }
+    out_info->color_type = static_cast<reskia_gr_color_type_t>(info.colorType());
+    out_info->id = 0;
+    out_info->is_protected = to_reskia_protected(info.getProtected());
+    return true;
+#else
+    (void) render_target;
+    return false;
+#endif
+}
+
+void GrBackendRenderTarget_setMutableState(reskia_gr_backend_render_target_t *render_target, const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    if (render_target != nullptr && state != nullptr && as_mutable_texture_state(state)->isValid()) {
+        reinterpret_cast<GrBackendRenderTarget *>(render_target)->setMutableState(*as_mutable_texture_state(state));
+    }
+#else
+    (void) render_target;
+    (void) state;
 #endif
 }
 
@@ -493,6 +707,174 @@ bool GrBackendRenderTarget_asHandle(const reskia_gr_backend_render_target_t *ren
     return true;
 #else
     (void) render_target;
+    return false;
+#endif
+}
+
+reskia_gr_backend_semaphore_t *GrBackendSemaphore_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_backend_semaphore_t *>(new GrBackendSemaphore());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_semaphore_t *GrBackendSemaphore_newCopy(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH)
+    return semaphore != nullptr ? reinterpret_cast<reskia_gr_backend_semaphore_t *>(new GrBackendSemaphore(*as_semaphore(semaphore))) : nullptr;
+#else
+    (void) semaphore;
+    return nullptr;
+#endif
+}
+
+void GrBackendSemaphore_delete(reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH)
+    delete as_semaphore(semaphore);
+#else
+    (void) semaphore;
+#endif
+}
+
+void GrBackendSemaphore_initVulkan(reskia_gr_backend_semaphore_t *semaphore, uintptr_t vk_semaphore) {
+#if defined(SK_GANESH) && defined(SK_VULKAN)
+    if (semaphore != nullptr) {
+        as_semaphore(semaphore)->initVulkan((VkSemaphore) vk_semaphore);
+    }
+#else
+    (void) semaphore;
+    (void) vk_semaphore;
+#endif
+}
+
+uintptr_t GrBackendSemaphore_vkSemaphore(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH) && defined(SK_VULKAN)
+    return semaphore != nullptr ? (uintptr_t) as_semaphore(semaphore)->vkSemaphore() : 0;
+#else
+    (void) semaphore;
+    return 0;
+#endif
+}
+
+void GrBackendSemaphore_initMetal(reskia_gr_backend_semaphore_t *semaphore, void *event, uint64_t value) {
+#if defined(SK_GANESH) && defined(SK_METAL)
+    if (semaphore != nullptr) {
+        as_semaphore(semaphore)->initMetal(event, value);
+    }
+#else
+    (void) semaphore;
+    (void) event;
+    (void) value;
+#endif
+}
+
+void *GrBackendSemaphore_mtlSemaphore(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH) && defined(SK_METAL)
+    return semaphore != nullptr ? const_cast<void *>(as_semaphore(semaphore)->mtlSemaphore()) : nullptr;
+#else
+    (void) semaphore;
+    return nullptr;
+#endif
+}
+
+uint64_t GrBackendSemaphore_mtlValue(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH) && defined(SK_METAL)
+    return semaphore != nullptr ? as_semaphore(semaphore)->mtlValue() : 0;
+#else
+    (void) semaphore;
+    return 0;
+#endif
+}
+
+bool GrBackendSemaphore_isInitialized(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH)
+    return semaphore != nullptr && as_semaphore(semaphore)->isInitialized();
+#else
+    (void) semaphore;
+    return false;
+#endif
+}
+
+reskia_gr_backend_api_t GrBackendSemaphore_backend(const reskia_gr_backend_semaphore_t *semaphore) {
+#if defined(SK_GANESH)
+    return semaphore != nullptr ? static_cast<reskia_gr_backend_api_t>(as_semaphore(semaphore)->backend()) : 0;
+#else
+    (void) semaphore;
+    return 0;
+#endif
+}
+
+reskia_skgpu_mutable_texture_state_t *MutableTextureState_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(new skgpu::MutableTextureState());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_skgpu_mutable_texture_state_t *MutableTextureState_newVulkan(int vk_image_layout, uint32_t queue_family_index) {
+#if defined(SK_GANESH) && defined(SK_VULKAN)
+    return reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(new skgpu::MutableTextureState(static_cast<VkImageLayout>(vk_image_layout), queue_family_index));
+#elif defined(SK_GANESH)
+    (void) vk_image_layout;
+    (void) queue_family_index;
+    return reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(new skgpu::MutableTextureState());
+#else
+    (void) vk_image_layout;
+    (void) queue_family_index;
+    return nullptr;
+#endif
+}
+
+reskia_skgpu_mutable_texture_state_t *MutableTextureState_newCopy(const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    return state != nullptr ? reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(new skgpu::MutableTextureState(*as_mutable_texture_state(state))) : nullptr;
+#else
+    (void) state;
+    return nullptr;
+#endif
+}
+
+void MutableTextureState_delete(reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    delete as_mutable_texture_state(state);
+#else
+    (void) state;
+#endif
+}
+
+int MutableTextureState_getVkImageLayout(const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH) && defined(SK_VULKAN)
+    return state != nullptr ? static_cast<int>(as_mutable_texture_state(state)->getVkImageLayout()) : 0;
+#else
+    (void) state;
+    return 0;
+#endif
+}
+
+uint32_t MutableTextureState_getQueueFamilyIndex(const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH) && defined(SK_VULKAN)
+    return state != nullptr ? as_mutable_texture_state(state)->getQueueFamilyIndex() : 0;
+#else
+    (void) state;
+    return 0;
+#endif
+}
+
+reskia_gr_backend_api_t MutableTextureState_backend(const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    return state != nullptr ? to_reskia_backend_api(as_mutable_texture_state(state)->backend()) : 0;
+#else
+    (void) state;
+    return 0;
+#endif
+}
+
+bool MutableTextureState_isValid(const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GANESH)
+    return state != nullptr && as_mutable_texture_state(state)->isValid();
+#else
+    (void) state;
     return false;
 #endif
 }

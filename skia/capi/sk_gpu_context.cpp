@@ -4,7 +4,10 @@
 
 #include "sk_gpu_context.h"
 
+#include "sk_surface_gpu.h"
+
 #include "include/core/SkColor.h"
+#include "include/core/SkData.h"
 #include "include/core/SkImageInfo.h"
 #include "include/core/SkPixmap.h"
 #include "include/core/SkString.h"
@@ -15,6 +18,7 @@
 
 #include <chrono>
 #include <string_view>
+#include <vector>
 
 #if defined(SK_VULKAN)
 #include "include/gpu/vk/GrVkBackendContext.h"
@@ -22,9 +26,11 @@
 
 #if defined(SK_GRAPHITE)
 #include "include/gpu/graphite/Context.h"
+#include "include/gpu/graphite/BackendTexture.h"
 #include "include/gpu/graphite/GraphiteTypes.h"
 #include "include/gpu/graphite/Recorder.h"
 #include "include/gpu/graphite/Recording.h"
+#include "include/gpu/graphite/TextureInfo.h"
 #endif
 
 #if defined(SK_GRAPHITE) && defined(SK_VULKAN)
@@ -35,16 +41,22 @@
 #if defined(SK_GRAPHITE) && defined(SK_METAL) && defined(__APPLE__)
 #include "include/gpu/graphite/mtl/MtlBackendContext.h"
 #include "include/gpu/graphite/mtl/MtlGraphiteUtils.h"
+#include "include/gpu/graphite/mtl/MtlGraphiteTypes.h"
 #include "include/ports/SkCFObject.h"
 #endif
 
 #if defined(SK_GANESH)
+#include "include/gpu/GrBackendSemaphore.h"
 #include "include/gpu/GrBackendSurface.h"
 #include "include/gpu/GrContextThreadSafeProxy.h"
 #include "include/gpu/GrRecordingContext.h"
 #include "include/gpu/GpuTypes.h"
+#include "include/gpu/MutableTextureState.h"
+#include "include/gpu/mock/GrMockTypes.h"
 #include "include/private/chromium/GrSurfaceCharacterization.h"
 #endif
+
+#include "../handles/static_sk_i_size-internal.h"
 
 namespace {
 
@@ -73,8 +85,28 @@ const GrBackendTexture *as_backend_texture(const reskia_gr_backend_texture_t *te
     return reinterpret_cast<const GrBackendTexture *>(texture);
 }
 
+const GrBackendRenderTarget *as_backend_render_target(const reskia_gr_backend_render_target_t *render_target) {
+    return reinterpret_cast<const GrBackendRenderTarget *>(render_target);
+}
+
+const GrBackendSemaphore *as_backend_semaphore(const reskia_gr_backend_semaphore_t *semaphore) {
+    return reinterpret_cast<const GrBackendSemaphore *>(semaphore);
+}
+
+const skgpu::MutableTextureState *as_mutable_texture_state(const reskia_skgpu_mutable_texture_state_t *state) {
+    return reinterpret_cast<const skgpu::MutableTextureState *>(state);
+}
+
+skgpu::MutableTextureState *as_mutable_texture_state(reskia_skgpu_mutable_texture_state_t *state) {
+    return reinterpret_cast<skgpu::MutableTextureState *>(state);
+}
+
 const SkPixmap *as_pixmap(const reskia_pixmap_t *pixmap) {
     return reinterpret_cast<const SkPixmap *>(pixmap);
+}
+
+const SkData *as_data(const reskia_data_t *data) {
+    return reinterpret_cast<const SkData *>(data);
 }
 
 const SkImageInfo *as_image_info(const reskia_image_info_t *image_info) {
@@ -139,6 +171,63 @@ std::string_view to_label(const char *label, size_t label_len) {
 }
 #endif
 
+#if defined(SK_GRAPHITE)
+skgpu::graphite::Context *as_graphite_context(reskia_graphite_context_t *ctx) {
+    return reinterpret_cast<skgpu::graphite::Context *>(ctx);
+}
+
+const skgpu::graphite::Context *as_graphite_context(const reskia_graphite_context_t *ctx) {
+    return reinterpret_cast<const skgpu::graphite::Context *>(ctx);
+}
+
+skgpu::graphite::Recorder *as_graphite_recorder(reskia_graphite_recorder_t *recorder) {
+    return reinterpret_cast<skgpu::graphite::Recorder *>(recorder);
+}
+
+const skgpu::graphite::BackendTexture *as_graphite_backend_texture(const reskia_graphite_backend_texture_t *texture) {
+    return reinterpret_cast<const skgpu::graphite::BackendTexture *>(texture);
+}
+
+skgpu::graphite::BackendTexture *as_graphite_backend_texture(reskia_graphite_backend_texture_t *texture) {
+    return reinterpret_cast<skgpu::graphite::BackendTexture *>(texture);
+}
+
+const skgpu::graphite::TextureInfo *as_graphite_texture_info(const reskia_graphite_texture_info_t *info) {
+    return reinterpret_cast<const skgpu::graphite::TextureInfo *>(info);
+}
+
+skgpu::graphite::TextureInfo *as_graphite_texture_info(reskia_graphite_texture_info_t *info) {
+    return reinterpret_cast<skgpu::graphite::TextureInfo *>(info);
+}
+
+int to_reskia_graphite_backend_api(skgpu::BackendApi backend) {
+    switch (backend) {
+        case skgpu::BackendApi::kMetal:
+            return RESKIA_GPU_BACKEND_API_METAL;
+        case skgpu::BackendApi::kVulkan:
+            return RESKIA_GPU_BACKEND_API_VULKAN;
+        default:
+            return RESKIA_GPU_BACKEND_API_UNKNOWN;
+    }
+}
+
+skgpu::Mipmapped to_graphite_mipmapped(bool mipmapped) {
+    return mipmapped ? skgpu::Mipmapped::kYes : skgpu::Mipmapped::kNo;
+}
+
+bool from_graphite_mipmapped(skgpu::Mipmapped mipmapped) {
+    return mipmapped == skgpu::Mipmapped::kYes;
+}
+
+bool from_graphite_protected(skgpu::Protected is_protected) {
+    return is_protected == skgpu::Protected::kYes;
+}
+
+skgpu::graphite::SyncToCpu to_graphite_sync_cpu(bool sync_cpu) {
+    return sync_cpu ? skgpu::graphite::SyncToCpu::kYes : skgpu::graphite::SyncToCpu::kNo;
+}
+#endif
+
 }  // namespace
 
 extern "C" {
@@ -166,6 +255,22 @@ reskia_direct_context_t *Reskia_GaneshContext_MakeVulkan(const void *backend_con
     return reinterpret_cast<reskia_direct_context_t *>(GrDirectContext::MakeVulkan(*vk_backend_context).release());
 #else
     (void) backend_context;
+    return nullptr;
+#endif
+}
+
+reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue) {
+    return Reskia_GaneshContext_MakeMetal(device, queue);
+}
+
+reskia_direct_context_t *GrDirectContext_MakeVulkan(const void *backend_context) {
+    return Reskia_GaneshContext_MakeVulkan(backend_context);
+}
+
+reskia_direct_context_t *GrDirectContext_MakeMock() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_direct_context_t *>(GrDirectContext::MakeMock(nullptr).release());
+#else
     return nullptr;
 #endif
 }
@@ -482,6 +587,17 @@ void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx) {
 #endif
 }
 
+void GrDirectContext_resetGLTextureBindings(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr) {
+        return;
+    }
+    as_direct_context(ctx)->resetGLTextureBindings();
+#else
+    (void) ctx;
+#endif
+}
+
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx) {
 #if defined(SK_GANESH)
     return ctx != nullptr ? reinterpret_cast<reskia_gr_direct_context_id_t *>(new GrDirectContext::DirectContextID(as_direct_context(ctx)->directContextID())) : nullptr;
@@ -757,6 +873,160 @@ reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithC
     (void) mipmapped;
     (void) is_protected;
     return nullptr;
+#endif
+}
+
+bool GrDirectContext_wait(reskia_direct_context_t *ctx, int num_semaphores, const reskia_gr_backend_semaphore_t * const *wait_semaphores, bool delete_semaphores_after_wait) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || num_semaphores < 0 || (num_semaphores > 0 && wait_semaphores == nullptr)) {
+        return false;
+    }
+    std::vector<GrBackendSemaphore> semaphores;
+    semaphores.reserve(static_cast<size_t>(num_semaphores));
+    for (int i = 0; i < num_semaphores; ++i) {
+        if (wait_semaphores[i] == nullptr) {
+            return false;
+        }
+        semaphores.push_back(*as_backend_semaphore(wait_semaphores[i]));
+    }
+    return as_direct_context(ctx)->wait(num_semaphores, semaphores.data(), delete_semaphores_after_wait);
+#else
+    (void) ctx;
+    (void) num_semaphores;
+    (void) wait_semaphores;
+    (void) delete_semaphores_after_wait;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const float color[4]) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && color != nullptr &&
+           as_direct_context(ctx)->updateBackendTexture(*as_backend_texture(texture), to_color4f(color), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) color;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateBackendTextureWithColorType(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, int color_type, const float color[4]) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && color != nullptr &&
+           as_direct_context(ctx)->updateBackendTexture(*as_backend_texture(texture), static_cast<SkColorType>(color_type), to_color4f(color), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) color_type;
+    (void) color;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateBackendTextureFromPixmaps(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels, int surface_origin) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && src_data != nullptr && num_levels > 0 && is_valid_surface_origin(surface_origin) &&
+           as_direct_context(ctx)->updateBackendTexture(*as_backend_texture(texture), as_pixmap(src_data), num_levels, to_surface_origin(surface_origin), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) src_data;
+    (void) num_levels;
+    (void) surface_origin;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateBackendTextureFromPixmap(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int surface_origin) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && src_data != nullptr && is_valid_surface_origin(surface_origin) &&
+           as_direct_context(ctx)->updateBackendTexture(*as_backend_texture(texture), *as_pixmap(src_data), to_surface_origin(surface_origin), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) src_data;
+    (void) surface_origin;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateBackendTextureFromPixmapsTopLeft(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && src_data != nullptr && num_levels > 0 &&
+           as_direct_context(ctx)->updateBackendTexture(*as_backend_texture(texture), as_pixmap(src_data), num_levels, nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) src_data;
+    (void) num_levels;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateCompressedBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const float color[4]) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && color != nullptr &&
+           as_direct_context(ctx)->updateCompressedBackendTexture(*as_backend_texture(texture), to_color4f(color), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) color;
+    return false;
+#endif
+}
+
+bool GrDirectContext_updateCompressedBackendTextureWithData(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const void *data, size_t data_size) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && texture != nullptr && data != nullptr && data_size > 0 &&
+           as_direct_context(ctx)->updateCompressedBackendTexture(*as_backend_texture(texture), data, data_size, nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) data;
+    (void) data_size;
+    return false;
+#endif
+}
+
+bool GrDirectContext_setBackendTextureState(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state, reskia_skgpu_mutable_texture_state_t *previous_state) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || texture == nullptr || state == nullptr || !as_mutable_texture_state(state)->isValid()) {
+        return false;
+    }
+    return as_direct_context(ctx)->setBackendTextureState(*as_backend_texture(texture), *as_mutable_texture_state(state), as_mutable_texture_state(previous_state), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) texture;
+    (void) state;
+    (void) previous_state;
+    return false;
+#endif
+}
+
+bool GrDirectContext_setBackendRenderTargetState(reskia_direct_context_t *ctx, const reskia_gr_backend_render_target_t *render_target, const reskia_skgpu_mutable_texture_state_t *state, reskia_skgpu_mutable_texture_state_t *previous_state) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || render_target == nullptr || state == nullptr || !as_mutable_texture_state(state)->isValid()) {
+        return false;
+    }
+    return as_direct_context(ctx)->setBackendRenderTargetState(*as_backend_render_target(render_target), *as_mutable_texture_state(state), as_mutable_texture_state(previous_state), nullptr, nullptr);
+#else
+    (void) ctx;
+    (void) render_target;
+    (void) state;
+    (void) previous_state;
+    return false;
+#endif
+}
+
+bool GrDirectContext_precompileShader(reskia_direct_context_t *ctx, const reskia_data_t *key, const reskia_data_t *data) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && key != nullptr && data != nullptr && as_direct_context(ctx)->precompileShader(*as_data(key), *as_data(data));
+#else
+    (void) ctx;
+    (void) key;
+    (void) data;
+    return false;
 #endif
 }
 
@@ -1167,6 +1437,425 @@ void Reskia_GraphiteContext_Release(reskia_graphite_context_t *ctx) {
     delete reinterpret_cast<skgpu::graphite::Context *>(ctx);
 #else
     (void) ctx;
+#endif
+}
+
+int Graphite_Context_backend(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr ? to_reskia_graphite_backend_api(as_graphite_context(ctx)->backend()) : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
+reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx) {
+    return Reskia_GraphiteContext_MakeRecorder(ctx);
+}
+
+bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr && as_graphite_context(ctx)->submit(to_graphite_sync_cpu(sync_cpu));
+#else
+    (void) ctx;
+    (void) sync_cpu;
+    return false;
+#endif
+}
+
+void Graphite_Context_checkAsyncWorkCompletion(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr) {
+        as_graphite_context(ctx)->checkAsyncWorkCompletion();
+    }
+#else
+    (void) ctx;
+#endif
+}
+
+void Graphite_Context_deleteBackendTexture(reskia_graphite_context_t *ctx, const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr && texture != nullptr) {
+        as_graphite_context(ctx)->deleteBackendTexture(*as_graphite_backend_texture(texture));
+    }
+#else
+    (void) ctx;
+    (void) texture;
+#endif
+}
+
+void Graphite_Context_freeGpuResources(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr) {
+        as_graphite_context(ctx)->freeGpuResources();
+    }
+#else
+    (void) ctx;
+#endif
+}
+
+void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int64_t ms_not_used) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr && ms_not_used >= 0) {
+        as_graphite_context(ctx)->performDeferredCleanup(std::chrono::milliseconds(ms_not_used));
+    }
+#else
+    (void) ctx;
+    (void) ms_not_used;
+#endif
+}
+
+size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr ? as_graphite_context(ctx)->currentBudgetedBytes() : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
+void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr && trace_memory_dump != nullptr) {
+        as_graphite_context(ctx)->dumpMemoryStatistics(reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump));
+    }
+#else
+    (void) ctx;
+    (void) trace_memory_dump;
+#endif
+}
+
+bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr && as_graphite_context(ctx)->supportsProtectedContent();
+#else
+    (void) ctx;
+    return false;
+#endif
+}
+
+void Graphite_Recorder_freeGpuResources(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    if (recorder != nullptr) {
+        as_graphite_recorder(recorder)->freeGpuResources();
+    }
+#else
+    (void) recorder;
+#endif
+}
+
+void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *recorder, int64_t ms_not_used) {
+#if defined(SK_GRAPHITE)
+    if (recorder != nullptr && ms_not_used >= 0) {
+        as_graphite_recorder(recorder)->performDeferredCleanup(std::chrono::milliseconds(ms_not_used));
+    }
+#else
+    (void) recorder;
+    (void) ms_not_used;
+#endif
+}
+
+size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? as_graphite_recorder(recorder)->currentBudgetedBytes() : 0;
+#else
+    (void) recorder;
+    return 0;
+#endif
+}
+
+void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder, reskia_trace_memory_dump_t *trace_memory_dump) {
+#if defined(SK_GRAPHITE)
+    if (recorder != nullptr && trace_memory_dump != nullptr) {
+        as_graphite_recorder(recorder)->dumpMemoryStatistics(reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump));
+    }
+#else
+    (void) recorder;
+    (void) trace_memory_dump;
+#endif
+}
+
+reskia_graphite_backend_texture_t *Graphite_Recorder_createBackendTexture(reskia_graphite_recorder_t *recorder, sk_i_size_t dimensions, const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    if (recorder == nullptr || dimensions == 0 || info == nullptr || !as_graphite_texture_info(info)->isValid()) {
+        return nullptr;
+    }
+    auto texture = as_graphite_recorder(recorder)->createBackendTexture(static_sk_i_size_get_entity(dimensions), *as_graphite_texture_info(info));
+    return reinterpret_cast<reskia_graphite_backend_texture_t *>(new skgpu::graphite::BackendTexture(texture));
+#else
+    (void) recorder;
+    (void) dimensions;
+    (void) info;
+    return nullptr;
+#endif
+}
+
+bool Graphite_Recorder_updateBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr && texture != nullptr && src_data != nullptr && num_levels > 0 &&
+           as_graphite_recorder(recorder)->updateBackendTexture(*as_graphite_backend_texture(texture), reinterpret_cast<const SkPixmap *>(src_data), num_levels);
+#else
+    (void) recorder;
+    (void) texture;
+    (void) src_data;
+    (void) num_levels;
+    return false;
+#endif
+}
+
+void Graphite_Recorder_deleteBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    if (recorder != nullptr && texture != nullptr) {
+        as_graphite_recorder(recorder)->deleteBackendTexture(*as_graphite_backend_texture(texture));
+    }
+#else
+    (void) recorder;
+    (void) texture;
+#endif
+}
+
+reskia_graphite_texture_info_t *Graphite_TextureInfo_new() {
+#if defined(SK_GRAPHITE)
+    return reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphite_mtl_texture_info_t *info) {
+#if defined(SK_GRAPHITE) && defined(SK_METAL)
+    if (info == nullptr) {
+        return nullptr;
+    }
+    skgpu::graphite::MtlTextureInfo mtl_info(
+            info->sample_count,
+            to_graphite_mipmapped(info->mipmapped),
+            info->format,
+            info->usage,
+            info->storage_mode,
+            info->framebuffer_only);
+    return reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo(mtl_info));
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+reskia_graphite_texture_info_t *Graphite_TextureInfo_newCopy(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo(*as_graphite_texture_info(info))) : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+void Graphite_TextureInfo_delete(reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    delete as_graphite_texture_info(info);
+#else
+    (void) info;
+#endif
+}
+
+bool Graphite_TextureInfo_equals(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr && other != nullptr && *as_graphite_texture_info(info) == *as_graphite_texture_info(other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+bool Graphite_TextureInfo_notEquals(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other) {
+    return info != nullptr && other != nullptr && !Graphite_TextureInfo_equals(info, other);
+}
+
+bool Graphite_TextureInfo_isValid(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr && as_graphite_texture_info(info)->isValid();
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? to_reskia_graphite_backend_api(as_graphite_texture_info(info)->backend()) : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? as_graphite_texture_info(info)->numSamples() : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr && from_graphite_mipmapped(as_graphite_texture_info(info)->mipmapped());
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr && from_graphite_protected(as_graphite_texture_info(info)->isProtected());
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GRAPHITE) && defined(SK_METAL)
+    if (info == nullptr || out_info == nullptr) {
+        return false;
+    }
+    skgpu::graphite::MtlTextureInfo mtl_info;
+    if (!as_graphite_texture_info(info)->getMtlTextureInfo(&mtl_info)) {
+        return false;
+    }
+    out_info->sample_count = mtl_info.fSampleCount;
+    out_info->mipmapped = from_graphite_mipmapped(mtl_info.fMipmapped);
+    out_info->format = mtl_info.fFormat;
+    out_info->usage = mtl_info.fUsage;
+    out_info->storage_mode = mtl_info.fStorageMode;
+    out_info->framebuffer_only = mtl_info.fFramebufferOnly;
+    return true;
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? reinterpret_cast<reskia_string_t *>(new SkString(as_graphite_texture_info(info)->toString())) : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_new() {
+#if defined(SK_GRAPHITE)
+    return reinterpret_cast<reskia_graphite_backend_texture_t *>(new skgpu::graphite::BackendTexture());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_newMtl(sk_i_size_t dimensions, void *mtl_texture) {
+#if defined(SK_GRAPHITE) && defined(SK_METAL) && defined(__APPLE__)
+    if (dimensions == 0 || mtl_texture == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_graphite_backend_texture_t *>(new skgpu::graphite::BackendTexture(static_sk_i_size_get_entity(dimensions), reinterpret_cast<CFTypeRef>(mtl_texture)));
+#else
+    (void) dimensions;
+    (void) mtl_texture;
+    return nullptr;
+#endif
+}
+
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_newCopy(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr ? reinterpret_cast<reskia_graphite_backend_texture_t *>(new skgpu::graphite::BackendTexture(*as_graphite_backend_texture(texture))) : nullptr;
+#else
+    (void) texture;
+    return nullptr;
+#endif
+}
+
+void Graphite_BackendTexture_delete(reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    delete as_graphite_backend_texture(texture);
+#else
+    (void) texture;
+#endif
+}
+
+bool Graphite_BackendTexture_equals(const reskia_graphite_backend_texture_t *texture, const reskia_graphite_backend_texture_t *other) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr && other != nullptr && *as_graphite_backend_texture(texture) == *as_graphite_backend_texture(other);
+#else
+    (void) texture;
+    (void) other;
+    return false;
+#endif
+}
+
+bool Graphite_BackendTexture_notEquals(const reskia_graphite_backend_texture_t *texture, const reskia_graphite_backend_texture_t *other) {
+    return texture != nullptr && other != nullptr && !Graphite_BackendTexture_equals(texture, other);
+}
+
+bool Graphite_BackendTexture_isValid(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr && as_graphite_backend_texture(texture)->isValid();
+#else
+    (void) texture;
+    return false;
+#endif
+}
+
+int Graphite_BackendTexture_backend(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr ? to_reskia_graphite_backend_api(as_graphite_backend_texture(texture)->backend()) : 0;
+#else
+    (void) texture;
+    return 0;
+#endif
+}
+
+sk_i_size_t Graphite_BackendTexture_dimensions(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr ? static_sk_i_size_make(as_graphite_backend_texture(texture)->dimensions()) : 0;
+#else
+    (void) texture;
+    return 0;
+#endif
+}
+
+reskia_graphite_texture_info_t *Graphite_BackendTexture_info(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE)
+    return texture != nullptr ? reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo(as_graphite_backend_texture(texture)->info())) : nullptr;
+#else
+    (void) texture;
+    return nullptr;
+#endif
+}
+
+void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state) {
+#if defined(SK_GRAPHITE)
+    if (texture != nullptr && state != nullptr && reinterpret_cast<const skgpu::MutableTextureState *>(state)->isValid()) {
+        as_graphite_backend_texture(texture)->setMutableState(*reinterpret_cast<const skgpu::MutableTextureState *>(state));
+    }
+#else
+    (void) texture;
+    (void) state;
+#endif
+}
+
+void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture) {
+#if defined(SK_GRAPHITE) && defined(SK_METAL)
+    return texture != nullptr ? const_cast<void *>(as_graphite_backend_texture(texture)->getMtlTexture()) : nullptr;
+#else
+    (void) texture;
+    return nullptr;
 #endif
 }
 

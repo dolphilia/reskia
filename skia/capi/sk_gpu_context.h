@@ -9,21 +9,38 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "sk_i_size.h"
+
 typedef struct reskia_direct_context_t reskia_direct_context_t;
+typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_gr_backend_format_t reskia_gr_backend_format_t;
+typedef struct reskia_gr_backend_render_target_t reskia_gr_backend_render_target_t;
+typedef struct reskia_gr_backend_semaphore_t reskia_gr_backend_semaphore_t;
 typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_context_thread_safe_proxy_t reskia_gr_context_thread_safe_proxy_t;
 typedef struct reskia_gr_direct_context_id_t reskia_gr_direct_context_id_t;
 typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characterization_t;
+typedef struct reskia_graphite_backend_texture_t reskia_graphite_backend_texture_t;
 typedef struct reskia_graphite_context_t reskia_graphite_context_t;
 typedef struct reskia_graphite_recorder_t reskia_graphite_recorder_t;
+typedef struct reskia_graphite_texture_info_t reskia_graphite_texture_info_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
+typedef struct reskia_skgpu_mutable_texture_state_t reskia_skgpu_mutable_texture_state_t;
 typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
 typedef int32_t reskia_gr_purge_resource_options_t;
 typedef int32_t reskia_gr_semaphores_submitted_t;
+
+typedef struct reskia_graphite_mtl_texture_info_t {
+    uint32_t sample_count;
+    bool mipmapped;
+    uint32_t format;
+    uint32_t usage;
+    uint32_t storage_mode;
+    bool framebuffer_only;
+} reskia_graphite_mtl_texture_info_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +54,9 @@ reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queu
  * owned: 呼び出し側が Reskia_DirectContext_Release で解放する (const GrVkBackendContext *backend_context) -> GrDirectContext *
  */
 reskia_direct_context_t *Reskia_GaneshContext_MakeVulkan(const void *backend_context);
+reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue); // owned; NULL input/unavailable Metal returns NULL
+reskia_direct_context_t *GrDirectContext_MakeVulkan(const void *backend_context); // owned; NULL input/unavailable Vulkan returns NULL
+reskia_direct_context_t *GrDirectContext_MakeMock(); // owned; unavailable Ganesh returns NULL
 void Reskia_DirectContext_FlushAndSubmit(reskia_direct_context_t *ctx, bool sync_cpu); // (GrDirectContext *ctx, bool sync_cpu)
 void Reskia_DirectContext_Abandon(reskia_direct_context_t *ctx); // (GrDirectContext *ctx)
 void Reskia_DirectContext_Release(reskia_direct_context_t *ctx); // owned: 呼び出し側が保持する参照を release する (GrDirectContext *ctx)
@@ -66,6 +86,7 @@ void GrDirectContext_dumpMemoryStatistics(reskia_direct_context_t *ctx, reskia_t
 reskia_string_t *GrDirectContext_dump(reskia_direct_context_t *ctx); // owned; NULL input or SK_ENABLE_DUMP_GPU-disabled build returns NULL
 bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx); // NULL input returns false
 void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input is no-op
+void GrDirectContext_resetGLTextureBindings(reskia_direct_context_t *ctx); // NULL input is no-op
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx); // owned; NULL input returns NULL
 void GrDirectContextID_delete(reskia_gr_direct_context_id_t *context_id); // NULL input is no-op
 bool GrDirectContextID_isValid(reskia_gr_direct_context_id_t *context_id); // NULL input returns false
@@ -83,6 +104,17 @@ reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTexture(resk
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionType(reskia_direct_context_t *ctx, int width, int height, int compression_type, const float color[4], bool mipmapped, bool is_protected); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithData(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const void *data, size_t data_size, bool mipmapped, bool is_protected); // owned; invalid input returns NULL
 reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionTypeData(reskia_direct_context_t *ctx, int width, int height, int compression_type, const void *data, size_t data_size, bool mipmapped, bool is_protected); // owned; invalid input returns NULL
+bool GrDirectContext_wait(reskia_direct_context_t *ctx, int num_semaphores, const reskia_gr_backend_semaphore_t * const *wait_semaphores, bool delete_semaphores_after_wait); // invalid input returns false
+bool GrDirectContext_updateBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const float color[4]); // invalid input returns false; no callback
+bool GrDirectContext_updateBackendTextureWithColorType(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, int color_type, const float color[4]); // invalid input returns false; no callback
+bool GrDirectContext_updateBackendTextureFromPixmaps(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels, int surface_origin); // invalid input returns false; no callback
+bool GrDirectContext_updateBackendTextureFromPixmap(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int surface_origin); // invalid input returns false; no callback
+bool GrDirectContext_updateBackendTextureFromPixmapsTopLeft(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels); // invalid input returns false; no callback
+bool GrDirectContext_updateCompressedBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const float color[4]); // invalid input returns false; no callback
+bool GrDirectContext_updateCompressedBackendTextureWithData(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const void *data, size_t data_size); // invalid input returns false; no callback
+bool GrDirectContext_setBackendTextureState(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state, reskia_skgpu_mutable_texture_state_t *previous_state); // invalid input returns false; no callback
+bool GrDirectContext_setBackendRenderTargetState(reskia_direct_context_t *ctx, const reskia_gr_backend_render_target_t *render_target, const reskia_skgpu_mutable_texture_state_t *state, reskia_skgpu_mutable_texture_state_t *previous_state); // invalid input returns false; no callback
+bool GrDirectContext_precompileShader(reskia_direct_context_t *ctx, const reskia_data_t *key, const reskia_data_t *data); // invalid input returns false
 void GrDirectContext_deleteBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture); // NULL input is no-op
 
 bool GrRecordingContext_abandoned(reskia_direct_context_t *ctx); // NULL input returns true
@@ -133,6 +165,52 @@ reskia_graphite_recorder_t *Reskia_GraphiteContext_MakeRecorder(reskia_graphite_
 bool Reskia_GraphiteContext_InsertRecordingAndSubmit(reskia_graphite_context_t *ctx, reskia_graphite_recorder_t *recorder, bool sync_cpu); // (skgpu::graphite::Context *ctx, skgpu::graphite::Recorder *recorder, bool sync_cpu) -> bool
 void Reskia_GraphiteRecorder_Release(reskia_graphite_recorder_t *recorder); // owned: 呼び出し側が保持する recorder を解放する (skgpu::graphite::Recorder *recorder)
 void Reskia_GraphiteContext_Release(reskia_graphite_context_t *ctx); // owned: 呼び出し側が保持する context を解放する (skgpu::graphite::Context *ctx)
+
+int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input returns 0
+reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
+bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
+void Graphite_Context_checkAsyncWorkCompletion(reskia_graphite_context_t *ctx); // NULL input is no-op
+void Graphite_Context_deleteBackendTexture(reskia_graphite_context_t *ctx, const reskia_graphite_backend_texture_t *texture); // NULL input is no-op
+void Graphite_Context_freeGpuResources(reskia_graphite_context_t *ctx); // NULL input is no-op
+void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int64_t ms_not_used); // invalid input is no-op
+size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
+void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
+bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
+
+void Graphite_Recorder_freeGpuResources(reskia_graphite_recorder_t *recorder); // NULL input is no-op
+void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *recorder, int64_t ms_not_used); // invalid input is no-op
+size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
+reskia_graphite_backend_texture_t *Graphite_Recorder_createBackendTexture(reskia_graphite_recorder_t *recorder, sk_i_size_t dimensions, const reskia_graphite_texture_info_t *info); // owned; invalid input returns NULL
+bool Graphite_Recorder_updateBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels); // invalid input returns false
+void Graphite_Recorder_deleteBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture); // NULL input is no-op
+
+reskia_graphite_texture_info_t *Graphite_TextureInfo_new(); // owned; invalid default info
+reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphite_mtl_texture_info_t *info); // owned; NULL/unavailable Metal returns NULL
+reskia_graphite_texture_info_t *Graphite_TextureInfo_newCopy(const reskia_graphite_texture_info_t *info); // owned; NULL returns NULL
+void Graphite_TextureInfo_delete(reskia_graphite_texture_info_t *info); // NULL input is no-op
+bool Graphite_TextureInfo_equals(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
+bool Graphite_TextureInfo_notEquals(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
+bool Graphite_TextureInfo_isValid(const reskia_graphite_texture_info_t *info); // NULL input returns false
+int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info); // NULL input returns 0
+uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info); // NULL input returns 0
+bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info); // NULL input returns false
+bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info); // NULL input returns false
+bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info); // NULL/non-Metal returns false
+reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_info_t *info); // owned; NULL input returns NULL
+
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_new(); // owned; invalid default texture
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_newMtl(sk_i_size_t dimensions, void *mtl_texture); // owned; invalid input/unavailable Metal returns NULL
+reskia_graphite_backend_texture_t *Graphite_BackendTexture_newCopy(const reskia_graphite_backend_texture_t *texture); // owned; NULL returns NULL
+void Graphite_BackendTexture_delete(reskia_graphite_backend_texture_t *texture); // NULL input is no-op
+bool Graphite_BackendTexture_equals(const reskia_graphite_backend_texture_t *texture, const reskia_graphite_backend_texture_t *other); // NULL input returns false
+bool Graphite_BackendTexture_notEquals(const reskia_graphite_backend_texture_t *texture, const reskia_graphite_backend_texture_t *other); // NULL input returns false
+bool Graphite_BackendTexture_isValid(const reskia_graphite_backend_texture_t *texture); // NULL input returns false
+int Graphite_BackendTexture_backend(const reskia_graphite_backend_texture_t *texture); // NULL input returns 0
+sk_i_size_t Graphite_BackendTexture_dimensions(const reskia_graphite_backend_texture_t *texture); // returns handle; NULL input returns 0
+reskia_graphite_texture_info_t *Graphite_BackendTexture_info(const reskia_graphite_backend_texture_t *texture); // owned; NULL input returns NULL
+void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state); // NULL/invalid state is no-op
+void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture); // NULL/non-Metal returns NULL
 
 #ifdef __cplusplus
 }

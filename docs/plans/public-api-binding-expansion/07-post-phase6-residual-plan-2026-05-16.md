@@ -561,3 +561,32 @@ Phase 10 backlog の `overcovered` と `deferred` をすべて解消した。
 | `public-api-phase-7-triage-routing-index.csv` | 853 | matrix status 同期済み |
 
 Phase 10 の coverage quality / overload polish / deferred small-gap cleanup は完了。残る `missing` 719 行は後続 phase の実装・分類対象として扱う。
+
+## Phase 11+ Handoff
+
+Phase 10 完了後の計画は `08-post-phase10-coverage-expansion-plan-2026-05-16.md` に引き継ぐ。
+
+Phase 10 closeout 時点:
+
+| status | count |
+| --- | ---: |
+| `covered` | 2413 |
+| `missing` | 719 |
+| `false_positive` | 162 |
+| `split_covered` | 13 |
+| `na` | 10 |
+| `partial` | 0 |
+| `overcovered` | 0 |
+| `deferred` | 0 |
+| `no_public_methods_found` | 104 |
+
+Phase 11 以降の大枠:
+
+| phase | theme |
+| --- | --- |
+| Phase 11 | GPU backend and context expansion |
+| Phase 12 | SVG and SkSG graph expansion |
+| Phase 13 | Text stack expansion |
+| Phase 14 | Callback / provider / registration batch |
+| Phase 15 | Platform/internal NA sweep |
+| Phase 16 | Coverage audit and generator refresh |
