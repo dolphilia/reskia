@@ -28,6 +28,14 @@ SkCanvas *as_canvas(reskia_canvas_t *canvas) {
     return reinterpret_cast<SkCanvas *>(canvas);
 }
 
+SkSVGPresentationContext *as_presentation_context(reskia_svg_presentation_context_t *context) {
+    return reinterpret_cast<SkSVGPresentationContext *>(context);
+}
+
+const SkSVGPresentationContext *as_presentation_context(const reskia_svg_presentation_context_t *context) {
+    return reinterpret_cast<const SkSVGPresentationContext *>(context);
+}
+
 }  // namespace
 
 extern "C" {
@@ -38,6 +46,18 @@ reskia_svg_dom_t *SkSVGDOM_MakeFromStream(reskia_stream_t *stream) {
     }
     auto dom = SkSVGDOM::MakeFromStream(*as_stream(stream));
     return reinterpret_cast<reskia_svg_dom_t *>(dom.release());
+}
+
+reskia_svg_presentation_context_t *SkSVGPresentationContext_new(void) {
+    return reinterpret_cast<reskia_svg_presentation_context_t *>(new SkSVGPresentationContext());
+}
+
+reskia_svg_presentation_context_t *SkSVGPresentationContext_copy(const reskia_svg_presentation_context_t *context) {
+    return context != nullptr ? reinterpret_cast<reskia_svg_presentation_context_t *>(new SkSVGPresentationContext(*as_presentation_context(context))) : nullptr;
+}
+
+void SkSVGPresentationContext_delete(reskia_svg_presentation_context_t *context) {
+    delete as_presentation_context(context);
 }
 
 void SkSVGDOM_ref(reskia_svg_dom_t *dom) {
@@ -102,6 +122,13 @@ void SkSVGDOM_render(reskia_svg_dom_t *dom, reskia_canvas_t *canvas) {
         return;
     }
     as_svg_dom(dom)->render(as_canvas(canvas));
+}
+
+void SkSVGDOM_renderNode(reskia_svg_dom_t *dom, reskia_canvas_t *canvas, reskia_svg_presentation_context_t *context, const char *id) {
+    if (dom == nullptr || canvas == nullptr || context == nullptr || id == nullptr) {
+        return;
+    }
+    as_svg_dom(dom)->renderNode(as_canvas(canvas), *as_presentation_context(context), id);
 }
 
 void SkSVGDOM_renderNodeById(reskia_svg_dom_t *dom, reskia_canvas_t *canvas, const char *id) {

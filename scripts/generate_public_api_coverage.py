@@ -49,6 +49,12 @@ class PublicClass:
     methods: tuple[Method, ...]
 
 
+@dataclass(frozen=True)
+class MethodOverride:
+    status: str
+    note: str
+
+
 def area_for(rel: str) -> str:
     parts = rel.split("/")
     if rel.startswith("include/"):
@@ -306,6 +312,53 @@ def capi_function_names(repo: Path) -> set[str]:
     return functions
 
 
+def method_key(area: str, header: str, class_name: str, method_name: str, signature: str) -> tuple[str, str, str, str, str]:
+    return (area, header, class_name, method_name, signature)
+
+
+def load_phase10_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], MethodOverride]:
+    """Load Phase 10 coverage-polish classifications.
+
+    The generator remains intentionally heuristic, but the Phase 10 backlog is
+    the reviewed source for rows that should not keep distorting coverage as
+    ordinary missing/covered methods.
+    """
+    path = repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-10-generator-polish-backlog.csv"
+    if not path.exists():
+        return {}
+
+    overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
+    with path.open(newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            triage = row.get("triage", "")
+            action = row.get("generator_action", "")
+            backlog_status = row.get("method_status", "")
+            status = backlog_status if backlog_status in {"split_covered", "deferred"} else ""
+            if triage == "false_positive":
+                status = "false_positive"
+            elif triage == "na":
+                status = "na"
+            elif triage == "real_gap" and "overload-aware coverage" in action:
+                status = "overcovered"
+            elif not status and triage == "real_gap" and "split" in action:
+                status = "split_covered"
+            elif not status and triage == "real_gap" and "defer" in action.lower():
+                status = "deferred"
+            if not status:
+                continue
+            key = method_key(
+                row.get("area", ""),
+                row.get("header", ""),
+                row.get("class", ""),
+                row.get("method", ""),
+                row.get("signature", ""),
+            )
+            note = row.get("note", "") or action or f"Phase 10 override: {triage}"
+            overrides[key] = MethodOverride(status=status, note=note)
+    return overrides
+
+
 def class_prefix_candidates(class_name: str, path: str) -> set[str]:
     names = {class_name}
     if path.startswith("modules/skottie/") and class_name == "Animation":
@@ -402,6 +455,7 @@ def status_for_class(cls: PublicClass, functions: set[str]) -> tuple[str, str]:
 def write_matrix(repo: Path, output: Path) -> None:
     classes = public_classes(repo)
     functions = capi_function_names(repo)
+    overrides = load_phase10_overrides(repo)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="") as f:
         writer = csv.writer(f)
@@ -445,6 +499,11 @@ def write_matrix(repo: Path, output: Path) -> None:
                 continue
             for method in cls.methods:
                 method_status, method_match = status_for_method(cls, method, functions)
+                override = overrides.get(method_key(cls.area, cls.path, cls.name, method.name, method.signature))
+                note = ""
+                if override is not None:
+                    method_status = override.status
+                    note = override.note
                 writer.writerow(
                     [
                         cls.area,
@@ -459,7 +518,7 @@ def write_matrix(repo: Path, output: Path) -> None:
                         method_status,
                         method_match or class_match,
                         method.signature,
-                        "",
+                        note,
                     ]
                 )
 

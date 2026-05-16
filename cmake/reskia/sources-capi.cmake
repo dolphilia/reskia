@@ -1,5 +1,6 @@
 list(APPEND SOURCE_FILES
         capi/sk_alpha_type.cpp
+        capi/sk_animated_image.cpp
         capi/sk_anim_codec_player.cpp
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
@@ -224,13 +225,18 @@ if(TARGET skunicode)
 endif()
 
 list(APPEND SOURCE_FILES capi/sk_open_type_svg_decoder.cpp)
+list(APPEND SOURCE_FILES capi/sk_svg_types.cpp)
 
 if(RESKIA_ENABLE_FONTCONFIG_CAPI)
-    if(UNIX AND EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontMgr_fontconfig.cpp")
+    if(UNIX
+            AND EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontMgr_fontconfig.cpp"
+            AND EXISTS "${PROJECT_SOURCE_DIR}/src/ports/SkFontConfigInterface.cpp"
+            AND EXISTS "${PROJECT_SOURCE_DIR}/include/ports/SkFontConfigInterface.h")
+        list(APPEND SOURCE_FILES capi/sk_font_config_interface.cpp)
         list(APPEND SOURCE_FILES capi/sk_font_mgr_fontconfig.cpp)
     else()
         message(WARNING
                 "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが UNIX 向け実装ファイル "
-                "src/ports/SkFontMgr_fontconfig.cpp が利用できないため capi/sk_font_mgr_fontconfig.cpp は未追加です。")
+                "または SkFontConfigInterface が利用できないため FontConfig C API は未追加です。")
     endif()
 endif()

@@ -26,7 +26,9 @@ bool smoke_svg_dom() {
     SkSVGDOM_release(nullptr);
     SkSVGDOM_setContainerSize(nullptr, 10.0f, 20.0f);
     SkSVGDOM_render(nullptr, nullptr);
+    SkSVGPresentationContext_delete(nullptr);
     if (!check(SkSVGDOM_MakeFromStream(nullptr) == nullptr &&
+               SkSVGPresentationContext_copy(nullptr) == nullptr &&
                SkSVGDOM_getRoot(nullptr) == nullptr &&
                SkSVGDOM_findNodeById(nullptr, "rect1") == nullptr &&
                !SkSVGDOM_containerSize(nullptr, &width, &height) &&
@@ -86,6 +88,27 @@ bool smoke_svg_dom() {
         return false;
     }
     SkSVGDOM_render(dom, canvas);
+    reskia_svg_presentation_context_t *presentation_context = SkSVGPresentationContext_new();
+    if (!check(presentation_context != nullptr, "SkSVGPresentationContext_new")) {
+        SkCanvas_delete(canvas);
+        SkSVGDOM_release(dom);
+        return false;
+    }
+    reskia_svg_presentation_context_t *presentation_context_copy = SkSVGPresentationContext_copy(presentation_context);
+    if (!check(presentation_context_copy != nullptr, "SkSVGPresentationContext_copy")) {
+        SkSVGPresentationContext_delete(presentation_context);
+        SkCanvas_delete(canvas);
+        SkSVGDOM_release(dom);
+        return false;
+    }
+    SkSVGDOM_renderNode(nullptr, canvas, presentation_context, "rect1");
+    SkSVGDOM_renderNode(dom, nullptr, presentation_context, "rect1");
+    SkSVGDOM_renderNode(dom, canvas, nullptr, "rect1");
+    SkSVGDOM_renderNode(dom, canvas, presentation_context, nullptr);
+    SkSVGDOM_renderNode(dom, canvas, presentation_context, "rect1");
+    SkSVGDOM_renderNode(dom, canvas, presentation_context, "missing");
+    SkSVGPresentationContext_delete(presentation_context_copy);
+    SkSVGPresentationContext_delete(presentation_context);
     SkSVGDOM_renderNodeById(nullptr, canvas, "rect1");
     SkSVGDOM_renderNodeById(dom, nullptr, "rect1");
     SkSVGDOM_renderNodeById(dom, canvas, nullptr);

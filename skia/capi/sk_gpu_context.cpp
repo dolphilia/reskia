@@ -4,11 +4,16 @@
 
 #include "sk_gpu_context.h"
 
+#include "include/core/SkColor.h"
+#include "include/core/SkImageInfo.h"
+#include "include/core/SkString.h"
+#include "include/core/SkSurfaceProps.h"
 #include "include/gpu/GrDirectContext.h"
 #include "include/gpu/GrTypes.h"
 #include "include/core/SkTextureCompressionType.h"
 
 #include <chrono>
+#include <string_view>
 
 #if defined(SK_VULKAN)
 #include "include/gpu/vk/GrVkBackendContext.h"
@@ -37,6 +42,7 @@
 #include "include/gpu/GrContextThreadSafeProxy.h"
 #include "include/gpu/GrRecordingContext.h"
 #include "include/gpu/GpuTypes.h"
+#include "include/private/chromium/GrSurfaceCharacterization.h"
 #endif
 
 namespace {
@@ -58,6 +64,30 @@ GrContextThreadSafeProxy *as_thread_safe_proxy(reskia_gr_context_thread_safe_pro
     return reinterpret_cast<GrContextThreadSafeProxy *>(proxy);
 }
 
+const GrBackendFormat *as_backend_format(const reskia_gr_backend_format_t *format) {
+    return reinterpret_cast<const GrBackendFormat *>(format);
+}
+
+const GrBackendTexture *as_backend_texture(const reskia_gr_backend_texture_t *texture) {
+    return reinterpret_cast<const GrBackendTexture *>(texture);
+}
+
+const SkImageInfo *as_image_info(const reskia_image_info_t *image_info) {
+    return reinterpret_cast<const SkImageInfo *>(image_info);
+}
+
+const SkSurfaceProps *as_surface_props(const reskia_surface_props_t *surface_props) {
+    return reinterpret_cast<const SkSurfaceProps *>(surface_props);
+}
+
+GrSurfaceCharacterization *as_surface_characterization(reskia_gr_surface_characterization_t *characterization) {
+    return reinterpret_cast<GrSurfaceCharacterization *>(characterization);
+}
+
+const GrSurfaceCharacterization *as_surface_characterization(const reskia_gr_surface_characterization_t *characterization) {
+    return reinterpret_cast<const GrSurfaceCharacterization *>(characterization);
+}
+
 bool is_valid_purge_resource_options(reskia_gr_purge_resource_options_t options) {
     return options >= static_cast<reskia_gr_purge_resource_options_t>(GrPurgeResourceOptions::kAllResources) &&
            options <= static_cast<reskia_gr_purge_resource_options_t>(GrPurgeResourceOptions::kScratchResourcesOnly);
@@ -69,6 +99,29 @@ GrPurgeResourceOptions to_purge_resource_options(reskia_gr_purge_resource_option
 
 GrSyncCpu to_sync_cpu(bool sync_cpu) {
     return sync_cpu ? GrSyncCpu::kYes : GrSyncCpu::kNo;
+}
+
+skgpu::Mipmapped to_mipmapped(bool mipmapped) {
+    return mipmapped ? skgpu::Mipmapped::kYes : skgpu::Mipmapped::kNo;
+}
+
+GrRenderable to_renderable(bool renderable) {
+    return renderable ? GrRenderable::kYes : GrRenderable::kNo;
+}
+
+GrProtected to_protected(bool is_protected) {
+    return is_protected ? GrProtected::kYes : GrProtected::kNo;
+}
+
+SkColor4f to_color4f(const float color[4]) {
+    if (color == nullptr) {
+        return {0.0f, 0.0f, 0.0f, 0.0f};
+    }
+    return {color[0], color[1], color[2], color[3]};
+}
+
+std::string_view to_label(const char *label, size_t label_len) {
+    return label != nullptr ? std::string_view(label, label_len) : std::string_view();
 }
 #endif
 
@@ -383,6 +436,18 @@ void GrDirectContext_dumpMemoryStatistics(reskia_direct_context_t *ctx, reskia_t
 #endif
 }
 
+reskia_string_t *GrDirectContext_dump(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH) && defined(SK_ENABLE_DUMP_GPU)
+    if (ctx == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_string_t *>(new SkString(as_direct_context(ctx)->dump()));
+#else
+    (void) ctx;
+    return nullptr;
+#endif
+}
+
 bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx) {
 #if defined(SK_GANESH)
     return ctx != nullptr && as_direct_context(ctx)->supportsDistanceFieldText();
@@ -450,6 +515,136 @@ reskia_gr_context_thread_safe_proxy_t *GrDirectContext_threadSafeProxy(reskia_di
 #else
     (void) ctx;
     return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || format == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(width, height, *as_backend_format(format), to_mipmapped(mipmapped), to_renderable(renderable), to_protected(is_protected), to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) format;
+    (void) mipmapped;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorType(reskia_direct_context_t *ctx, int width, int height, int color_type, bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(width, height, static_cast<SkColorType>(color_type), to_mipmapped(mipmapped), to_renderable(renderable), to_protected(is_protected), to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) color_type;
+    (void) mipmapped;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColor(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || format == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(width, height, *as_backend_format(format), to_color4f(color), to_mipmapped(mipmapped), to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) format;
+    (void) color;
+    (void) mipmapped;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorTypeColor(reskia_direct_context_t *ctx, int width, int height, int color_type, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createBackendTexture(width, height, static_cast<SkColorType>(color_type), to_color4f(color), to_mipmapped(mipmapped), to_renderable(renderable), to_protected(is_protected), nullptr, nullptr, to_label(label, label_len))));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) color_type;
+    (void) color;
+    (void) mipmapped;
+    (void) renderable;
+    (void) is_protected;
+    (void) label;
+    (void) label_len;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool is_protected) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || format == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createCompressedBackendTexture(width, height, *as_backend_format(format), to_color4f(color), to_mipmapped(mipmapped), to_protected(is_protected), nullptr, nullptr)));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) format;
+    (void) color;
+    (void) mipmapped;
+    (void) is_protected;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionType(reskia_direct_context_t *ctx, int width, int height, int compression_type, const float color[4], bool mipmapped, bool is_protected) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || width <= 0 || height <= 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_direct_context(ctx)->createCompressedBackendTexture(width, height, static_cast<SkTextureCompressionType>(compression_type), to_color4f(color), to_mipmapped(mipmapped), to_protected(is_protected), nullptr, nullptr)));
+#else
+    (void) ctx;
+    (void) width;
+    (void) height;
+    (void) compression_type;
+    (void) color;
+    (void) mipmapped;
+    (void) is_protected;
+    return nullptr;
+#endif
+}
+
+void GrDirectContext_deleteBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr || texture == nullptr) {
+        return;
+    }
+    as_direct_context(ctx)->deleteBackendTexture(*as_backend_texture(texture));
+#else
+    (void) ctx;
+    (void) texture;
 #endif
 }
 
@@ -593,6 +788,166 @@ bool GrContextThreadSafeProxy_notEquals(reskia_gr_context_thread_safe_proxy_t *p
     (void) proxy;
     (void) other;
     return false;
+#endif
+}
+
+reskia_gr_surface_characterization_t *GrContextThreadSafeProxy_createCharacterization(reskia_gr_context_thread_safe_proxy_t *proxy, size_t cache_max_resource_bytes, const reskia_image_info_t *image_info, const reskia_gr_backend_format_t *backend_format, int sample_count, int origin, const reskia_surface_props_t *surface_props, bool is_mipmapped, bool will_use_gl_fbo0, bool is_textureable, bool is_protected, bool vk_rt_supports_input_attachment, bool for_vulkan_secondary_command_buffer) {
+#if defined(SK_GANESH)
+    if (proxy == nullptr || image_info == nullptr || backend_format == nullptr || surface_props == nullptr || sample_count < 0) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_surface_characterization_t *>(new GrSurfaceCharacterization(as_thread_safe_proxy(proxy)->createCharacterization(cache_max_resource_bytes, *as_image_info(image_info), *as_backend_format(backend_format), sample_count, static_cast<GrSurfaceOrigin>(origin), *as_surface_props(surface_props), is_mipmapped, will_use_gl_fbo0, is_textureable, to_protected(is_protected), vk_rt_supports_input_attachment, for_vulkan_secondary_command_buffer)));
+#else
+    (void) proxy;
+    (void) cache_max_resource_bytes;
+    (void) image_info;
+    (void) backend_format;
+    (void) sample_count;
+    (void) origin;
+    (void) surface_props;
+    (void) is_mipmapped;
+    (void) will_use_gl_fbo0;
+    (void) is_textureable;
+    (void) is_protected;
+    (void) vk_rt_supports_input_attachment;
+    (void) for_vulkan_secondary_command_buffer;
+    return nullptr;
+#endif
+}
+
+reskia_gr_surface_characterization_t *GrSurfaceCharacterization_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_surface_characterization_t *>(new GrSurfaceCharacterization());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_surface_characterization_t *GrSurfaceCharacterization_newCopy(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? reinterpret_cast<reskia_gr_surface_characterization_t *>(new GrSurfaceCharacterization(*as_surface_characterization(characterization))) : nullptr;
+#else
+    (void) characterization;
+    return nullptr;
+#endif
+}
+
+void GrSurfaceCharacterization_delete(reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    delete as_surface_characterization(characterization);
+#else
+    (void) characterization;
+#endif
+}
+
+bool GrSurfaceCharacterization_equals(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_surface_characterization_t *other) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && other != nullptr && *as_surface_characterization(characterization) == *as_surface_characterization(other);
+#else
+    (void) characterization;
+    (void) other;
+    return false;
+#endif
+}
+
+bool GrSurfaceCharacterization_notEquals(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_surface_characterization_t *other) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && other != nullptr && *as_surface_characterization(characterization) != *as_surface_characterization(other);
+#else
+    (void) characterization;
+    (void) other;
+    return false;
+#endif
+}
+
+bool GrSurfaceCharacterization_isValid(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && as_surface_characterization(characterization)->isValid();
+#else
+    (void) characterization;
+    return false;
+#endif
+}
+
+int GrSurfaceCharacterization_width(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? as_surface_characterization(characterization)->width() : 0;
+#else
+    (void) characterization;
+    return 0;
+#endif
+}
+
+int GrSurfaceCharacterization_height(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? as_surface_characterization(characterization)->height() : 0;
+#else
+    (void) characterization;
+    return 0;
+#endif
+}
+
+int GrSurfaceCharacterization_colorType(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? static_cast<int>(as_surface_characterization(characterization)->colorType()) : 0;
+#else
+    (void) characterization;
+    return 0;
+#endif
+}
+
+int GrSurfaceCharacterization_sampleCount(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? as_surface_characterization(characterization)->sampleCount() : 0;
+#else
+    (void) characterization;
+    return 0;
+#endif
+}
+
+int GrSurfaceCharacterization_origin(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? static_cast<int>(as_surface_characterization(characterization)->origin()) : 0;
+#else
+    (void) characterization;
+    return 0;
+#endif
+}
+
+bool GrSurfaceCharacterization_isTextureable(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && as_surface_characterization(characterization)->isTextureable();
+#else
+    (void) characterization;
+    return false;
+#endif
+}
+
+bool GrSurfaceCharacterization_isMipMapped(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && as_surface_characterization(characterization)->isMipMapped();
+#else
+    (void) characterization;
+    return false;
+#endif
+}
+
+bool GrSurfaceCharacterization_isCompatible(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_backend_texture_t *texture) {
+#if defined(SK_GANESH)
+    return characterization != nullptr && texture != nullptr && as_surface_characterization(characterization)->isCompatible(*as_backend_texture(texture));
+#else
+    (void) characterization;
+    (void) texture;
+    return false;
+#endif
+}
+
+reskia_gr_backend_format_t *GrSurfaceCharacterization_backendFormat(const reskia_gr_surface_characterization_t *characterization) {
+#if defined(SK_GANESH)
+    return characterization != nullptr ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(as_surface_characterization(characterization)->backendFormat())) : nullptr;
+#else
+    (void) characterization;
+    return nullptr;
 #endif
 }
 

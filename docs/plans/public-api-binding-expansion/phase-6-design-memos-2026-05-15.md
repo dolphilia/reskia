@@ -201,9 +201,9 @@ Android hardware buffer helpers と ports font manager は platform availability
 - `SkRemotableFontIdentitySet` は ref-counted owned pointer wrapper を追加済み。
 - 抽象 `SkRemotableFontMgr` は concrete provider を作らず、既存または将来 provider pointer に対する call wrapper だけ追加済み。
 - `SkFontMgr_Indirect` constructor は `sk_font_mgr_t` impl と `SkRemotableFontMgr*` proxy を retain して `sk_font_mgr_t` を返す形で追加済み。
-- `SkFontConfigInterface` は implementation source (`SkFontConfigInterface.cpp` / direct FontConfig sources) が `skia/src` に未 import で、global registration と provider ownership 設計も必要なため、FontConfig guarded provider batch に残す。
+- `SkFontConfigInterface` は Phase 8 で implementation source (`SkFontConfigInterface.cpp` / direct FontConfig sources) を import し、`RESKIA_ENABLE_FONTCONFIG_CAPI=ON` 配下の C API と smoke test を追加済み。
 - `SkAndroidFrameworkUtils` は `SK_BUILD_FOR_ANDROID_FRAMEWORK` と Android platform API 依存のため `na`。
-- `SkAnimatedImage` は header は import 済みだが `src/android/SkAnimatedImage.cpp` が `skia/src` に無く、source import と `SkAndroidCodec` consumed ownership を同時に扱う必要があるため、Android import-source batch に残す。
+- `SkAnimatedImage` は Phase 8 で `src/android/SkAnimatedImage.cpp` を import し、`SkAndroidCodec` consumed ownership の C API と smoke test を追加済み。
 
 ## Recommended Order
 

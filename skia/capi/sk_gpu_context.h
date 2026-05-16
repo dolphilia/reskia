@@ -11,10 +11,15 @@
 
 typedef struct reskia_direct_context_t reskia_direct_context_t;
 typedef struct reskia_gr_backend_format_t reskia_gr_backend_format_t;
+typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_context_thread_safe_proxy_t reskia_gr_context_thread_safe_proxy_t;
 typedef struct reskia_gr_direct_context_id_t reskia_gr_direct_context_id_t;
+typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characterization_t;
 typedef struct reskia_graphite_context_t reskia_graphite_context_t;
 typedef struct reskia_graphite_recorder_t reskia_graphite_recorder_t;
+typedef struct reskia_image_info_t reskia_image_info_t;
+typedef struct reskia_string_t reskia_string_t;
+typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
 typedef int32_t reskia_gr_purge_resource_options_t;
 typedef int32_t reskia_gr_semaphores_submitted_t;
@@ -57,6 +62,7 @@ reskia_gr_semaphores_submitted_t GrDirectContext_flush(reskia_direct_context_t *
 bool GrDirectContext_submit(reskia_direct_context_t *ctx, bool sync_cpu); // NULL input returns false
 void GrDirectContext_checkAsyncWorkCompletion(reskia_direct_context_t *ctx); // NULL input is no-op
 void GrDirectContext_dumpMemoryStatistics(reskia_direct_context_t *ctx, reskia_trace_memory_dump_t *traceMemoryDump); // NULL input is no-op
+reskia_string_t *GrDirectContext_dump(reskia_direct_context_t *ctx); // owned; NULL input or SK_ENABLE_DUMP_GPU-disabled build returns NULL
 bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx); // NULL input returns false
 void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input is no-op
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx); // owned; NULL input returns NULL
@@ -64,6 +70,13 @@ void GrDirectContextID_delete(reskia_gr_direct_context_id_t *context_id); // NUL
 bool GrDirectContextID_isValid(reskia_gr_direct_context_id_t *context_id); // NULL input returns false
 bool GrDirectContextID_equals(reskia_gr_direct_context_id_t *context_id, reskia_gr_direct_context_id_t *other); // NULL input returns false
 reskia_gr_context_thread_safe_proxy_t *GrDirectContext_threadSafeProxy(reskia_direct_context_t *ctx); // owned; NULL input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorType(reskia_direct_context_t *ctx, int width, int height, int color_type, bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColor(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createBackendTextureWithColorTypeColor(reskia_direct_context_t *ctx, int width, int height, int color_type, const float color[4], bool mipmapped, bool renderable, bool is_protected, const char *label, size_t label_len); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTexture(reskia_direct_context_t *ctx, int width, int height, const reskia_gr_backend_format_t *format, const float color[4], bool mipmapped, bool is_protected); // owned; invalid input returns NULL
+reskia_gr_backend_texture_t *GrDirectContext_createCompressedBackendTextureWithCompressionType(reskia_direct_context_t *ctx, int width, int height, int compression_type, const float color[4], bool mipmapped, bool is_protected); // owned; invalid input returns NULL
+void GrDirectContext_deleteBackendTexture(reskia_direct_context_t *ctx, const reskia_gr_backend_texture_t *texture); // NULL input is no-op
 
 bool GrRecordingContext_abandoned(reskia_direct_context_t *ctx); // NULL input returns true
 bool GrRecordingContext_colorTypeSupportedAsSurface(reskia_direct_context_t *ctx, int color_type); // NULL input returns false
@@ -80,6 +93,23 @@ int GrContextThreadSafeProxy_maxSurfaceSampleCountForColorType(reskia_gr_context
 bool GrContextThreadSafeProxy_isValid(reskia_gr_context_thread_safe_proxy_t *proxy); // NULL input returns false
 bool GrContextThreadSafeProxy_equals(reskia_gr_context_thread_safe_proxy_t *proxy, reskia_gr_context_thread_safe_proxy_t *other); // NULL input returns false
 bool GrContextThreadSafeProxy_notEquals(reskia_gr_context_thread_safe_proxy_t *proxy, reskia_gr_context_thread_safe_proxy_t *other); // NULL input returns false
+reskia_gr_surface_characterization_t *GrContextThreadSafeProxy_createCharacterization(reskia_gr_context_thread_safe_proxy_t *proxy, size_t cache_max_resource_bytes, const reskia_image_info_t *image_info, const reskia_gr_backend_format_t *backend_format, int sample_count, int origin, const reskia_surface_props_t *surface_props, bool is_mipmapped, bool will_use_gl_fbo0, bool is_textureable, bool is_protected, bool vk_rt_supports_input_attachment, bool for_vulkan_secondary_command_buffer); // owned; invalid input returns NULL
+
+reskia_gr_surface_characterization_t *GrSurfaceCharacterization_new(); // owned; invalid default characterization
+reskia_gr_surface_characterization_t *GrSurfaceCharacterization_newCopy(const reskia_gr_surface_characterization_t *characterization); // owned; NULL returns NULL
+void GrSurfaceCharacterization_delete(reskia_gr_surface_characterization_t *characterization); // NULL input is no-op
+bool GrSurfaceCharacterization_equals(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_surface_characterization_t *other); // NULL input returns false
+bool GrSurfaceCharacterization_notEquals(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_surface_characterization_t *other); // NULL input returns false
+bool GrSurfaceCharacterization_isValid(const reskia_gr_surface_characterization_t *characterization); // NULL input returns false
+int GrSurfaceCharacterization_width(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
+int GrSurfaceCharacterization_height(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
+int GrSurfaceCharacterization_colorType(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
+int GrSurfaceCharacterization_sampleCount(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
+int GrSurfaceCharacterization_origin(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
+bool GrSurfaceCharacterization_isTextureable(const reskia_gr_surface_characterization_t *characterization); // NULL input returns false
+bool GrSurfaceCharacterization_isMipMapped(const reskia_gr_surface_characterization_t *characterization); // NULL input returns false
+bool GrSurfaceCharacterization_isCompatible(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_backend_texture_t *texture); // NULL input returns false
+reskia_gr_backend_format_t *GrSurfaceCharacterization_backendFormat(const reskia_gr_surface_characterization_t *characterization); // owned; NULL input returns NULL
 
 /**
  * owned: 呼び出し側が Reskia_GraphiteContext_Release で解放する (void *device, void *queue) -> skgpu::graphite::Context *

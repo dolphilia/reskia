@@ -5,6 +5,7 @@
 #include "capi/sk_gpu_backend_surface.h"
 #include "capi/sk_gpu_context.h"
 #include "capi/sk_graphics.h"
+#include "capi/sk_string.h"
 
 namespace {
 
@@ -99,6 +100,30 @@ bool smoke_context_create_destroy() {
 
     int null_resource_count = 1;
     size_t null_resource_bytes = 1;
+#if RESKIA_TEST_GPU_GANESH
+    reskia_gr_surface_characterization_t *default_characterization = GrSurfaceCharacterization_new();
+    if (!check(default_characterization != nullptr &&
+               !GrSurfaceCharacterization_isValid(default_characterization) &&
+               GrSurfaceCharacterization_width(default_characterization) == 0 &&
+               GrSurfaceCharacterization_height(default_characterization) == 0 &&
+               GrSurfaceCharacterization_newCopy(nullptr) == nullptr &&
+               !GrSurfaceCharacterization_isCompatible(default_characterization, nullptr),
+               "GrSurfaceCharacterization default/null helpers")) {
+        GrSurfaceCharacterization_delete(default_characterization);
+        return false;
+    }
+    reskia_gr_surface_characterization_t *default_characterization_copy =
+            GrSurfaceCharacterization_newCopy(default_characterization);
+    if (!check(default_characterization_copy != nullptr &&
+               !GrSurfaceCharacterization_isValid(default_characterization_copy),
+               "GrSurfaceCharacterization copy")) {
+        GrSurfaceCharacterization_delete(default_characterization_copy);
+        GrSurfaceCharacterization_delete(default_characterization);
+        return false;
+    }
+    GrSurfaceCharacterization_delete(default_characterization_copy);
+    GrSurfaceCharacterization_delete(default_characterization);
+#endif
     GrDirectContext_resetContext(nullptr, 0);
     GrDirectContext_abandonContext(nullptr);
     GrDirectContext_releaseResourcesAndAbandonContext(nullptr);
@@ -113,6 +138,7 @@ bool smoke_context_create_destroy() {
     GrDirectContext_checkAsyncWorkCompletion(nullptr);
     GrDirectContext_dumpMemoryStatistics(nullptr, nullptr);
     GrDirectContext_storeVkPipelineCacheData(nullptr);
+    GrDirectContext_deleteBackendTexture(nullptr, nullptr);
     if (!check(GrDirectContext_abandoned(nullptr), "GrDirectContext_abandoned(nullptr)")) {
         return false;
     }
@@ -124,7 +150,15 @@ bool smoke_context_create_destroy() {
                GrDirectContext_getResourceCachePurgeableBytes(nullptr) == 0 &&
                GrDirectContext_flush(nullptr) == -1 &&
                !GrDirectContext_submit(nullptr, false) &&
-               !GrDirectContext_supportsDistanceFieldText(nullptr),
+               GrDirectContext_dump(nullptr) == nullptr &&
+               !GrDirectContext_supportsDistanceFieldText(nullptr) &&
+               GrDirectContext_createBackendTexture(nullptr, 1, 1, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, 4, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColor(nullptr, 1, 1, nullptr, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, 4, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createCompressedBackendTexture(nullptr, 1, 1, nullptr, nullptr, false, false) == nullptr &&
+               GrDirectContext_createCompressedBackendTextureWithCompressionType(nullptr, 1, 1, 0, nullptr, false, false) == nullptr &&
+               GrContextThreadSafeProxy_createCharacterization(nullptr, 0, nullptr, nullptr, 0, 0, nullptr, false, false, false, false, false, false) == nullptr,
                "GrDirectContext null input helpers")) {
         return false;
     }
@@ -168,6 +202,13 @@ bool smoke_context_create_destroy() {
             return false;
         }
         GrDirectContextID_delete(context_id);
+        reskia_string_t *dump = GrDirectContext_dump(direct_context);
+        if (dump != nullptr && !check(SkString_c_str(dump) != nullptr, "GrDirectContext_dump(valid)")) {
+            SkString_delete(dump);
+            Reskia_DirectContext_Release(direct_context);
+            return false;
+        }
+        SkString_delete(dump);
         if (!check(!GrRecordingContext_abandoned(direct_context) &&
                    GrRecordingContext_maxTextureSize(direct_context) > 0 &&
                    GrRecordingContext_maxRenderTargetSize(direct_context) > 0 &&
@@ -189,6 +230,17 @@ bool smoke_context_create_destroy() {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
+        reskia_gr_backend_texture_t *backend_texture =
+                GrDirectContext_createBackendTexture(direct_context, 4, 4, proxy_format, false, true, false, "reskia-smoke", 12);
+        if (!check(backend_texture != nullptr, "GrDirectContext_createBackendTexture(valid)")) {
+            GrBackendTexture_delete(backend_texture);
+            GrBackendFormat_delete(proxy_format);
+            GrContextThreadSafeProxy_release(proxy);
+            Reskia_DirectContext_Release(direct_context);
+            return false;
+        }
+        GrDirectContext_deleteBackendTexture(direct_context, backend_texture);
+        GrBackendTexture_delete(backend_texture);
         GrBackendFormat_delete(proxy_format);
         GrContextThreadSafeProxy_release(proxy);
         const size_t cache_limit = GrDirectContext_getResourceCacheLimit(direct_context);

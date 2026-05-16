@@ -1307,15 +1307,43 @@ Phase 6 完了時点の残件 snapshot:
 - Phase 8 / Phase 9 / Phase 10 の対象が triage note から追える。
 - Phase 6 の残件が platform/provider/generator polish として説明できる。
 
+### Phase 7 progress 2026-05-16
+
+Phase 7 の最初の同期として、`public-api-phase-7-residual-index.csv` を追加した。現行 matrix の `missing` / `partial` 1015 行を集約し、既存 triage の分類を引き継ぎつつ、既存台帳に未収録だった 67 行を補完した。
+
+集計:
+
+- `real_gap`: 505
+- `na`: 283
+- `false_positive`: 227
+- Phase 8: 29
+- Phase 9 GPU: 297
+- Phase 9 optional: 445
+- Phase 9 callback/provider: 7
+- Phase 10: 237
+
+同期内容:
+
+- `public-api-paragraph-unicode-shaper-missing-triage.csv` から stale 10 行を削除した。
+- `partial` 17 行を Phase 10 generator polish と overload review に分類した。
+- `SkCustomTypefaceBuilder::setGlyph` は両 overload 実装済みの generator matching 問題として Phase 10 に分類した。
+
+### Phase 7 routing artifacts 2026-05-16
+
+Phase 7 の成果物として、次フェーズへ直接渡す補助台帳を追加した。
+
+- `public-api-phase-7-triage-routing-index.csv`: 930 行。既存 triage CSV の分類に `next_phase` / `residual_kind` を合流した view。
+- `public-api-phase-8-guarded-platform-index.csv`: 11 行。`SkAndroidFrameworkUtils` と Android-only `Sk3DView` を Phase 8 用に切り出した。
+- `public-api-phase-9-shortlist.csv`: 80 行。SVG value helpers、GPU no-callback value/query、SKSG graph ownership、paragraph residual、SkShaper を初期候補にした。
+- `public-api-phase-10-generator-polish-backlog.csv`: 237 行。false positive suppression、overload/split-helper matching、guard-aware NA classification を切り出した。
+
 ## Phase 8: Guarded platform / import-source APIs
 
 目的: 既定 build に混ぜられない Android / FontConfig / platform source import 系 API を feature guard 付きで扱う。
 
 対象:
 
-- `SkAnimatedImage`
 - `SkAndroidFrameworkUtils`
-- `SkFontConfigInterface`
 - `Sk3DView` Android framework-only camera location methods
 
 方針:
@@ -1330,6 +1358,58 @@ Phase 6 完了時点の残件 snapshot:
 - feature option OFF で configure/build が通る。
 - feature option ON の環境では smoke が実行される。
 - source import / platform dependency / ownership が計画書に残る。
+
+### Phase 8 progress 2026-05-16
+
+`SkAnimatedImage` は Phase 8 の source-import subset として実装済み。
+
+実施内容:
+
+- `vendor/skia-upstream/src/android/SkAnimatedImage.cpp` を `skia/src/android/SkAnimatedImage.cpp` に import し、core source set に追加した。
+- `skia/capi/sk_animated_image.h` / `.cpp` を追加し、`Make` 2 overload、lifetime (`delete`)、frame decode/query、current frame image、repetition count を C ABI に公開した。
+- `SkAnimatedImage_Make*` は `sk_android_codec_t` を consume し、`getCurrentFrame` は retained `sk_image_t` を返す。
+- `test_animated_image_utils_smoke` を追加し、PNG fixture 経由で `SkAndroidCodec` -> `SkAnimatedImage` の基本経路を検証した。
+
+検証結果:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase8-animated -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON`
+- `cmake --build skia/cmake-build-codex-phase8-animated --target test_animated_image_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase8-animated -R 'c_skia_animated_image_utils_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+更新後 snapshot:
+
+- coverage: `covered` 2313、`missing` 987、`partial` 17、`no_public_methods_found` 104
+- `SkAnimatedImage` 11 行はすべて `covered`
+- `public-api-phase-8-guarded-platform-index.csv` は 18 行に縮小し、残りは Android framework-only 11 行と FontConfig provider 7 行
+
+残作業:
+
+- `SkAndroidFrameworkUtils` / `Sk3DView` camera location: `SK_BUILD_FOR_ANDROID_FRAMEWORK` only のため、Android framework build target が明示できるまで `na` のまま維持する。
+
+### Phase 8 FontConfig progress 2026-05-16
+
+`SkFontConfigInterface` は `RESKIA_ENABLE_FONTCONFIG_CAPI=ON` 配下の guarded provider subset として実装済み。
+
+実施内容:
+
+- `include/ports/SkFontConfigInterface.h` と `src/ports/SkFontConfigInterface*.{cpp,h}` を upstream から import した。
+- `skia/capi/sk_font_config_interface.h` / `.cpp` を追加し、`RefGlobal`、`SetGlobal`、`GetSingletonDirectInterface`、`matchFamilyName`、`openStream`、`makeTypeface` 2 overload を C ABI に公開した。
+- `FontIdentity` は opaque wrapper とし、ID/TTC/string/style access と `writeToMemory` / `readFromMemory` helper を追加した。
+- `test_font_config_interface_utils_smoke` を `RESKIA_ENABLE_FONTCONFIG_CAPI=ON` のときだけ登録するようにした。
+
+検証結果:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase8-fontconfig -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON -DRESKIA_ENABLE_FONTCONFIG_CAPI=ON`
+- `cmake --build skia/cmake-build-codex-phase8-fontconfig --target test_font_config_interface_utils_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase8-fontconfig -R 'c_skia_font_config_interface_utils_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+更新後 snapshot:
+
+- coverage: `covered` 2320、`missing` 980、`partial` 17、`no_public_methods_found` 104
+- `SkFontConfigInterface` 7 行はすべて `covered`
+- `public-api-phase-8-guarded-platform-index.csv` は 11 行に縮小し、残りは Android framework-only のみ
 
 ## Phase 9: High-volume optional module expansion
 
@@ -1350,6 +1430,67 @@ Phase 6 完了時点の残件 snapshot:
 - callback/provider API は release proc と failure path を smoke で検証する。
 - SVG、skottie、skresources の provider 設計が矛盾しない。
 
+### Phase 9 progress 2026-05-16
+
+Phase 9 の最初の推奨作業として、SVG value/helper subset を実装した。
+
+実施内容:
+
+- `skia/capi/sk_svg_types.h` / `.cpp` を追加。
+- `SkSVGTypes.h` の value helper から、`SkSVGColor`、`SkSVGDashArray`、`SkSVGFeInputType`、`SkSVGFeTurbulenceBaseFrequency`、`SkSVGFillRule`、`SkSVGFontFamily`、`SkSVGFontSize`、`SkSVGFontStyle`、`SkSVGFontWeight`、`SkSVGFuncIRI` を C ABI に公開。
+- getter に加えて operator coverage 用の `equals` / `notEquals` helper も追加。
+- `test_svg_types_capi_smoke` を追加。
+
+検証結果:
+
+- `cmake --build skia/cmake-build-codex-phase8-animated --target test_svg_types_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase8-animated -R 'c_skia_svg_types_capi_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py`
+
+更新後 snapshot:
+
+- coverage: `covered` 2392、`missing` 908、`partial` 17、`no_public_methods_found` 104
+- `public-api-svg-missing-triage.csv`: 284 行
+- `public-api-phase-9-shortlist.csv`: 60 行。`svg_value_helpers` は完了
+- `public-api-phase-10-generator-polish-backlog.csv`: 187 行
+
+次は Phase 9 推奨順に従い、GPU residual の no-callback value/query 20 行を確認する。
+
+### Phase 9 GPU Value/Query Progress 2026-05-16
+
+Phase 9 の次の推奨作業として、GPU residual のうち callback / native backend state を伴わない value/query subset を実装した。
+
+実施内容:
+
+- `GrDirectContext::createBackendTexture` の size + `GrBackendFormat` / `SkColorType` overload と color 初期化 overload を C ABI に公開。
+- `GrDirectContext::createCompressedBackendTexture` の color 初期化 overload を C ABI に公開。
+- `GrDirectContext::deleteBackendTexture` を C ABI に公開。
+- `GrContextThreadSafeProxy::createCharacterization` 用に `GrSurfaceCharacterization` owned wrapper を追加。
+- `test_gpu_context_capi_smoke` に null-safe path と Metal 実機 context path の backend texture allocation smoke を追加。
+
+今回あえて残したもの:
+
+- `GrDirectContext::MakeMetal` / `MakeVulkan` の `GrContextOptions` overload は options ABI 設計に回す。
+- `GrDirectContext::MakeMock` は mock context options / CMake source policy を Phase 10 以降で別途扱う。
+- pixmap/data upload overload と callback 付き overload は callback/provider foundation 側の扱いに残す。
+- `createBackendTexture` / `createCompressedBackendTexture` の pixmap/data upload overload は exact method-name matching で matrix 上は `covered` になるため、Phase 10 generator polish backlog に overcovered row として明示的に残す。
+
+検証結果:
+
+- `cmake -S skia -B skia/cmake-build-codex-phase9-gpu -DCMAKE_BUILD_TYPE=Debug -DRESKIA_BUILD_TESTS=ON -DRESKIA_ENABLE_GPU_GANESH=ON -DRESKIA_ENABLE_GPU_METAL=ON`
+- `cmake --build skia/cmake-build-codex-phase9-gpu --target test_gpu_context_capi_smoke -j 8`
+- `ctest --test-dir skia/cmake-build-codex-phase9-gpu -R 'c_skia_gpu_context_capi_smoke' --output-on-failure`
+- `python3 scripts/generate_public_api_coverage.py --repo . --output docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv`
+
+更新後 snapshot:
+
+- coverage: `covered` 2406、`missing` 893、`partial` 18、`no_public_methods_found` 104
+- `public-api-gpu-missing-triage.csv`: 300 行
+- `public-api-phase-7-residual-index.csv`: 911 行
+- `public-api-phase-7-triage-routing-index.csv`: 857 行
+- `public-api-phase-9-shortlist.csv`: 48 行。`gpu_no_callback_value_query` は残り 8 行
+- `public-api-phase-10-generator-polish-backlog.csv`: 195 行
+
 ## Phase 10: Coverage quality / ABI polish
 
 目的: 実装済みなのに `partial` / `missing` に残る行を減らし、C ABI の命名・所有権コメント・enum 定数を整える。
@@ -1367,6 +1508,130 @@ Phase 6 完了時点の残件 snapshot:
 - `partial` が真の未実装 overload だけを表す。
 - platform guard 由来の未実装が triage CSV と note で説明できる。
 - 新規 C API の header comment が `owned` / `borrowed` / `consumed` / `retained` の語彙で揃う。
+
+### Phase 10 progress 2026-05-16
+
+Phase 10 の最初の作業として、coverage generator が Phase 10 backlog を読み、実装対象ではない行を `missing` / `covered` に混ぜないようにした。
+
+実施内容:
+
+- `scripts/generate_public_api_coverage.py` に Phase 10 override 読み込みを追加。
+- `public-api-phase-10-generator-polish-backlog.csv` の `false_positive` 行を matrix 上でも `false_positive` として出力。
+- guarded / legacy API の `na` 行を matrix 上でも `na` として出力。
+- exact method-name matching で過剰に `covered` になる upload overload を `overcovered` として出力。
+
+更新後 snapshot:
+
+- `covered`: 2400
+- `missing`: 722
+- `false_positive`: 161
+- `na`: 10
+- `overcovered`: 6
+- `partial`: 18
+- `no_public_methods_found`: 104
+
+残る Phase 10 の主対象:
+
+- `partial` 18 行のうち、実装済み split-helper と真の未実装 overload の切り分け。
+- `overcovered` 6 行の overload-aware matching 改善。
+- `missing` 722 行のうち、Phase 8/9/10 へ分類済みでない行の再分類。
+
+### Phase 10 partial resolution 2026-05-16
+
+Phase 10 backlog の `partial` 18 行を再分類し、matrix 上の `partial` を 0 行にした。
+
+分類結果:
+
+- `split_covered`: 13 行。`SkCustomTypefaceBuilder::setGlyph`、paragraph font families / decoration、skunicode UTF-8 / UTF-16 split helper、`SkSVGNode::setAttribute(const char*, const char*)` など。
+- `deferred`: 4 行。`GrDirectContext::dump`、generic `SkSG::Scene::Make(RenderNode)`、`SkSVGDOM::renderNode` の custom presentation context、`SkSVGNode::setAttribute(SkSVGValue)`。
+- `false_positive`: 1 行。`GrDirectContext` destructor。
+
+更新後 snapshot:
+
+- `covered`: 2400
+- `missing`: 722
+- `false_positive`: 162
+- `split_covered`: 13
+- `na`: 10
+- `overcovered`: 6
+- `deferred`: 4
+- `partial`: 0
+- `no_public_methods_found`: 104
+
+### Phase 10 residual sync / dump progress 2026-05-16
+
+Phase 10 の次の小さな実装候補として、`GrDirectContext::dump` を C ABI に追加した。`SK_ENABLE_DUMP_GPU` が有効な build では owned `reskia_string_t *` を返し、無効な build または `NULL` input では `NULL` を返す。これにより標準 build でも ABI は存在し、debug dump 有効 build だけで実体を返す形にした。
+
+あわせて Phase 7 residual / routing index を Phase 10 override 後の matrix status と同期し、古い `partial` 表示を消した。
+
+更新内容:
+
+- `GrDirectContext_dump` を `skia/capi/sk_gpu_context.h` / `.cpp` に追加。
+- GPU smoke test に `NULL` input と valid context 呼び出しを追加。
+- `GrDirectContext::dump` を Phase 10 backlog、Phase 7 residual / routing index、GPU triage から削除。
+- `public-api-phase-7-residual-index.csv` と `public-api-phase-7-triage-routing-index.csv` を現行 matrix の `false_positive` / `split_covered` / `na` / `overcovered` / `deferred` に同期。
+
+更新後 snapshot:
+
+- `covered`: 2401
+- `missing`: 722
+- `false_positive`: 162
+- `split_covered`: 13
+- `na`: 10
+- `overcovered`: 6
+- `deferred`: 3
+- `partial`: 0
+- `no_public_methods_found`: 104
+
+台帳 snapshot:
+
+- `public-api-phase-10-generator-polish-backlog.csv`: 194 行。
+- `public-api-phase-7-residual-index.csv`: 916 行。
+- `public-api-phase-7-triage-routing-index.csv`: 865 行。
+- `public-api-gpu-missing-triage.csv`: 299 行。
+
+残る Phase 10 の主対象:
+
+- `overcovered` 6 行の overload-aware matching と、pixmap / raw data upload overload の ABI 方針。
+- `deferred` 3 行: generic `SkSG::Scene::Make(RenderNode)`、custom `SkSVGPresentationContext` 付き `SkSVGDOM::renderNode`、`SkSVGNode::setAttribute(SkSVGValue)`。
+- `missing` 722 行のうち、実装 phase へまだ落とせていない残件の再分類。
+
+### Phase 10 SVG presentation context progress 2026-05-16
+
+`SkSVGDOM::renderNode(SkCanvas*, SkSVGPresentationContext&, const char*)` を C ABI に追加した。Phase 3 では default context helper の `SkSVGDOM_renderNodeById` に留めていたが、Phase 10 では `SkSVGPresentationContext` の owned wrapper を最小公開し、custom context を受け取る `SkSVGDOM_renderNode` として upstream method に直接対応させた。
+
+更新内容:
+
+- `SkSVGPresentationContext_new` / `SkSVGPresentationContext_copy` / `SkSVGPresentationContext_delete` を追加。
+- `SkSVGDOM_renderNode` を追加。
+- SVG DOM smoke test に presentation context の create / copy / delete と custom-context render path を追加。
+- `SkSVGDOM::renderNode` と `SkSVGPresentationContext` constructor / copy constructor 行を Phase 7 residual / routing index、SVG triage から削除。
+- `SkSVGDOM::renderNode` を Phase 10 backlog から削除。
+
+更新後 snapshot:
+
+- `covered`: 2404
+- `missing`: 720
+- `false_positive`: 162
+- `split_covered`: 13
+- `na`: 10
+- `overcovered`: 6
+- `deferred`: 2
+- `partial`: 0
+- `no_public_methods_found`: 104
+
+台帳 snapshot:
+
+- `public-api-phase-10-generator-polish-backlog.csv`: 193 行。
+- `public-api-phase-7-residual-index.csv`: 913 行。
+- `public-api-phase-7-triage-routing-index.csv`: 862 行。
+- `public-api-svg-missing-triage.csv`: 281 行。
+
+残る Phase 10 の主対象:
+
+- `overcovered` 6 行の overload-aware matching と、pixmap / raw data upload overload の ABI 方針。
+- `deferred` 2 行: generic `SkSG::Scene::Make(RenderNode)`、`SkSVGNode::setAttribute(SkSVGValue)`。
+- `missing` 720 行のうち、実装 phase へまだ落とせていない残件の再分類。
 
 ## 実装 batch の標準手順
 

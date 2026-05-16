@@ -1,4 +1,5 @@
 list(APPEND SOURCE_FILES
+        src/android/SkAnimatedImage.cpp
         src/base/SkArenaAlloc.cpp
         src/base/SkBase64.cpp
         src/base/SkBezierCurves.cpp
@@ -529,6 +530,9 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
         set(_reskia_fontconfig_sources
                 src/ports/SkFontHost_FreeType_common.cpp
                 src/ports/SkFontHost_FreeType.cpp
+                src/ports/SkFontConfigInterface.cpp
+                src/ports/SkFontConfigInterface_direct.cpp
+                src/ports/SkFontConfigInterface_direct_factory.cpp
                 src/ports/SkFontMgr_fontconfig.cpp
         )
         set(_reskia_fontconfig_missing "")
