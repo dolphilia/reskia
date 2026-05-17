@@ -11,10 +11,10 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 | status | count |
 | --- | ---: |
 | `covered` | 2604 |
-| `missing` | 293 |
-| `false_positive` | 270 |
+| `missing` | 252 |
+| `false_positive` | 274 |
 | `split_covered` | 33 |
-| `na` | 117 |
+| `na` | 154 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -29,12 +29,8 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 | `include/gpu` | 151 | Ganesh / Graphite backend value、context/recorder、semaphore、YUV(A)、platform backend |
 | `modules/svg` | 74 | SVG nodes、filter/render context、shape-specific setters/helpers |
 | `modules/sksg` | 25 | RenderNode graph primitives/effects、invalidation、nodeAt |
-| `modules/bentleyottmann` | 24 | low-priority internal geometry helpers |
-| `include/android` | 7 | Android-only framework helpers |
-| `include/core` | 5 | registration/subclass hooks |
-| `include/utils` | 4 | Sk3DView camera location guarded methods |
+| `include/core` | 1 | global registration |
 | `include/codec` | 1 | codec registration |
-| `include/sksl` | 2 | debug trace sink |
 
 Residual index view:
 
@@ -190,6 +186,7 @@ Progress:
 - 2026-05-17: Phase 14 callback/provider override 台帳 `public-api-phase-14-callback-provider-overrides.csv` を追加し、typed `ExpressionEvaluator<T>` の template marker 行を `split_covered`、内部 `SceneGraphRevalidator` を必要とする `SlotManager` constructor を `na` に分類した。matrix は `covered 2598`、`missing 299`、`split_covered 33`、`na 117`、`modules/skottie missing 6`。
 - 2026-05-17: `PropertyObserver` property callback batch として lazy handle 設計メモ `skottie-property-observer-lazy-handle-design-2026-05-17.md` を追加し、`onColorProperty` / `onOpacityProperty` / `onTextProperty` / `onTransformProperty` の C callback bridge、callback-scoped lazy handle、owned property handle materialization、color/opacity/text/transform get/set wrapper を追加した。`c_skia_skottie_smoke` で direct property callback dispatch、null lazy materialization、transform null guard、builder retained lifetime を検証済み。matrix は `covered 2602`、`missing 295`、`modules/skottie missing 2`。
 - 2026-05-17: Skottie shaper batch として設計メモ `skottie-shaper-result-capi-design-2026-05-17.md` を追加し、`Skottie_Shaper_Shape` / `ShapeAtPoint` / `ShapeInBox`、owned `Shaper::Result` wrapper、fragment count / missing glyph count / scale / visual bounds query を追加した。`TextPropertyValue` を `Shaper::TextDesc` source として再利用する。`c_skia_skottie_smoke` で point/box shape、result metadata、visual bounds、null path を検証済み。matrix は `covered 2604`、`missing 293`、`modules/skottie missing 0`。
+- 2026-05-17: Phase 14 routing closeout として `phase14-registration-provider-routing-2026-05-17.md` を追加した。`SkCodec::Register` / `SkTypeface::Register` は process-global registration policy が必要な follow-up として missing に残し、`SkSVGImage::LoadImage` は SVG resource polish、GPU/Graphite async/provider/allocator は GPU 専用 phase に送る。
 
 ## Phase 15: Platform/Internal NA Sweep
 
@@ -209,6 +206,10 @@ Expected outcome:
 
 - `triage=na` / `false_positive` を Phase 10 override または新しい post-Phase10 override に反映し、matrix の `missing` を実態に近づける。
 - `real_gap` は「実装すべき API」だけに近づける。
+
+Progress:
+
+- 2026-05-17: Phase 15 first pass として `public-api-phase-15-platform-internal-overrides.csv` を追加し、Android framework-only API、`SK_BUILD_FOR_ANDROID_FRAMEWORK` guarded `Sk3DView` camera helpers、SkSL debug trace sinks、`bentleyottmann` internal geometry helpers、core abstract/destructor/subclass hooks を `na` / `false_positive` に分類した。`SkCodec::Register` / `SkTypeface::Register` は global registration follow-up として missing に残した。matrix は `covered 2604`、`missing 252`、`na 154`、`false_positive 274`。
 
 ## Phase 16: Coverage Audit And Generator Refresh
 

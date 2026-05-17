@@ -330,6 +330,7 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-12-svg-sksg-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-13-text-stack-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-14-callback-provider-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-15-platform-internal-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
