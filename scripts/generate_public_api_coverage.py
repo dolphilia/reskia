@@ -329,6 +329,7 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-11-gpu-platform-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-12-svg-sksg-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-13-text-stack-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-14-callback-provider-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
@@ -370,6 +371,8 @@ def class_prefix_candidates(class_name: str, path: str) -> set[str]:
     names = {class_name}
     if path.startswith("modules/skottie/") and class_name == "Animation":
         names.add("Skottie_Animation")
+    if path.startswith("modules/skottie/"):
+        names.add("Skottie_" + class_name)
     if path.startswith("modules/sksg/"):
         names.add("SkSG_" + class_name)
     if path.startswith("modules/skparagraph/"):

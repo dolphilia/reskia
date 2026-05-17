@@ -1,4 +1,5 @@
 #include "capi/sk_codec.h"
+#include "capi/sk_png_chunk_reader.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -14,6 +15,26 @@ bool check(bool condition, const char *message) {
         return false;
     }
     return true;
+}
+
+struct ChunkReaderState {
+    int calls = 0;
+    int releases = 0;
+};
+
+bool read_chunk_continue(const char tag[4], const void *data, size_t length, void *user_data) {
+    auto *state = static_cast<ChunkReaderState *>(user_data);
+    if (state != nullptr) {
+        state->calls += 1;
+    }
+    return tag != nullptr && data != nullptr && length == 3;
+}
+
+void release_chunk_reader_state(void *user_data) {
+    auto *state = static_cast<ChunkReaderState *>(user_data);
+    if (state != nullptr) {
+        state->releases += 1;
+    }
 }
 
 }  // namespace
@@ -61,6 +82,24 @@ int main() {
     ok &= check(SkCodec_MakeFromStream(0, reinterpret_cast<reskia_codec_result_t *>(&result), nullptr, 99) == 0, "MakeFromStream rejects invalid policy");
     ok &= check(result == kInvalidParameters, "MakeFromStream invalid policy result");
     ok &= check(SkCodec_MakeFromData(0, nullptr) == 0, "MakeFromData rejects invalid data");
+
+    ok &= check(!SkPngChunkReader_readChunk(nullptr, "abcd", nullptr, 0), "png chunk reader null read");
+    auto *null_callback_reader = SkPngChunkReader_new(nullptr, nullptr, nullptr);
+    ok &= check(null_callback_reader != nullptr, "png chunk reader new without callback");
+    ok &= check(SkPngChunkReader_readChunk(null_callback_reader, "abcd", nullptr, 0), "png chunk reader null callback continues");
+    SkPngChunkReader_release(null_callback_reader);
+
+    ChunkReaderState chunk_state;
+    auto *reader = SkPngChunkReader_new(read_chunk_continue, &chunk_state, release_chunk_reader_state);
+    ok &= check(reader != nullptr, "png chunk reader new");
+    const uint8_t payload[3] = {1, 2, 3};
+    ok &= check(SkPngChunkReader_readChunk(reader, "rSkI", payload, sizeof(payload)), "png chunk reader callback");
+    ok &= check(chunk_state.calls == 1, "png chunk reader callback count");
+    SkPngChunkReader_retain(reader);
+    SkPngChunkReader_release(reader);
+    ok &= check(chunk_state.releases == 0, "png chunk reader retained release keeps alive");
+    SkPngChunkReader_release(reader);
+    ok &= check(chunk_state.releases == 1, "png chunk reader final release callback");
 
     return ok ? 0 : 1;
 }

@@ -107,6 +107,7 @@ list(APPEND SOURCE_FILES
         capi/sk_pixel_ref.cpp
         capi/sk_pixmap_utils.cpp
         capi/sk_pixmap.cpp
+        capi/sk_png_chunk_reader.cpp
         capi/sk_png_decoder.cpp
         capi/sk_png_encoder.cpp
         capi/sk_point_3.cpp

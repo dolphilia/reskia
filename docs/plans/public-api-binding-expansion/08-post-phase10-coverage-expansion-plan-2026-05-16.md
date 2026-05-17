@@ -10,11 +10,11 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2585 |
-| `missing` | 314 |
+| `covered` | 2604 |
+| `missing` | 293 |
 | `false_positive` | 270 |
-| `split_covered` | 32 |
-| `na` | 116 |
+| `split_covered` | 33 |
+| `na` | 117 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -30,13 +30,11 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 | `modules/svg` | 74 | SVG nodes、filter/render context、shape-specific setters/helpers |
 | `modules/sksg` | 25 | RenderNode graph primitives/effects、invalidation、nodeAt |
 | `modules/bentleyottmann` | 24 | low-priority internal geometry helpers |
-| `modules/skottie` | 18 | observers/interceptors/expression callbacks |
 | `include/android` | 7 | Android-only framework helpers |
 | `include/core` | 5 | registration/subclass hooks |
 | `include/utils` | 4 | Sk3DView camera location guarded methods |
-| `include/codec` | 2 | codec registration / chunk callback |
+| `include/codec` | 1 | codec registration |
 | `include/sksl` | 2 | debug trace sink |
-| `modules/skresources` | 2 | ResourceProvider / ExternalTrackAsset |
 
 Residual index view:
 
@@ -157,6 +155,7 @@ Progress:
 - 2026-05-17: `Paragraph::updateForegroundPaint` / `updateBackgroundPaint` wrapper を追加した。upstream 実装は full text range 以外を debug assert するため、C wrapper では `ParagraphImpl::text().size()` を確認し、partial range は `false` で返して trap を避ける。`c_skia_paragraph_builder_capi_smoke` で partial range rejection と full range update を検証済み。matrix は `covered 2559`、`missing 386`、`modules/skparagraph missing 27`。
 - 2026-05-17: `SkShaper` factory / cache purge / run iterator / simple, iterator, feature shape wrapper を追加した。shape output は既存 `SkTextBlobBuilderRunHandler` に接続し、font fallback handle 0 は `SkFontMgr::RefDefault()` に補完して upstream null dereference を避ける。`c_skia_shaper_capi_smoke` で factory、simple shape、iterator shape、feature shape を検証済み。matrix は `covered 2581`、`missing 364`、`modules/skshaper missing 0`。
 - 2026-05-17: `skia::textlayout::FontArguments` wrapper を追加し、core `SkFontArguments` からの construction/copy と `CloneTypeface` を C ABI に露出した。`c_skia_paragraph_text_style_capi_smoke` で null path、copy、default typeface clone path を検証済み。さらに `public-api-phase-13-text-stack-overrides.csv` を追加し、`ParagraphPainter` / `ParagraphCache` callback/internal rows、`Block` / `Placeholder` / `StyleMetrics` internal layout records、未移植 optional module `skplaintexteditor` を理由付きで `na` / `false_positive` に分類した。matrix は `covered 2585`、`missing 314`、`na 116`、`modules/skparagraph missing 0`、`modules/skplaintexteditor missing 0`。
+- 2026-05-17: Phase 13 は完了扱いとした。`skottie::Shaper::Shape` は text helper だが `modules/skottie` 側の After Effects shaping API であり、Phase 13 の paragraph/shaper/unicode/plaintext editor 範囲から外して後続 skottie helper batch に回す。
 
 ## Phase 14: Callback / Provider / Registration Batch
 
@@ -181,6 +180,16 @@ Expected outcome:
 
 - callback/provider rows を実装可能なものと permanently-deferred/na に分ける。
 - Phase 1 の設計メモを現行 API 実装に反映する。
+
+Progress:
+
+- 2026-05-17: Phase 14 first pass として `SkPngChunkReader` の C callback bridge を追加した。`SkPngChunkReader_new` は callback と `user_data` を保持する concrete subclass を作り、`SkPngChunkReader_retain` / `release` で `SkRefCnt` lifetime を管理する。`readChunk` の `tag` / `data` は callback 中だけ有効な borrowed pointer とし、reader 破棄時に `release_proc` を呼ぶ。`c_skia_codec_invalid_input_smoke` で null reader、null callback、callback dispatch、retain/release destruction を検証済み。matrix は `covered 2586`、`missing 313`、`include/codec missing 1`。
+- 2026-05-17: skresources provider callback batch として `ExternalTrackAsset_new` / `seek` / refcount wrapper と `ResourceProvider_loadAudioAsset` を追加した。`ExternalTrackAsset` は seek callback と `user_data` を持つ concrete subclass とし、asset 破棄時に `release_proc` を呼ぶ。`c_skia_skresources_capi_smoke` で null path、seek callback、retain/release destruction、default `ResourceProvider_loadAudioAsset` null result を検証済み。matrix は `covered 2588`、`missing 311`、`modules/skresources missing 0`。
+- 2026-05-17: skottie observer batch として `Logger` / `MarkerObserver` / `ExternalLayer` / `PrecompInterceptor` / `PropertyObserver` node traversal の C callback bridge と `AnimationBuilder` setter を追加した。`ExternalLayer` と `PrecompInterceptor` は callback が返した external layer を C++ 側で retain して `sk_sp` に変換する。`PropertyObserver` は property handle lazy materialization をまだ公開せず、`onEnterNode` / `onLeavingNode` のみを先行公開した。`c_skia_skottie_smoke` で direct callback、builder retained lifetime、release callback を検証済み。matrix は `covered 2594`、`missing 305`、`modules/skottie missing 12`。
+- 2026-05-17: skottie expression/glyph batch として typed `ExpressionEvaluator` (`number` / `string` / `array`)、`ExpressionManager`、`AnimationBuilder_setExpressionManager`、`GlyphDecorator`、`TextPropertyValue_setDecorator` を追加した。array evaluator は C callback に `out_values == NULL` / `capacity == 0` で必要要素数を問い合わせ、2 回目の callback で値をコピーする規約にした。`c_skia_skottie_smoke` で evaluator callback、manager create callback、builder retained lifetime、glyph decorator dispatch、TextPropertyValue decorator retention を検証済み。matrix は `covered 2598`、`missing 301`、`modules/skottie missing 8`。
+- 2026-05-17: Phase 14 callback/provider override 台帳 `public-api-phase-14-callback-provider-overrides.csv` を追加し、typed `ExpressionEvaluator<T>` の template marker 行を `split_covered`、内部 `SceneGraphRevalidator` を必要とする `SlotManager` constructor を `na` に分類した。matrix は `covered 2598`、`missing 299`、`split_covered 33`、`na 117`、`modules/skottie missing 6`。
+- 2026-05-17: `PropertyObserver` property callback batch として lazy handle 設計メモ `skottie-property-observer-lazy-handle-design-2026-05-17.md` を追加し、`onColorProperty` / `onOpacityProperty` / `onTextProperty` / `onTransformProperty` の C callback bridge、callback-scoped lazy handle、owned property handle materialization、color/opacity/text/transform get/set wrapper を追加した。`c_skia_skottie_smoke` で direct property callback dispatch、null lazy materialization、transform null guard、builder retained lifetime を検証済み。matrix は `covered 2602`、`missing 295`、`modules/skottie missing 2`。
+- 2026-05-17: Skottie shaper batch として設計メモ `skottie-shaper-result-capi-design-2026-05-17.md` を追加し、`Skottie_Shaper_Shape` / `ShapeAtPoint` / `ShapeInBox`、owned `Shaper::Result` wrapper、fragment count / missing glyph count / scale / visual bounds query を追加した。`TextPropertyValue` を `Shaper::TextDesc` source として再利用する。`c_skia_skottie_smoke` で point/box shape、result metadata、visual bounds、null path を検証済み。matrix は `covered 2604`、`missing 293`、`modules/skottie missing 0`。
 
 ## Phase 15: Platform/Internal NA Sweep
 

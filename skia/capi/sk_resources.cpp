@@ -21,6 +21,10 @@ skresources::ImageAsset *as_image_asset(reskia_skresources_image_asset_t *asset)
     return reinterpret_cast<skresources::ImageAsset *>(asset);
 }
 
+skresources::ExternalTrackAsset *as_external_track_asset(reskia_skresources_external_track_asset_t *asset) {
+    return reinterpret_cast<skresources::ExternalTrackAsset *>(asset);
+}
+
 skresources::ResourceProvider *as_resource_provider(reskia_skresources_resource_provider_t *provider) {
     return reinterpret_cast<skresources::ResourceProvider *>(provider);
 }
@@ -63,6 +67,10 @@ reskia_skresources_image_asset_t *release_image_asset(sk_sp<skresources::ImageAs
     return reinterpret_cast<reskia_skresources_image_asset_t *>(asset.release());
 }
 
+reskia_skresources_external_track_asset_t *release_external_track_asset(sk_sp<skresources::ExternalTrackAsset> asset) {
+    return reinterpret_cast<reskia_skresources_external_track_asset_t *>(asset.release());
+}
+
 reskia_skresources_resource_provider_t *release_resource_provider(sk_sp<skresources::ResourceProvider> provider) {
     return reinterpret_cast<reskia_skresources_resource_provider_t *>(provider.release());
 }
@@ -78,6 +86,34 @@ sk_data_t make_data_handle(sk_sp<SkData> data) {
 sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
     return typeface ? static_sk_typeface_make(std::move(typeface)) : 0;
 }
+
+class ReskiaExternalTrackAsset final : public skresources::ExternalTrackAsset {
+public:
+    ReskiaExternalTrackAsset(
+            reskia_skresources_external_track_asset_seek_proc_t seek,
+            void *user_data,
+            reskia_callback_release_proc_t release_proc)
+        : seek_(seek)
+        , user_data_(user_data)
+        , release_proc_(release_proc) {}
+
+    ~ReskiaExternalTrackAsset() override {
+        if (release_proc_ != nullptr) {
+            release_proc_(user_data_);
+        }
+    }
+
+    void seek(float t) override {
+        if (seek_ != nullptr) {
+            seek_(t, user_data_);
+        }
+    }
+
+private:
+    reskia_skresources_external_track_asset_seek_proc_t seek_;
+    void *user_data_;
+    reskia_callback_release_proc_t release_proc_;
+};
 
 }  // namespace
 
@@ -126,6 +162,36 @@ bool ImageAsset_getFrameData(reskia_skresources_image_asset_t *asset, float t, r
     return true;
 }
 
+reskia_skresources_external_track_asset_t *ExternalTrackAsset_new(
+        reskia_skresources_external_track_asset_seek_proc_t seek,
+        void *user_data,
+        reskia_callback_release_proc_t release_proc) {
+    return reinterpret_cast<reskia_skresources_external_track_asset_t *>(
+            new ReskiaExternalTrackAsset(seek, user_data, release_proc));
+}
+
+void ExternalTrackAsset_ref(reskia_skresources_external_track_asset_t *asset) {
+    if (asset != nullptr) {
+        as_external_track_asset(asset)->ref();
+    }
+}
+
+void ExternalTrackAsset_unref(reskia_skresources_external_track_asset_t *asset) {
+    if (asset != nullptr) {
+        as_external_track_asset(asset)->unref();
+    }
+}
+
+void ExternalTrackAsset_release(reskia_skresources_external_track_asset_t *asset) {
+    ExternalTrackAsset_unref(asset);
+}
+
+void ExternalTrackAsset_seek(reskia_skresources_external_track_asset_t *asset, float t) {
+    if (asset != nullptr) {
+        as_external_track_asset(asset)->seek(t);
+    }
+}
+
 reskia_skresources_image_asset_t *MultiFrameImageAsset_Make(sk_data_t data, reskia_skresources_image_decode_strategy_t strategy) {
     return release_image_asset(skresources::MultiFrameImageAsset::Make(
             static_sk_data_get_entity(data),
@@ -170,6 +236,10 @@ sk_data_t ResourceProvider_loadFont(reskia_skresources_resource_provider_t *prov
 
 sk_typeface_t ResourceProvider_loadTypeface(reskia_skresources_resource_provider_t *provider, const char name[], const char url[]) {
     return provider != nullptr ? make_typeface_handle(as_resource_provider(provider)->loadTypeface(name, url)) : 0;
+}
+
+reskia_skresources_external_track_asset_t *ResourceProvider_loadAudioAsset(reskia_skresources_resource_provider_t *provider, const char resource_path[], const char resource_name[], const char resource_id[]) {
+    return provider != nullptr ? release_external_track_asset(as_resource_provider(provider)->loadAudioAsset(resource_path, resource_name, resource_id)) : nullptr;
 }
 
 reskia_skresources_resource_provider_t *FileResourceProvider_Make(const char base_dir[], reskia_skresources_image_decode_strategy_t strategy) {

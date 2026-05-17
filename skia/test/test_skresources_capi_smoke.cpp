@@ -41,6 +41,27 @@ bool check_image_handle(sk_image_t image, const char *message) {
     return check(ok, message);
 }
 
+struct ExternalTrackState {
+    int seeks = 0;
+    int releases = 0;
+    float last_t = 0.0f;
+};
+
+void external_track_seek(float t, void *user_data) {
+    auto *state = static_cast<ExternalTrackState *>(user_data);
+    if (state != nullptr) {
+        state->seeks += 1;
+        state->last_t = t;
+    }
+}
+
+void external_track_release(void *user_data) {
+    auto *state = static_cast<ExternalTrackState *>(user_data);
+    if (state != nullptr) {
+        state->releases += 1;
+    }
+}
+
 }  // namespace
 
 int main() {
@@ -58,6 +79,20 @@ int main() {
     ok &= check(ResourceProvider_loadImageAsset(nullptr, nullptr, nullptr, nullptr) == nullptr, "ResourceProvider_loadImageAsset null");
     ok &= check(ResourceProvider_loadFont(nullptr, nullptr, nullptr) == 0, "ResourceProvider_loadFont null");
     ok &= check(ResourceProvider_loadTypeface(nullptr, nullptr, nullptr) == 0, "ResourceProvider_loadTypeface null");
+    ok &= check(ResourceProvider_loadAudioAsset(nullptr, nullptr, nullptr, nullptr) == nullptr, "ResourceProvider_loadAudioAsset null");
+    ExternalTrackAsset_seek(nullptr, 1.0f);
+
+    ExternalTrackState track_state;
+    reskia_skresources_external_track_asset_t *track =
+            ExternalTrackAsset_new(external_track_seek, &track_state, external_track_release);
+    ok &= check(track != nullptr, "ExternalTrackAsset_new");
+    ExternalTrackAsset_seek(track, 2.5f);
+    ok &= check(track_state.seeks == 1 && track_state.last_t == 2.5f, "ExternalTrackAsset_seek callback");
+    ExternalTrackAsset_ref(track);
+    ExternalTrackAsset_release(track);
+    ok &= check(track_state.releases == 0, "ExternalTrackAsset retained release keeps alive");
+    ExternalTrackAsset_release(track);
+    ok &= check(track_state.releases == 1, "ExternalTrackAsset final release callback");
 
     const std::vector<uint8_t> png = read_png_fixture();
     ok &= check(!png.empty(), "read png fixture");
@@ -88,6 +123,8 @@ int main() {
         sk_data_t loaded = FileResourceProvider_load(file_provider, "", fixture_name);
         ok &= check(loaded != 0, "FileResourceProvider_load fixture");
         static_sk_data_delete(loaded);
+        ok &= check(ResourceProvider_loadAudioAsset(file_provider, "", fixture_name, "fixture") == nullptr,
+                    "ResourceProvider_loadAudioAsset default null");
 
         reskia_skresources_image_asset_t *file_asset =
                 FileResourceProvider_loadImageAsset(file_provider, "", fixture_name, "fixture");

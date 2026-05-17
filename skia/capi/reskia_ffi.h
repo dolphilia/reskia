@@ -34,6 +34,7 @@
 #include "sk_pdf.h"
 #include "sk_picture.h"
 #include "sk_pixel_ref.h"
+#include "sk_png_chunk_reader.h"
 #include "sk_read_buffer.h"
 #include "sk_runtime_effect.h"
 #include "sk_shader.h"
