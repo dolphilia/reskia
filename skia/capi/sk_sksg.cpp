@@ -2,13 +2,27 @@
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColor.h"
+#include "include/core/SkMatrix.h"
+#include "include/core/SkPaint.h"
+#include "include/core/SkPath.h"
+#include "include/core/SkPoint.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
+#include "include/core/SkRRect.h"
 #include "modules/sksg/include/SkSGDraw.h"
+#include "modules/sksg/include/SkSGClipEffect.h"
 #include "modules/sksg/include/SkSGGroup.h"
+#include "modules/sksg/include/SkSGGeometryEffect.h"
+#include "modules/sksg/include/SkSGInvalidationController.h"
+#include "modules/sksg/include/SkSGMaskEffect.h"
+#include "modules/sksg/include/SkSGOpacityEffect.h"
 #include "modules/sksg/include/SkSGPaint.h"
+#include "modules/sksg/include/SkSGPath.h"
+#include "modules/sksg/include/SkSGPlane.h"
 #include "modules/sksg/include/SkSGRect.h"
+#include "modules/sksg/include/SkSGRenderEffect.h"
 #include "modules/sksg/include/SkSGScene.h"
+#include "modules/sksg/include/SkSGTransform.h"
 
 #include <memory>
 #include <utility>
@@ -28,7 +42,53 @@ public:
     explicit ReskiaSkSGRenderNode(sk_sp<sksg::RenderNode> node_in)
             : node(std::move(node_in)) {}
 
+    explicit ReskiaSkSGRenderNode(sk_sp<sksg::Group> group_in)
+            : node(group_in)
+            , group(std::move(group_in)) {}
+
+    explicit ReskiaSkSGRenderNode(sk_sp<sksg::OpacityEffect> opacity_effect_in)
+            : node(opacity_effect_in)
+            , opacity_effect(std::move(opacity_effect_in)) {}
+
     sk_sp<sksg::RenderNode> node;
+    sk_sp<sksg::Group> group;
+    sk_sp<sksg::OpacityEffect> opacity_effect;
+};
+
+class ReskiaSkSGGeometryNode final : public SkRefCnt {
+public:
+    explicit ReskiaSkSGGeometryNode(sk_sp<sksg::GeometryNode> node_in)
+            : node(std::move(node_in)) {}
+
+    explicit ReskiaSkSGGeometryNode(sk_sp<sksg::Rect> rect_in)
+            : node(rect_in)
+            , rect(std::move(rect_in)) {}
+
+    explicit ReskiaSkSGGeometryNode(sk_sp<sksg::Path> path_in)
+            : node(path_in)
+            , path(std::move(path_in)) {}
+
+    explicit ReskiaSkSGGeometryNode(sk_sp<sksg::RRect> rrect_in)
+            : node(rrect_in)
+            , rrect(std::move(rrect_in)) {}
+
+    sk_sp<sksg::GeometryNode> node;
+    sk_sp<sksg::Rect> rect;
+    sk_sp<sksg::Path> path;
+    sk_sp<sksg::RRect> rrect;
+};
+
+class ReskiaSkSGPaintNode final : public SkRefCnt {
+public:
+    explicit ReskiaSkSGPaintNode(sk_sp<sksg::PaintNode> node_in)
+            : node(std::move(node_in)) {}
+
+    explicit ReskiaSkSGPaintNode(sk_sp<sksg::Color> color_in)
+            : node(color_in)
+            , color(std::move(color_in)) {}
+
+    sk_sp<sksg::PaintNode> node;
+    sk_sp<sksg::Color> color;
 };
 
 inline ReskiaSkSGScene *to_scene_holder(reskia_sksg_scene_t *scene) {
@@ -47,6 +107,18 @@ inline const ReskiaSkSGRenderNode *to_render_node_holder(const reskia_sksg_rende
     return reinterpret_cast<const ReskiaSkSGRenderNode *>(node);
 }
 
+inline ReskiaSkSGGeometryNode *to_geometry_node_holder(reskia_sksg_geometry_node_t *node) {
+    return reinterpret_cast<ReskiaSkSGGeometryNode *>(node);
+}
+
+inline ReskiaSkSGPaintNode *to_paint_node_holder(reskia_sksg_paint_node_t *node) {
+    return reinterpret_cast<ReskiaSkSGPaintNode *>(node);
+}
+
+inline sksg::InvalidationController *to_invalidation_controller(reskia_sksg_invalidation_controller_t *controller) {
+    return reinterpret_cast<sksg::InvalidationController *>(controller);
+}
+
 sk_sp<sksg::RenderNode> make_simple_rect_render_node(float x, float y, float width, float height, reskia_color_t color) {
     if (!(width > 0.0f) || !(height > 0.0f)) {
         return nullptr;
@@ -60,6 +132,70 @@ sk_sp<sksg::RenderNode> make_simple_rect_render_node(float x, float y, float wid
     }
     root->addChild(draw);
     return root;
+}
+
+reskia_sksg_render_node_t *wrap_render_node(sk_sp<sksg::RenderNode> node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGRenderNode>(std::move(node));
+    return reinterpret_cast<reskia_sksg_render_node_t *>(holder.release());
+}
+
+reskia_sksg_render_node_t *wrap_group(sk_sp<sksg::Group> group) {
+    if (group == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGRenderNode>(std::move(group));
+    return reinterpret_cast<reskia_sksg_render_node_t *>(holder.release());
+}
+
+reskia_sksg_render_node_t *wrap_opacity_effect(sk_sp<sksg::OpacityEffect> effect) {
+    if (effect == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGRenderNode>(std::move(effect));
+    return reinterpret_cast<reskia_sksg_render_node_t *>(holder.release());
+}
+
+reskia_sksg_geometry_node_t *wrap_geometry_node(sk_sp<sksg::GeometryNode> node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGGeometryNode>(std::move(node));
+    return reinterpret_cast<reskia_sksg_geometry_node_t *>(holder.release());
+}
+
+reskia_sksg_geometry_node_t *wrap_rect(sk_sp<sksg::Rect> rect) {
+    if (rect == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGGeometryNode>(std::move(rect));
+    return reinterpret_cast<reskia_sksg_geometry_node_t *>(holder.release());
+}
+
+reskia_sksg_geometry_node_t *wrap_path(sk_sp<sksg::Path> path) {
+    if (path == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGGeometryNode>(std::move(path));
+    return reinterpret_cast<reskia_sksg_geometry_node_t *>(holder.release());
+}
+
+reskia_sksg_geometry_node_t *wrap_rrect(sk_sp<sksg::RRect> rrect) {
+    if (rrect == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGGeometryNode>(std::move(rrect));
+    return reinterpret_cast<reskia_sksg_geometry_node_t *>(holder.release());
+}
+
+reskia_sksg_paint_node_t *wrap_color(sk_sp<sksg::Color> color) {
+    if (color == nullptr) {
+        return nullptr;
+    }
+    auto holder = sk_make_sp<ReskiaSkSGPaintNode>(std::move(color));
+    return reinterpret_cast<reskia_sksg_paint_node_t *>(holder.release());
 }
 
 } // namespace
@@ -91,11 +227,309 @@ reskia_sksg_scene_t *SkSG_Scene_Make(reskia_sksg_render_node_t *root) {
 
 reskia_sksg_render_node_t *SkSG_RenderNode_MakeSimpleRect(float x, float y, float width, float height, reskia_color_t color) {
     auto node = make_simple_rect_render_node(x, y, width, height, color);
-    if (node == nullptr) {
+    return wrap_render_node(std::move(node));
+}
+
+reskia_sksg_render_node_t *SkSG_Group_Make() {
+    return wrap_group(sksg::Group::Make());
+}
+
+bool SkSG_Group_addChild(reskia_sksg_render_node_t *group, reskia_sksg_render_node_t *child) {
+    if (group == nullptr || child == nullptr ||
+        to_render_node_holder(group)->group == nullptr ||
+        to_render_node_holder(child)->node == nullptr) {
+        return false;
+    }
+    to_render_node_holder(group)->group->addChild(to_render_node_holder(child)->node);
+    return true;
+}
+
+bool SkSG_Group_removeChild(reskia_sksg_render_node_t *group, reskia_sksg_render_node_t *child) {
+    if (group == nullptr || child == nullptr ||
+        to_render_node_holder(group)->group == nullptr ||
+        to_render_node_holder(child)->node == nullptr) {
+        return false;
+    }
+    to_render_node_holder(group)->group->removeChild(to_render_node_holder(child)->node);
+    return true;
+}
+
+size_t SkSG_Group_size(reskia_sksg_render_node_t *group) {
+    return group != nullptr && to_render_node_holder(group)->group != nullptr
+                   ? to_render_node_holder(group)->group->size()
+                   : 0;
+}
+
+bool SkSG_Group_empty(reskia_sksg_render_node_t *group) {
+    return group == nullptr || to_render_node_holder(group)->group == nullptr ||
+           to_render_node_holder(group)->group->empty();
+}
+
+void SkSG_Group_clear(reskia_sksg_render_node_t *group) {
+    if (group != nullptr && to_render_node_holder(group)->group != nullptr) {
+        to_render_node_holder(group)->group->clear();
+    }
+}
+
+reskia_sksg_geometry_node_t *SkSG_Rect_Make() {
+    return wrap_rect(sksg::Rect::Make());
+}
+
+reskia_sksg_geometry_node_t *SkSG_Rect_MakeXYWH(float x, float y, float width, float height) {
+    if (!(width >= 0.0f) || !(height >= 0.0f)) {
         return nullptr;
     }
-    auto holder = sk_make_sp<ReskiaSkSGRenderNode>(std::move(node));
-    return reinterpret_cast<reskia_sksg_render_node_t *>(holder.release());
+    return wrap_rect(sksg::Rect::Make(SkRect::MakeXYWH(x, y, width, height)));
+}
+
+reskia_sksg_geometry_node_t *SkSG_RRect_Make() {
+    return wrap_rrect(sksg::RRect::Make());
+}
+
+reskia_sksg_geometry_node_t *SkSG_RRect_MakeFromRRect(const reskia_r_rect_t *rrect) {
+    return rrect != nullptr ? wrap_rrect(sksg::RRect::Make(*reinterpret_cast<const SkRRect *>(rrect))) : nullptr;
+}
+
+reskia_sksg_geometry_node_t *SkSG_Path_Make() {
+    return wrap_path(sksg::Path::Make());
+}
+
+void SkSG_Path_setFillType(reskia_sksg_geometry_node_t *path, int fill_type) {
+    if (path != nullptr && to_geometry_node_holder(path)->path != nullptr) {
+        to_geometry_node_holder(path)->path->setFillType(static_cast<SkPathFillType>(fill_type));
+    }
+}
+
+reskia_sksg_geometry_node_t *SkSG_Plane_Make() {
+    return wrap_geometry_node(sksg::Plane::Make());
+}
+
+reskia_sksg_geometry_node_t *SkSG_TrimEffect_Make(reskia_sksg_geometry_node_t *child) {
+    return child != nullptr && to_geometry_node_holder(child)->node != nullptr
+                   ? wrap_geometry_node(sksg::TrimEffect::Make(to_geometry_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_geometry_node_t *SkSG_DashEffect_Make(reskia_sksg_geometry_node_t *child) {
+    return child != nullptr && to_geometry_node_holder(child)->node != nullptr
+                   ? wrap_geometry_node(sksg::DashEffect::Make(to_geometry_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_geometry_node_t *SkSG_RoundEffect_Make(reskia_sksg_geometry_node_t *child) {
+    return child != nullptr && to_geometry_node_holder(child)->node != nullptr
+                   ? wrap_geometry_node(sksg::RoundEffect::Make(to_geometry_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_geometry_node_t *SkSG_OffsetEffect_Make(reskia_sksg_geometry_node_t *child) {
+    return child != nullptr && to_geometry_node_holder(child)->node != nullptr
+                   ? wrap_geometry_node(sksg::OffsetEffect::Make(to_geometry_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_paint_node_t *SkSG_Color_Make(reskia_color_t color) {
+    return wrap_color(sksg::Color::Make(static_cast<SkColor>(color)));
+}
+
+reskia_color_t SkSG_Color_getColor(reskia_sksg_paint_node_t *color) {
+    return color != nullptr && to_paint_node_holder(color)->color != nullptr
+                   ? static_cast<reskia_color_t>(to_paint_node_holder(color)->color->getColor())
+                   : 0;
+}
+
+void SkSG_Color_setColor(reskia_sksg_paint_node_t *color, reskia_color_t value) {
+    if (color != nullptr && to_paint_node_holder(color)->color != nullptr) {
+        to_paint_node_holder(color)->color->setColor(static_cast<SkColor>(value));
+    }
+}
+
+reskia_sksg_render_node_t *SkSG_Draw_Make(reskia_sksg_geometry_node_t *geometry, reskia_sksg_paint_node_t *paint) {
+    if (geometry == nullptr || paint == nullptr ||
+        to_geometry_node_holder(geometry)->node == nullptr ||
+        to_paint_node_holder(paint)->node == nullptr) {
+        return nullptr;
+    }
+    return wrap_render_node(sksg::Draw::Make(to_geometry_node_holder(geometry)->node,
+                                             to_paint_node_holder(paint)->node));
+}
+
+reskia_sksg_render_node_t *SkSG_OpacityEffect_Make(reskia_sksg_render_node_t *child, float opacity) {
+    if (child == nullptr || to_render_node_holder(child)->node == nullptr) {
+        return nullptr;
+    }
+    return wrap_opacity_effect(sksg::OpacityEffect::Make(to_render_node_holder(child)->node, opacity));
+}
+
+float SkSG_OpacityEffect_getOpacity(reskia_sksg_render_node_t *effect) {
+    return effect != nullptr && to_render_node_holder(effect)->opacity_effect != nullptr
+                   ? to_render_node_holder(effect)->opacity_effect->getOpacity()
+                   : 0.0f;
+}
+
+void SkSG_OpacityEffect_setOpacity(reskia_sksg_render_node_t *effect, float opacity) {
+    if (effect != nullptr && to_render_node_holder(effect)->opacity_effect != nullptr) {
+        to_render_node_holder(effect)->opacity_effect->setOpacity(opacity);
+    }
+}
+
+reskia_sksg_render_node_t *SkSG_ClipEffect_Make(reskia_sksg_render_node_t *child, reskia_sksg_geometry_node_t *clip, bool aa, bool force_clip) {
+    if (child == nullptr || clip == nullptr ||
+        to_render_node_holder(child)->node == nullptr ||
+        to_geometry_node_holder(clip)->node == nullptr) {
+        return nullptr;
+    }
+    return wrap_render_node(sksg::ClipEffect::Make(to_render_node_holder(child)->node,
+                                                   to_geometry_node_holder(clip)->node,
+                                                   aa,
+                                                   force_clip));
+}
+
+reskia_sksg_render_node_t *SkSG_TransformEffect_Make(reskia_sksg_render_node_t *child, const reskia_matrix_t *matrix) {
+    if (child == nullptr || matrix == nullptr || to_render_node_holder(child)->node == nullptr) {
+        return nullptr;
+    }
+    return wrap_render_node(sksg::TransformEffect::Make(to_render_node_holder(child)->node,
+                                                        *reinterpret_cast<const SkMatrix *>(matrix)));
+}
+
+reskia_sksg_render_node_t *SkSG_TransformEffect_MakeWithMatrix(reskia_sksg_render_node_t *child, const reskia_matrix_t *matrix) {
+    return SkSG_TransformEffect_Make(child, matrix);
+}
+
+reskia_sksg_render_node_t *SkSG_ShaderEffect_Make(reskia_sksg_render_node_t *child) {
+    return child != nullptr && to_render_node_holder(child)->node != nullptr
+                   ? wrap_render_node(sksg::ShaderEffect::Make(to_render_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_render_node_t *SkSG_MaskShaderEffect_Make(reskia_sksg_render_node_t *child) {
+    return child != nullptr && to_render_node_holder(child)->node != nullptr
+                   ? wrap_render_node(sksg::MaskShaderEffect::Make(to_render_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_render_node_t *SkSG_BlenderEffect_Make(reskia_sksg_render_node_t *child) {
+    return child != nullptr && to_render_node_holder(child)->node != nullptr
+                   ? wrap_render_node(sksg::BlenderEffect::Make(to_render_node_holder(child)->node))
+                   : nullptr;
+}
+
+reskia_sksg_render_node_t *SkSG_LayerEffect_Make(reskia_sksg_render_node_t *child, int blend_mode) {
+    return child != nullptr && to_render_node_holder(child)->node != nullptr
+                   ? wrap_render_node(sksg::LayerEffect::Make(to_render_node_holder(child)->node,
+                                                              static_cast<SkBlendMode>(blend_mode)))
+                   : nullptr;
+}
+
+reskia_sksg_render_node_t *SkSG_MaskEffect_Make(reskia_sksg_render_node_t *child, reskia_sksg_render_node_t *mask, int mode) {
+    if (child == nullptr || mask == nullptr ||
+        to_render_node_holder(child)->node == nullptr ||
+        to_render_node_holder(mask)->node == nullptr) {
+        return nullptr;
+    }
+    return wrap_render_node(sksg::MaskEffect::Make(to_render_node_holder(child)->node,
+                                                   to_render_node_holder(mask)->node,
+                                                   static_cast<sksg::MaskEffect::Mode>(mode)));
+}
+
+reskia_sksg_invalidation_controller_t *SkSG_InvalidationController_new() {
+    return reinterpret_cast<reskia_sksg_invalidation_controller_t *>(new sksg::InvalidationController());
+}
+
+void SkSG_InvalidationController_delete(reskia_sksg_invalidation_controller_t *controller) {
+    delete to_invalidation_controller(controller);
+}
+
+void SkSG_InvalidationController_inval(reskia_sksg_invalidation_controller_t *controller, float left, float top, float right, float bottom) {
+    if (controller != nullptr) {
+        to_invalidation_controller(controller)->inval(SkRect::MakeLTRB(left, top, right, bottom));
+    }
+}
+
+reskia_rect_t *SkSG_InvalidationController_bounds(reskia_sksg_invalidation_controller_t *controller) {
+    return controller != nullptr ? reinterpret_cast<reskia_rect_t *>(new SkRect(to_invalidation_controller(controller)->bounds())) : nullptr;
+}
+
+void SkSG_InvalidationController_reset(reskia_sksg_invalidation_controller_t *controller) {
+    if (controller != nullptr) {
+        to_invalidation_controller(controller)->reset();
+    }
+}
+
+void SkSG_GeometryNode_release(reskia_sksg_geometry_node_t *node) {
+    if (node != nullptr) {
+        to_geometry_node_holder(node)->unref();
+    }
+}
+
+void SkSG_GeometryNode_ref(reskia_sksg_geometry_node_t *node) {
+    if (node != nullptr) {
+        to_geometry_node_holder(node)->ref();
+    }
+}
+
+void SkSG_GeometryNode_unref(reskia_sksg_geometry_node_t *node) {
+    if (node != nullptr) {
+        to_geometry_node_holder(node)->unref();
+    }
+}
+
+bool SkSG_GeometryNode_contains(reskia_sksg_geometry_node_t *node, float x, float y) {
+    if (node == nullptr || to_geometry_node_holder(node)->node == nullptr) {
+        return false;
+    }
+    to_geometry_node_holder(node)->node->revalidate(nullptr, SkMatrix::I());
+    return to_geometry_node_holder(node)->node->contains(SkPoint::Make(x, y));
+}
+
+void SkSG_GeometryNode_clip(reskia_sksg_geometry_node_t *node, reskia_canvas_t *canvas, bool anti_alias) {
+    if (node != nullptr && canvas != nullptr && to_geometry_node_holder(node)->node != nullptr) {
+        to_geometry_node_holder(node)->node->revalidate(nullptr, SkMatrix::I());
+        to_geometry_node_holder(node)->node->clip(reinterpret_cast<SkCanvas *>(canvas), anti_alias);
+    }
+}
+
+void SkSG_GeometryNode_draw(reskia_sksg_geometry_node_t *node, reskia_canvas_t *canvas, const reskia_paint_t *paint) {
+    if (node != nullptr && canvas != nullptr && paint != nullptr && to_geometry_node_holder(node)->node != nullptr) {
+        to_geometry_node_holder(node)->node->revalidate(nullptr, SkMatrix::I());
+        to_geometry_node_holder(node)->node->draw(reinterpret_cast<SkCanvas *>(canvas),
+                                                  *reinterpret_cast<const SkPaint *>(paint));
+    }
+}
+
+reskia_path_t *SkSG_GeometryNode_asPath(reskia_sksg_geometry_node_t *node) {
+    if (node == nullptr || to_geometry_node_holder(node)->node == nullptr) {
+        return nullptr;
+    }
+    to_geometry_node_holder(node)->node->revalidate(nullptr, SkMatrix::I());
+    return reinterpret_cast<reskia_path_t *>(new SkPath(to_geometry_node_holder(node)->node->asPath()));
+}
+
+void SkSG_PaintNode_release(reskia_sksg_paint_node_t *node) {
+    if (node != nullptr) {
+        to_paint_node_holder(node)->unref();
+    }
+}
+
+void SkSG_PaintNode_ref(reskia_sksg_paint_node_t *node) {
+    if (node != nullptr) {
+        to_paint_node_holder(node)->ref();
+    }
+}
+
+void SkSG_PaintNode_unref(reskia_sksg_paint_node_t *node) {
+    if (node != nullptr) {
+        to_paint_node_holder(node)->unref();
+    }
+}
+
+reskia_paint_t *SkSG_PaintNode_makePaint(reskia_sksg_paint_node_t *node) {
+    if (node == nullptr || to_paint_node_holder(node)->node == nullptr) {
+        return nullptr;
+    }
+    to_paint_node_holder(node)->node->revalidate(nullptr, SkMatrix::I());
+    return reinterpret_cast<reskia_paint_t *>(new SkPaint(to_paint_node_holder(node)->node->makePaint()));
 }
 
 void SkSG_RenderNode_release(reskia_sksg_render_node_t *node) {
@@ -117,6 +551,38 @@ void SkSG_RenderNode_unref(reskia_sksg_render_node_t *node) {
         return;
     }
     to_render_node_holder(node)->unref();
+}
+
+bool SkSG_RenderNode_render(reskia_sksg_render_node_t *node, reskia_canvas_t *canvas) {
+    if (node == nullptr || canvas == nullptr || to_render_node_holder(node)->node == nullptr) {
+        return false;
+    }
+    to_render_node_holder(node)->node->render(reinterpret_cast<SkCanvas *>(canvas));
+    return true;
+}
+
+bool SkSG_RenderNode_nodeAt(reskia_sksg_render_node_t *node, float x, float y) {
+    if (node == nullptr || to_render_node_holder(node)->node == nullptr) {
+        return false;
+    }
+    return to_render_node_holder(node)->node->nodeAt(SkPoint::Make(x, y)) != nullptr;
+}
+
+bool SkSG_RenderNode_isVisible(reskia_sksg_render_node_t *node) {
+    return node != nullptr && to_render_node_holder(node)->node != nullptr &&
+           to_render_node_holder(node)->node->isVisible();
+}
+
+void SkSG_RenderNode_setVisible(reskia_sksg_render_node_t *node, bool visible) {
+    if (node != nullptr && to_render_node_holder(node)->node != nullptr) {
+        to_render_node_holder(node)->node->setVisible(visible);
+    }
+}
+
+void SkSG_Node_invalidate(reskia_sksg_render_node_t *node, bool damage) {
+    if (node != nullptr && to_render_node_holder(node)->node != nullptr) {
+        to_render_node_holder(node)->node->invalidate(damage);
+    }
 }
 
 void SkSG_Scene_release(reskia_sksg_scene_t *scene) {
@@ -163,6 +629,14 @@ bool SkSG_Scene_render(reskia_sksg_scene_t *scene, reskia_canvas_t *canvas) {
     holder->scene->revalidate();
     holder->scene->render(reinterpret_cast<SkCanvas *>(canvas));
     return true;
+}
+
+bool SkSG_Scene_nodeAt(reskia_sksg_scene_t *scene, float x, float y) {
+    if (scene == nullptr || !to_scene_holder(scene)->scene) {
+        return false;
+    }
+    to_scene_holder(scene)->scene->revalidate();
+    return to_scene_holder(scene)->scene->nodeAt(SkPoint::Make(x, y)) != nullptr;
 }
 
 } // extern "C"

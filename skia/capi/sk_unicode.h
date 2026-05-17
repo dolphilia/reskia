@@ -78,6 +78,7 @@ bool SkUnicode_hasSoftLineBreakFlag(reskia_unicode_code_unit_flags_t flags);
 bool SkUnicode_hasGraphemeStartFlag(reskia_unicode_code_unit_flags_t flags);
 bool SkUnicode_hasControlFlag(reskia_unicode_code_unit_flags_t flags);
 bool SkUnicode_hasPartOfWhiteSpaceBreakFlag(reskia_unicode_code_unit_flags_t flags);
+int32_t SkUnicode_extractBidi(const char *utf8, int32_t utf8_units, reskia_unicode_bidi_direction_t direction, reskia_unicode_bidi_region_t *dst, int32_t dst_count); // static helper; returns required region count; dst may be NULL
 
 reskia_string_t *SkUnicode_convertUtf16ToUtf8(const uint16_t *utf16, int32_t utf16_units); // owned SkString; NULL input with non-zero units returns NULL
 int32_t SkUnicode_convertUtf8ToUtf16(const char *utf8, int32_t utf8_units, uint16_t *dst, int32_t dst_units); // returns required UTF-16 units; dst may be NULL

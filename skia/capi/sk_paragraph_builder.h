@@ -148,6 +148,8 @@ int32_t SkParagraph_Paragraph_unresolvedGlyphs(reskia_paragraph_t *paragraph);
 int32_t SkParagraph_Paragraph_unresolvedCodepoints(reskia_paragraph_t *paragraph, int32_t *dst, int32_t dst_count);
 bool SkParagraph_Paragraph_updateTextAlign(reskia_paragraph_t *paragraph, reskia_paragraph_text_align_t text_align);
 bool SkParagraph_Paragraph_updateFontSize(reskia_paragraph_t *paragraph, size_t from, size_t to, float font_size);
+bool SkParagraph_Paragraph_updateForegroundPaint(reskia_paragraph_t *paragraph, size_t from, size_t to, const reskia_paint_t *paint);
+bool SkParagraph_Paragraph_updateBackgroundPaint(reskia_paragraph_t *paragraph, size_t from, size_t to, const reskia_paint_t *paint);
 
 #ifdef __cplusplus
 }

@@ -10,11 +10,11 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2506 |
-| `missing` | 605 |
-| `false_positive` | 164 |
-| `split_covered` | 13 |
-| `na` | 29 |
+| `covered` | 2585 |
+| `missing` | 314 |
+| `false_positive` | 270 |
+| `split_covered` | 32 |
+| `na` | 116 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -26,13 +26,10 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 
 | area | missing | 主な内容 |
 | --- | ---: | --- |
-| `include/gpu` | 169 | Ganesh / Graphite backend value、context/recorder、semaphore、YUV(A)、platform backend |
-| `modules/svg` | 191 | SVG nodes、filter/render context、shape-specific setters/helpers |
-| `modules/sksg` | 102 | RenderNode graph primitives/effects、invalidation、nodeAt |
-| `modules/skparagraph` | 33 | TextStyle paint ID、Paragraph update paint、Block/Placeholder/FontArguments |
+| `include/gpu` | 151 | Ganesh / Graphite backend value、context/recorder、semaphore、YUV(A)、platform backend |
+| `modules/svg` | 74 | SVG nodes、filter/render context、shape-specific setters/helpers |
+| `modules/sksg` | 25 | RenderNode graph primitives/effects、invalidation、nodeAt |
 | `modules/bentleyottmann` | 24 | low-priority internal geometry helpers |
-| `modules/skplaintexteditor` | 23 | editor helper API |
-| `modules/skshaper` | 22 | shaping factory/result paths |
 | `modules/skottie` | 18 | observers/interceptors/expression callbacks |
 | `include/android` | 7 | Android-only framework helpers |
 | `include/core` | 5 | registration/subclass hooks |
@@ -40,19 +37,18 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 | `include/codec` | 2 | codec registration / chunk callback |
 | `include/sksl` | 2 | debug trace sink |
 | `modules/skresources` | 2 | ResourceProvider / ExternalTrackAsset |
-| `modules/skunicode` | 1 | remaining utility helper |
 
 Residual index view:
 
 | bucket | count |
 | --- | ---: |
-| `real_gap` | 357 |
-| `na` | 277 |
-| `false_positive` | 177 |
+| `real_gap` | 324 |
+| `na` | 160 |
+| `false_positive` | 282 |
 | `P1` | 8 |
-| `P2` | 172 |
-| `P3` | 459 |
-| `P0` | 172 |
+| `P2` | 184 |
+| `P3` | 286 |
+| `P0` | 288 |
 
 ## Planning Principles
 
@@ -98,7 +94,8 @@ Progress:
 - 2026-05-17: Phase 11D として GPU D3D-only 17 行を `na`、`TestingOnly_Equals` 2 行を `false_positive` に分類する `public-api-phase-11-gpu-platform-overrides.csv` を追加し、generator が Phase 11 override も読むようにした。matrix は `covered 2441`、`missing 672`、`na 27`、`false_positive 164`。
 - 2026-05-17: Phase 11B として `GrDirectContext_MakeMetal` / `MakeVulkan` / `MakeMock`、`resetGLTextureBindings`、`wait`、backend texture update、compressed texture update、backend state setter、`precompileShader` を callback なし wrapper として追加した。`priv()` 2 行は internal control surface として Phase 11D override で `na` にした。matrix は `covered 2461`、`missing 650`、`na 29`。
 - 2026-05-17: Phase 11C として Graphite `Context` / `Recorder` / `TextureInfo` / `BackendTexture` の C wrapper を追加した。`Graphite_*` prefix を coverage generator の Graphite class alias に追加し、`c_skia_gpu_context_capi_smoke` で null/default object/Metal context 経路を検証済み。matrix は `covered 2506`、`missing 605`、`include/gpu missing 169`。
-- Phase 11C の value/query wrapper first pass は完了。残る Phase 11 は Graphite async callback / `insertRecording` / `snap` / `clientImageProvider` / `addFinishInfo` / `makeDeferredCanvas` など所有権設計が必要な行と、Dawn/Vulkan/platform/priv cleanup が中心。
+- 2026-05-17: Phase 11D cleanup として Graphite/GPU の platform-only / priv / callback-design-required 行を `public-api-phase-11-gpu-platform-overrides.csv` に追加分類した。Dawn/Vulkan-only、Graphite/Ganesh `priv()`、D3D-only は `na`、`ShaderErrorHandler` / allocator / external texture / Graphite async readback / `insertRecording` / `snap` / provider/canvas transfer は `design_required` として Phase 14 に routing した。matrix は `covered 2506`、`missing 587`、`na 47`、`include/gpu missing 151`。
+- 2026-05-17: Phase 11 は完了扱いとし、残る Graphite `BackendSemaphore` Metal/default value wrapper、`ContextID`、`RecorderOptions` / `ContextOptions`、`TextureInfo::isCompatible` の 12 行は `Phase 16 GPU small-gap batch` に routing した。YUV(A) backend texture value objects も後続の GPU small-gap / coverage polish でまとめる。
 
 ## Phase 12: SVG And SkSG Graph Expansion
 
@@ -121,6 +118,13 @@ Expected outcome:
 
 - SVG/SkSG の `P3 real_gap` を、small helper 実装と `na` に二分する。
 - `SkSG_RenderNode` holder を Phase 10 で導入済みなので、Graph node factory を安全に増やせる。
+
+Progress:
+
+- 2026-05-17: Phase 12 first pass として SkSG `Group::Make` / `addChild` / `removeChild` / `size` / `empty` / `clear`、`RenderNode::render` / `nodeAt` / `isVisible` / `setVisible`、`Node::invalidate` wrapper を追加した。`c_skia_sksg_capi_smoke` で null path、group child operation、visibility、scene construction を検証済み。matrix は `covered 2518`、`missing 575`、`modules/sksg missing 90`。
+- 2026-05-17: SkSG second pass として `Rect::Make`、`Color::Make` / `getColor` / `setColor`、`Draw::Make`、`GeometryNode::contains`、`PaintNode::makePaint` wrapper を追加した。`contains` / `makePaint` は SkSG 内部 assert を避けるため wrapper 内で revalidate する。さらに SkSG protected virtual hook 32 行を `public-api-phase-12-svg-sksg-overrides.csv` で `false_positive` に分類した。matrix は `covered 2524`、`missing 537`、`false_positive 196`、`modules/sksg missing 52`。
+- 2026-05-17: SkSG third pass として `Path::Make` / `setFillType`、`Plane::Make`、`OpacityEffect::Make` / `getOpacity` / `setOpacity`、`ClipEffect::Make`、`TransformEffect::Make`、`InvalidationController` の `new` / `inval` / `bounds` / `reset` wrapper を追加した。`TransformEffect_MakeWithMatrix` は互換 alias とし、generator の `partial` を避けるため正規名 `SkSG_TransformEffect_Make` も公開した。matrix は `covered 2536`、`missing 525`、`modules/sksg missing 40`。
+- 2026-05-17: SkSG fourth pass として `RRect::Make`、`GeometryNode::clip` / `draw` / `asPath`、`Scene::nodeAt`、`TrimEffect` / `DashEffect` / `RoundEffect` / `OffsetEffect`、`ShaderEffect` / `MaskShaderEffect` / `BlenderEffect` / `LayerEffect` / `MaskEffect` factory wrapper を追加した。SVG cleanup として render/filter/parser internal hook、subclass `parseAndSetAttribute` の generic coverage、provider/image loading design-required を `public-api-phase-12-svg-sksg-overrides.csv` に分類した。matrix は `covered 2551`、`missing 393`、`false_positive 269`、`na 71`、`split_covered 33`、`modules/svg missing 74`、`modules/sksg missing 25`。
 
 ## Phase 13: Text Stack Expansion
 
@@ -145,6 +149,14 @@ Priority:
 Expected outcome:
 
 - text stack の user-facing API を優先し、internal painter/cache rows は `na` へ整理する。
+
+Progress:
+
+- 2026-05-17: Phase 13 first pass として `TextStyle` foreground/background の `PaintOrID` query と `PaintID` setter wrapper を追加した。C ABI では `reskia_paragraph_paint_or_id_t` により PaintID variant を返し、paint 本体は既存の `getForeground` / `getBackground` で扱う分担にした。`c_skia_paragraph_text_style_capi_smoke` で null path と foreground/background PaintID roundtrip を検証済み。matrix は `covered 2555`、`missing 389`、`modules/skparagraph missing 29`。
+- 2026-05-17: `SkUnicode_extractBidi` を追加した。upstream の static 宣言はこの build ではリンク実体がないため、C wrapper 内では `SkUnicode::Make()` で取得した backend の `getBidiRegions` に委譲する。`c_skia_unicode_capi_smoke` で static helper と null path を検証済み。matrix は `covered 2557`、`missing 388`、`modules/skunicode missing 0`。
+- 2026-05-17: `Paragraph::updateForegroundPaint` / `updateBackgroundPaint` wrapper を追加した。upstream 実装は full text range 以外を debug assert するため、C wrapper では `ParagraphImpl::text().size()` を確認し、partial range は `false` で返して trap を避ける。`c_skia_paragraph_builder_capi_smoke` で partial range rejection と full range update を検証済み。matrix は `covered 2559`、`missing 386`、`modules/skparagraph missing 27`。
+- 2026-05-17: `SkShaper` factory / cache purge / run iterator / simple, iterator, feature shape wrapper を追加した。shape output は既存 `SkTextBlobBuilderRunHandler` に接続し、font fallback handle 0 は `SkFontMgr::RefDefault()` に補完して upstream null dereference を避ける。`c_skia_shaper_capi_smoke` で factory、simple shape、iterator shape、feature shape を検証済み。matrix は `covered 2581`、`missing 364`、`modules/skshaper missing 0`。
+- 2026-05-17: `skia::textlayout::FontArguments` wrapper を追加し、core `SkFontArguments` からの construction/copy と `CloneTypeface` を C ABI に露出した。`c_skia_paragraph_text_style_capi_smoke` で null path、copy、default typeface clone path を検証済み。さらに `public-api-phase-13-text-stack-overrides.csv` を追加し、`ParagraphPainter` / `ParagraphCache` callback/internal rows、`Block` / `Placeholder` / `StyleMetrics` internal layout records、未移植 optional module `skplaintexteditor` を理由付きで `na` / `false_positive` に分類した。matrix は `covered 2585`、`missing 314`、`na 116`、`modules/skparagraph missing 0`、`modules/skplaintexteditor missing 0`。
 
 ## Phase 14: Callback / Provider / Registration Batch
 

@@ -94,6 +94,18 @@ std::vector<SkUnicode::LineBreakBefore> make_line_breaks(const size_t *positions
     return out;
 }
 
+int32_t copy_bidi_regions(const std::vector<SkUnicode::BidiRegion>& regions, reskia_unicode_bidi_region_t *dst, int32_t dst_count) {
+    if (dst != nullptr && dst_count > 0) {
+        const int32_t copy_count = std::min<int32_t>(dst_count, static_cast<int32_t>(regions.size()));
+        for (int32_t i = 0; i < copy_count; ++i) {
+            dst[i].start = regions[i].start;
+            dst[i].end = regions[i].end;
+            dst[i].level = regions[i].level;
+        }
+    }
+    return static_cast<int32_t>(regions.size());
+}
+
 }  // namespace
 
 extern "C" {
@@ -217,6 +229,19 @@ bool SkUnicode_hasControlFlag(reskia_unicode_code_unit_flags_t flags) {
 
 bool SkUnicode_hasPartOfWhiteSpaceBreakFlag(reskia_unicode_code_unit_flags_t flags) {
     return SkUnicode::hasPartOfWhiteSpaceBreakFlag(as_flags(flags));
+}
+
+int32_t SkUnicode_extractBidi(const char *utf8, int32_t utf8_units, reskia_unicode_bidi_direction_t direction, reskia_unicode_bidi_region_t *dst, int32_t dst_count) {
+    if ((utf8 == nullptr && utf8_units != 0) || utf8_units < 0 || dst_count < 0 || !valid_direction(direction)) {
+        return -1;
+    }
+    std::vector<SkUnicode::BidiRegion> regions;
+    const auto text_direction = direction == RESKIA_UNICODE_BIDI_DIRECTION_RTL ? SkUnicode::TextDirection::kRTL : SkUnicode::TextDirection::kLTR;
+    auto unicode = SkUnicode::Make();
+    if (!unicode || !unicode->getBidiRegions(utf8, utf8_units, text_direction, &regions)) {
+        return -1;
+    }
+    return copy_bidi_regions(regions, dst, dst_count);
 }
 
 reskia_string_t *SkUnicode_convertUtf16ToUtf8(const uint16_t *utf16, int32_t utf16_units) {
@@ -347,15 +372,7 @@ int32_t SkUnicode_getBidiRegions(reskia_unicode_t *unicode, const char *utf8, in
     if (!as_unicode(unicode)->getBidiRegions(utf8, utf8_units, text_direction, &regions)) {
         return -1;
     }
-    if (dst != nullptr && dst_count > 0) {
-        const int32_t copy_count = std::min<int32_t>(dst_count, static_cast<int32_t>(regions.size()));
-        for (int32_t i = 0; i < copy_count; ++i) {
-            dst[i].start = regions[i].start;
-            dst[i].end = regions[i].end;
-            dst[i].level = regions[i].level;
-        }
-    }
-    return static_cast<int32_t>(regions.size());
+    return copy_bidi_regions(regions, dst, dst_count);
 }
 
 int32_t SkUnicode_getWords(reskia_unicode_t *unicode, const char *utf8, int32_t utf8_units, const char *locale, size_t *dst, int32_t dst_count) {

@@ -23,6 +23,12 @@ typedef int32_t reskia_paragraph_text_baseline_t;
 typedef int32_t reskia_paragraph_text_decoration_mode_t;
 typedef int32_t reskia_paragraph_text_decoration_style_t;
 typedef int32_t reskia_paragraph_text_decoration_t;
+typedef int32_t reskia_paragraph_paint_id_t;
+
+typedef struct reskia_paragraph_paint_or_id_t {
+    bool is_paint_id;
+    reskia_paragraph_paint_id_t paint_id;
+} reskia_paragraph_paint_or_id_t;
 
 typedef struct reskia_paragraph_text_shadow_t {
     reskia_color_t color;
@@ -89,12 +95,16 @@ reskia_color_t SkParagraph_TextStyle_getColor(const reskia_paragraph_text_style_
 void SkParagraph_TextStyle_setColor(reskia_paragraph_text_style_t *style, reskia_color_t color);
 bool SkParagraph_TextStyle_hasForeground(const reskia_paragraph_text_style_t *style);
 reskia_paint_t *SkParagraph_TextStyle_getForeground(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_getForegroundPaintOrID(const reskia_paragraph_text_style_t *style, reskia_paragraph_paint_or_id_t *out_value);
 bool SkParagraph_TextStyle_setForegroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
+bool SkParagraph_TextStyle_setForegroundPaintID(reskia_paragraph_text_style_t *style, reskia_paragraph_paint_id_t paint_id);
 bool SkParagraph_TextStyle_setForegroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
 void SkParagraph_TextStyle_clearForegroundColor(reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_hasBackground(const reskia_paragraph_text_style_t *style);
 reskia_paint_t *SkParagraph_TextStyle_getBackground(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_getBackgroundPaintOrID(const reskia_paragraph_text_style_t *style, reskia_paragraph_paint_or_id_t *out_value);
 bool SkParagraph_TextStyle_setBackgroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
+bool SkParagraph_TextStyle_setBackgroundPaintID(reskia_paragraph_text_style_t *style, reskia_paragraph_paint_id_t paint_id);
 bool SkParagraph_TextStyle_setBackgroundColor(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint);
 void SkParagraph_TextStyle_clearBackgroundColor(reskia_paragraph_text_style_t *style);
 reskia_paragraph_text_decoration_t SkParagraph_TextStyle_getDecorationType(const reskia_paragraph_text_style_t *style);

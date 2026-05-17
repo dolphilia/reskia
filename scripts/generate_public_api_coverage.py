@@ -327,6 +327,8 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
     paths = [
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-10-generator-polish-backlog.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-11-gpu-platform-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-12-svg-sksg-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-13-text-stack-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
@@ -339,7 +341,7 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
                 triage = row.get("triage", "")
                 action = row.get("generator_action", "")
                 backlog_status = row.get("method_status", "")
-                status = backlog_status if backlog_status in {"split_covered", "deferred"} else ""
+                status = backlog_status if backlog_status in {"missing", "split_covered", "deferred"} else ""
                 if triage == "false_positive":
                     status = "false_positive"
                 elif triage == "na":

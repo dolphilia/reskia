@@ -5,6 +5,7 @@
 #include "sk_paragraph_builder.h"
 
 #include "include/core/SkCanvas.h"
+#include "include/core/SkPaint.h"
 #include "include/core/SkString.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Metrics.h"
@@ -12,6 +13,7 @@
 #include "modules/skparagraph/include/ParagraphBuilder.h"
 #include "modules/skparagraph/include/ParagraphStyle.h"
 #include "modules/skparagraph/include/TextStyle.h"
+#include "modules/skparagraph/src/ParagraphImpl.h"
 #include "modules/skunicode/include/SkUnicode.h"
 
 #include <algorithm>
@@ -24,6 +26,7 @@ namespace {
 using skia::textlayout::FontCollection;
 using skia::textlayout::Paragraph;
 using skia::textlayout::ParagraphBuilder;
+using skia::textlayout::ParagraphImpl;
 using skia::textlayout::ParagraphStyle;
 using skia::textlayout::PlaceholderAlignment;
 using skia::textlayout::PlaceholderStyle;
@@ -59,6 +62,14 @@ SkUnicode *as_unicode(reskia_unicode_t *unicode) {
 
 SkCanvas *as_canvas(reskia_canvas_t *canvas) {
     return reinterpret_cast<SkCanvas *>(canvas);
+}
+
+const SkPaint *as_paint(const reskia_paint_t *paint) {
+    return reinterpret_cast<const SkPaint *>(paint);
+}
+
+ParagraphImpl *as_paragraph_impl(reskia_paragraph_t *paragraph) {
+    return dynamic_cast<ParagraphImpl *>(as_paragraph(paragraph));
 }
 
 bool valid_placeholder_alignment(reskia_paragraph_placeholder_alignment_t alignment) {
@@ -508,6 +519,30 @@ bool SkParagraph_Paragraph_updateFontSize(reskia_paragraph_t *paragraph, size_t 
         return false;
     }
     as_paragraph(paragraph)->updateFontSize(from, to, font_size);
+    return true;
+}
+
+bool SkParagraph_Paragraph_updateForegroundPaint(reskia_paragraph_t *paragraph, size_t from, size_t to, const reskia_paint_t *paint) {
+    if (paragraph == nullptr || paint == nullptr || from > to) {
+        return false;
+    }
+    ParagraphImpl *impl = as_paragraph_impl(paragraph);
+    if (impl == nullptr || from != 0 || to != impl->text().size()) {
+        return false;
+    }
+    impl->updateForegroundPaint(from, to, *as_paint(paint));
+    return true;
+}
+
+bool SkParagraph_Paragraph_updateBackgroundPaint(reskia_paragraph_t *paragraph, size_t from, size_t to, const reskia_paint_t *paint) {
+    if (paragraph == nullptr || paint == nullptr || from > to) {
+        return false;
+    }
+    ParagraphImpl *impl = as_paragraph_impl(paragraph);
+    if (impl == nullptr || from != 0 || to != impl->text().size()) {
+        return false;
+    }
+    impl->updateBackgroundPaint(from, to, *as_paint(paint));
     return true;
 }
 

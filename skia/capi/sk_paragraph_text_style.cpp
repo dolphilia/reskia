@@ -8,6 +8,7 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkString.h"
 #include "include/core/SkFontArguments.h"
+#include "modules/skparagraph/include/ParagraphPainter.h"
 #include "modules/skparagraph/include/TextShadow.h"
 #include "modules/skparagraph/include/TextStyle.h"
 
@@ -19,10 +20,12 @@
 #include <optional>
 #include <cstring>
 #include <utility>
+#include <variant>
 
 namespace {
 
 using skia::textlayout::StyleType;
+using skia::textlayout::ParagraphPainter;
 using skia::textlayout::TextBaseline;
 using skia::textlayout::TextDecoration;
 using skia::textlayout::TextDecorationMode;
@@ -110,6 +113,19 @@ sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
     return static_sk_typeface_make(std::move(typeface));
 }
 
+bool fill_paint_or_id(const ParagraphPainter::SkPaintOrID& paint_or_id, reskia_paragraph_paint_or_id_t *out_value) {
+    if (out_value == nullptr) {
+        return false;
+    }
+    out_value->is_paint_id = false;
+    out_value->paint_id = 0;
+    if (const auto *paint_id = std::get_if<ParagraphPainter::PaintID>(&paint_or_id)) {
+        out_value->is_paint_id = true;
+        out_value->paint_id = static_cast<reskia_paragraph_paint_id_t>(*paint_id);
+    }
+    return true;
+}
+
 }  // namespace
 
 extern "C" {
@@ -176,11 +192,26 @@ reskia_paint_t *SkParagraph_TextStyle_getForeground(const reskia_paragraph_text_
     return reinterpret_cast<reskia_paint_t *>(new SkPaint(as_text_style(style)->getForeground()));
 }
 
+bool SkParagraph_TextStyle_getForegroundPaintOrID(const reskia_paragraph_text_style_t *style, reskia_paragraph_paint_or_id_t *out_value) {
+    if (style == nullptr) {
+        return false;
+    }
+    return fill_paint_or_id(as_text_style(style)->getForegroundPaintOrID(), out_value);
+}
+
 bool SkParagraph_TextStyle_setForegroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
     if (style == nullptr || paint == nullptr) {
         return false;
     }
     as_text_style(style)->setForegroundPaint(*as_paint(paint));
+    return true;
+}
+
+bool SkParagraph_TextStyle_setForegroundPaintID(reskia_paragraph_text_style_t *style, reskia_paragraph_paint_id_t paint_id) {
+    if (style == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setForegroundPaintID(static_cast<ParagraphPainter::PaintID>(paint_id));
     return true;
 }
 
@@ -205,11 +236,26 @@ reskia_paint_t *SkParagraph_TextStyle_getBackground(const reskia_paragraph_text_
     return reinterpret_cast<reskia_paint_t *>(new SkPaint(as_text_style(style)->getBackground()));
 }
 
+bool SkParagraph_TextStyle_getBackgroundPaintOrID(const reskia_paragraph_text_style_t *style, reskia_paragraph_paint_or_id_t *out_value) {
+    if (style == nullptr) {
+        return false;
+    }
+    return fill_paint_or_id(as_text_style(style)->getBackgroundPaintOrID(), out_value);
+}
+
 bool SkParagraph_TextStyle_setBackgroundPaint(reskia_paragraph_text_style_t *style, const reskia_paint_t *paint) {
     if (style == nullptr || paint == nullptr) {
         return false;
     }
     as_text_style(style)->setBackgroundPaint(*as_paint(paint));
+    return true;
+}
+
+bool SkParagraph_TextStyle_setBackgroundPaintID(reskia_paragraph_text_style_t *style, reskia_paragraph_paint_id_t paint_id) {
+    if (style == nullptr) {
+        return false;
+    }
+    as_text_style(style)->setBackgroundPaintID(static_cast<ParagraphPainter::PaintID>(paint_id));
     return true;
 }
 

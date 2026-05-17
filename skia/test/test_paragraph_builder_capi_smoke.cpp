@@ -8,6 +8,7 @@
 #include "capi/sk_paragraph_font_collection.h"
 #include "capi/sk_paragraph_style.h"
 #include "capi/sk_paragraph_text_style.h"
+#include "capi/sk_paint.h"
 #include "capi/sk_string.h"
 #include "handles/static_sk_font_mgr.h"
 
@@ -61,6 +62,8 @@ bool smoke_null_inputs() {
            check(!SkParagraph_Paragraph_getGlyphPositionAtCoordinate(nullptr, 0, 0, nullptr), "glyph position null") &&
            check(!SkParagraph_Paragraph_getWordBoundary(nullptr, 0, nullptr), "word boundary null") &&
            check(SkParagraph_Paragraph_getLineMetrics(nullptr, nullptr, 0) == -1, "line metrics null") &&
+           check(!SkParagraph_Paragraph_updateForegroundPaint(nullptr, 0, 1, nullptr), "update foreground null") &&
+           check(!SkParagraph_Paragraph_updateBackgroundPaint(nullptr, 0, 1, nullptr), "update background null") &&
            check(SkParagraph_Paragraph_unresolvedGlyphs(nullptr) == -1, "unresolved null");
 }
 
@@ -237,6 +240,29 @@ bool smoke_layout_and_paint() {
         SkParagraph_FontCollection_release(collection);
         return false;
     }
+    reskia_paint_t *update_paint = SkPaint_new();
+    if (!check(update_paint != nullptr, "update paint new")) {
+        SkParagraph_Paragraph_delete(paragraph);
+        static_sk_font_mgr_delete(font_mgr);
+        SkParagraph_TextStyle_delete(text_style);
+        SkParagraph_ParagraphStyle_delete(paragraph_style);
+        SkParagraph_FontCollection_release(collection);
+        return false;
+    }
+    SkPaint_setColor(update_paint, 0xff336699);
+    if (!check(!SkParagraph_Paragraph_updateForegroundPaint(paragraph, 0, 5, update_paint), "update foreground partial range") ||
+        !check(!SkParagraph_Paragraph_updateBackgroundPaint(paragraph, 0, 5, update_paint), "update background partial range") ||
+        !check(SkParagraph_Paragraph_updateForegroundPaint(paragraph, 0, 18, update_paint), "update foreground paint") ||
+        !check(SkParagraph_Paragraph_updateBackgroundPaint(paragraph, 0, 18, update_paint), "update background paint")) {
+        SkPaint_delete(update_paint);
+        SkParagraph_Paragraph_delete(paragraph);
+        static_sk_font_mgr_delete(font_mgr);
+        SkParagraph_TextStyle_delete(text_style);
+        SkParagraph_ParagraphStyle_delete(paragraph_style);
+        SkParagraph_FontCollection_release(collection);
+        return false;
+    }
+    SkPaint_delete(update_paint);
     SkParagraph_Paragraph_markDirty(paragraph);
     if (!check(SkParagraph_Paragraph_layout(paragraph, 260.0f), "layout after dirty")) {
         SkParagraph_Paragraph_delete(paragraph);
