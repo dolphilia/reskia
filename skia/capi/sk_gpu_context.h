@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 #include "sk_i_size.h"
+#include "sk_yuva_info.h"
 
 typedef struct reskia_direct_context_t reskia_direct_context_t;
 typedef struct reskia_data_t reskia_data_t;
@@ -20,10 +21,15 @@ typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_context_thread_safe_proxy_t reskia_gr_context_thread_safe_proxy_t;
 typedef struct reskia_gr_direct_context_id_t reskia_gr_direct_context_id_t;
 typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characterization_t;
+typedef struct reskia_graphite_backend_semaphore_t reskia_graphite_backend_semaphore_t;
 typedef struct reskia_graphite_backend_texture_t reskia_graphite_backend_texture_t;
 typedef struct reskia_graphite_context_t reskia_graphite_context_t;
+typedef struct reskia_graphite_context_options_t reskia_graphite_context_options_t;
 typedef struct reskia_graphite_recorder_t reskia_graphite_recorder_t;
+typedef struct reskia_graphite_recorder_options_t reskia_graphite_recorder_options_t;
 typedef struct reskia_graphite_texture_info_t reskia_graphite_texture_info_t;
+typedef struct reskia_graphite_yuva_backend_texture_info_t reskia_graphite_yuva_backend_texture_info_t;
+typedef struct reskia_graphite_yuva_backend_textures_t reskia_graphite_yuva_backend_textures_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
 typedef struct reskia_skgpu_mutable_texture_state_t reskia_skgpu_mutable_texture_state_t;
@@ -166,6 +172,17 @@ bool Reskia_GraphiteContext_InsertRecordingAndSubmit(reskia_graphite_context_t *
 void Reskia_GraphiteRecorder_Release(reskia_graphite_recorder_t *recorder); // owned: 呼び出し側が保持する recorder を解放する (skgpu::graphite::Recorder *recorder)
 void Reskia_GraphiteContext_Release(reskia_graphite_context_t *ctx); // owned: 呼び出し側が保持する context を解放する (skgpu::graphite::Context *ctx)
 
+reskia_graphite_context_options_t *Graphite_ContextOptions_new(); // owned
+void Graphite_ContextOptions_delete(reskia_graphite_context_options_t *options); // NULL input is no-op
+size_t Graphite_ContextOptions_gpuBudgetInBytes(const reskia_graphite_context_options_t *options); // NULL input returns 0
+void Graphite_ContextOptions_setGpuBudgetInBytes(reskia_graphite_context_options_t *options, size_t budget); // NULL input is no-op
+
+reskia_graphite_recorder_options_t *Graphite_RecorderOptions_new(); // owned
+reskia_graphite_recorder_options_t *Graphite_RecorderOptions_newCopy(const reskia_graphite_recorder_options_t *options); // owned; NULL returns NULL
+void Graphite_RecorderOptions_delete(reskia_graphite_recorder_options_t *options); // NULL input is no-op
+size_t Graphite_RecorderOptions_gpuBudgetInBytes(const reskia_graphite_recorder_options_t *options); // NULL input returns 0
+void Graphite_RecorderOptions_setGpuBudgetInBytes(reskia_graphite_recorder_options_t *options, size_t budget); // NULL input is no-op
+
 int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
@@ -197,7 +214,17 @@ uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *i
 bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info); // NULL/non-Metal returns false
+bool Graphite_TextureInfo_isCompatible(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
 reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_info_t *info); // owned; NULL input returns NULL
+
+reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_new(); // owned; invalid default semaphore
+reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_newMtl(void *event, uint64_t value); // owned; unavailable Metal returns NULL
+reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_newCopy(const reskia_graphite_backend_semaphore_t *semaphore); // owned; NULL returns NULL
+void Graphite_BackendSemaphore_delete(reskia_graphite_backend_semaphore_t *semaphore); // NULL input is no-op
+bool Graphite_BackendSemaphore_isValid(const reskia_graphite_backend_semaphore_t *semaphore); // NULL input returns false
+int Graphite_BackendSemaphore_backend(const reskia_graphite_backend_semaphore_t *semaphore); // NULL input returns 0
+void *Graphite_BackendSemaphore_getMtlEvent(const reskia_graphite_backend_semaphore_t *semaphore); // NULL/non-Metal returns NULL
+uint64_t Graphite_BackendSemaphore_getMtlValue(const reskia_graphite_backend_semaphore_t *semaphore); // NULL/non-Metal returns 0
 
 reskia_graphite_backend_texture_t *Graphite_BackendTexture_new(); // owned; invalid default texture
 reskia_graphite_backend_texture_t *Graphite_BackendTexture_newMtl(sk_i_size_t dimensions, void *mtl_texture); // owned; invalid input/unavailable Metal returns NULL
@@ -211,6 +238,31 @@ sk_i_size_t Graphite_BackendTexture_dimensions(const reskia_graphite_backend_tex
 reskia_graphite_texture_info_t *Graphite_BackendTexture_info(const reskia_graphite_backend_texture_t *texture); // owned; NULL input returns NULL
 void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state); // NULL/invalid state is no-op
 void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture); // NULL/non-Metal returns NULL
+
+reskia_graphite_yuva_backend_texture_info_t *Graphite_YUVABackendTextureInfo_new(); // owned; invalid default info
+reskia_graphite_yuva_backend_texture_info_t *Graphite_YUVABackendTextureInfo_newWithRecorderYUVAInfoTextureInfos(const reskia_graphite_recorder_t *recorder, const reskia_yuva_info_t *info, const reskia_graphite_texture_info_t *const *texture_infos, int texture_info_count, bool mipmapped); // owned; invalid input returns NULL
+reskia_graphite_yuva_backend_texture_info_t *Graphite_YUVABackendTextureInfo_newCopy(const reskia_graphite_yuva_backend_texture_info_t *info); // owned; NULL returns NULL
+void Graphite_YUVABackendTextureInfo_delete(reskia_graphite_yuva_backend_texture_info_t *info); // NULL input is no-op
+bool Graphite_YUVABackendTextureInfo_equals(const reskia_graphite_yuva_backend_texture_info_t *info, const reskia_graphite_yuva_backend_texture_info_t *other); // NULL input returns false
+bool Graphite_YUVABackendTextureInfo_notEquals(const reskia_graphite_yuva_backend_texture_info_t *info, const reskia_graphite_yuva_backend_texture_info_t *other); // NULL input returns false
+reskia_graphite_texture_info_t *Graphite_YUVABackendTextureInfo_planeTextureInfo(const reskia_graphite_yuva_backend_texture_info_t *info, int index); // owned; invalid input returns NULL
+reskia_yuva_info_t *Graphite_YUVABackendTextureInfo_yuvaInfo(const reskia_graphite_yuva_backend_texture_info_t *info); // owned; NULL input returns NULL
+int Graphite_YUVABackendTextureInfo_yuvColorSpace(const reskia_graphite_yuva_backend_texture_info_t *info); // NULL input returns -1
+bool Graphite_YUVABackendTextureInfo_mipmapped(const reskia_graphite_yuva_backend_texture_info_t *info); // NULL input returns false
+int Graphite_YUVABackendTextureInfo_numPlanes(const reskia_graphite_yuva_backend_texture_info_t *info); // NULL input returns 0
+bool Graphite_YUVABackendTextureInfo_isValid(const reskia_graphite_yuva_backend_texture_info_t *info); // NULL input returns false
+bool Graphite_YUVABackendTextureInfo_toYUVALocations(const reskia_graphite_yuva_backend_texture_info_t *info, reskia_yuva_location_t *locations); // locations[4]; invalid input clears locations and returns false
+
+reskia_graphite_yuva_backend_textures_t *Graphite_YUVABackendTextures_new(); // owned; invalid default textures
+reskia_graphite_yuva_backend_textures_t *Graphite_YUVABackendTextures_newWithRecorderYUVAInfoTextures(const reskia_graphite_recorder_t *recorder, const reskia_yuva_info_t *info, const reskia_graphite_backend_texture_t *const *textures, int texture_count); // owned; invalid input returns NULL
+void Graphite_YUVABackendTextures_delete(reskia_graphite_yuva_backend_textures_t *textures); // NULL input is no-op
+int Graphite_YUVABackendTextures_planeTextures(const reskia_graphite_yuva_backend_textures_t *textures, reskia_graphite_backend_texture_t **out_textures, int capacity); // fills owned texture copies; returns plane count, invalid input returns 0
+reskia_graphite_backend_texture_t *Graphite_YUVABackendTextures_planeTexture(const reskia_graphite_yuva_backend_textures_t *textures, int index); // owned; invalid input returns NULL
+reskia_yuva_info_t *Graphite_YUVABackendTextures_yuvaInfo(const reskia_graphite_yuva_backend_textures_t *textures); // owned; NULL input returns NULL
+int Graphite_YUVABackendTextures_yuvColorSpace(const reskia_graphite_yuva_backend_textures_t *textures); // NULL input returns -1
+int Graphite_YUVABackendTextures_numPlanes(const reskia_graphite_yuva_backend_textures_t *textures); // NULL input returns 0
+bool Graphite_YUVABackendTextures_isValid(const reskia_graphite_yuva_backend_textures_t *textures); // NULL input returns false
+bool Graphite_YUVABackendTextures_toYUVALocations(const reskia_graphite_yuva_backend_textures_t *textures, reskia_yuva_location_t *locations); // locations[4]; invalid input clears locations and returns false
 
 #ifdef __cplusplus
 }

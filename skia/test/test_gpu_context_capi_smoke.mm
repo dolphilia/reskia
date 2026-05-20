@@ -7,6 +7,7 @@
 #include "capi/sk_graphics.h"
 #include "capi/sk_i_size.h"
 #include "capi/sk_string.h"
+#include "capi/sk_yuva_info.h"
 #include "handles/static_sk_i_size.h"
 
 namespace {
@@ -40,6 +41,22 @@ bool smoke_context_create_destroy() {
                GrBackendSemaphore_vkSemaphore(nullptr) == 0 &&
                GrBackendSemaphore_mtlSemaphore(nullptr) == nullptr &&
                GrBackendSemaphore_mtlValue(nullptr) == 0 &&
+               GrDriverBugWorkarounds_newWithTypes(nullptr, 0) == nullptr &&
+               GrDriverBugWorkarounds_newCopy(nullptr) == nullptr &&
+               !GrDriverBugWorkarounds_isEnabled(nullptr, 0) &&
+               GrYUVABackendTextureInfo_newCopy(nullptr) == nullptr &&
+               !GrYUVABackendTextureInfo_isValid(nullptr) &&
+               GrYUVABackendTextureInfo_yuvaInfo(nullptr) == nullptr &&
+               GrYUVABackendTextureInfo_yuvColorSpace(nullptr) == -1 &&
+               GrYUVABackendTextureInfo_numPlanes(nullptr) == 0 &&
+               GrYUVABackendTextureInfo_planeFormat(nullptr, 0) == nullptr &&
+               !GrYUVABackendTextureInfo_toYUVALocations(nullptr, nullptr) &&
+               GrYUVABackendTextures_textures(nullptr, nullptr, 0) == 0 &&
+               GrYUVABackendTextures_texture(nullptr, 0) == nullptr &&
+               GrYUVABackendTextures_yuvaInfo(nullptr) == nullptr &&
+               GrYUVABackendTextures_numPlanes(nullptr) == 0 &&
+               !GrYUVABackendTextures_isValid(nullptr) &&
+               !GrYUVABackendTextures_toYUVALocations(nullptr, nullptr) &&
                MutableTextureState_newCopy(nullptr) == nullptr &&
                !MutableTextureState_isValid(nullptr) &&
                MutableTextureState_backend(nullptr) == 0 &&
@@ -257,6 +274,198 @@ bool smoke_context_create_destroy() {
     }
     GrBackendSemaphore_delete(semaphore_copy);
     GrBackendSemaphore_delete(semaphore);
+
+    reskia_gr_driver_bug_workarounds_t *default_workarounds = GrDriverBugWorkarounds_new();
+    const int32_t workaround_type = 0;
+    reskia_gr_driver_bug_workarounds_t *enabled_workarounds =
+            GrDriverBugWorkarounds_newWithTypes(&workaround_type, 1);
+    if (!check(default_workarounds != nullptr &&
+               enabled_workarounds != nullptr &&
+               !GrDriverBugWorkarounds_isEnabled(default_workarounds, workaround_type) &&
+               GrDriverBugWorkarounds_isEnabled(enabled_workarounds, workaround_type),
+               "GrDriverBugWorkarounds constructors/query")) {
+        GrDriverBugWorkarounds_delete(enabled_workarounds);
+        GrDriverBugWorkarounds_delete(default_workarounds);
+        return false;
+    }
+    reskia_gr_driver_bug_workarounds_t *enabled_workarounds_copy =
+            GrDriverBugWorkarounds_newCopy(enabled_workarounds);
+    GrDriverBugWorkarounds_applyOverrides(default_workarounds, enabled_workarounds_copy);
+    if (!check(enabled_workarounds_copy != nullptr &&
+               GrDriverBugWorkarounds_isEnabled(default_workarounds, workaround_type) &&
+               GrDriverBugWorkarounds_isEnabled(enabled_workarounds_copy, workaround_type),
+               "GrDriverBugWorkarounds copy/apply")) {
+        GrDriverBugWorkarounds_delete(enabled_workarounds_copy);
+        GrDriverBugWorkarounds_delete(enabled_workarounds);
+        GrDriverBugWorkarounds_delete(default_workarounds);
+        return false;
+    }
+    GrDriverBugWorkarounds_delete(enabled_workarounds_copy);
+    GrDriverBugWorkarounds_delete(enabled_workarounds);
+    GrDriverBugWorkarounds_delete(default_workarounds);
+
+    reskia_gr_yuva_backend_texture_info_t *default_yuva_texture_info = GrYUVABackendTextureInfo_new();
+    if (!check(default_yuva_texture_info != nullptr &&
+               !GrYUVABackendTextureInfo_isValid(default_yuva_texture_info) &&
+               GrYUVABackendTextureInfo_numPlanes(default_yuva_texture_info) == 0,
+               "GrYUVABackendTextureInfo default")) {
+        GrYUVABackendTextureInfo_delete(default_yuva_texture_info);
+        return false;
+    }
+    reskia_gr_yuva_backend_texture_info_t *default_yuva_texture_info_copy =
+            GrYUVABackendTextureInfo_newCopy(default_yuva_texture_info);
+    if (!check(default_yuva_texture_info_copy != nullptr &&
+               GrYUVABackendTextureInfo_equals(default_yuva_texture_info, default_yuva_texture_info_copy) &&
+               !GrYUVABackendTextureInfo_notEquals(default_yuva_texture_info, default_yuva_texture_info_copy),
+               "GrYUVABackendTextureInfo copy")) {
+        GrYUVABackendTextureInfo_delete(default_yuva_texture_info_copy);
+        GrYUVABackendTextureInfo_delete(default_yuva_texture_info);
+        return false;
+    }
+    GrYUVABackendTextureInfo_delete(default_yuva_texture_info_copy);
+    GrYUVABackendTextureInfo_delete(default_yuva_texture_info);
+
+    reskia_gr_yuva_backend_textures_t *default_yuva_textures = GrYUVABackendTextures_new();
+    if (!check(default_yuva_textures != nullptr &&
+               !GrYUVABackendTextures_isValid(default_yuva_textures) &&
+               GrYUVABackendTextures_numPlanes(default_yuva_textures) == 0 &&
+               GrYUVABackendTextures_texture(default_yuva_textures, 0) == nullptr,
+               "GrYUVABackendTextures default")) {
+        GrYUVABackendTextures_delete(default_yuva_textures);
+        return false;
+    }
+    GrYUVABackendTextures_delete(default_yuva_textures);
+
+    const sk_i_size_t yuva_size = SkISize_Make(4, 2);
+    reskia_yuva_info_t *yuva_info = SkYUVAInfo_newWithDimensionsConfigSubsamplingSpaceOriginAndSiting(
+            yuva_size,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0);
+    if (!check(yuva_info != nullptr && SkYUVAInfo_isValid(yuva_info), "SkYUVAInfo for backend texture wrappers")) {
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    reskia_gr_backend_format_t *plane_formats[4] = {
+            GrBackendFormat_MakeMock(1, 0, false),
+            GrBackendFormat_MakeMock(1, 0, false),
+            GrBackendFormat_MakeMock(1, 0, false),
+            nullptr,
+    };
+    reskia_gr_yuva_backend_texture_info_t *yuva_texture_info =
+            GrYUVABackendTextureInfo_newWithYUVAInfoFormats(yuva_info, plane_formats, 0, 0);
+    if (!check(yuva_texture_info != nullptr &&
+               GrYUVABackendTextureInfo_isValid(yuva_texture_info) &&
+               GrYUVABackendTextureInfo_numPlanes(yuva_texture_info) == 3 &&
+               GrYUVABackendTextureInfo_yuvColorSpace(yuva_texture_info) == 0 &&
+               GrYUVABackendTextureInfo_textureOrigin(yuva_texture_info) == 0,
+               "GrYUVABackendTextureInfo valid")) {
+        GrYUVABackendTextureInfo_delete(yuva_texture_info);
+        for (auto *format : plane_formats) {
+            GrBackendFormat_delete(format);
+        }
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    reskia_gr_backend_format_t *plane_format_copy = GrYUVABackendTextureInfo_planeFormat(yuva_texture_info, 0);
+    reskia_yuva_info_t *yuva_info_copy = GrYUVABackendTextureInfo_yuvaInfo(yuva_texture_info);
+    if (!check(plane_format_copy != nullptr &&
+               GrBackendFormat_isValid(plane_format_copy) &&
+               yuva_info_copy != nullptr &&
+               SkYUVAInfo_numPlanes(yuva_info_copy) == 3,
+               "GrYUVABackendTextureInfo owned queries")) {
+        GrBackendFormat_delete(plane_format_copy);
+        SkYUVAInfo_delete(yuva_info_copy);
+        GrYUVABackendTextureInfo_delete(yuva_texture_info);
+        for (auto *format : plane_formats) {
+            GrBackendFormat_delete(format);
+        }
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    GrBackendFormat_delete(plane_format_copy);
+    SkYUVAInfo_delete(yuva_info_copy);
+    reskia_yuva_location_t yuva_locations[4] = {};
+    if (!check(GrYUVABackendTextureInfo_toYUVALocations(yuva_texture_info, yuva_locations),
+               "GrYUVABackendTextureInfo locations")) {
+        GrYUVABackendTextureInfo_delete(yuva_texture_info);
+        for (auto *format : plane_formats) {
+            GrBackendFormat_delete(format);
+        }
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    GrYUVABackendTextureInfo_delete(yuva_texture_info);
+    for (auto *format : plane_formats) {
+        GrBackendFormat_delete(format);
+    }
+
+    reskia_gr_backend_texture_t *plane_textures[4] = {
+            GrBackendTexture_newMock(4, 2, 0, 1, 0, 301, 0),
+            GrBackendTexture_newMock(4, 2, 0, 1, 0, 302, 0),
+            GrBackendTexture_newMock(4, 2, 0, 1, 0, 303, 0),
+            nullptr,
+    };
+    reskia_gr_yuva_backend_textures_t *yuva_textures =
+            GrYUVABackendTextures_newWithYUVAInfoTextures(yuva_info, plane_textures, 0);
+    if (!check(yuva_textures != nullptr &&
+               GrYUVABackendTextures_isValid(yuva_textures) &&
+               GrYUVABackendTextures_numPlanes(yuva_textures) == 3 &&
+               GrYUVABackendTextures_textureOrigin(yuva_textures) == 0,
+               "GrYUVABackendTextures valid")) {
+        GrYUVABackendTextures_delete(yuva_textures);
+        for (auto *texture : plane_textures) {
+            GrBackendTexture_delete(texture);
+        }
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    reskia_gr_backend_texture_t *plane_texture_copy = GrYUVABackendTextures_texture(yuva_textures, 0);
+    reskia_gr_backend_texture_t *plane_texture_copies[3] = {};
+    reskia_yuva_info_t *textures_yuva_info_copy = GrYUVABackendTextures_yuvaInfo(yuva_textures);
+    if (!check(plane_texture_copy != nullptr &&
+               GrBackendTexture_isValid(plane_texture_copy) &&
+               GrYUVABackendTextures_textures(yuva_textures, plane_texture_copies, 3) == 3 &&
+               plane_texture_copies[0] != nullptr &&
+               plane_texture_copies[1] != nullptr &&
+               plane_texture_copies[2] != nullptr &&
+               GrBackendTexture_isValid(plane_texture_copies[0]) &&
+               textures_yuva_info_copy != nullptr &&
+               SkYUVAInfo_numPlanes(textures_yuva_info_copy) == 3 &&
+               GrYUVABackendTextures_toYUVALocations(yuva_textures, yuva_locations),
+               "GrYUVABackendTextures owned queries")) {
+        for (auto *texture : plane_texture_copies) {
+            GrBackendTexture_delete(texture);
+        }
+        GrBackendTexture_delete(plane_texture_copy);
+        SkYUVAInfo_delete(textures_yuva_info_copy);
+        GrYUVABackendTextures_delete(yuva_textures);
+        for (auto *texture : plane_textures) {
+            GrBackendTexture_delete(texture);
+        }
+        SkYUVAInfo_delete(yuva_info);
+        static_sk_i_size_delete(yuva_size);
+        return false;
+    }
+    for (auto *texture : plane_texture_copies) {
+        GrBackendTexture_delete(texture);
+    }
+    GrBackendTexture_delete(plane_texture_copy);
+    SkYUVAInfo_delete(textures_yuva_info_copy);
+    GrYUVABackendTextures_delete(yuva_textures);
+    for (auto *texture : plane_textures) {
+        GrBackendTexture_delete(texture);
+    }
+    SkYUVAInfo_delete(yuva_info);
+    static_sk_i_size_delete(yuva_size);
 #endif
 
     int null_resource_count = 1;
@@ -346,6 +555,9 @@ bool smoke_context_create_destroy() {
                !Graphite_Context_submit(nullptr, false) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
+               Graphite_ContextOptions_gpuBudgetInBytes(nullptr) == 0 &&
+               Graphite_RecorderOptions_newCopy(nullptr) == nullptr &&
+               Graphite_RecorderOptions_gpuBudgetInBytes(nullptr) == 0 &&
                Graphite_Recorder_currentBudgetedBytes(nullptr) == 0 &&
                Graphite_Recorder_createBackendTexture(nullptr, 0, nullptr) == nullptr &&
                !Graphite_Recorder_updateBackendTexture(nullptr, nullptr, nullptr, 0) &&
@@ -357,7 +569,27 @@ bool smoke_context_create_destroy() {
                !Graphite_TextureInfo_mipmapped(nullptr) &&
                !Graphite_TextureInfo_isProtected(nullptr) &&
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
+               !Graphite_TextureInfo_isCompatible(nullptr, nullptr) &&
                Graphite_TextureInfo_toString(nullptr) == nullptr &&
+               Graphite_BackendSemaphore_newCopy(nullptr) == nullptr &&
+               !Graphite_BackendSemaphore_isValid(nullptr) &&
+               Graphite_BackendSemaphore_backend(nullptr) == 0 &&
+               Graphite_BackendSemaphore_getMtlEvent(nullptr) == nullptr &&
+               Graphite_BackendSemaphore_getMtlValue(nullptr) == 0 &&
+               Graphite_YUVABackendTextureInfo_newCopy(nullptr) == nullptr &&
+               !Graphite_YUVABackendTextureInfo_isValid(nullptr) &&
+               Graphite_YUVABackendTextureInfo_planeTextureInfo(nullptr, 0) == nullptr &&
+               Graphite_YUVABackendTextureInfo_yuvaInfo(nullptr) == nullptr &&
+               Graphite_YUVABackendTextureInfo_yuvColorSpace(nullptr) == -1 &&
+               Graphite_YUVABackendTextureInfo_numPlanes(nullptr) == 0 &&
+               !Graphite_YUVABackendTextureInfo_toYUVALocations(nullptr, nullptr) &&
+               Graphite_YUVABackendTextures_planeTextures(nullptr, nullptr, 0) == 0 &&
+               Graphite_YUVABackendTextures_planeTexture(nullptr, 0) == nullptr &&
+               Graphite_YUVABackendTextures_yuvaInfo(nullptr) == nullptr &&
+               Graphite_YUVABackendTextures_yuvColorSpace(nullptr) == -1 &&
+               Graphite_YUVABackendTextures_numPlanes(nullptr) == 0 &&
+               !Graphite_YUVABackendTextures_isValid(nullptr) &&
+               !Graphite_YUVABackendTextures_toYUVALocations(nullptr, nullptr) &&
                Graphite_BackendTexture_newCopy(nullptr) == nullptr &&
                !Graphite_BackendTexture_equals(nullptr, nullptr) &&
                !Graphite_BackendTexture_isValid(nullptr) &&
@@ -493,6 +725,23 @@ bool smoke_context_create_destroy() {
         Graphite_Context_performDeferredCleanup(graphite_context, 0);
         Graphite_Context_freeGpuResources(graphite_context);
 
+        reskia_graphite_context_options_t* context_options = Graphite_ContextOptions_new();
+        if (!check(context_options != nullptr &&
+                   Graphite_ContextOptions_gpuBudgetInBytes(context_options) > 0,
+                   "Graphite_ContextOptions default")) {
+            Graphite_ContextOptions_delete(context_options);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_ContextOptions_setGpuBudgetInBytes(context_options, 4096);
+        if (!check(Graphite_ContextOptions_gpuBudgetInBytes(context_options) == 4096,
+                   "Graphite_ContextOptions budget roundtrip")) {
+            Graphite_ContextOptions_delete(context_options);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_ContextOptions_delete(context_options);
+
         reskia_graphite_recorder_t* recorder =
                 Graphite_Context_makeRecorder(graphite_context);
         if (!check(recorder != nullptr, "Graphite_Context_makeRecorder")) {
@@ -501,6 +750,33 @@ bool smoke_context_create_destroy() {
         }
         Graphite_Recorder_performDeferredCleanup(recorder, 0);
         Graphite_Recorder_freeGpuResources(recorder);
+
+        reskia_graphite_recorder_options_t* recorder_options = Graphite_RecorderOptions_new();
+        reskia_graphite_recorder_options_t* recorder_options_copy =
+                Graphite_RecorderOptions_newCopy(recorder_options);
+        if (!check(recorder_options != nullptr &&
+                   recorder_options_copy != nullptr &&
+                   Graphite_RecorderOptions_gpuBudgetInBytes(recorder_options) > 0 &&
+                   Graphite_RecorderOptions_gpuBudgetInBytes(recorder_options_copy) ==
+                           Graphite_RecorderOptions_gpuBudgetInBytes(recorder_options),
+                   "Graphite_RecorderOptions default/copy")) {
+            Graphite_RecorderOptions_delete(recorder_options_copy);
+            Graphite_RecorderOptions_delete(recorder_options);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_RecorderOptions_setGpuBudgetInBytes(recorder_options, 8192);
+        if (!check(Graphite_RecorderOptions_gpuBudgetInBytes(recorder_options) == 8192,
+                   "Graphite_RecorderOptions budget roundtrip")) {
+            Graphite_RecorderOptions_delete(recorder_options_copy);
+            Graphite_RecorderOptions_delete(recorder_options);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_RecorderOptions_delete(recorder_options_copy);
+        Graphite_RecorderOptions_delete(recorder_options);
 
         reskia_graphite_texture_info_t* default_texture_info = Graphite_TextureInfo_new();
         reskia_string_t* texture_info_string = Graphite_TextureInfo_toString(default_texture_info);
@@ -524,7 +800,8 @@ bool smoke_context_create_destroy() {
                 Graphite_TextureInfo_newCopy(default_texture_info);
         if (!check(copied_texture_info != nullptr &&
                    Graphite_TextureInfo_equals(default_texture_info, copied_texture_info) &&
-                   !Graphite_TextureInfo_notEquals(default_texture_info, copied_texture_info),
+                   !Graphite_TextureInfo_notEquals(default_texture_info, copied_texture_info) &&
+                   Graphite_TextureInfo_isCompatible(default_texture_info, copied_texture_info),
                    "Graphite_TextureInfo copy")) {
             Graphite_TextureInfo_delete(copied_texture_info);
             Graphite_TextureInfo_delete(default_texture_info);
@@ -534,6 +811,59 @@ bool smoke_context_create_destroy() {
         }
         Graphite_TextureInfo_delete(copied_texture_info);
         Graphite_TextureInfo_delete(default_texture_info);
+
+        reskia_graphite_backend_semaphore_t* default_semaphore = Graphite_BackendSemaphore_new();
+        reskia_graphite_backend_semaphore_t* copied_semaphore =
+                Graphite_BackendSemaphore_newCopy(default_semaphore);
+        if (!check(default_semaphore != nullptr &&
+                   copied_semaphore != nullptr &&
+                   !Graphite_BackendSemaphore_isValid(default_semaphore) &&
+                   Graphite_BackendSemaphore_backend(default_semaphore) == 0 &&
+                   Graphite_BackendSemaphore_getMtlEvent(default_semaphore) == nullptr &&
+                   Graphite_BackendSemaphore_getMtlValue(default_semaphore) == 0,
+                   "Graphite_BackendSemaphore default/copy")) {
+            Graphite_BackendSemaphore_delete(copied_semaphore);
+            Graphite_BackendSemaphore_delete(default_semaphore);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_BackendSemaphore_delete(copied_semaphore);
+        Graphite_BackendSemaphore_delete(default_semaphore);
+
+        reskia_graphite_yuva_backend_texture_info_t* default_yuva_texture_info =
+                Graphite_YUVABackendTextureInfo_new();
+        reskia_graphite_yuva_backend_texture_info_t* copied_yuva_texture_info =
+                Graphite_YUVABackendTextureInfo_newCopy(default_yuva_texture_info);
+        if (!check(default_yuva_texture_info != nullptr &&
+                   copied_yuva_texture_info != nullptr &&
+                   !Graphite_YUVABackendTextureInfo_isValid(default_yuva_texture_info) &&
+                   Graphite_YUVABackendTextureInfo_numPlanes(default_yuva_texture_info) == 0 &&
+                   Graphite_YUVABackendTextureInfo_equals(default_yuva_texture_info, copied_yuva_texture_info) &&
+                   !Graphite_YUVABackendTextureInfo_notEquals(default_yuva_texture_info, copied_yuva_texture_info),
+                   "Graphite_YUVABackendTextureInfo default/copy")) {
+            Graphite_YUVABackendTextureInfo_delete(copied_yuva_texture_info);
+            Graphite_YUVABackendTextureInfo_delete(default_yuva_texture_info);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_YUVABackendTextureInfo_delete(copied_yuva_texture_info);
+        Graphite_YUVABackendTextureInfo_delete(default_yuva_texture_info);
+
+        reskia_graphite_yuva_backend_textures_t* default_yuva_textures =
+                Graphite_YUVABackendTextures_new();
+        if (!check(default_yuva_textures != nullptr &&
+                   !Graphite_YUVABackendTextures_isValid(default_yuva_textures) &&
+                   Graphite_YUVABackendTextures_numPlanes(default_yuva_textures) == 0 &&
+                   Graphite_YUVABackendTextures_planeTexture(default_yuva_textures, 0) == nullptr,
+                   "Graphite_YUVABackendTextures default")) {
+            Graphite_YUVABackendTextures_delete(default_yuva_textures);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_YUVABackendTextures_delete(default_yuva_textures);
 
         reskia_graphite_backend_texture_t* default_backend_texture = Graphite_BackendTexture_new();
         reskia_graphite_backend_texture_t* copied_backend_texture =

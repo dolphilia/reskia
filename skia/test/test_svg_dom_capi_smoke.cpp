@@ -18,6 +18,75 @@ bool check(bool condition, const char *message) {
     return true;
 }
 
+bool smoke_svg_node_factories() {
+    SkSVGNode_ref(nullptr);
+    SkSVGNode_unref(nullptr);
+    SkSVGNode_release(nullptr);
+
+    reskia_svg_node_t *filter_effect = SkSVGFeBlend_Make();
+    reskia_svg_node_t *not_filter_effect = SkSVGCircle_Make();
+    const bool filter_check =
+            filter_effect != nullptr &&
+            not_filter_effect != nullptr &&
+            SkSVGFe_IsFilterEffect(filter_effect) &&
+            !SkSVGFe_IsFilterEffect(not_filter_effect) &&
+            !SkSVGFe_IsFilterEffect(nullptr);
+    SkSVGNode_release(not_filter_effect);
+    SkSVGNode_release(filter_effect);
+    if (!check(filter_check, "SkSVGFe_IsFilterEffect")) {
+        return false;
+    }
+
+    reskia_svg_node_t *nodes[] = {
+            SkSVGCircle_Make(),
+            SkSVGClipPath_Make(),
+            SkSVGDefs_Make(),
+            SkSVGEllipse_Make(),
+            SkSVGFeBlend_Make(),
+            SkSVGFeColorMatrix_Make(),
+            SkSVGFeComposite_Make(),
+            SkSVGFeDiffuseLighting_Make(),
+            SkSVGFeDisplacementMap_Make(),
+            SkSVGFeDistantLight_Make(),
+            SkSVGFeFlood_Make(),
+            SkSVGFeGaussianBlur_Make(),
+            SkSVGFeImage_Make(),
+            SkSVGFeMorphology_Make(),
+            SkSVGFeOffset_Make(),
+            SkSVGFePointLight_Make(),
+            SkSVGFeSpecularLighting_Make(),
+            SkSVGFeSpotLight_Make(),
+            SkSVGFeTurbulence_Make(),
+            SkSVGFilter_Make(),
+            SkSVGG_Make(),
+            SkSVGImage_Make(),
+            SkSVGLine_Make(),
+            SkSVGLinearGradient_Make(),
+            SkSVGMask_Make(),
+            SkSVGPath_Make(),
+            SkSVGPattern_Make(),
+            SkSVGPoly_MakePolygon(),
+            SkSVGPoly_MakePolyline(),
+            SkSVGRadialGradient_Make(),
+            SkSVGRect_Make(),
+            SkSVGSVG_Make(1),
+            SkSVGStop_Make(),
+            SkSVGText_Make(),
+            SkSVGTextLiteral_Make(),
+            SkSVGTextPath_Make(),
+            SkSVGTSpan_Make(),
+            SkSVGUse_Make(),
+    };
+    bool ok = true;
+    for (reskia_svg_node_t *node : nodes) {
+        ok = ok && node != nullptr && SkSVGNode_tag(node) >= 0;
+        SkSVGNode_ref(node);
+        SkSVGNode_unref(node);
+        SkSVGNode_release(node);
+    }
+    return check(ok, "SkSVG node factories");
+}
+
 bool smoke_svg_dom() {
     float width = -1.0f;
     float height = -1.0f;
@@ -163,5 +232,5 @@ bool smoke_svg_dom() {
 }  // namespace
 
 int main() {
-    return smoke_svg_dom() ? 0 : 1;
+    return smoke_svg_node_factories() && smoke_svg_dom() ? 0 : 1;
 }

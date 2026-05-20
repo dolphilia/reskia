@@ -10,8 +10,8 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2604 |
-| `missing` | 252 |
+| `covered` | 2713 |
+| `missing` | 143 |
 | `false_positive` | 274 |
 | `split_covered` | 33 |
 | `na` | 154 |
@@ -26,13 +26,13 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 
 | area | missing | 主な内容 |
 | --- | ---: | --- |
-| `include/gpu` | 151 | Ganesh / Graphite backend value、context/recorder、semaphore、YUV(A)、platform backend |
-| `modules/svg` | 74 | SVG nodes、filter/render context、shape-specific setters/helpers |
+| `include/gpu` | 98 | Ganesh / Graphite backend value、context/recorder、platform backend |
+| `modules/svg` | 18 | SVG node render helpers、resource/provider loading、OpenType SVG decoder |
 | `modules/sksg` | 25 | RenderNode graph primitives/effects、invalidation、nodeAt |
 | `include/core` | 1 | global registration |
 | `include/codec` | 1 | codec registration |
 
-Residual index view:
+Phase 16 audit residual index view (reference; Phase 17/18 covered moves are reflected in the matrix counts above):
 
 | bucket | count |
 | --- | ---: |
@@ -43,6 +43,8 @@ Residual index view:
 | `P2` | 184 |
 | `P3` | 286 |
 | `P0` | 288 |
+
+Phase 17A で Graphite `BackendSemaphore` / `TextureInfo::isCompatible` / YUV(A) / options、Ganesh `GrYUVABackendTextureInfo` / `GrYUVABackendTextures`、`GrDriverBugWorkarounds` を covered に移した。Phase 18A では SVG type value accessor、node factory、filter-effect query、`SkSVGLengthContext` helper を covered に移したため、Phase 16 audit snapshot から `missing` は 109 行減少した。
 
 ## Planning Principles
 
@@ -229,10 +231,84 @@ Exit criteria:
 - `missing` は `real_gap` 実装候補と明示 `na` 候補に整理済み。
 - 次に着手する phase が、coverage impact と design risk の両方から説明できる。
 
+Progress:
+
+- 2026-05-20: Phase 16 first pass として `public-api-phase16-coverage-audit-2026-05-20.md` と `public-api-phase-16-current-missing-routing.csv` を追加した。最新 matrix では `covered 2604`、`missing 252`、`false_positive 274`、`na 154`、`split_covered 33`、`partial/overcovered/deferred 0`。古い Phase 7 routing index は stale とし、残 `missing` を `include/gpu 151`、`modules/svg 74`、`modules/sksg 25`、global registration 2 行へ再 routing した。Phase 16 は runtime C ABI を追加せず、status vocabulary、smoke coverage map、次 phase 境界を固定する audit phase とした。
+
+## Phase 17: GPU Small-Gap And Provider Split
+
+目的: 残る `include/gpu` 151 行を、low-risk value wrappers と design-heavy provider/async/platform allocator に分割して進める。
+
+Priority:
+
+1. YUV(A) backend texture value wrappers: `GrYUVABackendTextureInfo` / `GrYUVABackendTextures` / Graphite equivalents.
+2. Backend value/options wrappers: `GrBackendDrawableInfo`、mock texture/render target info、`GrDriverBugWorkarounds`、Graphite `BackendSemaphore` / options / compatibility queries.
+3. GL/Vulkan/Dawn/platform-only rows の build guard / `na` 再確認。
+4. Graphite async readback、`ImageProvider`、`Recorder::snap`、`Context::insertRecording`、allocator provider は専用 ownership design を置いてから実装可否を判断する。
+
+Expected outcome:
+
+- GPU value rows を covered/na に寄せ、callback/provider rows だけを明示 follow-up として残す。
+- `c_skia_gpu_context_capi_smoke` / `c_skia_gpu_surface_capi_smoke` を拡張して value wrappers を検証する。
+
+Progress:
+
+- 2026-05-20: Phase 17A first pass として Graphite `TextureInfo::isCompatible` と `BackendSemaphore` default / Metal / copy constructor、`isValid` / `backend` / Metal event/value query wrapper を追加した。Phase 11 で実装候補として `missing` 固定していた行は `public-api-phase-17-gpu-small-gap-overrides.csv` で covered に昇格し、generator は post-phase override の `covered` を扱うようにした。`c_skia_gpu_context_capi_smoke` は既存 Ganesh+Metal 構成で通過。Graphite+Metal 専用構成は既存の Objective-C ARC 互換エラーでビルド不可のため、Phase 17B の GPU verification risk として残す。matrix は `covered 2612`、`missing 244`、`include/gpu missing 143`。
+- 2026-05-20: Phase 17A continuation として Ganesh `GrYUVABackendTextureInfo` / `GrYUVABackendTextures` の default / constructor / copy / equality / plane query / YUVA location wrapper と、`GrDriverBugWorkarounds` の constructor / copy / apply wrapper を追加した。YUV(A) wrapper は `SkYUVAInfo` と mock alpha texture/format で smoke 検証し、集合 accessor は owned copy の配列出力にした。matrix は `covered 2633`、`missing 223`、`include/gpu missing 122`。
+- 2026-05-20: Graphite YUV(A) continuation として `YUVABackendTextureInfo` / `YUVABackendTextures` の default / recorder constructor / copy / query wrapper を追加した。constructor は有効オブジェクト作成に `Recorder` を要求し、query 結果は owned copy として返す。さらに Graphite `ContextOptions` / `RecorderOptions` の default/copy と GPU budget field wrapper を追加した。matrix は `covered 2657`、`missing 199`、`include/gpu missing 98`。
+
+## Phase 18: SVG Resource And Value Polish
+
+目的: `modules/svg` の残行を、value accessors、node factories、resource/provider design に分ける。Phase 18A first pass 後の残行は 62 行。
+
+Priority:
+
+1. `SkSVGTypes.h` の lightweight `type()` / value accessors。
+2. SVG node/filter `Make` factories の追加と existing DOM/render smoke への接続。
+3. `appendChild` は standalone node ownership / child transfer model を設計してから扱う。
+4. `SkSVGImage::LoadImage` は `SkSVGIRI`、`SkSVGPreserveAspectRatio`、`ImageInfo` wrapper と skresources provider owner model をまとめて設計する。
+
+Expected outcome:
+
+- SVG value/factory rows を coverage polish し、resource loading は設計済み follow-up にする。
+
+Progress:
+
+- 2026-05-20: Phase 18A first pass として `SkSVGTypes.h` の lightweight value wrapper を追加した。`SkSVGIRI` / `SkSVGPaint` は owned copy の `SkString` / value object を返し、`SkSVGPaint::color` / `iri` と `SkSVGStopColor::color` は upstream assert 条件を C wrapper 側で型確認してから呼ぶ。`SkSVGLineJoin` / `SkSVGSpreadMethod` / `SkSVGVisibility` / `SkSVGStopColor` / `SkSVGObjectBoundingBoxUnits` / `SkSVGTextAnchor` は enum type accessor を追加し、`c_skia_svg_types_capi_smoke` で roundtrip と null-safe cleanup を検証済み。matrix は `covered 2669`、`missing 187`、`modules/svg missing 62`。
+- 2026-05-20: Phase 18A continuation として SVG node `Make` factory 群、`SkSVGNode_ref` / `unref` / `release`、`SkSVGFe::IsFilterEffect` wrapper を追加した。factory は `sk_sp<T>::release()` で owned node を C ABI に渡し、DOM 由来 borrowed node は既存どおり解放対象外とする。`SkSVGLengthContext` は render context 本体から切り離せる lightweight helper として `viewPort` / `setViewPort` / `resolve` / `resolveRect` を追加した。`c_skia_svg_dom_capi_smoke` と `c_skia_svg_types_capi_smoke` で検証済み。matrix は `covered 2713`、`missing 143`、`modules/svg missing 18`。
+
+## Phase 19: SkSG Graph Polish
+
+目的: `modules/sksg` 25 行の graph/effect factories と getter/iterator surface を整理する。
+
+Priority:
+
+1. Color filter、gradient、image、merge、render effect factories。
+2. `GeometryTransform::getTransform`、shader/filter getters の revalidate-safe wrapper。
+3. `InvalidationController` begin/end は C iterator API を設計してから実装する。
+
+Expected outcome:
+
+- SkSG graph factory rows を covered に寄せ、iterator-only rows は明示設計済みにする。
+
+## Phase 20: Global Registration Design
+
+目的: `SkCodec::Register` と `SkTypeface::Register` の process-global callback registration を安全に扱う。
+
+Design requirements:
+
+- upstream に unregister がないため、callback owner は process lifetime または disabled callback policy を持つ。
+- repeated registration と replacement behavior を明記する。
+- `std::unique_ptr<SkStream>` / `SkStreamAsset` transfer と returned `SkCodec` / `SkTypeface` ownership を C ABI に落とす。
+- callback release timing を library teardown に依存させない。
+
+Expected outcome:
+
+- まず設計メモと API skeleton を作り、通常の borrowed callback bridge と混同しない。
+
 ## Recommended Order
 
-1. Phase 11A: GPU backend value wrappers。coverage impact が大きく、既存 GPU smoke に足しやすい。
-2. Phase 11D: GPU platform/priv NA sweep。283 行の見かけの missing を早めに正規化する。
-3. Phase 13A: Paragraph `P1` rows。user-facing で実装価値が高い。
-4. Phase 12 SkSG graph expansion。Phase 10 の render node holder を活かせる。
-5. Phase 14 callback/provider batch。設計リスクが高いため、上記の value/object API を進めた後にまとめて扱う。
+1. Phase 17A: GPU low-risk value wrappers。残数が最大で、既存 GPU smoke に足しやすい。
+2. Phase 18A: SVG value accessors / node factories。DOM/render smoke と接続しやすい。
+3. Phase 19A: SkSG remaining factories。既存 SkSG holder と smoke を活かせる。
+4. Phase 17B/20: callback/provider/global registration design。設計リスクが高いため、value/object rows の後にまとめる。

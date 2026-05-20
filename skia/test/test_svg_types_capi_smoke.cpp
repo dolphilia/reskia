@@ -25,6 +25,40 @@ int main() {
         return 1;
     }
 
+    reskia_svg_length_context_t *length_context = SkSVGLengthContext_new(200.0f, 100.0f, 90.0f);
+    float viewport_width = 0.0f;
+    float viewport_height = 0.0f;
+    if (!check(length_context != nullptr &&
+               SkSVGLengthContext_viewPort(length_context, &viewport_width, &viewport_height) &&
+               viewport_width == 200.0f &&
+               viewport_height == 100.0f &&
+               SkSVGLengthContext_resolve(length_context, length, 0) == 12.5f,
+               "SkSVGLengthContext accessors")) {
+        SkSVGLengthContext_delete(length_context);
+        SkSVGLength_delete(length);
+        return 1;
+    }
+    SkSVGLengthContext_setViewPort(length_context, 300.0f, 150.0f);
+    float rect_left = 0.0f;
+    float rect_top = 0.0f;
+    float rect_right = 0.0f;
+    float rect_bottom = 0.0f;
+    if (!check(SkSVGLengthContext_viewPort(length_context, &viewport_width, &viewport_height) &&
+               viewport_width == 300.0f &&
+               viewport_height == 150.0f &&
+               SkSVGLengthContext_resolveRect(length_context, length, length, length, length,
+                                              &rect_left, &rect_top, &rect_right, &rect_bottom) &&
+               rect_left == 12.5f &&
+               rect_top == 12.5f &&
+               rect_right == 25.0f &&
+               rect_bottom == 25.0f,
+               "SkSVGLengthContext resolveRect")) {
+        SkSVGLengthContext_delete(length_context);
+        SkSVGLength_delete(length);
+        return 1;
+    }
+    SkSVGLengthContext_delete(length_context);
+
     reskia_svg_color_t *color = SkSVGColor_new(0xFF336699);
     uint32_t out_color = 0;
     if (!check(color != nullptr && SkSVGColor_type(color) == 1 &&
@@ -44,6 +78,63 @@ int main() {
         SkSVGColor_delete(color);
         SkSVGLength_delete(length);
         return 1;
+    }
+
+    {
+        reskia_svg_iri_t *paint_iri = SkSVGIRI_new(0, "gradient0");
+        reskia_string_t *paint_iri_text = SkSVGIRI_iri(paint_iri);
+        reskia_svg_paint_t *paint = SkSVGPaint_newWithIRI(paint_iri, color);
+        reskia_svg_color_t *paint_color = SkSVGPaint_color(paint);
+        reskia_svg_iri_t *paint_iri_copy = SkSVGPaint_iri(paint);
+        reskia_string_t *paint_iri_copy_text = SkSVGIRI_iri(paint_iri_copy);
+        uint32_t paint_color_value = 0;
+        const bool svg_value_accessors_ok =
+                paint_iri != nullptr && SkSVGIRI_type(paint_iri) == 0 &&
+                paint_iri_text != nullptr && SkString_equalsText(paint_iri_text, "gradient0") &&
+                paint != nullptr && SkSVGPaint_type(paint) == 2 &&
+                paint_color != nullptr && SkSVGColor_color(paint_color, &paint_color_value) &&
+                paint_color_value == 0xFF336699 &&
+                paint_iri_copy != nullptr && paint_iri_copy_text != nullptr &&
+                SkString_equalsText(paint_iri_copy_text, "gradient0");
+        SkString_delete(paint_iri_copy_text);
+        SkSVGIRI_delete(paint_iri_copy);
+        SkSVGColor_delete(paint_color);
+        SkSVGPaint_delete(paint);
+        SkString_delete(paint_iri_text);
+        SkSVGIRI_delete(paint_iri);
+        if (!check(svg_value_accessors_ok, "SkSVGIRI/SkSVGPaint accessors")) {
+            SkSVGColor_delete(color);
+            SkSVGLength_delete(length);
+            return 1;
+        }
+
+        reskia_svg_line_join_t *line_join = SkSVGLineJoin_new(2);
+        reskia_svg_spread_method_t *spread = SkSVGSpreadMethod_new(1);
+        reskia_svg_visibility_t *visibility = SkSVGVisibility_new(3);
+        reskia_svg_stop_color_t *stop_color = SkSVGStopColor_new(0xFF112233);
+        reskia_svg_object_bounding_box_units_t *units = SkSVGObjectBoundingBoxUnits_new(1);
+        reskia_svg_text_anchor_t *text_anchor = SkSVGTextAnchor_new(2);
+        uint32_t stop_color_value = 0;
+        const bool small_value_accessors_ok =
+                line_join != nullptr && SkSVGLineJoin_type(line_join) == 2 &&
+                spread != nullptr && SkSVGSpreadMethod_type(spread) == 1 &&
+                visibility != nullptr && SkSVGVisibility_type(visibility) == 3 &&
+                stop_color != nullptr && SkSVGStopColor_type(stop_color) == 0 &&
+                SkSVGStopColor_color(stop_color, &stop_color_value) &&
+                stop_color_value == 0xFF112233 &&
+                units != nullptr && SkSVGObjectBoundingBoxUnits_type(units) == 1 &&
+                text_anchor != nullptr && SkSVGTextAnchor_type(text_anchor) == 2;
+        SkSVGTextAnchor_delete(text_anchor);
+        SkSVGObjectBoundingBoxUnits_delete(units);
+        SkSVGStopColor_delete(stop_color);
+        SkSVGVisibility_delete(visibility);
+        SkSVGSpreadMethod_delete(spread);
+        SkSVGLineJoin_delete(line_join);
+        if (!check(small_value_accessors_ok, "SVG small value accessors")) {
+            SkSVGColor_delete(color);
+            SkSVGLength_delete(length);
+            return 1;
+        }
     }
 
     reskia_svg_dash_array_t *dash_none = SkSVGDashArray_newWithType(0);

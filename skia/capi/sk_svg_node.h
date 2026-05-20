@@ -21,6 +21,49 @@ extern "C" {
  * Skia: SkSVGNode::tag() const.
  */
 int32_t SkSVGNode_tag(reskia_svg_node_t *node);
+void SkSVGNode_ref(reskia_svg_node_t *node);
+void SkSVGNode_unref(reskia_svg_node_t *node);
+void SkSVGNode_release(reskia_svg_node_t *node);
+
+reskia_svg_node_t *SkSVGCircle_Make(void);
+reskia_svg_node_t *SkSVGClipPath_Make(void);
+reskia_svg_node_t *SkSVGDefs_Make(void);
+reskia_svg_node_t *SkSVGEllipse_Make(void);
+reskia_svg_node_t *SkSVGFeBlend_Make(void);
+bool SkSVGFe_IsFilterEffect(const reskia_svg_node_t *node);
+reskia_svg_node_t *SkSVGFeColorMatrix_Make(void);
+reskia_svg_node_t *SkSVGFeComposite_Make(void);
+reskia_svg_node_t *SkSVGFeDiffuseLighting_Make(void);
+reskia_svg_node_t *SkSVGFeDisplacementMap_Make(void);
+reskia_svg_node_t *SkSVGFeDistantLight_Make(void);
+reskia_svg_node_t *SkSVGFeFlood_Make(void);
+reskia_svg_node_t *SkSVGFeGaussianBlur_Make(void);
+reskia_svg_node_t *SkSVGFeImage_Make(void);
+reskia_svg_node_t *SkSVGFeMorphology_Make(void);
+reskia_svg_node_t *SkSVGFeOffset_Make(void);
+reskia_svg_node_t *SkSVGFePointLight_Make(void);
+reskia_svg_node_t *SkSVGFeSpecularLighting_Make(void);
+reskia_svg_node_t *SkSVGFeSpotLight_Make(void);
+reskia_svg_node_t *SkSVGFeTurbulence_Make(void);
+reskia_svg_node_t *SkSVGFilter_Make(void);
+reskia_svg_node_t *SkSVGG_Make(void);
+reskia_svg_node_t *SkSVGImage_Make(void);
+reskia_svg_node_t *SkSVGLine_Make(void);
+reskia_svg_node_t *SkSVGLinearGradient_Make(void);
+reskia_svg_node_t *SkSVGMask_Make(void);
+reskia_svg_node_t *SkSVGPath_Make(void);
+reskia_svg_node_t *SkSVGPattern_Make(void);
+reskia_svg_node_t *SkSVGPoly_MakePolygon(void);
+reskia_svg_node_t *SkSVGPoly_MakePolyline(void);
+reskia_svg_node_t *SkSVGRadialGradient_Make(void);
+reskia_svg_node_t *SkSVGRect_Make(void);
+reskia_svg_node_t *SkSVGSVG_Make(int32_t type);
+reskia_svg_node_t *SkSVGStop_Make(void);
+reskia_svg_node_t *SkSVGText_Make(void);
+reskia_svg_node_t *SkSVGTextLiteral_Make(void);
+reskia_svg_node_t *SkSVGTextPath_Make(void);
+reskia_svg_node_t *SkSVGTSpan_Make(void);
+reskia_svg_node_t *SkSVGUse_Make(void);
 
 reskia_svg_value_t *SkSVGValue_newColor(uint32_t color); // owned; delete with SkSVGValue_delete
 reskia_svg_value_t *SkSVGValue_newLength(float value, int32_t unit); // owned; delete with SkSVGValue_delete

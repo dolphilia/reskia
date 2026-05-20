@@ -4,13 +4,19 @@
 
 #include "sk_gpu_backend_surface.h"
 
+#include <vector>
+
 #if defined(SK_GANESH)
 #include "include/core/SkString.h"
+#include "include/core/SkYUVAInfo.h"
 #include "include/gpu/GrBackendSemaphore.h"
 #include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/GrDriverBugWorkarounds.h"
+#include "include/gpu/GrYUVABackendTextures.h"
 #include "include/gpu/MutableTextureState.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #include "include/core/SkTextureCompressionType.h"
+#include "src/core/SkYUVAInfoLocation.h"
 
 #include "../handles/static_sk_i_size-internal.h"
 #endif
@@ -21,9 +27,23 @@
 
 namespace {
 
+void clear_yuva_locations(reskia_yuva_location_t *locations) {
+    if (locations == nullptr) {
+        return;
+    }
+    for (int i = 0; i < 4; ++i) {
+        locations[i].plane = -1;
+        locations[i].channel = -1;
+    }
+}
+
 #if defined(SK_GANESH)
 const GrBackendFormat *as_format(const reskia_gr_backend_format_t *format) {
     return reinterpret_cast<const GrBackendFormat *>(format);
+}
+
+const SkYUVAInfo *as_yuva_info(const reskia_yuva_info_t *info) {
+    return reinterpret_cast<const SkYUVAInfo *>(info);
 }
 
 GrBackendTexture *as_texture(reskia_gr_backend_texture_t *texture) {
@@ -44,6 +64,22 @@ GrBackendSemaphore *as_semaphore(reskia_gr_backend_semaphore_t *semaphore) {
 
 const GrBackendSemaphore *as_semaphore(const reskia_gr_backend_semaphore_t *semaphore) {
     return reinterpret_cast<const GrBackendSemaphore *>(semaphore);
+}
+
+GrDriverBugWorkarounds *as_driver_bug_workarounds(reskia_gr_driver_bug_workarounds_t *workarounds) {
+    return reinterpret_cast<GrDriverBugWorkarounds *>(workarounds);
+}
+
+const GrDriverBugWorkarounds *as_driver_bug_workarounds(const reskia_gr_driver_bug_workarounds_t *workarounds) {
+    return reinterpret_cast<const GrDriverBugWorkarounds *>(workarounds);
+}
+
+const GrYUVABackendTextureInfo *as_yuva_backend_texture_info(const reskia_gr_yuva_backend_texture_info_t *info) {
+    return reinterpret_cast<const GrYUVABackendTextureInfo *>(info);
+}
+
+const GrYUVABackendTextures *as_yuva_backend_textures(const reskia_gr_yuva_backend_textures_t *textures) {
+    return reinterpret_cast<const GrYUVABackendTextures *>(textures);
 }
 
 skgpu::MutableTextureState *as_mutable_texture_state(reskia_skgpu_mutable_texture_state_t *state) {
@@ -86,6 +122,28 @@ reskia_gpu_backend_api_t to_reskia_backend_api(skgpu::BackendApi backend) {
 
 reskia_skgpu_protected_t to_reskia_protected(skgpu::Protected is_protected) {
     return is_protected == skgpu::Protected::kYes ? 1 : 0;
+}
+
+bool copy_yuva_locations(const SkYUVAInfo::YUVALocations &native_locations, reskia_yuva_location_t *locations) {
+    if (locations == nullptr) {
+        return false;
+    }
+    for (int i = 0; i < SkYUVAInfo::kYUVAChannelCount; ++i) {
+        locations[i].plane = native_locations[i].fPlane;
+        locations[i].channel = static_cast<int32_t>(native_locations[i].fChannel);
+    }
+    return SkYUVAInfo::YUVALocation::AreValidLocations(native_locations);
+}
+
+bool driver_bug_workaround_is_enabled(const GrDriverBugWorkarounds &workarounds, int32_t type) {
+    switch (type) {
+#define GPU_OP(enum_type, name) \
+        case GrDriverBugWorkaroundType::enum_type: return workarounds.name;
+        GPU_DRIVER_BUG_WORKAROUNDS(GPU_OP)
+#undef GPU_OP
+        default:
+            return false;
+    }
 }
 #endif
 
@@ -801,6 +859,354 @@ reskia_gr_backend_api_t GrBackendSemaphore_backend(const reskia_gr_backend_semap
 #else
     (void) semaphore;
     return 0;
+#endif
+}
+
+reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_driver_bug_workarounds_t *>(new GrDriverBugWorkarounds());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_newWithTypes(const int32_t *workarounds, int count) {
+#if defined(SK_GANESH)
+    if (workarounds == nullptr || count < 0) {
+        return nullptr;
+    }
+    std::vector<int32_t> native_workarounds;
+    native_workarounds.reserve(static_cast<size_t>(count));
+    for (int i = 0; i < count; ++i) {
+        if (workarounds[i] < 0 || workarounds[i] >= NUMBER_OF_GPU_DRIVER_BUG_WORKAROUND_TYPES) {
+            return nullptr;
+        }
+        native_workarounds.push_back(workarounds[i]);
+    }
+    return reinterpret_cast<reskia_gr_driver_bug_workarounds_t *>(new GrDriverBugWorkarounds(native_workarounds));
+#else
+    (void) workarounds;
+    (void) count;
+    return nullptr;
+#endif
+}
+
+reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_newCopy(const reskia_gr_driver_bug_workarounds_t *workarounds) {
+#if defined(SK_GANESH)
+    return workarounds != nullptr
+            ? reinterpret_cast<reskia_gr_driver_bug_workarounds_t *>(new GrDriverBugWorkarounds(*as_driver_bug_workarounds(workarounds)))
+            : nullptr;
+#else
+    (void) workarounds;
+    return nullptr;
+#endif
+}
+
+void GrDriverBugWorkarounds_delete(reskia_gr_driver_bug_workarounds_t *workarounds) {
+#if defined(SK_GANESH)
+    delete as_driver_bug_workarounds(workarounds);
+#else
+    (void) workarounds;
+#endif
+}
+
+void GrDriverBugWorkarounds_applyOverrides(reskia_gr_driver_bug_workarounds_t *workarounds, const reskia_gr_driver_bug_workarounds_t *overrides) {
+#if defined(SK_GANESH)
+    if (workarounds != nullptr && overrides != nullptr) {
+        as_driver_bug_workarounds(workarounds)->applyOverrides(*as_driver_bug_workarounds(overrides));
+    }
+#else
+    (void) workarounds;
+    (void) overrides;
+#endif
+}
+
+bool GrDriverBugWorkarounds_isEnabled(const reskia_gr_driver_bug_workarounds_t *workarounds, int32_t type) {
+#if defined(SK_GANESH)
+    return workarounds != nullptr && driver_bug_workaround_is_enabled(*as_driver_bug_workarounds(workarounds), type);
+#else
+    (void) workarounds;
+    (void) type;
+    return false;
+#endif
+}
+
+reskia_gr_yuva_backend_texture_info_t *GrYUVABackendTextureInfo_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_yuva_backend_texture_info_t *>(new GrYUVABackendTextureInfo());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_yuva_backend_texture_info_t *GrYUVABackendTextureInfo_newWithYUVAInfoFormats(const reskia_yuva_info_t *info, const reskia_gr_backend_format_t *const *formats, reskia_skgpu_mipmapped_t mipmapped, int texture_origin) {
+#if defined(SK_GANESH)
+    const SkYUVAInfo *native_info = as_yuva_info(info);
+    if (native_info == nullptr || formats == nullptr || !native_info->isValid()) {
+        return nullptr;
+    }
+    GrBackendFormat native_formats[SkYUVAInfo::kMaxPlanes];
+    const int num_planes = native_info->numPlanes();
+    for (int i = 0; i < num_planes; ++i) {
+        if (formats[i] == nullptr) {
+            return nullptr;
+        }
+        native_formats[i] = *as_format(formats[i]);
+    }
+    return reinterpret_cast<reskia_gr_yuva_backend_texture_info_t *>(new GrYUVABackendTextureInfo(
+            *native_info,
+            native_formats,
+            to_mipmapped(mipmapped),
+            static_cast<GrSurfaceOrigin>(texture_origin)));
+#else
+    (void) info;
+    (void) formats;
+    (void) mipmapped;
+    (void) texture_origin;
+    return nullptr;
+#endif
+}
+
+reskia_gr_yuva_backend_texture_info_t *GrYUVABackendTextureInfo_newCopy(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr
+            ? reinterpret_cast<reskia_gr_yuva_backend_texture_info_t *>(new GrYUVABackendTextureInfo(*as_yuva_backend_texture_info(info)))
+            : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+void GrYUVABackendTextureInfo_delete(reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    delete reinterpret_cast<GrYUVABackendTextureInfo *>(info);
+#else
+    (void) info;
+#endif
+}
+
+bool GrYUVABackendTextureInfo_equals(const reskia_gr_yuva_backend_texture_info_t *info, const reskia_gr_yuva_backend_texture_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && *as_yuva_backend_texture_info(info) == *as_yuva_backend_texture_info(other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+bool GrYUVABackendTextureInfo_notEquals(const reskia_gr_yuva_backend_texture_info_t *info, const reskia_gr_yuva_backend_texture_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && *as_yuva_backend_texture_info(info) != *as_yuva_backend_texture_info(other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+reskia_yuva_info_t *GrYUVABackendTextureInfo_yuvaInfo(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr ? reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo(as_yuva_backend_texture_info(info)->yuvaInfo())) : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+int GrYUVABackendTextureInfo_yuvColorSpace(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr ? static_cast<int>(as_yuva_backend_texture_info(info)->yuvColorSpace()) : -1;
+#else
+    (void) info;
+    return -1;
+#endif
+}
+
+reskia_skgpu_mipmapped_t GrYUVABackendTextureInfo_mipmapped(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr ? static_cast<reskia_skgpu_mipmapped_t>(as_yuva_backend_texture_info(info)->mipmapped()) : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+int GrYUVABackendTextureInfo_textureOrigin(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr ? static_cast<int>(as_yuva_backend_texture_info(info)->textureOrigin()) : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+int GrYUVABackendTextureInfo_numPlanes(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr ? as_yuva_backend_texture_info(info)->numPlanes() : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+reskia_gr_backend_format_t *GrYUVABackendTextureInfo_planeFormat(const reskia_gr_yuva_backend_texture_info_t *info, int index) {
+#if defined(SK_GANESH)
+    if (info == nullptr || index < 0 || index >= as_yuva_backend_texture_info(info)->numPlanes()) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(as_yuva_backend_texture_info(info)->planeFormat(index)));
+#else
+    (void) info;
+    (void) index;
+    return nullptr;
+#endif
+}
+
+bool GrYUVABackendTextureInfo_isValid(const reskia_gr_yuva_backend_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr && as_yuva_backend_texture_info(info)->isValid();
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool GrYUVABackendTextureInfo_toYUVALocations(const reskia_gr_yuva_backend_texture_info_t *info, reskia_yuva_location_t *locations) {
+    clear_yuva_locations(locations);
+#if defined(SK_GANESH)
+    if (info == nullptr || locations == nullptr || !as_yuva_backend_texture_info(info)->isValid()) {
+        return false;
+    }
+    return copy_yuva_locations(as_yuva_backend_texture_info(info)->toYUVALocations(), locations);
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+reskia_gr_yuva_backend_textures_t *GrYUVABackendTextures_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_yuva_backend_textures_t *>(new GrYUVABackendTextures());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_yuva_backend_textures_t *GrYUVABackendTextures_newWithYUVAInfoTextures(const reskia_yuva_info_t *info, const reskia_gr_backend_texture_t *const *textures, int texture_origin) {
+#if defined(SK_GANESH)
+    const SkYUVAInfo *native_info = as_yuva_info(info);
+    if (native_info == nullptr || textures == nullptr || !native_info->isValid()) {
+        return nullptr;
+    }
+    GrBackendTexture native_textures[SkYUVAInfo::kMaxPlanes];
+    const int num_planes = native_info->numPlanes();
+    for (int i = 0; i < num_planes; ++i) {
+        if (textures[i] == nullptr) {
+            return nullptr;
+        }
+        native_textures[i] = *as_texture(textures[i]);
+    }
+    return reinterpret_cast<reskia_gr_yuva_backend_textures_t *>(
+            new GrYUVABackendTextures(*native_info, native_textures, static_cast<GrSurfaceOrigin>(texture_origin)));
+#else
+    (void) info;
+    (void) textures;
+    (void) texture_origin;
+    return nullptr;
+#endif
+}
+
+void GrYUVABackendTextures_delete(reskia_gr_yuva_backend_textures_t *textures) {
+#if defined(SK_GANESH)
+    delete reinterpret_cast<GrYUVABackendTextures *>(textures);
+#else
+    (void) textures;
+#endif
+}
+
+int GrYUVABackendTextures_textures(const reskia_gr_yuva_backend_textures_t *textures, reskia_gr_backend_texture_t **out_textures, int capacity) {
+#if defined(SK_GANESH)
+    if (textures == nullptr) {
+        return 0;
+    }
+    const GrYUVABackendTextures *native = as_yuva_backend_textures(textures);
+    const int num_planes = native->numPlanes();
+    if (out_textures != nullptr && capacity > 0) {
+        const int count = capacity < num_planes ? capacity : num_planes;
+        for (int i = 0; i < count; ++i) {
+            out_textures[i] = reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(native->texture(i)));
+        }
+    }
+    return num_planes;
+#else
+    (void) textures;
+    (void) out_textures;
+    (void) capacity;
+    return 0;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrYUVABackendTextures_texture(const reskia_gr_yuva_backend_textures_t *textures, int index) {
+#if defined(SK_GANESH)
+    if (textures == nullptr || index < 0 || index >= as_yuva_backend_textures(textures)->numPlanes()) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_yuva_backend_textures(textures)->texture(index)));
+#else
+    (void) textures;
+    (void) index;
+    return nullptr;
+#endif
+}
+
+reskia_yuva_info_t *GrYUVABackendTextures_yuvaInfo(const reskia_gr_yuva_backend_textures_t *textures) {
+#if defined(SK_GANESH)
+    return textures != nullptr ? reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo(as_yuva_backend_textures(textures)->yuvaInfo())) : nullptr;
+#else
+    (void) textures;
+    return nullptr;
+#endif
+}
+
+int GrYUVABackendTextures_numPlanes(const reskia_gr_yuva_backend_textures_t *textures) {
+#if defined(SK_GANESH)
+    return textures != nullptr ? as_yuva_backend_textures(textures)->numPlanes() : 0;
+#else
+    (void) textures;
+    return 0;
+#endif
+}
+
+int GrYUVABackendTextures_textureOrigin(const reskia_gr_yuva_backend_textures_t *textures) {
+#if defined(SK_GANESH)
+    return textures != nullptr ? static_cast<int>(as_yuva_backend_textures(textures)->textureOrigin()) : 0;
+#else
+    (void) textures;
+    return 0;
+#endif
+}
+
+bool GrYUVABackendTextures_isValid(const reskia_gr_yuva_backend_textures_t *textures) {
+#if defined(SK_GANESH)
+    return textures != nullptr && as_yuva_backend_textures(textures)->isValid();
+#else
+    (void) textures;
+    return false;
+#endif
+}
+
+bool GrYUVABackendTextures_toYUVALocations(const reskia_gr_yuva_backend_textures_t *textures, reskia_yuva_location_t *locations) {
+    clear_yuva_locations(locations);
+#if defined(SK_GANESH)
+    if (textures == nullptr || locations == nullptr || !as_yuva_backend_textures(textures)->isValid()) {
+        return false;
+    }
+    return copy_yuva_locations(as_yuva_backend_textures(textures)->toYUVALocations(), locations);
+#else
+    (void) textures;
+    return false;
 #endif
 }
 

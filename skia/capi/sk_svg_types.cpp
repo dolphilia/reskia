@@ -10,7 +10,11 @@
 
 #include "include/core/SkColor.h"
 #include "include/core/SkPathTypes.h"
+#include "include/core/SkRect.h"
+#include "include/core/SkSize.h"
 #include "include/core/SkString.h"
+#include "modules/svg/include/SkSVGNode.h"
+#include "modules/svg/include/SkSVGRenderContext.h"
 #include "modules/svg/include/SkSVGTypes.h"
 
 namespace {
@@ -31,6 +35,14 @@ SkSVGLength::Unit svg_length_unit(int32_t unit) {
         return SkSVGLength::Unit::kUnknown;
     }
     return static_cast<SkSVGLength::Unit>(unit);
+}
+
+SkSVGLengthContext::LengthType svg_length_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGLengthContext::LengthType::kHorizontal) ||
+        type > static_cast<int32_t>(SkSVGLengthContext::LengthType::kOther)) {
+        return SkSVGLengthContext::LengthType::kOther;
+    }
+    return static_cast<SkSVGLengthContext::LengthType>(type);
 }
 
 SkSVGColor::Type svg_color_type(int32_t type) {
@@ -89,12 +101,68 @@ SkSVGFuncIRI::Type svg_func_iri_type(int32_t type) {
     return static_cast<SkSVGFuncIRI::Type>(type);
 }
 
+SkSVGPaint::Type svg_paint_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGPaint::Type::kNone) ||
+        type > static_cast<int32_t>(SkSVGPaint::Type::kIRI)) {
+        return SkSVGPaint::Type::kNone;
+    }
+    return static_cast<SkSVGPaint::Type>(type);
+}
+
 SkSVGIRI::Type svg_iri_type(int32_t type) {
     if (type < static_cast<int32_t>(SkSVGIRI::Type::kLocal) ||
         type > static_cast<int32_t>(SkSVGIRI::Type::kDataURI)) {
         return SkSVGIRI::Type::kLocal;
     }
     return static_cast<SkSVGIRI::Type>(type);
+}
+
+SkSVGLineJoin::Type svg_line_join_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGLineJoin::Type::kMiter) ||
+        type > static_cast<int32_t>(SkSVGLineJoin::Type::kInherit)) {
+        return SkSVGLineJoin::Type::kInherit;
+    }
+    return static_cast<SkSVGLineJoin::Type>(type);
+}
+
+SkSVGSpreadMethod::Type svg_spread_method_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGSpreadMethod::Type::kPad) ||
+        type > static_cast<int32_t>(SkSVGSpreadMethod::Type::kReflect)) {
+        return SkSVGSpreadMethod::Type::kPad;
+    }
+    return static_cast<SkSVGSpreadMethod::Type>(type);
+}
+
+SkSVGVisibility::Type svg_visibility_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGVisibility::Type::kVisible) ||
+        type > static_cast<int32_t>(SkSVGVisibility::Type::kInherit)) {
+        return SkSVGVisibility::Type::kVisible;
+    }
+    return static_cast<SkSVGVisibility::Type>(type);
+}
+
+SkSVGStopColor::Type svg_stop_color_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGStopColor::Type::kColor) ||
+        type > static_cast<int32_t>(SkSVGStopColor::Type::kInherit)) {
+        return SkSVGStopColor::Type::kInherit;
+    }
+    return static_cast<SkSVGStopColor::Type>(type);
+}
+
+SkSVGObjectBoundingBoxUnits::Type svg_object_bounding_box_units_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGObjectBoundingBoxUnits::Type::kUserSpaceOnUse) ||
+        type > static_cast<int32_t>(SkSVGObjectBoundingBoxUnits::Type::kObjectBoundingBox)) {
+        return SkSVGObjectBoundingBoxUnits::Type::kUserSpaceOnUse;
+    }
+    return static_cast<SkSVGObjectBoundingBoxUnits::Type>(type);
+}
+
+SkSVGTextAnchor::Type svg_text_anchor_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGTextAnchor::Type::kStart) ||
+        type > static_cast<int32_t>(SkSVGTextAnchor::Type::kInherit)) {
+        return SkSVGTextAnchor::Type::kInherit;
+    }
+    return static_cast<SkSVGTextAnchor::Type>(type);
 }
 
 reskia_string_t *make_string(const SkString& string) {
@@ -119,6 +187,72 @@ float SkSVGLength_value(const reskia_svg_length_t *length) {
 
 int32_t SkSVGLength_unit(const reskia_svg_length_t *length) {
     return length != nullptr ? static_cast<int32_t>(as_type<SkSVGLength>(length)->unit()) : 0;
+}
+
+reskia_svg_length_context_t *SkSVGLengthContext_new(float viewport_width, float viewport_height, float dpi) {
+    return to_opaque<reskia_svg_length_context_t>(
+            new SkSVGLengthContext(SkSize::Make(viewport_width, viewport_height), dpi));
+}
+
+void SkSVGLengthContext_delete(reskia_svg_length_context_t *context) {
+    delete as_type<SkSVGLengthContext>(context);
+}
+
+bool SkSVGLengthContext_viewPort(const reskia_svg_length_context_t *context, float *out_width, float *out_height) {
+    if (context == nullptr) {
+        return false;
+    }
+    const SkSize& view_port = as_type<SkSVGLengthContext>(context)->viewPort();
+    if (out_width != nullptr) {
+        *out_width = view_port.width();
+    }
+    if (out_height != nullptr) {
+        *out_height = view_port.height();
+    }
+    return true;
+}
+
+void SkSVGLengthContext_setViewPort(reskia_svg_length_context_t *context, float width, float height) {
+    if (context != nullptr) {
+        as_type<SkSVGLengthContext>(context)->setViewPort(SkSize::Make(width, height));
+    }
+}
+
+float SkSVGLengthContext_resolve(const reskia_svg_length_context_t *context, const reskia_svg_length_t *length, int32_t length_type) {
+    return context != nullptr && length != nullptr ?
+            as_type<SkSVGLengthContext>(context)->resolve(*as_type<SkSVGLength>(length), svg_length_type(length_type)) :
+            0.0f;
+}
+
+bool SkSVGLengthContext_resolveRect(
+        const reskia_svg_length_context_t *context,
+        const reskia_svg_length_t *x,
+        const reskia_svg_length_t *y,
+        const reskia_svg_length_t *width,
+        const reskia_svg_length_t *height,
+        float *out_left,
+        float *out_top,
+        float *out_right,
+        float *out_bottom) {
+    if (context == nullptr || x == nullptr || y == nullptr || width == nullptr || height == nullptr) {
+        return false;
+    }
+    const SkRect rect = as_type<SkSVGLengthContext>(context)->resolveRect(
+            *as_type<SkSVGLength>(x), *as_type<SkSVGLength>(y),
+            *as_type<SkSVGLength>(width), *as_type<SkSVGLength>(height));
+    if (out_left != nullptr) {
+        *out_left = rect.left();
+    }
+    if (out_top != nullptr) {
+        *out_top = rect.top();
+    }
+    if (out_right != nullptr) {
+        *out_right = rect.right();
+    }
+    if (out_bottom != nullptr) {
+        *out_bottom = rect.bottom();
+    }
+    return true;
 }
 
 reskia_svg_color_t *SkSVGColor_new(uint32_t color) {
@@ -156,6 +290,60 @@ bool SkSVGColor_equals(const reskia_svg_color_t *color, const reskia_svg_color_t
 
 bool SkSVGColor_notEquals(const reskia_svg_color_t *color, const reskia_svg_color_t *other) {
     return color == nullptr || other == nullptr || *as_type<SkSVGColor>(color) != *as_type<SkSVGColor>(other);
+}
+
+reskia_svg_iri_t *SkSVGIRI_new(int32_t type, const char iri[]) {
+    return iri != nullptr ? to_opaque<reskia_svg_iri_t>(new SkSVGIRI(svg_iri_type(type), SkString(iri))) : nullptr;
+}
+
+void SkSVGIRI_delete(reskia_svg_iri_t *iri) {
+    delete as_type<SkSVGIRI>(iri);
+}
+
+int32_t SkSVGIRI_type(const reskia_svg_iri_t *iri) {
+    return iri != nullptr ? static_cast<int32_t>(as_type<SkSVGIRI>(iri)->type()) : -1;
+}
+
+reskia_string_t *SkSVGIRI_iri(const reskia_svg_iri_t *iri) {
+    return iri != nullptr ? make_string(as_type<SkSVGIRI>(iri)->iri()) : nullptr;
+}
+
+reskia_svg_paint_t *SkSVGPaint_newWithType(int32_t type) {
+    return to_opaque<reskia_svg_paint_t>(new SkSVGPaint(svg_paint_type(type)));
+}
+
+reskia_svg_paint_t *SkSVGPaint_newWithColor(const reskia_svg_color_t *color) {
+    return color != nullptr ? to_opaque<reskia_svg_paint_t>(new SkSVGPaint(*as_type<SkSVGColor>(color))) : nullptr;
+}
+
+reskia_svg_paint_t *SkSVGPaint_newWithIRI(const reskia_svg_iri_t *iri, const reskia_svg_color_t *fallback_color) {
+    return iri != nullptr && fallback_color != nullptr ?
+            to_opaque<reskia_svg_paint_t>(new SkSVGPaint(*as_type<SkSVGIRI>(iri), *as_type<SkSVGColor>(fallback_color))) :
+            nullptr;
+}
+
+void SkSVGPaint_delete(reskia_svg_paint_t *paint) {
+    delete as_type<SkSVGPaint>(paint);
+}
+
+int32_t SkSVGPaint_type(const reskia_svg_paint_t *paint) {
+    return paint != nullptr ? static_cast<int32_t>(as_type<SkSVGPaint>(paint)->type()) : -1;
+}
+
+reskia_svg_color_t *SkSVGPaint_color(const reskia_svg_paint_t *paint) {
+    if (paint == nullptr ||
+        (as_type<SkSVGPaint>(paint)->type() != SkSVGPaint::Type::kColor &&
+         as_type<SkSVGPaint>(paint)->type() != SkSVGPaint::Type::kIRI)) {
+        return nullptr;
+    }
+    return to_opaque<reskia_svg_color_t>(new SkSVGColor(as_type<SkSVGPaint>(paint)->color()));
+}
+
+reskia_svg_iri_t *SkSVGPaint_iri(const reskia_svg_paint_t *paint) {
+    if (paint == nullptr || as_type<SkSVGPaint>(paint)->type() != SkSVGPaint::Type::kIRI) {
+        return nullptr;
+    }
+    return to_opaque<reskia_svg_iri_t>(new SkSVGIRI(as_type<SkSVGPaint>(paint)->iri()));
 }
 
 reskia_svg_dash_array_t *SkSVGDashArray_newWithType(int32_t type) {
@@ -279,6 +467,80 @@ bool SkSVGFillRule_equals(const reskia_svg_fill_rule_t *rule, const reskia_svg_f
 
 bool SkSVGFillRule_notEquals(const reskia_svg_fill_rule_t *rule, const reskia_svg_fill_rule_t *other) {
     return rule == nullptr || other == nullptr || *as_type<SkSVGFillRule>(rule) != *as_type<SkSVGFillRule>(other);
+}
+
+reskia_svg_line_join_t *SkSVGLineJoin_new(int32_t type) {
+    return to_opaque<reskia_svg_line_join_t>(new SkSVGLineJoin(svg_line_join_type(type)));
+}
+
+void SkSVGLineJoin_delete(reskia_svg_line_join_t *join) {
+    delete as_type<SkSVGLineJoin>(join);
+}
+
+int32_t SkSVGLineJoin_type(const reskia_svg_line_join_t *join) {
+    return join != nullptr ? static_cast<int32_t>(as_type<SkSVGLineJoin>(join)->type()) : -1;
+}
+
+reskia_svg_spread_method_t *SkSVGSpreadMethod_new(int32_t type) {
+    return to_opaque<reskia_svg_spread_method_t>(new SkSVGSpreadMethod(svg_spread_method_type(type)));
+}
+
+void SkSVGSpreadMethod_delete(reskia_svg_spread_method_t *method) {
+    delete as_type<SkSVGSpreadMethod>(method);
+}
+
+int32_t SkSVGSpreadMethod_type(const reskia_svg_spread_method_t *method) {
+    return method != nullptr ? static_cast<int32_t>(as_type<SkSVGSpreadMethod>(method)->type()) : -1;
+}
+
+reskia_svg_visibility_t *SkSVGVisibility_new(int32_t type) {
+    return to_opaque<reskia_svg_visibility_t>(new SkSVGVisibility(svg_visibility_type(type)));
+}
+
+void SkSVGVisibility_delete(reskia_svg_visibility_t *visibility) {
+    delete as_type<SkSVGVisibility>(visibility);
+}
+
+int32_t SkSVGVisibility_type(const reskia_svg_visibility_t *visibility) {
+    return visibility != nullptr ? static_cast<int32_t>(as_type<SkSVGVisibility>(visibility)->type()) : -1;
+}
+
+reskia_svg_stop_color_t *SkSVGStopColor_new(uint32_t color) {
+    return to_opaque<reskia_svg_stop_color_t>(new SkSVGStopColor(static_cast<SkColor>(color)));
+}
+
+reskia_svg_stop_color_t *SkSVGStopColor_newWithType(int32_t type) {
+    return to_opaque<reskia_svg_stop_color_t>(new SkSVGStopColor(svg_stop_color_type(type)));
+}
+
+void SkSVGStopColor_delete(reskia_svg_stop_color_t *color) {
+    delete as_type<SkSVGStopColor>(color);
+}
+
+int32_t SkSVGStopColor_type(const reskia_svg_stop_color_t *color) {
+    return color != nullptr ? static_cast<int32_t>(as_type<SkSVGStopColor>(color)->type()) : -1;
+}
+
+bool SkSVGStopColor_color(const reskia_svg_stop_color_t *color, uint32_t *out_color) {
+    if (color == nullptr || out_color == nullptr ||
+        as_type<SkSVGStopColor>(color)->type() != SkSVGStopColor::Type::kColor) {
+        return false;
+    }
+    *out_color = as_type<SkSVGStopColor>(color)->color();
+    return true;
+}
+
+reskia_svg_object_bounding_box_units_t *SkSVGObjectBoundingBoxUnits_new(int32_t type) {
+    return to_opaque<reskia_svg_object_bounding_box_units_t>(
+            new SkSVGObjectBoundingBoxUnits(svg_object_bounding_box_units_type(type)));
+}
+
+void SkSVGObjectBoundingBoxUnits_delete(reskia_svg_object_bounding_box_units_t *units) {
+    delete as_type<SkSVGObjectBoundingBoxUnits>(units);
+}
+
+int32_t SkSVGObjectBoundingBoxUnits_type(const reskia_svg_object_bounding_box_units_t *units) {
+    return units != nullptr ? static_cast<int32_t>(as_type<SkSVGObjectBoundingBoxUnits>(units)->type()) : -1;
 }
 
 reskia_svg_font_family_t *SkSVGFontFamily_new(const char family[]) {
@@ -407,6 +669,18 @@ bool SkSVGFuncIRI_equals(const reskia_svg_func_iri_t *func_iri, const reskia_svg
 
 bool SkSVGFuncIRI_notEquals(const reskia_svg_func_iri_t *func_iri, const reskia_svg_func_iri_t *other) {
     return func_iri == nullptr || other == nullptr || *as_type<SkSVGFuncIRI>(func_iri) != *as_type<SkSVGFuncIRI>(other);
+}
+
+reskia_svg_text_anchor_t *SkSVGTextAnchor_new(int32_t type) {
+    return to_opaque<reskia_svg_text_anchor_t>(new SkSVGTextAnchor(svg_text_anchor_type(type)));
+}
+
+void SkSVGTextAnchor_delete(reskia_svg_text_anchor_t *anchor) {
+    delete as_type<SkSVGTextAnchor>(anchor);
+}
+
+int32_t SkSVGTextAnchor_type(const reskia_svg_text_anchor_t *anchor) {
+    return anchor != nullptr ? static_cast<int32_t>(as_type<SkSVGTextAnchor>(anchor)->type()) : -1;
 }
 
 }

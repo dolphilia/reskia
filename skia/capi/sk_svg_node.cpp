@@ -7,10 +7,43 @@
 #include <utility>
 
 #include "include/core/SkColor.h"
+#include "include/core/SkImage.h"
 #include "include/core/SkString.h"
 #include "modules/svg/include/SkSVGAttribute.h"
+#include "modules/svg/include/SkSVGCircle.h"
+#include "modules/svg/include/SkSVGClipPath.h"
+#include "modules/svg/include/SkSVGDefs.h"
+#include "modules/svg/include/SkSVGEllipse.h"
+#include "modules/svg/include/SkSVGFeBlend.h"
+#include "modules/svg/include/SkSVGFeColorMatrix.h"
+#include "modules/svg/include/SkSVGFeComposite.h"
+#include "modules/svg/include/SkSVGFeDisplacementMap.h"
+#include "modules/svg/include/SkSVGFe.h"
+#include "modules/svg/include/SkSVGFeFlood.h"
+#include "modules/svg/include/SkSVGFeGaussianBlur.h"
+#include "modules/svg/include/SkSVGFeImage.h"
+#include "modules/svg/include/SkSVGFeLightSource.h"
+#include "modules/svg/include/SkSVGFeLighting.h"
+#include "modules/svg/include/SkSVGFeMorphology.h"
+#include "modules/svg/include/SkSVGFeOffset.h"
+#include "modules/svg/include/SkSVGFeTurbulence.h"
+#include "modules/svg/include/SkSVGFilter.h"
+#include "modules/svg/include/SkSVGG.h"
+#include "modules/svg/include/SkSVGImage.h"
+#include "modules/svg/include/SkSVGLine.h"
+#include "modules/svg/include/SkSVGLinearGradient.h"
+#include "modules/svg/include/SkSVGMask.h"
 #include "modules/svg/include/SkSVGNode.h"
+#include "modules/svg/include/SkSVGPath.h"
+#include "modules/svg/include/SkSVGPattern.h"
+#include "modules/svg/include/SkSVGPoly.h"
+#include "modules/svg/include/SkSVGRadialGradient.h"
+#include "modules/svg/include/SkSVGRect.h"
+#include "modules/svg/include/SkSVGSVG.h"
+#include "modules/svg/include/SkSVGStop.h"
+#include "modules/svg/include/SkSVGText.h"
 #include "modules/svg/include/SkSVGTypes.h"
+#include "modules/svg/include/SkSVGUse.h"
 #include "modules/svg/include/SkSVGValue.h"
 
 namespace {
@@ -66,6 +99,19 @@ const ReskiaSVGValue *as_svg_value(const reskia_svg_value_t *value) {
     return reinterpret_cast<const ReskiaSVGValue *>(value);
 }
 
+template <typename T>
+reskia_svg_node_t *to_svg_node(sk_sp<T> node) {
+    return reinterpret_cast<reskia_svg_node_t *>(static_cast<SkSVGNode *>(node.release()));
+}
+
+SkSVGSVG::Type svg_svg_type(int32_t type) {
+    if (type < static_cast<int32_t>(SkSVGSVG::Type::kRoot) ||
+        type > static_cast<int32_t>(SkSVGSVG::Type::kInner)) {
+        return SkSVGSVG::Type::kInner;
+    }
+    return static_cast<SkSVGSVG::Type>(type);
+}
+
 }  // namespace
 
 extern "C" {
@@ -75,6 +121,178 @@ int32_t SkSVGNode_tag(reskia_svg_node_t *node) {
         return -1;
     }
     return static_cast<int32_t>(reinterpret_cast<SkSVGNode *>(node)->tag());
+}
+
+void SkSVGNode_ref(reskia_svg_node_t *node) {
+    if (node != nullptr) {
+        reinterpret_cast<SkSVGNode *>(node)->ref();
+    }
+}
+
+void SkSVGNode_unref(reskia_svg_node_t *node) {
+    if (node != nullptr) {
+        reinterpret_cast<SkSVGNode *>(node)->unref();
+    }
+}
+
+void SkSVGNode_release(reskia_svg_node_t *node) {
+    SkSVGNode_unref(node);
+}
+
+reskia_svg_node_t *SkSVGCircle_Make(void) {
+    return to_svg_node(SkSVGCircle::Make());
+}
+
+reskia_svg_node_t *SkSVGClipPath_Make(void) {
+    return to_svg_node(SkSVGClipPath::Make());
+}
+
+reskia_svg_node_t *SkSVGDefs_Make(void) {
+    return to_svg_node(SkSVGDefs::Make());
+}
+
+reskia_svg_node_t *SkSVGEllipse_Make(void) {
+    return to_svg_node(SkSVGEllipse::Make());
+}
+
+reskia_svg_node_t *SkSVGFeBlend_Make(void) {
+    return to_svg_node(SkSVGFeBlend::Make());
+}
+
+bool SkSVGFe_IsFilterEffect(const reskia_svg_node_t *node) {
+    return node != nullptr && SkSVGFe::IsFilterEffect(sk_ref_sp(const_cast<SkSVGNode *>(reinterpret_cast<const SkSVGNode *>(node))));
+}
+
+reskia_svg_node_t *SkSVGFeColorMatrix_Make(void) {
+    return to_svg_node(SkSVGFeColorMatrix::Make());
+}
+
+reskia_svg_node_t *SkSVGFeComposite_Make(void) {
+    return to_svg_node(SkSVGFeComposite::Make());
+}
+
+reskia_svg_node_t *SkSVGFeDiffuseLighting_Make(void) {
+    return to_svg_node(SkSVGFeDiffuseLighting::Make());
+}
+
+reskia_svg_node_t *SkSVGFeDisplacementMap_Make(void) {
+    return to_svg_node(SkSVGFeDisplacementMap::Make());
+}
+
+reskia_svg_node_t *SkSVGFeDistantLight_Make(void) {
+    return to_svg_node(SkSVGFeDistantLight::Make());
+}
+
+reskia_svg_node_t *SkSVGFeFlood_Make(void) {
+    return to_svg_node(SkSVGFeFlood::Make());
+}
+
+reskia_svg_node_t *SkSVGFeGaussianBlur_Make(void) {
+    return to_svg_node(SkSVGFeGaussianBlur::Make());
+}
+
+reskia_svg_node_t *SkSVGFeImage_Make(void) {
+    return to_svg_node(SkSVGFeImage::Make());
+}
+
+reskia_svg_node_t *SkSVGFeMorphology_Make(void) {
+    return to_svg_node(SkSVGFeMorphology::Make());
+}
+
+reskia_svg_node_t *SkSVGFeOffset_Make(void) {
+    return to_svg_node(SkSVGFeOffset::Make());
+}
+
+reskia_svg_node_t *SkSVGFePointLight_Make(void) {
+    return to_svg_node(SkSVGFePointLight::Make());
+}
+
+reskia_svg_node_t *SkSVGFeSpecularLighting_Make(void) {
+    return to_svg_node(SkSVGFeSpecularLighting::Make());
+}
+
+reskia_svg_node_t *SkSVGFeSpotLight_Make(void) {
+    return to_svg_node(SkSVGFeSpotLight::Make());
+}
+
+reskia_svg_node_t *SkSVGFeTurbulence_Make(void) {
+    return to_svg_node(SkSVGFeTurbulence::Make());
+}
+
+reskia_svg_node_t *SkSVGFilter_Make(void) {
+    return to_svg_node(SkSVGFilter::Make());
+}
+
+reskia_svg_node_t *SkSVGG_Make(void) {
+    return to_svg_node(SkSVGG::Make());
+}
+
+reskia_svg_node_t *SkSVGImage_Make(void) {
+    return to_svg_node(SkSVGImage::Make());
+}
+
+reskia_svg_node_t *SkSVGLine_Make(void) {
+    return to_svg_node(SkSVGLine::Make());
+}
+
+reskia_svg_node_t *SkSVGLinearGradient_Make(void) {
+    return to_svg_node(SkSVGLinearGradient::Make());
+}
+
+reskia_svg_node_t *SkSVGMask_Make(void) {
+    return to_svg_node(SkSVGMask::Make());
+}
+
+reskia_svg_node_t *SkSVGPath_Make(void) {
+    return to_svg_node(SkSVGPath::Make());
+}
+
+reskia_svg_node_t *SkSVGPattern_Make(void) {
+    return to_svg_node(SkSVGPattern::Make());
+}
+
+reskia_svg_node_t *SkSVGPoly_MakePolygon(void) {
+    return to_svg_node(SkSVGPoly::MakePolygon());
+}
+
+reskia_svg_node_t *SkSVGPoly_MakePolyline(void) {
+    return to_svg_node(SkSVGPoly::MakePolyline());
+}
+
+reskia_svg_node_t *SkSVGRadialGradient_Make(void) {
+    return to_svg_node(SkSVGRadialGradient::Make());
+}
+
+reskia_svg_node_t *SkSVGRect_Make(void) {
+    return to_svg_node(SkSVGRect::Make());
+}
+
+reskia_svg_node_t *SkSVGSVG_Make(int32_t type) {
+    return to_svg_node(SkSVGSVG::Make(svg_svg_type(type)));
+}
+
+reskia_svg_node_t *SkSVGStop_Make(void) {
+    return to_svg_node(SkSVGStop::Make());
+}
+
+reskia_svg_node_t *SkSVGText_Make(void) {
+    return to_svg_node(SkSVGText::Make());
+}
+
+reskia_svg_node_t *SkSVGTextLiteral_Make(void) {
+    return to_svg_node(SkSVGTextLiteral::Make());
+}
+
+reskia_svg_node_t *SkSVGTextPath_Make(void) {
+    return to_svg_node(SkSVGTextPath::Make());
+}
+
+reskia_svg_node_t *SkSVGTSpan_Make(void) {
+    return to_svg_node(SkSVGTSpan::Make());
+}
+
+reskia_svg_node_t *SkSVGUse_Make(void) {
+    return to_svg_node(SkSVGUse::Make());
 }
 
 reskia_svg_value_t *SkSVGValue_newColor(uint32_t color) {
