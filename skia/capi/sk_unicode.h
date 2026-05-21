@@ -70,6 +70,10 @@ bool SkUnicode_isSpace(reskia_unicode_t *unicode, reskia_unichar_t unichar); // 
 bool SkUnicode_isTabulation(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isHardBreak(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isEmoji(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiComponent(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiModifierBase(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiModifier(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isRegionalIndicator(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isIdeographic(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 
 bool SkUnicode_hasTabulationFlag(reskia_unicode_code_unit_flags_t flags);

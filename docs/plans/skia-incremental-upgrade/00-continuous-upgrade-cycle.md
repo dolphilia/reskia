@@ -95,13 +95,24 @@
 2. baseline と candidate の public header delta を出す。
 3. `DEPS`、`gn/*.gni`、Bazel metadata、mirror 済み source directory の drift を見る。
 4. coverage generator が candidate root を扱える状態なら、candidate coverage regression を取得する。
-5. generator が candidate root を扱えない場合は、先に tooling を整える。
+5. 前回 coverage matrix と candidate coverage matrix を比較し、vendor 側で削除された public method に対応する C API が残っていないか stale C API report を取得する。
+6. generator が candidate root または stale C API report を扱えない場合は、先に tooling を整える。
 
 成果物:
 
 - `docs/plans/skia-incremental-upgrade/records/` に cycle record を作る。
 - probe 段階では `vendor/skia-source.lock` を更新しない。
 - probe 段階では原則 C API 実装を入れない。ただし probe tooling の小修正は許容する。
+
+推奨コマンド:
+
+```sh
+python3 scripts/generate_public_api_coverage.py \
+  --skia-root vendor/skia-upstream-candidate \
+  --output .tmp/skia-upgrade-cycle-XXX/candidate-public-api-coverage-matrix.csv \
+  --previous-matrix docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv \
+  --stale-output .tmp/skia-upgrade-cycle-XXX/candidate-stale-capi.csv
+```
 
 ### Step 3: Routing
 
@@ -117,6 +128,7 @@
 - `optional-backend`: Dawn / Vulkan / Metal / Android / platform-specific helper。
 - `generator-noise`: public API ではない、または parser 誤検出。
 - `design-required`: callback/provider/global registration/ownership 設計が必要なもの。
+- `removed-upstream`: vendor public API から削除された method/class/header に対応する C API が残っているもの。
 
 判断:
 
@@ -124,6 +136,7 @@
 - platform 依存や backend 未有効領域は既存 policy に沿って `na` または roadmap 行へ回す。
 - internal/private surface は `false_positive` として理由を残す。
 - ownership 設計が必要なものは、この段階では実装せず設計メモ化する。
+- `removed-upstream` は原則として C API も削除する。互換維持などで残す場合は、cycle record に理由、削除期限、または明示的な分類を残す。
 
 ### Step 4: Source/Header Sync and C API Catch-up
 
@@ -156,6 +169,7 @@
 
 - public API coverage regeneration。
 - coverage matrix: `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- stale C API report: `stale_capi 0`。`signature_changed_review` が出た場合は ABI 互換性を確認し、実装修正または cycle record の分類で解消する。
 - prebuilt `reskia` configure/build。
 - source `reskia` configure/build。
 - GPU smoke: `PASS` または expected `SKIP`/`PASS`。
@@ -176,6 +190,7 @@
 lock update 条件:
 
 - coverage が freeze 状態に戻っている。
+- stale C API report が解消済み、または残す理由が明確である。
 - build/smoke gate が通っている。
 - cycle record が残っている。
 - source sync note が残っている。

@@ -81,12 +81,7 @@ extern "C" {
  * owned: 呼び出し側が Reskia_DirectContext_Release で解放する (void *device, void *queue) -> GrDirectContext *
  */
 reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queue);
-/**
- * owned: 呼び出し側が Reskia_DirectContext_Release で解放する (const GrVkBackendContext *backend_context) -> GrDirectContext *
- */
-reskia_direct_context_t *Reskia_GaneshContext_MakeVulkan(const void *backend_context);
 reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue); // owned; NULL input/unavailable Metal returns NULL
-reskia_direct_context_t *GrDirectContext_MakeVulkan(const void *backend_context); // owned; NULL input/unavailable Vulkan returns NULL
 reskia_direct_context_t *GrDirectContext_MakeMock(); // owned; unavailable Ganesh returns NULL
 void Reskia_DirectContext_FlushAndSubmit(reskia_direct_context_t *ctx, bool sync_cpu); // (GrDirectContext *ctx, bool sync_cpu)
 void Reskia_DirectContext_Abandon(reskia_direct_context_t *ctx); // (GrDirectContext *ctx)
@@ -234,6 +229,7 @@ int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input retu
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_graphite_context_t *ctx, const reskia_graphite_recorder_options_t *options); // owned; invalid input returns NULL
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
+bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
 void Graphite_Context_asyncRescaleAndReadPixelsFromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context); // invalid input invokes callback with NULL result
 void Graphite_Context_asyncRescaleAndReadPixelsFromSurface(reskia_graphite_context_t *ctx, const reskia_surface_t *surface, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context); // invalid input invokes callback with NULL result

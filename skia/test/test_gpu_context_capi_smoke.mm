@@ -764,8 +764,7 @@ bool smoke_context_create_destroy() {
     if (!check(graphite_async_fail_state.calls == 6, "Graphite_Context async invalid fail callbacks")) {
         return false;
     }
-    if (GrDirectContext_MakeMetal(nullptr, nullptr) != nullptr ||
-        GrDirectContext_MakeVulkan(nullptr) != nullptr) {
+    if (GrDirectContext_MakeMetal(nullptr, nullptr) != nullptr) {
         return false;
     }
     GrDirectContext_deleteBackendTexture(nullptr, nullptr);

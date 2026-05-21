@@ -4,6 +4,10 @@
 This is intentionally heuristic. It uses the vendored public headers as the
 source of truth, extracts top-level class/struct method declarations, and
 matches them against Reskia C API function names.
+
+When given a previous matrix and stale output path, it also emits a reverse
+report for C APIs that still match public methods removed from the current
+Skia headers.
 """
 
 from __future__ import annotations
@@ -55,6 +59,13 @@ class MethodOverride:
     note: str
 
 
+@dataclass(frozen=True)
+class CapiFunction:
+    name: str
+    path: str
+    line: int
+
+
 def area_for(rel: str) -> str:
     parts = rel.split("/")
     if rel.startswith("include/"):
@@ -70,10 +81,9 @@ def snake(name: str) -> str:
     return value.lower()
 
 
-def public_header_paths(repo: Path) -> list[Path]:
-    root = repo / "vendor/skia-upstream"
-    roots = [root / "include"]
-    modules = root / "modules"
+def public_header_paths(skia_root: Path) -> list[Path]:
+    roots = [skia_root / "include"]
+    modules = skia_root / "modules"
     if modules.exists():
         roots.extend(sorted(p / "include" for p in modules.iterdir() if (p / "include").exists()))
 
@@ -116,9 +126,8 @@ def line_number(text: str, pos: int) -> int:
     return text.count("\n", 0, pos) + 1
 
 
-def class_definitions(repo: Path, path: Path) -> list[tuple[str, str, str, int, str]]:
-    root = repo / "vendor/skia-upstream"
-    rel = str(path.relative_to(root))
+def class_definitions(skia_root: Path, path: Path) -> list[tuple[str, str, str, int, str]]:
+    rel = str(path.relative_to(skia_root))
     text = strip_comments(path.read_text(errors="ignore"))
     macros = "|".join(re.escape(m) for m in API_MACROS)
     pattern = re.compile(
@@ -270,11 +279,11 @@ def extract_methods(class_name: str, kind: str, body: str, class_line: int) -> t
     return tuple(methods)
 
 
-def public_classes(repo: Path) -> list[PublicClass]:
+def public_classes(skia_root: Path) -> list[PublicClass]:
     classes: list[PublicClass] = []
     seen: set[tuple[str, str, int]] = set()
-    for path in public_header_paths(repo):
-        for name, kind, rel, line, body in class_definitions(repo, path):
+    for path in public_header_paths(skia_root):
+        for name, kind, rel, line, body in class_definitions(skia_root, path):
             key = (name, rel, line)
             if key in seen:
                 continue
@@ -292,12 +301,13 @@ def public_classes(repo: Path) -> list[PublicClass]:
     return classes
 
 
-def capi_function_names(repo: Path) -> set[str]:
-    functions: set[str] = set()
+def capi_functions(repo: Path) -> list[CapiFunction]:
+    functions: list[CapiFunction] = []
     pattern = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(")
     for path in sorted((repo / "skia/capi").glob("*.h")):
+        rel = str(path.relative_to(repo))
         text = strip_comments(path.read_text(errors="ignore"))
-        for line in text.splitlines():
+        for line_no, line in enumerate(text.splitlines(), start=1):
             if line.lstrip().startswith("#"):
                 continue
             if ";" not in line and "{" not in line:
@@ -308,12 +318,20 @@ def capi_function_names(repo: Path) -> set[str]:
             name = match.group(1)
             if name in {"if", "for", "while", "switch", "return", "sizeof"}:
                 continue
-            functions.add(name)
+            functions.append(CapiFunction(name=name, path=rel, line=line_no))
     return functions
+
+
+def capi_function_names(repo: Path) -> set[str]:
+    return {function.name for function in capi_functions(repo)}
 
 
 def method_key(area: str, header: str, class_name: str, method_name: str, signature: str) -> tuple[str, str, str, str, str]:
     return (area, header, class_name, method_name, signature)
+
+
+def method_identity(area: str, header: str, class_name: str, method_name: str) -> tuple[str, str, str, str]:
+    return (area, header, class_name, method_name)
 
 
 def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], MethodOverride]:
@@ -339,6 +357,7 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-24-svg-provider-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-25-gpu-provider-bridge-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-28-ganesh-external-texture-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-34-upgrade-probe-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
@@ -473,8 +492,96 @@ def status_for_class(cls: PublicClass, functions: set[str]) -> tuple[str, str]:
     return "missing", ""
 
 
-def write_matrix(repo: Path, output: Path) -> None:
-    classes = public_classes(repo)
+def public_method_keys(classes: list[PublicClass]) -> tuple[set[tuple[str, str, str, str, str]], set[tuple[str, str, str, str]]]:
+    exact: set[tuple[str, str, str, str, str]] = set()
+    identities: set[tuple[str, str, str, str]] = set()
+    for cls in classes:
+        for method in cls.methods:
+            exact.add(method_key(cls.area, cls.path, cls.name, method.name, method.signature))
+            identities.add(method_identity(cls.area, cls.path, cls.name, method.name))
+    return exact, identities
+
+
+def write_stale_capi_report(
+    repo: Path,
+    classes: list[PublicClass],
+    previous_matrix: Path,
+    output: Path,
+) -> None:
+    """Report C APIs that still match public methods removed from the current Skia root.
+
+    This is a reverse check for upgrade cycles. The current coverage matrix is
+    generated from current vendor headers, so APIs removed upstream disappear
+    from that matrix. Comparing against a previous matrix lets us flag C ABI
+    functions that were previously tied to a public method but are now stale
+    candidates.
+    """
+    current_keys, current_identities = public_method_keys(classes)
+    function_index = {function.name: function for function in capi_functions(repo)}
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    with previous_matrix.open(newline="") as f, output.open("w", newline="") as out:
+        reader = csv.DictReader(f)
+        writer = csv.writer(out)
+        writer.writerow(
+            [
+                "area",
+                "header",
+                "class",
+                "method",
+                "previous_method_status",
+                "stale_status",
+                "capi_function",
+                "capi_header",
+                "capi_line",
+                "signature",
+                "note",
+            ]
+        )
+        for row in reader:
+            method = row.get("method", "")
+            matched = row.get("matched_capi", "")
+            previous_status = row.get("method_status", "")
+            if not method or not matched:
+                continue
+            if previous_status not in {"covered", "split_covered", "partial", "overcovered"}:
+                continue
+            area = row.get("area", "")
+            header = row.get("header", "")
+            class_name = row.get("class", "")
+            signature = row.get("signature", "")
+            exact_key = method_key(area, header, class_name, method, signature)
+            identity_key = method_identity(area, header, class_name, method)
+            if exact_key in current_keys:
+                continue
+            if identity_key in current_identities:
+                stale_status = "signature_changed_review"
+                note = "method still exists in current vendor headers with a different signature; review C ABI compatibility"
+            else:
+                stale_status = "stale_capi"
+                note = "method is absent from current vendor headers; remove or explicitly classify the C API"
+            for name in matched.split("|"):
+                function = function_index.get(name)
+                if function is None:
+                    continue
+                writer.writerow(
+                    [
+                        area,
+                        header,
+                        class_name,
+                        method,
+                        previous_status,
+                        stale_status,
+                        function.name,
+                        function.path,
+                        function.line,
+                        signature,
+                        note,
+                    ]
+                )
+
+
+def write_matrix_from_classes(repo: Path, classes: list[PublicClass], output: Path) -> None:
     functions = capi_function_names(repo)
     overrides = load_method_overrides(repo)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -544,16 +651,56 @@ def write_matrix(repo: Path, output: Path) -> None:
                 )
 
 
+def write_matrix(repo: Path, skia_root: Path, output: Path) -> None:
+    write_matrix_from_classes(repo, public_classes(skia_root), output)
+
+
+def write_reports(repo: Path, skia_root: Path, output: Path, previous_matrix: Path | None, stale_output: Path | None) -> None:
+    classes = public_classes(skia_root)
+    write_matrix_from_classes(repo, classes, output)
+    if previous_matrix is not None and stale_output is not None:
+        write_stale_capi_report(repo, classes, previous_matrix, stale_output)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", type=Path, default=Path.cwd())
+    parser.add_argument(
+        "--skia-root",
+        type=Path,
+        help="Skia source root to scan for public headers (default: <repo>/vendor/skia-upstream)",
+    )
     parser.add_argument(
         "--output",
         type=Path,
         default=Path("docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv"),
     )
+    parser.add_argument(
+        "--previous-matrix",
+        type=Path,
+        help=(
+            "Previous public API coverage matrix to compare against for stale C API detection. "
+            "When set, --stale-output must also be set."
+        ),
+    )
+    parser.add_argument(
+        "--stale-output",
+        type=Path,
+        help="Output CSV for C APIs that still match public methods removed from the current Skia root.",
+    )
     args = parser.parse_args()
-    write_matrix(args.repo.resolve(), (args.repo / args.output).resolve() if not args.output.is_absolute() else args.output)
+    if (args.previous_matrix is None) != (args.stale_output is None):
+        parser.error("--previous-matrix and --stale-output must be specified together")
+    repo = args.repo.resolve()
+    skia_root = args.skia_root.resolve() if args.skia_root else repo / "vendor/skia-upstream"
+    output = (repo / args.output).resolve() if not args.output.is_absolute() else args.output
+    previous_matrix = None
+    if args.previous_matrix is not None:
+        previous_matrix = (repo / args.previous_matrix).resolve() if not args.previous_matrix.is_absolute() else args.previous_matrix
+    stale_output = None
+    if args.stale_output is not None:
+        stale_output = (repo / args.stale_output).resolve() if not args.stale_output.is_absolute() else args.stale_output
+    write_reports(repo, skia_root, output, previous_matrix, stale_output)
     return 0
 
 

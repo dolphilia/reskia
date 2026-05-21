@@ -203,6 +203,22 @@ bool SkUnicode_isEmoji(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
     return unicode != nullptr && as_unicode(unicode)->isEmoji(unichar);
 }
 
+bool SkUnicode_isEmojiComponent(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
+    return unicode != nullptr && as_unicode(unicode)->isEmojiComponent(unichar);
+}
+
+bool SkUnicode_isEmojiModifierBase(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
+    return unicode != nullptr && as_unicode(unicode)->isEmojiModifierBase(unichar);
+}
+
+bool SkUnicode_isEmojiModifier(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
+    return unicode != nullptr && as_unicode(unicode)->isEmojiModifier(unichar);
+}
+
+bool SkUnicode_isRegionalIndicator(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
+    return unicode != nullptr && as_unicode(unicode)->isRegionalIndicator(unichar);
+}
+
 bool SkUnicode_isIdeographic(reskia_unicode_t *unicode, reskia_unichar_t unichar) {
     return unicode != nullptr && as_unicode(unicode)->isIdeographic(unichar);
 }

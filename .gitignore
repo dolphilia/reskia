@@ -16,6 +16,7 @@ third_party/**/*
 !third_party/*/
 !third_party/*/README.md
 /vendor/skia-upstream/
+/vendor/skia-upstream-candidate/
 /AGENTS.md
 /CLAUDE.md
 /target/

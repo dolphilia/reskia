@@ -1597,6 +1597,17 @@ void MutableTextureState_delete(reskia_skgpu_mutable_texture_state_t *state) {
 #endif
 }
 
+void MutableTextureState_set(reskia_skgpu_mutable_texture_state_t *state, const reskia_skgpu_mutable_texture_state_t *other) {
+#if defined(SK_GANESH)
+    if (state != nullptr && other != nullptr) {
+        as_mutable_texture_state(state)->set(*as_mutable_texture_state(other));
+    }
+#else
+    (void) state;
+    (void) other;
+#endif
+}
+
 int MutableTextureState_getVkImageLayout(const reskia_skgpu_mutable_texture_state_t *state) {
 #if defined(SK_GANESH) && defined(SK_VULKAN)
     return state != nullptr ? static_cast<int>(as_mutable_texture_state(state)->getVkImageLayout()) : 0;

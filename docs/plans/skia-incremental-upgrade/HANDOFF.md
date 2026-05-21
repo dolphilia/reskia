@@ -48,10 +48,10 @@ git -C vendor/skia-upstream status --short --branch
 
 推奨順:
 
-1. `scripts/generate_public_api_coverage.py` が candidate Skia root を受け取れるようにするか、同等の再現可能な probe 手順を用意する。
+1. `scripts/generate_public_api_coverage.py` が candidate Skia root と stale C API report を受け取れるようにするか、同等の再現可能な probe 手順を用意する。
 2. `docs/plans/skia-incremental-upgrade/records/` に初回 cycle record を作る。
 3. baseline `0d49b661...` と candidate `5f54e9f...` の public header delta を記録する。
-4. coverage regression を取り、新規 `missing` / `partial` / `overcovered` を area ごとに routing する。
+4. coverage regression と stale C API report を取り、新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. Core / Codec など低リスク領域の追従可否を確認する。
 
 ## やってはいけないこと
@@ -61,6 +61,7 @@ git -C vendor/skia-upstream status --short --branch
 - candidate の差分を1つの大きな implementation batch にしない。
 - optional backend や ownership 設計が必要な API を、設計メモなしに C ABI へ露出しない。
 - coverage が `missing 0` / `deferred 0` に戻る前に cycle close しない。
+- vendor 側で削除された public API に対応する C API を、理由や削除期限なしに残したまま cycle close しない。
 
 ## 記録先
 
@@ -102,6 +103,8 @@ fallback:
 次を満たすまで、candidate を accepted baseline にしない。
 
 - coverage matrix が `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- stale C API report が `stale_capi 0`、または残す理由が cycle record に記録されている。
+- `signature_changed_review` が出た場合は ABI 互換性の確認結果が記録されている。
 - prebuilt `reskia` configure/build が通る。
 - source `reskia` configure/build が通る。
 - GPU smoke が `PASS` または expected `SKIP`/`PASS`。

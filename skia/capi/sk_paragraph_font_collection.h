@@ -37,6 +37,7 @@ sk_font_mgr_t SkParagraph_FontCollection_getFallbackManager(reskia_paragraph_fon
 int32_t SkParagraph_FontCollection_findTypefaces(reskia_paragraph_font_collection_t *collection, const char *family_names[], int32_t family_names_count, sk_font_style_t font_style, sk_typeface_t *dst, int32_t dst_count); // returns required typeface count; dst may be NULL
 sk_typeface_t SkParagraph_FontCollection_defaultFallback(reskia_paragraph_font_collection_t *collection); // returned handle owns a ref; 0 when unavailable
 sk_typeface_t SkParagraph_FontCollection_defaultFallbackForChar(reskia_paragraph_font_collection_t *collection, int32_t unicode, sk_font_style_t font_style, const char *locale); // locale may be NULL
+sk_typeface_t SkParagraph_FontCollection_defaultEmojiFallback(reskia_paragraph_font_collection_t *collection, int32_t emoji_start, sk_font_style_t font_style, const char *locale); // locale may be NULL
 void SkParagraph_FontCollection_disableFontFallback(reskia_paragraph_font_collection_t *collection); // NULL input is no-op
 void SkParagraph_FontCollection_enableFontFallback(reskia_paragraph_font_collection_t *collection); // NULL input is no-op
 bool SkParagraph_FontCollection_fontFallbackEnabled(reskia_paragraph_font_collection_t *collection); // NULL input returns false

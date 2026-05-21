@@ -40,6 +40,7 @@ public:
     [[nodiscard]] bool addFinishInfo(const InsertFinishInfo&, ResourceProvider*);
 
     [[nodiscard]] bool submitToGpu();
+    [[nodiscard]] bool hasUnfinishedGpuWork();
     void checkForFinishedWork(SyncToCpu);
 
 #if defined(GRAPHITE_TEST_UTILS)

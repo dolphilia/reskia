@@ -147,6 +147,8 @@ bool Context::submit(SyncToCpu syncToCpu) {
     return success;
 }
 
+bool Context::hasUnfinishedGpuWork() const { return fQueueManager->hasUnfinishedGpuWork(); }
+
 void Context::asyncRescaleAndReadPixels(const SkImage* image,
                                         const SkImageInfo& dstImageInfo,
                                         const SkIRect& srcRect,

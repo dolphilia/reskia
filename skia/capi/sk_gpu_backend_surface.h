@@ -231,6 +231,7 @@ reskia_skgpu_mutable_texture_state_t *MutableTextureState_new(); // owned; inval
 reskia_skgpu_mutable_texture_state_t *MutableTextureState_newVulkan(int vk_image_layout, uint32_t queue_family_index); // owned; returns invalid default state when Vulkan is unavailable
 reskia_skgpu_mutable_texture_state_t *MutableTextureState_newCopy(const reskia_skgpu_mutable_texture_state_t *state); // owned; NULL returns NULL
 void MutableTextureState_delete(reskia_skgpu_mutable_texture_state_t *state); // NULL input is no-op
+void MutableTextureState_set(reskia_skgpu_mutable_texture_state_t *state, const reskia_skgpu_mutable_texture_state_t *other); // NULL input is no-op
 int MutableTextureState_getVkImageLayout(const reskia_skgpu_mutable_texture_state_t *state); // NULL/non-Vulkan input returns 0
 uint32_t MutableTextureState_getQueueFamilyIndex(const reskia_skgpu_mutable_texture_state_t *state); // NULL/non-Vulkan input returns 0
 reskia_gr_backend_api_t MutableTextureState_backend(const reskia_skgpu_mutable_texture_state_t *state); // NULL input returns 0

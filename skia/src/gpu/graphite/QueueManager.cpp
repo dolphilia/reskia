@@ -226,6 +226,8 @@ bool QueueManager::submitToGpu() {
     return true;
 }
 
+bool QueueManager::hasUnfinishedGpuWork() { return !fOutstandingSubmissions.empty(); }
+
 void QueueManager::checkForFinishedWork(SyncToCpu sync) {
     TRACE_EVENT1("skia.gpu", TRACE_FUNC, "sync", sync == SyncToCpu::kYes);
 

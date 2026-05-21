@@ -335,7 +335,7 @@ struct GraphiteFinishedCallbackContext {
     reskia_graphite_release_proc_t release_proc;
 };
 
-void graphite_finished_callback(skgpu::GpuFinishedContext context, skgpu::CallbackResult result) {
+void graphite_finished_callback(skgpu::graphite::GpuFinishedContext context, skgpu::CallbackResult result) {
     auto *callback_context = static_cast<GraphiteFinishedCallbackContext *>(context);
     if (callback_context == nullptr) {
         return;
@@ -544,26 +544,8 @@ reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queu
 #endif
 }
 
-reskia_direct_context_t *Reskia_GaneshContext_MakeVulkan(const void *backend_context) {
-#if defined(SK_GANESH) && defined(SK_VULKAN)
-    if (backend_context == nullptr) {
-        return nullptr;
-    }
-
-    auto *vk_backend_context = reinterpret_cast<const GrVkBackendContext *>(backend_context);
-    return reinterpret_cast<reskia_direct_context_t *>(GrDirectContext::MakeVulkan(*vk_backend_context).release());
-#else
-    (void) backend_context;
-    return nullptr;
-#endif
-}
-
 reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue) {
     return Reskia_GaneshContext_MakeMetal(device, queue);
-}
-
-reskia_direct_context_t *GrDirectContext_MakeVulkan(const void *backend_context) {
-    return Reskia_GaneshContext_MakeVulkan(backend_context);
 }
 
 reskia_direct_context_t *GrDirectContext_MakeMock() {
@@ -2074,6 +2056,15 @@ bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
 #else
     (void) ctx;
     (void) sync_cpu;
+    return false;
+#endif
+}
+
+bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr && as_graphite_context(ctx)->hasUnfinishedGpuWork();
+#else
+    (void) ctx;
     return false;
 #endif
 }

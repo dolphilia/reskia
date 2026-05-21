@@ -49,6 +49,8 @@
 | `overcovered` |  |  |
 | `false_positive` |  |  |
 | `na` |  |  |
+| `stale_capi` |  | from stale C API report |
+| `signature_changed_review` |  | from stale C API report |
 
 ## Routing
 
@@ -60,6 +62,7 @@
 | `optional-backend` |  |  |  |
 | `generator-noise` |  |  |  |
 | `design-required` |  |  |  |
+| `removed-upstream` |  |  |  |
 
 ## Source/Header Sync
 
@@ -71,6 +74,8 @@
 ## C API Catch-up
 
 - implemented:
+- removed because upstream removed:
+- retained despite upstream removal:
 - classified `na`:
 - classified `false_positive`:
 - design notes added:
@@ -80,6 +85,7 @@
 | gate | result | command/log |
 | --- | --- | --- |
 | coverage regeneration |  |  |
+| stale C API report |  |  |
 | prebuilt configure/build |  |  |
 | source configure/build |  |  |
 | GPU smoke |  |  |
