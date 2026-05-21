@@ -312,3 +312,127 @@ floating `main` を直接使わない。
 3. `vendor/skia-source.lock` を意図的に更新しない probe を実行する。
 
 これにより、現在の安定した freeze を維持したまま、アップグレードリスクを可視化できる。
+
+## 追記: 仮候補 commit 選定調査
+
+調査時刻: 2026-05-22 07:44:32 JST
+
+この追記では、計画をまだ実施せず、`vendor/skia-upstream` の現行 commit からどの程度先の Skia commit を最初の probe 候補にするのがよいかを調べた。
+
+### 調査条件
+
+現在の Reskia baseline:
+
+- commit: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
+- local `vendor/skia-upstream` HEAD: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
+- upstream 上の commit date: 2023-11-19
+- lock file 上の `SKIA_BASELINE_DATE`: 2026-02-14
+
+注意点:
+
+- ローカル `origin/main` は調査時点で lock commit と同じだった。
+- 候補選定のため、公式 `https://github.com/google/skia.git` の `main` と GitHub API を参照した。
+- `vendor/skia-source.lock` は変更していない。
+- この調査は候補選定までであり、candidate checkout、source sync、coverage regeneration、build verification はまだ実施していない。
+
+### 比較した候補
+
+| 候補 | commit | committer date | baseline からの commit 数 | `include`/`modules` 差分 | public header 変更の性格 | 評価 |
+| --- | --- | ---: | ---: | ---: | --- | --- |
+| 1週間後 | `600986ba305dcb2c61f02749d992e46d5996a1e7` | 2023-11-27 | 88 | 49 files, +529/-400 | ほぼ GPU / Graphite / skcms / skshaper 寄り | 小さすぎるわけではないが、初回 probe としては API 領域が GPU に偏る |
+| 2週間強 | `5f54e9f84cff8c42fd645ec53c1727857bdb12ab` | 2023-12-05 | 181 | 83 files, +1147/-565 | Codec/Core/GPU/Graphite/SkUnicode/SkParagraph/Skottie に広がる | 最初の probe 候補として最もよい |
+| 3週間強 | `927f20598b11040c3265369e6da1ee3732cbb9e3` | 2023-12-12 | 267 | 103 files, +1422/-615 | 12/05 の範囲に加えて Android/Dawn/SkFont/SkCGUtils が増える | 初回にはやや広い。2回目以降の候補向き |
+
+commit 数は `git rev-list --count <baseline>..<candidate>` で確認した。
+
+### 12/05 候補の public header 差分
+
+`5f54e9f84cff8c42fd645ec53c1727857bdb12ab` まで進めた場合、主に次の公開ヘッダに差分が出る。
+
+- `include/codec/*Decoder.h`
+- `include/codec/SkCodec.h`
+- `include/core/SkCanvas.h`
+- `include/core/SkMilestone.h`
+- `include/gpu/GrBackendSemaphore.h`
+- `include/gpu/GrBackendSurface.h`
+- `include/gpu/GrContextThreadSafeProxy.h`
+- `include/gpu/GrDirectContext.h`
+- `include/gpu/GrTypes.h`
+- `include/gpu/MutableTextureState.h`
+- `include/gpu/ganesh/vk/GrVkBackendSemaphore.h`
+- `include/gpu/gl/GrGLFunctions.h`
+- `include/gpu/graphite/BackendTexture.h`
+- `include/gpu/graphite/Context.h`
+- `include/gpu/graphite/ContextOptions.h`
+- `include/gpu/graphite/Recorder.h`
+- `include/gpu/graphite/Surface.h`
+- `include/gpu/vk/VulkanMutableTextureState.h`
+- `include/ports/SkFontConfigInterface.h`
+- `include/private/base/SkDeque.h`
+- `include/private/base/SkThreadAnnotations.h`
+- `include/private/chromium/GrSurfaceCharacterization.h`
+- `modules/skottie/include/SkottieProperty.h`
+- `modules/skottie/include/TextShaper.h`
+- `modules/skparagraph/include/FontCollection.h`
+- `modules/skshaper/include/SkShaper.h`
+- `modules/skunicode/include/SkUnicode.h`
+
+公開 API 追従として目につく変更:
+
+- `SkCodec::MakeFromStream` / `MakeFromData` 周辺に decoder span を受け取る overload が増える。
+- codec decoder headers に小さな interface 変更が入る。
+- `SkCanvas` 内部の predraw flag 型が整理される。ただし C ABI 対象としては private/internal 寄りの可能性が高い。
+- `GrContextThreadSafeProxy::createCharacterization` の引数型が `bool` から `skgpu::Mipmapped` / `skgpu::Protected` へ寄る。legacy overload も残る。
+- `SkUnicode` に emoji component / modifier / regional indicator 判定系が増える。
+- `FontCollection` に fallback 用 font family の保持が増える。
+- Graphite/Ganesh header は引き続き optional backend / GPU policy の分類対象になる。
+
+### 12/12 候補を初回にしない理由
+
+`927f20598b11040c3265369e6da1ee3732cbb9e3` は、12/05 候補との差分に加えて以下が増える。
+
+- Android hardware buffer helpers
+- Graphite Dawn backend context
+- `include/core/SkFont.h`
+- `include/gpu/ShaderErrorHandler.h`
+- `include/utils/mac/SkCGUtils.h`
+- `modules/skparagraph/include/TypefaceFontProvider.h`
+
+これらは Reskia の optional backend roadmap や platform-specific policy に触れやすい。初回 probe でここまで入れると、C API binding 追従、CMake/source sync、optional backend 判定、platform gating が同時に混ざる。最初の候補としては少し広い。
+
+### 仮選定
+
+仮の最初の candidate commit は次を推奨する。
+
+- `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
+- committer date: 2023-12-05T19:49:10Z
+- subject: `Allow undefined format from Android format properties and ability to fallback to importing as external`
+
+理由:
+
+- baseline から 181 commits で、1週間候補より十分に変化がある。
+- public header 差分は 40件台で、調査・分類・coverage 追従が現実的な範囲に収まる。
+- Core/Codec/Text/GPU/Module にある程度広がりがあり、upgrade probe の手順を検証する材料として偏りすぎない。
+- 12/12 候補ほど Android/Dawn/platform-specific surface が増えていない。
+- `missing 0` freeze 後の初回 probe として、coverage regression の量を観測するにはちょうどよい。
+
+### 次点候補
+
+より保守的に始めるなら、`600986ba305dcb2c61f02749d992e46d5996a1e7` を使う。
+
+- baseline から 88 commits。
+- public header 差分は比較的小さい。
+- ただし変更の中心が GPU / Graphite に寄るため、Reskia 全体の upgrade probe としては観測できる範囲が狭い。
+
+12/05 候補で public API delta や build drift が想定より大きかった場合の fallback として扱うのがよい。
+
+### 今後の probe で確認すべきこと
+
+次に実施する場合は、まだ lock を更新せず、次だけを確認する。
+
+1. 候補 commit を別 checkout または一時 checkout で用意する。
+2. baseline と candidate の public header delta を機械的に出す。
+3. `scripts/generate_public_api_coverage.py` が candidate root を扱えるようにするか、作業ツリーを一時的に candidate に切り替えて coverage regression を取る。
+4. 新規 `missing` を area ごとに `real_gap` / `na` / `false_positive` / `design-required` へ仮分類する。
+5. CMake source list、`DEPS`、`gn/*.gni` の drift を記録する。
+6. 実装・lock 更新は、probe note の accept/reject 判定後に行う。
