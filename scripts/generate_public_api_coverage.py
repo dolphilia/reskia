@@ -336,6 +336,9 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-21-gpu-platform-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-22-gpu-value-overrides.csv",
         repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-23-gpu-provider-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-24-svg-provider-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-25-gpu-provider-bridge-overrides.csv",
+        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-28-ganesh-external-texture-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}

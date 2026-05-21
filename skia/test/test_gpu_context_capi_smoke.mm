@@ -11,6 +11,7 @@
 #include "capi/sk_yuva_info.h"
 #include "handles/static_sk_capabilities.h"
 #include "handles/static_sk_i_size.h"
+#include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
 
 namespace {
@@ -33,6 +34,25 @@ struct AsyncFailState {
     int calls;
 };
 
+struct ShaderErrorState {
+    int calls;
+    int releases;
+    const char *shader;
+    const char *errors;
+};
+
+struct ImageProviderState {
+    int calls;
+    int releases;
+};
+
+struct ExternalTextureState {
+    int generates;
+    int disposes;
+    int releases;
+    int generator_releases;
+};
+
 void finish_callback(void *user_data, int32_t result) {
     auto *state = static_cast<FinishCallbackState *>(user_data);
     state->calls += 1;
@@ -50,6 +70,65 @@ void async_fail_callback(void *context, const reskia_async_read_result_t *result
     if (result != nullptr) {
         state->calls += 1000;
     }
+}
+
+void shader_error_callback(void *user_data, const char *shader, const char *errors) {
+    auto *state = static_cast<ShaderErrorState *>(user_data);
+    state->calls += 1;
+    state->shader = shader;
+    state->errors = errors;
+}
+
+void shader_error_release(void *user_data) {
+    auto *state = static_cast<ShaderErrorState *>(user_data);
+    state->releases += 1;
+}
+
+sk_image_t image_provider_find_or_create(
+        reskia_graphite_recorder_t *,
+        const reskia_image_t *,
+        sk_image_required_properties_t,
+        void *user_data) {
+    auto *state = static_cast<ImageProviderState *>(user_data);
+    state->calls += 1;
+    return 0;
+}
+
+void image_provider_release(void *user_data) {
+    auto *state = static_cast<ImageProviderState *>(user_data);
+    state->releases += 1;
+}
+
+void external_texture_dispose(void *user_data, const reskia_gr_backend_texture_t *texture) {
+    auto *state = static_cast<ExternalTextureState *>(user_data);
+    state->disposes += 1;
+    if (texture == nullptr || !GrBackendTexture_isValid(texture)) {
+        state->disposes += 1000;
+    }
+}
+
+void external_texture_release(void *user_data) {
+    auto *state = static_cast<ExternalTextureState *>(user_data);
+    state->releases += 1;
+}
+
+void external_texture_generator_release(void *user_data) {
+    auto *state = static_cast<ExternalTextureState *>(user_data);
+    state->generator_releases += 1;
+}
+
+reskia_gr_external_texture_t *external_texture_generate(
+        reskia_direct_context_t *,
+        bool mipmapped,
+        void *user_data) {
+    auto *state = static_cast<ExternalTextureState *>(user_data);
+    state->generates += 1;
+    reskia_gr_backend_texture_t *backend_texture =
+            GrBackendTexture_newMock(1, 1, mipmapped ? 1 : 0, 4, 0, 321 + state->generates, 0);
+    reskia_gr_external_texture_t *external_texture =
+            GrExternalTexture_new(backend_texture, external_texture_dispose, user_data, external_texture_release);
+    GrBackendTexture_delete(backend_texture);
+    return external_texture;
 }
 
 bool smoke_context_create_destroy() {
@@ -729,6 +808,7 @@ bool smoke_context_create_destroy() {
                GrRecordingContext_skCapabilities(nullptr) == 0 &&
                Graphite_Context_backend(nullptr) == 0 &&
                Graphite_Context_makeRecorder(nullptr) == nullptr &&
+               Graphite_Context_makeRecorderWithOptions(nullptr, nullptr) == nullptr &&
                !Graphite_Context_submit(nullptr, false) &&
                !Graphite_Context_insertRecording(nullptr, nullptr) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
@@ -738,9 +818,17 @@ bool smoke_context_create_destroy() {
                !Graphite_ContextID_equals(nullptr, nullptr) &&
                GrContextOptions_newCopy(nullptr) == nullptr &&
                !GrContextOptions_suppressPrints(nullptr) &&
+               ShaderErrorHandler_new(nullptr, nullptr, nullptr) == nullptr &&
+               GrExternalTexture_new(nullptr, nullptr, nullptr, nullptr) == nullptr &&
+               GrExternalTexture_getBackendTexture(nullptr) == nullptr &&
+               GrExternalTextureGenerator_new(nullptr, nullptr, nullptr, nullptr) == nullptr &&
+               GrExternalTextureGenerator_generateExternalTexture(nullptr, nullptr, false) == nullptr &&
+               SkImages_DeferredFromTextureGenerator(nullptr) == 0 &&
                Graphite_ContextOptions_gpuBudgetInBytes(nullptr) == 0 &&
                Graphite_RecorderOptions_newCopy(nullptr) == nullptr &&
                Graphite_RecorderOptions_gpuBudgetInBytes(nullptr) == 0 &&
+               Graphite_ImageProvider_new(nullptr, nullptr, nullptr) == nullptr &&
+               Graphite_ImageProvider_findOrCreate(nullptr, nullptr, nullptr, 0) == 0 &&
                !Graphite_Recorder_addFinishInfo(nullptr, nullptr, nullptr, nullptr) &&
                Graphite_Recorder_clientImageProvider(nullptr) == nullptr &&
                Graphite_Recorder_makeDeferredCanvas(nullptr, nullptr, nullptr) == nullptr &&
@@ -815,8 +903,88 @@ bool smoke_context_create_destroy() {
         GrContextOptions_delete(context_options);
         return false;
     }
+    ShaderErrorState shader_error_state = {};
+    reskia_shader_error_handler_t *shader_error_handler =
+            ShaderErrorHandler_new(shader_error_callback, &shader_error_state, shader_error_release);
+    if (!check(shader_error_handler != nullptr, "ShaderErrorHandler_new")) {
+        GrContextOptions_delete(context_options_copy);
+        GrContextOptions_delete(context_options);
+        return false;
+    }
+    GrContextOptions_setShaderErrorHandler(context_options, shader_error_handler);
+    ShaderErrorHandler_compileError(shader_error_handler, "shader", "errors");
+    if (!check(shader_error_state.calls == 1 &&
+               shader_error_state.shader != nullptr &&
+               shader_error_state.errors != nullptr,
+               "ShaderErrorHandler_compileError")) {
+        ShaderErrorHandler_delete(shader_error_handler);
+        GrContextOptions_delete(context_options_copy);
+        GrContextOptions_delete(context_options);
+        return false;
+    }
+    GrContextOptions_setShaderErrorHandler(context_options, nullptr);
+    ShaderErrorHandler_delete(shader_error_handler);
+    if (!check(shader_error_state.releases == 1, "ShaderErrorHandler release")) {
+        GrContextOptions_delete(context_options_copy);
+        GrContextOptions_delete(context_options);
+        return false;
+    }
     GrContextOptions_delete(context_options_copy);
     GrContextOptions_delete(context_options);
+
+    ExternalTextureState external_state = {};
+    reskia_gr_backend_texture_t *backend_texture =
+            GrBackendTexture_newMock(1, 1, 0, 4, 0, 123, 0);
+    reskia_gr_external_texture_t *external_texture =
+            GrExternalTexture_new(backend_texture, external_texture_dispose, &external_state, external_texture_release);
+    reskia_gr_backend_texture_t *external_backend_copy =
+            GrExternalTexture_getBackendTexture(external_texture);
+    if (!check(backend_texture != nullptr &&
+               external_texture != nullptr &&
+               external_backend_copy != nullptr &&
+               GrBackendTexture_isValid(external_backend_copy),
+               "GrExternalTexture_new/getBackendTexture")) {
+        GrBackendTexture_delete(external_backend_copy);
+        GrExternalTexture_delete(external_texture);
+        GrBackendTexture_delete(backend_texture);
+        return false;
+    }
+    GrBackendTexture_delete(external_backend_copy);
+    GrExternalTexture_dispose(external_texture);
+    GrExternalTexture_dispose(external_texture);
+    GrExternalTexture_delete(external_texture);
+    GrBackendTexture_delete(backend_texture);
+    if (!check(external_state.disposes == 1 && external_state.releases == 1,
+               "GrExternalTexture dispose/release")) {
+        return false;
+    }
+
+    const sk_image_info_t generator_info_handle = SkImageInfo_MakeN32Premul(1, 1);
+    auto *generator_info = reinterpret_cast<reskia_image_info_t *>(
+            static_sk_image_info_get_ptr(generator_info_handle));
+    reskia_gr_external_texture_generator_t *generator =
+            GrExternalTextureGenerator_new(generator_info, external_texture_generate, &external_state, external_texture_generator_release);
+    reskia_gr_external_texture_t *generated_texture =
+            GrExternalTextureGenerator_generateExternalTexture(generator, nullptr, false);
+    if (!check(generator != nullptr &&
+               generated_texture != nullptr &&
+               external_state.generates == 1,
+               "GrExternalTextureGenerator_generateExternalTexture")) {
+        GrExternalTexture_delete(generated_texture);
+        GrExternalTextureGenerator_delete(generator);
+        static_sk_image_info_delete(generator_info_handle);
+        return false;
+    }
+    GrExternalTexture_delete(generated_texture);
+    sk_image_t deferred_image = SkImages_DeferredFromTextureGenerator(generator);
+    static_sk_image_info_delete(generator_info_handle);
+    if (!check(deferred_image != 0, "SkImages_DeferredFromTextureGenerator")) {
+        return false;
+    }
+    static_sk_image_delete(deferred_image);
+    if (!check(external_state.generator_releases == 1, "GrExternalTextureGenerator release")) {
+        return false;
+    }
 #endif
 
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
@@ -1028,6 +1196,38 @@ bool smoke_context_create_destroy() {
             Reskia_GraphiteContext_Release(graphite_context);
             return false;
         }
+
+        ImageProviderState image_provider_state = {};
+        reskia_graphite_image_provider_t *image_provider =
+                Graphite_ImageProvider_new(image_provider_find_or_create, &image_provider_state, image_provider_release);
+        Graphite_RecorderOptions_setImageProvider(recorder_options, image_provider);
+        reskia_graphite_recorder_t *provider_recorder =
+                Graphite_Context_makeRecorderWithOptions(graphite_context, recorder_options);
+        if (!check(image_provider != nullptr &&
+                   provider_recorder != nullptr &&
+                   Graphite_Recorder_clientImageProvider(provider_recorder) == image_provider &&
+                   Graphite_ImageProvider_findOrCreate(image_provider, provider_recorder, nullptr, 0) == 0,
+                   "Graphite_ImageProvider bridge")) {
+            Reskia_GraphiteRecorder_Release(provider_recorder);
+            Graphite_ImageProvider_unref(image_provider);
+            Graphite_RecorderOptions_delete(recorder_options_copy);
+            Graphite_RecorderOptions_delete(recorder_options);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Reskia_GraphiteRecorder_Release(provider_recorder);
+        Graphite_RecorderOptions_setImageProvider(recorder_options, nullptr);
+        Graphite_ImageProvider_unref(image_provider);
+        if (!check(image_provider_state.calls == 0 && image_provider_state.releases == 1,
+                   "Graphite_ImageProvider release")) {
+            Graphite_RecorderOptions_delete(recorder_options_copy);
+            Graphite_RecorderOptions_delete(recorder_options);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+
         Graphite_RecorderOptions_delete(recorder_options_copy);
         Graphite_RecorderOptions_delete(recorder_options);
 

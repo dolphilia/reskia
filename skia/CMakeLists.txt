@@ -20,9 +20,41 @@ if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     endif()
 endif()
 
+if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+    set(RESKIA_SVG_SHAPING_INCLUDE_DIRS
+            "${PROJECT_SOURCE_DIR}"
+            "${PROJECT_SOURCE_DIR}/modules/svg/include"
+    )
+    if(NOT TARGET skunicode)
+        add_library(skunicode
+                modules/skunicode/src/SkUnicode.cpp
+                modules/skunicode/src/SkUnicode_hardcoded.cpp
+        )
+        target_compile_features(skunicode PUBLIC cxx_std_17)
+        target_include_directories(skunicode PRIVATE ${RESKIA_SVG_SHAPING_INCLUDE_DIRS})
+    endif()
+    if(NOT TARGET skshaper)
+        add_library(skshaper
+                modules/skshaper/src/SkShaper.cpp
+                modules/skshaper/src/SkShaper_primitive.cpp
+                modules/skshaper/src/SkShaper_coretext.cpp
+        )
+        target_compile_features(skshaper PUBLIC cxx_std_17)
+        target_include_directories(skshaper PRIVATE ${RESKIA_SVG_SHAPING_INCLUDE_DIRS})
+        target_compile_definitions(skshaper PRIVATE SK_SHAPER_CORETEXT_AVAILABLE SK_BUILD_FOR_MAC)
+        target_link_libraries(skshaper PUBLIC skunicode)
+    endif()
+endif()
+
 set(RESKIA_INTERNAL_LIBS skcms)
 if(APPLE)
     list(APPEND RESKIA_INTERNAL_LIBS skresources svg)
+    if(TARGET skshaper)
+        list(APPEND RESKIA_INTERNAL_LIBS skshaper)
+    endif()
+    if(TARGET skunicode)
+        list(APPEND RESKIA_INTERNAL_LIBS skunicode)
+    endif()
 endif()
 
 set(RESKIA_RESOLVED_INTERNAL_LIBS "")

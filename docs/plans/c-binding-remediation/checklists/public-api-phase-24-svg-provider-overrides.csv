@@ -1,0 +1,2 @@
+area,header,class,method,method_line,method_status,matched_capi,triage,priority,residual_kind,signature,generator_action,note
+modules/svg,modules/svg/include/SkSVGImage.h,SkSVGImage,LoadImage,29,covered,SkSVGImage_LoadImage,real_gap,P2,implemented,"static ImageInfo LoadImage(const sk_sp<skresources::ResourceProvider>&, const SkSVGIRI&, const SkRect&, SkSVGPreserveAspectRatio);",Phase 24 SVG provider bridge,Exposed through SkSVGImage_LoadImage with caller-owned sk_image_t/sk_rect_t ImageInfo output and borrowed skresources provider input.

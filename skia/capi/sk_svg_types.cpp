@@ -117,6 +117,30 @@ SkSVGIRI::Type svg_iri_type(int32_t type) {
     return static_cast<SkSVGIRI::Type>(type);
 }
 
+SkSVGPreserveAspectRatio::Align svg_preserve_aspect_ratio_align(int32_t align) {
+    switch (align) {
+        case SkSVGPreserveAspectRatio::kXMinYMin:
+        case SkSVGPreserveAspectRatio::kXMidYMin:
+        case SkSVGPreserveAspectRatio::kXMaxYMin:
+        case SkSVGPreserveAspectRatio::kXMinYMid:
+        case SkSVGPreserveAspectRatio::kXMidYMid:
+        case SkSVGPreserveAspectRatio::kXMaxYMid:
+        case SkSVGPreserveAspectRatio::kXMinYMax:
+        case SkSVGPreserveAspectRatio::kXMidYMax:
+        case SkSVGPreserveAspectRatio::kXMaxYMax:
+        case SkSVGPreserveAspectRatio::kNone:
+            return static_cast<SkSVGPreserveAspectRatio::Align>(align);
+        default:
+            return SkSVGPreserveAspectRatio::kXMidYMid;
+    }
+}
+
+SkSVGPreserveAspectRatio::Scale svg_preserve_aspect_ratio_scale(int32_t scale) {
+    return scale == static_cast<int32_t>(SkSVGPreserveAspectRatio::kSlice) ?
+            SkSVGPreserveAspectRatio::kSlice :
+            SkSVGPreserveAspectRatio::kMeet;
+}
+
 SkSVGLineJoin::Type svg_line_join_type(int32_t type) {
     if (type < static_cast<int32_t>(SkSVGLineJoin::Type::kMiter) ||
         type > static_cast<int32_t>(SkSVGLineJoin::Type::kInherit)) {
@@ -306,6 +330,41 @@ int32_t SkSVGIRI_type(const reskia_svg_iri_t *iri) {
 
 reskia_string_t *SkSVGIRI_iri(const reskia_svg_iri_t *iri) {
     return iri != nullptr ? make_string(as_type<SkSVGIRI>(iri)->iri()) : nullptr;
+}
+
+reskia_svg_preserve_aspect_ratio_t *SkSVGPreserveAspectRatio_new(int32_t align, int32_t scale) {
+    auto *preserve_aspect_ratio = new SkSVGPreserveAspectRatio();
+    preserve_aspect_ratio->fAlign = svg_preserve_aspect_ratio_align(align);
+    preserve_aspect_ratio->fScale = svg_preserve_aspect_ratio_scale(scale);
+    return to_opaque<reskia_svg_preserve_aspect_ratio_t>(preserve_aspect_ratio);
+}
+
+void SkSVGPreserveAspectRatio_delete(reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio) {
+    delete as_type<SkSVGPreserveAspectRatio>(preserve_aspect_ratio);
+}
+
+int32_t SkSVGPreserveAspectRatio_align(const reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio) {
+    return preserve_aspect_ratio != nullptr ?
+            static_cast<int32_t>(as_type<SkSVGPreserveAspectRatio>(preserve_aspect_ratio)->fAlign) :
+            -1;
+}
+
+int32_t SkSVGPreserveAspectRatio_scale(const reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio) {
+    return preserve_aspect_ratio != nullptr ?
+            static_cast<int32_t>(as_type<SkSVGPreserveAspectRatio>(preserve_aspect_ratio)->fScale) :
+            -1;
+}
+
+void SkSVGPreserveAspectRatio_set(
+        reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio,
+        int32_t align,
+        int32_t scale) {
+    if (preserve_aspect_ratio == nullptr) {
+        return;
+    }
+    auto *typed = as_type<SkSVGPreserveAspectRatio>(preserve_aspect_ratio);
+    typed->fAlign = svg_preserve_aspect_ratio_align(align);
+    typed->fScale = svg_preserve_aspect_ratio_scale(scale);
 }
 
 reskia_svg_paint_t *SkSVGPaint_newWithType(int32_t type) {

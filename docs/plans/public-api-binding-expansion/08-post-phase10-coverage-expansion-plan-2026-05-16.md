@@ -10,11 +10,11 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2793 |
-| `missing` | 45 |
+| `covered` | 2811 |
+| `missing` | 0 |
 | `false_positive` | 275 |
 | `split_covered` | 33 |
-| `na` | 171 |
+| `na` | 198 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -26,8 +26,8 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 
 | area | missing | 主な内容 |
 | --- | ---: | --- |
-| `include/gpu` | 44 | Graphite async/provider、GL interface/extension loader、allocator |
-| `modules/svg` | 1 | `SkSVGImage::LoadImage` resource/provider loading |
+| `include/gpu` | 0 | 通常 missing なし。`GrExternalTexture*` dedicated bridge も Phase 28 で covered |
+| `modules/svg` | 0 | `SkSVGImage::LoadImage` resource/provider loading 済み |
 
 Phase 16 audit residual index view (reference; Phase 17/18 covered moves are reflected in the matrix counts above):
 
@@ -395,6 +395,7 @@ Progress:
 - 2026-05-21: Phase 23E Vulkan allocator guard として `VulkanMemoryAllocator` 12 行を `na` に分類した。これらは `VkImage` / `VkBuffer` / `VkDeviceSize` / `VulkanBackendMemory` と concrete allocator callback bridge に依存し、現行 portable build では Vulkan header / allocator target がないため、optional Vulkan allocator bridge まで C ABI coverage から外す。matrix は `covered 2796`、`missing 30`、`na 183`、`include/gpu missing 29`。
 - 2026-05-21: Phase 23E Metal allocator guard として `MtlMemoryAllocator` 2 行を `na` に分類した。`id<MTLBuffer>` / `id<MTLTexture>` / `MTLTextureDescriptor` と `MtlAlloc` refcount の Objective-C lifetime を伴うため、optional Metal allocator bridge まで portable C ABI coverage から外す。matrix は `covered 2796`、`missing 28`、`na 185`、`include/gpu missing 27`。
 - 2026-05-21: Phase 23B Graphite async readback continuation として `Graphite_Context_asyncRescaleAndReadPixels*` 6 wrapper を追加した。image/surface overload は C 名で分け、callback ABI は既存 `reskia_async_read_pixels_callback_t` / `reskia_async_read_result_t` を再利用する。invalid input は既存 `SkImage` / `SkSurface` wrapper と同じく callback に `NULL` result を返す。あわせて `GrRecordingContext_skCapabilities` を owned `const_sk_capabilities_t` handle として追加した。matrix は `covered 2803`、`missing 21`、`include/gpu missing 20`。build は compile 後に既存 `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で停止する。
+- 2026-05-21: Phase 23C/D closeout として `ShaderErrorHandler` の C callback bridge (`ShaderErrorHandler_new` / `compileError` / `delete`) と `GrContextOptions_setShaderErrorHandler` を追加した。handler は caller-owned、options は borrowed pointer を保持し、handler delete 時に release callback を一度だけ呼ぶ。さらに `GrGLExtensions` 残 5 行と `GrGLInterface` 8 行を GL loader / linked implementation follow-up として `na` に分類した。matrix は `covered 2804`、`missing 7`、`na 198`、`include/gpu missing 6`。build は同じ既存 `SkShaper::Make` link issue で停止する。
 
 ## Phase 24: SVG Image Resource Loading
 
@@ -412,9 +413,102 @@ Expected outcome:
 - 実装可能なら `SkSVGImage_LoadImage` と `ImageInfo` wrapper を追加して `modules/svg missing 0` にする。
 - 依存が過大な場合でも、row-level `na` ではなく provider follow-up として設計メモに明確な blocker を残す。
 
+Progress:
+
+- 2026-05-21: Phase 24 implementation として `SkSVGPreserveAspectRatio` value wrapper と `SkSVGImage_LoadImage` を追加した。`LoadImage` は borrowed `reskia_skresources_resource_provider_t*`、borrowed `SkSVGIRI` / viewport / preserveAspectRatio input を受け、成功時は caller-owned `sk_image_t` と `sk_rect_t` を `reskia_svg_image_info_t` で返す。`public-api-phase-24-svg-provider-overrides.csv` で古い Phase 12 design-required override を covered に上書きし、matrix は `covered 2805`、`missing 6`、`modules/svg missing 0`。source SVG build の `test_svg_image_capi_smoke` は通過。PNG decode が有効な環境では success path も検証し、現行 source build のように fixture decode が無効な場合は failure/clear path を検証する。
+
 ## Recommended Order
 
 1. Phase 21: GPU residual triage refresh。98 行を実装候補と設計候補に分ける。
 2. Phase 22: GPU value wrapper final batch。既存 smoke で検証できる small value row を先に減らす。
 3. Phase 23: GPU provider / async / allocator design。callback/resource ownership を文書化してから実装可否を決める。
 4. Phase 24: SVG image resource loading。残り 1 行を skresources provider と `ImageInfo` ownership と一緒に処理する。
+
+## Phase 25: GPU Provider Bridge Closeout
+
+目的: Phase 24 後に残った GPU 6 行を、実装可能な Graphite provider bridge と専用設計が必要な Ganesh external texture bridge に分けて処理する。
+
+Tasks:
+
+1. Graphite `ImageProvider::findOrCreate` を direct wrapper と C callback provider で公開する。
+2. `RecorderOptions` に provider を retain して渡せる setter と、options 付き recorder factory を追加する。
+3. callback が返す `sk_image_t` の transfer semantics を文書化する。
+4. `GrExternalTexture` / `GrExternalTextureGenerator` は `SkImages::DeferredFromTextureGenerator` と external backend resource lifecycle を含む dedicated bridge として設計に残す。
+
+Expected outcome:
+
+- `ImageProvider::findOrCreate` は `covered` にする。
+- `GrExternalTexture*` 5 行は `deferred` とし、`na` にはしない。
+- 通常の `missing` は 0 にし、残りは dedicated external texture bridge の follow-up として明確化する。
+
+Progress:
+
+- 2026-05-21: `Graphite_ImageProvider_findOrCreate`、`Graphite_ImageProvider_new` / `ref` / `unref`、`Graphite_RecorderOptions_setImageProvider`、`Graphite_Context_makeRecorderWithOptions` を追加した。C callback provider が返す `sk_image_t` は bridge が消費し、Skia へ `sk_sp<SkImage>` として渡す。`phase25-gpu-provider-bridge-design-2026-05-21.md` と `public-api-phase-25-gpu-provider-bridge-overrides.csv` を追加し、`GrExternalTexture` / `GrExternalTextureGenerator` 5 行は dedicated external texture bridge まで `deferred` とした。
+
+## Phase 26: Coverage Freeze / Audit
+
+目的: Phase 25 後の `missing 0` を正式な到達点として固定し、残る `deferred 5` を通常の未実装ではなく dedicated Ganesh external texture bridge backlog として扱う。
+
+Tasks:
+
+1. 最新 matrix の status count と area 分布を audit note に記録する。
+2. status vocabulary を Phase 26 時点の意味に更新する。`deferred` は一時的な generator warning ではなく、明示設計済み dedicated bridge backlog として扱う。
+3. 古い Phase 16 audit の前提と Phase 26 後の前提を区別する。
+4. 次 work order を build verification debt と Ganesh external texture bridge に分ける。
+
+Expected outcome:
+
+- `missing 0` を維持する。
+- `partial 0` / `overcovered 0` を維持する。
+- `deferred 5` は `GrExternalTexture` / `GrExternalTextureGenerator` のみであることを固定する。
+- 次に進む場合は Phase 27 build verification debt、または Phase 28 Ganesh external texture dedicated bridge から選べる。
+
+Progress:
+
+- 2026-05-21: `public-api-phase26-coverage-freeze-audit-2026-05-21.md` を追加し、Phase 25 後の snapshot (`covered 2806`、`missing 0`、`deferred 5`) と `deferred` の扱いを固定した。
+
+## Phase 27: Build Verification Debt
+
+目的: Phase 22-25 の GPU C API 変更を継続的に検証できるよう、prebuilt GPU build で止まっていた `libsvg.a` / `SkShaper::Make(sk_sp<SkFontMgr>)` link debt を解消する。
+
+Tasks:
+
+1. `test_gpu_context_capi_smoke` の link failure を再現し、source mode と prebuilt mode の差を確認する。
+2. prebuilt mode の内部ライブラリ閉包に `skshaper` / `skunicode` が欠けていることを記録する。
+3. Apple prebuilt mode では local fallback `skshaper` / `skunicode` targets を構成し、prebuilt `libsvg.a` の text shaping symbol を満たす。
+4. GPU smoke target が link できることを確認する。
+
+Expected outcome:
+
+- `cmake --build skia/cmake-build-codex-phase9-gpu --target test_gpu_context_capi_smoke -j 8` が link まで成功する。
+- Metal device がない環境では runtime smoke が SKIP/PASS になることを許容する。
+- source mode の SVG smoke build に回帰がないことを確認する。
+
+Progress:
+
+- 2026-05-21: prebuilt mode で `skia/lib/libsvg.a` は存在するが `libskshaper.a` / `libskunicode.a` が無いことを確認した。`libsvg.a` は `SkSVGText.cpp.o` から `SkShaper::Make(sk_sp<SkFontMgr>)` を未解決参照していた。
+- 2026-05-21: Apple non-source mode で fallback `skunicode` / `skshaper` static targets を local source から作り、`RESKIA_INTERNAL_LIBS` に追加する CMake 修正を入れた。prebuilt `libsvg.a` はそのまま使い、欠けていた shaping symbol だけを補う。
+- 2026-05-21: `test_gpu_context_capi_smoke` は build/link 成功。実行は現在環境に Metal device が無いため `SKIP: Metal device is unavailable in this environment` のうえ `PASS`。source mode の `test_svg_image_capi_smoke` / `test_svg_types_capi_smoke` も通過。
+
+## Phase 28: Ganesh External Texture Dedicated Bridge
+
+目的: Phase 26 で意図的に残した `deferred 5`、つまり `GrExternalTexture` / `GrExternalTextureGenerator` を safe concrete C callback bridge として実装する。
+
+Tasks:
+
+1. caller-owned `reskia_gr_external_texture_t` を追加し、backend texture copy accessor と idempotent dispose を公開する。
+2. C callback backed `GrExternalTextureGenerator` concrete subclass を追加する。
+3. `SkImages::DeferredFromTextureGenerator` を C ABI に公開し、generator ownership transfer を明確にする。
+4. `test_gpu_context_capi_smoke` に null path、direct external texture path、generator callback path、deferred image factory path を追加する。
+5. Phase 25 の `deferred` override を Phase 28 override で `covered` に更新する。
+
+Expected outcome:
+
+- `deferred` は 0 に戻る。
+- `missing` は 0 を維持する。
+- `test_gpu_context_capi_smoke` が build/link し、Metal device がない環境でも Ganesh external texture bridge の non-device smoke を通す。
+
+Progress:
+
+- 2026-05-21: `GrExternalTexture_new` / `delete` / `getBackendTexture` / `dispose`、`GrExternalTextureGenerator_new` / `delete` / `generateExternalTexture`、`SkImages_DeferredFromTextureGenerator` を追加した。external texture は `GrBackendTexture` を copy して保持し、dispose は一度だけ、delete 時にも未 dispose なら dispose する。generator callback が返した external texture object は bridge が consume して `std::unique_ptr<GrExternalTexture>` に移す。
+- 2026-05-21: `public-api-phase28-ganesh-external-texture-bridge-2026-05-21.md` と `public-api-phase-28-ganesh-external-texture-overrides.csv` を追加し、5 行を `covered` に更新した。`test_gpu_context_capi_smoke` は build/link 成功し、Metal device unavailable により Graphite/Metal path は skip されたが Ganesh external texture bridge smoke は `PASS`。

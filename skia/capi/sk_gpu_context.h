@@ -14,6 +14,8 @@
 #include "sk_yuva_info.h"
 #include "../handles/static_sk_color_space.h"
 #include "../handles/static_sk_capabilities.h"
+#include "../handles/static_sk_image.h"
+#include "../handles/static_sk_image_required_properties.h"
 
 typedef struct reskia_direct_context_t reskia_direct_context_t;
 typedef struct reskia_canvas_t reskia_canvas_t;
@@ -23,6 +25,9 @@ typedef struct reskia_gr_backend_render_target_t reskia_gr_backend_render_target
 typedef struct reskia_gr_backend_semaphore_t reskia_gr_backend_semaphore_t;
 typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_context_options_t reskia_gr_context_options_t;
+typedef struct reskia_shader_error_handler_t reskia_shader_error_handler_t;
+typedef struct reskia_gr_external_texture_t reskia_gr_external_texture_t;
+typedef struct reskia_gr_external_texture_generator_t reskia_gr_external_texture_generator_t;
 typedef struct reskia_gr_context_thread_safe_proxy_t reskia_gr_context_thread_safe_proxy_t;
 typedef struct reskia_gr_direct_context_id_t reskia_gr_direct_context_id_t;
 typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characterization_t;
@@ -52,8 +57,12 @@ typedef int32_t reskia_gr_semaphores_submitted_t;
 typedef int32_t reskia_graphite_rescale_gamma_t;
 typedef int32_t reskia_graphite_rescale_mode_t;
 typedef int32_t reskia_graphite_yuv_color_space_t;
+typedef void (*reskia_shader_error_proc_t)(void *user_data, const char *shader, const char *errors);
 typedef void (*reskia_graphite_finished_proc_t)(void *user_data, int32_t result);
 typedef void (*reskia_graphite_release_proc_t)(void *user_data);
+typedef sk_image_t (*reskia_graphite_image_provider_find_or_create_proc_t)(reskia_graphite_recorder_t *recorder, const reskia_image_t *image, sk_image_required_properties_t properties, void *user_data);
+typedef void (*reskia_gr_external_texture_dispose_proc_t)(void *user_data, const reskia_gr_backend_texture_t *texture);
+typedef reskia_gr_external_texture_t *(*reskia_gr_external_texture_generate_proc_t)(reskia_direct_context_t *recording_context, bool mipmapped, void *user_data);
 
 typedef struct reskia_graphite_mtl_texture_info_t {
     uint32_t sample_count;
@@ -162,6 +171,20 @@ reskia_gr_context_options_t *GrContextOptions_newCopy(const reskia_gr_context_op
 void GrContextOptions_delete(reskia_gr_context_options_t *options); // NULL input is no-op
 bool GrContextOptions_suppressPrints(const reskia_gr_context_options_t *options); // NULL input returns false
 void GrContextOptions_setSuppressPrints(reskia_gr_context_options_t *options, bool suppress); // NULL input is no-op
+void GrContextOptions_setShaderErrorHandler(reskia_gr_context_options_t *options, reskia_shader_error_handler_t *handler); // borrowed handler; NULL clears
+
+reskia_shader_error_handler_t *ShaderErrorHandler_new(reskia_shader_error_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owned; NULL proc returns NULL
+void ShaderErrorHandler_delete(reskia_shader_error_handler_t *handler); // owned; NULL input is no-op
+void ShaderErrorHandler_compileError(reskia_shader_error_handler_t *handler, const char *shader, const char *errors); // NULL handler/proc is no-op
+
+reskia_gr_external_texture_t *GrExternalTexture_new(const reskia_gr_backend_texture_t *texture, reskia_gr_external_texture_dispose_proc_t dispose_proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owned; texture required
+void GrExternalTexture_delete(reskia_gr_external_texture_t *texture); // NULL input is no-op; disposes once
+reskia_gr_backend_texture_t *GrExternalTexture_getBackendTexture(reskia_gr_external_texture_t *texture); // owned copy; invalid input returns NULL
+void GrExternalTexture_dispose(reskia_gr_external_texture_t *texture); // idempotent; NULL input is no-op
+reskia_gr_external_texture_generator_t *GrExternalTextureGenerator_new(const reskia_image_info_t *image_info, reskia_gr_external_texture_generate_proc_t generate_proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owned; image_info/proc required
+void GrExternalTextureGenerator_delete(reskia_gr_external_texture_generator_t *generator); // NULL input is no-op; do not call after SkImages_DeferredFromTextureGenerator consumes it
+reskia_gr_external_texture_t *GrExternalTextureGenerator_generateExternalTexture(reskia_gr_external_texture_generator_t *generator, reskia_direct_context_t *recording_context, bool mipmapped); // owned; invalid input returns NULL
+sk_image_t SkImages_DeferredFromTextureGenerator(reskia_gr_external_texture_generator_t *generator); // consumes generator; invalid input returns 0
 
 reskia_gr_surface_characterization_t *GrSurfaceCharacterization_new(); // owned; invalid default characterization
 reskia_gr_surface_characterization_t *GrSurfaceCharacterization_newCopy(const reskia_gr_surface_characterization_t *characterization); // owned; NULL returns NULL
@@ -205,9 +228,11 @@ reskia_graphite_recorder_options_t *Graphite_RecorderOptions_newCopy(const reski
 void Graphite_RecorderOptions_delete(reskia_graphite_recorder_options_t *options); // NULL input is no-op
 size_t Graphite_RecorderOptions_gpuBudgetInBytes(const reskia_graphite_recorder_options_t *options); // NULL input returns 0
 void Graphite_RecorderOptions_setGpuBudgetInBytes(reskia_graphite_recorder_options_t *options, size_t budget); // NULL input is no-op
+void Graphite_RecorderOptions_setImageProvider(reskia_graphite_recorder_options_t *options, reskia_graphite_image_provider_t *provider); // retains provider; NULL provider clears
 
 int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
+reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_graphite_context_t *ctx, const reskia_graphite_recorder_options_t *options); // owned; invalid input returns NULL
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
 void Graphite_Context_asyncRescaleAndReadPixelsFromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context); // invalid input invokes callback with NULL result
@@ -240,6 +265,11 @@ reskia_graphite_backend_texture_t *Graphite_Recorder_createBackendTexture(reskia
 bool Graphite_Recorder_updateBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture, const reskia_pixmap_t *src_data, int num_levels); // invalid input returns false
 void Graphite_Recorder_deleteBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture); // NULL input is no-op
 void Graphite_Recording_delete(reskia_graphite_recording_t *recording); // NULL input is no-op
+
+reskia_graphite_image_provider_t *Graphite_ImageProvider_new(reskia_graphite_image_provider_find_or_create_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owned; proc required
+void Graphite_ImageProvider_ref(reskia_graphite_image_provider_t *provider); // NULL input is no-op
+void Graphite_ImageProvider_unref(reskia_graphite_image_provider_t *provider); // NULL input is no-op
+sk_image_t Graphite_ImageProvider_findOrCreate(reskia_graphite_image_provider_t *provider, reskia_graphite_recorder_t *recorder, const reskia_image_t *image, sk_image_required_properties_t properties); // caller-owned image; invalid input returns 0
 
 reskia_graphite_texture_info_t *Graphite_TextureInfo_new(); // owned; invalid default info
 reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphite_mtl_texture_info_t *info); // owned; NULL/unavailable Metal returns NULL

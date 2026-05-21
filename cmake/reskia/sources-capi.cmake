@@ -226,6 +226,10 @@ if(APPLE AND TARGET svg)
     list(APPEND SOURCE_FILES capi/sk_svg_node.cpp)
 endif()
 
+if(APPLE AND TARGET svg AND TARGET skresources)
+    list(APPEND SOURCE_FILES capi/sk_svg_image.cpp)
+endif()
+
 if(TARGET skunicode)
     list(APPEND SOURCE_FILES capi/sk_unicode.cpp)
 endif()

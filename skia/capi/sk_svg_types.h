@@ -31,6 +31,7 @@ typedef struct reskia_svg_length_context_t reskia_svg_length_context_t;
 typedef struct reskia_svg_line_join_t reskia_svg_line_join_t;
 typedef struct reskia_svg_object_bounding_box_units_t reskia_svg_object_bounding_box_units_t;
 typedef struct reskia_svg_paint_t reskia_svg_paint_t;
+typedef struct reskia_svg_preserve_aspect_ratio_t reskia_svg_preserve_aspect_ratio_t;
 typedef struct reskia_svg_spread_method_t reskia_svg_spread_method_t;
 typedef struct reskia_svg_stop_color_t reskia_svg_stop_color_t;
 typedef struct reskia_svg_text_anchor_t reskia_svg_text_anchor_t;
@@ -61,6 +62,12 @@ reskia_svg_iri_t *SkSVGIRI_new(int32_t type, const char iri[]);
 void SkSVGIRI_delete(reskia_svg_iri_t *iri);
 int32_t SkSVGIRI_type(const reskia_svg_iri_t *iri);
 reskia_string_t *SkSVGIRI_iri(const reskia_svg_iri_t *iri);
+
+reskia_svg_preserve_aspect_ratio_t *SkSVGPreserveAspectRatio_new(int32_t align, int32_t scale);
+void SkSVGPreserveAspectRatio_delete(reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio);
+int32_t SkSVGPreserveAspectRatio_align(const reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio);
+int32_t SkSVGPreserveAspectRatio_scale(const reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio);
+void SkSVGPreserveAspectRatio_set(reskia_svg_preserve_aspect_ratio_t *preserve_aspect_ratio, int32_t align, int32_t scale);
 
 reskia_svg_paint_t *SkSVGPaint_newWithType(int32_t type);
 reskia_svg_paint_t *SkSVGPaint_newWithColor(const reskia_svg_color_t *color);

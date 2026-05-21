@@ -23,6 +23,7 @@
 #include "include/core/SkTextureCompressionType.h"
 
 #include <chrono>
+#include <memory>
 #include <string_view>
 #include <vector>
 
@@ -36,6 +37,7 @@
 #include "include/gpu/graphite/BackendSemaphore.h"
 #include "include/gpu/graphite/BackendTexture.h"
 #include "include/gpu/graphite/GraphiteTypes.h"
+#include "include/gpu/graphite/ImageProvider.h"
 #include "include/gpu/graphite/Recorder.h"
 #include "include/gpu/graphite/Recording.h"
 #include "include/gpu/graphite/TextureInfo.h"
@@ -63,6 +65,8 @@
 #include "include/gpu/GrRecordingContext.h"
 #include "include/gpu/GpuTypes.h"
 #include "include/gpu/MutableTextureState.h"
+#include "include/gpu/ShaderErrorHandler.h"
+#include "include/gpu/ganesh/GrExternalTextureGenerator.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #include "include/private/chromium/GrSurfaceCharacterization.h"
 #endif
@@ -71,6 +75,8 @@
 #include "../handles/static_sk_capabilities-internal.h"
 #include "../handles/static_sk_color_space.h"
 #include "../handles/static_sk_color_space-internal.h"
+#include "../handles/static_sk_image-internal.h"
+#include "../handles/static_sk_image_required_properties-internal.h"
 #include "../handles/static_sk_i_size.h"
 
 namespace {
@@ -140,6 +146,120 @@ const SkPixmap *as_pixmap(const reskia_pixmap_t *pixmap) {
 
 const SkData *as_data(const reskia_data_t *data) {
     return reinterpret_cast<const SkData *>(data);
+}
+
+class ReskiaShaderErrorHandler final : public skgpu::ShaderErrorHandler {
+public:
+    ReskiaShaderErrorHandler(reskia_shader_error_proc_t proc,
+                             void *user_data,
+                             reskia_graphite_release_proc_t release_proc)
+            : fProc(proc), fUserData(user_data), fReleaseProc(release_proc) {}
+
+    ~ReskiaShaderErrorHandler() override {
+        if (fReleaseProc != nullptr) {
+            fReleaseProc(fUserData);
+        }
+    }
+
+    void compileError(const char *shader, const char *errors) override {
+        if (fProc != nullptr) {
+            fProc(fUserData, shader != nullptr ? shader : "", errors != nullptr ? errors : "");
+        }
+    }
+
+private:
+    reskia_shader_error_proc_t fProc;
+    void *fUserData;
+    reskia_graphite_release_proc_t fReleaseProc;
+};
+
+class ReskiaGrExternalTexture final : public GrExternalTexture {
+public:
+    ReskiaGrExternalTexture(const GrBackendTexture& texture,
+                            reskia_gr_external_texture_dispose_proc_t dispose_proc,
+                            void *user_data,
+                            reskia_graphite_release_proc_t release_proc)
+            : fTexture(texture),
+              fDisposeProc(dispose_proc),
+              fUserData(user_data),
+              fReleaseProc(release_proc) {}
+
+    ~ReskiaGrExternalTexture() override {
+        this->dispose();
+        if (fReleaseProc != nullptr) {
+            fReleaseProc(fUserData);
+        }
+    }
+
+    GrBackendTexture getBackendTexture() override {
+        return fTexture;
+    }
+
+    void dispose() override {
+        if (fDisposed) {
+            return;
+        }
+        fDisposed = true;
+        if (fDisposeProc != nullptr) {
+            fDisposeProc(fUserData, reinterpret_cast<const reskia_gr_backend_texture_t *>(&fTexture));
+        }
+    }
+
+private:
+    GrBackendTexture fTexture;
+    reskia_gr_external_texture_dispose_proc_t fDisposeProc;
+    void *fUserData;
+    reskia_graphite_release_proc_t fReleaseProc;
+    bool fDisposed = false;
+};
+
+class ReskiaGrExternalTextureGenerator final : public GrExternalTextureGenerator {
+public:
+    ReskiaGrExternalTextureGenerator(const SkImageInfo& info,
+                                     reskia_gr_external_texture_generate_proc_t generate_proc,
+                                     void *user_data,
+                                     reskia_graphite_release_proc_t release_proc)
+            : GrExternalTextureGenerator(info),
+              fGenerateProc(generate_proc),
+              fUserData(user_data),
+              fReleaseProc(release_proc) {}
+
+    ~ReskiaGrExternalTextureGenerator() override {
+        if (fReleaseProc != nullptr) {
+            fReleaseProc(fUserData);
+        }
+    }
+
+    std::unique_ptr<GrExternalTexture> generateExternalTexture(GrRecordingContext *ctx,
+                                                               skgpu::Mipmapped mipmapped) override {
+        if (fGenerateProc == nullptr) {
+            return std::make_unique<ReskiaGrExternalTexture>(GrBackendTexture(), nullptr, nullptr, nullptr);
+        }
+        auto *texture = fGenerateProc(
+                reinterpret_cast<reskia_direct_context_t *>(ctx),
+                mipmapped == skgpu::Mipmapped::kYes,
+                fUserData);
+        return texture != nullptr
+                ? std::unique_ptr<GrExternalTexture>(reinterpret_cast<ReskiaGrExternalTexture *>(texture))
+                : std::make_unique<ReskiaGrExternalTexture>(GrBackendTexture(), nullptr, nullptr, nullptr);
+    }
+
+private:
+    reskia_gr_external_texture_generate_proc_t fGenerateProc;
+    void *fUserData;
+    reskia_graphite_release_proc_t fReleaseProc;
+};
+
+ReskiaShaderErrorHandler *as_shader_error_handler(reskia_shader_error_handler_t *handler) {
+    return reinterpret_cast<ReskiaShaderErrorHandler *>(handler);
+}
+
+ReskiaGrExternalTexture *as_external_texture(reskia_gr_external_texture_t *texture) {
+    return reinterpret_cast<ReskiaGrExternalTexture *>(texture);
+}
+
+ReskiaGrExternalTextureGenerator *as_external_texture_generator(reskia_gr_external_texture_generator_t *generator) {
+    return reinterpret_cast<ReskiaGrExternalTextureGenerator *>(generator);
 }
 
 const SkImageInfo *as_image_info(const reskia_image_info_t *image_info) {
@@ -253,6 +373,10 @@ skgpu::graphite::Recorder *as_graphite_recorder(reskia_graphite_recorder_t *reco
     return reinterpret_cast<skgpu::graphite::Recorder *>(recorder);
 }
 
+const skgpu::graphite::Recorder *as_graphite_recorder(const reskia_graphite_recorder_t *recorder) {
+    return reinterpret_cast<const skgpu::graphite::Recorder *>(recorder);
+}
+
 skgpu::graphite::Recording *as_graphite_recording(reskia_graphite_recording_t *recording) {
     return reinterpret_cast<skgpu::graphite::Recording *>(recording);
 }
@@ -267,6 +391,14 @@ const skgpu::graphite::RecorderOptions *as_graphite_recorder_options(const reski
 
 skgpu::graphite::RecorderOptions *as_graphite_recorder_options(reskia_graphite_recorder_options_t *options) {
     return reinterpret_cast<skgpu::graphite::RecorderOptions *>(options);
+}
+
+skgpu::graphite::ImageProvider *as_graphite_image_provider(reskia_graphite_image_provider_t *provider) {
+    return reinterpret_cast<skgpu::graphite::ImageProvider *>(provider);
+}
+
+const skgpu::graphite::ImageProvider *as_graphite_image_provider(const reskia_graphite_image_provider_t *provider) {
+    return reinterpret_cast<const skgpu::graphite::ImageProvider *>(provider);
 }
 
 const skgpu::graphite::BackendSemaphore *as_graphite_backend_semaphore(const reskia_graphite_backend_semaphore_t *semaphore) {
@@ -328,6 +460,42 @@ bool is_valid_graphite_rescale_gamma(reskia_graphite_rescale_gamma_t gamma) {
     return gamma == static_cast<reskia_graphite_rescale_gamma_t>(SkImage::RescaleGamma::kSrc) ||
            gamma == static_cast<reskia_graphite_rescale_gamma_t>(SkImage::RescaleGamma::kLinear);
 }
+
+class ReskiaGraphiteImageProvider final : public skgpu::graphite::ImageProvider {
+public:
+    ReskiaGraphiteImageProvider(reskia_graphite_image_provider_find_or_create_proc_t proc,
+                                void *user_data,
+                                reskia_graphite_release_proc_t release_proc)
+            : fProc(proc), fUserData(user_data), fReleaseProc(release_proc) {}
+
+    ~ReskiaGraphiteImageProvider() override {
+        if (fReleaseProc != nullptr) {
+            fReleaseProc(fUserData);
+        }
+    }
+
+    sk_sp<SkImage> findOrCreate(skgpu::graphite::Recorder *recorder,
+                                const SkImage *image,
+                                SkImage::RequiredProperties properties) override {
+        if (fProc == nullptr || recorder == nullptr || image == nullptr) {
+            return nullptr;
+        }
+        const sk_image_required_properties_t properties_handle =
+                static_sk_image_required_properties_make(properties);
+        const sk_image_t image_handle = fProc(
+                reinterpret_cast<reskia_graphite_recorder_t *>(recorder),
+                reinterpret_cast<const reskia_image_t *>(image),
+                properties_handle,
+                fUserData);
+        static_sk_image_required_properties_delete(properties_handle);
+        return image_handle != 0 ? static_sk_image_take_entity(image_handle) : nullptr;
+    }
+
+private:
+    reskia_graphite_image_provider_find_or_create_proc_t fProc;
+    void *fUserData;
+    reskia_graphite_release_proc_t fReleaseProc;
+};
 
 bool is_valid_graphite_rescale_mode(reskia_graphite_rescale_mode_t mode) {
     return mode >= static_cast<reskia_graphite_rescale_mode_t>(SkImage::RescaleMode::kNearest) &&
@@ -1394,6 +1562,157 @@ void GrContextOptions_setSuppressPrints(reskia_gr_context_options_t *options, bo
 #endif
 }
 
+void GrContextOptions_setShaderErrorHandler(reskia_gr_context_options_t *options, reskia_shader_error_handler_t *handler) {
+#if defined(SK_GANESH)
+    if (options != nullptr) {
+        as_context_options(options)->fShaderErrorHandler = handler != nullptr ? as_shader_error_handler(handler) : nullptr;
+    }
+#else
+    (void) options;
+    (void) handler;
+#endif
+}
+
+reskia_shader_error_handler_t *ShaderErrorHandler_new(reskia_shader_error_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc) {
+#if defined(SK_GANESH)
+    return proc != nullptr ? reinterpret_cast<reskia_shader_error_handler_t *>(new ReskiaShaderErrorHandler(proc, user_data, release_proc)) : nullptr;
+#else
+    (void) proc;
+    (void) user_data;
+    (void) release_proc;
+    return nullptr;
+#endif
+}
+
+void ShaderErrorHandler_delete(reskia_shader_error_handler_t *handler) {
+#if defined(SK_GANESH)
+    delete as_shader_error_handler(handler);
+#else
+    (void) handler;
+#endif
+}
+
+void ShaderErrorHandler_compileError(reskia_shader_error_handler_t *handler, const char *shader, const char *errors) {
+#if defined(SK_GANESH)
+    if (handler != nullptr) {
+        as_shader_error_handler(handler)->compileError(shader, errors);
+    }
+#else
+    (void) handler;
+    (void) shader;
+    (void) errors;
+#endif
+}
+
+reskia_gr_external_texture_t *GrExternalTexture_new(
+        const reskia_gr_backend_texture_t *texture,
+        reskia_gr_external_texture_dispose_proc_t dispose_proc,
+        void *user_data,
+        reskia_graphite_release_proc_t release_proc) {
+#if defined(SK_GANESH)
+    return texture != nullptr
+            ? reinterpret_cast<reskia_gr_external_texture_t *>(
+                    new ReskiaGrExternalTexture(*as_backend_texture(texture), dispose_proc, user_data, release_proc))
+            : nullptr;
+#else
+    (void) texture;
+    (void) dispose_proc;
+    (void) user_data;
+    (void) release_proc;
+    return nullptr;
+#endif
+}
+
+void GrExternalTexture_delete(reskia_gr_external_texture_t *texture) {
+#if defined(SK_GANESH)
+    delete as_external_texture(texture);
+#else
+    (void) texture;
+#endif
+}
+
+reskia_gr_backend_texture_t *GrExternalTexture_getBackendTexture(reskia_gr_external_texture_t *texture) {
+#if defined(SK_GANESH)
+    return texture != nullptr
+            ? reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(as_external_texture(texture)->getBackendTexture()))
+            : nullptr;
+#else
+    (void) texture;
+    return nullptr;
+#endif
+}
+
+void GrExternalTexture_dispose(reskia_gr_external_texture_t *texture) {
+#if defined(SK_GANESH)
+    if (texture != nullptr) {
+        as_external_texture(texture)->dispose();
+    }
+#else
+    (void) texture;
+#endif
+}
+
+reskia_gr_external_texture_generator_t *GrExternalTextureGenerator_new(
+        const reskia_image_info_t *image_info,
+        reskia_gr_external_texture_generate_proc_t generate_proc,
+        void *user_data,
+        reskia_graphite_release_proc_t release_proc) {
+#if defined(SK_GANESH)
+    return image_info != nullptr && generate_proc != nullptr
+            ? reinterpret_cast<reskia_gr_external_texture_generator_t *>(
+                    new ReskiaGrExternalTextureGenerator(*as_image_info(image_info), generate_proc, user_data, release_proc))
+            : nullptr;
+#else
+    (void) image_info;
+    (void) generate_proc;
+    (void) user_data;
+    (void) release_proc;
+    return nullptr;
+#endif
+}
+
+void GrExternalTextureGenerator_delete(reskia_gr_external_texture_generator_t *generator) {
+#if defined(SK_GANESH)
+    delete as_external_texture_generator(generator);
+#else
+    (void) generator;
+#endif
+}
+
+reskia_gr_external_texture_t *GrExternalTextureGenerator_generateExternalTexture(
+        reskia_gr_external_texture_generator_t *generator,
+        reskia_direct_context_t *recording_context,
+        bool mipmapped) {
+#if defined(SK_GANESH)
+    if (generator == nullptr) {
+        return nullptr;
+    }
+    std::unique_ptr<GrExternalTexture> texture = as_external_texture_generator(generator)->generateExternalTexture(
+            as_recording_context(recording_context),
+            to_mipmapped(mipmapped));
+    return reinterpret_cast<reskia_gr_external_texture_t *>(texture.release());
+#else
+    (void) generator;
+    (void) recording_context;
+    (void) mipmapped;
+    return nullptr;
+#endif
+}
+
+sk_image_t SkImages_DeferredFromTextureGenerator(reskia_gr_external_texture_generator_t *generator) {
+#if defined(SK_GANESH)
+    if (generator == nullptr) {
+        return 0;
+    }
+    std::unique_ptr<GrTextureGenerator> native_generator(as_external_texture_generator(generator));
+    sk_sp<SkImage> image = SkImages::DeferredFromTextureGenerator(std::move(native_generator));
+    return image ? static_sk_image_make(std::move(image)) : 0;
+#else
+    (void) generator;
+    return 0;
+#endif
+}
+
 reskia_gr_surface_characterization_t *GrSurfaceCharacterization_new() {
 #if defined(SK_GANESH)
     return reinterpret_cast<reskia_gr_surface_characterization_t *>(new GrSurfaceCharacterization());
@@ -1708,6 +2027,19 @@ void Graphite_RecorderOptions_setGpuBudgetInBytes(reskia_graphite_recorder_optio
 #endif
 }
 
+void Graphite_RecorderOptions_setImageProvider(reskia_graphite_recorder_options_t *options, reskia_graphite_image_provider_t *provider) {
+#if defined(SK_GRAPHITE)
+    if (options != nullptr) {
+        as_graphite_recorder_options(options)->fImageProvider = provider != nullptr
+                ? sk_ref_sp(as_graphite_image_provider(provider))
+                : nullptr;
+    }
+#else
+    (void) options;
+    (void) provider;
+#endif
+}
+
 int Graphite_Context_backend(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr ? to_reskia_graphite_backend_api(as_graphite_context(ctx)->backend()) : 0;
@@ -1719,6 +2051,21 @@ int Graphite_Context_backend(reskia_graphite_context_t *ctx) {
 
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx) {
     return Reskia_GraphiteContext_MakeRecorder(ctx);
+}
+
+reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_graphite_context_t *ctx, const reskia_graphite_recorder_options_t *options) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || options == nullptr) {
+        return nullptr;
+    }
+
+    auto recorder = as_graphite_context(ctx)->makeRecorder(*as_graphite_recorder_options(options));
+    return reinterpret_cast<reskia_graphite_recorder_t *>(recorder.release());
+#else
+    (void) ctx;
+    (void) options;
+    return nullptr;
+#endif
 }
 
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
@@ -2171,6 +2518,66 @@ void Graphite_Recording_delete(reskia_graphite_recording_t *recording) {
     delete as_graphite_recording(recording);
 #else
     (void) recording;
+#endif
+}
+
+reskia_graphite_image_provider_t *Graphite_ImageProvider_new(
+        reskia_graphite_image_provider_find_or_create_proc_t proc,
+        void *user_data,
+        reskia_graphite_release_proc_t release_proc) {
+#if defined(SK_GRAPHITE)
+    return proc != nullptr
+            ? reinterpret_cast<reskia_graphite_image_provider_t *>(new ReskiaGraphiteImageProvider(proc, user_data, release_proc))
+            : nullptr;
+#else
+    (void) proc;
+    (void) user_data;
+    (void) release_proc;
+    return nullptr;
+#endif
+}
+
+void Graphite_ImageProvider_ref(reskia_graphite_image_provider_t *provider) {
+#if defined(SK_GRAPHITE)
+    if (provider != nullptr) {
+        as_graphite_image_provider(provider)->ref();
+    }
+#else
+    (void) provider;
+#endif
+}
+
+void Graphite_ImageProvider_unref(reskia_graphite_image_provider_t *provider) {
+#if defined(SK_GRAPHITE)
+    if (provider != nullptr) {
+        as_graphite_image_provider(provider)->unref();
+    }
+#else
+    (void) provider;
+#endif
+}
+
+sk_image_t Graphite_ImageProvider_findOrCreate(
+        reskia_graphite_image_provider_t *provider,
+        reskia_graphite_recorder_t *recorder,
+        const reskia_image_t *image,
+        sk_image_required_properties_t properties) {
+#if defined(SK_GRAPHITE)
+    if (provider == nullptr || recorder == nullptr || image == nullptr ||
+        static_sk_image_required_properties_get_ptr(properties) == nullptr) {
+        return 0;
+    }
+    sk_sp<SkImage> result = as_graphite_image_provider(provider)->findOrCreate(
+            as_graphite_recorder(recorder),
+            reinterpret_cast<const SkImage *>(image),
+            static_sk_image_required_properties_get_entity(properties));
+    return result ? static_sk_image_make(std::move(result)) : 0;
+#else
+    (void) provider;
+    (void) recorder;
+    (void) image;
+    (void) properties;
+    return 0;
 #endif
 }
 

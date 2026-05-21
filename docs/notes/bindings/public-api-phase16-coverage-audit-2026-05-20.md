@@ -2,6 +2,10 @@
 
 Date: 2026-05-20
 
+Superseded note: this audit records the Phase 16 state. Phase 26 later freezes
+the post-coverage-expansion state with `missing 0` and `deferred 5`; see
+`docs/notes/bindings/public-api-phase26-coverage-freeze-audit-2026-05-21.md`.
+
 ## Snapshot
 
 Latest `docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv`:
@@ -51,7 +55,7 @@ Use these matrix statuses consistently:
 - `no_public_methods_found`: public class/struct row has no extracted public methods.
 - `partial`: temporary generator warning for loose symbol matches; should remain zero.
 - `overcovered`: temporary audit status for false exact matches; should remain zero.
-- `deferred`: temporary backlog status; should remain zero in the generated matrix.
+- `deferred`: at Phase 16 this was a temporary backlog status and was expected to remain zero. Phase 26 reuses it for a reviewed, named follow-up bridge backlog; use the Phase 26 audit for the current meaning.
 
 ## Smoke Coverage Map
 
