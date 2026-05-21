@@ -1,0 +1,2 @@
+area,header,class,method,method_line,method_status,matched_capi,triage,priority,residual_kind,signature,generator_action,note
+include/gpu,include/gpu/graphite/Context.h,Context,contextID,147,covered,Graphite_Context_contextID,covered,P2,implementation_done,ContextID contextID() const { return fContextID; },Phase 22 GPU value wrapper covered override,Graphite ContextID is exposed as an owned opaque value with validity and equality helpers.

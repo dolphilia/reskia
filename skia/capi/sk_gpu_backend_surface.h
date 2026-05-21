@@ -19,6 +19,7 @@ typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_backend_render_target_t reskia_gr_backend_render_target_t;
 typedef struct reskia_gr_backend_semaphore_t reskia_gr_backend_semaphore_t;
 typedef struct reskia_gr_driver_bug_workarounds_t reskia_gr_driver_bug_workarounds_t;
+typedef struct reskia_gr_gl_extensions_t reskia_gr_gl_extensions_t;
 typedef struct reskia_gr_yuva_backend_texture_info_t reskia_gr_yuva_backend_texture_info_t;
 typedef struct reskia_gr_yuva_backend_textures_t reskia_gr_yuva_backend_textures_t;
 typedef struct reskia_skgpu_mutable_texture_state_t reskia_skgpu_mutable_texture_state_t;
@@ -183,6 +184,12 @@ bool GrGLTextureInfo_equals(const reskia_gr_gl_texture_info_t *info, const reski
 bool GrGLTextureInfo_isProtected(const reskia_gr_gl_texture_info_t *info); // NULL input returns false
 bool GrGLFramebufferInfo_equals(const reskia_gr_gl_framebuffer_info_t *info, const reskia_gr_gl_framebuffer_info_t *other); // NULL input returns false
 bool GrGLFramebufferInfo_isProtected(const reskia_gr_gl_framebuffer_info_t *info); // NULL input returns false
+
+reskia_gr_gl_extensions_t *GrGLExtensions_new(); // owned
+void GrGLExtensions_delete(reskia_gr_gl_extensions_t *extensions); // NULL input is no-op
+void GrGLExtensions_swap(reskia_gr_gl_extensions_t *extensions, reskia_gr_gl_extensions_t *other); // NULL input is no-op
+bool GrGLExtensions_isInitialized(const reskia_gr_gl_extensions_t *extensions); // NULL input returns false
+void GrGLExtensions_reset(reskia_gr_gl_extensions_t *extensions); // NULL input is no-op
 
 bool GrMtlTextureInfo_new(reskia_gr_mtl_texture_info_t *out_info); // out_info required
 bool GrMtlTextureInfo_equals(const reskia_gr_mtl_texture_info_t *info, const reskia_gr_mtl_texture_info_t *other); // NULL input returns false

@@ -4,13 +4,18 @@
 
 #include "sk_gpu_context.h"
 
+#include "sk_async_read_result-internal.h"
 #include "sk_surface_gpu.h"
 
 #include "include/core/SkColor.h"
+#include "include/core/SkColorSpace.h"
 #include "include/core/SkData.h"
+#include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
 #include "include/core/SkPixmap.h"
+#include "include/core/SkRect.h"
 #include "include/core/SkString.h"
+#include "include/core/SkSurface.h"
 #include "include/core/SkSurfaceProps.h"
 #include "include/core/SkYUVAInfo.h"
 #include "include/gpu/GrDirectContext.h"
@@ -63,6 +68,10 @@
 #endif
 
 #include "../handles/static_sk_i_size-internal.h"
+#include "../handles/static_sk_capabilities-internal.h"
+#include "../handles/static_sk_color_space.h"
+#include "../handles/static_sk_color_space-internal.h"
+#include "../handles/static_sk_i_size.h"
 
 namespace {
 
@@ -200,6 +209,26 @@ const SkYUVAInfo *as_yuva_info(const reskia_yuva_info_t *info) {
     return reinterpret_cast<const SkYUVAInfo *>(info);
 }
 
+struct GraphiteFinishedCallbackContext {
+    reskia_graphite_finished_proc_t proc;
+    void *user_data;
+    reskia_graphite_release_proc_t release_proc;
+};
+
+void graphite_finished_callback(skgpu::GpuFinishedContext context, skgpu::CallbackResult result) {
+    auto *callback_context = static_cast<GraphiteFinishedCallbackContext *>(context);
+    if (callback_context == nullptr) {
+        return;
+    }
+    if (callback_context->proc != nullptr) {
+        callback_context->proc(callback_context->user_data, result == skgpu::CallbackResult::kSuccess ? 1 : 0);
+    }
+    if (callback_context->release_proc != nullptr) {
+        callback_context->release_proc(callback_context->user_data);
+    }
+    delete callback_context;
+}
+
 skgpu::graphite::Context *as_graphite_context(reskia_graphite_context_t *ctx) {
     return reinterpret_cast<skgpu::graphite::Context *>(ctx);
 }
@@ -216,8 +245,16 @@ const skgpu::graphite::Context *as_graphite_context(const reskia_graphite_contex
     return reinterpret_cast<const skgpu::graphite::Context *>(ctx);
 }
 
+const skgpu::graphite::Context::ContextID *as_graphite_context_id(const reskia_graphite_context_id_t *context_id) {
+    return reinterpret_cast<const skgpu::graphite::Context::ContextID *>(context_id);
+}
+
 skgpu::graphite::Recorder *as_graphite_recorder(reskia_graphite_recorder_t *recorder) {
     return reinterpret_cast<skgpu::graphite::Recorder *>(recorder);
+}
+
+skgpu::graphite::Recording *as_graphite_recording(reskia_graphite_recording_t *recording) {
+    return reinterpret_cast<skgpu::graphite::Recording *>(recording);
 }
 
 const skgpu::graphite::BackendTexture *as_graphite_backend_texture(const reskia_graphite_backend_texture_t *texture) {
@@ -285,6 +322,29 @@ bool from_graphite_protected(skgpu::Protected is_protected) {
 
 skgpu::graphite::SyncToCpu to_graphite_sync_cpu(bool sync_cpu) {
     return sync_cpu ? skgpu::graphite::SyncToCpu::kYes : skgpu::graphite::SyncToCpu::kNo;
+}
+
+bool is_valid_graphite_rescale_gamma(reskia_graphite_rescale_gamma_t gamma) {
+    return gamma == static_cast<reskia_graphite_rescale_gamma_t>(SkImage::RescaleGamma::kSrc) ||
+           gamma == static_cast<reskia_graphite_rescale_gamma_t>(SkImage::RescaleGamma::kLinear);
+}
+
+bool is_valid_graphite_rescale_mode(reskia_graphite_rescale_mode_t mode) {
+    return mode >= static_cast<reskia_graphite_rescale_mode_t>(SkImage::RescaleMode::kNearest) &&
+           mode <= static_cast<reskia_graphite_rescale_mode_t>(SkImage::RescaleMode::kRepeatedCubic);
+}
+
+bool is_valid_graphite_yuv_color_space(reskia_graphite_yuv_color_space_t yuv_color_space) {
+    return yuv_color_space >= 0 &&
+           yuv_color_space <= static_cast<reskia_graphite_yuv_color_space_t>(kLastEnum_SkYUVColorSpace);
+}
+
+bool has_i_size_handle(sk_i_size_t size) {
+    return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
+}
+
+bool has_optional_color_space_handle(sk_color_space_t color_space) {
+    return color_space == 0 || static_sk_color_space_get_ptr(color_space) != nullptr;
 }
 
 bool copy_yuva_locations(const SkYUVAInfo::YUVALocations &native_locations, reskia_yuva_location_t *locations) {
@@ -1179,6 +1239,15 @@ int GrRecordingContext_maxSurfaceSampleCountForColorType(reskia_direct_context_t
 #endif
 }
 
+const_sk_capabilities_t GrRecordingContext_skCapabilities(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    return ctx != nullptr ? static_const_sk_capabilities_make(as_recording_context(ctx)->skCapabilities()) : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
 void GrContextThreadSafeProxy_release(reskia_gr_context_thread_safe_proxy_t *proxy) {
 #if defined(SK_GANESH)
     if (proxy == nullptr) {
@@ -1662,6 +1731,197 @@ bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
 #endif
 }
 
+bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || recording == nullptr) {
+        return false;
+    }
+    skgpu::graphite::InsertRecordingInfo info;
+    info.fRecording = as_graphite_recording(recording);
+    return as_graphite_context(ctx)->insertRecording(info);
+#else
+    (void) ctx;
+    (void) recording;
+    return false;
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsFromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || image == nullptr || dst_info == nullptr || src_rect == nullptr || callback == nullptr ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixels(
+            reinterpret_cast<const SkImage *>(image),
+            *reinterpret_cast<const SkImageInfo *>(dst_info),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) image;
+    (void) dst_info;
+    (void) src_rect;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsFromSurface(reskia_graphite_context_t *ctx, const reskia_surface_t *surface, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || surface == nullptr || dst_info == nullptr || src_rect == nullptr || callback == nullptr ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixels(
+            reinterpret_cast<const SkSurface *>(surface),
+            *reinterpret_cast<const SkImageInfo *>(dst_info),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) surface;
+    (void) dst_info;
+    (void) src_rect;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsYUV420FromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, reskia_graphite_yuv_color_space_t yuv_color_space, sk_color_space_t dst_color_space, const reskia_i_rect_t *src_rect, sk_i_size_t dst_size, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || image == nullptr || src_rect == nullptr || callback == nullptr || !has_i_size_handle(dst_size) ||
+        !has_optional_color_space_handle(dst_color_space) || !is_valid_graphite_yuv_color_space(yuv_color_space) ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixelsYUV420(
+            reinterpret_cast<const SkImage *>(image),
+            static_cast<SkYUVColorSpace>(yuv_color_space),
+            static_sk_color_space_get_entity(dst_color_space),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_sk_i_size_get_entity(dst_size),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) image;
+    (void) yuv_color_space;
+    (void) dst_color_space;
+    (void) src_rect;
+    (void) dst_size;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsYUV420FromSurface(reskia_graphite_context_t *ctx, const reskia_surface_t *surface, reskia_graphite_yuv_color_space_t yuv_color_space, sk_color_space_t dst_color_space, const reskia_i_rect_t *src_rect, sk_i_size_t dst_size, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || surface == nullptr || src_rect == nullptr || callback == nullptr || !has_i_size_handle(dst_size) ||
+        !has_optional_color_space_handle(dst_color_space) || !is_valid_graphite_yuv_color_space(yuv_color_space) ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixelsYUV420(
+            reinterpret_cast<const SkSurface *>(surface),
+            static_cast<SkYUVColorSpace>(yuv_color_space),
+            static_sk_color_space_get_entity(dst_color_space),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_sk_i_size_get_entity(dst_size),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) surface;
+    (void) yuv_color_space;
+    (void) dst_color_space;
+    (void) src_rect;
+    (void) dst_size;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsYUVA420FromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, reskia_graphite_yuv_color_space_t yuv_color_space, sk_color_space_t dst_color_space, const reskia_i_rect_t *src_rect, sk_i_size_t dst_size, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || image == nullptr || src_rect == nullptr || callback == nullptr || !has_i_size_handle(dst_size) ||
+        !has_optional_color_space_handle(dst_color_space) || !is_valid_graphite_yuv_color_space(yuv_color_space) ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixelsYUVA420(
+            reinterpret_cast<const SkImage *>(image),
+            static_cast<SkYUVColorSpace>(yuv_color_space),
+            static_sk_color_space_get_entity(dst_color_space),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_sk_i_size_get_entity(dst_size),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) image;
+    (void) yuv_color_space;
+    (void) dst_color_space;
+    (void) src_rect;
+    (void) dst_size;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
+void Graphite_Context_asyncRescaleAndReadPixelsYUVA420FromSurface(reskia_graphite_context_t *ctx, const reskia_surface_t *surface, reskia_graphite_yuv_color_space_t yuv_color_space, sk_color_space_t dst_color_space, const reskia_i_rect_t *src_rect, sk_i_size_t dst_size, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || surface == nullptr || src_rect == nullptr || callback == nullptr || !has_i_size_handle(dst_size) ||
+        !has_optional_color_space_handle(dst_color_space) || !is_valid_graphite_yuv_color_space(yuv_color_space) ||
+        !is_valid_graphite_rescale_gamma(rescale_gamma) || !is_valid_graphite_rescale_mode(rescale_mode)) {
+        reskia_async_read_pixels_fail(callback, callback_context);
+        return;
+    }
+    as_graphite_context(ctx)->asyncRescaleAndReadPixelsYUVA420(
+            reinterpret_cast<const SkSurface *>(surface),
+            static_cast<SkYUVColorSpace>(yuv_color_space),
+            static_sk_color_space_get_entity(dst_color_space),
+            *reinterpret_cast<const SkIRect *>(src_rect),
+            static_sk_i_size_get_entity(dst_size),
+            static_cast<SkImage::RescaleGamma>(rescale_gamma),
+            static_cast<SkImage::RescaleMode>(rescale_mode),
+            reskia_async_read_pixels_bridge,
+            reskia_async_read_callback_context_new(callback, callback_context));
+#else
+    (void) ctx;
+    (void) surface;
+    (void) yuv_color_space;
+    (void) dst_color_space;
+    (void) src_rect;
+    (void) dst_size;
+    (void) rescale_gamma;
+    (void) rescale_mode;
+    reskia_async_read_pixels_fail(callback, callback_context);
+#endif
+}
+
 void Graphite_Context_checkAsyncWorkCompletion(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     if (ctx != nullptr) {
@@ -1733,6 +1993,44 @@ bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr
+                   ? reinterpret_cast<reskia_graphite_context_id_t *>(new skgpu::graphite::Context::ContextID(as_graphite_context(ctx)->contextID()))
+                   : nullptr;
+#else
+    (void) ctx;
+    return nullptr;
+#endif
+}
+
+void Graphite_ContextID_delete(reskia_graphite_context_id_t *context_id) {
+#if defined(SK_GRAPHITE)
+    delete reinterpret_cast<skgpu::graphite::Context::ContextID *>(context_id);
+#else
+    (void) context_id;
+#endif
+}
+
+bool Graphite_ContextID_isValid(const reskia_graphite_context_id_t *context_id) {
+#if defined(SK_GRAPHITE)
+    return context_id != nullptr && as_graphite_context_id(context_id)->isValid();
+#else
+    (void) context_id;
+    return false;
+#endif
+}
+
+bool Graphite_ContextID_equals(const reskia_graphite_context_id_t *context_id, const reskia_graphite_context_id_t *other) {
+#if defined(SK_GRAPHITE)
+    return context_id != nullptr && other != nullptr && *as_graphite_context_id(context_id) == *as_graphite_context_id(other);
+#else
+    (void) context_id;
+    (void) other;
+    return false;
+#endif
+}
+
 void Graphite_Recorder_freeGpuResources(reskia_graphite_recorder_t *recorder) {
 #if defined(SK_GRAPHITE)
     if (recorder != nullptr) {
@@ -1771,6 +2069,61 @@ void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder
 #else
     (void) recorder;
     (void) trace_memory_dump;
+#endif
+}
+
+bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc) {
+#if defined(SK_GRAPHITE)
+    if (recorder == nullptr || proc == nullptr) {
+        return false;
+    }
+    auto *callback_context = new GraphiteFinishedCallbackContext{proc, user_data, release_proc};
+    skgpu::graphite::InsertFinishInfo info;
+    info.fFinishedContext = callback_context;
+    info.fFinishedProc = graphite_finished_callback;
+    as_graphite_recorder(recorder)->addFinishInfo(info);
+    return true;
+#else
+    (void) recorder;
+    (void) proc;
+    (void) user_data;
+    (void) release_proc;
+    return false;
+#endif
+}
+
+reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? reinterpret_cast<reskia_graphite_image_provider_t *>(as_graphite_recorder(recorder)->clientImageProvider()) : nullptr;
+#else
+    (void) recorder;
+    return nullptr;
+#endif
+}
+
+reskia_canvas_t *Graphite_Recorder_makeDeferredCanvas(reskia_graphite_recorder_t *recorder, const reskia_image_info_t *image_info, const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    if (recorder == nullptr || image_info == nullptr || info == nullptr || !as_graphite_texture_info(info)->isValid()) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_canvas_t *>(as_graphite_recorder(recorder)->makeDeferredCanvas(*reinterpret_cast<const SkImageInfo *>(image_info), *as_graphite_texture_info(info)));
+#else
+    (void) recorder;
+    (void) image_info;
+    (void) info;
+    return nullptr;
+#endif
+}
+
+reskia_graphite_recording_t *Graphite_Recorder_snap(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    if (recorder == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_graphite_recording_t *>(as_graphite_recorder(recorder)->snap().release());
+#else
+    (void) recorder;
+    return nullptr;
 #endif
 }
 
@@ -1813,6 +2166,14 @@ void Graphite_Recorder_deleteBackendTexture(reskia_graphite_recorder_t *recorder
 #endif
 }
 
+void Graphite_Recording_delete(reskia_graphite_recording_t *recording) {
+#if defined(SK_GRAPHITE)
+    delete as_graphite_recording(recording);
+#else
+    (void) recording;
+#endif
+}
+
 reskia_graphite_texture_info_t *Graphite_TextureInfo_new() {
 #if defined(SK_GRAPHITE)
     return reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo());
@@ -1838,6 +2199,51 @@ reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphit
     (void) info;
     return nullptr;
 #endif
+}
+
+bool Graphite_MtlTextureInfo_new(reskia_graphite_mtl_texture_info_t *out_info) {
+    if (out_info == nullptr) {
+        return false;
+    }
+    *out_info = {};
+    out_info->sample_count = 1;
+    return true;
+}
+
+bool Graphite_MtlTextureInfo_newTexture(void *texture, reskia_graphite_mtl_texture_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(SK_GRAPHITE) && defined(SK_METAL) && defined(__APPLE__)
+    if (texture == nullptr || out_info == nullptr) {
+        return false;
+    }
+    skgpu::graphite::MtlTextureInfo mtl_info(reinterpret_cast<CFTypeRef>(texture));
+    out_info->sample_count = mtl_info.fSampleCount;
+    out_info->mipmapped = from_graphite_mipmapped(mtl_info.fMipmapped);
+    out_info->format = mtl_info.fFormat;
+    out_info->usage = mtl_info.fUsage;
+    out_info->storage_mode = mtl_info.fStorageMode;
+    out_info->framebuffer_only = mtl_info.fFramebufferOnly;
+    return true;
+#else
+    (void) texture;
+    return false;
+#endif
+}
+
+bool Graphite_MtlTextureInfo_newWithValues(uint32_t sample_count, bool mipmapped, uint32_t format, uint32_t usage, uint32_t storage_mode, bool framebuffer_only, reskia_graphite_mtl_texture_info_t *out_info) {
+    if (out_info == nullptr) {
+        return false;
+    }
+    *out_info = {
+            sample_count,
+            mipmapped,
+            format,
+            usage,
+            storage_mode,
+            framebuffer_only};
+    return true;
 }
 
 reskia_graphite_texture_info_t *Graphite_TextureInfo_newCopy(const reskia_graphite_texture_info_t *info) {

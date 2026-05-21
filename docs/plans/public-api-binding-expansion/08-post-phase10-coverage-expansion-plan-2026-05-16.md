@@ -10,11 +10,11 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2781 |
-| `missing` | 67 |
+| `covered` | 2793 |
+| `missing` | 45 |
 | `false_positive` | 275 |
 | `split_covered` | 33 |
-| `na` | 161 |
+| `na` | 171 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -26,7 +26,7 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 
 | area | missing | 主な内容 |
 | --- | ---: | --- |
-| `include/gpu` | 66 | Graphite async/provider、GL/Vulkan extension/interface、allocator、platform backend value |
+| `include/gpu` | 44 | Graphite async/provider、GL interface/extension loader、allocator |
 | `modules/svg` | 1 | `SkSVGImage::LoadImage` resource/provider loading |
 
 Phase 16 audit residual index view (reference; Phase 17/18 covered moves are reflected in the matrix counts above):
@@ -358,6 +358,8 @@ Acceptance:
 Progress:
 
 - 2026-05-21: Phase 22 first batch として Ganesh mock value wrapper (`GrMockTextureInfo` / `GrMockRenderTargetInfo` / `GrMockOptions`) と GL value wrapper (`GrGLTextureInfo` / `GrGLFramebufferInfo`) を追加した。さらに `GrMtlTextureInfo` default/equality、`GrContextOptions` default/copy/suppressPrints、`GrBackendDrawableInfo` guarded wrapper を追加した。`GrBackendDrawableInfo` は upstream header が Vulkan third_party header を直接要求するため、現行 portable GPU build では stub fallback、Vulkan header がある構成のみ native `GrBackendDrawableInfo` に接続する。matrix は `covered 2781`、`missing 67`、`include/gpu missing 66`。`test_gpu_context_capi_smoke` target は `sk_gpu_backend_surface.cpp` / `sk_gpu_context.cpp` の compile まで到達したが、既存の `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で link に失敗した。
+- 2026-05-21: Phase 22 continuation として Graphite `MtlTextureInfo` default / texture / value constructor helper と `Context::contextID` opaque value wrapper (`Graphite_Context_contextID` / `Graphite_ContextID_*`) を追加した。`ContextID` は private raw id を公開せず、owned opaque copy の validity/equality だけを C ABI に出す。`public-api-phase-22-gpu-value-overrides.csv` を追加し、Phase 11D で missing 固定していた `contextID` 行を covered に更新した。matrix は `covered 2785`、`missing 63`、`include/gpu missing 62`。`test_gpu_context_capi_smoke` target は引き続き compile 後に既存 `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で link 失敗する。
+- 2026-05-21: Phase 22 GL extension inline subset として `GrGLExtensions` default / swap / isInitialized / reset wrapper を追加した。copy / has / remove / add / init / dumpJSON は、この build の linked objects に `GrGLExtensions.cpp` 実装が入っておらず未解決 symbol になるため Phase 23 の GL interface/loader design に残した。matrix は `covered 2790`、`missing 58`、`include/gpu missing 57`。
 
 ## Phase 23: GPU Provider / Async / Allocator Design
 
@@ -382,6 +384,17 @@ Expected outcome:
 
 - `docs/notes/bindings/phase23-gpu-provider-async-allocator-design-YYYY-MM-DD.md` を追加する。
 - 実装しない row は `na` / `false_positive` に分類し、実装する row は Phase 24+ に移す。
+
+Progress:
+
+- 2026-05-21: Phase 23 design note `docs/notes/bindings/phase23-gpu-provider-async-allocator-design-2026-05-21.md` を追加した。残る GPU 行を Graphite recording/async/image provider、Ganesh external texture/shader error callback、GL interface/extension loader、Vulkan/Metal allocator、optional Vulkan value に分け、callback owner、async result、recording transfer、borrowed deferred canvas、allocator provider の ownership 方針を固定した。
+- 2026-05-21: Phase 23A optional Vulkan guard として `public-api-phase-23-gpu-provider-overrides.csv` を追加し、Graphite Vulkan texture info、`GrVkImageInfo`、`VulkanExtensions`、`VulkanAlloc`、`VulkanYcbcrConversionInfo` の 10 行を `na` に分類した。現行 portable build は `include/third_party/vulkan/vulkan/vulkan_core.h` が無く native Vulkan type を compile できないため、Vulkan build target が整うまで C ABI coverage から外す。matrix は `covered 2790`、`missing 48`、`na 171`、`include/gpu missing 47`。
+- 2026-05-21: Phase 23B first implementation として `Graphite_Recording` owned handle、`Graphite_Recorder_snap`、`Graphite_Context_insertRecording`、`Graphite_Recording_delete` を追加した。`insertRecording` は recording を borrowed とし、callback/semaphore/target surface/target texture state は指定しない最小 `InsertRecordingInfo` に限定する。advanced fields は finish callback / deferred canvas continuation に残す。matrix は `covered 2792`、`missing 46`、`include/gpu missing 45`。`test_gpu_context_capi_smoke` target は compile 後に既存 `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で link 失敗する。
+- 2026-05-21: Phase 23B finish callback continuation として `Graphite_Recorder_addFinishInfo` を追加した。C callback と `user_data` は C++ bridge context が保持し、Skia の finished callback 発火時に result を `0/1` で渡して `release_proc` を一度だけ呼ぶ。smoke では snap 前に recorder を release した failure callback path を追加した。matrix は `covered 2793`、`missing 45`、`include/gpu missing 44`。build は同じ既存 `SkShaper::Make` link issue で停止する。
+- 2026-05-21: Phase 23B recorder provider/deferred canvas continuation として `Graphite_Recorder_clientImageProvider` と `Graphite_Recorder_makeDeferredCanvas` を追加した。`clientImageProvider` は recorder-owned borrowed opaque pointer、`makeDeferredCanvas` は次回 `snap` または recorder release まで有効な borrowed `reskia_canvas_t*` として C ABI に出す。smoke には null path、default provider non-null、Metal `TextureInfo` + `SkImageInfo` の deferred canvas path を追加した。matrix は `covered 2796`、`missing 42`、`include/gpu missing 41`。build は compile 後に既存 `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で停止する。
+- 2026-05-21: Phase 23E Vulkan allocator guard として `VulkanMemoryAllocator` 12 行を `na` に分類した。これらは `VkImage` / `VkBuffer` / `VkDeviceSize` / `VulkanBackendMemory` と concrete allocator callback bridge に依存し、現行 portable build では Vulkan header / allocator target がないため、optional Vulkan allocator bridge まで C ABI coverage から外す。matrix は `covered 2796`、`missing 30`、`na 183`、`include/gpu missing 29`。
+- 2026-05-21: Phase 23E Metal allocator guard として `MtlMemoryAllocator` 2 行を `na` に分類した。`id<MTLBuffer>` / `id<MTLTexture>` / `MTLTextureDescriptor` と `MtlAlloc` refcount の Objective-C lifetime を伴うため、optional Metal allocator bridge まで portable C ABI coverage から外す。matrix は `covered 2796`、`missing 28`、`na 185`、`include/gpu missing 27`。
+- 2026-05-21: Phase 23B Graphite async readback continuation として `Graphite_Context_asyncRescaleAndReadPixels*` 6 wrapper を追加した。image/surface overload は C 名で分け、callback ABI は既存 `reskia_async_read_pixels_callback_t` / `reskia_async_read_result_t` を再利用する。invalid input は既存 `SkImage` / `SkSurface` wrapper と同じく callback に `NULL` result を返す。あわせて `GrRecordingContext_skCapabilities` を owned `const_sk_capabilities_t` handle として追加した。matrix は `covered 2803`、`missing 21`、`include/gpu missing 20`。build は compile 後に既存 `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で停止する。
 
 ## Phase 24: SVG Image Resource Loading
 

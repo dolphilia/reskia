@@ -6,9 +6,12 @@
 #include "capi/sk_gpu_context.h"
 #include "capi/sk_graphics.h"
 #include "capi/sk_i_size.h"
+#include "capi/sk_image_info.h"
 #include "capi/sk_string.h"
 #include "capi/sk_yuva_info.h"
+#include "handles/static_sk_capabilities.h"
 #include "handles/static_sk_i_size.h"
+#include "handles/static_sk_image_info.h"
 
 namespace {
 
@@ -18,6 +21,35 @@ bool check(bool condition, const char* message) {
         return false;
     }
     return true;
+}
+
+struct FinishCallbackState {
+    int calls;
+    int result;
+    int releases;
+};
+
+struct AsyncFailState {
+    int calls;
+};
+
+void finish_callback(void *user_data, int32_t result) {
+    auto *state = static_cast<FinishCallbackState *>(user_data);
+    state->calls += 1;
+    state->result = result;
+}
+
+void finish_release(void *user_data) {
+    auto *state = static_cast<FinishCallbackState *>(user_data);
+    state->releases += 1;
+}
+
+void async_fail_callback(void *context, const reskia_async_read_result_t *result) {
+    auto *state = static_cast<AsyncFailState *>(context);
+    state->calls += 1;
+    if (result != nullptr) {
+        state->calls += 1000;
+    }
 }
 
 bool smoke_context_create_destroy() {
@@ -86,6 +118,7 @@ bool smoke_context_create_destroy() {
                !GrGLTextureInfo_isProtected(nullptr) &&
                !GrGLFramebufferInfo_equals(nullptr, nullptr) &&
                !GrGLFramebufferInfo_isProtected(nullptr) &&
+               !GrGLExtensions_isInitialized(nullptr) &&
                !GrMtlTextureInfo_new(nullptr) &&
                !GrMtlTextureInfo_equals(nullptr, nullptr) &&
                GrBackendDrawableInfo_newVk(nullptr) == nullptr &&
@@ -191,6 +224,20 @@ bool smoke_context_create_destroy() {
         GrBackendFormat_delete(mock_format);
         return false;
     }
+
+    reskia_gr_gl_extensions_t *gl_extensions = GrGLExtensions_new();
+    if (!check(gl_extensions != nullptr &&
+               !GrGLExtensions_isInitialized(gl_extensions),
+               "GrGLExtensions default")) {
+        GrGLExtensions_delete(gl_extensions);
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+    reskia_gr_gl_extensions_t *gl_extensions_other = GrGLExtensions_new();
+    GrGLExtensions_swap(gl_extensions, gl_extensions_other);
+    GrGLExtensions_reset(gl_extensions_other);
+    GrGLExtensions_delete(gl_extensions_other);
+    GrGLExtensions_delete(gl_extensions);
 
     reskia_gr_backend_drawable_info_t *drawable_info = GrBackendDrawableInfo_new();
     if (drawable_info != nullptr) {
@@ -628,6 +675,16 @@ bool smoke_context_create_destroy() {
     GrDirectContext_checkAsyncWorkCompletion(nullptr);
     GrDirectContext_dumpMemoryStatistics(nullptr, nullptr);
     GrDirectContext_storeVkPipelineCacheData(nullptr);
+    AsyncFailState graphite_async_fail_state = {};
+    Graphite_Context_asyncRescaleAndReadPixelsFromImage(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    Graphite_Context_asyncRescaleAndReadPixelsFromSurface(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    Graphite_Context_asyncRescaleAndReadPixelsYUV420FromImage(nullptr, nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    Graphite_Context_asyncRescaleAndReadPixelsYUV420FromSurface(nullptr, nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    Graphite_Context_asyncRescaleAndReadPixelsYUVA420FromImage(nullptr, nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    Graphite_Context_asyncRescaleAndReadPixelsYUVA420FromSurface(nullptr, nullptr, 0, 0, nullptr, 0, 0, 0, async_fail_callback, &graphite_async_fail_state);
+    if (!check(graphite_async_fail_state.calls == 6, "Graphite_Context async invalid fail callbacks")) {
+        return false;
+    }
     if (GrDirectContext_MakeMetal(nullptr, nullptr) != nullptr ||
         GrDirectContext_MakeVulkan(nullptr) != nullptr) {
         return false;
@@ -669,16 +726,25 @@ bool smoke_context_create_destroy() {
                !GrDirectContext_setBackendTextureState(nullptr, nullptr, nullptr, nullptr) &&
                !GrDirectContext_setBackendRenderTargetState(nullptr, nullptr, nullptr, nullptr) &&
                !GrDirectContext_precompileShader(nullptr, nullptr, nullptr) &&
+               GrRecordingContext_skCapabilities(nullptr) == 0 &&
                Graphite_Context_backend(nullptr) == 0 &&
                Graphite_Context_makeRecorder(nullptr) == nullptr &&
                !Graphite_Context_submit(nullptr, false) &&
+               !Graphite_Context_insertRecording(nullptr, nullptr) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
+               Graphite_Context_contextID(nullptr) == nullptr &&
+               !Graphite_ContextID_isValid(nullptr) &&
+               !Graphite_ContextID_equals(nullptr, nullptr) &&
                GrContextOptions_newCopy(nullptr) == nullptr &&
                !GrContextOptions_suppressPrints(nullptr) &&
                Graphite_ContextOptions_gpuBudgetInBytes(nullptr) == 0 &&
                Graphite_RecorderOptions_newCopy(nullptr) == nullptr &&
                Graphite_RecorderOptions_gpuBudgetInBytes(nullptr) == 0 &&
+               !Graphite_Recorder_addFinishInfo(nullptr, nullptr, nullptr, nullptr) &&
+               Graphite_Recorder_clientImageProvider(nullptr) == nullptr &&
+               Graphite_Recorder_makeDeferredCanvas(nullptr, nullptr, nullptr) == nullptr &&
+               Graphite_Recorder_snap(nullptr) == nullptr &&
                Graphite_Recorder_currentBudgetedBytes(nullptr) == 0 &&
                Graphite_Recorder_createBackendTexture(nullptr, 0, nullptr) == nullptr &&
                !Graphite_Recorder_updateBackendTexture(nullptr, nullptr, nullptr, 0) &&
@@ -692,6 +758,9 @@ bool smoke_context_create_destroy() {
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
                !Graphite_TextureInfo_isCompatible(nullptr, nullptr) &&
                Graphite_TextureInfo_toString(nullptr) == nullptr &&
+               !Graphite_MtlTextureInfo_new(nullptr) &&
+               !Graphite_MtlTextureInfo_newTexture(nullptr, nullptr) &&
+               !Graphite_MtlTextureInfo_newWithValues(1, false, 0, 0, 0, false, nullptr) &&
                Graphite_BackendSemaphore_newCopy(nullptr) == nullptr &&
                !Graphite_BackendSemaphore_isValid(nullptr) &&
                Graphite_BackendSemaphore_backend(nullptr) == 0 &&
@@ -804,6 +873,14 @@ bool smoke_context_create_destroy() {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
+        const_sk_capabilities_t capabilities = GrRecordingContext_skCapabilities(direct_context);
+        if (!check(capabilities != 0 && static_const_sk_capabilities_get_ptr(capabilities) != nullptr,
+                   "GrRecordingContext_skCapabilities")) {
+            static_const_sk_capabilities_delete(capabilities);
+            Reskia_DirectContext_Release(direct_context);
+            return false;
+        }
+        static_const_sk_capabilities_delete(capabilities);
         reskia_gr_context_thread_safe_proxy_t *proxy = GrDirectContext_threadSafeProxy(direct_context);
         if (!check(proxy != nullptr && GrContextThreadSafeProxy_isValid(proxy), "GrDirectContext_threadSafeProxy(valid)")) {
             GrContextThreadSafeProxy_release(proxy);
@@ -861,6 +938,16 @@ bool smoke_context_create_destroy() {
             Reskia_GraphiteContext_Release(graphite_context);
             return false;
         }
+        reskia_graphite_context_id_t *graphite_context_id = Graphite_Context_contextID(graphite_context);
+        if (!check(graphite_context_id != nullptr &&
+                   Graphite_ContextID_isValid(graphite_context_id) &&
+                   Graphite_ContextID_equals(graphite_context_id, graphite_context_id),
+                   "Graphite_Context_contextID")) {
+            Graphite_ContextID_delete(graphite_context_id);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_ContextID_delete(graphite_context_id);
         Graphite_Context_checkAsyncWorkCompletion(graphite_context);
         Graphite_Context_performDeferredCleanup(graphite_context, 0);
         Graphite_Context_freeGpuResources(graphite_context);
@@ -890,6 +977,32 @@ bool smoke_context_create_destroy() {
         }
         Graphite_Recorder_performDeferredCleanup(recorder, 0);
         Graphite_Recorder_freeGpuResources(recorder);
+        if (!check(Graphite_Recorder_clientImageProvider(recorder) != nullptr,
+                   "Graphite_Recorder_clientImageProvider")) {
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+
+        reskia_graphite_recorder_t *finish_recorder = Graphite_Context_makeRecorder(graphite_context);
+        FinishCallbackState finish_state = {};
+        if (!check(finish_recorder != nullptr &&
+                   Graphite_Recorder_addFinishInfo(finish_recorder, finish_callback, &finish_state, finish_release),
+                   "Graphite_Recorder_addFinishInfo")) {
+            Reskia_GraphiteRecorder_Release(finish_recorder);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Reskia_GraphiteRecorder_Release(finish_recorder);
+        if (!check(finish_state.calls == 1 &&
+                   finish_state.result == 0 &&
+                   finish_state.releases == 1,
+                   "Graphite_Recorder_addFinishInfo failure callback on recorder release")) {
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
 
         reskia_graphite_recorder_options_t* recorder_options = Graphite_RecorderOptions_new();
         reskia_graphite_recorder_options_t* recorder_options_copy =
@@ -917,6 +1030,17 @@ bool smoke_context_create_destroy() {
         }
         Graphite_RecorderOptions_delete(recorder_options_copy);
         Graphite_RecorderOptions_delete(recorder_options);
+
+        reskia_graphite_recording_t *recording = Graphite_Recorder_snap(recorder);
+        if (!check(recording != nullptr &&
+                   Graphite_Context_insertRecording(graphite_context, recording),
+                   "Graphite_Recorder_snap/Context_insertRecording")) {
+            Graphite_Recording_delete(recording);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        Graphite_Recording_delete(recording);
 
         reskia_graphite_texture_info_t* default_texture_info = Graphite_TextureInfo_new();
         reskia_string_t* texture_info_string = Graphite_TextureInfo_toString(default_texture_info);
@@ -951,6 +1075,48 @@ bool smoke_context_create_destroy() {
         }
         Graphite_TextureInfo_delete(copied_texture_info);
         Graphite_TextureInfo_delete(default_texture_info);
+
+        reskia_graphite_mtl_texture_info_t default_mtl_info = {};
+        reskia_graphite_mtl_texture_info_t explicit_mtl_info = {};
+        if (!check(Graphite_MtlTextureInfo_new(&default_mtl_info) &&
+                   default_mtl_info.sample_count == 1 &&
+                   !default_mtl_info.mipmapped &&
+                   Graphite_MtlTextureInfo_newWithValues(4, true, 80, 17, 2, true, &explicit_mtl_info) &&
+                   explicit_mtl_info.sample_count == 4 &&
+                   explicit_mtl_info.mipmapped &&
+                   explicit_mtl_info.format == 80 &&
+                   explicit_mtl_info.usage == 17 &&
+                   explicit_mtl_info.storage_mode == 2 &&
+                   explicit_mtl_info.framebuffer_only,
+                   "Graphite_MtlTextureInfo values")) {
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        reskia_graphite_texture_info_t *mtl_texture_info = Graphite_TextureInfo_newMtl(&explicit_mtl_info);
+        if (!check(mtl_texture_info != nullptr &&
+                   Graphite_TextureInfo_isValid(mtl_texture_info) &&
+                   Graphite_TextureInfo_backend(mtl_texture_info) == RESKIA_GPU_BACKEND_API_METAL,
+                   "Graphite_TextureInfo_newMtl")) {
+            Graphite_TextureInfo_delete(mtl_texture_info);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        sk_image_info_t deferred_image_info = SkImageInfo_MakeN32Premul(4, 4);
+        auto *deferred_image_info_ptr = static_cast<reskia_image_info_t *>(
+                static_sk_image_info_get_ptr(deferred_image_info));
+        if (!check(deferred_image_info_ptr != nullptr &&
+                   Graphite_Recorder_makeDeferredCanvas(recorder, deferred_image_info_ptr, mtl_texture_info) != nullptr,
+                   "Graphite_Recorder_makeDeferredCanvas")) {
+            static_sk_image_info_delete(deferred_image_info);
+            Graphite_TextureInfo_delete(mtl_texture_info);
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        static_sk_image_info_delete(deferred_image_info);
+        Graphite_TextureInfo_delete(mtl_texture_info);
 
         reskia_graphite_backend_semaphore_t* default_semaphore = Graphite_BackendSemaphore_new();
         reskia_graphite_backend_semaphore_t* copied_semaphore =

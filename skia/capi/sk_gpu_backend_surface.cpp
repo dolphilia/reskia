@@ -14,6 +14,7 @@
 #include "include/gpu/GrDriverBugWorkarounds.h"
 #include "include/gpu/GrYUVABackendTextures.h"
 #include "include/gpu/MutableTextureState.h"
+#include "include/gpu/gl/GrGLExtensions.h"
 #include "include/gpu/gl/GrGLTypes.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #include "include/core/SkTextureCompressionType.h"
@@ -78,6 +79,14 @@ GrDriverBugWorkarounds *as_driver_bug_workarounds(reskia_gr_driver_bug_workaroun
 
 const GrDriverBugWorkarounds *as_driver_bug_workarounds(const reskia_gr_driver_bug_workarounds_t *workarounds) {
     return reinterpret_cast<const GrDriverBugWorkarounds *>(workarounds);
+}
+
+GrGLExtensions *as_gl_extensions(reskia_gr_gl_extensions_t *extensions) {
+    return reinterpret_cast<GrGLExtensions *>(extensions);
+}
+
+const GrGLExtensions *as_gl_extensions(const reskia_gr_gl_extensions_t *extensions) {
+    return reinterpret_cast<const GrGLExtensions *>(extensions);
 }
 
 const GrYUVABackendTextureInfo *as_yuva_backend_texture_info(const reskia_gr_yuva_backend_texture_info_t *info) {
@@ -1144,6 +1153,52 @@ bool GrGLFramebufferInfo_isProtected(const reskia_gr_gl_framebuffer_info_t *info
 #else
     (void) info;
     return false;
+#endif
+}
+
+reskia_gr_gl_extensions_t *GrGLExtensions_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_gl_extensions_t *>(new GrGLExtensions());
+#else
+    return nullptr;
+#endif
+}
+
+void GrGLExtensions_delete(reskia_gr_gl_extensions_t *extensions) {
+#if defined(SK_GANESH)
+    delete as_gl_extensions(extensions);
+#else
+    (void) extensions;
+#endif
+}
+
+void GrGLExtensions_swap(reskia_gr_gl_extensions_t *extensions, reskia_gr_gl_extensions_t *other) {
+#if defined(SK_GANESH)
+    if (extensions != nullptr && other != nullptr) {
+        as_gl_extensions(extensions)->swap(as_gl_extensions(other));
+    }
+#else
+    (void) extensions;
+    (void) other;
+#endif
+}
+
+bool GrGLExtensions_isInitialized(const reskia_gr_gl_extensions_t *extensions) {
+#if defined(SK_GANESH)
+    return extensions != nullptr && as_gl_extensions(extensions)->isInitialized();
+#else
+    (void) extensions;
+    return false;
+#endif
+}
+
+void GrGLExtensions_reset(reskia_gr_gl_extensions_t *extensions) {
+#if defined(SK_GANESH)
+    if (extensions != nullptr) {
+        as_gl_extensions(extensions)->reset();
+    }
+#else
+    (void) extensions;
 #endif
 }
 
