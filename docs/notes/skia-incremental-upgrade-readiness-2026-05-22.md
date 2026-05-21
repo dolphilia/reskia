@@ -1,8 +1,8 @@
-# Skia Incremental Upgrade Readiness
+# Skia 段階的アップグレード準備状況
 
 作成時刻: 2026-05-22 07:29:54 JST
 
-## Summary
+## 概要
 
 `vendor/skia-upstream` を徐々に新しい Skia commit へ進め、Reskia の C API binding と CMake source sync を段階的に追従する作業に入れるかを調査した。
 
@@ -10,10 +10,10 @@
 
 - 段階的アップグレードの探索を始める土台は整っている。
 - ただし、`vendor/skia-source.lock` を即座に最新 main へ更新する段階ではない。
-- まずは候補 commit を一時 checkout し、public API diff、source/header sync diff、coverage regression、build smoke を記録する "upgrade probe" phase を挟むべき。
+- まずは候補 commit を一時 checkout し、public API 差分、source/header sync 差分、coverage regression、build smoke を記録する「upgrade probe」フェーズを挟むべき。
 - 現在の coverage freeze (`missing 0` / `deferred 0`) と Phase 30-33 の verification matrix は、upgrade probe の合否判定として使える。
 
-## Current Baseline
+## 現在のベースライン
 
 Skia baseline:
 
@@ -21,14 +21,14 @@ Skia baseline:
 - `SKIA_REF=0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
 - `SKIA_BASELINE_DATE=2026-02-14`
 
-Local `vendor/skia-upstream`:
+ローカルの `vendor/skia-upstream`:
 
 - HEAD: `0d49b661d7`
 - status: clean
-- current remote observed during this investigation: `https://github.com/dolphilia/skia.git`
-- lock file upstream URL: `https://github.com/google/skia.git`
+- 調査時に観測した現在の remote: `https://github.com/dolphilia/skia.git`
+- lock file 上の upstream URL: `https://github.com/google/skia.git`
 
-This remote mismatch is not fatal because `scripts/fetch_skia_upstream.sh` resets remotes from the lock file, but it is a reminder that upgrade work should always start by running the fetch script rather than relying on the current clone configuration.
+この remote の不一致は致命的ではない。`scripts/fetch_skia_upstream.sh` は lock file の内容から remote を再設定する。ただし、アップグレード作業では現在の clone 設定に依存せず、必ず fetch script から開始すべきである。
 
 Coverage freeze:
 
@@ -45,56 +45,56 @@ Coverage freeze:
 | `overcovered` | 0 |
 | total | 3421 |
 
-Recent verification baseline:
+直近の検証ベースライン:
 
 - prebuilt `reskia` build: pass
 - source `reskia` build: pass
-- GPU prebuilt smoke: pass, with Metal device unavailable reported as `SKIP` then `PASS`
+- GPU prebuilt smoke: pass。Metal device unavailable は `SKIP` 後 `PASS`
 - source SVG/provider smoke: pass
 - coverage generator: pass
 
-## Upstream Reality
+## Upstream の現状
 
-Skia's official documentation identifies `skia.googlesource.com/skia` as the canonical source tree. The official download documentation describes cloning from `https://skia.googlesource.com/skia.git` and running Skia's dependency sync tools. The Gitiles main branch is actively moving; during this investigation, the public main page showed commits from the previous few hours.
+Skia 公式ドキュメントでは、`skia.googlesource.com/skia` が canonical source tree とされている。公式の download documentation でも、`https://skia.googlesource.com/skia.git` から clone し、Skia の dependency sync tools を実行する手順が説明されている。Gitiles の main branch は活発に進んでおり、今回の調査時点でも public main page には数時間前の commit が表示されていた。
 
-Implication for Reskia:
+Reskia への含意:
 
-- "latest" should mean a pinned commit, not a floating branch.
-- Every upgrade step should record a candidate Skia commit hash.
-- The lock file should be updated only after the candidate passes coverage and build gates.
+- 「latest」は floating branch ではなく、固定された commit を意味するべき。
+- すべての upgrade step で候補 Skia commit hash を記録する。
+- lock file は、候補 commit が coverage gate と build gate を通過した後にのみ更新する。
 
-References:
+参照:
 
 - https://skia.org/docs/
 - https://docs.skia.org/docs/user/download/
 - https://skia.googlesource.com/skia.git/
 
-## Existing Upgrade Assets
+## 既存のアップグレード資産
 
 ### Lock + fetch workflow
 
-`docs/notes/vendor-skia-management-2026-02-14.md` already chose a lock + untracked clone model:
+`docs/notes/vendor-skia-management-2026-02-14.md` では、すでに lock + untracked clone model が採用されている。
 
-- `vendor/skia-source.lock` tracks the source URLs and fixed ref.
-- `scripts/fetch_skia_upstream.sh` can clone/fetch `vendor/skia-upstream`.
-- `--ref` supports temporary candidate checkout.
-- `--dest` supports checking out a candidate into another directory.
+- `vendor/skia-source.lock` が source URL と固定 ref を管理する。
+- `scripts/fetch_skia_upstream.sh` は `vendor/skia-upstream` を clone/fetch できる。
+- `--ref` は一時的な候補 checkout をサポートする。
+- `--dest` は候補を別ディレクトリに checkout する用途に使える。
 
-This is a good fit for incremental upgrades because each candidate can be tested without making `vendor/skia-upstream` a tracked submodule.
+各候補を `vendor/skia-upstream` の submodule 化なしで検証できるため、この方式は段階的アップグレードに向いている。
 
 ### Public API coverage generator
 
-`scripts/generate_public_api_coverage.py` extracts public headers from `vendor/skia-upstream` and compares method-level public API coverage against `skia/capi`.
+`scripts/generate_public_api_coverage.py` は `vendor/skia-upstream` から public header を抽出し、method-level の public API coverage を `skia/capi` と比較する。
 
-This is now strong enough to be an upgrade gate because Phase 29-33 closed the steady-state matrix:
+Phase 29-33 で steady-state matrix を閉じたため、この generator は upgrade gate として使える段階にある。
 
-- `missing` must remain 0 after an accepted upgrade.
-- New public APIs from upstream should become `missing` during probe, then be implemented or classified.
-- `false_positive` / `na` / `split_covered` can absorb generator or platform noise when justified.
+- accepted upgrade 後も `missing` は 0 のままにする。
+- upstream 由来の新しい public API は probe 中に `missing` として出る。その後、実装または分類する。
+- `false_positive` / `na` / `split_covered` は、理由が明確であれば generator noise や platform noise を吸収できる。
 
 ### Verification matrix
 
-Phase 30 and Phase 33 established a practical build gate:
+Phase 30 と Phase 33 で実用的な build gate が確立された。
 
 - coverage generator
 - prebuilt `reskia`
@@ -102,37 +102,37 @@ Phase 30 and Phase 33 established a practical build gate:
 - GPU prebuilt smoke
 - source SVG/provider smoke
 
-This is enough to judge small candidate bumps.
+小さな候補 bump を判定するには十分である。
 
-## Readiness Assessment
+## 準備状況の評価
 
-Ready:
+整っているもの:
 
-- Baseline Skia ref is pinned.
-- Local comparison tree exists and is clean.
-- C API coverage is frozen at `missing 0` / `deferred 0`.
-- Callback/provider ownership policies are documented.
-- Optional backend `na` policy is documented.
-- Representative build/smoke matrix exists and passes.
-- Fetch script supports temporary refs.
+- baseline Skia ref は固定されている。
+- ローカル比較ツリーは存在し、clean である。
+- C API coverage は `missing 0` / `deferred 0` で freeze されている。
+- callback/provider ownership policy は文書化されている。
+- optional backend の `na` policy は文書化されている。
+- 代表 build/smoke matrix は存在し、通過している。
+- fetch script は一時 ref をサポートしている。
 
-Not fully ready:
+まだ不足しているもの:
 
-- There is no first-class "compare two Skia refs and emit public API delta" script.
-- `generate_public_api_coverage.py` assumes `vendor/skia-upstream` as the source tree; it does not directly accept a separate candidate Skia checkout path.
-- Source/header sync from upstream into `skia/` is still area-specific and manual.
-- Skia dependency changes from `DEPS`, `gn/*.gni`, generated files, and optional third_party rolls are not automatically classified.
-- The current local `vendor/skia-upstream` remote points at the fork until the fetch script resets it.
-- The local clone appears grafted/shallow from the checked-out baseline, so local history alone is not sufficient for commit-range planning.
+- 2 つの Skia ref を比較して public API delta を出す first-class script がない。
+- `generate_public_api_coverage.py` は `vendor/skia-upstream` を source tree と仮定している。別の候補 Skia checkout path を直接受け取れない。
+- upstream から `skia/` への source/header sync は、まだ area-specific かつ手動である。
+- `DEPS`、`gn/*.gni`、generated files、optional third_party roll 由来の Skia dependency 変更は自動分類されない。
+- 現在のローカル `vendor/skia-upstream` remote は、fetch script が再設定するまでは fork を指している。
+- ローカル clone は checked-out baseline から見て grafted/shallow に見えるため、local history だけでは commit range planning に不十分である。
 
-Overall:
+総合判断:
 
-- Proceed with a bounded upgrade probe.
-- Do not update `vendor/skia-source.lock` to a new baseline until the first probe has a repeatable diff/build report.
+- 範囲を絞った upgrade probe へ進んでよい。
+- ただし、最初の probe で再現可能な diff/build report ができるまでは、`vendor/skia-source.lock` を新しい baseline へ更新しない。
 
-## Recommended Upgrade Strategy
+## 推奨アップグレード戦略
 
-Use three nested levels:
+3 つの段階に分ける。
 
 1. Probe commit
 2. Accepted bump
@@ -140,32 +140,32 @@ Use three nested levels:
 
 ### Level 1: Probe commit
 
-Goal: measure drift without committing to it.
+目的: baseline へ採用する前に drift を測定する。
 
-Recommended steps:
+推奨手順:
 
-1. Select a candidate commit.
-   - Prefer small, dated checkpoints over `main`.
-   - Avoid jumping directly from 2026-02-14 baseline to current main.
-2. Fetch candidate.
-   - Use `scripts/fetch_skia_upstream.sh --ref <candidate>`.
-   - Or use `--dest vendor/skia-upstream-candidate` if keeping the baseline checkout untouched is preferred.
-3. Run public API coverage.
+1. 候補 commit を選ぶ。
+   - `main` そのものではなく、小さな日付単位の checkpoint を優先する。
+   - 2026-02-14 baseline から current main へ直接飛ばない。
+2. 候補を fetch する。
+   - `scripts/fetch_skia_upstream.sh --ref <candidate>` を使う。
+   - baseline checkout を触らずに残したい場合は、`--dest vendor/skia-upstream-candidate` を使う。
+3. public API coverage を実行する。
    - `python3 scripts/generate_public_api_coverage.py`
-   - Record new `missing` / `partial` / `overcovered` / `deferred`.
-4. Diff public headers by area.
+   - 新しい `missing` / `partial` / `overcovered` / `deferred` を記録する。
+4. public header を area ごとに diff する。
    - `include/core`
    - `include/effects`
    - `include/utils`
    - `modules/*/include`
    - `include/gpu`
-5. Diff source list dependencies.
+5. source list dependency を diff する。
    - `gn/*.gni`
    - `DEPS`
-   - module source directories already mirrored into `skia/`
-6. Run representative build/smoke matrix only after source/header sync is attempted.
+   - すでに `skia/` に mirror されている module source directories
+6. source/header sync を試した後にだけ、代表 build/smoke matrix を実行する。
 
-Probe output should be a note under `docs/notes/` with:
+Probe output は `docs/notes/` 配下の note として残す。
 
 - candidate commit
 - public API delta summary
@@ -177,138 +177,138 @@ Probe output should be a note under `docs/notes/` with:
 
 ### Level 2: Accepted bump
 
-Goal: make Reskia compile against the candidate Skia snapshot.
+目的: 候補 Skia snapshot に対して Reskia が compile できる状態にする。
 
-Recommended order:
+推奨順:
 
-1. Start with public headers and low-risk source sync.
-2. Regenerate coverage and classify new rows.
-3. Implement C ABI wrappers for low-risk new public methods.
-4. Add `na` / `false_positive` overrides only with explicit reasons.
-5. Run Phase 30/33 verification matrix.
-6. Record all CMake/source-list changes.
+1. public headers と low-risk source sync から始める。
+2. coverage を再生成し、新規行を分類する。
+3. low-risk な新規 public method に C ABI wrapper を実装する。
+4. `na` / `false_positive` override は、理由を明示できる場合だけ追加する。
+5. Phase 30/33 verification matrix を実行する。
+6. CMake/source-list の変更をすべて記録する。
 
-Accepted bump should still be one small Skia candidate, not a broad latest jump.
+Accepted bump でも、広い latest jump ではなく、1 つの小さな Skia candidate に留める。
 
 ### Level 3: Baseline lock update
 
-Goal: make the candidate the new official Reskia baseline.
+目的: 候補を Reskia の新しい公式 baseline にする。
 
-Only do this after:
+これを行う条件:
 
-- coverage returns to `missing 0` / `deferred 0`
-- representative builds pass
-- source sync notes are written
-- optional backend changes are classified
-- `vendor/skia-source.lock` is updated with the accepted commit and date
+- coverage が `missing 0` / `deferred 0` に戻っている。
+- representative builds が通っている。
+- source sync note が書かれている。
+- optional backend changes が分類されている。
+- `vendor/skia-source.lock` が accepted commit と日付で更新されている。
 
-## Candidate Selection
+## 候補 commit の選び方
 
-Do not use floating `main` directly.
+floating `main` を直接使わない。
 
-Recommended candidate types:
+推奨する候補:
 
-1. A specific commit from official `main`.
-2. A dated checkpoint commit selected from Skia Gitiles.
-3. A commit known to match a dependency roll boundary if dependency changes are the focus.
+1. 公式 `main` の特定 commit。
+2. Skia Gitiles から選んだ日付単位の checkpoint commit。
+3. dependency change を調査対象にする場合は、dependency roll boundary に対応する commit。
 
-Initial bump size:
+最初の bump size:
 
-- Start with 1-2 weeks after `0d49b661...`.
-- If the diff is small and builds are clean, increase to monthly checkpoints.
-- If the diff is large, split by feature area instead of time.
+- `0d49b661...` の 1-2 週間後から始める。
+- diff が小さく build が安定していれば、月単位の checkpoint へ広げる。
+- diff が大きい場合は、時間単位ではなく feature area ごとに分割する。
 
-Why:
+理由:
 
-- The current baseline is from 2026-02-14.
-- Current upstream main is months ahead and actively rolling dependency repositories.
-- A direct jump would mix public API drift, source-list drift, dependency drift, and optional backend drift in one review.
+- 現在の baseline は 2026-02-14 の commit である。
+- 現在の upstream main は数か月先に進んでおり、dependency repository roll も頻繁に入っている。
+- 直接 jump すると、public API drift、source-list drift、dependency drift、optional backend drift が 1 つの review に混ざる。
 
-## Proposed Phases
+## 提案フェーズ
 
 ### Phase U0: Upgrade Probe Tooling
 
-Scope:
+範囲:
 
-- Add or document a repeatable probe checklist.
-- Prefer adding a script that can compare current baseline vs candidate public header extraction.
-- Consider adding `--skia-root` to `scripts/generate_public_api_coverage.py` so candidate checkouts do not have to replace `vendor/skia-upstream`.
+- 再現可能な probe checklist を追加または文書化する。
+- 現 baseline と candidate の public header extraction を比較できる script を追加するのが望ましい。
+- 候補 checkout で `vendor/skia-upstream` を置き換えずに済むよう、`scripts/generate_public_api_coverage.py` に `--skia-root` を追加することを検討する。
 
-Exit criteria:
+終了条件:
 
-- Can produce a public API delta report without changing `vendor/skia-source.lock`.
+- `vendor/skia-source.lock` を変更せずに public API delta report を生成できる。
 
 ### Phase U1: First Small Skia Bump Probe
 
-Scope:
+範囲:
 
-- Choose a small candidate after `0d49b661...`.
-- Fetch candidate into `vendor/skia-upstream` or a temporary candidate checkout.
-- Run coverage generator.
-- Record public API delta and build risk.
+- `0d49b661...` より少し後の小さな候補を選ぶ。
+- 候補を `vendor/skia-upstream` または temporary candidate checkout に fetch する。
+- coverage generator を実行する。
+- public API delta と build risk を記録する。
 
-Exit criteria:
+終了条件:
 
-- A probe note says whether the candidate is safe to accept.
+- probe note に、候補を accept できるかどうかが記録されている。
 
 ### Phase U2: Low-Risk Core/Effects/Utils Sync
 
-Scope:
+範囲:
 
-- Only sync public headers and source files for low-risk areas.
-- Avoid GPU, text shaping, Skottie, Graphite, Dawn/Vulkan/D3D changes.
-- Bring coverage back to freeze.
+- low-risk area の public headers と source files だけを同期する。
+- GPU、text shaping、Skottie、Graphite、Dawn/Vulkan/D3D changes は避ける。
+- coverage を freeze 状態へ戻す。
 
-Exit criteria:
+終了条件:
 
-- prebuilt/source `reskia` builds pass.
-- coverage returns to `missing 0`.
+- prebuilt/source `reskia` builds が通る。
+- coverage が `missing 0` に戻る。
 
 ### Phase U3: Module Sync
 
-Scope:
+範囲:
 
-- SVG / skresources / skunicode / skshaper / skparagraph changes.
-- Respect optional dependency gates.
+- SVG / skresources / skunicode / skshaper / skparagraph changes。
+- optional dependency gates を尊重する。
 
-Exit criteria:
+終了条件:
 
-- source SVG/provider smoke passes.
-- text stack smoke passes where enabled.
+- source SVG/provider smoke が通る。
+- 有効化されている場合は text stack smoke が通る。
 
 ### Phase U4: GPU/Graphite Sync
 
-Scope:
+範囲:
 
-- Ganesh/Graphite public header and source drift.
-- Optional backend rows stay behind Phase 32 roadmap unless a backend-specific bridge is planned.
+- Ganesh/Graphite public header と source drift。
+- Optional backend rows は、backend-specific bridge を計画する場合を除き Phase 32 roadmap の背後に残す。
 
-Exit criteria:
+終了条件:
 
-- GPU prebuilt smoke builds and exits `PASS` or expected `SKIP`/`PASS`.
-- New GPU public APIs are implemented or classified.
+- GPU prebuilt smoke が build され、`PASS` または expected `SKIP`/`PASS` で終了する。
+- 新しい GPU public APIs が実装または分類されている。
 
 ### Phase U5: Lock Update
 
-Scope:
+範囲:
 
-- Update `vendor/skia-source.lock`.
-- Record accepted commit and date.
-- Regenerate final coverage matrix.
-- Run Phase 33 build sweep.
+- `vendor/skia-source.lock` を更新する。
+- accepted commit と日付を記録する。
+- final coverage matrix を再生成する。
+- Phase 33 build sweep を実行する。
 
-Exit criteria:
+終了条件:
 
-- The candidate becomes the new baseline.
+- 候補 commit が新しい baseline になる。
 
-## Immediate Recommendation
+## 直近の推奨
 
-Proceed, but start with Phase U0 rather than changing the lock.
+進めてよい。ただし、lock 変更ではなく Phase U0 から始める。
 
-The next concrete task should be:
+次の具体的なタスク:
 
-1. Add candidate-comparison tooling or a documented manual checklist.
-2. Select a first small candidate commit.
-3. Run a probe that intentionally does not update `vendor/skia-source.lock`.
+1. candidate comparison tooling を追加する、または manual checklist を文書化する。
+2. 最初の小さな candidate commit を選ぶ。
+3. `vendor/skia-source.lock` を意図的に更新しない probe を実行する。
 
-This keeps the current stable freeze intact while making upgrade risk visible.
+これにより、現在の安定した freeze を維持したまま、アップグレードリスクを可視化できる。
