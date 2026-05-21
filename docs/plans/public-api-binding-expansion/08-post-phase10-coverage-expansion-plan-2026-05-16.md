@@ -20,7 +20,7 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 | `overcovered` | 0 |
 | `deferred` | 0 |
 
-Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covered 13`、`na 10` のみ。実装待ちとしての Phase 10 行は残っていない。
+Phase 29 で `missing` / `deferred` / `partial` / `overcovered` はすべて 0 として freeze した。以降の phase は coverage 数字を増やす実装追加ではなく、freeze 状態を壊さないための検証・命名・所有権・optional backend roadmap の整備を主目的にする。
 
 ## Missing Distribution
 
@@ -512,3 +512,104 @@ Progress:
 
 - 2026-05-21: `GrExternalTexture_new` / `delete` / `getBackendTexture` / `dispose`、`GrExternalTextureGenerator_new` / `delete` / `generateExternalTexture`、`SkImages_DeferredFromTextureGenerator` を追加した。external texture は `GrBackendTexture` を copy して保持し、dispose は一度だけ、delete 時にも未 dispose なら dispose する。generator callback が返した external texture object は bridge が consume して `std::unique_ptr<GrExternalTexture>` に移す。
 - 2026-05-21: `public-api-phase28-ganesh-external-texture-bridge-2026-05-21.md` と `public-api-phase-28-ganesh-external-texture-overrides.csv` を追加し、5 行を `covered` に更新した。`test_gpu_context_capi_smoke` は build/link 成功し、Metal device unavailable により Graphite/Metal path は skip されたが Ganesh external texture bridge smoke は `PASS`。
+
+## Phase 29: Final Coverage Freeze / Documentation Closeout
+
+目的: Phase 28 後の `missing 0` / `deferred 0` を最終 coverage freeze として固定し、以降の作業を coverage expansion ではなく freeze maintenance として再定義する。
+
+Tasks:
+
+1. 最新 matrix を generator で再生成し、status count を記録する。
+2. `missing` / `deferred` / `partial` / `overcovered` がすべて 0 であることを final freeze note に残す。
+3. `false_positive` / `na` / `no_public_methods_found` / `split_covered` の意味を freeze invariant として明文化する。
+4. Phase 26 の freeze は `deferred 5` 時点の中間 freeze、Phase 29 は `deferred 0` の final freeze として位置づける。
+5. 次 phase を verification hardening / API surface audit / optional backend roadmap / full build sweep に分ける。
+
+Expected outcome:
+
+- `docs/notes/bindings/public-api-phase29-final-coverage-freeze-2026-05-21.md` に final snapshot を残す。
+- 以降、coverage matrix の steady state は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0` とする。
+- 新しい missing が出た場合は、同じ変更内で implementation / classification / design-required follow-up のどれかに routing する。
+
+Progress:
+
+- 2026-05-21: generator を再実行し、`covered 2811`、`split_covered 33`、`false_positive 275`、`na 198`、`no_public_methods_found 104`、`missing 0`、`deferred 0`、`partial 0`、`overcovered 0` を Phase 29 final freeze snapshot として記録した。
+
+## Phase 30: Verification Matrix Hardening
+
+目的: coverage freeze を build/test matrix で守れるよう、現在手元で確認している smoke を CI/ローカル検証観点で整理する。
+
+Tasks:
+
+1. C API smoke targets を module/feature flag ごとに一覧化する。
+2. prebuilt / source / system mode のうち、現実的に継続検証できる組み合わせを明示する。
+3. GPU/Graphite/Metal unavailable 環境の `SKIP/PASS` 条件を記録し、失敗と区別できるようにする。
+4. `scripts/generate_public_api_coverage.py` の実行を coverage freeze check として扱う運用を文書化する。
+
+Expected outcome:
+
+- coverage regression を generator count と smoke target の両方で検出できる。
+- optional backend が使えない環境でも、skip 条件が明示されているため false failure を避けられる。
+
+Progress:
+
+- 2026-05-21: `public-api-phase30-verification-matrix-hardening-2026-05-21.md` を追加し、freeze check を `python3 scripts/generate_public_api_coverage.py` と代表 smoke matrix に分けた。prebuilt GPU tree では `test_gpu_context_capi_smoke` / `test_gpu_surface_capi_smoke` を build/run し、Metal device unavailable は `SKIP` のうえ `PASS` として扱う条件を固定した。source SVG tree では `test_svg_image_capi_smoke`、`test_svg_types_capi_smoke`、`test_svg_canvas_capi_smoke`、`test_skresources_capi_smoke` を build/run した。
+
+## Phase 31: Header / Naming / Ownership Audit
+
+目的: 大量追加した C ABI の naming、ownership、null handling、callback lifetime を横断監査し、API surface の保守性を上げる。
+
+Tasks:
+
+1. `skia/capi` の newly added symbols を header ごとに棚卸しする。
+2. `new` / `delete` / `ref` / `unref` / ownership transfer naming が既存規約と一致するか確認する。
+3. callback/provider bridge の release callback、consume semantics、threading assumptions を note に集約する。
+4. null input policy と output parameter policy のばらつきを小さくする。
+
+Expected outcome:
+
+- Phase 5A 以降に追加した callback/provider foundation の所有権ルールが、個別 note だけでなく横断ドキュメントから参照できる。
+- ABI 名前・lifetime 表現の drift を早期に検出できる。
+
+Progress:
+
+- 2026-05-21: `public-api-phase31-header-naming-ownership-audit-2026-05-21.md` を追加し、`new/delete`、`ref/unref/release`、`borrowed and retained`、`consumes`、callback-scoped pointer、global registration replacement policy、null/output parameter policy を横断ルールとして固定した。Phase 31 時点では即時修正が必要な ABI 不整合は見つからず、`reskia_graphite_release_proc_t` と共有 `reskia_callback_release_proc_t` の使い分けは今後の callback API で注意する cleanup observation として残した。
+
+## Phase 32: Optional Backend Roadmap
+
+目的: coverage 上は `na` として閉じた optional/platform backend 行について、将来実装する場合の入口と条件を分けておく。
+
+Tasks:
+
+1. D3D/Vulkan/Dawn/Metal/platform-private の `na` 行を backend family ごとに再分類する。
+2. Reskia の現在の feature flags と dependency modes で実装可能なもの、将来 dependency が必要なものを分ける。
+3. C ABI へ出す場合に必要な ownership/design guard を短く記録する。
+
+Expected outcome:
+
+- `na` は放置ではなく、現時点の platform/dependency 境界として説明できる。
+- optional backend を将来有効化するときに、coverage matrix を再利用して作業順を立てられる。
+
+Progress:
+
+- 2026-05-21: `public-api-phase32-optional-backend-roadmap-2026-05-21.md` を追加し、GPU/platform backend 系 `na` 77 行を D3D 17、Vulkan 29、Dawn 5、GL loader 13、Metal allocator 2、GPU private/internal 11 に分けた。現時点では coverage status を変更せず、将来実装する場合は backend family ごとに optional bridge、native dependency、smoke target、ownership policy を揃えてから `na` から `covered` へ移す方針にした。
+
+## Phase 33: Full Build Sweep
+
+目的: Phase 29 final freeze 後の代表 build をまとめて確認し、coverage freeze と build health の closeout を行う。
+
+Tasks:
+
+1. prebuilt mode の主要 smoke target を build/run する。
+2. source mode の SVG/text/provider 系 smoke target を build/run する。
+3. 可能なら `reskia` main target の clean-ish configure/build を再確認する。
+4. build unavailable な optional path は、理由と再現条件を closeout note に記録する。
+
+Expected outcome:
+
+- Phase 29 final freeze 後に、少なくとも代表構成で build/link regression がないことを確認できる。
+- 残る作業が coverage implementation ではなく、環境依存の full verification debt であることを明確にできる。
+
+Progress:
+
+- 2026-05-21: `public-api-phase33-full-build-sweep-2026-05-21.md` を追加した。`docrefresh-prebuilt` と `docrefresh-source` の `reskia` main target は build 成功。prebuilt GPU tree の `test_gpu_context_capi_smoke` / `test_gpu_surface_capi_smoke` は build/run 成功し、Metal device unavailable は `SKIP` のうえ `PASS`。source SVG tree の `test_svg_image_capi_smoke`、`test_svg_types_capi_smoke`、`test_svg_canvas_capi_smoke`、`test_skresources_capi_smoke` は build/run 成功。coverage generator も `missing 0` / `deferred 0` / `partial 0` / `overcovered 0` を維持した。

@@ -4,8 +4,9 @@ Date: 2026-05-21
 
 Superseded note: this audit froze the Phase 26 state with `missing 0` and
 `deferred 5`. Phase 28 later implemented the Ganesh external texture bridge and
-returned `deferred` to 0; see
-`docs/notes/bindings/public-api-phase28-ganesh-external-texture-bridge-2026-05-21.md`.
+returned `deferred` to 0. Phase 29 is the final coverage freeze with
+`missing 0` / `deferred 0`; see
+`docs/notes/bindings/public-api-phase29-final-coverage-freeze-2026-05-21.md`.
 
 ## Snapshot
 
@@ -64,10 +65,10 @@ Recently verified:
 - source SVG build and smoke for `test_svg_image_capi_smoke`
 - source SVG smoke for `test_svg_types_capi_smoke`
 
-Known verification debt:
+Historical verification debt:
 
-- `cmake --build skia/cmake-build-codex-phase9-gpu --target test_gpu_context_capi_smoke -j 8` reaches the link step but fails on the pre-existing `libsvg.a` unresolved symbol `SkShaper::Make(sk_sp<SkFontMgr>)`.
-- This is tracked as build verification debt, not as a public API coverage gap.
+- At Phase 26 time, `cmake --build skia/cmake-build-codex-phase9-gpu --target test_gpu_context_capi_smoke -j 8` reached the link step but failed on the pre-existing `libsvg.a` unresolved symbol `SkShaper::Make(sk_sp<SkFontMgr>)`.
+- Phase 27 fixed this by adding Apple prebuilt fallback `skunicode` / `skshaper` targets. The Phase 26 item is historical context, not active coverage debt.
 
 ## Next Work
 
