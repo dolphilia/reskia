@@ -3,7 +3,9 @@
 #include <cstring>
 
 #include "capi/sk_canvas.h"
+#include "capi/sk_matrix.h"
 #include "capi/sk_memory_stream.h"
+#include "capi/sk_open_type_svg_decoder.h"
 #include "capi/sk_stream.h"
 #include "capi/sk_svg_dom.h"
 #include "capi/sk_svg_node.h"
@@ -34,6 +36,54 @@ bool smoke_svg_node_factories() {
     SkSVGNode_release(not_filter_effect);
     SkSVGNode_release(filter_effect);
     if (!check(filter_check, "SkSVGFe_IsFilterEffect")) {
+        return false;
+    }
+
+    SkSVGPresentationAttributes_delete(nullptr);
+    reskia_svg_presentation_attributes_t *initial_attributes = SkSVGPresentationAttributes_MakeInitial();
+    if (!check(initial_attributes != nullptr, "SkSVGPresentationAttributes_MakeInitial")) {
+        return false;
+    }
+    SkSVGPresentationAttributes_delete(initial_attributes);
+
+    const char svg_decoder_data[] =
+            "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'>"
+            "<rect id='glyph1' x='1' y='1' width='8' height='8' fill='context-fill'/>"
+            "</svg>";
+    reskia_open_type_svg_decoder_t *decoder = SkSVGOpenTypeSVGDecoder_Make(
+            reinterpret_cast<const uint8_t *>(svg_decoder_data), std::strlen(svg_decoder_data));
+    reskia_canvas_t *decoder_canvas = SkCanvas_newWithSizeProps(16, 16, nullptr);
+    const uint32_t palette[] = {0xFF0000FFu};
+    const bool decoder_ok =
+            decoder != nullptr &&
+            decoder_canvas != nullptr &&
+            SkSVGOpenTypeSVGDecoder_approximateSize(decoder) == std::strlen(svg_decoder_data) &&
+            !SkSVGOpenTypeSVGDecoder_render(nullptr, decoder_canvas, 16, 1, 0xFF000000u, palette, 1) &&
+            !SkSVGOpenTypeSVGDecoder_render(decoder, nullptr, 16, 1, 0xFF000000u, palette, 1) &&
+            SkSVGOpenTypeSVGDecoder_render(decoder, decoder_canvas, 16, 1, 0xFF000000u, palette, 1);
+    SkCanvas_delete(decoder_canvas);
+    SkSVGOpenTypeSVGDecoder_delete(decoder);
+    if (!check(decoder_ok, "SkSVGOpenTypeSVGDecoder")) {
+        return false;
+    }
+
+    reskia_svg_node_t *parent = SkSVGG_Make();
+    reskia_svg_node_t *child = SkSVGRect_Make();
+    const sk_matrix_t identity_matrix = SkMatrix_I();
+    const bool mutation_ok =
+            parent != nullptr &&
+            child != nullptr &&
+            !SkSVGNode_appendChild(nullptr, child) &&
+            !SkSVGNode_appendChild(parent, nullptr) &&
+            SkSVGNode_appendChild(parent, child) &&
+            !SkSVGTransformableNode_setTransform(parent, nullptr) &&
+            SkSVGTransformableNode_setTransform(
+                    parent,
+                    reinterpret_cast<const reskia_matrix_t *>(static_sk_matrix_get_ptr(identity_matrix)));
+    static_sk_matrix_delete(identity_matrix);
+    SkSVGNode_release(child);
+    SkSVGNode_release(parent);
+    if (!check(mutation_ok, "SkSVGNode appendChild/setTransform")) {
         return false;
     }
 

@@ -10,11 +10,11 @@ Phase 10 では coverage quality / overload polish / deferred small-gap cleanup 
 
 | status | count |
 | --- | ---: |
-| `covered` | 2713 |
-| `missing` | 143 |
-| `false_positive` | 274 |
+| `covered` | 2781 |
+| `missing` | 67 |
+| `false_positive` | 275 |
 | `split_covered` | 33 |
-| `na` | 154 |
+| `na` | 161 |
 | `no_public_methods_found` | 104 |
 | `partial` | 0 |
 | `overcovered` | 0 |
@@ -26,11 +26,8 @@ Phase 10 backlog は 185 行で、内訳は `false_positive 162`、`split_covere
 
 | area | missing | 主な内容 |
 | --- | ---: | --- |
-| `include/gpu` | 98 | Ganesh / Graphite backend value、context/recorder、platform backend |
-| `modules/svg` | 18 | SVG node render helpers、resource/provider loading、OpenType SVG decoder |
-| `modules/sksg` | 25 | RenderNode graph primitives/effects、invalidation、nodeAt |
-| `include/core` | 1 | global registration |
-| `include/codec` | 1 | codec registration |
+| `include/gpu` | 66 | Graphite async/provider、GL/Vulkan extension/interface、allocator、platform backend value |
+| `modules/svg` | 1 | `SkSVGImage::LoadImage` resource/provider loading |
 
 Phase 16 audit residual index view (reference; Phase 17/18 covered moves are reflected in the matrix counts above):
 
@@ -44,7 +41,7 @@ Phase 16 audit residual index view (reference; Phase 17/18 covered moves are ref
 | `P3` | 286 |
 | `P0` | 288 |
 
-Phase 17A で Graphite `BackendSemaphore` / `TextureInfo::isCompatible` / YUV(A) / options、Ganesh `GrYUVABackendTextureInfo` / `GrYUVABackendTextures`、`GrDriverBugWorkarounds` を covered に移した。Phase 18A では SVG type value accessor、node factory、filter-effect query、`SkSVGLengthContext` helper を covered に移したため、Phase 16 audit snapshot から `missing` は 109 行減少した。
+Phase 17A で Graphite `BackendSemaphore` / `TextureInfo::isCompatible` / YUV(A) / options、Ganesh `GrYUVABackendTextureInfo` / `GrYUVABackendTextures`、`GrDriverBugWorkarounds` を covered に移した。Phase 18A では SVG type value accessor、node factory、filter-effect query、`SkSVGLengthContext` helper、node mutation helper、OpenType SVG decoder を covered に移したため、Phase 16 audit snapshot から `missing` は 126 行減少した。
 
 ## Planning Principles
 
@@ -276,6 +273,7 @@ Progress:
 
 - 2026-05-20: Phase 18A first pass として `SkSVGTypes.h` の lightweight value wrapper を追加した。`SkSVGIRI` / `SkSVGPaint` は owned copy の `SkString` / value object を返し、`SkSVGPaint::color` / `iri` と `SkSVGStopColor::color` は upstream assert 条件を C wrapper 側で型確認してから呼ぶ。`SkSVGLineJoin` / `SkSVGSpreadMethod` / `SkSVGVisibility` / `SkSVGStopColor` / `SkSVGObjectBoundingBoxUnits` / `SkSVGTextAnchor` は enum type accessor を追加し、`c_skia_svg_types_capi_smoke` で roundtrip と null-safe cleanup を検証済み。matrix は `covered 2669`、`missing 187`、`modules/svg missing 62`。
 - 2026-05-20: Phase 18A continuation として SVG node `Make` factory 群、`SkSVGNode_ref` / `unref` / `release`、`SkSVGFe::IsFilterEffect` wrapper を追加した。factory は `sk_sp<T>::release()` で owned node を C ABI に渡し、DOM 由来 borrowed node は既存どおり解放対象外とする。`SkSVGLengthContext` は render context 本体から切り離せる lightweight helper として `viewPort` / `setViewPort` / `resolve` / `resolveRect` を追加した。`c_skia_svg_dom_capi_smoke` と `c_skia_svg_types_capi_smoke` で検証済み。matrix は `covered 2713`、`missing 143`、`modules/svg missing 18`。
+- 2026-05-20: Phase 18A closeout として `SkSVGNode_appendChild`、`SkSVGTransformableNode_setTransform`、`SkSVGPresentationAttributes_MakeInitial`、`SkSVGOpenTypeSVGDecoder_Make` / `approximateSize` / `render` wrapper を追加した。`appendChild` は child を retain して渡し、caller-owned node を消費しない。render-context 直結の `SkSVGNode::render` / `asPaint` / `asPath` / `objectBoundingBox` は `SkSVGDOM_render` / `renderNode` と今後の higher-level extraction API に任せるため Phase 18 override で `na`、macro 抽出された `SVG_PRES_ATTR` は `false_positive` に分類した。matrix は `covered 2725`、`missing 126`、`modules/svg missing 1`。残る SVG 行は `SkSVGImage::LoadImage` のみで、skresources provider と image asset ownership を伴うため resource/provider follow-up に残す。
 
 ## Phase 19: SkSG Graph Polish
 
@@ -290,6 +288,10 @@ Priority:
 Expected outcome:
 
 - SkSG graph factory rows を covered に寄せ、iterator-only rows は明示設計済みにする。
+
+Progress:
+
+- 2026-05-20: Phase 19A として SkSG `ColorFilter` / `Gradient` / `Image` / `Merge` / `Text` / `ShaderPaint` / `ImageFilter` / `Transform` / `GeometryTransform` / `ShaderEffect::setShader` / `Node::revalidate` / `InvalidationController` begin/end wrapper を追加した。`InvalidationController` は C iterator object ではなく、現時点の invalidation rect 数を返す count-style helper として exposed し、既存 `bounds` と併用する。`Transform::MakeConcat` は同一 transform を左右に渡すと upstream debug assert になるため C wrapper 側で invalid 入力として `NULL` を返す。`c_skia_sksg_capi_smoke` で graph/effect factory、getter、ref/unref、null path を検証済み。matrix は `covered 2750`、`missing 101`、`modules/sksg missing 0`。
 
 ## Phase 20: Global Registration Design
 
@@ -306,9 +308,100 @@ Expected outcome:
 
 - まず設計メモと API skeleton を作り、通常の borrowed callback bridge と混同しない。
 
+Progress:
+
+- 2026-05-21: Phase 20A として設計メモ `docs/notes/bindings/phase20-global-registration-capi-design-2026-05-21.md` を追加し、`SkCodec_Register` と `SkTypeface_Register` を実装した。`SkCodec_Register` は現行 upstream の `SkCodecs::Register` に固定 decoder id `reskia` で接続し、peek/make callback と context replacement を提供する。`SkTypeface_Register` は upstream factory callback が matched `FactoryId` を受け取れないため、初回登録 id を process 内で固定し、同一 id の context replacement のみ許可する。`c_skia_codec_smoke` で null rejection、callback dispatch、replacement release、different-id rejection を検証済み。matrix は `covered 2752`、`missing 99`、global registration missing 0。
+
+## Phase 21: GPU Residual Triage Refresh
+
+目的: 残る `include/gpu` 98 行を、実装可能な value wrapper、platform guard / optional backend、abstract provider / callback design に再分類する。
+
+Residual buckets:
+
+1. Low-risk value wrappers: `GrMockTypes`、`GrGLTypes`、`GrVkTypes`、`VulkanTypes`、`GrBackendDrawableInfo`、一部 `GrContextOptions`。
+2. Platform backend value wrappers: `GrGLExtensions` / `GrGLInterface`、`VulkanExtensions`、Graphite `DawnTextureInfo` / `MtlTextureInfo` / `VulkanTextureInfo`、Metal / Vulkan allocator 周辺。
+3. Graphite ownership/API design: `Context::insertRecording`、async readback、`Recorder::snap`、`addFinishInfo`、`makeDeferredCanvas`、`ImageProvider`。
+4. Abstract callback/provider rows: `ShaderErrorHandler`、`GrExternalTextureGenerator` / `GrExternalTexture`、`VulkanMemoryAllocator`、`MtlMemoryAllocator`。
+
+Tasks:
+
+1. `public-api-phase-21-gpu-residual-routing.csv` を追加し、98 行を `value_wrapper` / `platform_guard` / `provider_design` / `callback_design` / `abstract_virtual` に分類する。
+2. platform guard が明確な row は Phase 15/17 override 方針と同じ語彙で `na` 候補にする。
+3. 実装候補は Phase 22 の small value batch に移し、provider/callback は Phase 23 の設計 batch に移す。
+
+Expected outcome:
+
+- `include/gpu` 98 行の next action が row-level で明示される。
+- Phase 22 の実装対象を、既存 GPU smoke で検証できる value wrapper に絞る。
+
+Progress:
+
+- 2026-05-21: `public-api-phase-21-gpu-residual-routing.csv` を追加し、GPU missing 98 行を row-level に routing した。内訳は next phase 別に `Phase 22` 57 行、`Phase 23` 38 行、`Phase 21` platform guard 判定 3 行。bucket 別では `value_wrapper` 33、`platform_value_wrapper` 24、`provider_design` 20、`allocator_design` 14、`callback_design` 4、`platform_guard` 3。Phase 22 は mock/GL/Vulkan/Metal/DrawableInfo/ContextID の small value wrapper、Phase 23 は Graphite async/provider、external texture、allocator、GL/Vulkan loader callback 設計に分けた。
+- 2026-05-21: Phase 21 platform guard closeout として Dawn-only `DawnTextureInfo` constructor 3 行を `public-api-phase-21-gpu-platform-overrides.csv` で `na` に分類した。Dawn backend は `RESKIA_ENABLE_GPU_DAWN=ON` と Dawn/WebGPU C++ headers が必要な optional backend で、現行 portable C ABI coverage からは外す。matrix は `covered 2752`、`missing 96`、`na 161`、`include/gpu missing 95`。
+
+## Phase 22: GPU Value Wrapper Final Batch
+
+目的: Phase 21 で `value_wrapper` とした GPU row を実装し、coverage を安全に上げる。
+
+Priority:
+
+1. Mock / GL / Vulkan lightweight structs: equality、protected query、constructor、basic accessor。
+2. `GrBackendDrawableInfo` と `GrContextOptions` の default/copy/accessor。
+3. Graphite backend texture info value constructors は backend guard と dependency availability を確認してから追加する。
+
+Acceptance:
+
+- `c_skia_gpu_context_capi_smoke` または `c_skia_gpu_surface_capi_smoke` に null path と roundtrip を追加する。
+- optional backend guarded row は、ビルド不能な backend で無理に public C API を出さず、guarded implementation または documented `na` にする。
+- Phase 22 後、GPU `missing` は provider/callback/platform allocator 設計行だけに残す。
+
+Progress:
+
+- 2026-05-21: Phase 22 first batch として Ganesh mock value wrapper (`GrMockTextureInfo` / `GrMockRenderTargetInfo` / `GrMockOptions`) と GL value wrapper (`GrGLTextureInfo` / `GrGLFramebufferInfo`) を追加した。さらに `GrMtlTextureInfo` default/equality、`GrContextOptions` default/copy/suppressPrints、`GrBackendDrawableInfo` guarded wrapper を追加した。`GrBackendDrawableInfo` は upstream header が Vulkan third_party header を直接要求するため、現行 portable GPU build では stub fallback、Vulkan header がある構成のみ native `GrBackendDrawableInfo` に接続する。matrix は `covered 2781`、`missing 67`、`include/gpu missing 66`。`test_gpu_context_capi_smoke` target は `sk_gpu_backend_surface.cpp` / `sk_gpu_context.cpp` の compile まで到達したが、既存の `libsvg.a` 由来 `SkShaper::Make(sk_sp<SkFontMgr>)` 未解決で link に失敗した。
+
+## Phase 23: GPU Provider / Async / Allocator Design
+
+目的: GPU の abstract provider / callback / allocator 行を、実装するものと対象外にするものへ分ける。
+
+Design targets:
+
+- Graphite `Context` async readback and `insertRecording`
+- Graphite `Recorder::snap` / `addFinishInfo` / `makeDeferredCanvas`
+- Graphite `ImageProvider`
+- Ganesh `GrExternalTextureGenerator` / `GrExternalTexture`
+- `ShaderErrorHandler`
+- Vulkan / Metal memory allocator interfaces
+
+Design requirements:
+
+- callback context lifetime、release timing、threading、GPU queue / recorder ownership を Phase 5A/20 と同じ語彙で書く。
+- returned GPU resource handle の ownership と backend-specific guard を明示する。
+- abstract virtual hooks を C ABI に出す場合は concrete C++ bridge class を作る。そうでない場合は `na` 理由を matrix override に残す。
+
+Expected outcome:
+
+- `docs/notes/bindings/phase23-gpu-provider-async-allocator-design-YYYY-MM-DD.md` を追加する。
+- 実装しない row は `na` / `false_positive` に分類し、実装する row は Phase 24+ に移す。
+
+## Phase 24: SVG Image Resource Loading
+
+目的: 最後の `modules/svg` 1 行、`SkSVGImage::LoadImage` を resource/provider ownership とともに処理する。
+
+Tasks:
+
+1. `SkSVGIRI`、`SkSVGPreserveAspectRatio`、`SkSVGImage::ImageInfo` の C ABI 表現を確認する。
+2. 既存 `skresources::ResourceProvider` wrapper から `SkSVGImage::LoadImage` に渡せる provider ownership を設計する。
+3. `ImageInfo` の返却を owned result struct にするか、image / destination rect / intrinsic size などの accessor に分割するか決める。
+4. `c_skia_svg_dom_capi_smoke` または skresources smoke に null/failure path と minimal provider path を追加する。
+
+Expected outcome:
+
+- 実装可能なら `SkSVGImage_LoadImage` と `ImageInfo` wrapper を追加して `modules/svg missing 0` にする。
+- 依存が過大な場合でも、row-level `na` ではなく provider follow-up として設計メモに明確な blocker を残す。
+
 ## Recommended Order
 
-1. Phase 17A: GPU low-risk value wrappers。残数が最大で、既存 GPU smoke に足しやすい。
-2. Phase 18A: SVG value accessors / node factories。DOM/render smoke と接続しやすい。
-3. Phase 19A: SkSG remaining factories。既存 SkSG holder と smoke を活かせる。
-4. Phase 17B/20: callback/provider/global registration design。設計リスクが高いため、value/object rows の後にまとめる。
+1. Phase 21: GPU residual triage refresh。98 行を実装候補と設計候補に分ける。
+2. Phase 22: GPU value wrapper final batch。既存 smoke で検証できる small value row を先に減らす。
+3. Phase 23: GPU provider / async / allocator design。callback/resource ownership を文書化してから実装可否を決める。
+4. Phase 24: SVG image resource loading。残り 1 行を skresources provider と `ImageInfo` ownership と一緒に処理する。

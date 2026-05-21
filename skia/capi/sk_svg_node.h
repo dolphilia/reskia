@@ -8,7 +8,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_svg_node_t reskia_svg_node_t;
+typedef struct reskia_svg_presentation_attributes_t reskia_svg_presentation_attributes_t;
 typedef struct reskia_svg_value_t reskia_svg_value_t;
 
 #ifdef __cplusplus
@@ -24,6 +26,11 @@ int32_t SkSVGNode_tag(reskia_svg_node_t *node);
 void SkSVGNode_ref(reskia_svg_node_t *node);
 void SkSVGNode_unref(reskia_svg_node_t *node);
 void SkSVGNode_release(reskia_svg_node_t *node);
+bool SkSVGNode_appendChild(reskia_svg_node_t *parent, const reskia_svg_node_t *child);
+bool SkSVGTransformableNode_setTransform(reskia_svg_node_t *node, const reskia_matrix_t *matrix);
+
+reskia_svg_presentation_attributes_t *SkSVGPresentationAttributes_MakeInitial(void);
+void SkSVGPresentationAttributes_delete(reskia_svg_presentation_attributes_t *attributes);
 
 reskia_svg_node_t *SkSVGCircle_Make(void);
 reskia_svg_node_t *SkSVGClipPath_Make(void);

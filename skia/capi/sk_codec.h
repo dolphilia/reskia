@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "reskia_callback.h"
 #include "../handles/static_sk_codec.h"
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_i_rect.h"
@@ -34,6 +35,8 @@ typedef int32_t reskia_codec_encoded_image_format_t;
 typedef int32_t reskia_codec_result_code_t;
 typedef int32_t reskia_codec_scanline_order_t;
 typedef int32_t reskia_codec_selection_policy_t;
+typedef bool (*reskia_codec_peek_proc_t)(const void *data, size_t size, void *user_data);
+typedef sk_codec_t (*reskia_codec_make_proc_t)(sk_stream_t stream, reskia_codec_result_t *result, void *user_data);
 
 void SkCodec_delete(reskia_codec_t *codec); // (SkCodec* codec). NULL codec is no-op.
 sk_image_info_t SkCodec_getInfo(reskia_codec_t *codec); // (SkCodec* codec) -> sk_image_info_t. NULL codec returns 0.
@@ -132,7 +135,13 @@ sk_codec_t SkCodec_MakeFromStream(sk_stream_t stream, reskia_codec_result_t *res
  */
 sk_codec_t SkCodec_MakeFromData(sk_data_t data, reskia_png_chunk_reader_t *pngChunkReader);
 
-//void SkCodec_Register(bool (*peek)(const void*, size_t), std::unique_ptr<SkCodec> (*make)(std::unique_ptr<SkStream>, SkCodec::Result*));
+/**
+ * Installs/replaces the process-global Reskia codec decoder slot.
+ * callback/user_data are retained for process lifetime or until replacement.
+ * make receives a transferred stream handle; it must consume/delete it before returning.
+ * NULL callbacks return false and do not replace the current registration.
+ */
+bool SkCodec_Register(reskia_codec_peek_proc_t peek, reskia_codec_make_proc_t make, void *user_data, reskia_callback_release_proc_t release_proc);
 
 #ifdef __cplusplus
 }

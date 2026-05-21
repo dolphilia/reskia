@@ -65,7 +65,33 @@ bool smoke_context_create_destroy() {
                !GrBackendTexture_asHandle(nullptr, &texture_handle) &&
                texture_handle.backend_texture == nullptr &&
                !GrBackendRenderTarget_asHandle(nullptr, &render_target_handle) &&
-               render_target_handle.backend_render_target == nullptr,
+               render_target_handle.backend_render_target == nullptr &&
+               !GrMockTextureInfo_new(nullptr) &&
+               !GrMockTextureInfo_newWithValues(4, 0, 0, 0, nullptr) &&
+               !GrMockTextureInfo_equals(nullptr, nullptr) &&
+               GrMockTextureInfo_getBackendFormat(nullptr) == nullptr &&
+               GrMockTextureInfo_compressionType(nullptr) == 0 &&
+               GrMockTextureInfo_colorType(nullptr) == 0 &&
+               GrMockTextureInfo_id(nullptr) == 0 &&
+               GrMockTextureInfo_getProtected(nullptr) == 0 &&
+               !GrMockTextureInfo_isProtected(nullptr) &&
+               !GrMockRenderTargetInfo_new(nullptr) &&
+               !GrMockRenderTargetInfo_newWithValues(4, 0, 0, nullptr) &&
+               !GrMockRenderTargetInfo_equals(nullptr, nullptr) &&
+               GrMockRenderTargetInfo_getBackendFormat(nullptr) == nullptr &&
+               GrMockRenderTargetInfo_colorType(nullptr) == 0 &&
+               GrMockRenderTargetInfo_getProtected(nullptr) == 0 &&
+               !GrMockRenderTargetInfo_isProtected(nullptr) &&
+               !GrGLTextureInfo_equals(nullptr, nullptr) &&
+               !GrGLTextureInfo_isProtected(nullptr) &&
+               !GrGLFramebufferInfo_equals(nullptr, nullptr) &&
+               !GrGLFramebufferInfo_isProtected(nullptr) &&
+               !GrMtlTextureInfo_new(nullptr) &&
+               !GrMtlTextureInfo_equals(nullptr, nullptr) &&
+               GrBackendDrawableInfo_newVk(nullptr) == nullptr &&
+               !GrBackendDrawableInfo_isValid(nullptr) &&
+               GrBackendDrawableInfo_backend(nullptr) == 0 &&
+               !GrBackendDrawableInfo_getVkDrawableInfo(nullptr, nullptr),
                "GPU backend wrappers null input")) {
         return false;
     }
@@ -93,6 +119,99 @@ bool smoke_context_create_destroy() {
         return false;
     }
     SkString_delete(format_description);
+
+    reskia_gr_mock_texture_info_t default_mock_texture_info = {};
+    reskia_gr_mock_texture_info_t explicit_mock_texture_info = {};
+    reskia_gr_mock_texture_info_t explicit_mock_texture_info_copy = {};
+    if (!check(GrMockTextureInfo_new(&default_mock_texture_info) &&
+               default_mock_texture_info.color_type == 0 &&
+               default_mock_texture_info.compression_type == 0 &&
+               default_mock_texture_info.id == 0 &&
+               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info) &&
+               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info_copy) &&
+               GrMockTextureInfo_equals(&explicit_mock_texture_info, &explicit_mock_texture_info_copy) &&
+               GrMockTextureInfo_colorType(&explicit_mock_texture_info) == 4 &&
+               GrMockTextureInfo_compressionType(&explicit_mock_texture_info) == 0 &&
+               GrMockTextureInfo_id(&explicit_mock_texture_info) == 303 &&
+               GrMockTextureInfo_getProtected(&explicit_mock_texture_info) == 1 &&
+               GrMockTextureInfo_isProtected(&explicit_mock_texture_info),
+               "GrMockTextureInfo value helpers")) {
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+    reskia_gr_backend_format_t *mock_texture_info_format = GrMockTextureInfo_getBackendFormat(&explicit_mock_texture_info);
+    if (!check(mock_texture_info_format != nullptr && GrBackendFormat_isValid(mock_texture_info_format),
+               "GrMockTextureInfo_getBackendFormat")) {
+        GrBackendFormat_delete(mock_texture_info_format);
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+    GrBackendFormat_delete(mock_texture_info_format);
+
+    reskia_gr_mock_render_target_info_t default_mock_render_target_info = {};
+    reskia_gr_mock_render_target_info_t explicit_mock_render_target_info = {};
+    reskia_gr_mock_render_target_info_t explicit_mock_render_target_info_copy = {};
+    if (!check(GrMockRenderTargetInfo_new(&default_mock_render_target_info) &&
+               default_mock_render_target_info.color_type == 0 &&
+               default_mock_render_target_info.id == 0 &&
+               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info) &&
+               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info_copy) &&
+               GrMockRenderTargetInfo_equals(&explicit_mock_render_target_info, &explicit_mock_render_target_info_copy) &&
+               GrMockRenderTargetInfo_colorType(&explicit_mock_render_target_info) == 4 &&
+               GrMockRenderTargetInfo_getProtected(&explicit_mock_render_target_info) == 1 &&
+               GrMockRenderTargetInfo_isProtected(&explicit_mock_render_target_info),
+               "GrMockRenderTargetInfo value helpers")) {
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+    reskia_gr_backend_format_t *mock_render_target_info_format = GrMockRenderTargetInfo_getBackendFormat(&explicit_mock_render_target_info);
+    if (!check(mock_render_target_info_format != nullptr && GrBackendFormat_isValid(mock_render_target_info_format),
+               "GrMockRenderTargetInfo_getBackendFormat")) {
+        GrBackendFormat_delete(mock_render_target_info_format);
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+    GrBackendFormat_delete(mock_render_target_info_format);
+
+    reskia_gr_gl_texture_info_t gl_texture_info_a = {3553, 11, 32856, 1};
+    reskia_gr_gl_texture_info_t gl_texture_info_b = {3553, 11, 32856, 1};
+    reskia_gr_gl_framebuffer_info_t gl_framebuffer_info_a = {7, 32856, 1};
+    reskia_gr_gl_framebuffer_info_t gl_framebuffer_info_b = {7, 32856, 1};
+    reskia_gr_mtl_texture_info_t mtl_texture_info_a = {};
+    reskia_gr_mtl_texture_info_t mtl_texture_info_b = {};
+    if (!check(GrMockOptions_new() &&
+               GrGLTextureInfo_equals(&gl_texture_info_a, &gl_texture_info_b) &&
+               GrGLTextureInfo_isProtected(&gl_texture_info_a) &&
+               GrGLFramebufferInfo_equals(&gl_framebuffer_info_a, &gl_framebuffer_info_b) &&
+               GrGLFramebufferInfo_isProtected(&gl_framebuffer_info_a) &&
+               GrMtlTextureInfo_new(&mtl_texture_info_a) &&
+               GrMtlTextureInfo_new(&mtl_texture_info_b) &&
+               GrMtlTextureInfo_equals(&mtl_texture_info_a, &mtl_texture_info_b),
+               "GL/Metal/mock value helpers")) {
+        GrBackendFormat_delete(mock_format);
+        return false;
+    }
+
+    reskia_gr_backend_drawable_info_t *drawable_info = GrBackendDrawableInfo_new();
+    if (drawable_info != nullptr) {
+        if (!check(!GrBackendDrawableInfo_isValid(drawable_info) &&
+                   GrBackendDrawableInfo_backend(drawable_info) == 0,
+                   "GrBackendDrawableInfo default")) {
+            GrBackendDrawableInfo_delete(drawable_info);
+            GrBackendFormat_delete(mock_format);
+            return false;
+        }
+        reskia_gr_vk_drawable_info_t vk_drawable_info = {};
+        if (!check(!GrBackendDrawableInfo_getVkDrawableInfo(drawable_info, &vk_drawable_info) &&
+                   vk_drawable_info.secondary_command_buffer == 0,
+                   "GrBackendDrawableInfo_getVkDrawableInfo invalid default")) {
+            GrBackendDrawableInfo_delete(drawable_info);
+            GrBackendFormat_delete(mock_format);
+            return false;
+        }
+    }
+    GrBackendDrawableInfo_delete(drawable_info);
+
     if (!check(GrBackendFormat_asMtlFormat(mock_format) == 0, "GrBackendFormat_asMtlFormat(mock)")) {
         GrBackendFormat_delete(mock_format);
         return false;
@@ -555,6 +674,8 @@ bool smoke_context_create_destroy() {
                !Graphite_Context_submit(nullptr, false) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
+               GrContextOptions_newCopy(nullptr) == nullptr &&
+               !GrContextOptions_suppressPrints(nullptr) &&
                Graphite_ContextOptions_gpuBudgetInBytes(nullptr) == 0 &&
                Graphite_RecorderOptions_newCopy(nullptr) == nullptr &&
                Graphite_RecorderOptions_gpuBudgetInBytes(nullptr) == 0 &&
@@ -608,6 +729,25 @@ bool smoke_context_create_destroy() {
         GrDirectContext_resetGLTextureBindings(mock_context);
         Reskia_DirectContext_Release(mock_context);
     }
+
+    reskia_gr_context_options_t *context_options = GrContextOptions_new();
+    if (!check(context_options != nullptr &&
+               !GrContextOptions_suppressPrints(context_options),
+               "GrContextOptions default")) {
+        GrContextOptions_delete(context_options);
+        return false;
+    }
+    GrContextOptions_setSuppressPrints(context_options, true);
+    reskia_gr_context_options_t *context_options_copy = GrContextOptions_newCopy(context_options);
+    if (!check(context_options_copy != nullptr &&
+               GrContextOptions_suppressPrints(context_options_copy),
+               "GrContextOptions copy")) {
+        GrContextOptions_delete(context_options_copy);
+        GrContextOptions_delete(context_options);
+        return false;
+    }
+    GrContextOptions_delete(context_options_copy);
+    GrContextOptions_delete(context_options);
 #endif
 
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();

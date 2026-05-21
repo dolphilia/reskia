@@ -24,6 +24,9 @@
 #include "../handles/static_sk_data-internal.h"
 #include "../handles/static_sk_codec-internal.h"
 
+#include <memory>
+#include <mutex>
+
 namespace {
 
 SkCodec *as_codec(reskia_codec_t *codec) {
@@ -50,6 +53,56 @@ sk_codec_t make_codec_handle(std::unique_ptr<SkCodec> codec) {
         return 0;
     }
     return static_sk_codec_make(std::move(codec));
+}
+
+struct CodecRegistrationContext {
+    reskia_codec_peek_proc_t peek = nullptr;
+    reskia_codec_make_proc_t make = nullptr;
+    void *user_data = nullptr;
+    reskia_callback_release_proc_t release_proc = nullptr;
+
+    ~CodecRegistrationContext() {
+        if (release_proc != nullptr) {
+            release_proc(user_data);
+        }
+    }
+};
+
+std::mutex g_codec_registration_mutex;
+std::shared_ptr<const CodecRegistrationContext> g_codec_registration_context;
+
+bool reskia_codec_peek(const void *data, size_t size) {
+    std::shared_ptr<const CodecRegistrationContext> context;
+    {
+        std::lock_guard<std::mutex> lock(g_codec_registration_mutex);
+        context = g_codec_registration_context;
+    }
+    return context && context->peek != nullptr && context->peek(data, size, context->user_data);
+}
+
+std::unique_ptr<SkCodec> reskia_codec_make_from_stream(
+        std::unique_ptr<SkStream> stream,
+        SkCodec::Result *result,
+        SkCodecs::DecodeContext) {
+    std::shared_ptr<const CodecRegistrationContext> context;
+    {
+        std::lock_guard<std::mutex> lock(g_codec_registration_mutex);
+        context = g_codec_registration_context;
+    }
+    if (!context || context->make == nullptr || !stream) {
+        if (result != nullptr) {
+            *result = SkCodec::kInvalidInput;
+        }
+        return nullptr;
+    }
+
+    sk_stream_t stream_handle = static_sk_stream_make(std::move(stream));
+    sk_codec_t codec_handle = context->make(
+            stream_handle,
+            reinterpret_cast<reskia_codec_result_t *>(result),
+            context->user_data);
+    static_sk_stream_delete(stream_handle);
+    return static_sk_codec_take_entity(codec_handle);
 }
 
 } // namespace
@@ -282,8 +335,33 @@ sk_codec_t SkCodec_MakeFromData(sk_data_t data, reskia_png_chunk_reader_t *pngCh
     return make_codec_handle(SkCodec::MakeFromData(std::move(native_data), reinterpret_cast<SkPngChunkReader *>(pngChunkReader)));
 }
 
-//void SkCodec_Register(bool (*peek)(const void*, size_t), std::unique_ptr<SkCodec> (*make)(std::unique_ptr<SkStream>, SkCodec::Result*)) {
-//    SkCodec::Register(peek, make);
-//}
+bool SkCodec_Register(
+        reskia_codec_peek_proc_t peek,
+        reskia_codec_make_proc_t make,
+        void *user_data,
+        reskia_callback_release_proc_t release_proc) {
+    if (peek == nullptr || make == nullptr) {
+        return false;
+    }
+
+    auto next_context = std::make_shared<CodecRegistrationContext>();
+    next_context->peek = peek;
+    next_context->make = make;
+    next_context->user_data = user_data;
+    next_context->release_proc = release_proc;
+
+    std::shared_ptr<const CodecRegistrationContext> previous_context;
+    {
+        std::lock_guard<std::mutex> lock(g_codec_registration_mutex);
+        previous_context = std::move(g_codec_registration_context);
+        g_codec_registration_context = std::move(next_context);
+    }
+
+    SkCodecs::Register(SkCodecs::Decoder{
+            "reskia",
+            reskia_codec_peek,
+            reskia_codec_make_from_stream});
+    return true;
+}
 
 }

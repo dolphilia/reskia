@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "reskia_callback.h"
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_font_mgr.h"
 #include "../handles/static_sk_font_style.h"
@@ -29,6 +30,8 @@ typedef struct reskia_w_stream_t reskia_w_stream_t;
 typedef int32_t reskia_typeface_serialize_behavior_t; // SkTypeface::SerializeBehavior
 typedef int32_t reskia_typeface_text_encoding_t; // SkTextEncoding
 typedef int32_t reskia_typeface_unichar_t; // SkUnichar
+typedef uint32_t reskia_typeface_factory_id_t; // SkTypeface::FactoryId / SkFourByteTag
+typedef sk_typeface_t (*reskia_typeface_factory_make_proc_t)(sk_stream_asset_t stream_asset, const reskia_font_arguments_t *arguments, void *user_data);
 
 #ifdef __cplusplus
 extern "C" {
@@ -97,8 +100,13 @@ bool SkTypeface_Equal(const reskia_typeface_t *facea, const reskia_typeface_t *f
 sk_typeface_t SkTypeface_MakeEmpty(); // 生成不能では 0
 sk_typeface_t SkTypeface_MakeDeserialize(reskia_stream_t *stream, sk_font_mgr_t font_mgr); // stream は非 NULL。生成不能では 0
 
-// TODO
-//void SkTypeface_Register(SkTypeface::FactoryId id, sk_sp<SkTypeface>(*make)(std::unique_ptr<SkStreamAsset>, const SkFontArguments &)); // (SkTypeface::FactoryId id, sk_sp<SkTypeface>(*make)(std::unique_ptr<SkStreamAsset>, const SkFontArguments &))
+/**
+ * Installs/replaces the process-global Reskia typeface factory for one factory id.
+ * The first successful call fixes the id for the process; later calls must use the same id.
+ * make receives a transferred stream asset handle; it must consume/delete it before returning.
+ * NULL callback or a different id returns false and does not replace the current registration.
+ */
+bool SkTypeface_Register(reskia_typeface_factory_id_t id, reskia_typeface_factory_make_proc_t make, void *user_data, reskia_callback_release_proc_t release_proc);
 
 #if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
 

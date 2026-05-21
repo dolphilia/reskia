@@ -53,6 +53,7 @@
 #if defined(SK_GANESH)
 #include "include/gpu/GrBackendSemaphore.h"
 #include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/GrContextOptions.h"
 #include "include/gpu/GrContextThreadSafeProxy.h"
 #include "include/gpu/GrRecordingContext.h"
 #include "include/gpu/GpuTypes.h"
@@ -90,6 +91,14 @@ GrRecordingContext *as_recording_context(reskia_direct_context_t *ctx) {
 
 GrContextThreadSafeProxy *as_thread_safe_proxy(reskia_gr_context_thread_safe_proxy_t *proxy) {
     return reinterpret_cast<GrContextThreadSafeProxy *>(proxy);
+}
+
+GrContextOptions *as_context_options(reskia_gr_context_options_t *options) {
+    return reinterpret_cast<GrContextOptions *>(options);
+}
+
+const GrContextOptions *as_context_options(const reskia_gr_context_options_t *options) {
+    return reinterpret_cast<const GrContextOptions *>(options);
 }
 
 const GrBackendFormat *as_backend_format(const reskia_gr_backend_format_t *format) {
@@ -1268,6 +1277,51 @@ reskia_gr_surface_characterization_t *GrContextThreadSafeProxy_createCharacteriz
     (void) vk_rt_supports_input_attachment;
     (void) for_vulkan_secondary_command_buffer;
     return nullptr;
+#endif
+}
+
+reskia_gr_context_options_t *GrContextOptions_new() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_context_options_t *>(new GrContextOptions());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_context_options_t *GrContextOptions_newCopy(const reskia_gr_context_options_t *options) {
+#if defined(SK_GANESH)
+    return options != nullptr ? reinterpret_cast<reskia_gr_context_options_t *>(new GrContextOptions(*as_context_options(options))) : nullptr;
+#else
+    (void) options;
+    return nullptr;
+#endif
+}
+
+void GrContextOptions_delete(reskia_gr_context_options_t *options) {
+#if defined(SK_GANESH)
+    delete as_context_options(options);
+#else
+    (void) options;
+#endif
+}
+
+bool GrContextOptions_suppressPrints(const reskia_gr_context_options_t *options) {
+#if defined(SK_GANESH)
+    return options != nullptr && as_context_options(options)->fSuppressPrints;
+#else
+    (void) options;
+    return false;
+#endif
+}
+
+void GrContextOptions_setSuppressPrints(reskia_gr_context_options_t *options, bool suppress) {
+#if defined(SK_GANESH)
+    if (options != nullptr) {
+        as_context_options(options)->fSuppressPrints = suppress;
+    }
+#else
+    (void) options;
+    (void) suppress;
 #endif
 }
 

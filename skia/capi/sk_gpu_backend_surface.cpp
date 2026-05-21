@@ -14,11 +14,17 @@
 #include "include/gpu/GrDriverBugWorkarounds.h"
 #include "include/gpu/GrYUVABackendTextures.h"
 #include "include/gpu/MutableTextureState.h"
+#include "include/gpu/gl/GrGLTypes.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #include "include/core/SkTextureCompressionType.h"
 #include "src/core/SkYUVAInfoLocation.h"
 
 #include "../handles/static_sk_i_size-internal.h"
+#endif
+
+#if defined(SK_GANESH) && __has_include("include/third_party/vulkan/vulkan/vulkan_core.h")
+#define RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO 1
+#include "include/gpu/GrBackendDrawableInfo.h"
 #endif
 
 #if defined(SK_METAL)
@@ -144,6 +150,62 @@ bool driver_bug_workaround_is_enabled(const GrDriverBugWorkarounds &workarounds,
         default:
             return false;
     }
+}
+
+GrMockTextureInfo to_mock_texture_info(const reskia_gr_mock_texture_info_t &info) {
+    return GrMockTextureInfo(
+            static_cast<GrColorType>(info.color_type),
+            static_cast<SkTextureCompressionType>(info.compression_type),
+            info.id,
+            to_protected(info.is_protected));
+}
+
+GrMockRenderTargetInfo to_mock_render_target_info(const reskia_gr_mock_render_target_info_t &info) {
+    return GrMockRenderTargetInfo(
+            static_cast<GrColorType>(info.color_type),
+            info.id,
+            to_protected(info.is_protected));
+}
+
+GrGLTextureInfo to_gl_texture_info(const reskia_gr_gl_texture_info_t &info) {
+    return GrGLTextureInfo{
+            static_cast<GrGLenum>(info.target),
+            static_cast<GrGLuint>(info.id),
+            static_cast<GrGLenum>(info.format),
+            to_protected(info.is_protected)};
+}
+
+GrGLFramebufferInfo to_gl_framebuffer_info(const reskia_gr_gl_framebuffer_info_t &info) {
+    return GrGLFramebufferInfo{
+            static_cast<GrGLuint>(info.fbo_id),
+            static_cast<GrGLenum>(info.format),
+            to_protected(info.is_protected)};
+}
+
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+GrVkDrawableInfo to_vk_drawable_info(const reskia_gr_vk_drawable_info_t &info) {
+    return GrVkDrawableInfo{
+            reinterpret_cast<VkCommandBuffer>(info.secondary_command_buffer),
+            info.color_attachment_index,
+            reinterpret_cast<VkRenderPass>(info.compatible_render_pass),
+            static_cast<VkFormat>(info.format),
+            static_cast<VkRect2D *>(info.draw_bounds)};
+}
+
+reskia_gr_vk_drawable_info_t to_reskia_vk_drawable_info(const GrVkDrawableInfo &info) {
+    return reskia_gr_vk_drawable_info_t{
+            reinterpret_cast<uintptr_t>(info.fSecondaryCommandBuffer),
+            info.fColorAttachmentIndex,
+            reinterpret_cast<uintptr_t>(info.fCompatibleRenderPass),
+            static_cast<uint32_t>(info.fFormat),
+            info.fDrawBounds};
+}
+#endif
+#endif
+
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+const GrBackendDrawableInfo *as_drawable_info(const reskia_gr_backend_drawable_info_t *info) {
+    return reinterpret_cast<const GrBackendDrawableInfo *>(info);
 }
 #endif
 
@@ -927,6 +989,237 @@ bool GrDriverBugWorkarounds_isEnabled(const reskia_gr_driver_bug_workarounds_t *
 #else
     (void) workarounds;
     (void) type;
+    return false;
+#endif
+}
+
+bool GrMockTextureInfo_new(reskia_gr_mock_texture_info_t *out_info) {
+    if (out_info == nullptr) {
+        return false;
+    }
+    *out_info = {};
+    return true;
+}
+
+bool GrMockTextureInfo_newWithValues(reskia_gr_color_type_t color_type, reskia_sk_texture_compression_type_t compression_type, int id, reskia_skgpu_protected_t is_protected, reskia_gr_mock_texture_info_t *out_info) {
+    if (out_info == nullptr || id == 0) {
+        return false;
+    }
+    *out_info = {color_type, compression_type, id, is_protected};
+    return true;
+}
+
+bool GrMockTextureInfo_equals(const reskia_gr_mock_texture_info_t *info, const reskia_gr_mock_texture_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && to_mock_texture_info(*info) == to_mock_texture_info(*other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+reskia_gr_backend_format_t *GrMockTextureInfo_getBackendFormat(const reskia_gr_mock_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr && info->id != 0
+                   ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(to_mock_texture_info(*info).getBackendFormat()))
+                   : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+reskia_sk_texture_compression_type_t GrMockTextureInfo_compressionType(const reskia_gr_mock_texture_info_t *info) {
+    return info != nullptr ? info->compression_type : 0;
+}
+
+reskia_gr_color_type_t GrMockTextureInfo_colorType(const reskia_gr_mock_texture_info_t *info) {
+    return info != nullptr && info->compression_type == 0 ? info->color_type : 0;
+}
+
+int GrMockTextureInfo_id(const reskia_gr_mock_texture_info_t *info) {
+    return info != nullptr ? info->id : 0;
+}
+
+reskia_skgpu_protected_t GrMockTextureInfo_getProtected(const reskia_gr_mock_texture_info_t *info) {
+    return info != nullptr ? info->is_protected : 0;
+}
+
+bool GrMockTextureInfo_isProtected(const reskia_gr_mock_texture_info_t *info) {
+    return info != nullptr && info->is_protected != 0;
+}
+
+bool GrMockRenderTargetInfo_new(reskia_gr_mock_render_target_info_t *out_info) {
+    if (out_info == nullptr) {
+        return false;
+    }
+    *out_info = {};
+    return true;
+}
+
+bool GrMockRenderTargetInfo_newWithValues(reskia_gr_color_type_t color_type, int id, reskia_skgpu_protected_t is_protected, reskia_gr_mock_render_target_info_t *out_info) {
+    if (out_info == nullptr || id == 0) {
+        return false;
+    }
+    *out_info = {color_type, id, is_protected};
+    return true;
+}
+
+bool GrMockRenderTargetInfo_equals(const reskia_gr_mock_render_target_info_t *info, const reskia_gr_mock_render_target_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && to_mock_render_target_info(*info) == to_mock_render_target_info(*other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+reskia_gr_backend_format_t *GrMockRenderTargetInfo_getBackendFormat(const reskia_gr_mock_render_target_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr && info->id != 0
+                   ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(to_mock_render_target_info(*info).getBackendFormat()))
+                   : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+reskia_gr_color_type_t GrMockRenderTargetInfo_colorType(const reskia_gr_mock_render_target_info_t *info) {
+    return info != nullptr ? info->color_type : 0;
+}
+
+reskia_skgpu_protected_t GrMockRenderTargetInfo_getProtected(const reskia_gr_mock_render_target_info_t *info) {
+    return info != nullptr ? info->is_protected : 0;
+}
+
+bool GrMockRenderTargetInfo_isProtected(const reskia_gr_mock_render_target_info_t *info) {
+    return info != nullptr && info->is_protected != 0;
+}
+
+bool GrMockOptions_new() {
+#if defined(SK_GANESH)
+    GrMockOptions options;
+    (void) options;
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool GrGLTextureInfo_equals(const reskia_gr_gl_texture_info_t *info, const reskia_gr_gl_texture_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && to_gl_texture_info(*info) == to_gl_texture_info(*other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+bool GrGLTextureInfo_isProtected(const reskia_gr_gl_texture_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr && to_gl_texture_info(*info).isProtected();
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool GrGLFramebufferInfo_equals(const reskia_gr_gl_framebuffer_info_t *info, const reskia_gr_gl_framebuffer_info_t *other) {
+#if defined(SK_GANESH)
+    return info != nullptr && other != nullptr && to_gl_framebuffer_info(*info) == to_gl_framebuffer_info(*other);
+#else
+    (void) info;
+    (void) other;
+    return false;
+#endif
+}
+
+bool GrGLFramebufferInfo_isProtected(const reskia_gr_gl_framebuffer_info_t *info) {
+#if defined(SK_GANESH)
+    return info != nullptr && to_gl_framebuffer_info(*info).isProtected();
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool GrMtlTextureInfo_new(reskia_gr_mtl_texture_info_t *out_info) {
+    if (out_info == nullptr) {
+        return false;
+    }
+    *out_info = {};
+    return true;
+}
+
+bool GrMtlTextureInfo_equals(const reskia_gr_mtl_texture_info_t *info, const reskia_gr_mtl_texture_info_t *other) {
+    return info != nullptr && other != nullptr && info->texture == other->texture;
+}
+
+reskia_gr_backend_drawable_info_t *GrBackendDrawableInfo_new() {
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    return reinterpret_cast<reskia_gr_backend_drawable_info_t *>(new GrBackendDrawableInfo());
+#else
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_drawable_info_t *GrBackendDrawableInfo_newVk(const reskia_gr_vk_drawable_info_t *info) {
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    return info != nullptr
+                   ? reinterpret_cast<reskia_gr_backend_drawable_info_t *>(new GrBackendDrawableInfo(to_vk_drawable_info(*info)))
+                   : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
+void GrBackendDrawableInfo_delete(reskia_gr_backend_drawable_info_t *info) {
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    delete reinterpret_cast<GrBackendDrawableInfo *>(info);
+#else
+    (void) info;
+#endif
+}
+
+bool GrBackendDrawableInfo_isValid(const reskia_gr_backend_drawable_info_t *info) {
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    return info != nullptr && as_drawable_info(info)->isValid();
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+reskia_gr_backend_api_t GrBackendDrawableInfo_backend(const reskia_gr_backend_drawable_info_t *info) {
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    return info != nullptr ? static_cast<reskia_gr_backend_api_t>(as_drawable_info(info)->backend()) : 0;
+#else
+    (void) info;
+    return 0;
+#endif
+}
+
+bool GrBackendDrawableInfo_getVkDrawableInfo(const reskia_gr_backend_drawable_info_t *info, reskia_gr_vk_drawable_info_t *out_info) {
+    if (out_info != nullptr) {
+        *out_info = {};
+    }
+#if defined(RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO)
+    if (info == nullptr || out_info == nullptr) {
+        return false;
+    }
+    GrVkDrawableInfo native_info = {};
+    if (!as_drawable_info(info)->getVkDrawableInfo(&native_info)) {
+        return false;
+    }
+    *out_info = to_reskia_vk_drawable_info(native_info);
+    return true;
+#else
+    (void) info;
     return false;
 #endif
 }

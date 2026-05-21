@@ -24,6 +24,7 @@
 #include "../handles/static_sk_font_mgr.h"
 
 #include <memory>
+#include <mutex>
 #include <utility>
 
 namespace {
@@ -75,6 +76,43 @@ sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
         return 0;
     }
     return static_sk_typeface_make(std::move(typeface));
+}
+
+struct TypefaceRegistrationContext {
+    reskia_typeface_factory_make_proc_t make = nullptr;
+    void *user_data = nullptr;
+    reskia_callback_release_proc_t release_proc = nullptr;
+
+    ~TypefaceRegistrationContext() {
+        if (release_proc != nullptr) {
+            release_proc(user_data);
+        }
+    }
+};
+
+std::mutex g_typeface_registration_mutex;
+std::shared_ptr<const TypefaceRegistrationContext> g_typeface_registration_context;
+SkTypeface::FactoryId g_typeface_registration_id = 0;
+
+sk_sp<SkTypeface> reskia_typeface_make_from_stream(
+        std::unique_ptr<SkStreamAsset> stream,
+        const SkFontArguments &arguments) {
+    std::shared_ptr<const TypefaceRegistrationContext> context;
+    {
+        std::lock_guard<std::mutex> lock(g_typeface_registration_mutex);
+        context = g_typeface_registration_context;
+    }
+    if (!context || context->make == nullptr || !stream) {
+        return nullptr;
+    }
+
+    sk_stream_asset_t stream_handle = static_sk_stream_asset_make(std::move(stream));
+    sk_typeface_t typeface_handle = context->make(
+            stream_handle,
+            reinterpret_cast<const reskia_font_arguments_t *>(&arguments),
+            context->user_data);
+    static_sk_stream_asset_delete(stream_handle);
+    return static_sk_typeface_take_entity(typeface_handle);
 }
 
 }  // namespace
@@ -311,10 +349,38 @@ sk_typeface_t SkTypeface_MakeDeserialize(reskia_stream_t *stream, sk_font_mgr_t 
     return make_typeface_handle(SkTypeface::MakeDeserialize(reinterpret_cast<SkStream *>(stream), static_sk_font_mgr_get_entity(font_mgr)));
 }
 
-// TODO
-// void SkTypeface_Register(SkTypeface::FactoryId id, sk_sp<SkTypeface>(*make)(std::unique_ptr<SkStreamAsset>, const SkFontArguments &)) {
-//     SkTypeface::Register(id, make);
-// }
+bool SkTypeface_Register(
+        reskia_typeface_factory_id_t id,
+        reskia_typeface_factory_make_proc_t make,
+        void *user_data,
+        reskia_callback_release_proc_t release_proc) {
+    if (id == 0 || make == nullptr) {
+        return false;
+    }
+
+    auto next_context = std::make_shared<TypefaceRegistrationContext>();
+    next_context->make = make;
+    next_context->user_data = user_data;
+    next_context->release_proc = release_proc;
+
+    std::shared_ptr<const TypefaceRegistrationContext> previous_context;
+    bool should_register = false;
+    {
+        std::lock_guard<std::mutex> lock(g_typeface_registration_mutex);
+        if (g_typeface_registration_id != 0 && g_typeface_registration_id != id) {
+            return false;
+        }
+        should_register = g_typeface_registration_id == 0;
+        g_typeface_registration_id = id;
+        previous_context = std::move(g_typeface_registration_context);
+        g_typeface_registration_context = std::move(next_context);
+    }
+
+    if (should_register) {
+        SkTypeface::Register(id, reskia_typeface_make_from_stream);
+    }
+    return true;
+}
 
 #if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
 

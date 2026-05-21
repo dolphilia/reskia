@@ -14,6 +14,7 @@
 #include "sk_yuva_info.h"
 
 typedef struct reskia_gr_backend_format_t reskia_gr_backend_format_t;
+typedef struct reskia_gr_backend_drawable_info_t reskia_gr_backend_drawable_info_t;
 typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
 typedef struct reskia_gr_backend_render_target_t reskia_gr_backend_render_target_t;
 typedef struct reskia_gr_backend_semaphore_t reskia_gr_backend_semaphore_t;
@@ -51,9 +52,30 @@ typedef struct reskia_gr_mock_render_target_info_t {
     reskia_skgpu_protected_t is_protected;
 } reskia_gr_mock_render_target_info_t;
 
+typedef struct reskia_gr_gl_texture_info_t {
+    uint32_t target;
+    uint32_t id;
+    uint32_t format;
+    reskia_skgpu_protected_t is_protected;
+} reskia_gr_gl_texture_info_t;
+
+typedef struct reskia_gr_gl_framebuffer_info_t {
+    uint32_t fbo_id;
+    uint32_t format;
+    reskia_skgpu_protected_t is_protected;
+} reskia_gr_gl_framebuffer_info_t;
+
 typedef struct reskia_gr_mtl_texture_info_t {
     void *texture; // borrowed GrMTLHandle/id<MTLTexture>; NULL when unavailable or not Metal-backed
 } reskia_gr_mtl_texture_info_t;
+
+typedef struct reskia_gr_vk_drawable_info_t {
+    uintptr_t secondary_command_buffer;
+    uint32_t color_attachment_index;
+    uintptr_t compatible_render_pass;
+    uint32_t format;
+    void *draw_bounds; // borrowed VkRect2D*; NULL allowed
+} reskia_gr_vk_drawable_info_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,6 +158,41 @@ reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_newCopy(const reskia_
 void GrDriverBugWorkarounds_delete(reskia_gr_driver_bug_workarounds_t *workarounds); // NULL input is no-op
 void GrDriverBugWorkarounds_applyOverrides(reskia_gr_driver_bug_workarounds_t *workarounds, const reskia_gr_driver_bug_workarounds_t *overrides); // NULL input is no-op
 bool GrDriverBugWorkarounds_isEnabled(const reskia_gr_driver_bug_workarounds_t *workarounds, int32_t type); // NULL/invalid input returns false
+
+bool GrMockTextureInfo_new(reskia_gr_mock_texture_info_t *out_info); // out_info required
+bool GrMockTextureInfo_newWithValues(reskia_gr_color_type_t color_type, reskia_sk_texture_compression_type_t compression_type, int id, reskia_skgpu_protected_t is_protected, reskia_gr_mock_texture_info_t *out_info); // invalid id/out returns false
+bool GrMockTextureInfo_equals(const reskia_gr_mock_texture_info_t *info, const reskia_gr_mock_texture_info_t *other); // NULL input returns false
+reskia_gr_backend_format_t *GrMockTextureInfo_getBackendFormat(const reskia_gr_mock_texture_info_t *info); // owned; invalid input returns NULL
+reskia_sk_texture_compression_type_t GrMockTextureInfo_compressionType(const reskia_gr_mock_texture_info_t *info); // NULL input returns 0
+reskia_gr_color_type_t GrMockTextureInfo_colorType(const reskia_gr_mock_texture_info_t *info); // NULL/compressed input returns 0
+int GrMockTextureInfo_id(const reskia_gr_mock_texture_info_t *info); // NULL input returns 0
+reskia_skgpu_protected_t GrMockTextureInfo_getProtected(const reskia_gr_mock_texture_info_t *info); // NULL input returns 0
+bool GrMockTextureInfo_isProtected(const reskia_gr_mock_texture_info_t *info); // NULL input returns false
+
+bool GrMockRenderTargetInfo_new(reskia_gr_mock_render_target_info_t *out_info); // out_info required
+bool GrMockRenderTargetInfo_newWithValues(reskia_gr_color_type_t color_type, int id, reskia_skgpu_protected_t is_protected, reskia_gr_mock_render_target_info_t *out_info); // invalid id/out returns false
+bool GrMockRenderTargetInfo_equals(const reskia_gr_mock_render_target_info_t *info, const reskia_gr_mock_render_target_info_t *other); // NULL input returns false
+reskia_gr_backend_format_t *GrMockRenderTargetInfo_getBackendFormat(const reskia_gr_mock_render_target_info_t *info); // owned; invalid input returns NULL
+reskia_gr_color_type_t GrMockRenderTargetInfo_colorType(const reskia_gr_mock_render_target_info_t *info); // NULL input returns 0
+reskia_skgpu_protected_t GrMockRenderTargetInfo_getProtected(const reskia_gr_mock_render_target_info_t *info); // NULL input returns 0
+bool GrMockRenderTargetInfo_isProtected(const reskia_gr_mock_render_target_info_t *info); // NULL input returns false
+
+bool GrMockOptions_new(); // true when Ganesh mock options are available
+
+bool GrGLTextureInfo_equals(const reskia_gr_gl_texture_info_t *info, const reskia_gr_gl_texture_info_t *other); // NULL input returns false
+bool GrGLTextureInfo_isProtected(const reskia_gr_gl_texture_info_t *info); // NULL input returns false
+bool GrGLFramebufferInfo_equals(const reskia_gr_gl_framebuffer_info_t *info, const reskia_gr_gl_framebuffer_info_t *other); // NULL input returns false
+bool GrGLFramebufferInfo_isProtected(const reskia_gr_gl_framebuffer_info_t *info); // NULL input returns false
+
+bool GrMtlTextureInfo_new(reskia_gr_mtl_texture_info_t *out_info); // out_info required
+bool GrMtlTextureInfo_equals(const reskia_gr_mtl_texture_info_t *info, const reskia_gr_mtl_texture_info_t *other); // NULL input returns false
+
+reskia_gr_backend_drawable_info_t *GrBackendDrawableInfo_new(); // owned; invalid default drawable info
+reskia_gr_backend_drawable_info_t *GrBackendDrawableInfo_newVk(const reskia_gr_vk_drawable_info_t *info); // owned; NULL/unavailable Vulkan returns NULL
+void GrBackendDrawableInfo_delete(reskia_gr_backend_drawable_info_t *info); // NULL input is no-op
+bool GrBackendDrawableInfo_isValid(const reskia_gr_backend_drawable_info_t *info); // NULL input returns false
+reskia_gr_backend_api_t GrBackendDrawableInfo_backend(const reskia_gr_backend_drawable_info_t *info); // NULL input returns 0
+bool GrBackendDrawableInfo_getVkDrawableInfo(const reskia_gr_backend_drawable_info_t *info, reskia_gr_vk_drawable_info_t *out_info); // NULL/non-Vulkan returns false
 
 reskia_gr_yuva_backend_texture_info_t *GrYUVABackendTextureInfo_new(); // owned; invalid default info
 reskia_gr_yuva_backend_texture_info_t *GrYUVABackendTextureInfo_newWithYUVAInfoFormats(const reskia_yuva_info_t *info, const reskia_gr_backend_format_t *const *formats, reskia_skgpu_mipmapped_t mipmapped, int texture_origin); // owned; invalid input returns NULL

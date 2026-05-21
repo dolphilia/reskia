@@ -8,6 +8,7 @@
 
 #include "include/core/SkColor.h"
 #include "include/core/SkImage.h"
+#include "include/core/SkMatrix.h"
 #include "include/core/SkString.h"
 #include "modules/svg/include/SkSVGAttribute.h"
 #include "modules/svg/include/SkSVGCircle.h"
@@ -137,6 +138,32 @@ void SkSVGNode_unref(reskia_svg_node_t *node) {
 
 void SkSVGNode_release(reskia_svg_node_t *node) {
     SkSVGNode_unref(node);
+}
+
+bool SkSVGNode_appendChild(reskia_svg_node_t *parent, const reskia_svg_node_t *child) {
+    if (parent == nullptr || child == nullptr) {
+        return false;
+    }
+    reinterpret_cast<SkSVGNode *>(parent)->appendChild(
+            sk_ref_sp(const_cast<SkSVGNode *>(reinterpret_cast<const SkSVGNode *>(child))));
+    return true;
+}
+
+bool SkSVGTransformableNode_setTransform(reskia_svg_node_t *node, const reskia_matrix_t *matrix) {
+    if (node == nullptr || matrix == nullptr) {
+        return false;
+    }
+    reinterpret_cast<SkSVGTransformableNode *>(node)->setTransform(*reinterpret_cast<const SkMatrix *>(matrix));
+    return true;
+}
+
+reskia_svg_presentation_attributes_t *SkSVGPresentationAttributes_MakeInitial(void) {
+    return reinterpret_cast<reskia_svg_presentation_attributes_t *>(
+            new SkSVGPresentationAttributes(SkSVGPresentationAttributes::MakeInitial()));
+}
+
+void SkSVGPresentationAttributes_delete(reskia_svg_presentation_attributes_t *attributes) {
+    delete reinterpret_cast<SkSVGPresentationAttributes *>(attributes);
 }
 
 reskia_svg_node_t *SkSVGCircle_Make(void) {

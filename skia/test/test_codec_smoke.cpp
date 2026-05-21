@@ -16,6 +16,7 @@
 #include "capi/sk_graphics.h"
 #include "capi/sk_jpeg_encoder.h"
 #include "capi/sk_raw_decoder.h"
+#include "capi/sk_typeface.h"
 #include "capi/sk_webp_encoder.h"
 
 #if RESKIA_TEST_ENABLE_AVIF
@@ -29,6 +30,8 @@
 #include "handles/static_sk_codec.h"
 #include "handles/static_sk_data.h"
 #include "handles/static_sk_image_info.h"
+#include "handles/static_sk_stream.h"
+#include "handles/static_sk_stream_asset.h"
 
 namespace {
 
@@ -259,6 +262,163 @@ bool smoke_open_type_svg_factory() {
 }
 #endif
 
+struct GlobalRegistrationContext {
+    int* callback_count;
+    int* release_count;
+};
+
+void release_global_registration_context(void* user_data) {
+    auto* context = static_cast<GlobalRegistrationContext*>(user_data);
+    if (context != nullptr && context->release_count != nullptr) {
+        ++*context->release_count;
+    }
+}
+
+bool reskia_test_codec_peek(const void* data, size_t size, void* user_data) {
+    auto* context = static_cast<GlobalRegistrationContext*>(user_data);
+    if (context != nullptr && context->callback_count != nullptr) {
+        ++*context->callback_count;
+    }
+    const auto* bytes = static_cast<const uint8_t*>(data);
+    return bytes != nullptr && size >= 4 &&
+           bytes[0] == 0x52 && bytes[1] == 0x53 &&
+           bytes[2] == 0x4B && bytes[3] == 0x43;
+}
+
+sk_codec_t reskia_test_codec_make(sk_stream_t stream, reskia_codec_result_t* result, void* user_data) {
+    auto* context = static_cast<GlobalRegistrationContext*>(user_data);
+    if (context != nullptr && context->callback_count != nullptr) {
+        ++*context->callback_count;
+    }
+    if (result != nullptr) {
+        *reinterpret_cast<SkCodec::Result*>(result) = SkCodec::kInvalidInput;
+    }
+    static_sk_stream_delete(stream);
+    return 0;
+}
+
+sk_typeface_t reskia_test_typeface_make(sk_stream_asset_t stream_asset, const reskia_font_arguments_t*, void* user_data) {
+    auto* context = static_cast<GlobalRegistrationContext*>(user_data);
+    if (context != nullptr && context->callback_count != nullptr) {
+        ++*context->callback_count;
+    }
+    static_sk_stream_asset_delete(stream_asset);
+    return 0;
+}
+
+bool smoke_global_registration_callbacks() {
+    int first_codec_callbacks = 0;
+    int first_codec_releases = 0;
+    GlobalRegistrationContext first_codec_context{&first_codec_callbacks, &first_codec_releases};
+    if (!check(SkCodec_Register(
+                       reskia_test_codec_peek,
+                       reskia_test_codec_make,
+                       &first_codec_context,
+                       release_global_registration_context),
+               "SkCodec_Register install")) {
+        return false;
+    }
+
+    const uint8_t encoded[] = {0x52, 0x53, 0x4B, 0x43, 0x00};
+    sk_data_t data = SkData_MakeWithCopy(encoded, sizeof(encoded));
+    if (!check(data != 0, "SkData_MakeWithCopy(custom codec)")) {
+        return false;
+    }
+    sk_codec_t codec = SkCodec_MakeFromData(data, nullptr);
+    if (!check(codec == 0 &&
+               first_codec_callbacks == 2 &&
+               first_codec_releases == 0,
+               "SkCodec_Register dispatch")) {
+        static_sk_codec_delete(codec);
+        static_sk_data_delete(data);
+        return false;
+    }
+    static_sk_data_delete(data);
+
+    int second_codec_callbacks = 0;
+    int second_codec_releases = 0;
+    GlobalRegistrationContext second_codec_context{&second_codec_callbacks, &second_codec_releases};
+    if (!check(SkCodec_Register(
+                       reskia_test_codec_peek,
+                       reskia_test_codec_make,
+                       &second_codec_context,
+                       release_global_registration_context),
+               "SkCodec_Register replace")) {
+        return false;
+    }
+    if (!check(first_codec_releases == 1, "SkCodec_Register replaced context released")) {
+        return false;
+    }
+    if (!check(!SkCodec_Register(nullptr, reskia_test_codec_make, nullptr, nullptr) &&
+               !SkCodec_Register(reskia_test_codec_peek, nullptr, nullptr, nullptr),
+               "SkCodec_Register rejects null callbacks")) {
+        return false;
+    }
+
+    constexpr reskia_typeface_factory_id_t factory_id = 0x52534B46u; // RSKF
+    int first_typeface_callbacks = 0;
+    int first_typeface_releases = 0;
+    GlobalRegistrationContext first_typeface_context{&first_typeface_callbacks, &first_typeface_releases};
+    if (!check(SkTypeface_Register(
+                       factory_id,
+                       reskia_test_typeface_make,
+                       &first_typeface_context,
+                       release_global_registration_context),
+               "SkTypeface_Register install")) {
+        return false;
+    }
+
+    int second_typeface_callbacks = 0;
+    int second_typeface_releases = 0;
+    GlobalRegistrationContext second_typeface_context{&second_typeface_callbacks, &second_typeface_releases};
+    if (!check(SkTypeface_Register(
+                       factory_id,
+                       reskia_test_typeface_make,
+                       &second_typeface_context,
+                       release_global_registration_context),
+               "SkTypeface_Register replace")) {
+        return false;
+    }
+    if (!check(first_typeface_releases == 1, "SkTypeface_Register replaced context released")) {
+        return false;
+    }
+    if (!check(!SkTypeface_Register(0, reskia_test_typeface_make, nullptr, nullptr) &&
+               !SkTypeface_Register(factory_id, nullptr, nullptr, nullptr) &&
+               !SkTypeface_Register(0x52534B47u, reskia_test_typeface_make, nullptr, nullptr),
+               "SkTypeface_Register rejects invalid replacement")) {
+        return false;
+    }
+    if (!check(second_codec_releases == 0 &&
+               second_typeface_releases == 0,
+               "global registration retained replacement contexts")) {
+        return false;
+    }
+    if (!check(SkCodec_Register(
+                       reskia_test_codec_peek,
+                       reskia_test_codec_make,
+                       nullptr,
+                       nullptr),
+               "SkCodec_Register final no-op replacement")) {
+        return false;
+    }
+    if (!check(SkTypeface_Register(
+                       factory_id,
+                       reskia_test_typeface_make,
+                       nullptr,
+                       nullptr),
+               "SkTypeface_Register final no-op replacement")) {
+        return false;
+    }
+    if (!check(second_codec_releases == 1 &&
+               second_typeface_releases == 1 &&
+               first_typeface_callbacks == 0 &&
+               second_typeface_callbacks == 0,
+               "global registration final replacement releases contexts")) {
+        return false;
+    }
+    return true;
+}
+
 }  // namespace
 
 int main() {
@@ -268,6 +428,7 @@ int main() {
     if (!smoke_optional_decode_entrypoints()) return 1;
     if (!smoke_encoders()) return 1;
     if (!smoke_open_type_svg_factory()) return 1;
+    if (!smoke_global_registration_callbacks()) return 1;
     std::fprintf(stdout, "[codec-smoke] PASS\n");
     return 0;
 }

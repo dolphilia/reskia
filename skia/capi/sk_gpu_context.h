@@ -18,6 +18,7 @@ typedef struct reskia_gr_backend_format_t reskia_gr_backend_format_t;
 typedef struct reskia_gr_backend_render_target_t reskia_gr_backend_render_target_t;
 typedef struct reskia_gr_backend_semaphore_t reskia_gr_backend_semaphore_t;
 typedef struct reskia_gr_backend_texture_t reskia_gr_backend_texture_t;
+typedef struct reskia_gr_context_options_t reskia_gr_context_options_t;
 typedef struct reskia_gr_context_thread_safe_proxy_t reskia_gr_context_thread_safe_proxy_t;
 typedef struct reskia_gr_direct_context_id_t reskia_gr_direct_context_id_t;
 typedef struct reskia_gr_surface_characterization_t reskia_gr_surface_characterization_t;
@@ -139,6 +140,12 @@ bool GrContextThreadSafeProxy_isValid(reskia_gr_context_thread_safe_proxy_t *pro
 bool GrContextThreadSafeProxy_equals(reskia_gr_context_thread_safe_proxy_t *proxy, reskia_gr_context_thread_safe_proxy_t *other); // NULL input returns false
 bool GrContextThreadSafeProxy_notEquals(reskia_gr_context_thread_safe_proxy_t *proxy, reskia_gr_context_thread_safe_proxy_t *other); // NULL input returns false
 reskia_gr_surface_characterization_t *GrContextThreadSafeProxy_createCharacterization(reskia_gr_context_thread_safe_proxy_t *proxy, size_t cache_max_resource_bytes, const reskia_image_info_t *image_info, const reskia_gr_backend_format_t *backend_format, int sample_count, int origin, const reskia_surface_props_t *surface_props, bool is_mipmapped, bool will_use_gl_fbo0, bool is_textureable, bool is_protected, bool vk_rt_supports_input_attachment, bool for_vulkan_secondary_command_buffer); // owned; invalid input returns NULL
+
+reskia_gr_context_options_t *GrContextOptions_new(); // owned
+reskia_gr_context_options_t *GrContextOptions_newCopy(const reskia_gr_context_options_t *options); // owned; NULL returns NULL
+void GrContextOptions_delete(reskia_gr_context_options_t *options); // NULL input is no-op
+bool GrContextOptions_suppressPrints(const reskia_gr_context_options_t *options); // NULL input returns false
+void GrContextOptions_setSuppressPrints(reskia_gr_context_options_t *options, bool suppress); // NULL input is no-op
 
 reskia_gr_surface_characterization_t *GrSurfaceCharacterization_new(); // owned; invalid default characterization
 reskia_gr_surface_characterization_t *GrSurfaceCharacterization_newCopy(const reskia_gr_surface_characterization_t *characterization); // owned; NULL returns NULL
