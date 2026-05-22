@@ -108,10 +108,12 @@ Recorder::Recorder(sk_sp<SharedContext> sharedContext, const RecorderOptions& op
     fResourceProvider = fSharedContext->makeResourceProvider(this->singleOwner(),
                                                              fUniqueID,
                                                              options.fGpuBudgetInBytes);
-    fDrawBufferManager = std::make_unique<DrawBufferManager>(fResourceProvider.get(),
-                                                             fSharedContext->caps());
     fUploadBufferManager = std::make_unique<UploadBufferManager>(fResourceProvider.get(),
                                                                  fSharedContext->caps());
+    fDrawBufferManager = std::make_unique<DrawBufferManager>(fResourceProvider.get(),
+                                                             fSharedContext->caps(),
+                                                             fUploadBufferManager.get());
+
     SkASSERT(fResourceProvider);
 }
 
@@ -139,9 +141,7 @@ BackendApi Recorder::backend() const { return fSharedContext->backend(); }
 std::unique_ptr<Recording> Recorder::snap() {
     TRACE_EVENT0("skia.gpu", TRACE_FUNC);
     ASSERT_SINGLE_OWNER
-    for (auto& device : fTrackedDevices) {
-        device->flushPendingWorkToRecorder();
-    }
+    this->priv().flushTrackedDevices();
 
     std::unordered_set<sk_sp<TextureProxy>, Recording::ProxyHash> nonVolatileLazyProxies;
     std::unordered_set<sk_sp<TextureProxy>, Recording::ProxyHash> volatileLazyProxies;
@@ -166,7 +166,8 @@ std::unique_ptr<Recording> Recorder::snap() {
         // Leaving 'fTrackedDevices' alone since they were flushed earlier and could still be
         // attached to extant SkSurfaces.
         fDrawBufferManager = std::make_unique<DrawBufferManager>(fResourceProvider.get(),
-                                                                 fSharedContext->caps());
+                                                                 fSharedContext->caps(),
+                                                                 fUploadBufferManager.get());
         fTextureDataCache = std::make_unique<TextureDataCache>();
         fUniformDataCache = std::make_unique<UniformDataCache>();
         fGraph->reset();
@@ -195,15 +196,8 @@ std::unique_ptr<Recording> Recorder::snap() {
     fRuntimeEffectDict->reset();
     fTextureDataCache = std::make_unique<TextureDataCache>();
     fUniformDataCache = std::make_unique<UniformDataCache>();
-
-    if (!this->priv().caps()->disableCachedGlyphUploads()) {
-        // inject an initial task to maintain atlas state for next Recording
-        auto uploads = std::make_unique<UploadList>();
-        fAtlasProvider->textAtlasManager()->recordUploads(uploads.get(), /*useCachedUploads=*/true);
-        if (uploads->size() > 0) {
-            sk_sp<Task> uploadTask = UploadTask::Make(uploads.get());
-            this->priv().add(std::move(uploadTask));
-        }
+    if (!this->priv().caps()->requireOrderedRecordings()) {
+        fAtlasProvider->textAtlasManager()->evictAtlases();
     }
 
     return recording;
@@ -251,6 +245,27 @@ BackendTexture Recorder::createBackendTexture(SkISize dimensions, const TextureI
     }
     return fResourceProvider->createBackendTexture(dimensions, info);
 }
+
+#ifdef SK_BUILD_FOR_ANDROID
+
+BackendTexture Recorder::createBackendTexture(AHardwareBuffer* hardwareBuffer,
+                                              bool isRenderable,
+                                              bool isProtectedContent,
+                                              SkISize dimensions,
+                                              bool fromAndroidWindow) const {
+    if (fSharedContext->backend() != BackendApi::kVulkan) {
+        SKGPU_LOG_W("Creating an AHardwareBuffer-backed BackendTexture is only supported with the"
+                    "Vulkan backend.");
+        return {};
+    }
+    return fResourceProvider->createBackendTexture(hardwareBuffer,
+                                                   isRenderable,
+                                                   isProtectedContent,
+                                                   dimensions,
+                                                   fromAndroidWindow);
+}
+
+#endif // SK_BUILD_FOR_ANDROID
 
 bool Recorder::updateBackendTexture(const BackendTexture& backendTex,
                                     const SkPixmap srcData[],
@@ -384,6 +399,10 @@ void RecorderPriv::flushTrackedDevices() {
     for (Device* device : fRecorder->fTrackedDevices) {
         device->flushPendingWorkToRecorder();
     }
+    // Issue next upload flush token. This is only used by the atlasing code which
+    // always uses this method. Calling in Device::flushPendingWorkToRecorder may
+    // miss parent device flushes, increment too often, and lead to atlas corruption.
+    this->tokenTracker()->issueFlushToken();
 }
 
 sk_sp<TextureProxy> RecorderPriv::CreateCachedProxy(Recorder* recorder,

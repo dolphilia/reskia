@@ -725,8 +725,7 @@ bool smoke_context_create_destroy() {
                !GrSurfaceCharacterization_isValid(default_characterization) &&
                GrSurfaceCharacterization_width(default_characterization) == 0 &&
                GrSurfaceCharacterization_height(default_characterization) == 0 &&
-               GrSurfaceCharacterization_newCopy(nullptr) == nullptr &&
-               !GrSurfaceCharacterization_isCompatible(default_characterization, nullptr),
+               GrSurfaceCharacterization_newCopy(nullptr) == nullptr,
                "GrSurfaceCharacterization default/null helpers")) {
         GrSurfaceCharacterization_delete(default_characterization);
         return false;
@@ -816,6 +815,7 @@ bool smoke_context_create_destroy() {
                !Graphite_Context_insertRecording(nullptr, nullptr) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
+               !Graphite_Context_isDeviceLost(nullptr) &&
                Graphite_Context_contextID(nullptr) == nullptr &&
                !Graphite_ContextID_isValid(nullptr) &&
                !Graphite_ContextID_equals(nullptr, nullptr) &&
@@ -1106,6 +1106,11 @@ bool smoke_context_create_destroy() {
         }
         if (!check(Graphite_Context_backend(graphite_context) == RESKIA_GPU_BACKEND_API_METAL,
                    "Graphite_Context_backend")) {
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        if (!check(!Graphite_Context_isDeviceLost(graphite_context),
+                   "Graphite_Context_isDeviceLost")) {
             Reskia_GraphiteContext_Release(graphite_context);
             return false;
         }

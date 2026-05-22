@@ -157,6 +157,12 @@ public:
      */
     void dumpMemoryStatistics(SkTraceMemoryDump* traceMemoryDump) const;
 
+    /**
+     * Returns true if the backend-specific context has gotten into an unrecoverarble, lost state
+     * (e.g. if we've gotten a VK_ERROR_DEVICE_LOST in the Vulkan backend).
+     */
+    bool isDeviceLost() const;
+
     /*
      * Does this context support protected content?
      */
@@ -192,6 +198,21 @@ private:
     friend class ContextPriv;
     friend class ContextCtorAccessor;
 
+    struct PixelTransferResult {
+        using ConversionFn = void(void* dst, const void* mappedBuffer);
+        // If null then the transfer could not be performed. Otherwise this buffer will contain
+        // the pixel data when the transfer is complete.
+        sk_sp<Buffer> fTransferBuffer;
+        // Size of the read.
+        SkISize fSize;
+        // RowBytes for transfer buffer data
+        size_t fRowBytes;
+        // If this is null then the transfer buffer will contain the data in the requested
+        // color type. Otherwise, when the transfer is done this must be called to convert
+        // from the transfer buffer's color type to the requested color type.
+        std::function<ConversionFn> fPixelConverter;
+    };
+
     SingleOwner* singleOwner() const { return &fSingleOwner; }
 
     // Must be called in Make() to handle one-time GPU setup operations that can possibly fail and
@@ -224,19 +245,11 @@ private:
                                SkImage::ReadPixelsCallback callback,
                                SkImage::ReadPixelsContext context);
 
+    void finalizeAsyncReadPixels(SkSpan<PixelTransferResult>,
+                                 SkImage::ReadPixelsCallback callback,
+                                 SkImage::ReadPixelsContext callbackContext);
+
     // Inserts a texture to buffer transfer task, used by asyncReadPixels methods
-    struct PixelTransferResult {
-        using ConversionFn = void(void* dst, const void* mappedBuffer);
-        // If null then the transfer could not be performed. Otherwise this buffer will contain
-        // the pixel data when the transfer is complete.
-        sk_sp<Buffer> fTransferBuffer;
-        // RowBytes for transfer buffer data
-        size_t fRowBytes;
-        // If this is null then the transfer buffer will contain the data in the requested
-        // color type. Otherwise, when the transfer is done this must be called to convert
-        // from the transfer buffer's color type to the requested color type.
-        std::function<ConversionFn> fPixelConverter;
-    };
     PixelTransferResult transferPixels(const TextureProxy*,
                                        const SkImageInfo& srcImageInfo,
                                        const SkColorInfo& dstColorInfo,
@@ -246,7 +259,6 @@ private:
     std::unique_ptr<ResourceProvider> fResourceProvider;
     std::unique_ptr<QueueManager> fQueueManager;
     std::unique_ptr<ClientMappedBufferManager> fMappedBufferManager;
-    std::unique_ptr<PlotUploadTracker> fPlotUploadTracker;
 
     // In debug builds we guard against improper thread handling. This guard is passed to the
     // ResourceCache for the Context.

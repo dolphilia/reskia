@@ -45,7 +45,6 @@ list(APPEND SOURCE_FILES
         src/codec/SkJpegSegmentScan.cpp
         src/codec/SkJpegSourceMgr.cpp
         src/codec/SkJpegUtility.cpp
-        src/codec/SkMasks.cpp
         src/codec/SkMaskSwizzler.cpp
         src/codec/SkParseEncodedOrigin.cpp
         src/codec/SkPixmapUtils.cpp
@@ -147,6 +146,7 @@ list(APPEND SOURCE_FILES
         src/core/SkM44.cpp
         src/core/SkMallocPixelRef.cpp
         src/core/SkMask.cpp
+        src/core/SkMasks.cpp
         src/core/SkMaskBlurFilter.cpp
         src/core/SkMaskCache.cpp
         src/core/SkMaskFilter.cpp
@@ -214,7 +214,6 @@ list(APPEND SOURCE_FILES
         src/core/SkScan_AntiPath.cpp
         src/core/SkScan_Hairline.cpp
         src/core/SkScan_Path.cpp
-        src/core/SkScan_SAAPath.cpp
         src/core/SkScan.cpp
         src/core/SkSLTypeShared.cpp
         src/core/SkSpecialImage.cpp
@@ -468,6 +467,7 @@ list(APPEND SOURCE_FILES
         src/sksl/transform/SkSLEliminateEmptyStatements.cpp
         src/sksl/transform/SkSLEliminateUnreachableCode.cpp
         src/sksl/transform/SkSLFindAndDeclareBuiltinFunctions.cpp
+        src/sksl/transform/SkSLFindAndDeclareBuiltinStructs.cpp
         src/sksl/transform/SkSLFindAndDeclareBuiltinVariables.cpp
         src/sksl/transform/SkSLHoistSwitchVarDeclarationsAtTopLevel.cpp
         src/sksl/transform/SkSLRenamePrivateSymbols.cpp

@@ -27,6 +27,13 @@ public:
                                          Mipmapped = Mipmapped::kNo,
                                          const SkSurfaceProps* props = nullptr);
 
+    // Make a surface that is not registered with the provided recorder. This surface should be
+    // short-lived and it must be flushed manually for its draw commands to be recorded.
+    static sk_sp<SkSurface> MakeGraphiteScratch(Recorder* recorder,
+                                                const SkImageInfo& info,
+                                                Mipmapped = Mipmapped::kNo,
+                                                const SkSurfaceProps* props = nullptr);
+
     Surface(sk_sp<Device>);
     ~Surface() override;
 
@@ -62,7 +69,7 @@ public:
     TextureProxyView readSurfaceView() const;
     sk_sp<SkImage> asImage() const;
     sk_sp<SkImage> makeImageCopy(const SkIRect* subset, Mipmapped) const;
-    TextureProxy* backingTextureProxy();
+    TextureProxy* backingTextureProxy() const;
 
 private:
     sk_sp<Device> fDevice;

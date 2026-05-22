@@ -1812,16 +1812,6 @@ bool GrSurfaceCharacterization_isMipMapped(const reskia_gr_surface_characterizat
 #endif
 }
 
-bool GrSurfaceCharacterization_isCompatible(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_backend_texture_t *texture) {
-#if defined(SK_GANESH)
-    return characterization != nullptr && texture != nullptr && as_surface_characterization(characterization)->isCompatible(*as_backend_texture(texture));
-#else
-    (void) characterization;
-    (void) texture;
-    return false;
-#endif
-}
-
 reskia_gr_backend_format_t *GrSurfaceCharacterization_backendFormat(const reskia_gr_surface_characterization_t *characterization) {
 #if defined(SK_GANESH)
     return characterization != nullptr ? reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(as_surface_characterization(characterization)->backendFormat())) : nullptr;
@@ -2325,6 +2315,15 @@ void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reski
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr && as_graphite_context(ctx)->supportsProtectedContent();
+#else
+    (void) ctx;
+    return false;
+#endif
+}
+
+bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr && as_graphite_context(ctx)->isDeviceLost();
 #else
     (void) ctx;
     return false;

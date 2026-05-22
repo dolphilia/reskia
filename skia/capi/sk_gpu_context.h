@@ -194,7 +194,6 @@ int GrSurfaceCharacterization_sampleCount(const reskia_gr_surface_characterizati
 int GrSurfaceCharacterization_origin(const reskia_gr_surface_characterization_t *characterization); // NULL input returns 0
 bool GrSurfaceCharacterization_isTextureable(const reskia_gr_surface_characterization_t *characterization); // NULL input returns false
 bool GrSurfaceCharacterization_isMipMapped(const reskia_gr_surface_characterization_t *characterization); // NULL input returns false
-bool GrSurfaceCharacterization_isCompatible(const reskia_gr_surface_characterization_t *characterization, const reskia_gr_backend_texture_t *texture); // NULL input returns false
 reskia_gr_backend_format_t *GrSurfaceCharacterization_backendFormat(const reskia_gr_surface_characterization_t *characterization); // owned; NULL input returns NULL
 
 /**
@@ -244,6 +243,7 @@ void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int
 size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
+bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx); // NULL input returns false
 reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 void Graphite_ContextID_delete(reskia_graphite_context_id_t *context_id); // NULL input is no-op
 bool Graphite_ContextID_isValid(const reskia_graphite_context_id_t *context_id); // NULL input returns false

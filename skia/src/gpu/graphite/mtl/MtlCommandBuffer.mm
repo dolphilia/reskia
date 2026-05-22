@@ -196,8 +196,16 @@ bool MtlCommandBuffer::onAddComputePass(const DispatchGroupList& groups) {
                         SkAlignTo(wgBuf.size, 16),
                         wgBuf.index);
             }
-            this->dispatchThreadgroups(dispatch.fParams.fGlobalDispatchSize,
-                                       dispatch.fParams.fLocalDispatchSize);
+            if (const WorkgroupSize* globalSize =
+                        std::get_if<WorkgroupSize>(&dispatch.fGlobalSizeOrIndirect)) {
+                this->dispatchThreadgroups(*globalSize, dispatch.fLocalSize);
+            } else {
+                SkASSERT(std::holds_alternative<BufferView>(dispatch.fGlobalSizeOrIndirect));
+                const BufferView& indirect =
+                        *std::get_if<BufferView>(&dispatch.fGlobalSizeOrIndirect);
+                this->dispatchThreadgroupsIndirect(
+                        dispatch.fLocalSize, indirect.fInfo.fBuffer, indirect.fInfo.fOffset);
+            }
         }
     }
     this->endComputePass();
@@ -243,7 +251,7 @@ bool MtlCommandBuffer::beginRenderPass(const RenderPassDesc& renderPassDesc,
     if (colorTexture) {
         // TODO: check Texture matches RenderPassDesc
         auto colorAttachment = (*descriptor).colorAttachments[0];
-        colorAttachment.texture = ((MtlTexture*)colorTexture)->mtlTexture();
+        colorAttachment.texture = ((const MtlTexture*)colorTexture)->mtlTexture();
         const std::array<float, 4>& clearColor = renderPassDesc.fClearColor;
         colorAttachment.clearColor =
                 MTLClearColorMake(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
@@ -253,7 +261,7 @@ bool MtlCommandBuffer::beginRenderPass(const RenderPassDesc& renderPassDesc,
         if (resolveTexture) {
             SkASSERT(renderPassDesc.fColorResolveAttachment.fStoreOp == StoreOp::kStore);
             // TODO: check Texture matches RenderPassDesc
-            colorAttachment.resolveTexture = ((MtlTexture*)resolveTexture)->mtlTexture();
+            colorAttachment.resolveTexture = ((const MtlTexture*)resolveTexture)->mtlTexture();
             // Inclusion of a resolve texture implies the client wants to finish the
             // renderpass with a resolve.
             if (@available(macOS 10.12, iOS 10.0, tvOS 10.0, *)) {
@@ -276,7 +284,7 @@ bool MtlCommandBuffer::beginRenderPass(const RenderPassDesc& renderPassDesc,
     auto& depthStencilInfo = renderPassDesc.fDepthStencilAttachment;
     if (depthStencilTexture) {
         // TODO: check Texture matches RenderPassDesc
-        id<MTLTexture> mtlTexture = ((MtlTexture*)depthStencilTexture)->mtlTexture();
+        id<MTLTexture> mtlTexture = ((const MtlTexture*)depthStencilTexture)->mtlTexture();
         if (MtlFormatIsDepth(mtlTexture.pixelFormat)) {
             auto depthAttachment = (*descriptor).depthAttachment;
             depthAttachment.texture = mtlTexture;
@@ -317,7 +325,7 @@ bool MtlCommandBuffer::beginRenderPass(const RenderPassDesc& renderPassDesc,
         // The load msaa pipeline takes no uniforms, no vertex/instance attributes and only uses
         // one texture that does not require a sampler.
         fActiveRenderCommandEncoder->setFragmentTexture(
-                ((MtlTexture*) resolveTexture)->mtlTexture(), 0);
+                ((const MtlTexture*) resolveTexture)->mtlTexture(), 0);
         this->draw(PrimitiveType::kTriangleStrip, 0, 4);
     }
 
@@ -759,6 +767,16 @@ void MtlCommandBuffer::dispatchThreadgroups(const WorkgroupSize& globalSize,
                                             const WorkgroupSize& localSize) {
     SkASSERT(fActiveComputeCommandEncoder);
     fActiveComputeCommandEncoder->dispatchThreadgroups(globalSize, localSize);
+}
+
+void MtlCommandBuffer::dispatchThreadgroupsIndirect(const WorkgroupSize& localSize,
+                                                    const Buffer* indirectBuffer,
+                                                    size_t indirectBufferOffset) {
+    SkASSERT(fActiveComputeCommandEncoder);
+
+    id<MTLBuffer> mtlIndirectBuffer = static_cast<const MtlBuffer*>(indirectBuffer)->mtlBuffer();
+    fActiveComputeCommandEncoder->dispatchThreadgroupsWithIndirectBuffer(
+            mtlIndirectBuffer, indirectBufferOffset, localSize);
 }
 
 void MtlCommandBuffer::endComputePass() {

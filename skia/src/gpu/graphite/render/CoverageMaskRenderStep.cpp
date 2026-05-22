@@ -38,7 +38,10 @@ static skvx::float2 get_device_translation(const SkM44& localToDevice) {
 CoverageMaskRenderStep::CoverageMaskRenderStep()
         : RenderStep("CoverageMaskRenderStep",
                      "",
-                     Flags::kPerformsShading | Flags::kHasTextures | Flags::kEmitsCoverage,
+                     // The mask will have AA outsets baked in, but the original bounds for clipping
+                     // still require the outset for analytic coverage.
+                     Flags::kPerformsShading | Flags::kHasTextures | Flags::kEmitsCoverage |
+                     Flags::kOutsetBoundsForAA,
                      /*uniforms=*/{{"maskToDeviceRemainder", SkSLType::kFloat3x3}},
                      PrimitiveType::kTriangleStrip,
                      kDirectDepthGreaterPass,
@@ -90,19 +93,6 @@ const char* CoverageMaskRenderStep::fragmentCoverageSkSL() const {
         half c = sample(pathAtlas, clamp(textureCoords, maskBounds.LT, maskBounds.RB)).r;
         outputCoverage = half4(mix(c, 1 - c, invert));
     )";
-}
-
-float CoverageMaskRenderStep::boundsOutset(const Transform& localToDevice, const Rect&) const {
-    // Always incorporate a 1-pixel wide border to the (device space) mask for AA. CoverageMasks are
-    // expected to be in device space but only after the clip stack has been applied to the
-    // CoverageMask's originating geometry. Hence `localToDevice` is not guaranteed to be identity
-    // `boundsOutset` needs to return a local coordinate outset for the shape which will be applied
-    // to its local-coordinate bounds before it gets transformed to device space.
-    //
-    // TODO(b/238770428): This won't produce an accurate result if the transform has perspective as
-    // the scale is not uniform across the shape. Reconsider what to do here when this RenderStep
-    // supports perspective.
-    return 1.0 / localToDevice.maxScaleFactor();
 }
 
 void CoverageMaskRenderStep::writeVertices(DrawWriter* dw,
@@ -217,9 +207,13 @@ void CoverageMaskRenderStep::writeUniformsAndTextures(const DrawParams& params,
     gatherer->write(maskToDevice);
 
     // Write textures and samplers:
-    const SkSamplingOptions kSamplingOptions(SkFilterMode::kNearest);
+    const bool pixelAligned =
+            params.transform().type() <= Transform::Type::kSimpleRectStaysRect &&
+            params.transform().maxScaleFactor() == 1.f &&
+            all(deviceOrigin == floor(deviceOrigin + SK_ScalarNearlyZero));
     constexpr SkTileMode kTileModes[2] = {SkTileMode::kClamp, SkTileMode::kClamp};
-    gatherer->add(kSamplingOptions, kTileModes, sk_ref_sp(proxy));
+    gatherer->add(pixelAligned ? SkFilterMode::kNearest : SkFilterMode::kLinear,
+                  kTileModes, sk_ref_sp(proxy));
 }
 
 }  // namespace skgpu::graphite
