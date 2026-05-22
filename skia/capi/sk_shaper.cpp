@@ -8,6 +8,7 @@
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkFontStyle.h"
 #include "modules/skshaper/include/SkShaper.h"
+#include "modules/skshaper/include/SkShaper_skunicode.h"
 #include "modules/skunicode/include/SkUnicode.h"
 
 #include "../handles/static_sk_font_mgr-internal.h"
@@ -227,7 +228,7 @@ reskia_shaper_bidi_run_iterator_t *SkShaper_MakeSkUnicodeBidiRunIterator(reskia_
     if (unicode == nullptr || !valid_text(utf8, utf8_bytes)) {
         return nullptr;
     }
-    return release_bidi_iterator(SkShaper::MakeSkUnicodeBidiRunIterator(as_unicode(unicode), utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
+    return release_bidi_iterator(SkShapers::unicode::BidiRunIterator(as_unicode(unicode), utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
 #else
     (void)unicode;
     (void)utf8;

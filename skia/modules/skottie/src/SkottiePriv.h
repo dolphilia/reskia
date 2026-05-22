@@ -11,9 +11,11 @@
 #include "include/core/SkRefCnt.h"
 #include "modules/skottie/include/Skottie.h"
 
+#include "include/core/SkFontMgr.h"
 #include "include/core/SkFontStyle.h"
 #include "include/core/SkString.h"
 #include "include/core/SkTypeface.h"
+#include "modules/skottie/include/ExternalLayer.h"
 #include "modules/skottie/include/SkottieProperty.h"
 #include "modules/skottie/include/SlotManager.h"
 #include "modules/skottie/src/animator/Animator.h"
@@ -22,8 +24,6 @@
 #include "src/core/SkTHash.h"
 
 #include <vector>
-
-class SkFontMgr;
 
 namespace skjson {
 class ArrayValue;
@@ -236,26 +236,8 @@ private:
     sk_sp<sksg::RenderNode> attachTextLayer   (const skjson::ObjectValue&, LayerInfo*) const;
     sk_sp<sksg::RenderNode> attachAudioLayer  (const skjson::ObjectValue&, LayerInfo*) const;
 
-    // Delay resolving the fontmgr until it is actually needed.
-    struct LazyResolveFontMgr {
-        LazyResolveFontMgr(sk_sp<SkFontMgr> fontMgr) : fFontMgr(std::move(fontMgr)) {}
-
-        const sk_sp<SkFontMgr>& get() {
-            if (!fFontMgr) {
-                fFontMgr = SkFontMgr::RefEmpty();
-                SkASSERT(fFontMgr);
-            }
-            return fFontMgr;
-        }
-
-        const sk_sp<SkFontMgr>& getMaybeNull() const { return fFontMgr; }
-
-    private:
-        sk_sp<SkFontMgr> fFontMgr;
-    };
-
     sk_sp<ResourceProvider>      fResourceProvider;
-    LazyResolveFontMgr           fLazyFontMgr;
+    sk_sp<SkFontMgr>             fFontMgr;
     sk_sp<PropertyObserver>      fPropertyObserver;
     sk_sp<Logger>                fLogger;
     sk_sp<MarkerObserver>        fMarkerObserver;
