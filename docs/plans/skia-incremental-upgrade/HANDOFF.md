@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `c464143dfaab463d553b6f48e73ba6889d1e187f`
-- next probe candidate: choose a fixed commit after `c464143dfaab463d553b6f48e73ba6889d1e187f`
+- `SKIA_REF`: `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
+- next probe candidate: choose a fixed commit after `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -41,6 +41,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 007 accepted: `1986c687065ff91583a9f26de66aec2882b59c46`。
 - cycle 008 accepted: `dc528310c09aef0e167cac1d456f4a78bf5b53ec`。
 - cycle 009 accepted: `c464143dfaab463d553b6f48e73ba6889d1e187f`。
+- cycle 010 accepted: `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`。
 
 未実施:
 
@@ -50,11 +51,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 010 の candidate selection から始める。
+次の作業は、cycle 011 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `c464143dfaab463d553b6f48e73ba6889d1e187f` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `a4ff02094bbd98084cdcf79f7fdc3c1edb150433` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -87,22 +88,23 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `c464143dfaab463d553b6f48e73ba6889d1e187f`
-- committer date: 2024-02-12T23:17:30Z
-- subject: `[graphite][vello] Incorporate stroke rework changes`
+- `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
+- committer date: 2024-02-19T01:23:38Z
+- subject: `Roll vulkan-deps from d24319b1bbc9 to f3106c767df7 (1 revision)`
 
-cycle 009 結果:
+cycle 010 結果:
 
-- baseline から 90 commits。
-- `include` / `modules` 差分は 12 files, +262/-40。broad surface は 397 files, +15919/-36049。
-- initial candidate coverage は `missing 0`。stale/signature review は 0。
+- baseline から 94 commits。
+- `include` / `modules` 差分は 25 files, +357/-91。broad surface は 161 files, +2575/-1366。
+- initial candidate coverage は `missing 0`。`GrBackendDrawableInfo` の header relocation により stale report が一時 7 rows を出した。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`。
 - C API catch-up は不要。source/header sync のみで完了。
-- Graphite/Vello 更新により `src/gpu/graphite/SmallPathAtlas.{cpp,h}` を追加。GPU build で glob により `SmallPathAtlas.cpp` が取り込まれることを確認済み。
-- SkParagraph `OneLineShaper.cpp` に対応して `OneLineShaper.h` の `getEmojiSequenceStart` 宣言も同期済み。
+- stale checker は同じ class/method/signature が別 public header に移動した場合を relocation として扱い、真の削除・signature change だけを報告するよう調整済み。
+- `GrBackendDrawableInfo` は `include/gpu/GrBackendDrawableInfo.h` から `include/gpu/ganesh/vk/GrBackendDrawableInfo.h` へ移動。旧 header は compatibility include。
+- Graphite/Vello 更新により `src/gpu/graphite/RasterPathUtils.{cpp,h}` などを同期。GPU build で glob により `RasterPathUtils.cpp` が取り込まれることを確認済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、Vulkan dependency roll、Graphite/Vello churn、SkParagraph fallback behavior に注意して、1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、Skottie/SKSG churn、Vulkan/Dawn dependency roll、Graphite/Vello source-list drift に注意して、1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -115,6 +117,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-007-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-008-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-009-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-010-2026-05-22.md`
 
 ## Cycle close の条件
 

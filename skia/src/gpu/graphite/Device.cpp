@@ -60,6 +60,7 @@
 #include "src/core/SkStrikeCache.h"
 #include "src/core/SkTraceEvent.h"
 #include "src/core/SkVerticesPriv.h"
+#include "src/gpu/TiledTextureUtils.h"
 #include "src/shaders/SkImageShader.h"
 #include "src/text/GlyphRun.h"
 #include "src/text/gpu/GlyphVector.h"
@@ -69,6 +70,7 @@
 #include "src/text/gpu/VertexFiller.h"
 
 #include <functional>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 
@@ -76,6 +78,15 @@ using RescaleGamma       = SkImage::RescaleGamma;
 using RescaleMode        = SkImage::RescaleMode;
 using ReadPixelsCallback = SkImage::ReadPixelsCallback;
 using ReadPixelsContext  = SkImage::ReadPixelsContext;
+
+#if defined(GRAPHITE_TEST_UTILS)
+int gOverrideMaxTextureSizeGraphite = 0;
+// Allows tests to check how many tiles were drawn on the most recent call to
+// Device::drawAsTiledImageRect. This is an atomic because we can write to it from
+// multiple threads during "normal" operations. However, the tests that actually
+// read from it are done single-threaded.
+std::atomic<int> gNumTilesDrawnGraphite{0};
+#endif
 
 namespace skgpu::graphite {
 
@@ -755,6 +766,50 @@ void Device::drawVertices(const SkVertices* vertices, sk_sp<SkBlender> blender,
                        skipColorXform);
 }
 
+bool Device::drawAsTiledImageRect(SkCanvas* canvas,
+                                  const SkImage* image,
+                                  const SkRect* src,
+                                  const SkRect& dst,
+                                  const SkSamplingOptions& sampling,
+                                  const SkPaint& paint,
+                                  SkCanvas::SrcRectConstraint constraint) {
+    auto recorder = canvas->recorder();
+    if (!recorder) {
+        return false;
+    }
+    SkASSERT(src);
+
+    // For Graphite this is a pretty loose heuristic. The Recorder-local cache size (relative
+    // to the large image's size) is used as a proxy for how conservative we should be when
+    // allocating tiles. Since the tiles will actually be owned by the client (via an
+    // ImageProvider) they won't actually add any memory pressure directly to Graphite.
+    size_t cacheSize = recorder->priv().getResourceCacheLimit();
+    size_t maxTextureSize = recorder->priv().caps()->maxTextureSize();
+
+#if defined(GRAPHITE_TEST_UTILS)
+    if (gOverrideMaxTextureSizeGraphite) {
+        maxTextureSize = gOverrideMaxTextureSizeGraphite;
+    }
+    gNumTilesDrawnGraphite.store(0, std::memory_order_relaxed);
+#endif
+
+    [[maybe_unused]] auto [wasTiled, numTiles] =
+            skgpu::TiledTextureUtils::DrawAsTiledImageRect(canvas,
+                                                           image,
+                                                           *src,
+                                                           dst,
+                                                           SkCanvas::kAll_QuadAAFlags,
+                                                           sampling,
+                                                           &paint,
+                                                           constraint,
+                                                           cacheSize,
+                                                           maxTextureSize);
+#if defined(GRAPHITE_TEST_UTILS)
+    gNumTilesDrawnGraphite.store(numTiles, std::memory_order_relaxed);
+#endif
+    return wasTiled;
+}
+
 void Device::drawOval(const SkRect& oval, const SkPaint& paint) {
     if (paint.getPathEffect()) {
         // Dashing requires that the oval path starts on the right side and travels clockwise. This
@@ -1120,8 +1175,7 @@ void Device::drawGeometry(const Transform& localToDevice,
     // it to be drawn.
     std::optional<PathAtlas::MaskAndOrigin> atlasMask;  // only used if `pathAtlas != nullptr`
     if (pathAtlas != nullptr) {
-        std::tie(renderer, atlasMask) = pathAtlas->addShape(recorder(),
-                                                            clip.transformedShapeBounds(),
+        std::tie(renderer, atlasMask) = pathAtlas->addShape(clip.transformedShapeBounds(),
                                                             geometry.shape(),
                                                             localToDevice,
                                                             style);
@@ -1135,8 +1189,7 @@ void Device::drawGeometry(const Transform& localToDevice,
             fRecorder->priv().flushTrackedDevices();
 
             // Try inserting the shape again.
-            std::tie(renderer, atlasMask) = pathAtlas->addShape(recorder(),
-                                                                clip.transformedShapeBounds(),
+            std::tie(renderer, atlasMask) = pathAtlas->addShape(clip.transformedShapeBounds(),
                                                                 geometry.shape(),
                                                                 localToDevice,
                                                                 style);
@@ -1366,6 +1419,7 @@ std::pair<const Renderer*, PathAtlas*> Device::chooseRenderer(const Transform& l
     AtlasProvider* atlasProvider = fRecorder->priv().atlasProvider();
     if (atlasProvider->isAvailable(AtlasProvider::PathAtlasFlags::kCompute) &&
         (strategy == PathRendererStrategy::kComputeAnalyticAA ||
+         strategy == PathRendererStrategy::kComputeMSAA16 ||
          strategy == PathRendererStrategy::kDefault)) {
         pathAtlas = fDC->getComputePathAtlas(fRecorder);
     // Only use CPU rendered paths when multisampling is disabled
@@ -1455,7 +1509,7 @@ void Device::flushPendingWorkToRecorder() {
     // DrawPass stealing will need to share some of the same logic w/o becoming a Task.
 
     // Push any pending uploads from the atlasProvider
-    fRecorder->priv().atlasProvider()->recordUploads(fDC.get(), fRecorder);
+    fRecorder->priv().atlasProvider()->recordUploads(fDC.get());
 
     auto uploadTask = fDC->snapUploadTask(fRecorder);
     if (uploadTask) {

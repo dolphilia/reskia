@@ -502,6 +502,16 @@ def public_method_keys(classes: list[PublicClass]) -> tuple[set[tuple[str, str, 
     return exact, identities
 
 
+def public_method_relocation_keys(classes: list[PublicClass]) -> tuple[set[tuple[str, str, str]], set[tuple[str, str]]]:
+    exact: set[tuple[str, str, str]] = set()
+    identities: set[tuple[str, str]] = set()
+    for cls in classes:
+        for method in cls.methods:
+            exact.add((cls.name, method.name, method.signature))
+            identities.add((cls.name, method.name))
+    return exact, identities
+
+
 def write_stale_capi_report(
     repo: Path,
     classes: list[PublicClass],
@@ -517,6 +527,7 @@ def write_stale_capi_report(
     candidates.
     """
     current_keys, current_identities = public_method_keys(classes)
+    relocated_keys, relocated_identities = public_method_relocation_keys(classes)
     function_index = {function.name: function for function in capi_functions(repo)}
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -554,9 +565,15 @@ def write_stale_capi_report(
             identity_key = method_identity(area, header, class_name, method)
             if exact_key in current_keys:
                 continue
+            relocation_key = (class_name, method, signature)
+            if relocation_key in relocated_keys:
+                continue
             if identity_key in current_identities:
                 stale_status = "signature_changed_review"
                 note = "method still exists in current vendor headers with a different signature; review C ABI compatibility"
+            elif (class_name, method) in relocated_identities:
+                stale_status = "signature_changed_review"
+                note = "method still exists in current vendor headers at a different path with a different signature; review C ABI compatibility"
             else:
                 stale_status = "stale_capi"
                 note = "method is absent from current vendor headers; remove or explicitly classify the C API"
