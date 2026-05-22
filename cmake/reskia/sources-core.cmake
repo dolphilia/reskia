@@ -478,7 +478,7 @@ list(APPEND SOURCE_FILES
         src/text/GlyphRun.cpp
         src/text/SlugFromBuffer.cpp
         src/text/StrikeForGPU.cpp
-        src/utils/SkAnimCodecPlayer.cpp
+        modules/skresources/src/SkAnimCodecPlayer.cpp
         src/utils/SkCamera.cpp
         src/utils/SkCanvasStack.cpp
         src/utils/SkCanvasStateUtils.cpp

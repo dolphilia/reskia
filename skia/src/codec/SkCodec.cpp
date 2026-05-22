@@ -8,6 +8,7 @@
 #include "include/codec/SkCodec.h"
 
 #include "include/codec/SkCodecAnimation.h"
+#include "include/codec/SkPixmapUtils.h"
 #include "include/core/SkAlphaType.h"
 #include "include/core/SkBitmap.h"
 #include "include/core/SkColorPriv.h"
@@ -15,6 +16,7 @@
 #include "include/core/SkColorType.h"
 #include "include/core/SkData.h"
 #include "include/core/SkImage.h" // IWYU pragma: keep
+#include "include/core/SkImageInfo.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkStream.h"
 #include "include/private/base/SkTemplates.h"
@@ -22,8 +24,10 @@
 #include "src/base/SkNoDestructor.h"
 #include "src/codec/SkCodecPriv.h"
 #include "src/codec/SkFrameHolder.h"
+#include "src/codec/SkPixmapUtilsPriv.h"
 #include "src/codec/SkSampler.h"
 
+#include <string>
 #include <string_view>
 #include <utility>
 
@@ -140,6 +144,12 @@ bool HasDecoder(std::string_view id) {
 std::unique_ptr<SkCodec> SkCodec::MakeFromStream(
         std::unique_ptr<SkStream> stream, Result* outResult,
         SkPngChunkReader* chunkReader, SelectionPolicy selectionPolicy) {
+    return MakeFromStream(std::move(stream), SkCodecs::get_decoders(), outResult,
+                          chunkReader, selectionPolicy);
+}
+std::unique_ptr<SkCodec> SkCodec::MakeFromStream(
+        std::unique_ptr<SkStream> stream, SkSpan<const SkCodecs::Decoder> decoders,
+        Result* outResult, SkPngChunkReader* chunkReader, SelectionPolicy selectionPolicy) {
     Result resultStorage;
     if (!outResult) {
         outResult = &resultStorage;
@@ -185,7 +195,6 @@ std::unique_ptr<SkCodec> SkCodec::MakeFromStream(
     }
 
     SkCodecs::MakeFromStreamCallback rawFallback = nullptr;
-    auto decoders = SkCodecs::get_decoders();
     for (const SkCodecs::Decoder& proc : decoders) {
         if (proc.isFormat(buffer, bytesRead)) {
             // png and heif are special, since we want to be able to supply a SkPngChunkReader
@@ -215,10 +224,15 @@ std::unique_ptr<SkCodec> SkCodec::MakeFromStream(
 }
 
 std::unique_ptr<SkCodec> SkCodec::MakeFromData(sk_sp<SkData> data, SkPngChunkReader* reader) {
+    return MakeFromData(std::move(data), SkCodecs::get_decoders(), reader);
+}
+std::unique_ptr<SkCodec> SkCodec::MakeFromData(sk_sp<SkData> data,
+                                               SkSpan<const SkCodecs::Decoder> decoders,
+                                               SkPngChunkReader* reader) {
     if (!data) {
         return nullptr;
     }
-    return MakeFromStream(SkMemoryStream::Make(std::move(data)), nullptr, reader);
+    return MakeFromStream(SkMemoryStream::Make(std::move(data)), decoders, nullptr, reader);
 }
 
 SkCodec::SkCodec(SkEncodedInfo&& info,
@@ -510,21 +524,39 @@ std::tuple<sk_sp<SkImage>, SkCodec::Result> SkCodec::getImage(const SkImageInfo&
         return {nullptr, kInternalError};
     }
 
-    Result result = this->getPixels(info, bm.getPixels(), bm.rowBytes(), options);
-    switch (result) {
-        case kSuccess:
-        case kIncompleteInput:
-        case kErrorInInput:
-            bm.setImmutable();
-            return {bm.asImage(), result};
+    Result result;
+    auto decode = [this, options, &result](const SkPixmap& pm) {
+        result = this->getPixels(pm, options);
+        switch (result) {
+            case SkCodec::kSuccess:
+            case SkCodec::kIncompleteInput:
+            case SkCodec::kErrorInInput:
+                return true;
+            default:
+                return false;
+        }
+    };
 
-        default: break;
+    // If the codec reports this image is rotated, we will decode it into
+    // a temporary buffer, then copy it (rotated) into the pixmap belonging
+    // to bm that we allocated above. If the image is not rotated, we will
+    // decode straight into that allocated pixmap.
+    if (!SkPixmapUtils::Orient(bm.pixmap(), this->getOrigin(), decode)) {
+        return {nullptr, result};
     }
-    return {nullptr, result};
+    // Setting the bitmap to be immutable saves us from having to copy it.
+    bm.setImmutable();
+    return {SkImages::RasterFromBitmap(bm), kSuccess};
 }
 
 std::tuple<sk_sp<SkImage>, SkCodec::Result> SkCodec::getImage() {
-    return this->getImage(this->getInfo(), nullptr);
+    // If the codec reports that it is rotated, we need to rotate the image info
+    // it says it is, so the output is what the user wants.
+    SkImageInfo info = this->getInfo();
+    if (SkEncodedOriginSwapsWidthHeight(this->getOrigin())) {
+        info = SkPixmapUtils::SwapWidthHeight(info);
+    }
+    return this->getImage(info, nullptr);
 }
 
 SkCodec::Result SkCodec::startIncrementalDecode(const SkImageInfo& info, void* pixels,

@@ -6,9 +6,10 @@
  */
 
 #include "gm/gm.h"
+#include "include/codec/SkCodec.h"
+#include "include/codec/SkGifDecoder.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkStream.h"
-#include "include/utils/SkAnimCodecPlayer.h"
 #include "modules/skottie/include/Skottie.h"
 #include "modules/skottie/include/SkottieProperty.h"
 #include "modules/skottie/utils/SkottieUtils.h"
@@ -51,6 +52,7 @@ protected:
     void onOnceBeforeDraw() override {
         if (auto stream = GetResourceAsStream(kSkottieResource)) {
             fAnimation = skottie::Animation::Builder()
+                            .setFontManager(ToolUtils::TestFontMgr())
                             .setResourceProvider(sk_make_sp<FakeWebFontProvider>())
                             .make(stream.get());
         }
@@ -103,6 +105,7 @@ protected:
         if (auto stream = GetResourceAsStream(fResource)) {
             fPropManager = std::make_unique<skottie_utils::CustomPropertyManager>();
             fAnimation   = skottie::Animation::Builder()
+                              .setFontManager(ToolUtils::TestFontMgr())
                               .setPropertyObserver(fPropManager->getPropertyObserver())
                               .make(stream.get());
             fColorProps  = fPropManager->getColorProps();
@@ -216,8 +219,11 @@ private:
     public:
         sk_sp<skresources::ImageAsset> loadImageAsset(const char[], const char[],
                                                       const char[]) const override {
-            return skresources::MultiFrameImageAsset::Make(
-                        GetResourceAsData("images/flightAnim.gif"));
+            sk_sp<SkData> data = GetResourceAsData("images/flightAnim.gif");
+            SkASSERT(data);
+            std::unique_ptr<SkCodec> codec = SkGifDecoder::Decode(data, nullptr);
+            SkASSERT(codec);
+            return skresources::MultiFrameImageAsset::Make(std::move(codec));
         }
     };
 

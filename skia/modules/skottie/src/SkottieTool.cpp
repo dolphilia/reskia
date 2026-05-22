@@ -5,6 +5,10 @@
  * found in the LICENSE file.
  */
 
+#include "include/codec/SkCodec.h"
+#include "include/codec/SkJpegDecoder.h"
+#include "include/codec/SkPngDecoder.h"
+#include "include/codec/SkWebpDecoder.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkGraphics.h"
 #include "include/core/SkPicture.h"
@@ -13,7 +17,6 @@
 #include "include/core/SkStream.h"
 #include "include/core/SkSurface.h"
 #include "include/encode/SkPngEncoder.h"
-#include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #include "include/private/base/SkTPin.h"
 #include "modules/skottie/include/Skottie.h"
 #include "modules/skottie/utils/SkottieUtils.h"
@@ -32,6 +35,7 @@
 
 #if !defined(CPU_ONLY)
 #include "include/gpu/GrContextOptions.h"
+#include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #include "tools/gpu/GrContextFactory.h"
 #endif
 
@@ -42,8 +46,12 @@
     const char* formats_help = "Output format (png, skp, or null)";
 #endif
 
-#if defined(SK_BUILD_FOR_MAC)
+#if defined(SK_BUILD_FOR_MAC) && defined(SK_FONTMGR_CORETEXT_AVAILABLE)
 #include "include/ports/SkFontMgr_mac_ct.h"
+#elif defined(SK_BUILD_FOR_ANDROID) && defined(SK_FONTMGR_ANDROID_AVAILABLE)
+#include "include/ports/SkFontMgr_android.h"
+#elif defined(SK_BUILD_FOR_UNIX) && defined(SK_FONTMGR_FONTCONFIG_AVAILABLE)
+#include "include/ports/SkFontMgr_fontconfig.h"
 #else
 #include "include/ports/SkFontMgr_empty.h"
 #endif
@@ -464,9 +472,17 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    SkCodecs::Register(SkPngDecoder::Decoder());
+    SkCodecs::Register(SkJpegDecoder::Decoder());
+    SkCodecs::Register(SkWebpDecoder::Decoder());
+
     // If necessary, clients should use a font manager that would load fonts from the system.
-#if defined(SK_BUILD_FOR_MAC)
+#if defined(SK_BUILD_FOR_MAC) && defined(SK_FONTMGR_CORETEXT_AVAILABLE)
     sk_sp<SkFontMgr> fontMgr = SkFontMgr_New_CoreText(nullptr);
+#elif defined(SK_BUILD_FOR_ANDROID) && defined(SK_FONTMGR_ANDROID_AVAILABLE)
+    sk_sp<SkFontMgr> fontMgr = SkFontMgr_New_Android(nullptr);
+#elif defined(SK_BUILD_FOR_UNIX) && defined(SK_FONTMGR_FONTCONFIG_AVAILABLE)
+    sk_sp<SkFontMgr> fontMgr = SkFontMgr_New_FontConfig(nullptr);
 #else
     sk_sp<SkFontMgr> fontMgr = SkFontMgr_New_Custom_Empty();
 #endif
@@ -492,6 +508,7 @@ int main(int argc, char** argv) {
     //   - we need to know its duration upfront
     //   - we want to only report parsing errors once
     auto anim = skottie::Animation::Builder()
+            .setFontManager(fontMgr)
             .setLogger(logger)
             .setResourceProvider(rp)
             .make(static_cast<const char*>(data->data()), data->size());

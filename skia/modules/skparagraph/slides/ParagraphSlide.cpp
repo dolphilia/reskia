@@ -4263,22 +4263,29 @@ class ParagraphSlideLast : public ParagraphSlide_Base {
 public:
     ParagraphSlideLast() { fName = "ParagraphSlideLast"; }
     void draw(SkCanvas* canvas) override {
-        canvas->drawColor(SK_ColorWHITE);
+        canvas->clear(SK_ColorGRAY);
         auto fontCollection = getFontCollection();
         fontCollection->setDefaultFontManager(ToolUtils::TestFontMgr());
         fontCollection->enableFontFallback();
-        TextStyle text_style;
-        text_style.setFontFamilies({SkString("Roboto")});
-        text_style.setFontSize(20);
-        text_style.setColor(SK_ColorBLACK);
+
         ParagraphStyle paragraph_style;
-        paragraph_style.setTextStyle(text_style);
-        paragraph_style.setTextAlign(TextAlign::kJustify);
+        TextStyle text_style;
+        text_style.setColor(SK_ColorBLACK);
+        text_style.setFontFamilies({SkString("Roboto")});
+        text_style.setFontSize(200);
         ParagraphBuilderImpl builder(paragraph_style, fontCollection);
         builder.pushStyle(text_style);
-        builder.addText(u"\u3000\u3000哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈");
+        builder.addText("a");
+        PlaceholderStyle placeholder_style;
+        placeholder_style.fHeight = 0;
+        placeholder_style.fWidth = 600;
+        placeholder_style.fBaseline = TextBaseline::kAlphabetic;
+        placeholder_style.fAlignment = PlaceholderAlignment::kBottom;
+        builder.addPlaceholder(placeholder_style);
+        builder.addText("c");
         auto paragraph = builder.Build();
         paragraph->layout(this->size().width());
+        auto results = paragraph->getRectsForRange(1, 2, RectHeightStyle::kTight, RectWidthStyle::kTight);
         paragraph->paint(canvas, 0, 0);
     }
 };

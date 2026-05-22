@@ -8,7 +8,6 @@
 #include "gm/gm.h"
 #include "include/core/SkColor.h"
 #include "include/core/SkStream.h"
-#include "include/utils/SkAnimCodecPlayer.h"
 #include "modules/skottie/include/Skottie.h"
 #include "modules/skottie/include/SkottieProperty.h"
 #include "modules/skottie/utils/SkottieUtils.h"
@@ -52,6 +51,7 @@ protected:
         if (auto stream = GetResourceAsStream(kSkottieResource)) {
             fPropManager = std::make_unique<skottie_utils::CustomPropertyManager>();
             fAnimation = skottie::Animation::Builder()
+                            .setFontManager(ToolUtils::TestFontMgr())
                             .setResourceProvider(sk_make_sp<FakeWebFontProvider>())
                             .setPropertyObserver(fPropManager->getPropertyObserver())
                             .make(stream.get());

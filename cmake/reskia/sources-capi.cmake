@@ -1,7 +1,6 @@
 list(APPEND SOURCE_FILES
         capi/sk_alpha_type.cpp
         capi/sk_animated_image.cpp
-        capi/sk_anim_codec_player.cpp
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
         capi/sk_async_read_result.cpp

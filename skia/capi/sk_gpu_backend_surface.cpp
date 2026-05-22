@@ -17,6 +17,9 @@
 #include "include/gpu/gl/GrGLExtensions.h"
 #include "include/gpu/gl/GrGLTypes.h"
 #include "include/gpu/mock/GrMockTypes.h"
+#if defined(SK_VULKAN)
+#include "include/gpu/vk/VulkanMutableTextureState.h"
+#endif
 #include "include/core/SkTextureCompressionType.h"
 #include "src/core/SkYUVAInfoLocation.h"
 
@@ -1568,7 +1571,10 @@ reskia_skgpu_mutable_texture_state_t *MutableTextureState_new() {
 
 reskia_skgpu_mutable_texture_state_t *MutableTextureState_newVulkan(int vk_image_layout, uint32_t queue_family_index) {
 #if defined(SK_GANESH) && defined(SK_VULKAN)
-    return reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(new skgpu::MutableTextureState(static_cast<VkImageLayout>(vk_image_layout), queue_family_index));
+    return reinterpret_cast<reskia_skgpu_mutable_texture_state_t *>(
+            new skgpu::MutableTextureState(skgpu::MutableTextureStates::MakeVulkan(
+                    static_cast<VkImageLayout>(vk_image_layout),
+                    queue_family_index)));
 #elif defined(SK_GANESH)
     (void) vk_image_layout;
     (void) queue_family_index;
@@ -1610,7 +1616,10 @@ void MutableTextureState_set(reskia_skgpu_mutable_texture_state_t *state, const 
 
 int MutableTextureState_getVkImageLayout(const reskia_skgpu_mutable_texture_state_t *state) {
 #if defined(SK_GANESH) && defined(SK_VULKAN)
-    return state != nullptr ? static_cast<int>(as_mutable_texture_state(state)->getVkImageLayout()) : 0;
+    const skgpu::MutableTextureState *mutable_state = as_mutable_texture_state(state);
+    return mutable_state != nullptr && mutable_state->backend() == skgpu::BackendApi::kVulkan
+                   ? static_cast<int>(skgpu::MutableTextureStates::GetVkImageLayout(mutable_state))
+                   : 0;
 #else
     (void) state;
     return 0;
@@ -1619,7 +1628,10 @@ int MutableTextureState_getVkImageLayout(const reskia_skgpu_mutable_texture_stat
 
 uint32_t MutableTextureState_getQueueFamilyIndex(const reskia_skgpu_mutable_texture_state_t *state) {
 #if defined(SK_GANESH) && defined(SK_VULKAN)
-    return state != nullptr ? as_mutable_texture_state(state)->getQueueFamilyIndex() : 0;
+    const skgpu::MutableTextureState *mutable_state = as_mutable_texture_state(state);
+    return mutable_state != nullptr && mutable_state->backend() == skgpu::BackendApi::kVulkan
+                   ? skgpu::MutableTextureStates::GetVkQueueFamilyIndex(mutable_state)
+                   : 0;
 #else
     (void) state;
     return 0;
