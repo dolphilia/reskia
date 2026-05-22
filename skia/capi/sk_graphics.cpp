@@ -86,6 +86,17 @@ int SkGraphics_SetFontCacheCountLimit(int count) {
     return SkGraphics::SetFontCacheCountLimit(count);
 }
 
+int SkGraphics_GetTypefaceCacheCountLimit() {
+    return SkGraphics::GetTypefaceCacheCountLimit();
+}
+
+int SkGraphics_SetTypefaceCacheCountLimit(int count) {
+    if (count < 0) {
+        return SkGraphics::GetTypefaceCacheCountLimit();
+    }
+    return SkGraphics::SetTypefaceCacheCountLimit(count);
+}
+
 void SkGraphics_PurgeFontCache() {
     SkGraphics::PurgeFontCache();
 }

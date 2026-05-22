@@ -34,6 +34,8 @@ size_t SkGraphics_GetFontCacheUsed(); // () -> size_t
 int SkGraphics_GetFontCacheCountUsed(); // () -> int
 int SkGraphics_GetFontCacheCountLimit(); // () -> int
 int SkGraphics_SetFontCacheCountLimit(int count); // Negative count is rejected and returns the current limit.
+int SkGraphics_GetTypefaceCacheCountLimit(); // () -> int
+int SkGraphics_SetTypefaceCacheCountLimit(int count); // Negative count is rejected and returns the current limit.
 void SkGraphics_PurgeFontCache(); // Process-wide cache purge.
 void SkGraphics_PurgePinnedFontCache(); // Process-wide pinned cache purge.
 size_t SkGraphics_GetResourceCacheTotalBytesUsed(); // () -> size_t
