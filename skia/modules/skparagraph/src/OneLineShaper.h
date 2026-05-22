@@ -28,6 +28,14 @@ public:
 
     size_t unresolvedGlyphs() { return fUnresolvedGlyphs; }
 
+    /**
+     * This method is based on definition of https://unicode.org/reports/tr51/#def_emoji_sequence
+     * It determines if the string begins with an emoji sequence and,
+     * if so, return the first codepoint, moving 'begin' pointer to the next once.
+     * Otherwise it does not move the pointer and returns -1.
+     */
+    static SkUnichar getEmojiSequenceStart(SkUnicode* unicode, const char** begin, const char* end);
+
 private:
 
     struct RunBlock {

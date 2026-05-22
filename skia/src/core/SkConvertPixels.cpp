@@ -51,7 +51,9 @@ static bool swizzle_or_premul(const SkImageInfo& dstInfo,       void* dstPixels,
         !is_8888(srcInfo.colorType()) ||
         steps.flags.linearize         ||
         steps.flags.gamut_transform   ||
-        steps.flags.unpremul          ||
+        #if !defined(SK_USE_FAST_UNPREMUL_324099025)
+        steps.flags.unpremul  ||
+        #endif
         steps.flags.encode) {
         return false;
     }
@@ -63,6 +65,9 @@ static bool swizzle_or_premul(const SkImageInfo& dstInfo,       void* dstPixels,
     if (steps.flags.premul) {
         fn = swapRB ? SkOpts::RGBA_to_bgrA
                     : SkOpts::RGBA_to_rgbA;
+    } else if (steps.flags.unpremul) {
+        fn = swapRB ? SkOpts::rgbA_to_BGRA
+                    : SkOpts::rgbA_to_RGBA;
     } else {
         // If we're not swizzling, we ought to have used rect_memcpy().
         SkASSERT(swapRB);
@@ -219,8 +224,8 @@ static bool convert_to_alpha8(const SkImageInfo& dstInfo,       void* vdst, size
 static void convert_with_pipeline(const SkImageInfo& dstInfo, void* dstRow, int dstStride,
                                   const SkImageInfo& srcInfo, const void* srcRow, int srcStride,
                                   const SkColorSpaceXformSteps& steps) {
-    SkRasterPipeline_MemoryCtx src = { (void*)srcRow, srcStride },
-                               dst = { (void*)dstRow, dstStride };
+    SkRasterPipeline_MemoryCtx src = { const_cast<void*>(srcRow), srcStride },
+                               dst = {                   dstRow,  dstStride };
 
     SkRasterPipeline_<256> pipeline;
     pipeline.appendLoad(srcInfo.colorType(), &src);

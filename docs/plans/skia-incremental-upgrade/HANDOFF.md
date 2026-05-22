@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `dc528310c09aef0e167cac1d456f4a78bf5b53ec`
-- next probe candidate: choose a fixed commit after `dc528310c09aef0e167cac1d456f4a78bf5b53ec`
+- `SKIA_REF`: `c464143dfaab463d553b6f48e73ba6889d1e187f`
+- next probe candidate: choose a fixed commit after `c464143dfaab463d553b6f48e73ba6889d1e187f`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -40,6 +40,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 006 accepted: `ab1e11ab1d10aa598c294b2b1f56ed7c4dd4f823`。
 - cycle 007 accepted: `1986c687065ff91583a9f26de66aec2882b59c46`。
 - cycle 008 accepted: `dc528310c09aef0e167cac1d456f4a78bf5b53ec`。
+- cycle 009 accepted: `c464143dfaab463d553b6f48e73ba6889d1e187f`。
 
 未実施:
 
@@ -49,11 +50,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 009 の candidate selection から始める。
+次の作業は、cycle 010 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `dc528310c09aef0e167cac1d456f4a78bf5b53ec` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `c464143dfaab463d553b6f48e73ba6889d1e187f` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -86,21 +87,22 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `dc528310c09aef0e167cac1d456f4a78bf5b53ec`
-- committer date: 2024-02-05T23:12:35Z
-- subject: `Migrates graphite's main wait mechanism from using Tick to ProcessEvents.`
+- `c464143dfaab463d553b6f48e73ba6889d1e187f`
+- committer date: 2024-02-12T23:17:30Z
+- subject: `[graphite][vello] Incorporate stroke rework changes`
 
-cycle 008 結果:
+cycle 009 結果:
 
-- baseline から 109 commits。
-- `include` / `modules` 差分は 36 files, +440/-129。broad surface は 144 files, +6928/-2390。
-- initial candidate coverage は `missing 0`。stale/signature review は `MutableTextureState`、`SkAnimCodecPlayer`、`Skottie_Logger_log` に出た。
+- baseline から 90 commits。
+- `include` / `modules` 差分は 12 files, +262/-40。broad surface は 397 files, +15919/-36049。
+- initial candidate coverage は `missing 0`。stale/signature review は 0。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`。public include から外れた `SkAnimCodecPlayer` に追従し、対応 C API と smoke target は削除済み。
-- `MutableTextureState` の Vulkan factory/getter は新しい `skgpu::MutableTextureStates` helper 経由に移行済み。
-- skparagraph drift に必要な `src/base/SkUTF.{h,cpp}` も同期済み。
+- stale C API report は `stale_capi 0`。
+- C API catch-up は不要。source/header sync のみで完了。
+- Graphite/Vello 更新により `src/gpu/graphite/SmallPathAtlas.{cpp,h}` を追加。GPU build で glob により `SmallPathAtlas.cpp` が取り込まれることを確認済み。
+- SkParagraph `OneLineShaper.cpp` に対応して `OneLineShaper.h` の `getEmojiSequenceStart` 宣言も同期済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、2週間/3週間候補で増える generated/CanvasKit/backend churn に注意して、1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、Vulkan dependency roll、Graphite/Vello churn、SkParagraph fallback behavior に注意して、1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -112,6 +114,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-006-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-007-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-008-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-009-2026-05-22.md`
 
 ## Cycle close の条件
 
