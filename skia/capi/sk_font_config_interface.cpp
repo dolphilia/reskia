@@ -73,7 +73,7 @@ sk_typeface_t to_typeface_handle(sk_sp<SkTypeface> typeface) {
 
 sk_sp<SkFontMgr> font_mgr_or_default(sk_font_mgr_t font_mgr) {
     if (font_mgr == 0) {
-        return SkFontMgr::RefDefault();
+        return SkFontMgr::RefEmpty();
     }
     return static_sk_font_mgr_get_entity(font_mgr);
 }
@@ -230,15 +230,6 @@ sk_stream_asset_t SkFontConfigInterface_openStream(
 }
 
 sk_typeface_t SkFontConfigInterface_makeTypeface(
-        reskia_font_config_interface_t *interface_,
-        const reskia_font_config_identity_t *identity) {
-    if (interface_ == nullptr || identity == nullptr) {
-        return 0;
-    }
-    return to_typeface_handle(as_interface(interface_)->makeTypeface(*as_identity(identity)));
-}
-
-sk_typeface_t SkFontConfigInterface_makeTypefaceWithFontMgr(
         reskia_font_config_interface_t *interface_,
         const reskia_font_config_identity_t *identity,
         sk_font_mgr_t font_mgr) {

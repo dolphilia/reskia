@@ -380,9 +380,9 @@ UTEST(cskia, drawTextBlob_fromFile) {
 #endif
 
 /**
- * 非推奨：SkTypeface_MakeFromFileで外部フォントを取得し、文字を描画する
+ * 非推奨：空 typeface で文字描画 API の呼び出し経路を確認する
  */
-UTEST(cskia, SkTypeface_MakeFromFile) {
+UTEST(cskia, SkTypeface_MakeEmpty) {
     const int image_width = 500;
     const int image_height = 500;
     SkBitmap* bitmap = SkBitmap_new();
@@ -407,7 +407,7 @@ UTEST(cskia, SkTypeface_MakeFromFile) {
     SkPaint_setAntiAlias(paint3, true);
     SkPaint_setColor(paint3, SkColorSetRGB(136, 136, 136));
 
-    int typeface_key = SkTypeface_MakeFromFile("Mplus1-Regular.ttf", 0);
+    int typeface_key = SkTypeface_MakeEmpty();
     SkFont* font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
     static_sk_typeface_delete(typeface_key);
 

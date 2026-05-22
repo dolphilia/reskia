@@ -382,44 +382,4 @@ bool SkTypeface_Register(
     return true;
 }
 
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-
-sk_typeface_t SkTypeface_MakeDefault() {
-    return make_typeface_handle(SkTypeface::MakeDefault());
-}
-
-sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t fontStyle) {
-    return make_typeface_handle(SkTypeface::MakeFromName(familyName, static_sk_font_style_get_entity(fontStyle)));
-}
-
-sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index) {
-    if (path == nullptr || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromFile(path, index));
-}
-
-sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index) {
-    if (stream_asset == 0 || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromStream(static_sk_stream_asset_take_entity(stream_asset), index));
-}
-
-sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index) {
-    if (data == 0 || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromData(static_sk_data_get_entity(data), index));
-}
-
-sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream) {
-    if (stream == nullptr) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeDeserialize(reinterpret_cast<SkStream *>(stream)));
-}
-
-#endif
-
 }

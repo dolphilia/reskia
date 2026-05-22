@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `596053dde5f0db44e435fb802823524dc01a7637`
-- next probe candidate: choose a fixed commit after `596053dde5f0db44e435fb802823524dc01a7637`
+- `SKIA_REF`: `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
+- next probe candidate: choose a fixed commit after `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -35,6 +35,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 001 accepted: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`。
 - cycle 002 accepted: `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`。
 - cycle 003 accepted: `596053dde5f0db44e435fb802823524dc01a7637`。
+- cycle 004 accepted: `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`。
 
 未実施:
 
@@ -44,11 +45,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 004 の candidate selection から始める。
+次の作業は、cycle 005 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `596053dde5f0db44e435fb802823524dc01a7637` から約2週間後の固定 commit を第一候補にする。
+1. baseline `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -81,17 +82,17 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `596053dde5f0db44e435fb802823524dc01a7637`
-- committer date: 2024-01-10T22:06:21Z
-- subject: `Implement Myers' Sweep-Line algorithm`
+- `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
+- committer date: 2024-01-17T16:34:11Z
+- subject: `Reland "Remove SkFontMgr::RefDefault() and dependent APIs"`
 
-cycle 003 結果:
+cycle 004 結果:
 
-- baseline から 153 commits。
-- `include` / `modules` 差分は 12 files, +939/-19。
+- baseline から 69 commits。
+- `include` / `modules` 差分は 15 files, +50/-130。
 - candidate coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`。`signature_changed_review 0`。
-- `SkGraphics` typeface-cache count limit 2件を C API へ追加し、`modules/bentleyottmann` の 3件を non-mirrored module として `na` 分類済み。
+- stale C API report は `stale_capi 0`。`signature_changed_review 2` は現行 signature への移行として確認済み。
+- upstream で削除された `SkFontMgr::RefDefault` と old `SkTypeface` factories に対応する C API を削除済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
 
 cycle records:
@@ -99,6 +100,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-001-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-002-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-003-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-004-2026-05-22.md`
 
 ## Cycle close の条件
 

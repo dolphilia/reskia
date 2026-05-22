@@ -99,10 +99,7 @@ bool smoke_layout_and_paint() {
         return false;
     }
 
-    sk_font_mgr_t font_mgr = SkFontMgr_RefDefault();
-    if (font_mgr == 0) {
-        font_mgr = SkFontMgr_RefEmpty();
-    }
+    sk_font_mgr_t font_mgr = SkFontMgr_RefEmpty();
     if (!check(font_mgr != 0, "font manager") ||
         !check(SkParagraph_FontCollection_setDefaultFontManager(collection, font_mgr), "set font manager")) {
         static_sk_font_mgr_delete(font_mgr);

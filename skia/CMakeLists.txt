@@ -21,6 +21,9 @@ if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
 endif()
 
 if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+    if(NOT TARGET skresources)
+        add_subdirectory("${PROJECT_SOURCE_DIR}/modules/skresources" "${CMAKE_BINARY_DIR}/_deps/skresources")
+    endif()
     set(RESKIA_SVG_SHAPING_INCLUDE_DIRS
             "${PROJECT_SOURCE_DIR}"
             "${PROJECT_SOURCE_DIR}/modules/svg/include"
@@ -245,12 +248,10 @@ if (WIN32)
             src/utils/win/SkHRESULT.cpp
             src/utils/win/SkIStream.cpp
             src/ports/SkFontMgr_win_dw.cpp
-            src/ports/SkFontMgr_win_dw_factory.cpp
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
             src/ports/SkFontMgr_mac_ct.cpp
-            src/ports/SkFontMgr_mac_ct_factory.cpp
             src/sfnt/SkOTTable_name.cpp
             src/sfnt/SkOTUtils.cpp
             src/ports/SkScalerContext_mac_ct.cpp
@@ -263,11 +264,6 @@ elseif (UNIX)
     list(APPEND SOURCE_FILES
             src/ports/SkOSFile_posix.cpp
     )
-    if(RESKIA_ENABLE_FONTCONFIG_CAPI)
-        list(APPEND SOURCE_FILES src/ports/SkFontMgr_fontconfig_factory.cpp)
-    else()
-        list(APPEND SOURCE_FILES src/ports/SkFontMgr_empty_factory.cpp)
-    endif()
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})

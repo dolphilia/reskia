@@ -54,14 +54,24 @@ SkFont::SkFont(sk_sp<SkTypeface> face, SkScalar size, SkScalar scaleX, SkScalar 
     , fSkewX(skewX)
     , fFlags(kDefault_Flags)
     , fEdging(static_cast<unsigned>(kDefault_Edging))
-    , fHinting(static_cast<unsigned>(kDefault_Hinting))
-{}
+    , fHinting(static_cast<unsigned>(kDefault_Hinting)) {
+    if (!fTypeface) {
+        fTypeface = SkTypeface::MakeEmpty();
+    }
+}
 
 SkFont::SkFont(sk_sp<SkTypeface> face, SkScalar size) : SkFont(std::move(face), size, 1, 0) {}
 
 SkFont::SkFont(sk_sp<SkTypeface> face) : SkFont(std::move(face), kDefault_Size, 1, 0) {}
 
 SkFont::SkFont() : SkFont(nullptr, kDefault_Size) {}
+
+void SkFont::setTypeface(sk_sp<SkTypeface> tf) {
+    fTypeface = std::move(tf);
+    if (!fTypeface) {
+        fTypeface = SkTypeface::MakeEmpty();
+    }
+}
 
 bool SkFont::operator==(const SkFont& b) const {
     return  fTypeface.get() == b.fTypeface.get() &&
@@ -321,15 +331,11 @@ SkScalar SkFont::getMetrics(SkFontMetrics* metrics) const {
 }
 
 SkTypeface* SkFont::getTypefaceOrDefault() const {
-    return fTypeface ? fTypeface.get() : SkTypeface::GetDefaultTypeface();
+    return fTypeface.get();
 }
 
 sk_sp<SkTypeface> SkFont::refTypefaceOrDefault() const {
-#if !defined(SK_DISABLE_LEGACY_DEFAULT_TYPEFACE)
-    return fTypeface ? fTypeface : SkTypeface::MakeDefault();
-#else
-    return fTypeface ? fTypeface : SkTypeface::MakeEmpty();
-#endif
+    return fTypeface;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -688,7 +688,7 @@ std::unique_ptr<Run> TextLine::shapeEllipsis(const SkString& ellipsis, const Clu
 
         std::unique_ptr<SkShaper> shaper = SkShaper::MakeShapeDontWrapOrReorder(
                             fOwner->getUnicode()->copy(),
-                            fallback ? SkFontMgr::RefDefault() : SkFontMgr::RefEmpty());
+                            SkFontMgr::RefEmpty());
         shaper->shape(ellipsis.c_str(),
                       ellipsis.size(),
                       font,

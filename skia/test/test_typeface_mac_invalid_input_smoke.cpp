@@ -24,12 +24,12 @@ int main() {
         return 2;
     }
 
-    const sk_typeface_t typeface_handle = SkTypeface_MakeDefault();
+    const sk_typeface_t typeface_handle = SkTypeface_MakeEmpty();
     auto *typeface = static_cast<reskia_typeface_t *>(static_sk_typeface_get_ptr(typeface_handle));
-    if (!check(typeface_handle != 0 && typeface != nullptr, "SkTypeface_MakeDefault()")) {
+    if (!check(typeface_handle != 0 && typeface != nullptr, "SkTypeface_MakeEmpty()")) {
         return 3;
     }
-    if (!check(Mac_SkTypeface_GetCTFontRef(typeface) != nullptr, "Mac_SkTypeface_GetCTFontRef(default)")) {
+    if (!check(Mac_SkTypeface_GetCTFontRef(typeface) == nullptr, "Mac_SkTypeface_GetCTFontRef(empty)")) {
         static_sk_typeface_delete(typeface_handle);
         return 4;
     }

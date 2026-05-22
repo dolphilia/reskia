@@ -48,10 +48,7 @@ bool smoke_collection() {
         return false;
     }
 
-    sk_font_mgr_t font_mgr = SkFontMgr_RefDefault();
-    if (font_mgr == 0) {
-        font_mgr = SkFontMgr_RefEmpty();
-    }
+    sk_font_mgr_t font_mgr = SkFontMgr_RefEmpty();
     if (!check(font_mgr != 0, "font manager handle")) {
         SkParagraph_FontCollection_release(collection);
         return false;

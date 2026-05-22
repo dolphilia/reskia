@@ -245,7 +245,7 @@ bool smoke_text_style() {
         SkParagraph_TextStyle_delete(style);
         return false;
     }
-    sk_typeface_t typeface = SkTypeface_MakeDefault();
+    sk_typeface_t typeface = SkTypeface_MakeEmpty();
     sk_typeface_t cloned_typeface = SkParagraph_FontArguments_CloneTypeface(paragraph_font_arguments, typeface);
     if (cloned_typeface != 0) {
         static_sk_typeface_delete(cloned_typeface);

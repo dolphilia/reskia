@@ -59,9 +59,6 @@ void SkFontMgr_ref(reskia_font_mgr_t *font_mgr); // retained: 参照カウント
 void SkFontMgr_unref(reskia_font_mgr_t *font_mgr); // owned: 参照カウントを減らす。NULL 入力では no-op
 // static
 sk_font_mgr_t SkFontMgr_RefEmpty(); // 生成不能では 0
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-sk_font_mgr_t SkFontMgr_RefDefault(); // 生成不能では 0
-#endif
 
 #ifdef __cplusplus
 }

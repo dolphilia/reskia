@@ -43,8 +43,7 @@ void SkFontConfigInterface_unref(reskia_font_config_interface_t *interface_);
 
 bool SkFontConfigInterface_matchFamilyName(reskia_font_config_interface_t *interface_, const char family_name[], const reskia_font_style_t *requested, reskia_font_config_identity_t *out_font_identifier, reskia_string_t *out_family_name, reskia_font_style_t **out_style);
 sk_stream_asset_t SkFontConfigInterface_openStream(reskia_font_config_interface_t *interface_, const reskia_font_config_identity_t *identity);
-sk_typeface_t SkFontConfigInterface_makeTypeface(reskia_font_config_interface_t *interface_, const reskia_font_config_identity_t *identity);
-sk_typeface_t SkFontConfigInterface_makeTypefaceWithFontMgr(reskia_font_config_interface_t *interface_, const reskia_font_config_identity_t *identity, sk_font_mgr_t font_mgr);
+sk_typeface_t SkFontConfigInterface_makeTypeface(reskia_font_config_interface_t *interface_, const reskia_font_config_identity_t *identity, sk_font_mgr_t font_mgr);
 
 #ifdef __cplusplus
 }

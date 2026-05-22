@@ -108,17 +108,6 @@ sk_typeface_t SkTypeface_MakeDeserialize(reskia_stream_t *stream, sk_font_mgr_t 
  */
 bool SkTypeface_Register(reskia_typeface_factory_id_t id, reskia_typeface_factory_make_proc_t make, void *user_data, reskia_callback_release_proc_t release_proc);
 
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-
-sk_typeface_t SkTypeface_MakeDefault(); // 生成不能では 0
-sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t fontStyle); // familyName は NULL 許可。生成不能では 0
-sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index); // path 非 NULL、index >= 0。invalid 入力や生成不能では 0
-sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index); // stream_asset は consumed。invalid 入力や生成不能では 0
-sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index); // data 非 0、index >= 0。invalid 入力や生成不能では 0
-sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream); // stream は非 NULL。生成不能では 0
-
-#endif
-
 #ifdef __cplusplus
 }
 #endif

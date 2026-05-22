@@ -841,7 +841,7 @@ void SkPDFDevice::internalDrawGlyphRun(
     }
     SkTypeface* typeface = SkFontPriv::GetTypefaceOrDefault(glyphRunFont);
     if (!typeface) {
-        SkDebugf("SkPDF: SkTypeface::MakeDefault() returned nullptr.\n");
+        SkDebugf("SkPDF: SkFontPriv::GetTypefaceOrDefault() returned nullptr.\n");
         return;
     }
 

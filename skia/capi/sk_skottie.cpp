@@ -221,7 +221,7 @@ skottie::TransformPropertyValue transform_property_value_or_default(const reskia
 }
 
 sk_sp<SkFontMgr> font_mgr_or_default(sk_font_mgr_t font_mgr) {
-    return font_mgr != 0 ? static_sk_font_mgr_get_entity(font_mgr) : SkFontMgr::RefDefault();
+    return font_mgr != 0 ? static_sk_font_mgr_get_entity(font_mgr) : SkFontMgr::RefEmpty();
 }
 
 skottie::Shaper::TextDesc make_shaper_text_desc(

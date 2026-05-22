@@ -183,10 +183,4 @@ sk_font_mgr_t SkFontMgr_RefEmpty() {
     return make_font_mgr_handle(SkFontMgr::RefEmpty());
 }
 
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-sk_font_mgr_t SkFontMgr_RefDefault() {
-    return make_font_mgr_handle(SkFontMgr::RefDefault());
-}
-#endif
-
 }

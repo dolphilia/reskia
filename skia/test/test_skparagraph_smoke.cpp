@@ -5,6 +5,9 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkGraphics.h"
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+#include "include/ports/SkFontMgr_mac_ct.h"
+#endif
 
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
@@ -37,7 +40,11 @@ bool smoke_layout_and_paint() {
     using namespace skia::textlayout;
 
     sk_sp<FontCollection> fonts = sk_make_sp<FontCollection>();
-    fonts->setDefaultFontManager(SkFontMgr::RefDefault());
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+    fonts->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
+#else
+    fonts->setDefaultFontManager(SkFontMgr::RefEmpty());
+#endif
 
     ParagraphStyle paragraph_style;
     TextStyle text_style;

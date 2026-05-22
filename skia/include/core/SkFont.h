@@ -241,7 +241,7 @@ public:
 
         @param tf  font and style used to draw text
     */
-    void setTypeface(sk_sp<SkTypeface> tf) { fTypeface = std::move(tf); }
+    void setTypeface(sk_sp<SkTypeface> tf);
 
     /** Sets text size in points.
         Has no effect if textSize is not greater than or equal to zero.
