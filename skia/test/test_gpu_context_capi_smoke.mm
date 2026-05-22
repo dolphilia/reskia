@@ -13,8 +13,12 @@
 #include "handles/static_sk_i_size.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "include/private/gpu/ganesh/GrTypesPriv.h"
 
 namespace {
+
+constexpr reskia_gr_color_type_t kRGBA8888GrColorType =
+        static_cast<reskia_gr_color_type_t>(GrColorType::kRGBA_8888);
 
 bool check(bool condition, const char* message) {
     if (!condition) {
@@ -124,7 +128,7 @@ reskia_gr_external_texture_t *external_texture_generate(
     auto *state = static_cast<ExternalTextureState *>(user_data);
     state->generates += 1;
     reskia_gr_backend_texture_t *backend_texture =
-            GrBackendTexture_newMock(1, 1, mipmapped ? 1 : 0, 4, 0, 321 + state->generates, 0);
+            GrBackendTexture_newMock(1, 1, mipmapped ? 1 : 0, kRGBA8888GrColorType, 0, 321 + state->generates, 0);
     reskia_gr_external_texture_t *external_texture =
             GrExternalTexture_new(backend_texture, external_texture_dispose, user_data, external_texture_release);
     GrBackendTexture_delete(backend_texture);
@@ -209,7 +213,7 @@ bool smoke_context_create_destroy() {
     }
 
 #if RESKIA_TEST_GPU_GANESH
-    reskia_gr_backend_format_t *mock_format = GrBackendFormat_MakeMock(4, 0, false);
+    reskia_gr_backend_format_t *mock_format = GrBackendFormat_MakeMock(kRGBA8888GrColorType, 0, false);
     if (!check(mock_format != nullptr && GrBackendFormat_isValid(mock_format), "GrBackendFormat_MakeMock")) {
         GrBackendFormat_delete(mock_format);
         return false;
@@ -239,10 +243,10 @@ bool smoke_context_create_destroy() {
                default_mock_texture_info.color_type == 0 &&
                default_mock_texture_info.compression_type == 0 &&
                default_mock_texture_info.id == 0 &&
-               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info) &&
-               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info_copy) &&
+               GrMockTextureInfo_newWithValues(kRGBA8888GrColorType, 0, 303, 1, &explicit_mock_texture_info) &&
+               GrMockTextureInfo_newWithValues(kRGBA8888GrColorType, 0, 303, 1, &explicit_mock_texture_info_copy) &&
                GrMockTextureInfo_equals(&explicit_mock_texture_info, &explicit_mock_texture_info_copy) &&
-               GrMockTextureInfo_colorType(&explicit_mock_texture_info) == 4 &&
+               GrMockTextureInfo_colorType(&explicit_mock_texture_info) == kRGBA8888GrColorType &&
                GrMockTextureInfo_compressionType(&explicit_mock_texture_info) == 0 &&
                GrMockTextureInfo_id(&explicit_mock_texture_info) == 303 &&
                GrMockTextureInfo_getProtected(&explicit_mock_texture_info) == 1 &&
@@ -266,10 +270,10 @@ bool smoke_context_create_destroy() {
     if (!check(GrMockRenderTargetInfo_new(&default_mock_render_target_info) &&
                default_mock_render_target_info.color_type == 0 &&
                default_mock_render_target_info.id == 0 &&
-               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info) &&
-               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info_copy) &&
+               GrMockRenderTargetInfo_newWithValues(kRGBA8888GrColorType, 404, 1, &explicit_mock_render_target_info) &&
+               GrMockRenderTargetInfo_newWithValues(kRGBA8888GrColorType, 404, 1, &explicit_mock_render_target_info_copy) &&
                GrMockRenderTargetInfo_equals(&explicit_mock_render_target_info, &explicit_mock_render_target_info_copy) &&
-               GrMockRenderTargetInfo_colorType(&explicit_mock_render_target_info) == 4 &&
+               GrMockRenderTargetInfo_colorType(&explicit_mock_render_target_info) == kRGBA8888GrColorType &&
                GrMockRenderTargetInfo_getProtected(&explicit_mock_render_target_info) == 1 &&
                GrMockRenderTargetInfo_isProtected(&explicit_mock_render_target_info),
                "GrMockRenderTargetInfo value helpers")) {
@@ -351,7 +355,7 @@ bool smoke_context_create_destroy() {
     GrBackendFormat_delete(texture2d_format);
     GrBackendFormat_delete(mock_format);
 
-    reskia_gr_backend_texture_t *mock_texture = GrBackendTexture_newMock(8, 4, 1, 4, 0, 101, 0);
+    reskia_gr_backend_texture_t *mock_texture = GrBackendTexture_newMock(8, 4, 1, kRGBA8888GrColorType, 0, 101, 0);
     if (!check(mock_texture != nullptr &&
                GrBackendTexture_isValid(mock_texture) &&
                GrBackendTexture_width(mock_texture) == 8 &&
@@ -395,7 +399,7 @@ bool smoke_context_create_destroy() {
     }
     reskia_gr_mock_texture_info_t texture_info = {};
     if (!check(GrBackendTexture_getMockTextureInfo(mock_texture, &texture_info) &&
-               texture_info.color_type == 4 &&
+               texture_info.color_type == kRGBA8888GrColorType &&
                texture_info.compression_type == 0 &&
                texture_info.id == 101 &&
                texture_info.is_protected == 0,
@@ -423,7 +427,7 @@ bool smoke_context_create_destroy() {
     MutableTextureState_delete(mutable_state);
     GrBackendTexture_delete(mock_texture);
 
-    reskia_gr_backend_render_target_t *mock_render_target = GrBackendRenderTarget_newMock(16, 12, 1, 8, 4, 202, 0);
+    reskia_gr_backend_render_target_t *mock_render_target = GrBackendRenderTarget_newMock(16, 12, 1, 8, kRGBA8888GrColorType, 202, 0);
     if (!check(mock_render_target != nullptr &&
                GrBackendRenderTarget_isValid(mock_render_target) &&
                GrBackendRenderTarget_width(mock_render_target) == 16 &&
@@ -461,7 +465,7 @@ bool smoke_context_create_destroy() {
     }
     reskia_gr_mock_render_target_info_t render_target_info = {};
     if (!check(GrBackendRenderTarget_getMockRenderTargetInfo(mock_render_target, &render_target_info) &&
-               render_target_info.color_type == 4 &&
+               render_target_info.color_type == kRGBA8888GrColorType &&
                render_target_info.id == 0 &&
                render_target_info.is_protected == 0,
                "GrBackendRenderTarget_getMockRenderTargetInfo")) {
@@ -783,9 +787,9 @@ bool smoke_context_create_destroy() {
                GrDirectContext_dump(nullptr) == nullptr &&
                !GrDirectContext_supportsDistanceFieldText(nullptr) &&
                GrDirectContext_createBackendTexture(nullptr, 1, 1, nullptr, false, false, false, nullptr, 0) == nullptr &&
-               GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, 4, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, kRGBA8888GrColorType, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColor(nullptr, 1, 1, nullptr, nullptr, false, false, false, nullptr, 0) == nullptr &&
-               GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, 4, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, kRGBA8888GrColorType, nullptr, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmaps(nullptr, nullptr, 1, 0, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmap(nullptr, nullptr, 0, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmapsTopLeft(nullptr, nullptr, 1, false, false, nullptr, 0) == nullptr &&
@@ -933,7 +937,7 @@ bool smoke_context_create_destroy() {
 
     ExternalTextureState external_state = {};
     reskia_gr_backend_texture_t *backend_texture =
-            GrBackendTexture_newMock(1, 1, 0, 4, 0, 123, 0);
+            GrBackendTexture_newMock(1, 1, 0, kRGBA8888GrColorType, 0, 123, 0);
     reskia_gr_external_texture_t *external_texture =
             GrExternalTexture_new(backend_texture, external_texture_dispose, &external_state, external_texture_release);
     reskia_gr_backend_texture_t *external_backend_copy =
@@ -1054,7 +1058,7 @@ bool smoke_context_create_destroy() {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
-        reskia_gr_backend_format_t *proxy_format = GrContextThreadSafeProxy_defaultBackendFormat(proxy, 4, true);
+        reskia_gr_backend_format_t *proxy_format = GrContextThreadSafeProxy_defaultBackendFormat(proxy, kRGBA8888GrColorType, true);
         if (!check(proxy_format != nullptr, "GrContextThreadSafeProxy_defaultBackendFormat(valid)")) {
             GrBackendFormat_delete(proxy_format);
             GrContextThreadSafeProxy_release(proxy);

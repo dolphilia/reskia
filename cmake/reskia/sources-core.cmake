@@ -369,6 +369,7 @@ list(APPEND SOURCE_FILES
         src/shaders/SkTriColorShader.cpp
         src/shaders/SkWorkingColorSpaceShader.cpp
         src/sksl/analysis/SkSLCanExitWithoutReturningValue.cpp
+        src/sksl/analysis/SkSLCheckSymbolTableCorrectness.cpp
         src/sksl/analysis/SkSLCheckProgramStructure.cpp
         src/sksl/analysis/SkSLFinalizationChecks.cpp
         src/sksl/analysis/SkSLGetLoopControlFlowInfo.cpp
@@ -429,6 +430,7 @@ list(APPEND SOURCE_FILES
         src/sksl/ir/SkSLSwitchCase.cpp
         src/sksl/ir/SkSLSwitchStatement.cpp
         src/sksl/ir/SkSLSwizzle.cpp
+        src/sksl/ir/SkSLSymbol.cpp
         src/sksl/ir/SkSLSymbolTable.cpp
         src/sksl/ir/SkSLTernaryExpression.cpp
         src/sksl/ir/SkSLType.cpp
@@ -455,7 +457,6 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLPosition.cpp
         src/sksl/SkSLSampleUsage.cpp
         src/sksl/SkSLString.cpp
-        src/sksl/SkSLThreadContext.cpp
         src/sksl/SkSLUtil.cpp
         src/sksl/tracing/SkSLDebugTracePlayer.cpp
         src/sksl/tracing/SkSLDebugTracePriv.cpp

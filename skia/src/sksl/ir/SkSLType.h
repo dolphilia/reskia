@@ -393,6 +393,13 @@ public:
     }
 
     /**
+     * For matrix types, returns the type of a single column (`m[n]`). Asserts for all other types.
+     */
+    const Type& columnType(const Context& context) const {
+        return this->componentType().toCompound(context, this->rows(), /*rows=*/1);
+    }
+
+    /**
      * For texture samplers, returns the type of texture it samples (e.g., sampler2D has
      * a texture type of texture2D).
      */
@@ -630,6 +637,11 @@ protected:
     const Type* applyAccessQualifiers(const Context& context,
                                       ModifierFlags* modifierFlags,
                                       Position pos) const;
+
+    /** If the type is a struct, returns the depth of the struct's most deeply-nested field. */
+    virtual int structNestingDepth() const {
+        return 0;
+    }
 
 private:
     using INHERITED = Symbol;

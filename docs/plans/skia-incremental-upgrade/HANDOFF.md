@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
-- next probe candidate: choose a fixed commit after `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
+- `SKIA_REF`: `126f1add48c34f47b7e1e9fd21ca8c0724748c30`
+- next probe candidate: choose a fixed commit after `126f1add48c34f47b7e1e9fd21ca8c0724748c30`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -36,6 +36,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 002 accepted: `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`。
 - cycle 003 accepted: `596053dde5f0db44e435fb802823524dc01a7637`。
 - cycle 004 accepted: `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`。
+- cycle 005 accepted: `126f1add48c34f47b7e1e9fd21ca8c0724748c30`。
 
 未実施:
 
@@ -45,11 +46,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 005 の candidate selection から始める。
+次の作業は、cycle 006 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `126f1add48c34f47b7e1e9fd21ca8c0724748c30` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -82,18 +83,20 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `38e85e85079f4140158a8f83c7bbceb7a1ac5ca5`
-- committer date: 2024-01-17T16:34:11Z
-- subject: `Reland "Remove SkFontMgr::RefDefault() and dependent APIs"`
+- `126f1add48c34f47b7e1e9fd21ca8c0724748c30`
+- committer date: 2024-01-22T17:24:30Z
+- subject: `Fix assert in GrGLDirectContext`
 
-cycle 004 結果:
+cycle 005 結果:
 
-- baseline から 69 commits。
-- `include` / `modules` 差分は 15 files, +50/-130。
+- baseline から 53 commits。
+- `include` / `modules` 差分は 18 files, +108/-48。
 - candidate coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`。`signature_changed_review 2` は現行 signature への移行として確認済み。
-- upstream で削除された `SkFontMgr::RefDefault` と old `SkTypeface` factories に対応する C API を削除済み。
+- stale C API report は `stale_capi 0`。
+- C API の追加・削除は不要。`GrColorType` enum 挿入に伴い GPU context smoke の hardcoded numeric value を現行 enum 由来に修正済み。
+- `GrGLFinishCallbacks` 移設、`GrGpu::initCaps`、shader compiler ownership 変更、SkSL symbol-table refactor、raster pipeline context 変更に追従して GPU/SkSL/core sources と CMake source list を同期済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは、この候補直後に見える大きめの Vulkan header roll を狭い probe として扱うか、明示的な routing item として分ける。
 
 cycle records:
 
@@ -101,6 +104,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-002-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-003-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-004-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-005-2026-05-22.md`
 
 ## Cycle close の条件
 
