@@ -2439,6 +2439,15 @@ reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_g
 #endif
 }
 
+int Graphite_Recorder_backend(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? to_reskia_graphite_backend_api(as_graphite_recorder(recorder)->backend()) : 0;
+#else
+    (void) recorder;
+    return 0;
+#endif
+}
+
 reskia_canvas_t *Graphite_Recorder_makeDeferredCanvas(reskia_graphite_recorder_t *recorder, const reskia_image_info_t *image_info, const reskia_graphite_texture_info_t *info) {
 #if defined(SK_GRAPHITE)
     if (recorder == nullptr || image_info == nullptr || info == nullptr || !as_graphite_texture_info(info)->isValid()) {

@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
-- first probe candidate: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
+- `SKIA_REF`: `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`
+- next probe candidate: choose a fixed commit after `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -32,27 +32,26 @@ git -C vendor/skia-upstream status --short --branch
 - Phase 30-33 の verification matrix がある。
 - 段階的アップグレードの readiness 調査済み。
 - 約2週間幅が初回 probe の妥当な目安として選定済み。
-- 初回 candidate は `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`。
+- cycle 001 accepted: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`。
+- cycle 002 accepted: `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`。
 
 未実施:
 
-- candidate checkout を使った coverage regression。
-- candidate root を直接扱う tooling 整備。
-- source/header sync。
-- C API 追従実装。
-- `vendor/skia-source.lock` 更新。
+- 次サイクル candidate の選定。
+- 次サイクル candidate checkout を使った coverage regression。
+- 次サイクルの source/header sync と C API 追従実装。
 
 ## 次にやること
 
-最初の作業は、実装ではなく probe tooling と記録の整備から始める。
+次の作業は、cycle 003 の candidate selection から始める。
 
 推奨順:
 
-1. `scripts/generate_public_api_coverage.py` が candidate Skia root と stale C API report を受け取れるようにするか、同等の再現可能な probe 手順を用意する。
-2. `docs/plans/skia-incremental-upgrade/records/` に初回 cycle record を作る。
-3. baseline `0d49b661...` と candidate `5f54e9f...` の public header delta を記録する。
-4. coverage regression と stale C API report を取り、新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
-5. Core / Codec など低リスク領域の追従可否を確認する。
+1. baseline `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467` から約2週間後の固定 commit を第一候補にする。
+2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
+3. candidate checkout を用意して coverage regression と stale C API report を取る。
+4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
+5. low-risk source/header sync と C API catch-up へ進む。
 
 ## やってはいけないこと
 
@@ -77,26 +76,26 @@ git -C vendor/skia-upstream status --short --branch
 
 - `docs/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
 
-## 初回 candidate のメモ
+## 直近 accepted candidate のメモ
 
 候補:
 
-- `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
-- committer date: 2023-12-05T19:49:10Z
-- subject: `Allow undefined format from Android format properties and ability to fallback to importing as external`
+- `f0987bd082ac9bc3d5ed6257c9ecfad18d9b0467`
+- committer date: 2023-12-19T20:17:18Z
+- subject: `Remove FBFetch/DualSourceBlending caps bit checks from the front-end.`
 
-選定理由:
+cycle 002 結果:
 
-- baseline から 181 commits。
-- `include` / `modules` 差分は 83 files, +1147/-565。
-- Core / Codec / Text / GPU / Module に適度に広がる。
-- 12/12 候補ほど Android / Dawn / platform-specific surface が膨らまない。
+- baseline から 169 commits。
+- `include` / `modules` 差分は 52 files, +856/-291。
+- candidate coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- stale C API report は `stale_capi 0`。`signature_changed_review 10` は cycle record で ABI 互換または source-sync deferred として分類済み。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
 
-fallback:
+cycle records:
 
-- `600986ba305dcb2c61f02749d992e46d5996a1e7`
-- baseline から 88 commits。
-- 12/05 候補が重すぎた場合の1週間幅候補。
+- `docs/plans/skia-incremental-upgrade/records/cycle-001-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-002-2026-05-22.md`
 
 ## Cycle close の条件
 

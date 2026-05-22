@@ -75,6 +75,8 @@ public:
     */
     bool nextContour();
 
+    const SkContourMeasure* currentMeasure() const { return fContour.get(); }
+
 #ifdef SK_DEBUG
     void    dump();
 #endif
