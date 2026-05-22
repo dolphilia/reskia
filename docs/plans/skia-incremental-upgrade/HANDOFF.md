@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
-- next probe candidate: choose a fixed commit after `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
+- `SKIA_REF`: `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2`
+- next probe candidate: choose a fixed commit after `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -42,6 +42,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 008 accepted: `dc528310c09aef0e167cac1d456f4a78bf5b53ec`。
 - cycle 009 accepted: `c464143dfaab463d553b6f48e73ba6889d1e187f`。
 - cycle 010 accepted: `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`。
+- cycle 011 accepted: `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2`。
 
 未実施:
 
@@ -51,11 +52,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 011 の candidate selection から始める。
+次の作業は、cycle 012 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `a4ff02094bbd98084cdcf79f7fdc3c1edb150433` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -88,23 +89,24 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`
-- committer date: 2024-02-19T01:23:38Z
-- subject: `Roll vulkan-deps from d24319b1bbc9 to f3106c767df7 (1 revision)`
+- `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2`
+- committer date: 2024-02-26T01:03:25Z
+- subject: `Roll vulkan-deps from fda3fc86e763 to d829c29f43ec (1 revision)`
 
-cycle 010 結果:
+cycle 011 結果:
 
-- baseline から 94 commits。
-- `include` / `modules` 差分は 25 files, +357/-91。broad surface は 161 files, +2575/-1366。
-- initial candidate coverage は `missing 0`。`GrBackendDrawableInfo` の header relocation により stale report が一時 7 rows を出した。
+- baseline から 93 commits。
+- `include` / `modules` 差分は 18 files, +104/-35。broad surface は 165 files, +1650/-1157。
+- 2-week 候補は Skottie/SKSG/SkShaper churn まで広がり、3-week 候補は Graphite/Dawn と SkUnicode まで広がるため、1-week 候補を採用。
+- initial candidate coverage は `missing 0` / `stale_capi 0`。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`。
 - C API catch-up は不要。source/header sync のみで完了。
-- stale checker は同じ class/method/signature が別 public header に移動した場合を relocation として扱い、真の削除・signature change だけを報告するよう調整済み。
-- `GrBackendDrawableInfo` は `include/gpu/GrBackendDrawableInfo.h` から `include/gpu/ganesh/vk/GrBackendDrawableInfo.h` へ移動。旧 header は compatibility include。
-- Graphite/Vello 更新により `src/gpu/graphite/RasterPathUtils.{cpp,h}` などを同期。GPU build で glob により `RasterPathUtils.cpp` が取り込まれることを確認済み。
+- RuntimeEffect/RasterPipeline の source drift により `src/core/SkRasterPipelineOpList.h` と新規 `src/core/SkKnownRuntimeEffects.{cpp,h}` を同期。
+- `SkKnownRuntimeEffects.cpp` は `cmake/reskia/sources-core.cmake` に追加し、`SkBlendShader.cpp` のリンク依存を解消。upstream で削除された `SkTextBlobTrace.{cpp,h}` は Reskia 側からも削除し、source list から外した。
+- SkParagraph と optional Skottie の source/header/gni も同期。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、Skottie/SKSG churn、Vulkan/Dawn dependency roll、Graphite/Vello source-list drift に注意して、1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、より広い Skottie/SKSG update、SkShaper/SkUnicode changes、Dawn/Graphite source-list drift に注意して、1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -118,6 +120,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-008-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-009-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-010-2026-05-22.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-011-2026-05-22.md`
 
 ## Cycle close の条件
 

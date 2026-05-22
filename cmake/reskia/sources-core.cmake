@@ -205,6 +205,7 @@ list(APPEND SOURCE_FILES
         src/core/SkRRect.cpp
         src/core/SkRSXform.cpp
         src/core/SkRTree.cpp
+        src/core/SkKnownRuntimeEffects.cpp
         src/core/SkRuntimeBlender.cpp
         src/core/SkRuntimeEffect.cpp
         src/core/SkScalar.cpp
@@ -233,7 +234,6 @@ list(APPEND SOURCE_FILES
         src/core/SkSwizzler_opts.cpp
         src/core/SkTaskGroup.cpp
         src/core/SkTextBlob.cpp
-        src/core/SkTextBlobTrace.cpp
         src/core/SkTypeface_remote.cpp
         src/core/SkTypeface.cpp
         src/core/SkTypefaceCache.cpp
