@@ -36,6 +36,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkColorPalette.cpp
         src/codec/SkEncodedInfo.cpp
         src/codec/SkExif.cpp
+        src/codec/SkGainmapInfo.cpp
         src/codec/SkHeifCodec.cpp
         src/codec/SkIcoCodec.cpp
         src/codec/SkImageGenerator_FromEncoded.cpp

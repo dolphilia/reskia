@@ -22,6 +22,7 @@ add_library(svg
         src/SkSVGFe.cpp
         src/SkSVGFeBlend.cpp
         src/SkSVGFeColorMatrix.cpp
+        src/SkSVGFeComponentTransfer.cpp
         src/SkSVGFeComposite.cpp
         src/SkSVGFeDisplacementMap.cpp
         src/SkSVGFeFlood.cpp
@@ -29,6 +30,7 @@ add_library(svg
         src/SkSVGFeImage.cpp
         src/SkSVGFeLightSource.cpp
         src/SkSVGFeLighting.cpp
+        src/SkSVGFeMerge.cpp
         src/SkSVGFeMorphology.cpp
         src/SkSVGFeOffset.cpp
         src/SkSVGFeTurbulence.cpp

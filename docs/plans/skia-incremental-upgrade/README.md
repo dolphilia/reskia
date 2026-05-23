@@ -10,13 +10,13 @@
 - [HANDOFF.md](HANDOFF.md): 次の作業者がすぐ作業に入るための引き継ぎ文書。
 - [templates/cycle-record-template.md](templates/cycle-record-template.md): 各サイクルの記録テンプレート。
 
-## 現在の初回候補
+## 現在地
 
 - branch: `incremental-upgrade`
-- baseline: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
-- first probe candidate: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
-- candidate date: 2023-12-05T19:49:10Z
-- 位置づけ: 約2週間幅の妥当性を検証する最初の upgrade probe。
+- accepted baseline: `78069713e02aae7f03d20114a8bebe8c6a89259a`
+- baseline date: 2024-05-21T23:02:13Z
+- latest completed cycle: `docs/plans/skia-incremental-upgrade/records/cycle-022-2026-05-24.md`
+- next probe: cycle 023 で baseline から 1週間/2週間/3週間候補を比較する。cycle 022 が 2-week 候補で pass したため、2-week `73e53abdf54f56fe30d60dba6e62e19597fa2618` を第一候補にする。
 
 ## 原則
 
