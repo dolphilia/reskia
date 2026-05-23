@@ -18,6 +18,7 @@
 #include "src/base/SkAutoMalloc.h"
 #include "src/base/SkEndian.h"
 #include "src/core/SkMD5.h"
+#include "src/core/SkStreamPriv.h"
 #include "src/encode/SkICCPriv.h"
 
 #include <algorithm>
@@ -318,8 +319,8 @@ sk_sp<SkData> write_text_tag(const char* text) {
 // Write a CICP tag.
 sk_sp<SkData> write_cicp_tag(const skcms_CICP& cicp) {
     SkDynamicMemoryWStream s;
-    s.write32(SkEndian_SwapBE32(kTAG_cicp));  // Type signature
-    s.write32(0);                             // Reserved
+    SkWStreamWriteU32BE(&s, kTAG_cicp);       // Type signature
+    SkWStreamWriteU32BE(&s, 0);               // Reserved
     s.write8(cicp.color_primaries);           // Color primaries
     s.write8(cicp.transfer_characteristics);  // Transfer characteristics
     s.write8(cicp.matrix_coefficients);       // RGB matrix
@@ -378,31 +379,33 @@ float hdr_trfn_eval(const skcms_TransferFunction& fn, float x) {
 sk_sp<SkData> write_trc_tag(const skcms_Curve& trc) {
     SkDynamicMemoryWStream s;
     if (trc.table_entries) {
-        s.write32(SkEndian_SwapBE32(kTAG_CurveType));     // Type
-        s.write32(0);                                     // Reserved
-        s.write32(SkEndian_SwapBE32(trc.table_entries));  // Value count
+        SkWStreamWriteU32BE(&s, kTAG_CurveType);     // Type
+        SkWStreamWriteU32BE(&s, 0);                  // Reserved
+        SkWStreamWriteU32BE(&s, trc.table_entries);  // Value count
         for (uint32_t i = 0; i < trc.table_entries; ++i) {
             uint16_t value = reinterpret_cast<const uint16_t*>(trc.table_16)[i];
             s.write16(value);
         }
     } else {
-        s.write32(SkEndian_SwapBE32(kTAG_ParaCurveType));  // Type
+        SkWStreamWriteU32BE(&s, kTAG_ParaCurveType);       // Type
         s.write32(0);                                      // Reserved
         const auto& fn = trc.parametric;
         SkASSERT(skcms_TransferFunction_isSRGBish(&fn));
         if (fn.a == 1.f && fn.b == 0.f && fn.c == 0.f && fn.d == 0.f && fn.e == 0.f &&
             fn.f == 0.f) {
-            s.write32(SkEndian_SwapBE16(kExponential_ParaCurveType));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.g)));
+            SkWStreamWriteU16BE(&s, kExponential_ParaCurveType);
+            SkWStreamWriteU16BE(&s, 0);
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.g));
         } else {
-            s.write32(SkEndian_SwapBE16(kGABCDEF_ParaCurveType));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.g)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.a)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.b)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.c)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.d)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.e)));
-            s.write32(SkEndian_SwapBE32(float_round_to_fixed(fn.f)));
+            SkWStreamWriteU16BE(&s, kGABCDEF_ParaCurveType);
+            SkWStreamWriteU16BE(&s, 0);
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.g));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.a));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.b));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.c));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.d));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.e));
+            SkWStreamWriteU32BE(&s, float_round_to_fixed(fn.f));
         }
     }
     s.padToAlign4();
@@ -500,16 +503,16 @@ sk_sp<SkData> write_mAB_or_mBA_tag(uint32_t type,
     }
 
     SkDynamicMemoryWStream s;
-    s.write32(SkEndian_SwapBE32(type));             // Type signature
-    s.write32(0);                                   // Reserved
-    s.write8(kNumChannels);                         // Input channels
-    s.write8(kNumChannels);                         // Output channels
-    s.write16(0);                                   // Reserved
-    s.write32(SkEndian_SwapBE32(b_curves_offset));  // B curve offset
-    s.write32(SkEndian_SwapBE32(matrix_offset));    // Matrix offset
-    s.write32(SkEndian_SwapBE32(m_curves_offset));  // M curve offset
-    s.write32(SkEndian_SwapBE32(clut_offset));      // CLUT offset
-    s.write32(SkEndian_SwapBE32(a_curves_offset));  // A curve offset
+    SkWStreamWriteU32BE(&s, type);  // Type signature
+    s.write32(0);                   // Reserved
+    s.write8(kNumChannels);         // Input channels
+    s.write8(kNumChannels);         // Output channels
+    s.write16(0);                   // Reserved
+    SkWStreamWriteU32BE(&s, b_curves_offset);  // B curve offset
+    SkWStreamWriteU32BE(&s, matrix_offset);    // Matrix offset
+    SkWStreamWriteU32BE(&s, m_curves_offset);  // M curve offset
+    SkWStreamWriteU32BE(&s, clut_offset);      // CLUT offset
+    SkWStreamWriteU32BE(&s, a_curves_offset);  // A curve offset
     SkASSERT(s.bytesWritten() == b_curves_offset);
     for (size_t i = 0; i < kNumChannels; ++i) {
         s.write(b_curves_data[i]->data(), b_curves_data[i]->size());
@@ -548,13 +551,16 @@ void SkICCFloatXYZD50ToGrid16Lab(const float* xyz_float, uint8_t* grid16_lab) {
     for (size_t i = 0; i < 3; ++i) {
         v[i] = v[i] > 0.008856f ? cbrtf(v[i]) : v[i] * 7.787f + (16 / 116.0f);
     }
-    const float L = 116 * v[1] - 16;
-    const float a = 500 * (v[0] - v[1]);
-    const float b = 200 * (v[1] - v[2]);
+
+    const float Lab[3] = {
+            116 * v[1] - 16,
+            500 * (v[0] - v[1]),
+            200 * (v[1] - v[2]),
+    };
     const float Lab_unorm[3] = {
-            std::clamp(L, 0.0f, 100.0f) * 0.01f,
-            std::clamp(a, -128.0f, 127.0f) * (1 / 255.0f) + (128 / 255.0f),
-            std::clamp(b, -128.0f, 127.0f) * (1 / 255.0f) + (128 / 255.0f),
+            Lab[0] * (1.0f / 100),
+            (Lab[1] + 128) * (1.0f / 255),
+            (Lab[2] + 128) * (1.0f / 255),
     };
     // This matches how skcms decodes grid_16 Lab values; see https://crbug.com/skia/13807.
     for (size_t i = 0; i < 3; ++i) {

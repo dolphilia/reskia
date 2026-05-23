@@ -24,13 +24,27 @@ SK_MAKE_BITMASK_OPS(PrecompileImageShaderFlags)
 
 //--------------------------------------------------------------------------------------------------
 namespace PrecompileShadersPriv {
-    sk_sp<PrecompileShader> Blur(sk_sp<PrecompileShader> child);
+    sk_sp<PrecompileShader> Blur(sk_sp<PrecompileShader> wrapped);
+
+    sk_sp<PrecompileShader> Displacement(sk_sp<PrecompileShader> displacement,
+                                         sk_sp<PrecompileShader> color);
+
+    sk_sp<PrecompileShader> Lighting(sk_sp<PrecompileShader> wrapped);
+
+    sk_sp<PrecompileShader> MatrixConvolution(sk_sp<PrecompileShader> wrapped);
+
+    sk_sp<PrecompileShader> LinearMorphology(sk_sp<PrecompileShader> wrapped);
+
+    sk_sp<PrecompileShader> SparseMorphology(sk_sp<PrecompileShader> wrapped);
 
     // TODO: This, technically, doesn't need to take an SkSpan since it is only called from
-    // PrecompileShader::makeWithCTM. Leaving it be for now in case the usage is revised.
+    // PaintOptions::setClipShaders with a single PrecompileShader. Leaving it be for now in case
+    // the usage is revised.
     sk_sp<PrecompileShader> CTM(SkSpan<const sk_sp<PrecompileShader>> wrapped);
 
     sk_sp<PrecompileShader> Image(SkEnumBitMask<PrecompileImageShaderFlags>);
+
+    sk_sp<PrecompileShader> RawImage(SkEnumBitMask<PrecompileImageShaderFlags>);
 
     // This factory variant should be used when the existence or non-existence of the local matrix
     // is known. If 'withLM' is true only the LMShader-wrapped shader will be created while, when

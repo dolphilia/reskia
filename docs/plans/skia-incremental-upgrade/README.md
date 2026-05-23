@@ -13,10 +13,10 @@
 ## 現在地
 
 - branch: `incremental-upgrade`
-- accepted baseline: `78069713e02aae7f03d20114a8bebe8c6a89259a`
-- baseline date: 2024-05-21T23:02:13Z
-- latest completed cycle: `docs/plans/skia-incremental-upgrade/records/cycle-022-2026-05-24.md`
-- next probe: cycle 023 で baseline から 1週間/2週間/3週間候補を比較する。cycle 022 が 2-week 候補で pass したため、2-week `73e53abdf54f56fe30d60dba6e62e19597fa2618` を第一候補にする。
+- accepted baseline: `73e53abdf54f56fe30d60dba6e62e19597fa2618`
+- baseline date: 2024-06-04T20:41:40Z
+- latest completed cycle: `docs/plans/skia-incremental-upgrade/records/cycle-023-2026-05-24.md`
+- next probe: cycle 024 で baseline から 1週間/2週間/3週間候補を比較する。2-week 候補 `24a4123fc949aad0c98d251b05c8ba2b21a9b931` は標準幅だが `include`/`modules` insertions が大きいため、1-week 候補 `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` と差分内容を比較して選ぶ。
 
 ## 原則
 
