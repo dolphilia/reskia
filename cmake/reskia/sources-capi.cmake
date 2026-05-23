@@ -3,6 +3,7 @@ list(APPEND SOURCE_FILES
         capi/sk_animated_image.cpp
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
+        capi/sk_arc.cpp
         capi/sk_async_read_result.cpp
         capi/sk_auto_canvas_restore.cpp
         capi/sk_b_box_hierarchy.cpp

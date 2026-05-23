@@ -4,6 +4,7 @@
 
 #include "sk_path.h"
 
+#include "include/core/SkArc.h"
 #include "include/core/SkPath.h"
 #include "include/pathops/SkPathOps.h"
 
@@ -183,6 +184,13 @@ bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line) {
         return false;
     }
     return reinterpret_cast<SkPath *>(path)->isLine(reinterpret_cast<SkPoint *>(line));
+}
+
+bool SkPath_isArc(reskia_path_t *path, reskia_arc_t *arc) {
+    if (path == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkPath *>(path)->isArc(reinterpret_cast<SkArc *>(arc));
 }
 
 int SkPath_countPoints(reskia_path_t *path) {
