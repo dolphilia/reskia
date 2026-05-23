@@ -121,7 +121,8 @@ cycle 024 結果:
 - source/header sync では Core blur refactor、SkPath、JPEG multi-picture、PNG BGRA10XR encode、Ganesh/Graphite blur utility、Metal/Vulkan/Dawn type updates、SKSL generated Graphite shader 更新を取り込んだ。
 - CMake source-list では新規 `src/core/SkBlurEngine.cpp` を追加した。`gn`/Bazel metadata は Reskia の CMake build surface へ追加しなかった。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- GPU smoke dir の全 target build は既存 legacy `test_c_skia` compile issue で止まるため、対象 smoke executable を target build して `ctest -R` で確認した。
+- 既存 legacy `test_c_skia` compile issue は修正済み。GPU smoke dir の全 target build と `c_skia_test` は pass。
+- `c_skia_font_invalid_input_smoke` と `c_skia_unicode_capi_smoke` の expectation drift も修正済み。GPU smoke dir の full `ctest` は 88/88 pass。
 - 次サイクルでは、accepted baseline `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` から 1週間/2週間候補を再比較する。
 
 cycle records:

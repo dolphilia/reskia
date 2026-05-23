@@ -37,13 +37,16 @@ bool smoke_unicode_static_helpers() {
     uint16_t output[4] = {};
     int32_t required = SkUnicode_convertUtf8ToUtf16("Hi", 2, output, 4);
     reskia_unicode_bidi_region_t regions[4] = {};
+    reskia_unicode_t *icu_unicode = SkUnicodes_ICU_Make();
     int32_t bidi_count = SkUnicode_extractBidi("abc", 3, RESKIA_UNICODE_BIDI_DIRECTION_LTR, regions, 4);
-    return check(required == 2, "convertUtf8ToUtf16 required units") &&
-           check(output[0] == 'H' && output[1] == 'i', "convertUtf8ToUtf16 contents") &&
-           check(SkUnicode_convertUtf16ToUtf8(nullptr, 1) == nullptr, "convertUtf16ToUtf8 null nonzero") &&
-           check(SkUnicode_convertUtf8ToUtf16(nullptr, 1, nullptr, 0) == -1, "convertUtf8ToUtf16 null nonzero") &&
-           check(bidi_count >= 0, "extractBidi") &&
-           check(SkUnicode_extractBidi(nullptr, 1, RESKIA_UNICODE_BIDI_DIRECTION_LTR, nullptr, 0) == -1, "extractBidi null nonzero");
+    bool ok = check(required == 2, "convertUtf8ToUtf16 required units") &&
+              check(output[0] == 'H' && output[1] == 'i', "convertUtf8ToUtf16 contents") &&
+              check(SkUnicode_convertUtf16ToUtf8(nullptr, 1) == nullptr, "convertUtf16ToUtf8 null nonzero") &&
+              check(SkUnicode_convertUtf8ToUtf16(nullptr, 1, nullptr, 0) == -1, "convertUtf8ToUtf16 null nonzero") &&
+              check(icu_unicode != nullptr ? bidi_count >= 0 : bidi_count == -1, "extractBidi backend availability") &&
+              check(SkUnicode_extractBidi(nullptr, 1, RESKIA_UNICODE_BIDI_DIRECTION_LTR, nullptr, 0) == -1, "extractBidi null nonzero");
+    SkUnicode_delete(icu_unicode);
+    return ok;
 }
 
 bool smoke_unicode_instance_helpers() {
