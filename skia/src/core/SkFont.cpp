@@ -66,13 +66,6 @@ SkFont::SkFont(sk_sp<SkTypeface> face) : SkFont(std::move(face), kDefault_Size, 
 
 SkFont::SkFont() : SkFont(nullptr, kDefault_Size) {}
 
-void SkFont::setTypeface(sk_sp<SkTypeface> tf) {
-    fTypeface = std::move(tf);
-    if (!fTypeface) {
-        fTypeface = SkTypeface::MakeEmpty();
-    }
-}
-
 bool SkFont::operator==(const SkFont& b) const {
     return  fTypeface.get() == b.fTypeface.get() &&
             fSize           == b.fSize &&
@@ -91,6 +84,13 @@ void SkFont::dump() const {
     SkDebugf("flags 0x%X\n", fFlags);
     SkDebugf("edging %d\n", (unsigned)fEdging);
     SkDebugf("hinting %d\n", (unsigned)fHinting);
+}
+
+void SkFont::setTypeface(sk_sp<SkTypeface> tf) {
+    fTypeface = std::move(tf);
+    if (!fTypeface) {
+        fTypeface = SkTypeface::MakeEmpty();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,17 +170,17 @@ bool SkFont::hasSomeAntiAliasing() const {
 }
 
 SkGlyphID SkFont::unicharToGlyph(SkUnichar uni) const {
-    return this->getTypefaceOrDefault()->unicharToGlyph(uni);
+    return this->getTypeface()->unicharToGlyph(uni);
 }
 
 void SkFont::unicharsToGlyphs(const SkUnichar uni[], int count, SkGlyphID glyphs[]) const {
-    this->getTypefaceOrDefault()->unicharsToGlyphs(uni, count, glyphs);
+    this->getTypeface()->unicharsToGlyphs(uni, count, glyphs);
 }
 
 int SkFont::textToGlyphs(const void* text, size_t byteLength, SkTextEncoding encoding,
                          SkGlyphID glyphs[], int maxGlyphCount) const {
-    return this->getTypefaceOrDefault()->textToGlyphs(text, byteLength, encoding,
-                                                      glyphs, maxGlyphCount);
+    return this->getTypeface()->textToGlyphs(text, byteLength, encoding,
+                                             glyphs, maxGlyphCount);
 }
 
 SkScalar SkFont::measureText(const void* text, size_t length, SkTextEncoding encoding,
@@ -330,14 +330,6 @@ SkScalar SkFont::getMetrics(SkFontMetrics* metrics) const {
     return metrics->fDescent - metrics->fAscent + metrics->fLeading;
 }
 
-SkTypeface* SkFont::getTypefaceOrDefault() const {
-    return fTypeface.get();
-}
-
-sk_sp<SkTypeface> SkFont::refTypefaceOrDefault() const {
-    return fTypeface;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkFontPriv::ScaleFontMetrics(SkFontMetrics* metrics, SkScalar scale) {
@@ -363,7 +355,7 @@ SkRect SkFontPriv::GetFontBounds(const SkFont& font) {
     m.setScale(font.getSize() * font.getScaleX(), font.getSize());
     m.postSkew(font.getSkewX(), 0);
 
-    SkTypeface* typeface = SkFontPriv::GetTypefaceOrDefault(font);
+    SkTypeface* typeface = font.getTypeface();
 
     SkRect bounds;
     m.mapRect(&bounds, typeface->getBounds());
@@ -406,7 +398,7 @@ void SkFontPriv::GlyphsToUnichars(const SkFont& font, const SkGlyphID glyphs[], 
         return;
     }
 
-    auto typeface = SkFontPriv::GetTypefaceOrDefault(font);
+    auto typeface = font.getTypeface();
     const unsigned numGlyphsInTypeface = typeface->countGlyphs();
     AutoTArray<SkUnichar> unichars(static_cast<size_t>(numGlyphsInTypeface));
     typeface->getGlyphToUnicodeMap(unichars.get());

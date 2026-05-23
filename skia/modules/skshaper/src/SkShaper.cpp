@@ -35,6 +35,9 @@
 #if !defined(SK_DISABLE_LEGACY_SKSHAPER_FUNCTIONS)
 std::unique_ptr<SkShaper> SkShaper::Make(sk_sp<SkFontMgr> fallback) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE) && defined(SK_SHAPER_UNICODE_AVAILABLE)
+    if (!fallback) {
+        fallback = SkFontMgr::RefEmpty();
+    }
     std::unique_ptr<SkShaper> shaper = MakeShapeThenWrap(std::move(fallback));
     if (shaper) {
         return shaper;

@@ -163,8 +163,8 @@ std::unique_ptr<SkCodec> SkJpegxlCodec::MakeFromStream(std::unique_ptr<SkStream>
 
     size_t iccSize = 0;
     // TODO(eustas): format field is currently ignored by decoder.
-    // @TODO 2024/06/14 comment out
-//status = JxlDecoderGetICCProfileSize(dec, /* format = */ nullptr, JXL_COLOR_PROFILE_TARGET_DATA, &iccSize);
+    status = JxlDecoderGetICCProfileSize(
+        dec, /* format = */ nullptr, JXL_COLOR_PROFILE_TARGET_DATA, &iccSize);
     if (status != JXL_DEC_SUCCESS) {
         // Likely incompatible colorspace.
         iccSize = 0;
@@ -173,12 +173,11 @@ std::unique_ptr<SkCodec> SkJpegxlCodec::MakeFromStream(std::unique_ptr<SkStream>
     if (iccSize) {
         auto icc = SkData::MakeUninitialized(iccSize);
         // TODO(eustas): format field is currently ignored by decoder.
-        // @TODO 2024/06/14 comment out
-//        status = JxlDecoderGetColorAsICCProfile(dec,
-//                                                /* format = */ nullptr,
-//                                                JXL_COLOR_PROFILE_TARGET_DATA,
-//                                                reinterpret_cast<uint8_t*>(icc->writable_data()),
-//                                                iccSize);
+        status = JxlDecoderGetColorAsICCProfile(dec,
+                                                /* format = */ nullptr,
+                                                JXL_COLOR_PROFILE_TARGET_DATA,
+                                                reinterpret_cast<uint8_t*>(icc->writable_data()),
+                                                iccSize);
         if (status != JXL_DEC_SUCCESS) {
             // Current event is JXL_DEC_COLOR_ENCODING -> can't fail.
             SkDEBUGFAIL("libjxl returned unexpected status");

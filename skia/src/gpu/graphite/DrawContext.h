@@ -65,6 +65,7 @@ public:
     int pendingRenderSteps() const { return fPendingDraws->renderStepCount(); }
 
     void clear(const SkColor4f& clearColor);
+    void discard();
 
     void recordDraw(const Renderer* renderer,
                     const Transform& localToDevice,

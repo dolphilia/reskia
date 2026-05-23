@@ -25,19 +25,33 @@ class Recorder;
 
 class Image final : public Image_Base {
 public:
-    Image(uint32_t uniqueID, TextureProxyView, const SkColorInfo&);
+    Image(TextureProxyView, const SkColorInfo&);
     ~Image() override;
 
     // Create an Image that wraps the Device and automatically flushes or references the Device's
     // pending tasks when the Image is used in a draw to another canvas.
-    static sk_sp<Image> MakeView(sk_sp<Device> device);
+    static sk_sp<Image> WrapDevice(sk_sp<Device> device);
+
+    // Create an Image by copying the provided texture proxy view into a new texturable proxy.
+    // The source texture does not have to be texturable if it is blittable.
+    static sk_sp<Image> Copy(Recorder*,
+                             const TextureProxyView& srcView,
+                             const SkColorInfo&,
+                             const SkIRect& subset,
+                             Budgeted,
+                             Mipmapped,
+                             SkBackingFit);
 
     const TextureProxyView& textureProxyView() const { return fTextureProxyView; }
+
+    // Always copy this image, even if 'subset' and mipmapping match this image exactly.
+    sk_sp<Image> copyImage(Recorder*, const SkIRect& subset,
+                           Budgeted, Mipmapped, SkBackingFit) const;
 
     SkImage_Base::Type type() const override { return SkImage_Base::Type::kGraphite; }
 
     bool onHasMipmaps() const override {
-        return fTextureProxyView.proxy()->mipmapped() == skgpu::Mipmapped::kYes;
+        return fTextureProxyView.proxy()->mipmapped() == Mipmapped::kYes;
     }
 
     bool onIsProtected() const override {
@@ -67,14 +81,15 @@ public:
 #endif
 
 private:
-    sk_sp<SkImage> copyImage(const SkIRect& subset, Recorder*, RequiredProperties) const;
-    using Image_Base::onMakeSubset;
     sk_sp<SkImage> onMakeSubset(Recorder*, const SkIRect&, RequiredProperties) const override;
-    using Image_Base::onMakeColorTypeAndColorSpace;
     sk_sp<SkImage> makeColorTypeAndColorSpace(Recorder*,
                                               SkColorType targetCT,
                                               sk_sp<SkColorSpace> targetCS,
                                               RequiredProperties) const override;
+
+    // Include the no-op Ganesh functions to avoid warnings about hidden virtuals.
+    using Image_Base::onMakeSubset;
+    using Image_Base::onMakeColorTypeAndColorSpace;
 
     TextureProxyView fTextureProxyView;
 };

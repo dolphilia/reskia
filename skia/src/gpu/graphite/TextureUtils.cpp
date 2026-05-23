@@ -31,6 +31,7 @@
 #include "include/gpu/graphite/Surface.h"
 #include "src/gpu/BlurUtils.h"
 #include "src/gpu/SkBackingFit.h"
+#include "src/gpu/graphite/AttachmentTypes.h"
 #include "src/gpu/graphite/Buffer.h"
 #include "src/gpu/graphite/Caps.h"
 #include "src/gpu/graphite/CommandBuffer.h"
@@ -51,26 +52,22 @@
 
 namespace {
 
-sk_sp<SkSurface> make_surface_with_fallback(skgpu::graphite::Recorder* recorder,
-                                            const SkImageInfo& info,
-                                            skgpu::Mipmapped mipmapped,
-                                            const SkSurfaceProps* surfaceProps) {
+sk_sp<skgpu::graphite::Surface> make_renderable_scratch_surface(
+        skgpu::graphite::Recorder* recorder,
+        const SkImageInfo& info,
+        const SkSurfaceProps* surfaceProps = nullptr) {
     SkColorType ct = recorder->priv().caps()->getRenderableColorType(info.colorType());
     if (ct == kUnknown_SkColorType) {
         return nullptr;
     }
 
-    return SkSurfaces::RenderTarget(recorder, info.makeColorType(ct), mipmapped, surfaceProps);
-}
-
-sk_sp<SkSurface> make_scratch_surface_with_fallback(skgpu::graphite::Recorder* recorder,
-                                                    const SkImageInfo& info) {
-    SkColorType ct = recorder->priv().caps()->getRenderableColorType(info.colorType());
-    if (ct == kUnknown_SkColorType) {
-        return nullptr;
-    }
-
-    return skgpu::graphite::Surface::MakeGraphiteScratch(recorder, info.makeColorType(ct));
+    // TODO(b/323886870): Historically the scratch surfaces used here were exact-fit but they should
+    // be able to be approx-fit and uninstantiated.
+    return skgpu::graphite::Surface::MakeScratch(recorder,
+                                                 info.makeColorType(ct),
+                                                 skgpu::Budgeted::kYes,
+                                                 skgpu::Mipmapped::kNo,
+                                                 SkBackingFit::kExact);
 }
 
 bool valid_client_provided_image(const SkImage* clientProvided,
@@ -118,7 +115,7 @@ sk_sp<SkSpecialImage> eval_blur(skgpu::graphite::Recorder* recorder,
                                                 SkBackingFit::kExact,
 #endif
                                                 outProps,
-                                                /*addInitialClear=*/false);
+                                                skgpu::graphite::LoadOp::kDiscard);
     if (!device) {
         return nullptr;
     }
@@ -429,9 +426,7 @@ sk_sp<SkImage> MakeFromBitmap(Recorder* recorder,
     }
 
     SkASSERT(!requiredProps.fMipmapped || view.proxy()->mipmapped() == skgpu::Mipmapped::kYes);
-    return sk_make_sp<skgpu::graphite::Image>(kNeedNewImageUniqueID,
-                                              std::move(view),
-                                              colorInfo.makeColorType(ct));
+    return sk_make_sp<skgpu::graphite::Image>(std::move(view), colorInfo.makeColorType(ct));
 }
 
 size_t ComputeSize(SkISize dimensions,
@@ -475,10 +470,7 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
 
     // make a Surface matching dstInfo to rescale into
     SkSurfaceProps surfaceProps = {};
-    sk_sp<SkSurface> dst = make_surface_with_fallback(recorder,
-                                                      dstInfo,
-                                                      Mipmapped::kNo,
-                                                      &surfaceProps);
+    sk_sp<SkSurface> dst = make_renderable_scratch_surface(recorder, dstInfo, &surfaceProps);
     if (!dst) {
         return nullptr;
     }
@@ -508,9 +500,7 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
     // Within a rescaling pass tempInput is read from and tempOutput is written to.
     // At the end of the pass tempOutput's texture is wrapped and assigned to tempInput.
     const SkImageInfo& srcImageInfo = srcImage->imageInfo();
-    sk_sp<SkImage> tempInput(new Image(kNeedNewImageUniqueID,
-                                       imageView,
-                                       srcImageInfo.colorInfo()));
+    sk_sp<SkImage> tempInput(new Image(imageView, srcImageInfo.colorInfo()));
     sk_sp<SkSurface> tempOutput;
 
     // Assume we should ignore the rescale linear request if the surface has no color space since
@@ -524,10 +514,7 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
                                                      tempInput->imageInfo().colorType(),
                                                      kPremul_SkAlphaType,
                                                      std::move(linearGamma));
-        tempOutput = make_surface_with_fallback(recorder,
-                                                gammaDstInfo,
-                                                Mipmapped::kNo,
-                                                &surfaceProps);
+        tempOutput = make_renderable_scratch_surface(recorder, gammaDstInfo, &surfaceProps);
         if (!tempOutput) {
             return nullptr;
         }
@@ -539,7 +526,7 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
         gammaDst->drawImageRect(tempInput, srcRect, gammaDstRect,
                                 SkSamplingOptions(SkFilterMode::kNearest), &paint,
                                 SkCanvas::kStrict_SrcRectConstraint);
-        tempInput = SkSurfaces::AsImage(tempOutput);
+        tempInput = SkSurfaces::AsImage(std::move(tempOutput));
         srcRect = gammaDstRect;
     }
 
@@ -560,21 +547,16 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
             }
         }
 
-        SkCanvas* stepDst;
         SkRect stepDstRect;
         if (nextDims == finalSize) {
-            stepDst = dst->getCanvas();
+            tempOutput = dst;
             stepDstRect = dstRect;
         } else {
             SkImageInfo nextInfo = outImageInfo.makeDimensions(nextDims);
-            tempOutput = make_surface_with_fallback(recorder,
-                                                    nextInfo,
-                                                    Mipmapped::kNo,
-                                                    &surfaceProps);
+            tempOutput = make_renderable_scratch_surface(recorder, nextInfo, &surfaceProps);
             if (!tempOutput) {
                 return nullptr;
             }
-            stepDst = tempOutput->getCanvas();
             stepDstRect = SkRect::Make(tempOutput->imageInfo().dimensions());
         }
 
@@ -588,14 +570,14 @@ sk_sp<SkImage> RescaleImage(Recorder* recorder,
         }
         SkPaint paint;
         paint.setBlendMode(SkBlendMode::kSrc);
-        stepDst->drawImageRect(tempInput, srcRect, stepDstRect, samplingOptions, &paint,
-                               SkCanvas::kStrict_SrcRectConstraint);
+        tempOutput->getCanvas()->drawImageRect(tempInput, srcRect, stepDstRect, samplingOptions,
+                                               &paint, SkCanvas::kStrict_SrcRectConstraint);
 
-        tempInput = SkSurfaces::AsImage(tempOutput);
+        tempInput = SkSurfaces::AsImage(std::move(tempOutput));
         srcRect = SkRect::Make(nextDims);
     } while (srcRect.width() != finalSize.width() || srcRect.height() != finalSize.height());
 
-    return SkSurfaces::AsImage(dst);
+    return SkSurfaces::AsImage(std::move(dst));
 }
 
 bool GenerateMipmaps(Recorder* recorder,
@@ -612,8 +594,7 @@ bool GenerateMipmaps(Recorder* recorder,
     // pixel format. We have to be consistent and swizzle on the read.
     auto imgSwizzle = recorder->priv().caps()->getReadSwizzle(colorInfo.colorType(),
                                                               texture->textureInfo());
-    sk_sp<SkImage> scratchImg(
-            new Image(kNeedNewImageUniqueID, TextureProxyView(texture, imgSwizzle), colorInfo));
+    sk_sp<SkImage> scratchImg(new Image(TextureProxyView(texture, imgSwizzle), colorInfo));
 
     SkISize srcSize = texture->dimensions();
     const SkColorInfo outColorInfo = colorInfo.makeAlphaType(kPremul_SkAlphaType);
@@ -621,9 +602,9 @@ bool GenerateMipmaps(Recorder* recorder,
     // Alternate between two scratch surfaces to avoid reading from and writing to a texture in the
     // same pass. The dimensions of the first usages of the two scratch textures will be 1/2 and 1/4
     // those of the original texture, respectively.
-    sk_sp<SkSurface> scratchSurfaces[2];
+    sk_sp<Surface> scratchSurfaces[2];
     for (int i = 0; i < 2; ++i) {
-        scratchSurfaces[i] = make_scratch_surface_with_fallback(
+        scratchSurfaces[i] = make_renderable_scratch_surface(
                 recorder,
                 SkImageInfo::Make(SkISize::Make(std::max(1, srcSize.width() >> (i + 1)),
                                                 std::max(1, srcSize.height() >> (i + 1))),
@@ -637,7 +618,7 @@ bool GenerateMipmaps(Recorder* recorder,
         const SkISize dstSize = SkISize::Make(std::max(srcSize.width() >> 1, 1),
                                               std::max(srcSize.height() >> 1, 1));
 
-        SkSurface* scratchSurface = scratchSurfaces[(mipLevel - 1) & 1].get();
+        Surface* scratchSurface = scratchSurfaces[(mipLevel - 1) & 1].get();
 
         SkPaint paint;
         paint.setBlendMode(SkBlendMode::kSrc);
@@ -662,7 +643,7 @@ bool GenerateMipmaps(Recorder* recorder,
         }
         recorder->priv().add(std::move(copyTask));
 
-        scratchImg = static_cast<const Surface*>(scratchSurface)->asImage();
+        scratchImg = scratchSurface->asImage();
         srcSize = dstSize;
     }
 
@@ -774,7 +755,7 @@ public:
                                              SkBackingFit::kExact,
 #endif
                                              props ? *props : this->surfaceProps(),
-                                             /*addInitialClear=*/false);
+                                             skgpu::graphite::LoadOp::kDiscard);
     }
 
     sk_sp<SkSpecialImage> makeImage(const SkIRect& subset, sk_sp<SkImage> image) const override {
@@ -791,7 +772,6 @@ public:
         skgpu::Swizzle swizzle = fRecorder->priv().caps()->getReadSwizzle(colorInfo.colorType(),
                                                                           proxy->textureInfo());
         return sk_make_sp<skgpu::graphite::Image>(
-                data.getGenerationID(),
                 skgpu::graphite::TextureProxyView(std::move(proxy), swizzle),
                 colorInfo);
     }

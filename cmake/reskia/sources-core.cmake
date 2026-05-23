@@ -115,7 +115,6 @@ list(APPEND SOURCE_FILES
         src/core/SkDraw.cpp
         src/core/SkDrawable.cpp
         src/core/SkDrawBase.cpp
-        src/core/SkDrawLooper.cpp
         src/core/SkDrawShadowInfo.cpp
         src/core/SkEdge.cpp
         src/core/SkEdgeBuilder.cpp
@@ -286,7 +285,6 @@ list(APPEND SOURCE_FILES
         src/effects/SkEmbossMask.cpp
         src/effects/SkEmbossMaskFilter.cpp
         src/effects/SkHighContrastFilter.cpp
-        src/effects/SkLayerDrawLooper.cpp
         src/effects/SkShaderMaskFilterImpl.cpp
         src/effects/SkTableMaskFilter.cpp
         src/effects/SkTrimPathEffect.cpp
@@ -492,7 +490,6 @@ list(APPEND SOURCE_FILES
         src/utils/SkJSON.cpp
         src/utils/SkJSONWriter.cpp
         src/utils/SkMatrix22.cpp
-        src/utils/SkMultiPictureDocument.cpp
         src/utils/SkNullCanvas.cpp
         src/utils/SkNWayCanvas.cpp
         src/utils/SkOrderedFontMgr.cpp

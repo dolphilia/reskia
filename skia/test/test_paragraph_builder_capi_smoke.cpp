@@ -12,6 +12,11 @@
 #include "capi/sk_string.h"
 #include "handles/static_sk_font_mgr.h"
 
+#if defined(__APPLE__)
+#include "handles/static_sk_font_mgr-internal.h"
+#include "include/ports/SkFontMgr_mac_ct.h"
+#endif
+
 namespace {
 
 constexpr uint32_t kWhite = 0xffffffff;
@@ -54,6 +59,8 @@ bool smoke_null_inputs() {
            check(SkParagraph_ParagraphBuilder_getText(nullptr) == nullptr, "get text null") &&
            check(SkParagraph_ParagraphBuilder_getParagraphStyle(nullptr) == nullptr, "get style null") &&
            check(!SkParagraph_ParagraphBuilder_setWordsUtf8(nullptr, nullptr, 0), "set words null") &&
+           check(!SkParagraph_ParagraphBuilder_getClientICUDataCounts(nullptr, nullptr, nullptr, nullptr), "client icu counts null") &&
+           check(!SkParagraph_ParagraphBuilder_getClientICUData(nullptr, nullptr, 0, nullptr, 0, nullptr, 0), "client icu data null") &&
            check(SkParagraph_Paragraph_getHeight(nullptr) == 0.0f, "paragraph height null") &&
            check(!SkParagraph_Paragraph_layout(nullptr, 100), "layout null") &&
            check(!SkParagraph_Paragraph_paint(nullptr, nullptr, 0, 0), "paint null") &&
@@ -99,7 +106,11 @@ bool smoke_layout_and_paint() {
         return false;
     }
 
+#if defined(__APPLE__)
+    sk_font_mgr_t font_mgr = static_sk_font_mgr_make(SkFontMgr_New_CoreText(nullptr));
+#else
     sk_font_mgr_t font_mgr = SkFontMgr_RefEmpty();
+#endif
     if (!check(font_mgr != 0, "font manager") ||
         !check(SkParagraph_FontCollection_setDefaultFontManager(collection, font_mgr), "set font manager")) {
         static_sk_font_mgr_delete(font_mgr);
@@ -131,6 +142,34 @@ bool smoke_layout_and_paint() {
         SkParagraph_FontCollection_release(collection);
         return false;
     }
+
+    reskia_paragraph_builder_t *client_builder = SkParagraph_ParagraphBuilder_make(paragraph_style, collection);
+    const size_t words[] = {0, 5, 18};
+    const size_t graphemes[] = {0, 1, 2, 3};
+    const size_t line_breaks[] = {18};
+    size_t words_count = 0;
+    size_t graphemes_count = 0;
+    size_t line_breaks_count = 0;
+    size_t words_out[3] = {};
+    size_t graphemes_out[4] = {};
+    size_t line_breaks_out[1] = {};
+    if (!check(client_builder != nullptr, "client builder make") ||
+        !check(SkParagraph_ParagraphBuilder_setWordsUtf16(client_builder, words, 3), "set client words") ||
+        !check(SkParagraph_ParagraphBuilder_setGraphemeBreaksUtf8(client_builder, graphemes, 4), "set client graphemes") ||
+        !check(SkParagraph_ParagraphBuilder_setLineBreaksUtf8(client_builder, line_breaks, 1), "set client lines") ||
+        !check(SkParagraph_ParagraphBuilder_getClientICUDataCounts(client_builder, &words_count, &graphemes_count, &line_breaks_count), "client icu counts") ||
+        !check(words_count == 3 && graphemes_count == 4 && line_breaks_count == 1, "client icu count fields") ||
+        !check(SkParagraph_ParagraphBuilder_getClientICUData(client_builder, words_out, 3, graphemes_out, 4, line_breaks_out, 1), "client icu data") ||
+        !check(words_out[2] == 18 && graphemes_out[3] == 3 && line_breaks_out[0] == 18, "client icu data fields")) {
+        SkParagraph_ParagraphBuilder_delete(client_builder);
+        SkParagraph_ParagraphBuilder_delete(builder);
+        static_sk_font_mgr_delete(font_mgr);
+        SkParagraph_TextStyle_delete(text_style);
+        SkParagraph_ParagraphStyle_delete(paragraph_style);
+        SkParagraph_FontCollection_release(collection);
+        return false;
+    }
+    SkParagraph_ParagraphBuilder_delete(client_builder);
 
     if (!check(SkParagraph_ParagraphBuilder_pushStyle(builder, text_style), "push style") ||
         !check(SkParagraph_ParagraphBuilder_addTextUtf8(builder, "Hello paragraph", 15), "add utf8")) {

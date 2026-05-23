@@ -123,6 +123,8 @@ bool SkParagraph_ParagraphBuilder_setGraphemeBreaksUtf8(reskia_paragraph_builder
 bool SkParagraph_ParagraphBuilder_setGraphemeBreaksUtf16(reskia_paragraph_builder_t *builder, const size_t *positions, int32_t count);
 bool SkParagraph_ParagraphBuilder_setLineBreaksUtf8(reskia_paragraph_builder_t *builder, const size_t *positions, int32_t count);
 bool SkParagraph_ParagraphBuilder_setLineBreaksUtf16(reskia_paragraph_builder_t *builder, const size_t *positions, int32_t count);
+bool SkParagraph_ParagraphBuilder_getClientICUDataCounts(reskia_paragraph_builder_t *builder, size_t *out_words_utf16_count, size_t *out_grapheme_breaks_utf8_count, size_t *out_line_breaks_utf8_count);
+bool SkParagraph_ParagraphBuilder_getClientICUData(reskia_paragraph_builder_t *builder, size_t *words_utf16_dst, int32_t words_utf16_count, size_t *grapheme_breaks_utf8_dst, int32_t grapheme_breaks_utf8_count, size_t *line_breaks_utf8_dst, int32_t line_breaks_utf8_count);
 bool SkParagraph_ParagraphBuilder_SetUnicode(reskia_paragraph_builder_t *builder, reskia_unicode_t *unicode); // consumes unicode on success
 void SkParagraph_ParagraphBuilder_Reset(reskia_paragraph_builder_t *builder);
 

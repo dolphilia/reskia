@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace {
@@ -358,6 +359,46 @@ bool SkParagraph_ParagraphBuilder_setLineBreaksUtf16(reskia_paragraph_builder_t 
         return false;
     }
     as_builder(builder)->setLineBreaksUtf16(make_line_breaks(positions, count));
+    return true;
+}
+
+bool SkParagraph_ParagraphBuilder_getClientICUDataCounts(reskia_paragraph_builder_t *builder, size_t *out_words_utf16_count, size_t *out_grapheme_breaks_utf8_count, size_t *out_line_breaks_utf8_count) {
+    if (builder == nullptr ||
+        out_words_utf16_count == nullptr ||
+        out_grapheme_breaks_utf8_count == nullptr ||
+        out_line_breaks_utf8_count == nullptr) {
+        return false;
+    }
+    auto [words_utf16, grapheme_breaks_utf8, line_breaks_utf8] = as_builder(builder)->getClientICUData();
+    *out_words_utf16_count = words_utf16.size();
+    *out_grapheme_breaks_utf8_count = grapheme_breaks_utf8.size();
+    *out_line_breaks_utf8_count = line_breaks_utf8.size();
+    return true;
+}
+
+bool SkParagraph_ParagraphBuilder_getClientICUData(reskia_paragraph_builder_t *builder, size_t *words_utf16_dst, int32_t words_utf16_count, size_t *grapheme_breaks_utf8_dst, int32_t grapheme_breaks_utf8_count, size_t *line_breaks_utf8_dst, int32_t line_breaks_utf8_count) {
+    if (builder == nullptr ||
+        words_utf16_count < 0 ||
+        grapheme_breaks_utf8_count < 0 ||
+        line_breaks_utf8_count < 0 ||
+        (words_utf16_dst == nullptr && words_utf16_count != 0) ||
+        (grapheme_breaks_utf8_dst == nullptr && grapheme_breaks_utf8_count != 0) ||
+        (line_breaks_utf8_dst == nullptr && line_breaks_utf8_count != 0)) {
+        return false;
+    }
+    auto [words_utf16, grapheme_breaks_utf8, line_breaks_utf8] = as_builder(builder)->getClientICUData();
+    const int32_t words_copy_count = std::min<int32_t>(words_utf16_count, static_cast<int32_t>(words_utf16.size()));
+    const int32_t grapheme_copy_count = std::min<int32_t>(grapheme_breaks_utf8_count, static_cast<int32_t>(grapheme_breaks_utf8.size()));
+    const int32_t line_copy_count = std::min<int32_t>(line_breaks_utf8_count, static_cast<int32_t>(line_breaks_utf8.size()));
+    for (int32_t i = 0; i < words_copy_count; ++i) {
+        words_utf16_dst[i] = words_utf16[i];
+    }
+    for (int32_t i = 0; i < grapheme_copy_count; ++i) {
+        grapheme_breaks_utf8_dst[i] = grapheme_breaks_utf8[i];
+    }
+    for (int32_t i = 0; i < line_copy_count; ++i) {
+        line_breaks_utf8_dst[i] = line_breaks_utf8[i].pos;
+    }
     return true;
 }
 

@@ -211,8 +211,8 @@ SkCodec::Result SkAvifCodec::onGetPixels(const SkImageInfo& dstInfo,
     }
 
     if (this->dimensions() != dstInfo.dimensions()) {
-        // @TODO 2024/06/14 comment out
-//        result = avifImageScale(fAvifDecoder->image, dstInfo.width(), dstInfo.height(), &fAvifDecoder->diag);
+        result = avifImageScale(
+                fAvifDecoder->image, dstInfo.width(), dstInfo.height(), &fAvifDecoder->diag);
         if (result != AVIF_RESULT_OK) {
             return kInvalidInput;
         }

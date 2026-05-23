@@ -138,7 +138,6 @@ protected:
     virtual sk_sp<SkTypeface> onMakeFromFile(const char path[], int ttcIndex) const = 0;
 
     virtual sk_sp<SkTypeface> onLegacyMakeTypeface(const char familyName[], SkFontStyle) const = 0;
-
 };
 
 #endif

@@ -194,7 +194,7 @@ void DawnBuffer::onMap() {
     // This should work because our resource tracking mechanism should make sure that
     // the buffer is free of any GPU use at this point.
     wgpu::BufferMapCallbackInfo callbackInfo{};
-    callbackInfo.mode = wgpu::CallbackMode::AllowSpontaneous;
+    callbackInfo.mode = wgpu::CallbackMode::WaitAnyOnly;
     callbackInfo.userdata = this;
     callbackInfo.callback = [](WGPUBufferMapAsyncStatus s, void* userData) {
         auto buffer = static_cast<DawnBuffer*>(userData);
