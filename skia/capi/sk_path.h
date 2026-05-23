@@ -63,6 +63,7 @@ void SkPath_updateBoundsCache(reskia_path_t *path); // (SkPath *path)
 sk_rect_t SkPath_computeTightBounds(reskia_path_t *path); // (SkPath *path) -> sk_rect_t
 bool SkPath_conservativelyContainsRect(reskia_path_t *path, const reskia_rect_t *rect); // (SkPath *path, const SkRect *rect) -> bool
 void SkPath_incReserve(reskia_path_t *path, int extraPtCount); // (SkPath *path, int extraPtCount)
+void SkPath_incReserveWithCounts(reskia_path_t *path, int extraPtCount, int extraVerbCount, int extraConicCount); // NULL input is no-op
 reskia_path_t *SkPath_moveTo(reskia_path_t *path, float x, float y); // (SkPath *path, SkScalar x, SkScalar y) -> SkPath *
 reskia_path_t *SkPath_moveToPoint(reskia_path_t *path, const reskia_point_t *p); // (SkPath *path, const SkPoint *p) -> SkPath *
 reskia_path_t *SkPath_rMoveTo(reskia_path_t *path, float dx, float dy); // (SkPath *path, SkScalar dx, SkScalar dy) -> SkPath *

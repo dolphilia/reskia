@@ -71,6 +71,12 @@
 #include "include/private/chromium/GrSurfaceCharacterization.h"
 #endif
 
+#if defined(SK_GANESH) && defined(SK_METAL) && defined(__APPLE__)
+#include "include/gpu/ganesh/mtl/GrMtlBackendContext.h"
+#include "include/gpu/ganesh/mtl/GrMtlDirectContext.h"
+#include "include/ports/SkCFObject.h"
+#endif
+
 #include "../handles/static_sk_i_size-internal.h"
 #include "../handles/static_sk_capabilities-internal.h"
 #include "../handles/static_sk_color_space.h"
@@ -532,20 +538,21 @@ bool copy_yuva_locations(const SkYUVAInfo::YUVALocations &native_locations, resk
 extern "C" {
 
 reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queue) {
-#if defined(SK_GANESH) && defined(SK_METAL)
+#if defined(SK_GANESH) && defined(SK_METAL) && defined(__APPLE__)
     if (device == nullptr || queue == nullptr) {
         return nullptr;
     }
-    return reinterpret_cast<reskia_direct_context_t *>(GrDirectContext::MakeMetal(device, queue).release());
+
+    GrMtlBackendContext backend_context;
+    backend_context.fDevice = sk_ret_cfp(reinterpret_cast<CFTypeRef>(device));
+    backend_context.fQueue = sk_ret_cfp(reinterpret_cast<CFTypeRef>(queue));
+
+    return reinterpret_cast<reskia_direct_context_t *>(GrDirectContexts::MakeMetal(backend_context).release());
 #else
     (void) device;
     (void) queue;
     return nullptr;
 #endif
-}
-
-reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue) {
-    return Reskia_GaneshContext_MakeMetal(device, queue);
 }
 
 reskia_direct_context_t *GrDirectContext_MakeMock() {
@@ -2301,6 +2308,15 @@ size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr ? as_graphite_context(ctx)->maxBudgetedBytes() : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump) {
 #if defined(SK_GRAPHITE)
     if (ctx != nullptr && trace_memory_dump != nullptr) {
@@ -2327,6 +2343,15 @@ bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx) {
 #else
     (void) ctx;
     return false;
+#endif
+}
+
+int Graphite_Context_maxTextureSize(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr ? as_graphite_context(ctx)->maxTextureSize() : 0;
+#else
+    (void) ctx;
+    return 0;
 #endif
 }
 
@@ -2392,6 +2417,15 @@ void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *record
 size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder) {
 #if defined(SK_GRAPHITE)
     return recorder != nullptr ? as_graphite_recorder(recorder)->currentBudgetedBytes() : 0;
+#else
+    (void) recorder;
+    return 0;
+#endif
+}
+
+size_t Graphite_Recorder_maxBudgetedBytes(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? as_graphite_recorder(recorder)->maxBudgetedBytes() : 0;
 #else
     (void) recorder;
     return 0;

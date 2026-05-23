@@ -770,7 +770,7 @@ bool smoke_context_create_destroy() {
     if (!check(graphite_async_fail_state.calls == 6, "Graphite_Context async invalid fail callbacks")) {
         return false;
     }
-    if (GrDirectContext_MakeMetal(nullptr, nullptr) != nullptr) {
+    if (Reskia_GaneshContext_MakeMetal(nullptr, nullptr) != nullptr) {
         return false;
     }
     GrDirectContext_deleteBackendTexture(nullptr, nullptr);
@@ -817,8 +817,10 @@ bool smoke_context_create_destroy() {
                !Graphite_Context_submit(nullptr, false) &&
                !Graphite_Context_insertRecording(nullptr, nullptr) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
+               Graphite_Context_maxBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
                !Graphite_Context_isDeviceLost(nullptr) &&
+               Graphite_Context_maxTextureSize(nullptr) == 0 &&
                Graphite_Context_contextID(nullptr) == nullptr &&
                !Graphite_ContextID_isValid(nullptr) &&
                !Graphite_ContextID_equals(nullptr, nullptr) &&
@@ -840,6 +842,7 @@ bool smoke_context_create_destroy() {
                Graphite_Recorder_makeDeferredCanvas(nullptr, nullptr, nullptr) == nullptr &&
                Graphite_Recorder_snap(nullptr) == nullptr &&
                Graphite_Recorder_currentBudgetedBytes(nullptr) == 0 &&
+               Graphite_Recorder_maxBudgetedBytes(nullptr) == 0 &&
                Graphite_Recorder_createBackendTexture(nullptr, 0, nullptr) == nullptr &&
                !Graphite_Recorder_updateBackendTexture(nullptr, nullptr, nullptr, 0) &&
                Graphite_TextureInfo_newCopy(nullptr) == nullptr &&

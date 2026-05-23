@@ -154,21 +154,6 @@ reskia_shaper_t *SkShaper_MakeShapeThenWrap(sk_font_mgr_t font_mgr) {
 #endif
 }
 
-reskia_shaper_t *SkShaper_MakeShapeDontWrapOrReorder(reskia_unicode_t *unicode, sk_font_mgr_t font_mgr) {
-#if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    if (unicode == nullptr) {
-        return nullptr;
-    }
-    return release_shaper(SkShaper::MakeShapeDontWrapOrReorder(
-            std::unique_ptr<SkUnicode>(as_unicode(unicode)),
-            font_mgr_or_null(font_mgr)));
-#else
-    (void)unicode;
-    (void)font_mgr;
-    return nullptr;
-#endif
-}
-
 reskia_shaper_t *SkShaper_MakeCoreText(void) {
 #if defined(SK_SHAPER_CORETEXT_AVAILABLE)
     return release_shaper(SkShaper::MakeCoreText());
@@ -221,21 +206,6 @@ reskia_shaper_bidi_run_iterator_t *SkShaper_MakeBiDiRunIterator(const char *utf8
         return nullptr;
     }
     return release_bidi_iterator(SkShaper::MakeBiDiRunIterator(utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
-}
-
-reskia_shaper_bidi_run_iterator_t *SkShaper_MakeSkUnicodeBidiRunIterator(reskia_unicode_t *unicode, const char *utf8, size_t utf8_bytes, uint8_t bidi_level) {
-#if defined(SK_SHAPER_UNICODE_AVAILABLE)
-    if (unicode == nullptr || !valid_text(utf8, utf8_bytes)) {
-        return nullptr;
-    }
-    return release_bidi_iterator(SkShapers::unicode::BidiRunIterator(as_unicode(unicode), utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
-#else
-    (void)unicode;
-    (void)utf8;
-    (void)utf8_bytes;
-    (void)bidi_level;
-    return nullptr;
-#endif
 }
 
 reskia_shaper_bidi_run_iterator_t *SkShaper_MakeIcuBiDiRunIterator(const char *utf8, size_t utf8_bytes, uint8_t bidi_level) {

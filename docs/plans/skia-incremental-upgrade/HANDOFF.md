@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `2f07d8e1829ba5bcd0868e3d27e644b87b110598`
-- next probe candidate: choose a fixed commit after `2f07d8e1829ba5bcd0868e3d27e644b87b110598`
+- `SKIA_REF`: `7ffd936a66df500b2275695f6a58208163f31518`
+- next probe candidate: choose a fixed commit after `7ffd936a66df500b2275695f6a58208163f31518`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -46,6 +46,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 012 accepted: `dfd933f9930cab2e492b5bb99cbd31e431b32ba0`。
 - cycle 013 accepted: `76154622bf46eb7b107b437a5d1a032ae6d30344`。
 - cycle 014 accepted: `2f07d8e1829ba5bcd0868e3d27e644b87b110598`。
+- cycle 015 accepted: `7ffd936a66df500b2275695f6a58208163f31518`。
 
 未実施:
 
@@ -55,11 +56,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 015 の candidate selection から始める。
+次の作業は、cycle 016 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `2f07d8e1829ba5bcd0868e3d27e644b87b110598` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `7ffd936a66df500b2275695f6a58208163f31518` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -92,26 +93,26 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `2f07d8e1829ba5bcd0868e3d27e644b87b110598`
-- committer date: 2024-03-18T23:44:33Z
-- subject: `Roll skcms from d52adb9ccd98 to defc2fa459b6 (1 revision)`
+- `7ffd936a66df500b2275695f6a58208163f31518`
+- committer date: 2024-03-25T19:14:22Z
+- subject: `[graphite] TaskList uses TArray, no more prepending`
 
-cycle 014 結果:
+cycle 015 結果:
 
-- baseline から 76 commits。
-- `include` / `modules` 差分は 26 files, +265/-215。broad surface は 161 files, +2080/-1210。
-- 2-week 候補は `missing 5` と stale/signature review 20 rows になり、SkUnicode/SkShaper/SkParagraph と Metal/Graphite 周辺の routing が広がるため、1-week date-end 候補を採用した。
-- initial candidate coverage は `missing 1` / `stale_capi 4`。
+- baseline から 103 commits。
+- `include` / `modules` 差分は 69 files, +898/-460。broad surface は 159 files, +3488/-1431。
+- 2-week 候補は `missing 7` と stale/signature review 26 rows になり、Paragraph/Font provider と Graphite texture/compression 方面の routing が広がるため、1-week date-end 候補を採用した。
+- initial candidate coverage は `missing 4` / `stale_capi 13` / `signature_changed_review 3`。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`。
-- C API catch-up として `SkCodec_refEncodedData` を削除し、replacement の `SkCodec_getEncodedData` を追加。
-- vendor 側で移動された Metal semaphore API に追従し、`GrBackendSemaphore_initMetal`、`GrBackendSemaphore_mtlSemaphore`、`GrBackendSemaphore_mtlValue` を削除。
-- `GrBackendSemaphores_MakeMtl`、`GrBackendSemaphores_GetMtlHandle`、`GrBackendSemaphores_GetMtlValue` を追加。
-- cycle 013 で分類した `DawnTextureInfo` optional backend rows は phase 34 override に追加し、coverage regeneration で再 missing 化しないようにした。
-- `include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h`、`include/gpu/ganesh/mtl/GrMtlTypes.h`、`src/gpu/ganesh/mtl/GrMtlBackendSemaphore.mm` を含む 141 files を source/header sync。
-- この candidate では upstream 削除に追従する mirrored source/header はなかった。
+- C API catch-up として Graphite budget/texture size getters と `SkPath_incReserveWithCounts` を追加。
+- `SkUnicode` factory namespace migration に追従し、旧 `SkUnicode_Make*` / `SkUnicode_copy` C API を削除して `SkUnicodes_*_Make` を追加。
+- vendor 側で削除された `SkMemoryStream_asData`、`GrDirectContext_MakeMetal` alias、`SkShaper_MakeShapeDontWrapOrReorder`、`SkShaper_MakeSkUnicodeBidiRunIterator` を削除。
+- `DawnTextureInfo` delegating constructor は Dawn/WebGPU optional backend API として phase 34 override に追加した。
+- `SkShaper::MakeFontMgrRunIterator` の null fallback を `SkFontMgr::RefEmpty()` に正規化し、新 upstream assert と既存 primitive/legacy shaping path の互換性を保った。
+- SkUnicode header split、Graphite task directory migration を含む 135 files を source/header sync し、19 files を upstream 削除/移動に追従して削除した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 次サイクルでは、2-week 候補 `7ffd936a66df500b2275695f6a58208163f31518` で見えていた SkUnicode/SkShaper/SkParagraph migration、Graphite TaskList/Atlas drift、Metal semaphore namespace drift の残り、Dawn optional API に注意して、1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、2-week 候補 `cd75e467271917846f2b53277028168255e4f485` で見えていた `SkImage::readPixelsGraphite`、`Recorder::updateCompressedBackendTexture`、`TextureInfo::compressionType`、Paragraph/Font provider migration、Dawn optional API に注意して、1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -129,6 +130,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-012-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-013-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-014-2026-05-23.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-015-2026-05-23.md`
 
 ## Cycle close の条件
 

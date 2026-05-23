@@ -137,9 +137,6 @@ bool smoke_shape() {
     SkShaper_ScriptRunIterator_delete(script_iterator);
     SkShaper_LanguageRunIterator_delete(language_iterator);
 
-    reskia_shaper_t *dont_wrap = SkShaper_MakeShapeDontWrapOrReorder(nullptr, 0);
-    SkShaper_delete(dont_wrap);
-
     static_sk_point_delete(offset);
     SkFont_delete(font);
     SkShaper_delete(shaper);

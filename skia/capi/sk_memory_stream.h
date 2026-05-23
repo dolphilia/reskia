@@ -33,7 +33,6 @@ void SkMemoryStream_delete(reskia_memory_stream_t *memory_stream); // (SkMemoryS
  */
 void SkMemoryStream_setMemory(reskia_memory_stream_t *memory_stream, const uint8_t *data, size_t length, bool copyData);
 void SkMemoryStream_setMemoryOwned(reskia_memory_stream_t *memory_stream, const uint8_t *data, size_t length); // data may be null only when length == 0; stream takes sk_malloc-compatible ownership
-sk_data_t SkMemoryStream_asData(reskia_memory_stream_t *memory_stream); // (SkMemoryStream *memory_stream) -> sk_data_t
 sk_data_t SkMemoryStream_getData(reskia_memory_stream_t *memory_stream); // NULL input returns 0.
 void SkMemoryStream_setData(reskia_memory_stream_t *memory_stream, sk_data_t data); // (SkMemoryStream *memory_stream, sk_data_t data)
 void SkMemoryStream_skipToAlign4(reskia_memory_stream_t *memory_stream); // (SkMemoryStream *memory_stream)

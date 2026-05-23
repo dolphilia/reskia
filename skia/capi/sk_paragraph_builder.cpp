@@ -365,7 +365,7 @@ bool SkParagraph_ParagraphBuilder_SetUnicode(reskia_paragraph_builder_t *builder
     if (builder == nullptr || unicode == nullptr) {
         return false;
     }
-    as_builder(builder)->SetUnicode(std::unique_ptr<SkUnicode>(as_unicode(unicode)));
+    as_builder(builder)->SetUnicode(sk_sp<SkUnicode>(as_unicode(unicode)));
     return true;
 }
 

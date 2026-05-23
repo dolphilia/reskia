@@ -5,8 +5,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef skgpu_graphite_Task_DEFINED
-#define skgpu_graphite_Task_DEFINED
+#ifndef skgpu_graphite_task_Task_DEFINED
+#define skgpu_graphite_task_Task_DEFINED
 
 #include "include/core/SkPoint.h"
 #include "include/core/SkRefCnt.h"
@@ -21,8 +21,6 @@ class Texture;
 
 class Task : public SkRefCnt {
 public:
-    ~Task() override;
-
     // Holds a render target and translation to use in the task's work, if necessary.
     struct ReplayTargetData {
         const Texture* fTarget;
@@ -35,13 +33,8 @@ public:
 
     // Returns true on success; false on failure.
     virtual bool addCommands(Context*, CommandBuffer*, ReplayTargetData) = 0;
-
-protected:
-    Task();
-
-private:
 };
 
 } // namespace skgpu::graphite
 
-#endif // skgpu_graphite_Task_DEFINED
+#endif // skgpu_graphite_task_Task_DEFINED

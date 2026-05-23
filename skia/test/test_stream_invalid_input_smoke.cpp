@@ -44,9 +44,6 @@ int main() {
     if (!check(SkMemoryStream_newWithDataAndCopyFlag(nullptr, 1, true) == nullptr, "SkMemoryStream_newWithDataAndCopyFlag(nullptr, 1)")) {
         return 9;
     }
-    if (!check(SkMemoryStream_asData(nullptr) == 0, "SkMemoryStream_asData(nullptr)")) {
-        return 10;
-    }
     if (!check(SkMemoryStream_getAtPos(nullptr) == nullptr, "SkMemoryStream_getAtPos(nullptr)")) {
         return 11;
     }

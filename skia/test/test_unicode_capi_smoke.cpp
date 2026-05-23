@@ -47,9 +47,8 @@ bool smoke_unicode_static_helpers() {
 }
 
 bool smoke_unicode_instance_helpers() {
-    if (!check(SkUnicode_copy(nullptr) == nullptr, "copy null") ||
-        !check(SkUnicode_MakeClientBasedUnicode(nullptr, 1, nullptr, 0, nullptr, 0, nullptr, 0) == nullptr, "client unicode null text") ||
-        !check(SkUnicode_MakeClientBasedUnicode("", 0, nullptr, 1, nullptr, 0, nullptr, 0) == nullptr, "client unicode null words") ||
+    if (!check(SkUnicodes_Client_Make(nullptr, 1, nullptr, 0, nullptr, 0, nullptr, 0) == nullptr, "client unicode null text") ||
+        !check(SkUnicodes_Client_Make("", 0, nullptr, 1, nullptr, 0, nullptr, 0) == nullptr, "client unicode null words") ||
         !check(SkUnicode_toUpper(nullptr, nullptr) == nullptr, "toUpper null") ||
         !check(SkUnicode_makeBidiIteratorUtf8(nullptr, "abc", 3, RESKIA_UNICODE_BIDI_DIRECTION_LTR) == nullptr, "bidi iterator null unicode") ||
         !check(SkUnicode_makeBidiIteratorUtf8(nullptr, nullptr, 1, RESKIA_UNICODE_BIDI_DIRECTION_LTR) == nullptr, "bidi iterator null text") ||
@@ -81,17 +80,17 @@ bool smoke_unicode_instance_helpers() {
         return false;
     }
 
-    reskia_unicode_t *unicode = SkUnicode_Make();
-    reskia_unicode_t *icu_unicode = SkUnicode_MakeIcuBasedUnicode();
+    reskia_unicode_t *unicode = SkUnicodes_ICU_Make();
+    reskia_unicode_t *icu_unicode = SkUnicodes_ICU_Make();
     SkUnicode_delete(icu_unicode);
     const size_t words[] = {0, 3};
     const size_t grapheme_breaks[] = {0, 1, 2};
     const size_t line_breaks[] = {3};
-    reskia_unicode_t *client_unicode = SkUnicode_MakeClientBasedUnicode("abc", 3, words, 2, grapheme_breaks, 3, line_breaks, 1);
+    reskia_unicode_t *client_unicode = SkUnicodes_Client_Make("abc", 3, words, 2, grapheme_breaks, 3, line_breaks, 1);
     SkUnicode_delete(client_unicode);
-    reskia_unicode_t *libgrapheme_unicode = SkUnicode_MakeLibgraphemeBasedUnicode();
+    reskia_unicode_t *libgrapheme_unicode = SkUnicodes_Libgrapheme_Make();
     SkUnicode_delete(libgrapheme_unicode);
-    reskia_unicode_t *icu4x_unicode = SkUnicode_MakeIcu4xBasedUnicode();
+    reskia_unicode_t *icu4x_unicode = SkUnicodes_ICU4X_Make();
     SkUnicode_delete(icu4x_unicode);
     if (unicode == nullptr) {
         return true;
@@ -104,13 +103,6 @@ bool smoke_unicode_instance_helpers() {
         SkUnicode_delete(unicode);
         return false;
     }
-
-    reskia_unicode_t *copy = SkUnicode_copy(unicode);
-    if (!check(copy != nullptr, "copy unicode")) {
-        SkUnicode_delete(unicode);
-        return false;
-    }
-    SkUnicode_delete(copy);
 
     reskia_bidi_iterator_t *bidi = SkUnicode_makeBidiIteratorUtf8(unicode, "abc", 3, RESKIA_UNICODE_BIDI_DIRECTION_LTR);
     if (bidi != nullptr) {

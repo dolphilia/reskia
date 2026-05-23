@@ -81,7 +81,6 @@ extern "C" {
  * owned: 呼び出し側が Reskia_DirectContext_Release で解放する (void *device, void *queue) -> GrDirectContext *
  */
 reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queue);
-reskia_direct_context_t *GrDirectContext_MakeMetal(void *device, void *queue); // owned; NULL input/unavailable Metal returns NULL
 reskia_direct_context_t *GrDirectContext_MakeMock(); // owned; unavailable Ganesh returns NULL
 void Reskia_DirectContext_FlushAndSubmit(reskia_direct_context_t *ctx, bool sync_cpu); // (GrDirectContext *ctx, bool sync_cpu)
 void Reskia_DirectContext_Abandon(reskia_direct_context_t *ctx); // (GrDirectContext *ctx)
@@ -241,9 +240,11 @@ void Graphite_Context_deleteBackendTexture(reskia_graphite_context_t *ctx, const
 void Graphite_Context_freeGpuResources(reskia_graphite_context_t *ctx); // NULL input is no-op
 void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int64_t ms_not_used); // invalid input is no-op
 size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
+size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx); // NULL input returns false
+int Graphite_Context_maxTextureSize(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 void Graphite_ContextID_delete(reskia_graphite_context_id_t *context_id); // NULL input is no-op
 bool Graphite_ContextID_isValid(const reskia_graphite_context_id_t *context_id); // NULL input returns false
@@ -252,6 +253,7 @@ bool Graphite_ContextID_equals(const reskia_graphite_context_id_t *context_id, c
 void Graphite_Recorder_freeGpuResources(reskia_graphite_recorder_t *recorder); // NULL input is no-op
 void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *recorder, int64_t ms_not_used); // invalid input is no-op
 size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+size_t Graphite_Recorder_maxBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owns user_data until callback if true; invalid input returns false
 reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_graphite_recorder_t *recorder); // borrowed; NULL input returns NULL

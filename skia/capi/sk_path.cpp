@@ -250,10 +250,14 @@ bool SkPath_conservativelyContainsRect(reskia_path_t *path, const reskia_rect_t 
 }
 
 void SkPath_incReserve(reskia_path_t *path, int extraPtCount) {
+    SkPath_incReserveWithCounts(path, extraPtCount, 0, 0);
+}
+
+void SkPath_incReserveWithCounts(reskia_path_t *path, int extraPtCount, int extraVerbCount, int extraConicCount) {
     if (path == nullptr) {
         return;
     }
-    reinterpret_cast<SkPath *>(path)->incReserve(extraPtCount);
+    reinterpret_cast<SkPath *>(path)->incReserve(extraPtCount, extraVerbCount, extraConicCount);
 }
 
 reskia_path_t *SkPath_moveTo(reskia_path_t *path, float x, float y) {

@@ -7,6 +7,10 @@
 #include "include/core/SkString.h"
 #include "include/private/base/SkTArray.h"
 #include "modules/skunicode/include/SkUnicode.h"
+#include "modules/skunicode/include/SkUnicode_client.h"
+#include "modules/skunicode/include/SkUnicode_icu.h"
+#include "modules/skunicode/include/SkUnicode_icu4x.h"
+#include "modules/skunicode/include/SkUnicode_libgrapheme.h"
 
 #include <algorithm>
 #include <memory>
@@ -64,7 +68,7 @@ SkUnicode::BreakType as_break_type(reskia_unicode_break_type_t type) {
     }
 }
 
-reskia_unicode_t *release_unicode(std::unique_ptr<SkUnicode> unicode) {
+reskia_unicode_t *release_unicode(sk_sp<SkUnicode> unicode) {
     return reinterpret_cast<reskia_unicode_t *>(unicode.release());
 }
 
@@ -110,19 +114,15 @@ int32_t copy_bidi_regions(const std::vector<SkUnicode::BidiRegion>& regions, res
 
 extern "C" {
 
-reskia_unicode_t *SkUnicode_Make(void) {
-    return release_unicode(SkUnicode::Make());
-}
-
-reskia_unicode_t *SkUnicode_MakeIcuBasedUnicode(void) {
+reskia_unicode_t *SkUnicodes_ICU_Make(void) {
 #if defined(SK_UNICODE_ICU_IMPLEMENTATION)
-    return release_unicode(SkUnicode::MakeIcuBasedUnicode());
+    return release_unicode(SkUnicodes::ICU::Make());
 #else
     return nullptr;
 #endif
 }
 
-reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count) {
+reskia_unicode_t *SkUnicodes_Client_Make(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count) {
     if (text_units < 0 || words_count < 0 || grapheme_breaks_count < 0 || line_breaks_count < 0 ||
         (text == nullptr && text_units != 0) ||
         (words == nullptr && words_count != 0) ||
@@ -135,7 +135,7 @@ reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t tex
     if (text_units > 0) {
         text_copy.assign(text, static_cast<size_t>(text_units));
     }
-    return release_unicode(SkUnicode::MakeClientBasedUnicode(
+    return release_unicode(SkUnicodes::Client::Make(
             SkSpan<char>(text_copy.data(), text_copy.size()),
             make_positions(words, words_count),
             make_positions(grapheme_breaks, grapheme_breaks_count),
@@ -145,31 +145,24 @@ reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t tex
 #endif
 }
 
-reskia_unicode_t *SkUnicode_MakeLibgraphemeBasedUnicode(void) {
+reskia_unicode_t *SkUnicodes_Libgrapheme_Make(void) {
 #if defined(SK_UNICODE_LIBGRAPHEME_IMPLEMENTATION)
-    return release_unicode(SkUnicode::MakeLibgraphemeBasedUnicode());
+    return release_unicode(SkUnicodes::Libgrapheme::Make());
 #else
     return nullptr;
 #endif
 }
 
-reskia_unicode_t *SkUnicode_MakeIcu4xBasedUnicode(void) {
+reskia_unicode_t *SkUnicodes_ICU4X_Make(void) {
 #if defined(SK_UNICODE_ICU4X_IMPLEMENTATION)
-    return release_unicode(SkUnicode::MakeIcu4xBasedUnicode());
+    return release_unicode(SkUnicodes::ICU4X::Make());
 #else
     return nullptr;
 #endif
 }
 
 void SkUnicode_delete(reskia_unicode_t *unicode) {
-    delete as_unicode(unicode);
-}
-
-reskia_unicode_t *SkUnicode_copy(reskia_unicode_t *unicode) {
-    if (unicode == nullptr) {
-        return nullptr;
-    }
-    return release_unicode(as_unicode(unicode)->copy());
+    SkSafeUnref(as_unicode(unicode));
 }
 
 reskia_string_t *SkUnicode_toUpper(reskia_unicode_t *unicode, const reskia_string_t *text) {
@@ -253,11 +246,17 @@ int32_t SkUnicode_extractBidi(const char *utf8, int32_t utf8_units, reskia_unico
     }
     std::vector<SkUnicode::BidiRegion> regions;
     const auto text_direction = direction == RESKIA_UNICODE_BIDI_DIRECTION_RTL ? SkUnicode::TextDirection::kRTL : SkUnicode::TextDirection::kLTR;
-    auto unicode = SkUnicode::Make();
+#if defined(SK_UNICODE_ICU_IMPLEMENTATION)
+    auto unicode = SkUnicodes::ICU::Make();
     if (!unicode || !unicode->getBidiRegions(utf8, utf8_units, text_direction, &regions)) {
         return -1;
     }
     return copy_bidi_regions(regions, dst, dst_count);
+#else
+    (void) text_direction;
+    (void) regions;
+    return -1;
+#endif
 }
 
 reskia_string_t *SkUnicode_convertUtf16ToUtf8(const uint16_t *utf16, int32_t utf16_units) {
