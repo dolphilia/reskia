@@ -548,13 +548,13 @@ void SkICCFloatXYZD50ToGrid16Lab(const float* xyz_float, uint8_t* grid16_lab) {
     for (size_t i = 0; i < 3; ++i) {
         v[i] = v[i] > 0.008856f ? cbrtf(v[i]) : v[i] * 7.787f + (16 / 116.0f);
     }
-    const float L = v[1] * 116.0f - 16.0f;
-    const float a = (v[0] - v[1]) * 500.0f;
-    const float b = (v[1] - v[2]) * 200.0f;
+    const float L = 116 * v[1] - 16;
+    const float a = 500 * (v[0] - v[1]);
+    const float b = 200 * (v[1] - v[2]);
     const float Lab_unorm[3] = {
-            L * (1 / 100.f),
-            (a + 128.0f) * (1 / 255.0f),
-            (b + 128.0f) * (1 / 255.0f),
+            std::clamp(L, 0.0f, 100.0f) * 0.01f,
+            std::clamp(a, -128.0f, 127.0f) * (1 / 255.0f) + (128 / 255.0f),
+            std::clamp(b, -128.0f, 127.0f) * (1 / 255.0f) + (128 / 255.0f),
     };
     // This matches how skcms decodes grid_16 Lab values; see https://crbug.com/skia/13807.
     for (size_t i = 0; i < 3; ++i) {

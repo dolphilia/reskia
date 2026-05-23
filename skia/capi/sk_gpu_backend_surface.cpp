@@ -32,7 +32,7 @@
 
 #if defined(SK_GANESH) && __has_include("include/third_party/vulkan/vulkan/vulkan_core.h")
 #define RESKIA_HAS_GR_BACKEND_DRAWABLE_INFO 1
-#include "include/gpu/GrBackendDrawableInfo.h"
+#include "include/gpu/ganesh/vk/GrBackendDrawableInfo.h"
 #endif
 
 #if defined(SK_METAL)

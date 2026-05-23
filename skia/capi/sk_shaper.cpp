@@ -134,11 +134,11 @@ std::vector<SkShaper::Feature> make_features(const reskia_shaper_feature_t *feat
 extern "C" {
 
 reskia_shaper_t *SkShaper_Make(void) {
-    return release_shaper(SkShaper::Make());
+    return release_shaper(SkShaper::Make(font_mgr_or_default(0)));
 }
 
 reskia_shaper_t *SkShaper_MakeWithFontMgr(sk_font_mgr_t font_mgr) {
-    return release_shaper(SkShaper::Make(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::Make(font_mgr_or_default(font_mgr)));
 }
 
 reskia_shaper_t *SkShaper_MakePrimitive(void) {
@@ -147,7 +147,7 @@ reskia_shaper_t *SkShaper_MakePrimitive(void) {
 
 reskia_shaper_t *SkShaper_MakeShaperDrivenWrapper(sk_font_mgr_t font_mgr) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    return release_shaper(SkShaper::MakeShaperDrivenWrapper(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::MakeShaperDrivenWrapper(font_mgr_or_default(font_mgr)));
 #else
     (void)font_mgr;
     return nullptr;
@@ -156,7 +156,7 @@ reskia_shaper_t *SkShaper_MakeShaperDrivenWrapper(sk_font_mgr_t font_mgr) {
 
 reskia_shaper_t *SkShaper_MakeShapeThenWrap(sk_font_mgr_t font_mgr) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    return release_shaper(SkShaper::MakeShapeThenWrap(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::MakeShapeThenWrap(font_mgr_or_default(font_mgr)));
 #else
     (void)font_mgr;
     return nullptr;

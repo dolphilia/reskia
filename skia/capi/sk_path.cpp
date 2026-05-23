@@ -128,6 +128,20 @@ reskia_path_t *SkPath_rewind(reskia_path_t *path) {
     return reinterpret_cast<reskia_path_t *>(&p->rewind());
 }
 
+sk_path_t SkPath_snapshot(reskia_path_t *path) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->snapshot());
+}
+
+sk_path_t SkPath_detach(reskia_path_t *path) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->detach());
+}
+
 bool SkPath_isEmpty(reskia_path_t *path) {
     if (path == nullptr) {
         return true;

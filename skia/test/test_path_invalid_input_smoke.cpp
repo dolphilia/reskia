@@ -27,6 +27,12 @@ int main() {
     if (!check(SkPath_getFillType(nullptr) == 0, "SkPath_getFillType(nullptr)")) {
         return 4;
     }
+    if (!check(SkPath_snapshot(nullptr) == 0, "SkPath_snapshot(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkPath_detach(nullptr) == 0, "SkPath_detach(nullptr)")) {
+        return 4;
+    }
     if (!check(SkPath_isEmpty(nullptr), "SkPath_isEmpty(nullptr)")) {
         return 5;
     }
@@ -80,6 +86,20 @@ int main() {
     if (!check(path != nullptr, "SkPath_new")) {
         return 21;
     }
+    SkPath_moveTo(path, 1.0f, 2.0f);
+    sk_path_t snapshot = SkPath_snapshot(path);
+    if (!check(snapshot != 0, "SkPath_snapshot(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(snapshot);
+    sk_path_t detached = SkPath_detach(path);
+    if (!check(detached != 0 && SkPath_isEmpty(path), "SkPath_detach(path)")) {
+        static_sk_path_delete(detached);
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(detached);
 
     if (!check(SkPath_moveToPoint(path, nullptr) == nullptr, "SkPath_moveToPoint(path, nullptr)")) {
         SkPath_delete(path);

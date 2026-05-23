@@ -45,6 +45,8 @@ bool SkPath_isOval(reskia_path_t *path, reskia_rect_t *bounds); // (SkPath *path
 bool SkPath_isRRect(reskia_path_t *path, reskia_r_rect_t *rrect); // (SkPath *path, SkRRect *rrect) -> bool
 reskia_path_t *SkPath_reset(reskia_path_t *path); // (SkPath *path) -> SkPath *
 reskia_path_t *SkPath_rewind(reskia_path_t *path); // (SkPath *path) -> SkPath *
+sk_path_t SkPath_snapshot(reskia_path_t *path); // (SkPath *path) -> sk_path_t; NULL returns 0
+sk_path_t SkPath_detach(reskia_path_t *path); // (SkPath *path) -> sk_path_t; NULL returns 0
 bool SkPath_isEmpty(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isLastContourClosed(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isFinite(reskia_path_t *path); // (SkPath *path) -> bool

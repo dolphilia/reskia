@@ -117,7 +117,6 @@ list(APPEND SOURCE_FILES
         capi/sk_rect.cpp
         capi/sk_ref_cnt_base.cpp
         capi/sk_ref_cnt.cpp
-        capi/sk_remotable_font_mgr.cpp
         capi/reskia_ffi.cpp
         capi/sk_region.cpp
         capi/sk_rsx_form.cpp

@@ -31,14 +31,14 @@ bool check(bool condition, const char* message) {
 bool smoke_shape_utf8_bidi_linebreak() {
     const char* text = u8"Hello שלום\nمرحبا 123";
 
-    std::unique_ptr<SkShaper> shaper = SkShaper::Make();
-    if (!check(shaper != nullptr, "SkShaper::Make")) return false;
-
 #if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
     sk_sp<SkFontMgr> font_mgr = SkFontMgr_New_CoreText(nullptr);
 #else
     sk_sp<SkFontMgr> font_mgr = SkFontMgr::RefEmpty();
 #endif
+    std::unique_ptr<SkShaper> shaper = SkShaper::Make(font_mgr);
+    if (!check(shaper != nullptr, "SkShaper::Make")) return false;
+
     sk_sp<SkTypeface> typeface = font_mgr->legacyMakeTypeface(nullptr, SkFontStyle());
     if (!check(typeface != nullptr, "font_mgr->legacyMakeTypeface")) return false;
 

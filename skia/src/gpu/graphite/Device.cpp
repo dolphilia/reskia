@@ -1414,6 +1414,11 @@ std::pair<const Renderer*, PathAtlas*> Device::chooseRenderer(const Transform& l
     }
 }
 
+sk_sp<Task> Device::lastDrawTask() const {
+    SkASSERT(this->isScratchDevice());
+    return fLastTask;
+}
+
 void Device::flushPendingWorkToRecorder(Recorder* recorder) {
     TRACE_EVENT0("skia.gpu", TRACE_FUNC);
 
@@ -1439,8 +1444,37 @@ void Device::flushPendingWorkToRecorder(Recorder* recorder) {
     SkASSERT(!recorder || fScopedRecordingID == 0);
     SkASSERT(fScopedRecordingID == 0 || fScopedRecordingID == fRecorder->priv().nextRecordingID());
 
+    // TODO(b/330864257):  flushPendingWorkToRecorder() can be recursively called if this Device
+    // recorded a picture shader draw and during a flush (triggered by snap or automatically from
+    // reaching limits), the picture shader will be rendered to a new device. If that picture drawn
+    // to the temporary device fills up an atlas it can trigger the global
+    // recorder->flushTrackedDevices(), which will then encounter this device that is already in
+    // the midst of flushing. To avoid crashing we only actually flush the first time this is called
+    // and set a bit to early-out on any recursive calls.
+    // This is not an ideal solution since the temporary Device's flush-the-world may have reset
+    // atlas entries that the current Device's flushed draws will reference. But at this stage it's
+    // not possible to split the already recorded draws into a before-list and an after-list that
+    // can reference the old and new contents of the atlas. While avoiding the crash, this may cause
+    // incorrect accesses to a shared atlas. Once paint data is extracted at draw time, picture
+    // shaders will be resolved outside of flushes and then this will be fixed automatically.
+    if (fIsFlushing) {
+        return;
+    } else {
+        fIsFlushing = true;
+    }
+
     this->internalFlush();
     sk_sp<Task> drawTask = fDC->snapDrawTask(fRecorder);
+    if (this->isScratchDevice()) {
+        // TODO(b/323887221): Once shared atlas resources are less brittle, scratch devices won't
+        // flush to the recorder at all and will only store the snapped task here.
+        fLastTask = drawTask;
+    } else {
+        // Non-scratch devices do not need to point back to the last snapped task since they are
+        // always added to the root task list.
+        SkASSERT(!fLastTask);
+    }
+
     if (drawTask) {
         fRecorder->priv().add(std::move(drawTask));
 
@@ -1453,6 +1487,8 @@ void Device::flushPendingWorkToRecorder(Recorder* recorder) {
             }
         }
     }
+
+    fIsFlushing = false;
 }
 
 void Device::internalFlush() {
@@ -1621,7 +1657,7 @@ bool Device::isScratchDevice() const {
     // Recorder::snap(). Truly scratch devices that have gone out of scope as intended will have
     // already been destroyed at this point. Scratch devices that become longer-lived (linked to
     // a client-owned object) automatically transition to non-scratch usage.
-    return SkToBool(fDC->target());
+    return !fDC->target()->isInstantiated() && !fDC->target()->isLazy();
 }
 
 sk_sp<sktext::gpu::Slug> Device::convertGlyphRunListToSlug(const sktext::GlyphRunList& glyphRunList,

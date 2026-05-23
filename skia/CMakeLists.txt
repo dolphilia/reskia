@@ -234,8 +234,6 @@ include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-handles.cmake")
 
 if (WIN32)
     list(APPEND SOURCE_FILES
-            src/fonts/SkFontMgr_indirect.cpp
-            src/fonts/SkRemotableFontMgr.cpp
             src/ports/SkDebug_win.cpp
             src/ports/SkOSFile_win.cpp
             src/ports/SkTypeface_win_dw.cpp
