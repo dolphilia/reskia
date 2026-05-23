@@ -41,6 +41,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkImageGenerator_FromEncoded.cpp
         src/codec/SkJpegCodec.cpp
         src/codec/SkJpegDecoderMgr.cpp
+        src/codec/SkJpegMetadataDecoderImpl.cpp
         src/codec/SkJpegMultiPicture.cpp
         src/codec/SkJpegSegmentScan.cpp
         src/codec/SkJpegSourceMgr.cpp

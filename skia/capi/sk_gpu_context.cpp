@@ -2828,6 +2828,15 @@ reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_inf
 #endif
 }
 
+reskia_string_t *Graphite_TextureInfo_toRPAttachmentString(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? reinterpret_cast<reskia_string_t *>(new SkString(as_graphite_texture_info(info)->toRPAttachmentString())) : nullptr;
+#else
+    (void) info;
+    return nullptr;
+#endif
+}
+
 reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_new() {
 #if defined(SK_GRAPHITE)
     return reinterpret_cast<reskia_graphite_backend_semaphore_t *>(new skgpu::graphite::BackendSemaphore());

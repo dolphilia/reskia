@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `a6bc04f984d25bbce342d33ee469b15e93e37698`
-- next probe candidate: choose a fixed commit after `a6bc04f984d25bbce342d33ee469b15e93e37698`
+- `SKIA_REF`: `423b224869102f5462a6f15b6a1a558f07f72739`
+- next probe candidate: choose a fixed commit after `423b224869102f5462a6f15b6a1a558f07f72739`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -52,20 +52,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 018 accepted: `b159229f2174800f6655f7b7dbba01d7bd3d5d48`。
 - cycle 019 accepted: `22d1130a2ba22beb7156d5578f1a9942d1e88bcb`。
 - cycle 020 accepted: `a6bc04f984d25bbce342d33ee469b15e93e37698`。
+- cycle 021 accepted: `423b224869102f5462a6f15b6a1a558f07f72739`。
 
 未実施:
 
-- cycle 021 candidate の選定。
-- cycle 021 candidate checkout を使った coverage regression。
-- cycle 021 の source/header sync と C API 追従実装。
+- cycle 022 candidate の選定。
+- cycle 022 candidate checkout を使った coverage regression。
+- cycle 022 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 021 の candidate selection から始める。
+次の作業は、cycle 022 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `a6bc04f984d25bbce342d33ee469b15e93e37698` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `423b224869102f5462a6f15b6a1a558f07f72739` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -98,21 +99,19 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `a6bc04f984d25bbce342d33ee469b15e93e37698`
-- committer date: 2024-04-30T21:28:14Z
-- subject: `Escape unicode sequence`
+- `423b224869102f5462a6f15b6a1a558f07f72739`
+- committer date: 2024-05-07T21:29:58Z
+- subject: `Change CtsEnforcement for SurfaceAsyncReadPixels`
 
-cycle 020 結果:
+cycle 021 結果:
 
-- 1-week date-end 候補を採用し、2-week/3-week 候補は PDF、TextureInfo、SkUnicode、SVG filter、Dawn 周辺の drift が広がるため deferred とした。
+- 1-week date-end 候補を採用した。2-week 候補 `d0d87c26b4899728b6e344d68843cae9f8c86c18` と 3-week 候補 `78069713e02aae7f03d20114a8bebe8c6a89259a` は drift が広がるため次 cycle 以降で再評価する。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`。initial `signature_changed_review` は `SkCanvas::drawArc` 1 件で、C ABI 互換と確認済み。
-- C API catch-up として `SkArc` と `SkPath::isArc` を追加した。
-- `DawnTextureInfo` の新規 constructor は Dawn/WebGPU optional backend API として `na` に記録した。
-- `SkSVGEllipse` の `SVG_ATTR` macro signature 変更は standalone C ABI method ではないため `false_positive` に記録した。
-- source/header sync では Graphite の `AttachmentTypes` -> `RenderPassDesc`、`RectBlur*` -> `AnalyticBlur*` の rename を取り込んだ。
+- stale C API report は `stale_capi 0`、`signature_changed_review 0`。
+- C API catch-up として `Graphite_TextureInfo_toRPAttachmentString` を追加した。
+- source/header sync では JPEG metadata decoder split、Graphite scratch resource manager、Graphite render pass / texture / task / resource manager、PDF、generated Graphite SKSL 更新を取り込んだ。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 次サイクルでは、accepted baseline `a6bc04f984d25bbce342d33ee469b15e93e37698` から 1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、accepted baseline `423b224869102f5462a6f15b6a1a558f07f72739` から 1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -136,6 +135,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-018-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-019-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-020-2026-05-23.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-021-2026-05-23.md`
 
 ## Cycle close の条件
 
