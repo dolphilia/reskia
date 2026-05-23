@@ -84,6 +84,7 @@ list(APPEND SOURCE_FILES
         src/core/SkBlitter_ARGB32.cpp
         src/core/SkBlitter_Sprite.cpp
         src/core/SkBlitter.cpp
+        src/core/SkBlurEngine.cpp
         src/core/SkBlurMask.cpp
         src/core/SkBlurMaskFilterImpl.cpp
         src/core/SkCachedData.cpp

@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `73e53abdf54f56fe30d60dba6e62e19597fa2618`
-- next probe candidate: choose a fixed commit after `73e53abdf54f56fe30d60dba6e62e19597fa2618`
+- `SKIA_REF`: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
+- next probe candidate: choose a fixed commit after `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -55,31 +55,31 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 021 accepted: `423b224869102f5462a6f15b6a1a558f07f72739`。
 - cycle 022 accepted: `78069713e02aae7f03d20114a8bebe8c6a89259a`。
 - cycle 023 accepted: `73e53abdf54f56fe30d60dba6e62e19597fa2618`。
+- cycle 024 accepted: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`。
 
 未実施:
 
-- cycle 024 candidate の選定。
-- cycle 024 candidate checkout を使った coverage regression。
-- cycle 024 の source/header sync と C API 追従実装。
+- cycle 025 candidate の選定。
+- cycle 025 candidate checkout を使った coverage regression。
+- cycle 025 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 024 の candidate selection から始める。
+次の作業は、cycle 025 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `73e53abdf54f56fe30d60dba6e62e19597fa2618` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 024 の比較候補メモ:
+cycle 025 の比較候補メモ:
 
-- 1-week: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` (2024-06-11T20:30:41Z, 93 commits, include/modules drift: 17 files changed, 149 insertions, 124 deletions)
-- 2-week: `24a4123fc949aad0c98d251b05c8ba2b21a9b931` (2024-06-18T18:50:15Z, 166 commits, include/modules drift: 24 files changed, 685 insertions, 126 deletions)
-- 3-week: `a8c2acc3903806ff36800a67f5e60dba84265fd3` (2024-06-25T20:40:23Z, 231 commits, include/modules drift: 34 files changed, 813 insertions, 205 deletions)
-- cycle 023 は 2-week 候補で pass したが、cycle 024 の 2-week は `include`/`modules` insertions が大きい。1-week/2-week の差分内容を比較してから選ぶ。
+- 1-week: `24a4123fc949aad0c98d251b05c8ba2b21a9b931` (2024-06-18T18:50:15Z, 73 commits, include/modules drift: 7 files changed, 536 insertions, 2 deletions)
+- 2-week: `a8c2acc3903806ff36800a67f5e60dba84265fd3` (2024-06-25T20:40:23Z, 138 commits, include/modules drift: 19 files changed, 667 insertions, 84 deletions)
+- cycle 025 では Graphite precompile public headers の routing を先に行う。C ABI へ即時露出するか、optional/design-required として分類するかを記録してから source/header sync へ進む。
 
 ## やってはいけないこと
 
@@ -108,21 +108,21 @@ cycle 024 の比較候補メモ:
 
 候補:
 
-- `73e53abdf54f56fe30d60dba6e62e19597fa2618`
-- committer date: 2024-06-04T20:41:40Z
-- subject: `[graphite] Use explicit key for analytic rrect blur masks`
+- `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
+- committer date: 2024-06-11T20:30:41Z
+- subject: `SkPath: optimize reading paths`
 
-cycle 023 結果:
+cycle 024 結果:
 
-- 2-week 候補を採用した。1-week 候補 `0026a60471337507a6557a492bd8f0c95a688e17` と 3-week 候補 `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` は比較対象として記録した。
+- 1-week 候補を採用した。2-week 候補 `24a4123fc949aad0c98d251b05c8ba2b21a9b931` は Graphite precompile public headers が大きいため次 cycle へ deferred、3-week 候補 `a8c2acc3903806ff36800a67f5e60dba84265fd3` も deferred とした。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
 - C API catch-up の新規 entry point 追加は不要だった。
-- `SkHighContrastConfig` は upstream の formatting-only signature drift で C ABI 互換。canonical matrix refresh 後に stale report は 0 になった。
-- source/header sync では Core/canvas/image-filter、effects、Exif/TIFF/JPEG/Gainmap/ICC、Graphite/Ganesh/Metal/Vulkan、Skottie/skshaper text、SKSL generated Graphite shader 更新を取り込んだ。
-- `skia/src/encode/SkICC.cpp` では Reskia C API が公開している `SkICCFloatXYZD50ToGrid16Lab` と `SkICCFloatToTable16` の definitions を保持した。
+- source/header sync では Core blur refactor、SkPath、JPEG multi-picture、PNG BGRA10XR encode、Ganesh/Graphite blur utility、Metal/Vulkan/Dawn type updates、SKSL generated Graphite shader 更新を取り込んだ。
+- CMake source-list では新規 `src/core/SkBlurEngine.cpp` を追加した。`gn`/Bazel metadata は Reskia の CMake build surface へ追加しなかった。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 次サイクルでは、accepted baseline `73e53abdf54f56fe30d60dba6e62e19597fa2618` から 1週間/2週間/3週間候補を再比較する。
+- GPU smoke dir の全 target build は既存 legacy `test_c_skia` compile issue で止まるため、対象 smoke executable を target build して `ctest -R` で確認した。
+- 次サイクルでは、accepted baseline `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` から 1週間/2週間候補を再比較する。
 
 cycle records:
 
@@ -149,6 +149,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-021-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-022-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-023-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-024-2026-05-24.md`
 
 ## Cycle close の条件
 
