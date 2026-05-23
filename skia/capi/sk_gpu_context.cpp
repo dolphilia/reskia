@@ -2535,6 +2535,19 @@ bool Graphite_Recorder_updateBackendTexture(reskia_graphite_recorder_t *recorder
 #endif
 }
 
+bool Graphite_Recorder_updateCompressedBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture, const void *data, size_t data_size) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr && texture != nullptr && data != nullptr && data_size > 0 &&
+           as_graphite_recorder(recorder)->updateCompressedBackendTexture(*as_graphite_backend_texture(texture), data, data_size);
+#else
+    (void) recorder;
+    (void) texture;
+    (void) data;
+    (void) data_size;
+    return false;
+#endif
+}
+
 void Graphite_Recorder_deleteBackendTexture(reskia_graphite_recorder_t *recorder, const reskia_graphite_backend_texture_t *texture) {
 #if defined(SK_GRAPHITE)
     if (recorder != nullptr && texture != nullptr) {
@@ -2759,6 +2772,15 @@ bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info
 #else
     (void) info;
     return false;
+#endif
+}
+
+reskia_sk_texture_compression_type_t Graphite_TextureInfo_compressionType(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr ? static_cast<reskia_sk_texture_compression_type_t>(as_graphite_texture_info(info)->compressionType()) : 0;
+#else
+    (void) info;
+    return 0;
 #endif
 }
 

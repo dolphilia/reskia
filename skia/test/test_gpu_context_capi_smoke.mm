@@ -146,9 +146,9 @@ bool smoke_context_create_destroy() {
                GrBackendTexture_getLabel(nullptr) == nullptr &&
                GrBackendRenderTarget_dimensions(nullptr) == 0 &&
                !GrBackendFormat_desc(nullptr, nullptr) &&
-               !GrBackendTexture_getMtlTextureInfo(nullptr, nullptr) &&
+               !GrBackendTextures_GetMtlTextureInfo(nullptr, nullptr) &&
                !GrBackendTexture_getMockTextureInfo(nullptr, nullptr) &&
-               !GrBackendRenderTarget_getMtlTextureInfo(nullptr, nullptr) &&
+               !GrBackendRenderTargets_GetMtlTextureInfo(nullptr, nullptr) &&
                !GrBackendRenderTarget_getMockRenderTargetInfo(nullptr, nullptr) &&
                GrBackendSemaphore_newCopy(nullptr) == nullptr &&
                !GrBackendSemaphore_isInitialized(nullptr) &&
@@ -341,7 +341,7 @@ bool smoke_context_create_destroy() {
     }
     GrBackendDrawableInfo_delete(drawable_info);
 
-    if (!check(GrBackendFormat_asMtlFormat(mock_format) == 0, "GrBackendFormat_asMtlFormat(mock)")) {
+    if (!check(GrBackendFormats_AsMtlFormat(mock_format) == 0, "GrBackendFormats_AsMtlFormat(mock)")) {
         GrBackendFormat_delete(mock_format);
         return false;
     }
@@ -390,9 +390,9 @@ bool smoke_context_create_destroy() {
     }
     GrBackendFormat_delete(texture_format);
     reskia_gr_mtl_texture_info_t mtl_texture_info = {reinterpret_cast<void *>(0x1)};
-    if (!check(!GrBackendTexture_getMtlTextureInfo(mock_texture, &mtl_texture_info) &&
+    if (!check(!GrBackendTextures_GetMtlTextureInfo(mock_texture, &mtl_texture_info) &&
                mtl_texture_info.texture == nullptr,
-               "GrBackendTexture_getMtlTextureInfo(mock)")) {
+               "GrBackendTextures_GetMtlTextureInfo(mock)")) {
         GrBackendTexture_delete(mock_texture);
         return false;
     }
@@ -456,9 +456,9 @@ bool smoke_context_create_destroy() {
     }
     GrBackendFormat_delete(render_target_format);
     reskia_gr_mtl_texture_info_t mtl_render_target_info = {reinterpret_cast<void *>(0x1)};
-    if (!check(!GrBackendRenderTarget_getMtlTextureInfo(mock_render_target, &mtl_render_target_info) &&
+    if (!check(!GrBackendRenderTargets_GetMtlTextureInfo(mock_render_target, &mtl_render_target_info) &&
                mtl_render_target_info.texture == nullptr,
-               "GrBackendRenderTarget_getMtlTextureInfo(mock)")) {
+               "GrBackendRenderTargets_GetMtlTextureInfo(mock)")) {
         GrBackendRenderTarget_delete(mock_render_target);
         return false;
     }
@@ -845,6 +845,7 @@ bool smoke_context_create_destroy() {
                Graphite_Recorder_maxBudgetedBytes(nullptr) == 0 &&
                Graphite_Recorder_createBackendTexture(nullptr, 0, nullptr) == nullptr &&
                !Graphite_Recorder_updateBackendTexture(nullptr, nullptr, nullptr, 0) &&
+               !Graphite_Recorder_updateCompressedBackendTexture(nullptr, nullptr, nullptr, 0) &&
                Graphite_TextureInfo_newCopy(nullptr) == nullptr &&
                !Graphite_TextureInfo_equals(nullptr, nullptr) &&
                !Graphite_TextureInfo_isValid(nullptr) &&
@@ -852,6 +853,7 @@ bool smoke_context_create_destroy() {
                Graphite_TextureInfo_numSamples(nullptr) == 0 &&
                !Graphite_TextureInfo_mipmapped(nullptr) &&
                !Graphite_TextureInfo_isProtected(nullptr) &&
+               Graphite_TextureInfo_compressionType(nullptr) == 0 &&
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
                !Graphite_TextureInfo_isCompatible(nullptr, nullptr) &&
                Graphite_TextureInfo_toString(nullptr) == nullptr &&
@@ -1264,6 +1266,7 @@ bool smoke_context_create_destroy() {
                    Graphite_TextureInfo_numSamples(default_texture_info) == 0 &&
                    !Graphite_TextureInfo_mipmapped(default_texture_info) &&
                    !Graphite_TextureInfo_isProtected(default_texture_info) &&
+                   Graphite_TextureInfo_compressionType(default_texture_info) == 0 &&
                    texture_info_string != nullptr,
                    "Graphite_TextureInfo default")) {
             SkString_delete(texture_info_string);

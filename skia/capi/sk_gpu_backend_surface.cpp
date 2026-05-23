@@ -18,6 +18,7 @@
 #include "include/gpu/gl/GrGLTypes.h"
 #include "include/gpu/mock/GrMockTypes.h"
 #if defined(SK_METAL)
+#include "include/gpu/ganesh/mtl/GrMtlBackendSurface.h"
 #include "include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h"
 #endif
 #if defined(SK_VULKAN)
@@ -35,7 +36,7 @@
 #endif
 
 #if defined(SK_METAL)
-#include "include/gpu/mtl/GrMtlTypes.h"
+#include "include/gpu/ganesh/mtl/GrMtlTypes.h"
 #endif
 
 namespace {
@@ -256,9 +257,9 @@ reskia_gr_backend_format_t *GrBackendFormat_MakeMock(reskia_gr_color_type_t colo
 #endif
 }
 
-reskia_gr_backend_format_t *GrBackendFormat_MakeMtl(int format) {
+reskia_gr_backend_format_t *GrBackendFormats_MakeMtl(int format) {
 #if defined(SK_GANESH) && defined(SK_METAL)
-    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormat::MakeMtl(static_cast<GrMTLPixelFormat>(format))));
+    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormats::MakeMtl(static_cast<GrMTLPixelFormat>(format))));
 #elif defined(SK_GANESH)
     (void) format;
     return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat());
@@ -345,9 +346,9 @@ bool GrBackendFormat_desc(const reskia_gr_backend_format_t *format, reskia_gr_co
 #endif
 }
 
-int GrBackendFormat_asMtlFormat(const reskia_gr_backend_format_t *format) {
+int GrBackendFormats_AsMtlFormat(const reskia_gr_backend_format_t *format) {
 #if defined(SK_GANESH) && defined(SK_METAL)
-    return format != nullptr ? static_cast<int>(as_format(format)->asMtlFormat()) : 0;
+    return format != nullptr ? static_cast<int>(GrBackendFormats::AsMtlFormat(*as_format(format))) : 0;
 #else
     (void) format;
     return 0;
@@ -497,10 +498,6 @@ bool GrBackendTexture_hasMipmaps(const reskia_gr_backend_texture_t *texture) {
 #endif
 }
 
-bool GrBackendTexture_hasMipMaps(const reskia_gr_backend_texture_t *texture) {
-    return GrBackendTexture_hasMipmaps(texture);
-}
-
 reskia_gr_backend_api_t GrBackendTexture_backend(const reskia_gr_backend_texture_t *texture) {
 #if defined(SK_GANESH)
     return texture != nullptr ? static_cast<reskia_gr_backend_api_t>(as_texture(texture)->backend()) : 0;
@@ -519,7 +516,7 @@ reskia_gr_texture_type_t GrBackendTexture_textureType(const reskia_gr_backend_te
 #endif
 }
 
-bool GrBackendTexture_getMtlTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mtl_texture_info_t *out_info) {
+bool GrBackendTextures_GetMtlTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mtl_texture_info_t *out_info) {
     if (out_info != nullptr) {
         *out_info = {};
     }
@@ -528,7 +525,7 @@ bool GrBackendTexture_getMtlTextureInfo(const reskia_gr_backend_texture_t *textu
         return false;
     }
     GrMtlTextureInfo info;
-    if (!as_texture(texture)->getMtlTextureInfo(&info)) {
+    if (!GrBackendTextures::GetMtlTextureInfo(*as_texture(texture), &info)) {
         return false;
     }
     out_info->texture = const_cast<void *>(info.fTexture.get());
@@ -748,7 +745,7 @@ bool GrBackendRenderTarget_isFramebufferOnly(const reskia_gr_backend_render_targ
 #endif
 }
 
-bool GrBackendRenderTarget_getMtlTextureInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mtl_texture_info_t *out_info) {
+bool GrBackendRenderTargets_GetMtlTextureInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mtl_texture_info_t *out_info) {
     if (out_info != nullptr) {
         *out_info = {};
     }
@@ -757,7 +754,7 @@ bool GrBackendRenderTarget_getMtlTextureInfo(const reskia_gr_backend_render_targ
         return false;
     }
     GrMtlTextureInfo info;
-    if (!as_render_target(render_target)->getMtlTextureInfo(&info)) {
+    if (!GrBackendRenderTargets::GetMtlTextureInfo(*as_render_target(render_target), &info)) {
         return false;
     }
     out_info->texture = const_cast<void *>(info.fTexture.get());

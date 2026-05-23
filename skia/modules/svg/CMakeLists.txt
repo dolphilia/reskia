@@ -125,6 +125,8 @@ if(ICU_UBIDI_INCLUDE_DIR)
     target_include_directories(skunicode PRIVATE "${ICU_UBIDI_INCLUDE_DIR}")
     target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU_IMPLEMENTATION)
     target_sources(skunicode PRIVATE
+            ../skunicode/src/SkBidiFactory_icu_full.cpp
+            ../skunicode/src/SkBidiFactory_icu_subset.cpp
             ../skunicode/src/SkUnicode_icu.cpp
             ../skunicode/src/SkUnicode_icu_bidi.cpp
             ../skunicode/src/SkUnicode_icu_builtin.cpp
