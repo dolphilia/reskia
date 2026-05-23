@@ -407,6 +407,8 @@ def class_prefix_candidates(class_name: str, path: str) -> set[str]:
         names.add("SkParagraph_" + class_name)
     if path.startswith("modules/svg/"):
         names.add(class_name)
+    if path.startswith("modules/skshaper/") and class_name == "Factory":
+        names.add("SkShapers_Factory")
     if path.startswith("include/gpu/graphite/"):
         names.add("Graphite_" + class_name)
     return names

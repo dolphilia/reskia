@@ -72,7 +72,6 @@ int main() {
     SkMemoryStream_setMemory(nullptr, nullptr, 0, true);
     SkMemoryStream_setMemoryOwned(nullptr, nullptr, 0);
     SkMemoryStream_setData(nullptr, 0);
-    SkMemoryStream_skipToAlign4(nullptr);
 
     const uint8_t bytes[] = {10, 20, 30, 40};
     reskia_memory_stream_t *memory_stream = SkMemoryStream_newWithDataAndCopyFlag(bytes, sizeof(bytes), true);

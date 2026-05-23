@@ -65,13 +65,6 @@ void SkMemoryStream_setData(reskia_memory_stream_t *memory_stream, sk_data_t dat
     reinterpret_cast<SkMemoryStream *>(memory_stream)->setData(static_sk_data_get_entity(data));
 }
 
-void SkMemoryStream_skipToAlign4(reskia_memory_stream_t *memory_stream) {
-    if (memory_stream == nullptr) {
-        return;
-    }
-    reinterpret_cast<SkMemoryStream *>(memory_stream)->skipToAlign4();
-}
-
 const uint8_t * SkMemoryStream_getAtPos(reskia_memory_stream_t *memory_stream) {
     if (memory_stream == nullptr) {
         return nullptr;

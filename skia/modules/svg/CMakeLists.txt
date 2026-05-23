@@ -63,6 +63,7 @@ target_include_directories(svg PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 add_library(skshaper
         ../skshaper/src/SkShaper.cpp
+        ../skshaper/src/SkShaper_factory.cpp
         ../skshaper/src/SkShaper_primitive.cpp
 )
 target_compile_features(skshaper PUBLIC cxx_std_17)
@@ -123,7 +124,17 @@ if(ICU_UBIDI_INCLUDE_DIR)
     find_library(ICU_DATA_LIBRARY NAMES icudata HINTS ${SVG_DEP_HINTS} PATH_SUFFIXES lib lib64)
 
     target_include_directories(skunicode PRIVATE "${ICU_UBIDI_INCLUDE_DIR}")
-    target_compile_definitions(skunicode PRIVATE SK_UNICODE_ICU_IMPLEMENTATION)
+    target_compile_definitions(skunicode PRIVATE
+            SK_UNICODE_ICU_IMPLEMENTATION
+            u_errorName_skia=u_errorName
+            ubidi_close_skia=ubidi_close
+            ubidi_getDirection_skia=ubidi_getDirection
+            ubidi_getLength_skia=ubidi_getLength
+            ubidi_getLevelAt_skia=ubidi_getLevelAt
+            ubidi_openSized_skia=ubidi_openSized
+            ubidi_setPara_skia=ubidi_setPara
+            ubidi_reorderVisual_skia=ubidi_reorderVisual
+    )
     target_sources(skunicode PRIVATE
             ../skunicode/src/SkBidiFactory_icu_full.cpp
             ../skunicode/src/SkBidiFactory_icu_subset.cpp

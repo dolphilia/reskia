@@ -39,6 +39,7 @@ if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     if(NOT TARGET skshaper)
         add_library(skshaper
                 modules/skshaper/src/SkShaper.cpp
+                modules/skshaper/src/SkShaper_factory.cpp
                 modules/skshaper/src/SkShaper_primitive.cpp
                 modules/skshaper/src/SkShaper_coretext.cpp
         )

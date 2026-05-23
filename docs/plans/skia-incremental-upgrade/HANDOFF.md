@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `cd75e467271917846f2b53277028168255e4f485`
-- next probe candidate: choose a fixed commit after `cd75e467271917846f2b53277028168255e4f485`
+- `SKIA_REF`: `8567db100d685f017915d30996905363fae2658d`
+- next probe candidate: choose a fixed commit after `8567db100d685f017915d30996905363fae2658d`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -48,20 +48,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 014 accepted: `2f07d8e1829ba5bcd0868e3d27e644b87b110598`。
 - cycle 015 accepted: `7ffd936a66df500b2275695f6a58208163f31518`。
 - cycle 016 accepted: `cd75e467271917846f2b53277028168255e4f485`。
+- cycle 017 accepted: `8567db100d685f017915d30996905363fae2658d`。
 
 未実施:
 
-- 次サイクル candidate の選定。
-- 次サイクル candidate checkout を使った coverage regression。
-- 次サイクルの source/header sync と C API 追従実装。
+- cycle 018 candidate の選定。
+- cycle 018 candidate checkout を使った coverage regression。
+- cycle 018 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 017 の candidate selection から始める。
+次の作業は、cycle 018 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `cd75e467271917846f2b53277028168255e4f485` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `8567db100d685f017915d30996905363fae2658d` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -94,27 +95,22 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `cd75e467271917846f2b53277028168255e4f485`
-- committer date: 2024-04-01T21:33:54Z
-- subject: `[paragraph] TypefaceFontProvider impl more FontMgr`
+- `8567db100d685f017915d30996905363fae2658d`
+- committer date: 2024-04-08T21:47:34Z
+- subject: `Fix minor bugs in the SkSL PrettyPrint algorithm.`
 
-cycle 016 結果:
+cycle 017 結果:
 
-- baseline から 108 commits。
-- `include` / `modules` 差分は 31 files, +455/-274。broad surface は 136 files, +4438/-1464。
-- 2-week 候補は `missing 12`、3-week 候補は `missing 13` になり、Graphite/Ganesh GPU drift と text-module drift が広がるため、1-week date-end 候補を採用した。
-- initial candidate coverage は `missing 3` / `stale_capi 5` / `signature_changed_review 5`。
+- 1-week date-end 候補を採用し、2-week/3-week 候補は public/module drift が広がるため deferred とした。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`。
-- C API catch-up として `Graphite_Recorder_updateCompressedBackendTexture`、`Graphite_TextureInfo_compressionType`、`SkImage_readPixelsGraphite` を追加した。
-- Metal backend surface helpers を upstream の namespace-style API に合わせて rename し、旧 stale aliases を削除した。
-- `SkImage_readPixelsGraphite` は upstream member が `GRAPHITE_TEST_UTILS` 限定のため、通常 build では false を返す guarded wrapper とした。
-- `SkBidiFactory_icu_full/subset` source を `skunicode` target に追加し、ローカル ICU の versioned symbols に合わせて subset wrapper の固定 `_skia` suffix 前提を外した。
-- upstream header に残る `SkICCFloatXYZD50ToGrid16Lab` / `SkICCFloatToTable16` の public declarations に対し、Reskia link 互換のため定義を復元した。
-- `TypefaceFontProvider` の FontMgr 実装拡張に伴い、paragraph provider smoke は CoreText FontMgr から登録用 typeface を作るよう更新した。
-- Metal backend header migration、SkUnicode Bidi factory split、Graphite/Ganesh/Metal source drift を含む 125 files を source/header sync し、2 files を upstream 削除に追従して削除した。
+- stale C API report は `stale_capi 0`。`signature_changed_review` は `GrBackendTexture` constructor の default `label` 追加 3 rows のみで、既存 C ABI は default label 相当として維持した。
+- C API catch-up として `SkBitmap_setColorSpace` と `SkShapers::Factory` 系 API を追加した。
+- upstream で削除された `SkMemoryStream::skipToAlign4` に対応する C API と smoke 呼び出しを削除した。
+- `SkSVGFilter::applyProperties` と `SkSVGRenderContext` internal helper rows は `false_positive` / `na` override とした。
+- `SkShaper_factory.cpp`、`SkSLEliminateUnnecessaryBraces.cpp` を CMake source list に追加し、source build 用に ICU subset `_skia` symbol compatibility definitions を追加した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 次サイクルでは、2-week 候補 `8567db100d685f017915d30996905363fae2658d` で見えていた `missing 12` と stale/signature review 14 rows に注意して、1週間/2週間/3週間候補を再比較する。
+- full GPU smoke build は既存 `test_c_skia` の old typed C API smoke compile error により失敗するため、cycle gate 対象 smoke target を個別 build して検証した。
+- 次サイクルでは、accepted baseline `8567db100d685f017915d30996905363fae2658d` から 1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -134,6 +130,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-014-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-015-2026-05-23.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-016-2026-05-23.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-017-2026-05-23.md`
 
 ## Cycle close の条件
 

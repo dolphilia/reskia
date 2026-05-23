@@ -56,7 +56,6 @@ struct SkGainmapInfo;
 
 extern "C" {
     #include "jpeglib.h"  // NO_G3_REWRITE
-    #include "jmorecfg.h"  // NO_G3_REWRITE
 }
 
 bool SkJpegCodec::IsJpeg(const void* buffer, size_t bytesRead) {
@@ -250,10 +249,11 @@ static SkEncodedOrigin get_exif_orientation(sk_sp<SkData> exifData) {
     return kDefault_SkEncodedOrigin;
 }
 
-SkCodec::Result SkJpegCodec::ReadHeader(SkStream* stream, SkCodec** codecOut,
+SkCodec::Result SkJpegCodec::ReadHeader(
+        SkStream* stream,
+        SkCodec** codecOut,
         JpegDecoderMgr** decoderMgrOut,
         std::unique_ptr<SkEncodedInfo::ICCProfile> defaultColorProfile) {
-
     // Create a JpegDecoderMgr to own all of the decompress information
     std::unique_ptr<JpegDecoderMgr> decoderMgr(new JpegDecoderMgr(stream));
 
@@ -503,6 +503,7 @@ bool SkJpegCodec::conversionSupported(const SkImageInfo& dstInfo, bool srcIsOpaq
                 fDecoderMgr->dinfo()->out_color_space = JCS_GRAYSCALE;
             }
             break;
+        case kBGRA_10101010_XR_SkColorType:
         case kBGR_101010x_XR_SkColorType:
         case kRGBA_F16_SkColorType:
             SkASSERT(needsColorXform);
@@ -1412,12 +1413,3 @@ std::unique_ptr<SkCodec> Decode(sk_sp<SkData> data,
 }
 
 }  // namespace SkJpegDecoder
-
-namespace SkJpegPriv {
-
-SkEncodedOrigin get_exif_orientation(jpeg_decompress_struct* dinfo) {
-    auto metadataDecoder = SkJpegMetadataDecoder::Make(get_sk_marker_list(dinfo));
-    return get_exif_orientation(metadataDecoder->getExifMetadata(/*copyData=*/false));
-}
-
-}  // namespace SkJpegPriv

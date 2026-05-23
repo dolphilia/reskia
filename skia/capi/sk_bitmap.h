@@ -140,6 +140,7 @@ void SkBitmap_reset(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 size_t SkBitmap_rowBytes(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> size_t
 int SkBitmap_rowBytesAsPixels(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap) -> int
 bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaType); // (SkBitmap *bitmap, SkAlphaType alphaType) -> bool
+void SkBitmap_setColorSpace(reskia_bitmap_t *bitmap, sk_color_space_t colorSpace); // (SkBitmap *bitmap, sk_sp<SkColorSpace> colorSpace)
 void SkBitmap_setImmutable(reskia_bitmap_t *bitmap); // (SkBitmap *bitmap)
 bool SkBitmap_setInfo(reskia_bitmap_t *bitmap, const reskia_image_info_t *imageInfo, size_t rowBytes); // (SkBitmap *bitmap, const SkImageInfo *imageInfo, size_t rowBytes) -> bool
 void SkBitmap_setPixelRef(reskia_bitmap_t *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy); // (SkBitmap *bitmap, sk_pixel_ref_t pixelRef, int dx, int dy)

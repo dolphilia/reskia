@@ -502,6 +502,13 @@ bool SkBitmap_setAlphaType(reskia_bitmap_t *bitmap, reskia_alpha_type_t alphaTyp
     return reinterpret_cast<SkBitmap *>(bitmap)->setAlphaType(static_cast<SkAlphaType>(alphaType));
 }
 
+void SkBitmap_setColorSpace(reskia_bitmap_t *bitmap, sk_color_space_t colorSpace) {
+    if (bitmap == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkBitmap *>(bitmap)->setColorSpace(static_sk_color_space_get_entity(colorSpace));
+}
+
 void SkBitmap_setImmutable(reskia_bitmap_t *bitmap) {
     if (bitmap == nullptr) {
         return;

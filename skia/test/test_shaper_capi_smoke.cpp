@@ -24,6 +24,10 @@ bool smoke_null_inputs() {
            check(SkShaper_MakeBiDiRunIterator(nullptr, 1, 0) == nullptr, "bidi iterator null text") &&
            check(SkShaper_MakeScriptRunIterator(nullptr, 1, 0) == nullptr, "script iterator null text") &&
            check(SkShaper_MakeStdLanguageRunIterator(nullptr, 1) == nullptr, "language iterator null text") &&
+           check(SkShapers_Factory_makeShaper(nullptr, 0) == nullptr, "factory make shaper null") &&
+           check(SkShapers_Factory_makeBidiRunIterator(nullptr, "abc", 3, 0) == nullptr, "factory bidi null") &&
+           check(SkShapers_Factory_makeScriptRunIterator(nullptr, "abc", 3, 0) == nullptr, "factory script null") &&
+           check(SkShapers_Factory_getUnicode(nullptr) == nullptr, "factory unicode null") &&
            check(!SkShaper_shape(nullptr, "abc", 3, nullptr, true, 100.0f, nullptr), "shape null") &&
            check(SkShaper_FontRunIterator_atEnd(nullptr), "font iterator null at end") &&
            check(SkShaper_BiDiRunIterator_currentLevel(nullptr) == 0, "bidi current null") &&
@@ -45,6 +49,26 @@ bool smoke_shape() {
 
     reskia_shaper_t *primitive = SkShaper_MakePrimitive();
     SkShaper_delete(primitive);
+    reskia_shapers_factory_t *factory = SkShapers_Primitive_Factory();
+    reskia_shaper_t *factory_shaper = SkShapers_Factory_makeShaper(factory, 0);
+    reskia_shaper_bidi_run_iterator_t *factory_bidi = SkShapers_Factory_makeBidiRunIterator(factory, text, text_size, 0);
+    reskia_shaper_script_run_iterator_t *factory_script = SkShapers_Factory_makeScriptRunIterator(factory, text, text_size, 0x5a797979);
+    if (!check(factory != nullptr, "primitive factory") ||
+        !check(factory_shaper != nullptr, "factory shaper") ||
+        !check(factory_bidi != nullptr, "factory bidi") ||
+        !check(factory_script != nullptr, "factory script") ||
+        !check(SkShapers_Factory_getUnicode(factory) == nullptr, "primitive factory unicode")) {
+        SkShaper_delete(factory_shaper);
+        SkShaper_BiDiRunIterator_delete(factory_bidi);
+        SkShaper_ScriptRunIterator_delete(factory_script);
+        SkShapers_Factory_release(factory);
+        SkShaper_delete(shaper);
+        return false;
+    }
+    SkShaper_delete(factory_shaper);
+    SkShaper_BiDiRunIterator_delete(factory_bidi);
+    SkShaper_ScriptRunIterator_delete(factory_script);
+    SkShapers_Factory_release(factory);
     reskia_shaper_t *core_text = SkShaper_MakeCoreText();
     SkShaper_delete(core_text);
     reskia_shaper_t *shape_then_wrap = SkShaper_MakeShapeThenWrap(0);
