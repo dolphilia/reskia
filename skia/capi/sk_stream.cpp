@@ -8,10 +8,12 @@
 
 #include "../handles/static_sk_stream.h"
 #include "../handles/static_sk_stream_asset.h"
+#include "../handles/static_sk_data.h"
 
 #include "../handles/static_sk_stream-internal.h"
 #include "../handles/static_sk_stream_asset-internal.h"
 #include "../handles/static_sk_stream_asset.h"
+#include "../handles/static_sk_data-internal.h"
 
 extern "C" {
 
@@ -178,6 +180,13 @@ const void * SkStream_getMemoryBase(reskia_stream_t *stream) {
         return nullptr;
     }
     return reinterpret_cast<SkStream *>(stream)->getMemoryBase();
+}
+
+sk_data_t SkStream_getData(reskia_stream_t *stream) {
+    if (stream == nullptr) {
+        return 0;
+    }
+    return static_sk_data_make(reinterpret_cast<SkStream *>(stream)->getData());
 }
 
 // static

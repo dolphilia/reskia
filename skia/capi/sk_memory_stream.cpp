@@ -58,6 +58,13 @@ sk_data_t SkMemoryStream_asData(reskia_memory_stream_t *memory_stream) {
     return static_sk_data_make(reinterpret_cast<SkMemoryStream *>(memory_stream)->asData());
 }
 
+sk_data_t SkMemoryStream_getData(reskia_memory_stream_t *memory_stream) {
+    if (memory_stream == nullptr) {
+        return 0;
+    }
+    return static_sk_data_make(reinterpret_cast<SkMemoryStream *>(memory_stream)->getData());
+}
+
 void SkMemoryStream_setData(reskia_memory_stream_t *memory_stream, sk_data_t data) {
     if (memory_stream == nullptr) {
         return;

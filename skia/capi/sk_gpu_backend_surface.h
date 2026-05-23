@@ -145,8 +145,6 @@ bool GrBackendRenderTarget_asHandle(const reskia_gr_backend_render_target_t *ren
 reskia_gr_backend_semaphore_t *GrBackendSemaphore_new(); // owned; uninitialized default semaphore
 reskia_gr_backend_semaphore_t *GrBackendSemaphore_newCopy(const reskia_gr_backend_semaphore_t *semaphore); // owned; NULL returns NULL
 void GrBackendSemaphore_delete(reskia_gr_backend_semaphore_t *semaphore); // NULL input is no-op
-void GrBackendSemaphore_initVulkan(reskia_gr_backend_semaphore_t *semaphore, uintptr_t vk_semaphore); // NULL input or unavailable Vulkan is no-op
-uintptr_t GrBackendSemaphore_vkSemaphore(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Vulkan input returns 0
 void GrBackendSemaphore_initMetal(reskia_gr_backend_semaphore_t *semaphore, void *event, uint64_t value); // NULL input or unavailable Metal is no-op
 void *GrBackendSemaphore_mtlSemaphore(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns NULL
 uint64_t GrBackendSemaphore_mtlValue(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns 0

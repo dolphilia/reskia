@@ -153,7 +153,6 @@ bool smoke_context_create_destroy() {
                GrBackendSemaphore_newCopy(nullptr) == nullptr &&
                !GrBackendSemaphore_isInitialized(nullptr) &&
                GrBackendSemaphore_backend(nullptr) == 0 &&
-               GrBackendSemaphore_vkSemaphore(nullptr) == 0 &&
                GrBackendSemaphore_mtlSemaphore(nullptr) == nullptr &&
                GrBackendSemaphore_mtlValue(nullptr) == 0 &&
                GrDriverBugWorkarounds_newWithTypes(nullptr, 0) == nullptr &&

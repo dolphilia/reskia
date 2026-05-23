@@ -31,7 +31,7 @@
 #include "src/sfnt/SkOTTable_OS_2.h"
 
 #ifdef SK_TYPEFACE_FACTORY_FREETYPE
-#include "src/ports/SkFontHost_FreeType_common.h"
+#include "src/ports/SkTypeface_FreeType.h"
 #endif
 
 #ifdef SK_TYPEFACE_FACTORY_CORETEXT
@@ -64,7 +64,10 @@ namespace {
 
 class SkEmptyTypeface : public SkTypeface {
 public:
-    static sk_sp<SkTypeface> Make() { return sk_sp<SkTypeface>(new SkEmptyTypeface); }
+    static sk_sp<SkTypeface> Make() {
+        static SkNoDestructor<SkEmptyTypeface> instance;
+        return sk_ref_sp(instance.get());
+    }
 
     static constexpr SkTypeface::FactoryId FactoryId = SkSetFourByteTag('e','m','t','y');
     static sk_sp<SkTypeface> MakeFromStream(std::unique_ptr<SkStreamAsset> stream,
@@ -75,6 +78,7 @@ public:
         return nullptr;
     }
 protected:
+    friend SkNoDestructor<SkEmptyTypeface>;
     SkEmptyTypeface() : SkTypeface(SkFontStyle(), true) { }
 
     std::unique_ptr<SkStreamAsset> onOpenStream(int* ttcIndex) const override { return nullptr; }
@@ -102,6 +106,8 @@ protected:
     void getPostScriptGlyphNames(SkString*) const override {}
     void getGlyphToUnicodeMap(SkUnichar*) const override {}
     int onGetUPEM() const override { return 0; }
+    bool onComputeBounds(SkRect* bounds) const override { return false; }
+
     class EmptyLocalizedStrings : public SkTypeface::LocalizedStrings {
     public:
         bool next(SkTypeface::LocalizedString*) override { return false; }
@@ -245,7 +251,7 @@ sk_sp<SkTypeface> SkTypeface::MakeDeserialize(SkStream* stream, sk_sp<SkFontMgr>
             }
         }
 
-        SkDEBUGCODE(FactoryId id = desc.getFactoryId();)
+        [[maybe_unused]] FactoryId id = desc.getFactoryId();
         SkDEBUGF("Could not find factory %c%c%c%c for %s.\n",
                  (id >> 24) & 0xFF, (id >> 16) & 0xFF, (id >> 8) & 0xFF, (id >> 0) & 0xFF,
                  desc.getFamilyName());

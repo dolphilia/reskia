@@ -49,7 +49,6 @@ void SlugImpl::doFlatten(SkWriteBuffer& buffer) const {
 
 sk_sp<Slug> SlugImpl::MakeFromBuffer(SkReadBuffer& buffer, const SkStrikeClient* client) {
     SkRect sourceBounds = buffer.readRect();
-    SkASSERT(!sourceBounds.isEmpty());
     if (!buffer.validate(!sourceBounds.isEmpty())) { return nullptr; }
     SkPaint paint = buffer.readPaint();
     SkPoint origin = buffer.readPoint();
@@ -115,11 +114,5 @@ void Slug::AddDeserialProcs(SkDeserialProcs* procs, const SkStrikeClient* client
         return SlugImpl::MakeFromBuffer(buffer, client);
     };
 }
-
-#if !defined(SK_SLUG_DISABLE_LEGACY_DESERIALIZE)
-sk_sp<Slug> SkMakeSlugFromBuffer(SkReadBuffer& buffer, const SkStrikeClient* client) {
-    return SlugImpl::MakeFromBuffer(buffer, client);
-}
-#endif
 
 }  // namespace sktext::gpu

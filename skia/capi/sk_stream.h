@@ -10,6 +10,7 @@
 
 #include "../handles/static_sk_stream.h"
 #include "../handles/static_sk_stream_asset.h"
+#include "../handles/static_sk_data.h"
 
 typedef struct reskia_stream_t reskia_stream_t;
 
@@ -45,6 +46,7 @@ size_t SkStream_getLength(reskia_stream_t *stream); // (SkStream *stream) -> siz
  * caller must not free.
  */
 const void * SkStream_getMemoryBase(reskia_stream_t *stream);
+sk_data_t SkStream_getData(reskia_stream_t *stream); // NULL or unsupported stream returns 0.
 
 // static
 

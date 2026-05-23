@@ -259,6 +259,7 @@ elseif (APPLE)
             src/ports/SkOSFile_posix.cpp
             capi/sk_typeface_mac.cpp
             src/utils/mac/SkCTFont.cpp
+            src/utils/mac/SkCTFontCreateExactCopy.cpp
     )
 elseif (UNIX)
     list(APPEND SOURCE_FILES

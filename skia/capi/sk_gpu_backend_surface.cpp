@@ -868,26 +868,6 @@ void GrBackendSemaphore_delete(reskia_gr_backend_semaphore_t *semaphore) {
 #endif
 }
 
-void GrBackendSemaphore_initVulkan(reskia_gr_backend_semaphore_t *semaphore, uintptr_t vk_semaphore) {
-#if defined(SK_GANESH) && defined(SK_VULKAN)
-    if (semaphore != nullptr) {
-        as_semaphore(semaphore)->initVulkan((VkSemaphore) vk_semaphore);
-    }
-#else
-    (void) semaphore;
-    (void) vk_semaphore;
-#endif
-}
-
-uintptr_t GrBackendSemaphore_vkSemaphore(const reskia_gr_backend_semaphore_t *semaphore) {
-#if defined(SK_GANESH) && defined(SK_VULKAN)
-    return semaphore != nullptr ? (uintptr_t) as_semaphore(semaphore)->vkSemaphore() : 0;
-#else
-    (void) semaphore;
-    return 0;
-#endif
-}
-
 void GrBackendSemaphore_initMetal(reskia_gr_backend_semaphore_t *semaphore, void *event, uint64_t value) {
 #if defined(SK_GANESH) && defined(SK_METAL)
     if (semaphore != nullptr) {

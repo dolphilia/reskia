@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `dfd933f9930cab2e492b5bb99cbd31e431b32ba0`
-- next probe candidate: choose a fixed commit after `dfd933f9930cab2e492b5bb99cbd31e431b32ba0`
+- `SKIA_REF`: `76154622bf46eb7b107b437a5d1a032ae6d30344`
+- next probe candidate: choose a fixed commit after `76154622bf46eb7b107b437a5d1a032ae6d30344`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -44,6 +44,7 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 010 accepted: `a4ff02094bbd98084cdcf79f7fdc3c1edb150433`。
 - cycle 011 accepted: `4346b8f4a1e03ba08e3d80c66084a35a8ccde4d2`。
 - cycle 012 accepted: `dfd933f9930cab2e492b5bb99cbd31e431b32ba0`。
+- cycle 013 accepted: `76154622bf46eb7b107b437a5d1a032ae6d30344`。
 
 未実施:
 
@@ -53,11 +54,11 @@ git -C vendor/skia-upstream status --short --branch
 
 ## 次にやること
 
-次の作業は、cycle 013 の candidate selection から始める。
+次の作業は、cycle 014 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `dfd933f9930cab2e492b5bb99cbd31e431b32ba0` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `76154622bf46eb7b107b437a5d1a032ae6d30344` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -90,23 +91,27 @@ git -C vendor/skia-upstream status --short --branch
 
 候補:
 
-- `dfd933f9930cab2e492b5bb99cbd31e431b32ba0`
-- committer date: 2024-03-04T04:39:28Z
-- subject: `Roll Dawn from 0b135d53cd80 to d9da44a9929a (8 revisions)`
+- `76154622bf46eb7b107b437a5d1a032ae6d30344`
+- committer date: 2024-03-11T23:53:18Z
+- subject: `Add SkCodec API to preserve original data`
 
-cycle 012 結果:
+cycle 013 結果:
 
-- baseline から 86 commits。
-- `include` / `modules` 差分は 170 files, +2359/-560。broad surface は 222 files, +3436/-1117。
-- 1-week date-end 候補より小さい固定 commit を採用し、Skottie/SKSG と SkShaper/SVG text の churn を cycle 内で吸収した。
-- initial candidate coverage は `missing 0` / `stale_capi 0`。
+- baseline から 112 commits。
+- `include` / `modules` 差分は 37 files, +404/-138。broad surface は 172 files, +3243/-1688。
+- 2-week/3-week 候補は SkUnicode、Graphite/Dawn、skcms、fontations 方面の差分が広がるため、1-week date-end 候補を採用した。
+- initial candidate coverage は `missing 6` / `stale_capi 2` / `signature_changed_review 1`。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`。
-- C API catch-up として `SkShaper_MakeSkUnicodeBidiRunIterator` の呼び出し先を `SkShapers::unicode::BidiRunIterator` へ更新。
-- Skottie/SKSG、SkShaper/SVG text、SkParagraph/skplaintexteditor、core/opts、Ganesh/Graphite を source/header sync。
-- `SkSwizzler_opts.h` は upstream rename に合わせて削除し、`SkSwizzler_opts.inc` を追加。
+- C API catch-up として `SkCodec_refEncodedData`、`SkStream_getData`、`SkMemoryStream_getData` を追加。
+- vendor 側で削除された Vulkan semaphore API に追従し、`GrBackendSemaphore_initVulkan` と `GrBackendSemaphore_vkSemaphore` を削除。
+- `GrContextThreadSafeProxy_createCharacterization` は C ABI を維持しつつ、内部呼び出しを `skgpu::Mipmapped` へ更新。
+- `DawnTextureInfo` の 3 missing は Dawn/WebGPU optional backend API として `na` に分類。
+- Core codec/stream/picture、Ganesh/Graphite/Dawn、SkUnicode、fontations、skcms を source/header sync。
+- `SmallPathAtlas.{cpp,h}` は upstream 削除に追従して削除。
+- `SkCTFontCreateExactCopy.{cpp,h}` 追加に伴い、Apple source list を更新。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 次サイクルでは、SkCodec API additions、Graphite/Dawn source-list drift、SkUnicode/SkShaper API movement に注意して、1週間/2週間/3週間候補を再比較する。
+- 次サイクルでは、2-week/3-week 候補で見えていた skcms roll、Graphite TaskList/Atlas drift、Dawn optional API、SkUnicode/fontations の追加差分に注意して、1週間/2週間/3週間候補を再比較する。
 
 cycle records:
 
@@ -122,6 +127,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-010-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-011-2026-05-22.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-012-2026-05-23.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-013-2026-05-23.md`
 
 ## Cycle close の条件
 

@@ -47,6 +47,7 @@ reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec); // (SkCo
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t. NULL codec returns 0.
 bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubset); // (SkCodec* codec, SkIRect* desiredSubset) -> bool. codec/subset are required.
 reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedImageFormat. NULL codec returns -1.
+sk_data_t SkCodec_refEncodedData(reskia_codec_t *codec); // NULL codec or missing encoded data returns 0.
 /**
  * codec/info/pixels are required.
  * invalid input returns kInvalidParameters.
