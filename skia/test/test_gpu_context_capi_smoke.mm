@@ -153,8 +153,8 @@ bool smoke_context_create_destroy() {
                GrBackendSemaphore_newCopy(nullptr) == nullptr &&
                !GrBackendSemaphore_isInitialized(nullptr) &&
                GrBackendSemaphore_backend(nullptr) == 0 &&
-               GrBackendSemaphore_mtlSemaphore(nullptr) == nullptr &&
-               GrBackendSemaphore_mtlValue(nullptr) == 0 &&
+               GrBackendSemaphores_GetMtlHandle(nullptr) == nullptr &&
+               GrBackendSemaphores_GetMtlValue(nullptr) == 0 &&
                GrDriverBugWorkarounds_newWithTypes(nullptr, 0) == nullptr &&
                GrDriverBugWorkarounds_newCopy(nullptr) == nullptr &&
                !GrDriverBugWorkarounds_isEnabled(nullptr, 0) &&
@@ -503,24 +503,28 @@ bool smoke_context_create_destroy() {
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
-    GrBackendSemaphore_initMetal(semaphore, nullptr, 77);
-    if (!check(GrBackendSemaphore_isInitialized(semaphore) &&
-               GrBackendSemaphore_mtlSemaphore(semaphore) == nullptr &&
-               GrBackendSemaphore_mtlValue(semaphore) == 77,
-               "GrBackendSemaphore Metal init/query")) {
+    reskia_gr_backend_semaphore_t *metal_semaphore = GrBackendSemaphores_MakeMtl(nullptr, 77);
+    if (!check(metal_semaphore != nullptr &&
+               GrBackendSemaphore_isInitialized(metal_semaphore) &&
+               GrBackendSemaphores_GetMtlHandle(metal_semaphore) == nullptr &&
+               GrBackendSemaphores_GetMtlValue(metal_semaphore) == 77,
+               "GrBackendSemaphores Metal make/query")) {
+        GrBackendSemaphore_delete(metal_semaphore);
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
-    reskia_gr_backend_semaphore_t *semaphore_copy = GrBackendSemaphore_newCopy(semaphore);
+    reskia_gr_backend_semaphore_t *semaphore_copy = GrBackendSemaphore_newCopy(metal_semaphore);
     if (!check(semaphore_copy != nullptr &&
                GrBackendSemaphore_isInitialized(semaphore_copy) &&
-               GrBackendSemaphore_mtlValue(semaphore_copy) == 77,
+               GrBackendSemaphores_GetMtlValue(semaphore_copy) == 77,
                "GrBackendSemaphore copy")) {
         GrBackendSemaphore_delete(semaphore_copy);
+        GrBackendSemaphore_delete(metal_semaphore);
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
     GrBackendSemaphore_delete(semaphore_copy);
+    GrBackendSemaphore_delete(metal_semaphore);
     GrBackendSemaphore_delete(semaphore);
 
     reskia_gr_driver_bug_workarounds_t *default_workarounds = GrDriverBugWorkarounds_new();

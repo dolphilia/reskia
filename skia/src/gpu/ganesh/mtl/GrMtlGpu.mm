@@ -10,6 +10,7 @@
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkTextureCompressionType.h"
 #include "include/gpu/GpuTypes.h"
+#include "include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h"
 #include "include/private/gpu/ganesh/GrTypesPriv.h"
 #include "src/base/SkMathPriv.h"
 #include "src/base/SkRectMemcpy.h"
@@ -18,6 +19,8 @@
 #include "src/gpu/ganesh/GrBackendUtils.h"
 #include "src/gpu/ganesh/GrDataUtils.h"
 #include "src/gpu/ganesh/GrDirectContextPriv.h"
+#include "src/gpu/ganesh/GrImageInfo.h"
+#include "src/gpu/ganesh/GrPixmap.h"
 #include "src/gpu/ganesh/GrRenderTarget.h"
 #include "src/gpu/ganesh/GrResourceProvider.h"
 #include "src/gpu/ganesh/GrTexture.h"
@@ -1605,7 +1608,8 @@ std::unique_ptr<GrSemaphore> GrMtlGpu::wrapBackendSemaphore(const GrBackendSemap
                                                             GrSemaphoreWrapType /* wrapType */,
                                                             GrWrapOwnership /*ownership*/) {
     SkASSERT(this->caps()->backendSemaphoreSupport());
-    return GrMtlSemaphore::MakeWrapped(semaphore.mtlSemaphore(), semaphore.mtlValue());
+    return GrMtlSemaphore::MakeWrapped(GrBackendSemaphores::GetMtlHandle(semaphore),
+                                       GrBackendSemaphores::GetMtlValue(semaphore));
 }
 
 void GrMtlGpu::insertSemaphore(GrSemaphore* semaphore) {

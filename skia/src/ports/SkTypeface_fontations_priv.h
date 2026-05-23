@@ -201,17 +201,21 @@ private:
 
 /** SkTypeface implementation based on Google Fonts Fontations Rust libraries. */
 class SkTypeface_Fontations : public SkTypeface {
-public:
-    SkTypeface_Fontations(sk_sp<SkData> fontData, const SkFontArguments&);
+private:
+    SkTypeface_Fontations(sk_sp<SkData> fontData,
+                          const SkFontStyle& style,
+                          uint32_t ttcIndex,
+                          rust::Box<fontations_ffi::BridgeFontRef>&& fontRef,
+                          rust::Box<fontations_ffi::BridgeNormalizedCoords>&& normalizedCoords,
+                          rust::Box<fontations_ffi::BridgeOutlineCollection>&& outlines,
+                          rust::Vec<uint32_t>&& palette);
 
-    bool hasValidBridgeFontRef() const;
+public:
     const fontations_ffi::BridgeFontRef& getBridgeFontRef() { return *fBridgeFontRef; }
     const fontations_ffi::BridgeNormalizedCoords& getBridgeNormalizedCoords() {
         return *fBridgeNormalizedCoords;
     }
-    const fontations_ffi::BridgeOutlineCollection& getOutlines() {
-        return *fOutlines;
-    }
+    const fontations_ffi::BridgeOutlineCollection& getOutlines() { return *fOutlines; }
     SkSpan<SkColor> getPalette() {
         return SkSpan<SkColor>(reinterpret_cast<SkColor*>(fPalette.data()), fPalette.size());
     }
@@ -227,9 +231,7 @@ protected:
     std::unique_ptr<SkScalerContext> onCreateScalerContext(const SkScalerContextEffects& effects,
                                                            const SkDescriptor* desc) const override;
     void onFilterRec(SkScalerContextRec*) const override;
-    std::unique_ptr<SkAdvancedTypefaceMetrics> onGetAdvancedMetrics() const override {
-        return nullptr;
-    }
+    std::unique_ptr<SkAdvancedTypefaceMetrics> onGetAdvancedMetrics() const override;
     void onGetFontDescriptor(SkFontDescriptor*, bool*) const override;
     void onCharsToGlyphs(const SkUnichar* chars, int count, SkGlyphID glyphs[]) const override;
     int onCountGlyphs() const override;

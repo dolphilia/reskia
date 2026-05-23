@@ -156,9 +156,9 @@ reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *cod
     return native != nullptr ? static_cast<reskia_codec_encoded_image_format_t>(native->getEncodedFormat()) : -1;
 }
 
-sk_data_t SkCodec_refEncodedData(reskia_codec_t *codec) {
+sk_stream_t SkCodec_getEncodedData(reskia_codec_t *codec) {
     SkCodec *native = as_codec(codec);
-    return native != nullptr ? static_sk_data_make(native->refEncodedData()) : 0;
+    return native != nullptr ? static_sk_stream_make(native->getEncodedData()) : 0;
 }
 
 reskia_codec_result_code_t SkCodec_getPixels(reskia_codec_t *codec, const reskia_image_info_t *info, void* pixels, size_t rowBytes, const reskia_codec_options_t *options) {

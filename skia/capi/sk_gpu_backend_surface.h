@@ -145,11 +145,11 @@ bool GrBackendRenderTarget_asHandle(const reskia_gr_backend_render_target_t *ren
 reskia_gr_backend_semaphore_t *GrBackendSemaphore_new(); // owned; uninitialized default semaphore
 reskia_gr_backend_semaphore_t *GrBackendSemaphore_newCopy(const reskia_gr_backend_semaphore_t *semaphore); // owned; NULL returns NULL
 void GrBackendSemaphore_delete(reskia_gr_backend_semaphore_t *semaphore); // NULL input is no-op
-void GrBackendSemaphore_initMetal(reskia_gr_backend_semaphore_t *semaphore, void *event, uint64_t value); // NULL input or unavailable Metal is no-op
-void *GrBackendSemaphore_mtlSemaphore(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns NULL
-uint64_t GrBackendSemaphore_mtlValue(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns 0
 bool GrBackendSemaphore_isInitialized(const reskia_gr_backend_semaphore_t *semaphore); // NULL input returns false
 reskia_gr_backend_api_t GrBackendSemaphore_backend(const reskia_gr_backend_semaphore_t *semaphore); // NULL input returns 0
+reskia_gr_backend_semaphore_t *GrBackendSemaphores_MakeMtl(void *event, uint64_t value); // owned; unavailable Metal returns NULL
+void *GrBackendSemaphores_GetMtlHandle(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns NULL
+uint64_t GrBackendSemaphores_GetMtlValue(const reskia_gr_backend_semaphore_t *semaphore); // NULL/non-Metal input returns 0
 
 reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_new(); // owned
 reskia_gr_driver_bug_workarounds_t *GrDriverBugWorkarounds_newWithTypes(const int32_t *workarounds, int count); // owned; invalid input returns NULL

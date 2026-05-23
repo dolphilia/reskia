@@ -17,6 +17,9 @@
 #include "include/gpu/gl/GrGLExtensions.h"
 #include "include/gpu/gl/GrGLTypes.h"
 #include "include/gpu/mock/GrMockTypes.h"
+#if defined(SK_METAL)
+#include "include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h"
+#endif
 #if defined(SK_VULKAN)
 #include "include/gpu/vk/VulkanMutableTextureState.h"
 #endif
@@ -868,30 +871,28 @@ void GrBackendSemaphore_delete(reskia_gr_backend_semaphore_t *semaphore) {
 #endif
 }
 
-void GrBackendSemaphore_initMetal(reskia_gr_backend_semaphore_t *semaphore, void *event, uint64_t value) {
+reskia_gr_backend_semaphore_t *GrBackendSemaphores_MakeMtl(void *event, uint64_t value) {
 #if defined(SK_GANESH) && defined(SK_METAL)
-    if (semaphore != nullptr) {
-        as_semaphore(semaphore)->initMetal(event, value);
-    }
+    return reinterpret_cast<reskia_gr_backend_semaphore_t *>(new GrBackendSemaphore(GrBackendSemaphores::MakeMtl(event, value)));
 #else
-    (void) semaphore;
     (void) event;
     (void) value;
+    return nullptr;
 #endif
 }
 
-void *GrBackendSemaphore_mtlSemaphore(const reskia_gr_backend_semaphore_t *semaphore) {
+void *GrBackendSemaphores_GetMtlHandle(const reskia_gr_backend_semaphore_t *semaphore) {
 #if defined(SK_GANESH) && defined(SK_METAL)
-    return semaphore != nullptr ? const_cast<void *>(as_semaphore(semaphore)->mtlSemaphore()) : nullptr;
+    return semaphore != nullptr ? const_cast<void *>(GrBackendSemaphores::GetMtlHandle(*as_semaphore(semaphore))) : nullptr;
 #else
     (void) semaphore;
     return nullptr;
 #endif
 }
 
-uint64_t GrBackendSemaphore_mtlValue(const reskia_gr_backend_semaphore_t *semaphore) {
+uint64_t GrBackendSemaphores_GetMtlValue(const reskia_gr_backend_semaphore_t *semaphore) {
 #if defined(SK_GANESH) && defined(SK_METAL)
-    return semaphore != nullptr ? as_semaphore(semaphore)->mtlValue() : 0;
+    return semaphore != nullptr ? GrBackendSemaphores::GetMtlValue(*as_semaphore(semaphore)) : 0;
 #else
     (void) semaphore;
     return 0;

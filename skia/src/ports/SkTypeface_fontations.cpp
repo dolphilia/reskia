@@ -83,20 +83,21 @@ sk_sp<SkTypeface> SkTypeface_Make_Fontations(std::unique_ptr<SkStreamAsset> font
     return SkTypeface_Fontations::MakeFromStream(std::move(fontData), args);
 }
 
-SkTypeface_Fontations::SkTypeface_Fontations(sk_sp<SkData> fontData, const SkFontArguments& args)
-        : SkTypeface(SkFontStyle(), true)
-        , fFontData(fontData)
-        , fTtcIndex(args.getCollectionIndex())
-        , fBridgeFontRef(make_bridge_font_ref(fFontData, fTtcIndex))
-        , fBridgeNormalizedCoords(make_normalized_coords(*fBridgeFontRef, args))
-        , fOutlines(fontations_ffi::get_outline_collection(*fBridgeFontRef))
-        , fPalette(resolve_palette(
-                  *fBridgeFontRef,
-                  args.getPalette().index,
-                  rust::Slice<const fontations_ffi::PaletteOverride>(
-                          reinterpret_cast<const ::fontations_ffi::PaletteOverride*>(
-                                  args.getPalette().overrides),
-                          args.getPalette().overrideCount))) {}
+SkTypeface_Fontations::SkTypeface_Fontations(
+        sk_sp<SkData> fontData,
+        const SkFontStyle& style,
+        uint32_t ttcIndex,
+        rust::Box<fontations_ffi::BridgeFontRef>&& fontRef,
+        rust::Box<fontations_ffi::BridgeNormalizedCoords>&& normalizedCoords,
+        rust::Box<fontations_ffi::BridgeOutlineCollection>&& outlines,
+        rust::Vec<uint32_t>&& palette)
+        : SkTypeface(style, true)
+        , fFontData(std::move(fontData))
+        , fTtcIndex(ttcIndex)
+        , fBridgeFontRef(std::move(fontRef))
+        , fBridgeNormalizedCoords(std::move(normalizedCoords))
+        , fOutlines(std::move(outlines))
+        , fPalette(std::move(palette)) {}
 
 sk_sp<SkTypeface> SkTypeface_Fontations::MakeFromStream(std::unique_ptr<SkStreamAsset> stream,
                                                         const SkFontArguments& args) {
@@ -105,8 +106,38 @@ sk_sp<SkTypeface> SkTypeface_Fontations::MakeFromStream(std::unique_ptr<SkStream
 
 sk_sp<SkTypeface> SkTypeface_Fontations::MakeFromData(sk_sp<SkData> data,
                                                       const SkFontArguments& args) {
-    sk_sp<SkTypeface_Fontations> probeTypeface(new SkTypeface_Fontations(data, args));
-    return probeTypeface->hasValidBridgeFontRef() ? probeTypeface : nullptr;
+    uint32_t ttcIndex = args.getCollectionIndex();
+    rust::Box<fontations_ffi::BridgeFontRef> bridgeFontRef = make_bridge_font_ref(data, ttcIndex);
+    if (!fontations_ffi::font_ref_is_valid(*bridgeFontRef)) {
+        return nullptr;
+    }
+
+    SkFontStyle style;
+    fontations_ffi::BridgeFontStyle fontStyle;
+    if (fontations_ffi::get_font_style(*bridgeFontRef, fontStyle)) {
+        style = SkFontStyle(fontStyle.weight,
+                            fontStyle.width,
+                            static_cast<SkFontStyle::Slant>(fontStyle.slant));
+    }
+
+    rust::Box<fontations_ffi::BridgeNormalizedCoords> normalizedCoords =
+            make_normalized_coords(*bridgeFontRef, args);
+    rust::Box<fontations_ffi::BridgeOutlineCollection> outlines =
+            fontations_ffi::get_outline_collection(*bridgeFontRef);
+
+    rust::Slice<const fontations_ffi::PaletteOverride> paletteOverrides(
+            reinterpret_cast<const ::fontations_ffi::PaletteOverride*>(args.getPalette().overrides),
+            args.getPalette().overrideCount);
+    rust::Vec<uint32_t> palette =
+            resolve_palette(*bridgeFontRef, args.getPalette().index, paletteOverrides);
+
+    return sk_sp<SkTypeface>(new SkTypeface_Fontations(data,
+                                                       style,
+                                                       ttcIndex,
+                                                       std::move(bridgeFontRef),
+                                                       std::move(normalizedCoords),
+                                                       std::move(outlines),
+                                                       std::move(palette)));
 }
 
 namespace sk_fontations {
@@ -221,10 +252,6 @@ void SkTypeface_Fontations::onCharsToGlyphs(const SkUnichar* chars,
 }
 int SkTypeface_Fontations::onCountGlyphs() const {
     return fontations_ffi::num_glyphs(*fBridgeFontRef);
-}
-
-bool SkTypeface_Fontations::hasValidBridgeFontRef() const {
-    return fontations_ffi::font_ref_is_valid(*fBridgeFontRef);
 }
 
 void SkTypeface_Fontations::onFilterRec(SkScalerContextRec* rec) const {
@@ -632,6 +659,57 @@ std::unique_ptr<SkScalerContext> SkTypeface_Fontations::onCreateScalerContext(
         const SkScalerContextEffects& effects, const SkDescriptor* desc) const {
     return std::make_unique<SkFontationsScalerContext>(
             sk_ref_sp(const_cast<SkTypeface_Fontations*>(this)), effects, desc);
+}
+
+std::unique_ptr<SkAdvancedTypefaceMetrics> SkTypeface_Fontations::onGetAdvancedMetrics() const {
+    std::unique_ptr<SkAdvancedTypefaceMetrics> info(new SkAdvancedTypefaceMetrics);
+
+    if (!fontations_ffi::is_embeddable(*fBridgeFontRef)) {
+        info->fFlags |= SkAdvancedTypefaceMetrics::kNotEmbeddable_FontFlag;
+    }
+
+    if (!fontations_ffi::is_subsettable(*fBridgeFontRef)) {
+        info->fFlags |= SkAdvancedTypefaceMetrics::kNotSubsettable_FontFlag;
+    }
+
+    if (fontations_ffi::table_data(
+                *fBridgeFontRef, SkSetFourByteTag('f', 'v', 'a', 'r'), 0, rust::Slice<uint8_t>())) {
+        info->fFlags |= SkAdvancedTypefaceMetrics::kVariable_FontFlag;
+    }
+
+    // Metrics information.
+    fontations_ffi::Metrics metrics =
+            fontations_ffi::get_unscaled_metrics(*fBridgeFontRef, *fBridgeNormalizedCoords);
+    info->fAscent = metrics.ascent;
+    info->fDescent = metrics.descent;
+    info->fCapHeight = metrics.cap_height;
+
+    info->fBBox = SkIRect::MakeLTRB((int32_t)metrics.x_min,
+                                    (int32_t)metrics.top,
+                                    (int32_t)metrics.x_max,
+                                    (int32_t)metrics.bottom);
+
+    // Style information.
+    if (fontations_ffi::is_fixed_pitch(*fBridgeFontRef)) {
+        info->fStyle |= SkAdvancedTypefaceMetrics::kFixedPitch_Style;
+    }
+
+    fontations_ffi::BridgeFontStyle fontStyle;
+    if (fontations_ffi::get_font_style(*fBridgeFontRef, fontStyle)) {
+        if (fontStyle.slant == SkFontStyle::Slant::kItalic_Slant) {
+            info->fStyle |= SkAdvancedTypefaceMetrics::kItalic_Style;
+        }
+    }
+
+    if (fontations_ffi::is_serif_style(*fBridgeFontRef)) {
+        info->fStyle |= SkAdvancedTypefaceMetrics::kSerif_Style;
+    } else if (fontations_ffi::is_script_style(*fBridgeFontRef)) {
+        info->fStyle |= SkAdvancedTypefaceMetrics::kScript_Style;
+    }
+
+    info->fItalicAngle = fontations_ffi::italic_angle(*fBridgeFontRef);
+
+    return info;
 }
 
 void SkTypeface_Fontations::onGetFontDescriptor(SkFontDescriptor* desc, bool* serialize) const {
