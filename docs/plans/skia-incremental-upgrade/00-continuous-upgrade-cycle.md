@@ -12,7 +12,7 @@
 
 - 作業ブランチ: `incremental-upgrade`
 - 現在の baseline: `vendor/skia-source.lock`
-- 現在の `SKIA_REF`: `0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
+- 現在の `SKIA_REF`: `vendor/skia-source.lock` の値を正とする。計画書中の古い例や初回候補より、常に lock と `HANDOFF.md` を優先する。
 - 現在の coverage freeze: `missing 0` / `deferred 0`
 - 直近の build/smoke baseline は Phase 30-33 の verification matrix を基準にする。
 
@@ -26,6 +26,8 @@
 
 標準幅は、現在の baseline から Skia upstream main 上で約2週間後の固定 commit とする。
 
+ここでいう `main` は「floating な最新 main」ではない。必ず `vendor/skia-upstream` または `vendor/skia-upstream-candidate` の local refs に存在する固定 commit hash を選ぶ。候補選定のために、毎回 upstream main 全体を fetch しようとしない。local refs で候補が見つからない場合は、まずその事実を cycle record / HANDOFF に記録し、必要なら次サイクルの作業として refs 更新可否を確認する。
+
 目安:
 
 - commit 数: 150-220 commits 程度。
@@ -38,6 +40,8 @@
 - 1週間幅は扱いやすいが、GPU / Graphite など特定領域に偏る場合があり、upgrade probe として得られる知見が狭い。
 - 3週間以上は Android / Dawn / platform-specific helper など optional backend policy に触れやすく、初回から判断が混ざりすぎる。
 - 初回候補 `5f54e9f84cff8c42fd645ec53c1727857bdb12ab` は 181 commits、`include` / `modules` で 83 files, +1147/-565 であり、実作業量の観測にちょうどよい。
+
+実運用では、2週間幅が重すぎる場合や local refs に候補がない場合がある。その場合は、1週間候補を採用してよい。特に HANDOFF に deferred candidate が残っている場合は、それを最初に再評価する。deferred candidate は前サイクルで一度見送られた固定 commit であり、再検索や広範囲 fetch よりも再現性が高い。
 
 ## 1サイクルの流れ
 
@@ -65,12 +69,57 @@
 
 - 次に probe する固定 Skia commit を1つ選ぶ。
 
-手順:
+基本方針:
+
+- `HANDOFF.md` の「次にやること」と「比較候補メモ」を最初に見る。
+- deferred candidate が書かれていれば、まずそれを第一候補として再評価する。
+- 候補は必ず commit hash で固定する。日付や `main` という名前だけを candidate にしない。
+- local refs にある commit だけで選定する。候補選定のためだけに `git fetch` や外部検索へ進まない。
+- local refs の先が不足している場合は、無理に探さず「local refs に候補なし」と記録する。
+
+推奨手順:
 
 1. 現 baseline から約2週間後の `main` commit を第一候補にする。
 2. 比較用に1週間候補と3週間候補も見る。
 3. 各候補について commit 数、`include` / `modules` shortstat、主要 public header list、dependency/source-list drift を確認する。
 4. large dependency roll、platform-specific backend、generated file 大量更新が強い候補は少し前後へずらす。
+
+ただし、HANDOFF に deferred candidate がある場合は、上記 1 の前に deferred candidate を確認する。deferred candidate が現在 baseline から見て 1週間程度の固定 commit で、coverage/build gate を通せそうなら、それを採用してよい。
+
+候補探索の具体例:
+
+```sh
+baseline=$(sed -n 's/^SKIA_REF="//p' vendor/skia-source.lock | sed 's/"$//')
+
+# HANDOFF の deferred candidate がある場合は、その commit が local にあるか確認する。
+git -C vendor/skia-upstream cat-file -e <candidate>^{commit}
+git -C vendor/skia-upstream show -s --format='%H%n%cI%n%s' <candidate>
+git -C vendor/skia-upstream rev-list --count "$baseline"..<candidate>
+
+# 1週間/2週間/3週間の候補を local refs から探す。出なければ「候補なし」と記録する。
+git -C vendor/skia-upstream log --all \
+  --since='<baseline date + 7 days>' \
+  --until='<baseline date + 8 days>' \
+  --format='%H %cI %s' \
+  --reverse | head -20
+```
+
+候補比較の具体例:
+
+```sh
+git -C vendor/skia-upstream diff --shortstat "$baseline"..<candidate> -- include modules
+git -C vendor/skia-upstream diff --name-status "$baseline"..<candidate> -- include modules
+git -C vendor/skia-upstream diff --shortstat "$baseline"..<candidate> -- DEPS gn bazel include modules src
+git -C vendor/skia-upstream diff --name-status "$baseline"..<candidate> -- DEPS gn bazel include modules src
+```
+
+選定時の判断基準:
+
+- `include` / `modules` が小さく、source drift が主に Core/SkSL/GPU helper なら probe へ進みやすい。
+- Graphite/Dawn/Vulkan/Metal の backend migration が広い場合は、1週間幅へ縮めるか、その candidate を deferred として次回に回す。
+- `DEPS` や third_party roll が Reskia の dependency model に影響しそうなら、その cycle で lock update しない前提で probe する。
+- generated file churn だけで候補を見送らない。ただし generated churn と backend migration と dependency roll が同時に大きい場合は候補を前倒しする。
+- local refs に 2週間/3週間候補が存在しない場合は、1週間候補または deferred candidate を採用する。候補なしを理由に floating latest main へ飛ばない。
 
 記録項目:
 
@@ -82,6 +131,15 @@
 - `include` / `modules` diff shortstat
 - 主要 public header 差分
 - 採用理由または見送り理由
+- local refs の範囲不足があった場合は、その旨
+
+やってはいけないこと:
+
+- 候補選定のたびに upstream main 全体を fetch しようとする。
+- local に存在しない commit を前提に probe 手順へ進む。
+- `origin/main` や `main` という ref 名をそのまま baseline/candidate として扱う。
+- 候補が見つからないまま web 検索や広範囲の試行錯誤に進む。
+- commit 数だけで選ぶ。必ず `include` / `modules` と `DEPS` / source drift も見る。
 
 ### Step 2: Probe Without Lock Update
 
@@ -107,12 +165,29 @@
 推奨コマンド:
 
 ```sh
+git -C vendor/skia-upstream-candidate checkout <candidate>
+mkdir -p .tmp/skia-upgrade-cycle-XXX
+cp docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv \
+  .tmp/skia-upgrade-cycle-XXX/previous-public-api-coverage-matrix.csv
+
 python3 scripts/generate_public_api_coverage.py \
   --skia-root vendor/skia-upstream-candidate \
   --output .tmp/skia-upgrade-cycle-XXX/candidate-public-api-coverage-matrix.csv \
   --previous-matrix docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv \
   --stale-output .tmp/skia-upgrade-cycle-XXX/candidate-stale-capi.csv
+
+awk -F, 'NR>1{c[$10]++} END{for (k in c) print k,c[k]}' \
+  .tmp/skia-upgrade-cycle-XXX/candidate-public-api-coverage-matrix.csv
+awk -F, 'NR>1{c[$6]++} END{for (k in c) print k,c[k]}' \
+  .tmp/skia-upgrade-cycle-XXX/candidate-stale-capi.csv
 ```
+
+probe で `stale_capi` が出た場合:
+
+- まず upstream header で該当 method/class が本当に削除されたか確認する。
+- 削除済みなら、対応する C API 宣言・実装も削除するのが原則。
+- 互換維持のために残す場合は、cycle record に理由と削除期限または明示分類を書く。
+- stale を放置したまま lock update しない。
 
 ### Step 3: Routing
 
@@ -158,6 +233,8 @@ python3 scripts/generate_public_api_coverage.py \
 - 各 area の終了ごとに coverage を再生成する。
 - `missing` は一時的に許容しても、cycle close 前に必ず 0 に戻す。
 - safety policy、ownership policy、optional backend policy を変える場合は理由を文書化する。
+- upstream の `bazel/`、`gn/*.gni`、CanvasKit metadata など、Reskia の tracked mirror surface ではないファイルを機械同期で混ぜない。混ざった場合は cycle record に「意図的に同期しない」と書き、最終差分から除外する。
+- rename は CMake 明示リストに残りやすい。`git diff --name-status` の `R*` 行を確認し、削除元が CMake に残っていないか `rg` で確認する。
 
 ### Step 5: Verification Gate
 
