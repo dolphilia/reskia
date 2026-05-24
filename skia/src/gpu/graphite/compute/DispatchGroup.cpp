@@ -265,7 +265,7 @@ std::unique_ptr<DispatchGroup> Builder::finalize() {
     return obj;
 }
 
-#if defined(GRAPHITE_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
 void Builder::reset() {
     fOutputTable.reset();
     fObj.reset(new DispatchGroup);
@@ -351,7 +351,7 @@ DispatchResourceOptional Builder::allocateResource(const ComputeStep* step,
             auto dataBlock = uboMgr.finish();
             SkASSERT(dataBlock.size());
 
-            auto [writer, bufInfo] = bufferMgr->getUniformWriter(dataBlock.size());
+            auto [writer, bufInfo] = bufferMgr->getUniformWriter(/*count=*/1, dataBlock.size());
             if (bufInfo) {
                 writer.write(dataBlock.data(), dataBlock.size());
                 result = bufInfo;

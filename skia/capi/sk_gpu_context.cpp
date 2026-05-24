@@ -2308,6 +2308,15 @@ size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+size_t Graphite_Context_currentPurgeableBytes(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr ? as_graphite_context(ctx)->currentPurgeableBytes() : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
 size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr ? as_graphite_context(ctx)->maxBudgetedBytes() : 0;
@@ -2417,6 +2426,15 @@ void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *record
 size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder) {
 #if defined(SK_GRAPHITE)
     return recorder != nullptr ? as_graphite_recorder(recorder)->currentBudgetedBytes() : 0;
+#else
+    (void) recorder;
+    return 0;
+#endif
+}
+
+size_t Graphite_Recorder_currentPurgeableBytes(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? as_graphite_recorder(recorder)->currentPurgeableBytes() : 0;
 #else
     (void) recorder;
     return 0;
@@ -2779,6 +2797,15 @@ bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info) 
 bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info) {
 #if defined(SK_GRAPHITE)
     return info != nullptr && from_graphite_protected(as_graphite_texture_info(info)->isProtected());
+#else
+    (void) info;
+    return false;
+#endif
+}
+
+bool Graphite_TextureInfo_isMemoryless(const reskia_graphite_texture_info_t *info) {
+#if defined(SK_GRAPHITE)
+    return info != nullptr && as_graphite_texture_info(info)->isMemoryless();
 #else
     (void) info;
     return false;

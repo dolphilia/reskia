@@ -120,9 +120,6 @@ int main() {
     if (!check(!SkImage_readPixelsWithContextPixmap(nullptr, nullptr, nullptr, 0, 0, 0), "SkImage_readPixelsWithContextPixmap nullptr image")) {
         return 5;
     }
-    if (!check(!SkImage_readPixelsGraphite(nullptr, nullptr, nullptr, 0, 0), "SkImage_readPixelsGraphite nullptr image")) {
-        return 5;
-    }
     if (!check(!SkImage_readPixelsWithPixmap(nullptr, nullptr, 0, 0, 0), "SkImage_readPixelsWithPixmap nullptr image")) {
         return 5;
     }

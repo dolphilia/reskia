@@ -209,10 +209,8 @@ skif::FilterResult SkBlurImageFilter::onFilterImage(const skif::Context& ctx) co
     if (!resolvedChildOutput) {
         return {};
     }
-    skif::LayerSpace<SkIRect> srcBounds{SkIRect::MakeXYWH(origin.x(),
-                                                          origin.y(),
-                                                          resolvedChildOutput->width(),
-                                                          resolvedChildOutput->height())};
+    SkIRect srcRect = SkIRect::MakeSize(resolvedChildOutput->dimensions());
+    SkIRect srcRelativeOutput = SkIRect(maxOutput).makeOffset(-origin.x(), -origin.y());
 
     // These parameters will always select the successive box-blur algorithm for 8888 data,
     // matching the legacy behavior when that code was defined inline here.
@@ -220,9 +218,9 @@ skif::FilterResult SkBlurImageFilter::onFilterImage(const skif::Context& ctx) co
             /*sigma=*/{kMaxSigma, kMaxSigma}, /*colorType=*/kN32_SkColorType);
     sk_sp<SkSpecialImage> blurResult = legacyBlur->blur(SkSize(sigma),
                                                         std::move(resolvedChildOutput),
-                                                        SkIRect(srcBounds),
+                                                        srcRect,
                                                         SkTileMode::kDecal,
-                                                        SkIRect(maxOutput));
+                                                        srcRelativeOutput);
     return skif::FilterResult{std::move(blurResult), maxOutput.topLeft()};
 }
 

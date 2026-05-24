@@ -291,26 +291,6 @@ bool SkImage_readPixelsWithContextPixmap(reskia_image_t *image, reskia_direct_co
     return reinterpret_cast<SkImage *>(image)->readPixels(reinterpret_cast<GrDirectContext *>(context), * reinterpret_cast<const SkPixmap *>(dst), srcX, srcY, static_cast<SkImage::CachingHint>(cachingHint));
 }
 
-bool SkImage_readPixelsGraphite(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_pixmap_t *dst, int srcX, int srcY) {
-#if defined(GRAPHITE_TEST_UTILS)
-    if (image == nullptr || recorder == nullptr || dst == nullptr) {
-        return false;
-    }
-    return reinterpret_cast<SkImage *>(image)->readPixelsGraphite(
-            reinterpret_cast<skgpu::graphite::Recorder *>(recorder),
-            *reinterpret_cast<const SkPixmap *>(dst),
-            srcX,
-            srcY);
-#else
-    (void) image;
-    (void) recorder;
-    (void) dst;
-    (void) srcX;
-    (void) srcY;
-    return false;
-#endif
-}
-
 bool SkImage_readPixelsWithImageInfo(reskia_image_t *image, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
     if (image == nullptr || !has_valid_pixels(dstInfo, dstPixels, dstRowBytes) || !valid_caching_hint(cachingHint)) {
         return false;

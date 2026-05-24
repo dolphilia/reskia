@@ -450,6 +450,7 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLMemoryLayout.h
         src/sksl/SkSLModule.cpp
         src/sksl/SkSLModuleDataDefault.cpp
+        src/sksl/SkSLGraphiteModules.cpp
         src/sksl/SkSLModuleLoader.cpp
         src/sksl/SkSLOperator.cpp
         src/sksl/SkSLOutputStream.cpp

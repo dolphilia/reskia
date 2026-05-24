@@ -1517,7 +1517,8 @@ ShaderCodeDictionary::ShaderCodeDictionary(Layout layout)
             SnippetRequirementFlags::kPriorStageOutput,
             /*uniforms=*/{ { "matrix",    SkSLType::kFloat4x4 },
                            { "translate", SkSLType::kFloat4 },
-                           { "inHSL",     SkSLType::kInt } }
+                           { "inHSL",     SkSLType::kInt },
+                           { "clampRGB",  SkSLType::kInt } }
     };
     fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kTableColorFilter] = {
             /*name=*/"TableColorFilter",
@@ -1607,6 +1608,15 @@ ShaderCodeDictionary::ShaderCodeDictionary(Layout layout)
             /*textures=*/{},
             GenerateClipShaderPreamble,
             /*numChildren=*/1
+    };
+
+    fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kCircularRRectClip] = {
+            /*name=*/"CircularRRectClip",
+            /*staticFn=*/"sk_circular_rrect_clip",
+            SnippetRequirementFlags::kPriorStageOutput,
+            /*uniforms=*/{ { "rect",           SkSLType::kFloat4 },
+                           { "radiusPlusHalf", SkSLType::kHalf2 },
+                           { "edgeSelect",     SkSLType::kHalf4 } }
     };
 
     fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kCompose] = {

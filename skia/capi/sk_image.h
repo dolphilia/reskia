@@ -208,7 +208,6 @@ bool SkImage_readPixels(reskia_image_t *image, reskia_direct_context_t *context,
  * Skia: (SkImage *image, GrDirectContext *context, const SkPixmap *dst, int srcX, int srcY, SkImage::CachingHint cachingHint) -> bool.
  */
 bool SkImage_readPixelsWithContextPixmap(reskia_image_t *image, reskia_direct_context_t *context, const reskia_pixmap_t *dst, int srcX, int srcY, reskia_image_caching_hint_t cachingHint);
-bool SkImage_readPixelsGraphite(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_pixmap_t *dst, int srcX, int srcY); // invalid input returns false
 /**
  * image/dstInfo/dstPixels: non-null.
  * dstRowBytes must satisfy dstInfo.validRowBytes.

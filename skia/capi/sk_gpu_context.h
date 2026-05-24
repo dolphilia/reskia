@@ -241,6 +241,7 @@ void Graphite_Context_deleteBackendTexture(reskia_graphite_context_t *ctx, const
 void Graphite_Context_freeGpuResources(reskia_graphite_context_t *ctx); // NULL input is no-op
 void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int64_t ms_not_used); // invalid input is no-op
 size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
+size_t Graphite_Context_currentPurgeableBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
@@ -254,6 +255,7 @@ bool Graphite_ContextID_equals(const reskia_graphite_context_id_t *context_id, c
 void Graphite_Recorder_freeGpuResources(reskia_graphite_recorder_t *recorder); // NULL input is no-op
 void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *recorder, int64_t ms_not_used); // invalid input is no-op
 size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+size_t Graphite_Recorder_currentPurgeableBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 size_t Graphite_Recorder_maxBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owns user_data until callback if true; invalid input returns false
@@ -287,6 +289,7 @@ int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info); //
 uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info); // NULL input returns 0
 bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info); // NULL input returns false
+bool Graphite_TextureInfo_isMemoryless(const reskia_graphite_texture_info_t *info); // NULL input returns false
 reskia_sk_texture_compression_type_t Graphite_TextureInfo_compressionType(const reskia_graphite_texture_info_t *info); // NULL input returns 0
 bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info); // NULL/non-Metal returns false
 bool Graphite_TextureInfo_isCompatible(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false

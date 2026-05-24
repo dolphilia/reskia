@@ -403,7 +403,7 @@ void DawnCaps::initCaps(const DawnBackendContext& backendContext, const ContextO
     wgpu::AdapterInfo info;
     backendContext.fDevice.GetAdapter().GetInfo(&info);
 
-#if defined(GRAPHITE_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
     this->setDeviceName(info.device);
 #endif
 #endif // defined(__EMSCRIPTEN__)
@@ -465,7 +465,7 @@ void DawnCaps::initCaps(const DawnBackendContext& backendContext, const ContextO
     // TODO: support clamp to border.
     fClampToBorderSupport = false;
 
-#if defined(GRAPHITE_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
     fDrawBufferCanBeMappedForReadback = false;
 #endif
 
@@ -487,6 +487,8 @@ void DawnCaps::initCaps(const DawnBackendContext& backendContext, const ContextO
     if (backendContext.fDevice.HasFeature(wgpu::FeatureName::DawnLoadResolveTexture)) {
         fSupportedResolveTextureLoadOp = wgpu::LoadOp::ExpandResolveTexture;
     }
+    fSupportsPartialLoadResolve =
+            backendContext.fDevice.HasFeature(wgpu::FeatureName::DawnPartialLoadResolveTexture);
 #endif
 
     if (!backendContext.fTick) {

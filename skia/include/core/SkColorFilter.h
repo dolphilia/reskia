@@ -100,8 +100,12 @@ public:
     static sk_sp<SkColorFilter> Blend(const SkColor4f& c, sk_sp<SkColorSpace>, SkBlendMode mode);
     static sk_sp<SkColorFilter> Blend(SkColor c, SkBlendMode mode);
 
+    enum class Clamp : bool { kNo, kYes };
+
     static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&);
+    static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&, Clamp clamp);
     static sk_sp<SkColorFilter> Matrix(const float rowMajor[20]);
+    static sk_sp<SkColorFilter> Matrix(const float rowMajor[20], Clamp clamp);
 
     // A version of Matrix which operates in HSLA space instead of RGBA.
     // I.e. HSLA-to-RGBA(Matrix(RGBA-to-HSLA(input))).

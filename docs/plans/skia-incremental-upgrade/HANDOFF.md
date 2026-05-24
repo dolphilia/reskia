@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
-- next probe candidate: choose a fixed commit after `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
+- `SKIA_REF`: `d50960eac8398fd1ad360198944be1376c805486`
+- next probe candidate: choose a fixed commit after `d50960eac8398fd1ad360198944be1376c805486`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -63,29 +63,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 029 accepted: `84d893159af295c4dc61f408f227cf37916b5b55`。
 - cycle 030 accepted: `746d444f3efdc41216d94ae53b07bac3c949f887`。
 - cycle 031 accepted: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`。
+- cycle 032 accepted: `d50960eac8398fd1ad360198944be1376c805486`。
 
 未実施:
 
-- cycle 032 candidate の選定。
-- cycle 032 candidate checkout を使った coverage regression。
-- cycle 032 の source/header sync と C API 追従実装。
+- cycle 033 candidate の選定。
+- cycle 033 candidate checkout を使った coverage regression。
+- cycle 033 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 032 の candidate selection から始める。
+次の作業は、cycle 033 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `d50960eac8398fd1ad360198944be1376c805486` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 032 の比較候補メモ:
+cycle 033 の比較候補メモ:
 
-- local upstream refs では 2024-08-01 以降の候補が見つからなかった。candidate selection では必要に応じて upstream refs の更新可否を確認する。
-- 既知リスクは Graphite backend helper migration の継続、Dawn/Vulkan optional backend drift、SkSL generated churn。
+- cycle 032 では `vendor/skia-upstream-candidate` の更新済み refs を利用し、`vendor/skia-upstream` も accepted commit に同期済み。
+- 既知リスクは Graphite backend helper migration の継続、Dawn/Vulkan optional backend drift、SkSL generated churn、prebuilt `libsvg.a` と `SkColorFilters::Matrix` ABI 互換 overload。
 
 ## やってはいけないこと
 
@@ -114,21 +115,23 @@ cycle 032 の比較候補メモ:
 
 候補:
 
-- `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
-- committer date: 2024-07-31T22:26:12Z
-- subject: `Roll vulkan-deps from a9708d3e114d to d665a73f7d0d (6 revisions)`
+- `d50960eac8398fd1ad360198944be1376c805486`
+- committer date: 2024-08-14T22:32:42Z
+- subject: `Revert "[graphite] Add DawnCaps::extractGraphicsDescs"`
 
-cycle 031 結果:
+cycle 032 結果:
 
-- deferred していた `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` を採用した。local upstream refs では 2024-08-01 以降の比較候補が見つからなかったため、次 cycle では refs 更新可否の確認から始める。
+- 2週間幅候補 `d50960eac8398fd1ad360198944be1376c805486` を採用した。1週間候補は小さく、3週間候補は Graphite/SkSL drift が大きいため見送った。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up では upstream で削除された `BackendTexture::setMutableState` に対応する `Graphite_BackendTexture_setMutableState` を削除した。
-- source/header sync では Graphite Dawn/Vulkan backend helper migration、Ganesh/Graphite backend drift、SkSL codegen/generated updates、text GPU `SDFTControl` -> `SubRunControl` rename を取り込んだ。
-- CMake source list では `src/text/gpu/SDFTControl.cpp` を `src/text/gpu/SubRunControl.cpp` に置き換えた。
+- C API catch-up では `Graphite_Context_currentPurgeableBytes`、`Graphite_Recorder_currentPurgeableBytes`、`Graphite_TextureInfo_isMemoryless` を追加した。
+- upstream で削除された `SkImage_readPixelsGraphite` と `SkPath_isArc` は C API と smoke 参照から削除した。
+- source/header sync では Ganesh/Graphite backend drift、SkSL Graphite generated module、skcms updates、Dawn/Vulkan optional backend drift を取り込んだ。
+- CMake source list では `src/sksl/SkSLGraphiteModules.cpp` を追加した。
+- prebuilt `libsvg.a` が旧 `SkColorFilters::Matrix(const SkColorMatrix&)` symbol を参照するため、Reskia 側に one-arg compatibility overload を残した。prebuilt 更新時に見直す。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 031 では対象外。
-- 次サイクルでは、accepted baseline `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` から再比較する。
+- Skottie/SKSG optional smoke は cycle 032 では対象外。
+- 次サイクルでは、accepted baseline `d50960eac8398fd1ad360198944be1376c805486` から再比較する。
 
 cycle records:
 
@@ -163,6 +166,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-029-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-030-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-031-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-032-2026-05-24.md`
 
 ## Cycle close の条件
 

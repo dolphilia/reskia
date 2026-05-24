@@ -1041,6 +1041,7 @@ void add_matrix_colorfilter_uniform_data(const ShaderCodeDictionary* dict,
     gatherer->write(data.fMatrix);
     gatherer->write(data.fTranslate);
     gatherer->write(static_cast<int>(data.fInHSLA));
+    gatherer->write(static_cast<int>(data.fClamp));
 }
 
 } // anonymous namespace
@@ -1106,6 +1107,29 @@ void ColorSpaceTransformBlock::AddBlock(const KeyContext& keyContext,
                                         const ColorSpaceTransformData& data) {
     add_color_space_xform_uniform_data(keyContext.dict(), data, gatherer);
     builder->addBlock(BuiltInCodeSnippetID::kColorSpaceXformColorFilter);
+}
+
+//--------------------------------------------------------------------------------------------------
+namespace {
+
+void add_circular_rrect_clip_data(
+        const ShaderCodeDictionary* dict,
+        const CircularRRectClipBlock::CircularRRectClipData& data,
+        PipelineDataGatherer* gatherer) {
+    BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kCircularRRectClip)
+    gatherer->write(data.fRect);
+    gatherer->write(data.fRadiusPlusHalf);
+    gatherer->writeHalf(data.fEdgeSelect);
+}
+
+}  // anonymous namespace
+
+void CircularRRectClipBlock::AddBlock(const KeyContext& keyContext,
+                                      PaintParamsKeyBuilder* builder,
+                                      PipelineDataGatherer* gatherer,
+                                      const CircularRRectClipData& data) {
+    add_circular_rrect_clip_data(keyContext.dict(), data, gatherer);
+    builder->addBlock(BuiltInCodeSnippetID::kCircularRRectClip);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1445,7 +1469,8 @@ static void add_to_key(const KeyContext& keyContext,
     SkASSERT(filter);
 
     bool inHSLA = filter->domain() == SkMatrixColorFilter::Domain::kHSLA;
-    MatrixColorFilterBlock::MatrixColorFilterData matrixCFData(filter->matrix(), inHSLA);
+    bool clamp = filter->clamp() == SkMatrixColorFilter::Clamp::kYes;
+    MatrixColorFilterBlock::MatrixColorFilterData matrixCFData(filter->matrix(), inHSLA, clamp);
 
     MatrixColorFilterBlock::AddBlock(keyContext, builder, gatherer, matrixCFData);
 }

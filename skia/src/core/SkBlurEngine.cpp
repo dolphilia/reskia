@@ -740,7 +740,9 @@ public:
                                const SkIRect& originalSrcBounds,
                                SkTileMode tileMode,
                                const SkIRect& originalDstBounds) const override {
-        SkASSERT(sigma.width() <= this->maxSigma() && sigma.height() <= this->maxSigma());
+        // TODO: Enable this assert when the TentPass is no longer used for legacy blurs
+        // (which supports blur sigmas larger than what's reported in maxSigma()).
+        // SkASSERT(sigma.width() <= this->maxSigma() && sigma.height() <= this->maxSigma());
         SkASSERT(tileMode == SkTileMode::kDecal);
 
         SkASSERT(SkIRect::MakeSize(input->dimensions()).contains(originalSrcBounds));
@@ -909,7 +911,7 @@ private:
 } // anonymous namespace
 
 const SkBlurEngine* SkBlurEngine::GetRasterBlurEngine() {
-    static RasterBlurEngine kInstance;
+    static const RasterBlurEngine kInstance;
     return &kInstance;
 }
 

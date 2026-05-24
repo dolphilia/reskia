@@ -54,7 +54,6 @@ bool SkPath_isFinite(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isVolatile(reskia_path_t *path); // (SkPath *path) -> bool
 reskia_path_t *SkPath_setIsVolatile(reskia_path_t *path, bool isVolatile); // (SkPath *path, bool isVolatile) -> SkPath *
 bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line); // (SkPath *path, SkPoint line[2]) -> bool
-bool SkPath_isArc(reskia_path_t *path, reskia_arc_t *arc); // arc may be NULL to test only
 int SkPath_countPoints(reskia_path_t *path); // (SkPath *path) -> int
 sk_point_t SkPath_getPoint(reskia_path_t *path, int index); // (SkPath *path, int index) -> sk_point_t
 int SkPath_getPoints(reskia_path_t *path, reskia_point_t *points, int max); // (SkPath *path, SkPoint points[], int max) -> int
