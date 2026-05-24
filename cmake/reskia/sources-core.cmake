@@ -448,6 +448,7 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLLexer.cpp
         src/sksl/SkSLMangler.cpp
         src/sksl/SkSLMemoryLayout.h
+        src/sksl/SkSLModule.cpp
         src/sksl/SkSLModuleDataDefault.cpp
         src/sksl/SkSLModuleLoader.cpp
         src/sksl/SkSLOperator.cpp
@@ -474,7 +475,9 @@ list(APPEND SOURCE_FILES
         src/sksl/transform/SkSLHoistSwitchVarDeclarationsAtTopLevel.cpp
         src/sksl/transform/SkSLRenamePrivateSymbols.cpp
         src/sksl/transform/SkSLReplaceConstVarsWithLiterals.cpp
+        src/sksl/transform/SkSLReplaceSplatCastsWithSwizzles.cpp
         src/sksl/transform/SkSLRewriteIndexedSwizzle.cpp
+        src/sksl/transform/SkSLTransform.cpp
         src/svg/SkSVGCanvas.cpp
         src/svg/SkSVGDevice.cpp
         src/text/GlyphRun.cpp
