@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `7c69f39fa85b3cca07c7d433a396011e01c88f34`
-- next probe candidate: choose a fixed commit after `7c69f39fa85b3cca07c7d433a396011e01c88f34`
+- `SKIA_REF`: `c73cff97952aa15e01985a35e5c6575b4eb50454`
+- next probe candidate: choose a fixed commit after `c73cff97952aa15e01985a35e5c6575b4eb50454`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -59,30 +59,31 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 025 accepted: `24a4123fc949aad0c98d251b05c8ba2b21a9b931`。
 - cycle 026 accepted: `a8c2acc3903806ff36800a67f5e60dba84265fd3`。
 - cycle 027 accepted: `7c69f39fa85b3cca07c7d433a396011e01c88f34`。
+- cycle 028 accepted: `c73cff97952aa15e01985a35e5c6575b4eb50454`。
 
 未実施:
 
-- cycle 028 candidate の選定。
-- cycle 028 candidate checkout を使った coverage regression。
-- cycle 028 の source/header sync と C API 追従実装。
+- cycle 029 candidate の選定。
+- cycle 029 candidate checkout を使った coverage regression。
+- cycle 029 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 028 の candidate selection から始める。
+次の作業は、cycle 029 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `a8c2acc3903806ff36800a67f5e60dba84265fd3` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `c73cff97952aa15e01985a35e5c6575b4eb50454` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 028 の比較候補メモ:
+cycle 029 の比較候補メモ:
 
-- 1-week: `c73cff97952aa15e01985a35e5c6575b4eb50454` (2024-07-10T21:55:27Z, 66 commits from current baseline, include/modules drift: 100 files changed, 115 insertions, 366 deletions)
-- この候補は Bazel metadata churn が大きく、`PrecompileShader`、GL helper、private Graphite context option removal を含む。
-- cycle 028 では Bazel metadata を source sync 対象から切り分け、public API と mirrored source drift を先に routing する。
+- deferred 2-week from previous baseline: `84d893159af295c4dc61f408f227cf37916b5b55` (2024-07-18T23:57:14Z, 182 commits from cycle 028 previous baseline, 116 commits from current baseline, include/modules drift: 111 files changed, 296 insertions, 584 deletions)
+- 3-week from previous baseline `06b26a1d51d71bb71d9f50ff58bc6d315dbbba21` は 301 commits で大きすぎたため、まず `84d893...` 周辺を再比較する。
+- 既知リスクは Graphite/SkSL drift、Metal/Vulkan optional backend drift、CoreText/text cleanup、Bazel metadata churn。
 
 ## やってはいけないこと
 
@@ -111,22 +112,21 @@ cycle 028 の比較候補メモ:
 
 候補:
 
-- `7c69f39fa85b3cca07c7d433a396011e01c88f34`
-- committer date: 2024-07-02T21:38:47Z
-- subject: `Remove staging gni file groups for sksl`
+- `c73cff97952aa15e01985a35e5c6575b4eb50454`
+- committer date: 2024-07-10T21:55:27Z
+- subject: `Remove assert in SubRun deserialization`
 
-cycle 027 結果:
+cycle 028 結果:
 
-- 1-week 候補を採用した。次候補 `c73cff97952aa15e01985a35e5c6575b4eb50454` は Bazel metadata churn が大きいため次 cycle へ deferred とした。
+- 1-week 候補を採用した。2-week 候補 `84d893159af295c4dc61f408f227cf37916b5b55` は Graphite/SkSL/source drift が広がるため次 cycle へ deferred とした。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up では `Graphite_Recorder_maxTextureSize` を追加した。
-- Graphite `PrecompileImageFilter` destructor/`priv()` は precompile ownership/design policy に従い `false_positive` として理由付き分類した。
-- source/header sync では Graphite precompile image/mask filter split、Graphite recorder maxTextureSize、Vulkan AMD memory allocator move、SkSL/codegen updates、CoreText/text updates を取り込んだ。
-- CMake source list では `src/gpu/vk/vulkanmemoryallocator/*` を Vulkan GPU source glob に追加した。
+- C API catch-up では新規 entry point は追加せず、`PrecompileShader` の既存 design-required override signature を upstream の `bool` / `const` 付き signature に更新した。
+- source/header sync では Ganesh/Graphite/GL helper updates、Graphite precompile shader updates、`ContextOptionsPriv.h` の `include/private` から `src/gpu/graphite` への move、SkSL/codegen updates、Core/Text/Codec updates を取り込んだ。
+- CMake source list 変更は不要だった。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 027 では対象差分なしのため未実施。
-- 次サイクルでは、accepted baseline `7c69f39fa85b3cca07c7d433a396011e01c88f34` から 1週間/2週間候補を再比較する。
+- Skottie/SKSG optional smoke は cycle 028 では対象差分なしのため未実施。
+- 次サイクルでは、accepted baseline `c73cff97952aa15e01985a35e5c6575b4eb50454` から 1週間/2週間候補を再比較する。
 
 cycle records:
 
@@ -157,6 +157,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-025-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-026-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-027-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-028-2026-05-24.md`
 
 ## Cycle close の条件
 

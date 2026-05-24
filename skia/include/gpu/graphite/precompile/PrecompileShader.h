@@ -27,16 +27,17 @@ class SK_API PrecompileShader : public PrecompileBase {
 public:
     /**
      *  This is the Precompile correlate to SkShader::makeWithLocalMatrix. The actual matrix
-     *  involved is abstracted away since it doesn't impact the generated shader.
+     *  involved is abstracted away, except for whether or the not the matrix involves perspective
+     *  so the correct generated shader variation is chosen.
      *  The PrecompileShaders::LocalMatrix factory can be used to generate a set of shaders
      *  that would've been generated via multiple makeWithLocalMatrix calls. That is, rather than
      *  performing:
-     *     sk_sp<PrecompileShader> option1 = source1->makeWithLocalMatrix();
-     *     sk_sp<PrecompileShader> option2 = source2->makeWithLocalMatrix();
+     *     sk_sp<PrecompileShader> option1 = source1->makeWithLocalMatrix(false);
+     *     sk_sp<PrecompileShader> option2 = source2->makeWithLocalMatrix(false);
      *  one could call:
-     *     sk_sp<PrecompileShader> combinedOptions = LocalMatrix({ source1, source2 });
+     *     sk_sp<PrecompileShader> combinedOptions = LocalMatrix({ source1, source2 }, false);
      */
-    sk_sp<PrecompileShader> makeWithLocalMatrix();
+    sk_sp<PrecompileShader> makeWithLocalMatrix(bool isPerspective) const;
 
     /**
      *  This is the Precompile correlate to SkShader::makeWithColorFilter.
@@ -52,7 +53,7 @@ public:
      *     sk_sp<PrecompileShader> combinedOptions = ColorFilter({ source1, source2 },
      *                                                           { colorFilter });
      */
-    sk_sp<PrecompileShader> makeWithColorFilter(sk_sp<PrecompileColorFilter>);
+    sk_sp<PrecompileShader> makeWithColorFilter(sk_sp<PrecompileColorFilter>) const;
 
     /**
      *  This is the Precompile correlate to SkShader::makeWithWorkingColorSpace.
@@ -69,7 +70,7 @@ public:
      *     sk_sp<PrecompileShader> combinedOptions = WorkingColorSpace({ source1, source2 },
      *                                                                 { colorSpace });
      */
-    sk_sp<PrecompileShader> makeWithWorkingColorSpace(sk_sp<SkColorSpace>);
+    sk_sp<PrecompileShader> makeWithWorkingColorSpace(sk_sp<SkColorSpace>) const;
 
     // Provides access to functions that aren't part of the public API.
     PrecompileShaderPriv priv();
@@ -135,7 +136,8 @@ namespace PrecompileShaders {
     // LocalMatrixShaders (i.e., pass an SkSpan to the factory function vs just creating a
     // single option). This entry point allows that use case.
     // Note: PrecompileShader::makeWithLocalMatrix() can still be used and works as expected.
-    SK_API sk_sp<PrecompileShader> LocalMatrix(SkSpan<const sk_sp<PrecompileShader>> wrapped);
+    SK_API sk_sp<PrecompileShader> LocalMatrix(SkSpan<const sk_sp<PrecompileShader>> wrapped,
+                                               bool isPerspective = false);
 
     // Normally, ColorFilterShaders are only created via SkShader::makeWithColorFilter.
     // However, in the combination API, clients may want to create a set of precompile

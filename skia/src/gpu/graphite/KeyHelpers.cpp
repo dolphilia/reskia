@@ -502,7 +502,9 @@ void LocalMatrixShaderBlock::BeginBlock(const KeyContext& keyContext,
 
     add_localmatrixshader_uniform_data(keyContext.dict(), lmShaderData.fLocalMatrix, gatherer);
 
-    builder->beginBlock(BuiltInCodeSnippetID::kLocalMatrixShader);
+    builder->beginBlock(lmShaderData.fHasPerspective
+                                ? BuiltInCodeSnippetID::kLocalMatrixShaderPersp
+                                : BuiltInCodeSnippetID::kLocalMatrixShader);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1086,6 +1088,32 @@ void ColorSpaceTransformBlock::AddBlock(const KeyContext& keyContext,
                                         const ColorSpaceTransformData& data) {
     add_color_space_xform_uniform_data(keyContext.dict(), data, gatherer);
     builder->addBlock(BuiltInCodeSnippetID::kColorSpaceXformColorFilter);
+}
+
+//--------------------------------------------------------------------------------------------------
+namespace {
+
+void add_primitive_color_uniform_data(
+        const ShaderCodeDictionary* dict,
+        const SkColorSpaceXformSteps& steps,
+        PipelineDataGatherer* gatherer) {
+
+    VALIDATE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kPrimitiveColor)
+    add_color_space_uniforms(steps, ReadSwizzle::kRGBA, gatherer);
+}
+
+}  // anonymous namespace
+
+void PrimitiveColorBlock::AddBlock(const KeyContext& keyContext,
+                                   PaintParamsKeyBuilder* builder,
+                                   PipelineDataGatherer* gatherer) {
+    SkColorSpaceXformSteps steps = SkColorSpaceXformSteps(SkColorSpace::MakeSRGB().get(),
+                                                          kPremul_SkAlphaType,
+                                                          keyContext.dstColorInfo().colorSpace(),
+                                                          keyContext.dstColorInfo().alphaType());
+    add_primitive_color_uniform_data(keyContext.dict(), steps, gatherer);
+
+    builder->addBlock(BuiltInCodeSnippetID::kPrimitiveColor);
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -31,17 +31,8 @@ namespace skgpu::graphite {
 
 PrecompileShader::~PrecompileShader() = default;
 
-sk_sp<PrecompileShader> PrecompileShader::makeWithLocalMatrix() {
-    if (this->priv().isALocalMatrixShader()) {
-        // SkShader::makeWithLocalMatrix collapses chains of localMatrix shaders so we need to
-        // follow suit here
-        return sk_ref_sp(this);
-    }
-
-    return PrecompileShaders::LocalMatrix({ sk_ref_sp(this) });
-}
-
-sk_sp<PrecompileShader> PrecompileShader::makeWithColorFilter(sk_sp<PrecompileColorFilter> cf) {
+sk_sp<PrecompileShader> PrecompileShader::makeWithColorFilter(
+        sk_sp<PrecompileColorFilter> cf) const {
     if (!cf) {
         return sk_ref_sp(this);
     }
@@ -49,7 +40,7 @@ sk_sp<PrecompileShader> PrecompileShader::makeWithColorFilter(sk_sp<PrecompileCo
     return PrecompileShaders::ColorFilter({ sk_ref_sp(this) }, { std::move(cf) });
 }
 
-sk_sp<PrecompileShader> PrecompileShader::makeWithWorkingColorSpace(sk_sp<SkColorSpace> cs) {
+sk_sp<PrecompileShader> PrecompileShader::makeWithWorkingColorSpace(sk_sp<SkColorSpace> cs) const {
     if (!cs) {
         return sk_ref_sp(this);
     }
@@ -569,12 +560,13 @@ sk_sp<PrecompileShader> PrecompileShadersPriv::Picture(bool withLM) {
 class PrecompileLocalMatrixShader final : public PrecompileShader {
 public:
     enum class Flags {
-        kNone,
-        kIncludeWithOutVariant,
+        kNone                  = 0b00,
+        kIsPerspective         = 0b01,
+        kIncludeWithOutVariant = 0b10,
     };
 
     PrecompileLocalMatrixShader(SkSpan<const sk_sp<PrecompileShader>> wrapped,
-                                Flags flags = Flags::kNone)
+                                SkEnumBitMask<Flags> flags = Flags::kNone)
             : fWrapped(wrapped.begin(), wrapped.end())
             , fFlags(flags) {
         fNumWrappedCombos = 0;
@@ -602,8 +594,16 @@ public:
         return false;
     }
 
+    SkSpan<const sk_sp<PrecompileShader>> getWrapped() const {
+        return fWrapped;
+    }
+
+    SkEnumBitMask<Flags> getFlags() const { return fFlags; }
+
 private:
     // The LocalMatrixShader has two potential variants: with and without the LocalMatrixShader
+    // In the "with" variant, the kIsPerspective flag will determine if the shader performs
+    // the perspective division or not.
     inline static constexpr int kNumIntrinsicCombinations = 2;
     inline static constexpr int kWithLocalMatrix    = 1;
     inline static constexpr int kWithoutLocalMatrix = 0;
@@ -611,7 +611,7 @@ private:
     bool isALocalMatrixShader() const override { return true; }
 
     int numIntrinsicCombinations() const override {
-        if (fFlags != Flags::kIncludeWithOutVariant) {
+        if (!(fFlags & Flags::kIncludeWithOutVariant)) {
             return 1;   // just kWithLocalMatrix
         }
         return kNumIntrinsicCombinations;
@@ -627,7 +627,7 @@ private:
 
         int desiredLMCombination, desiredWrappedCombination;
 
-        if (fFlags != Flags::kIncludeWithOutVariant) {
+        if (!(fFlags & Flags::kIncludeWithOutVariant)) {
             desiredLMCombination = kWithLocalMatrix;
             desiredWrappedCombination = desiredCombination;
         } else {
@@ -637,13 +637,17 @@ private:
         SkASSERT(desiredWrappedCombination < fNumWrappedCombos);
 
         if (desiredLMCombination == kWithLocalMatrix) {
-            LocalMatrixShaderBlock::LMShaderData kIgnoredLMShaderData(SkMatrix::I());
+            SkMatrix matrix = SkMatrix::I();
+            if (fFlags & Flags::kIsPerspective) {
+                matrix.setPerspX(0.1f);
+            }
+            LocalMatrixShaderBlock::LMShaderData lmShaderData(matrix);
 
-            LocalMatrixShaderBlock::BeginBlock(keyContext, builder, gatherer, kIgnoredLMShaderData);
+            LocalMatrixShaderBlock::BeginBlock(keyContext, builder, gatherer, matrix);
         }
 
-            AddToKey<PrecompileShader>(keyContext, builder, gatherer, fWrapped,
-                                       desiredWrappedCombination);
+        AddToKey<PrecompileShader>(keyContext, builder, gatherer, fWrapped,
+                                   desiredWrappedCombination);
 
         if (desiredLMCombination == kWithLocalMatrix) {
             builder->endBlock();
@@ -652,12 +656,16 @@ private:
 
     std::vector<sk_sp<PrecompileShader>> fWrapped;
     int fNumWrappedCombos;
-    Flags fFlags;
+    SkEnumBitMask<Flags> fFlags;
 };
 
 sk_sp<PrecompileShader> PrecompileShaders::LocalMatrix(
-        SkSpan<const sk_sp<PrecompileShader>> wrapped) {
-    return sk_make_sp<PrecompileLocalMatrixShader>(std::move(wrapped));
+        SkSpan<const sk_sp<PrecompileShader>> wrapped,
+        bool isPerspective) {
+    return sk_make_sp<PrecompileLocalMatrixShader>(
+            std::move(wrapped),
+            isPerspective ? PrecompileLocalMatrixShader::Flags::kIsPerspective
+                          : PrecompileLocalMatrixShader::Flags::kNone);
 }
 
 sk_sp<PrecompileShader> PrecompileShadersPriv::LocalMatrixBothVariants(
@@ -665,6 +673,24 @@ sk_sp<PrecompileShader> PrecompileShadersPriv::LocalMatrixBothVariants(
     return sk_make_sp<PrecompileLocalMatrixShader>(
             std::move(wrapped),
             PrecompileLocalMatrixShader::Flags::kIncludeWithOutVariant);
+}
+
+sk_sp<PrecompileShader> PrecompileShader::makeWithLocalMatrix(bool isPerspective) const {
+    if (this->priv().isALocalMatrixShader()) {
+        // SkShader::makeWithLocalMatrix collapses chains of localMatrix shaders so we need to
+        // follow suit here, folding in any new perspective flag if needed.
+        auto thisAsLMShader = static_cast<const PrecompileLocalMatrixShader*>(this);
+        if (isPerspective && !(thisAsLMShader->getFlags() &
+                PrecompileLocalMatrixShader::Flags::kIsPerspective)) {
+            return sk_make_sp<PrecompileLocalMatrixShader>(
+                thisAsLMShader->getWrapped(),
+                thisAsLMShader->getFlags() | PrecompileLocalMatrixShader::Flags::kIsPerspective);
+        }
+
+        return sk_ref_sp(this);
+    }
+
+    return PrecompileShaders::LocalMatrix({ sk_ref_sp(this) }, isPerspective);
 }
 
 //--------------------------------------------------------------------------------------------------
