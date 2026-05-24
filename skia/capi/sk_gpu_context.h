@@ -312,7 +312,6 @@ bool Graphite_BackendTexture_isValid(const reskia_graphite_backend_texture_t *te
 int Graphite_BackendTexture_backend(const reskia_graphite_backend_texture_t *texture); // NULL input returns 0
 sk_i_size_t Graphite_BackendTexture_dimensions(const reskia_graphite_backend_texture_t *texture); // returns handle; NULL input returns 0
 reskia_graphite_texture_info_t *Graphite_BackendTexture_info(const reskia_graphite_backend_texture_t *texture); // owned; NULL input returns NULL
-void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state); // NULL/invalid state is no-op
 void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture); // NULL/non-Metal returns NULL
 
 reskia_graphite_yuva_backend_texture_info_t *Graphite_YUVABackendTextureInfo_new(); // owned; invalid default info

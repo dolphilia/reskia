@@ -3018,17 +3018,6 @@ reskia_graphite_texture_info_t *Graphite_BackendTexture_info(const reskia_graphi
 #endif
 }
 
-void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *texture, const reskia_skgpu_mutable_texture_state_t *state) {
-#if defined(SK_GRAPHITE)
-    if (texture != nullptr && state != nullptr && reinterpret_cast<const skgpu::MutableTextureState *>(state)->isValid()) {
-        as_graphite_backend_texture(texture)->setMutableState(*reinterpret_cast<const skgpu::MutableTextureState *>(state));
-    }
-#else
-    (void) texture;
-    (void) state;
-#endif
-}
-
 void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture) {
 #if defined(SK_GRAPHITE) && defined(SK_METAL)
     return texture != nullptr

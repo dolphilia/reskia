@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `746d444f3efdc41216d94ae53b07bac3c949f887`
-- next probe candidate: choose a fixed commit after `746d444f3efdc41216d94ae53b07bac3c949f887`
+- `SKIA_REF`: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
+- next probe candidate: choose a fixed commit after `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -62,29 +62,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 028 accepted: `c73cff97952aa15e01985a35e5c6575b4eb50454`。
 - cycle 029 accepted: `84d893159af295c4dc61f408f227cf37916b5b55`。
 - cycle 030 accepted: `746d444f3efdc41216d94ae53b07bac3c949f887`。
+- cycle 031 accepted: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`。
 
 未実施:
 
-- cycle 031 candidate の選定。
-- cycle 031 candidate checkout を使った coverage regression。
-- cycle 031 の source/header sync と C API 追従実装。
+- cycle 032 candidate の選定。
+- cycle 032 candidate checkout を使った coverage regression。
+- cycle 032 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 031 の candidate selection から始める。
+次の作業は、cycle 032 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `746d444f3efdc41216d94ae53b07bac3c949f887` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 031 の比較候補メモ:
+cycle 032 の比較候補メモ:
 
-- cycle 030 で deferred: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` (2024-07-31T22:26:12Z, 109 commits from current baseline, include/modules drift from current baseline should be rechecked)
-- 既知リスクは Graphite/SkSL drift、Metal/Vulkan optional backend drift、SkSL generated churn、Dawn/Android metadata churn。
+- local upstream refs では 2024-08-01 以降の候補が見つからなかった。candidate selection では必要に応じて upstream refs の更新可否を確認する。
+- 既知リスクは Graphite backend helper migration の継続、Dawn/Vulkan optional backend drift、SkSL generated churn。
 
 ## やってはいけないこと
 
@@ -113,21 +114,21 @@ cycle 031 の比較候補メモ:
 
 候補:
 
-- `746d444f3efdc41216d94ae53b07bac3c949f887`
-- committer date: 2024-07-24T21:53:42Z
-- subject: `Avoid using optional<> for ModuleType.`
+- `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`
+- committer date: 2024-07-31T22:26:12Z
+- subject: `Roll vulkan-deps from a9708d3e114d to d665a73f7d0d (6 revisions)`
 
-cycle 030 結果:
+cycle 031 結果:
 
-- deferred していた `746d444f3efdc41216d94ae53b07bac3c949f887` を採用した。より先の `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` は Graphite backend header migration と Dawn/Vulkan private header migration が広がるため次 cycle へ deferred とした。
+- deferred していた `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` を採用した。local upstream refs では 2024-08-01 以降の比較候補が見つからなかったため、次 cycle では refs 更新可否の確認から始める。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up は不要だった。
-- source/header sync では Core canvas/image/surface、Graphite precompile/image、Dawn private helper、Ganesh/Graphite backend drift、SkSL module/specialization/codegen/generated updates、LoongArch LASX opts files を取り込んだ。
-- CMake source list では `SkSLModule.cpp`、`SkSLReplaceSplatCastsWithSwizzles.cpp`、`SkSLTransform.cpp` を追加した。
+- C API catch-up では upstream で削除された `BackendTexture::setMutableState` に対応する `Graphite_BackendTexture_setMutableState` を削除した。
+- source/header sync では Graphite Dawn/Vulkan backend helper migration、Ganesh/Graphite backend drift、SkSL codegen/generated updates、text GPU `SDFTControl` -> `SubRunControl` rename を取り込んだ。
+- CMake source list では `src/text/gpu/SDFTControl.cpp` を `src/text/gpu/SubRunControl.cpp` に置き換えた。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 030 では対象差分なしのため未実施。
-- 次サイクルでは、accepted baseline `746d444f3efdc41216d94ae53b07bac3c949f887` から `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` 周辺を再比較する。
+- Skottie/SKSG optional smoke は cycle 031 では対象外。
+- 次サイクルでは、accepted baseline `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b` から再比較する。
 
 cycle records:
 
@@ -161,6 +162,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-028-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-029-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-030-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-031-2026-05-24.md`
 
 ## Cycle close の条件
 

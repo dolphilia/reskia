@@ -16,8 +16,8 @@
 #include "src/gpu/graphite/DrawOrder.h"
 #include "src/gpu/graphite/geom/Rect.h"
 #include "src/gpu/graphite/geom/Transform_graphite.h"
-#include "src/text/gpu/SDFTControl.h"
 #include "src/text/gpu/SubRunContainer.h"
+#include "src/text/gpu/SubRunControl.h"
 
 enum class SkBackingFit;
 class SkStrokeRec;
@@ -279,7 +279,7 @@ private:
                                                           const SkStrokeRec&,
                                                           bool requireMSAA) const;
 
-    bool needsFlushBeforeDraw(int numNewDraws, DstReadRequirement) const;
+    bool needsFlushBeforeDraw(int numNewRenderSteps, DstReadRequirement) const;
 
     // Flush internal work, such as pending clip draws and atlas uploads, into the Device's DrawTask
     void internalFlush();
@@ -313,7 +313,7 @@ private:
     // TODO(b/330864257): Clean up once flushPendingWorkToRecorder() doesn't have to be re-entrant
     bool fIsFlushing = false;
 
-    const sktext::gpu::SDFTControl fSDFTControl;
+    const sktext::gpu::SubRunControl fSubRunControl;
 
 #if defined(SK_DEBUG)
     // When not 0, this Device is an unregistered scratch device that is intended to go out of

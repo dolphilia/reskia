@@ -873,7 +873,7 @@ if(RESKIA_BUILD_TESTS)
     list(APPEND SOURCE_FILES
             src/text/gpu/DistanceFieldAdjustTable.cpp
             src/text/gpu/GlyphVector.cpp
-            src/text/gpu/SDFTControl.cpp
+            src/text/gpu/SubRunControl.cpp
             src/text/gpu/SkChromeRemoteGlyphCache.cpp
             src/text/gpu/Slug.cpp
             src/text/gpu/SlugImpl.cpp

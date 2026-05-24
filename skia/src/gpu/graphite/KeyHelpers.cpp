@@ -351,18 +351,19 @@ static int write_color_and_offset_bufdata(int numStops,
     auto [dstData, bufferOffset] = gatherer->allocateGradientData(numStops, shader);
     if (dstData) {
         // Data doesn't already exist so we need to write it.
-        for (int i = 0; i < numStops; i++) {
+        // Writes all offset data, then color data. This way when binary searching through the
+        // offsets, there is better cache locality.
+        for (int i = 0, colorIdx = numStops; i < numStops; i++, colorIdx+=4) {
             SkColor4f unpremulColor = colors[i].unpremul();
 
             float offset = offsets ? offsets[i] : SkIntToFloat(i) / (numStops - 1);
             SkASSERT(offset >= 0.0f && offset <= 1.0f);
 
-            int dataIndex = i * 5;
-            dstData[dataIndex] = offset;
-            dstData[dataIndex + 1] = unpremulColor.fR;
-            dstData[dataIndex + 2] = unpremulColor.fG;
-            dstData[dataIndex + 3] = unpremulColor.fB;
-            dstData[dataIndex + 4] = unpremulColor.fA;
+            dstData[i] = offset;
+            dstData[colorIdx + 0] = unpremulColor.fR;
+            dstData[colorIdx + 1] = unpremulColor.fG;
+            dstData[colorIdx + 2] = unpremulColor.fB;
+            dstData[colorIdx + 3] = unpremulColor.fA;
         }
     }
 
@@ -517,13 +518,7 @@ void add_localmatrixshader_uniform_data(const ShaderCodeDictionary* dict,
                                         PipelineDataGatherer* gatherer) {
     BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kLocalMatrixShader)
 
-    SkM44 lmInverse;
-    bool wasInverted = localMatrix.invert(&lmInverse);  // TODO: handle failure up stack
-    if (!wasInverted) {
-        lmInverse.setIdentity();
-    }
-
-    gatherer->write(lmInverse);
+    gatherer->write(localMatrix);
 }
 
 } // anonymous namespace
@@ -1612,19 +1607,30 @@ static void notify_in_use(Recorder* recorder,
     NotifyImagesInUse(recorder, drawContext, shader->dst().get());
 }
 
+static SkMatrix matrix_invert_or_identity(const SkMatrix& matrix) {
+    SkMatrix inverseMatrix;
+    if (!matrix.invert(&inverseMatrix)) {
+        inverseMatrix.setIdentity();
+    }
+
+    return inverseMatrix;
+}
+
 static void add_to_key(const KeyContext& keyContext,
                        PaintParamsKeyBuilder* builder,
                        PipelineDataGatherer* gatherer,
                        const SkCTMShader* shader) {
     // CTM shaders are always given device coordinates, so we don't have to modify the CTM itself
     // with keyContext's local transform.
-    LocalMatrixShaderBlock::LMShaderData lmShaderData(shader->ctm());
+
+    SkMatrix lmInverse = matrix_invert_or_identity(shader->ctm());
+    LocalMatrixShaderBlock::LMShaderData lmShaderData(lmInverse);
 
     KeyContextWithLocalMatrix newContext(keyContext, shader->ctm());
 
     LocalMatrixShaderBlock::BeginBlock(newContext, builder, gatherer, lmShaderData);
 
-        AddToKey(newContext, builder, gatherer, shader->proxyShader().get());
+    AddToKey(newContext, builder, gatherer, shader->proxyShader().get());
 
     builder->endBlock();
 }
@@ -2023,8 +2029,9 @@ static void add_to_key(const KeyContext& keyContext,
     auto wrappedShader = shader->wrappedShader().get();
 
     // Fold the texture's origin flip into the local matrix so that the image shader doesn't need
-    // additional state
+    // additional state.
     SkMatrix matrix;
+
     SkShaderBase* wrappedShaderBase = as_SB(wrappedShader);
     if (wrappedShaderBase->type() == SkShaderBase::ShaderType::kImage) {
         auto imgShader = static_cast<const SkImageShader*>(wrappedShader);
@@ -2038,7 +2045,7 @@ static void add_to_key(const KeyContext& keyContext,
             if (imgBase->isYUVA()) {
                 auto imgYUVA = static_cast<const Image_YUVA*>(imgBase);
                 SkASSERT(imgYUVA);
-                matrix = imgYUVA->yuvaInfo().originMatrix();
+                matrix = matrix_invert_or_identity(imgYUVA->yuvaInfo().originMatrix());
             } else {
                 auto imgGraphite = static_cast<Image*>(imgBase);
                 SkASSERT(imgGraphite);
@@ -2048,11 +2055,11 @@ static void add_to_key(const KeyContext& keyContext,
                     matrix.setTranslateY(view.height());
                 }
             }
-        }
 
+        }
     } else if (wrappedShaderBase->type() == SkShaderBase::ShaderType::kGradientBase) {
         auto gradShader = static_cast<const SkGradientBaseShader*>(wrappedShader);
-        auto gradMatrix = gradShader->getGradientMatrix();
+        matrix = gradShader->getGradientMatrix();
 
         // Override the conical gradient matrix since graphite uses a different algorithm
         // than the ganesh and raster backends.
@@ -2071,19 +2078,16 @@ static void add_to_key(const KeyContext& keyContext,
                                                              conicalShader->getEndCenter(),
                                                              &conicalMatrix));
             }
-            gradMatrix = conicalMatrix;
+            matrix = conicalMatrix;
         }
-
-        SkMatrix invGradMatrix;
-        SkAssertResult(gradMatrix.invert(&invGradMatrix));
-
-        matrix.postConcat(invGradMatrix);
     }
 
-    matrix.postConcat(shader->localMatrix());
-    LocalMatrixShaderBlock::LMShaderData lmShaderData(matrix);
+    SkMatrix lmInverse = matrix_invert_or_identity(shader->localMatrix());
+    lmInverse.postConcat(matrix);
 
-    KeyContextWithLocalMatrix newContext(keyContext, matrix);
+    LocalMatrixShaderBlock::LMShaderData lmShaderData(lmInverse);
+
+    KeyContextWithLocalMatrix newContext(keyContext, shader->localMatrix());
 
     LocalMatrixShaderBlock::BeginBlock(newContext, builder, gatherer, lmShaderData);
 
