@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `a8c2acc3903806ff36800a67f5e60dba84265fd3`
-- next probe candidate: choose a fixed commit after `a8c2acc3903806ff36800a67f5e60dba84265fd3`
+- `SKIA_REF`: `7c69f39fa85b3cca07c7d433a396011e01c88f34`
+- next probe candidate: choose a fixed commit after `7c69f39fa85b3cca07c7d433a396011e01c88f34`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -58,16 +58,17 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 024 accepted: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`。
 - cycle 025 accepted: `24a4123fc949aad0c98d251b05c8ba2b21a9b931`。
 - cycle 026 accepted: `a8c2acc3903806ff36800a67f5e60dba84265fd3`。
+- cycle 027 accepted: `7c69f39fa85b3cca07c7d433a396011e01c88f34`。
 
 未実施:
 
-- cycle 027 candidate の選定。
-- cycle 027 candidate checkout を使った coverage regression。
-- cycle 027 の source/header sync と C API 追従実装。
+- cycle 028 candidate の選定。
+- cycle 028 candidate checkout を使った coverage regression。
+- cycle 028 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 027 の candidate selection から始める。
+次の作業は、cycle 028 の candidate selection から始める。
 
 推奨順:
 
@@ -77,11 +78,11 @@ git -C vendor/skia-upstream status --short --branch
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 027 の比較候補メモ:
+cycle 028 の比較候補メモ:
 
-- 1-week: `7c69f39fa85b3cca07c7d433a396011e01c88f34` (2024-07-02T21:38:47Z, 88 commits from current baseline, include/modules drift: 7 files changed, 183 insertions)
-- この候補は Graphite `PrecompileImageFilter` / `PrecompileMaskFilter` 追加を含む。
-- cycle 027 では Graphite precompile image/mask filter public API の routing を先に行う。
+- 1-week: `c73cff97952aa15e01985a35e5c6575b4eb50454` (2024-07-10T21:55:27Z, 66 commits from current baseline, include/modules drift: 100 files changed, 115 insertions, 366 deletions)
+- この候補は Bazel metadata churn が大きく、`PrecompileShader`、GL helper、private Graphite context option removal を含む。
+- cycle 028 では Bazel metadata を source sync 対象から切り分け、public API と mirrored source drift を先に routing する。
 
 ## やってはいけないこと
 
@@ -110,22 +111,22 @@ cycle 027 の比較候補メモ:
 
 候補:
 
-- `a8c2acc3903806ff36800a67f5e60dba84265fd3`
-- committer date: 2024-06-25T20:40:23Z
-- subject: `Change wacky_yuv GMs to split full colorspaces from limited.`
+- `7c69f39fa85b3cca07c7d433a396011e01c88f34`
+- committer date: 2024-07-02T21:38:47Z
+- subject: `Remove staging gni file groups for sksl`
 
-cycle 026 結果:
+cycle 027 結果:
 
-- 1-week 候補を採用した。2-week 候補 `7c69f39fa85b3cca07c7d433a396011e01c88f34` は Graphite precompile image/mask filter API を含むため次 cycle へ deferred とした。
+- 1-week 候補を採用した。次候補 `c73cff97952aa15e01985a35e5c6575b4eb50454` は Bazel metadata churn が大きいため次 cycle へ deferred とした。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up では `SkImage_makeScaled` と `SkImage_makeScaledWithRecorder` を追加した。
-- Graphite `PrecompileColorFilter::makeComposed` は precompile ownership/design policy に従い `na` として理由付き分類した。
-- source/header sync では Vulkan public header removal、Graphite precompile color-filter split、SkImage makeScaled implementation、SkSL/codegen updates、fontations/CoreText updates を取り込んだ。
-- `SkSLSPIRVtoHLSL.cpp` は Reskia の現行 dependency model に合わせ、`SK_ENABLE_SPIRV_CROSS` guard を維持した。
+- C API catch-up では `Graphite_Recorder_maxTextureSize` を追加した。
+- Graphite `PrecompileImageFilter` destructor/`priv()` は precompile ownership/design policy に従い `false_positive` として理由付き分類した。
+- source/header sync では Graphite precompile image/mask filter split、Graphite recorder maxTextureSize、Vulkan AMD memory allocator move、SkSL/codegen updates、CoreText/text updates を取り込んだ。
+- CMake source list では `src/gpu/vk/vulkanmemoryallocator/*` を Vulkan GPU source glob に追加した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 026 では対象差分なしのため未実施。
-- 次サイクルでは、accepted baseline `a8c2acc3903806ff36800a67f5e60dba84265fd3` から 1週間/2週間候補を再比較する。
+- Skottie/SKSG optional smoke は cycle 027 では対象差分なしのため未実施。
+- 次サイクルでは、accepted baseline `7c69f39fa85b3cca07c7d433a396011e01c88f34` から 1週間/2週間候補を再比較する。
 
 cycle records:
 
@@ -155,6 +156,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-024-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-025-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-026-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-027-2026-05-24.md`
 
 ## Cycle close の条件
 

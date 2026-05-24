@@ -755,7 +755,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.cpp")
         if(RESKIA_ENABLE_GPU_GANESH)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.c"

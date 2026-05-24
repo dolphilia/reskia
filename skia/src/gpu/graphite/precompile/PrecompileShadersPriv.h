@@ -10,6 +10,7 @@
 
 #include "include/core/SkRefCnt.h"
 #include "src/base/SkEnumBitMask.h"
+#include "src/gpu/graphite/precompile/PaintOptionsPriv.h"
 
 namespace skgpu::graphite {
 

@@ -259,6 +259,7 @@ void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder
 bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owns user_data until callback if true; invalid input returns false
 reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_graphite_recorder_t *recorder); // borrowed; NULL input returns NULL
 int Graphite_Recorder_backend(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+int Graphite_Recorder_maxTextureSize(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 reskia_canvas_t *Graphite_Recorder_makeDeferredCanvas(reskia_graphite_recorder_t *recorder, const reskia_image_info_t *image_info, const reskia_graphite_texture_info_t *info); // borrowed until next snap/release; invalid input returns NULL
 reskia_graphite_recording_t *Graphite_Recorder_snap(reskia_graphite_recorder_t *recorder); // owned; NULL/no recording returns NULL
 reskia_graphite_backend_texture_t *Graphite_Recorder_createBackendTexture(reskia_graphite_recorder_t *recorder, sk_i_size_t dimensions, const reskia_graphite_texture_info_t *info); // owned; invalid input returns NULL
