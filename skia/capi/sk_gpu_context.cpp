@@ -2652,11 +2652,12 @@ reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphit
     skgpu::graphite::MtlTextureInfo mtl_info(
             info->sample_count,
             to_graphite_mipmapped(info->mipmapped),
-            info->format,
-            info->usage,
-            info->storage_mode,
+            static_cast<MTLPixelFormat>(info->format),
+            static_cast<MTLTextureUsage>(info->usage),
+            static_cast<MTLStorageMode>(info->storage_mode),
             info->framebuffer_only);
-    return reinterpret_cast<reskia_graphite_texture_info_t *>(new skgpu::graphite::TextureInfo(mtl_info));
+    return reinterpret_cast<reskia_graphite_texture_info_t *>(
+            new skgpu::graphite::TextureInfo(skgpu::graphite::TextureInfos::MakeMetal(mtl_info)));
 #else
     (void) info;
     return nullptr;
@@ -2802,7 +2803,7 @@ bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t
         return false;
     }
     skgpu::graphite::MtlTextureInfo mtl_info;
-    if (!as_graphite_texture_info(info)->getMtlTextureInfo(&mtl_info)) {
+    if (!skgpu::graphite::TextureInfos::GetMtlTextureInfo(*as_graphite_texture_info(info), &mtl_info)) {
         return false;
     }
     out_info->sample_count = mtl_info.fSampleCount;
@@ -2857,7 +2858,8 @@ reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_new() {
 reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_newMtl(void *event, uint64_t value) {
 #if defined(SK_GRAPHITE) && defined(SK_METAL)
     return reinterpret_cast<reskia_graphite_backend_semaphore_t *>(
-            new skgpu::graphite::BackendSemaphore(event, value));
+            new skgpu::graphite::BackendSemaphore(
+                    skgpu::graphite::BackendSemaphores::MakeMetal(event, value)));
 #else
     (void) event;
     (void) value;
@@ -2905,7 +2907,9 @@ int Graphite_BackendSemaphore_backend(const reskia_graphite_backend_semaphore_t 
 
 void *Graphite_BackendSemaphore_getMtlEvent(const reskia_graphite_backend_semaphore_t *semaphore) {
 #if defined(SK_GRAPHITE) && defined(SK_METAL)
-    return semaphore != nullptr ? const_cast<void *>(as_graphite_backend_semaphore(semaphore)->getMtlEvent()) : nullptr;
+    return semaphore != nullptr
+            ? const_cast<void *>(skgpu::graphite::BackendSemaphores::GetMtlEvent(*as_graphite_backend_semaphore(semaphore)))
+            : nullptr;
 #else
     (void) semaphore;
     return nullptr;
@@ -2914,7 +2918,9 @@ void *Graphite_BackendSemaphore_getMtlEvent(const reskia_graphite_backend_semaph
 
 uint64_t Graphite_BackendSemaphore_getMtlValue(const reskia_graphite_backend_semaphore_t *semaphore) {
 #if defined(SK_GRAPHITE) && defined(SK_METAL)
-    return semaphore != nullptr ? as_graphite_backend_semaphore(semaphore)->getMtlValue() : 0;
+    return semaphore != nullptr
+            ? skgpu::graphite::BackendSemaphores::GetMtlValue(*as_graphite_backend_semaphore(semaphore))
+            : 0;
 #else
     (void) semaphore;
     return 0;
@@ -2934,7 +2940,10 @@ reskia_graphite_backend_texture_t *Graphite_BackendTexture_newMtl(sk_i_size_t di
     if (dimensions == 0 || mtl_texture == nullptr) {
         return nullptr;
     }
-    return reinterpret_cast<reskia_graphite_backend_texture_t *>(new skgpu::graphite::BackendTexture(static_sk_i_size_get_entity(dimensions), reinterpret_cast<CFTypeRef>(mtl_texture)));
+    return reinterpret_cast<reskia_graphite_backend_texture_t *>(
+            new skgpu::graphite::BackendTexture(skgpu::graphite::BackendTextures::MakeMetal(
+                    static_sk_i_size_get_entity(dimensions),
+                    reinterpret_cast<CFTypeRef>(mtl_texture))));
 #else
     (void) dimensions;
     (void) mtl_texture;
@@ -3022,7 +3031,9 @@ void Graphite_BackendTexture_setMutableState(reskia_graphite_backend_texture_t *
 
 void *Graphite_BackendTexture_getMtlTexture(const reskia_graphite_backend_texture_t *texture) {
 #if defined(SK_GRAPHITE) && defined(SK_METAL)
-    return texture != nullptr ? const_cast<void *>(as_graphite_backend_texture(texture)->getMtlTexture()) : nullptr;
+    return texture != nullptr
+            ? const_cast<void *>(skgpu::graphite::BackendTextures::GetMtlTexture(*as_graphite_backend_texture(texture)))
+            : nullptr;
 #else
     (void) texture;
     return nullptr;

@@ -380,6 +380,7 @@ list(APPEND SOURCE_FILES
         src/sksl/analysis/SkSLIsTrivialExpression.cpp
         src/sksl/analysis/SkSLProgramUsage.cpp
         src/sksl/analysis/SkSLReturnsInputAlpha.cpp
+        src/sksl/analysis/SkSLSpecialization.cpp
         src/sksl/analysis/SkSLSwitchCaseContainsExit.cpp
         src/sksl/analysis/SkSLSymbolTableStackBuilder.cpp
         src/sksl/codegen/SkSLGLSLCodeGenerator.cpp

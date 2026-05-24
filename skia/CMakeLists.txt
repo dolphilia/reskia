@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.26.4)
 project(reskia)
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 set(RESKIA_ROOT_DIR "${PROJECT_SOURCE_DIR}/..")
 include("${RESKIA_ROOT_DIR}/cmake/deps/ReskiaDeps.cmake")
 reskia_resolve_third_party("${RESKIA_ROOT_DIR}" RESKIA_DEP_LINK_DIRS RESKIA_DEP_LIBS)
@@ -268,6 +272,8 @@ endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
 if(APPLE AND RESKIA_ENABLE_GPU_METAL)
+    set_source_files_properties("${PROJECT_SOURCE_DIR}/capi/sk_gpu_context.cpp"
+            PROPERTIES LANGUAGE OBJCXX)
     set(_reskia_gpu_mtl_sources "")
     foreach(_reskia_src IN LISTS SOURCE_FILES)
         if(_reskia_src MATCHES "^src/gpu/.+\\.mm$" AND NOT _reskia_src MATCHES "^src/gpu/graphite/mtl/.+\\.mm$")
