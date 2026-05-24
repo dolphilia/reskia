@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
-- next probe candidate: choose a fixed commit after `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
+- `SKIA_REF`: `24a4123fc949aad0c98d251b05c8ba2b21a9b931`
+- next probe candidate: choose a fixed commit after `24a4123fc949aad0c98d251b05c8ba2b21a9b931`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -56,30 +56,31 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 022 accepted: `78069713e02aae7f03d20114a8bebe8c6a89259a`。
 - cycle 023 accepted: `73e53abdf54f56fe30d60dba6e62e19597fa2618`。
 - cycle 024 accepted: `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`。
+- cycle 025 accepted: `24a4123fc949aad0c98d251b05c8ba2b21a9b931`。
 
 未実施:
 
-- cycle 025 candidate の選定。
-- cycle 025 candidate checkout を使った coverage regression。
-- cycle 025 の source/header sync と C API 追従実装。
+- cycle 026 candidate の選定。
+- cycle 026 candidate checkout を使った coverage regression。
+- cycle 026 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 025 の candidate selection から始める。
+次の作業は、cycle 026 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `24a4123fc949aad0c98d251b05c8ba2b21a9b931` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 025 の比較候補メモ:
+cycle 026 の比較候補メモ:
 
-- 1-week: `24a4123fc949aad0c98d251b05c8ba2b21a9b931` (2024-06-18T18:50:15Z, 73 commits, include/modules drift: 7 files changed, 536 insertions, 2 deletions)
-- 2-week: `a8c2acc3903806ff36800a67f5e60dba84265fd3` (2024-06-25T20:40:23Z, 138 commits, include/modules drift: 19 files changed, 667 insertions, 84 deletions)
-- cycle 025 では Graphite precompile public headers の routing を先に行う。C ABI へ即時露出するか、optional/design-required として分類するかを記録してから source/header sync へ進む。
+- 1-week: `a8c2acc3903806ff36800a67f5e60dba84265fd3` (2024-06-25T20:40:23Z, 65 commits from current baseline, include/modules drift: 12 files changed, 131 insertions, 82 deletions)
+- この候補は Vulkan public header removal と Graphite `PrecompileColorFilter` 追加を含む。
+- cycle 026 では Vulkan header removal に対応する stale C API と、Graphite precompile color-filter public API の routing を先に行う。
 
 ## やってはいけないこと
 
@@ -108,22 +109,21 @@ cycle 025 の比較候補メモ:
 
 候補:
 
-- `51eabd0d1e4466eb427394912eddb6f7a9d0cafb`
-- committer date: 2024-06-11T20:30:41Z
-- subject: `SkPath: optimize reading paths`
+- `24a4123fc949aad0c98d251b05c8ba2b21a9b931`
+- committer date: 2024-06-18T18:50:15Z
+- subject: `Revert "wgsl: Mark more variables as const/immutable"`
 
-cycle 024 結果:
+cycle 025 結果:
 
-- 1-week 候補を採用した。2-week 候補 `24a4123fc949aad0c98d251b05c8ba2b21a9b931` は Graphite precompile public headers が大きいため次 cycle へ deferred、3-week 候補 `a8c2acc3903806ff36800a67f5e60dba84265fd3` も deferred とした。
+- 1-week 候補を採用した。2-week 候補 `a8c2acc3903806ff36800a67f5e60dba84265fd3` は Vulkan public header removal と追加 Graphite precompile API を含むため次 cycle へ deferred とした。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up の新規 entry point 追加は不要だった。
-- source/header sync では Core blur refactor、SkPath、JPEG multi-picture、PNG BGRA10XR encode、Ganesh/Graphite blur utility、Metal/Vulkan/Dawn type updates、SKSL generated Graphite shader 更新を取り込んだ。
-- CMake source-list では新規 `src/core/SkBlurEngine.cpp` を追加した。`gn`/Bazel metadata は Reskia の CMake build surface へ追加しなかった。
+- C API catch-up の新規 entry point 追加は不要だった。Graphite precompile public API 29 rows は `na`/`false_positive` として理由付き分類した。
+- source/header sync では Graphite precompile public headers、`SkPaint`、`SkSGRenderNode`、codec/core updates、Graphite precompile implementation split、Metal/Dawn sync、SkSL module data split、fontations updates を取り込んだ。
+- CMake source-list では `src/sksl/SkSLModuleDataDefault.cpp` と Graphite precompile glob を追加した。`SkSLModuleDataFile.cpp` は `tools/SkGetExecutablePath.h` 依存のため build surface に入れなかった。
+- shaper C API の既存 CMake gating drift を修正し、`capi/sk_text_blob_builder_run_handler.cpp` を `TARGET skshaper` でリンクするようにした。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke、Skottie/SKSG optional smoke は pass。
-- 既存 legacy `test_c_skia` compile issue は修正済み。GPU smoke dir の全 target build と `c_skia_test` は pass。
-- `c_skia_font_invalid_input_smoke` と `c_skia_unicode_capi_smoke` の expectation drift も修正済み。GPU smoke dir の full `ctest` は 88/88 pass。
-- 次サイクルでは、accepted baseline `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` から 1週間/2週間候補を再比較する。
+- 次サイクルでは、accepted baseline `24a4123fc949aad0c98d251b05c8ba2b21a9b931` から 1週間/2週間候補を再比較する。
 
 cycle records:
 
@@ -151,6 +151,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-022-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-023-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-024-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-025-2026-05-24.md`
 
 ## Cycle close の条件
 

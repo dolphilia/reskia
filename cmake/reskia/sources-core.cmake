@@ -447,6 +447,7 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLLexer.cpp
         src/sksl/SkSLMangler.cpp
         src/sksl/SkSLMemoryLayout.h
+        src/sksl/SkSLModuleDataDefault.cpp
         src/sksl/SkSLModuleLoader.cpp
         src/sksl/SkSLOperator.cpp
         src/sksl/SkSLOutputStream.cpp
@@ -744,7 +745,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.cpp")
     endif()
 
     if(RESKIA_ENABLE_GPU_VULKAN)
