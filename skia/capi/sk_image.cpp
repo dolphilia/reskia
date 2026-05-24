@@ -378,6 +378,25 @@ bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, cons
     return reinterpret_cast<SkImage *>(image)->scalePixels(* reinterpret_cast<const SkPixmap *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));
 }
 
+sk_image_t SkImage_makeScaled(reskia_image_t *image, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling) {
+    if (image == nullptr || info == nullptr || sampling == nullptr) {
+        return 0;
+    }
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeScaled(
+            *reinterpret_cast<const SkImageInfo *>(info),
+            *reinterpret_cast<const SkSamplingOptions *>(sampling)));
+}
+
+sk_image_t SkImage_makeScaledWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling) {
+    if (image == nullptr || info == nullptr || sampling == nullptr) {
+        return 0;
+    }
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeScaled(
+            reinterpret_cast<skgpu::graphite::Recorder *>(recorder),
+            *reinterpret_cast<const SkImageInfo *>(info),
+            *reinterpret_cast<const SkSamplingOptions *>(sampling)));
+}
+
 sk_data_t SkImage_refEncodedData(reskia_image_t *image) {
     if (image == nullptr) {
         return 0;

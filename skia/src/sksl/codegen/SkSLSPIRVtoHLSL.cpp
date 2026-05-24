@@ -19,7 +19,7 @@
 
 namespace SkSL {
 
-bool SPIRVtoHLSL(const std::string& spirv, std::string* hlsl) {
+void SPIRVtoHLSL(const std::string& spirv, std::string* hlsl) {
     spirv_cross::CompilerHLSL hlslCompiler((const uint32_t*)spirv.c_str(),
                                            spirv.size() / sizeof(uint32_t));
 
@@ -37,13 +37,16 @@ bool SPIRVtoHLSL(const std::string& spirv, std::string* hlsl) {
     hlslCompiler.set_common_options(optionsGLSL);
     hlslCompiler.set_hlsl_options(optionsHLSL);
     hlsl->assign(hlslCompiler.compile());
-    return true;
 }
 
-}
+}  // namespace SkSL
 
 #else
 
-namespace SkSL { bool SPIRVtoHLSL(const std::string&, std::string*) { return false; } }
+namespace SkSL {
+
+void SPIRVtoHLSL(const std::string&, std::string*) {}
+
+}  // namespace SkSL
 
 #endif
