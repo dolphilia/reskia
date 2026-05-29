@@ -29,7 +29,7 @@ typedef struct reskia_image_filters_t reskia_image_filters_t;
 typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_point3_t reskia_point3_t;
 typedef struct reskia_rect_t reskia_rect_t;
-typedef struct reskia_runtime_shader_builder_t reskia_runtime_shader_builder_t;
+typedef struct reskia_runtime_effect_builder_t reskia_runtime_effect_builder_t;
 typedef struct reskia_sampling_options_t reskia_sampling_options_t;
 typedef int reskia_string_view_t;
 typedef uint32_t reskia_color_t;
@@ -139,22 +139,22 @@ sk_image_filter_t SkImageFilters_PictureOnly(sk_picture_t picture); // picture m
  * builder is required.
  * input may be 0.
  */
-sk_image_filter_t SkImageFilters_RuntimeShader(const reskia_runtime_shader_builder_t *builder, reskia_string_view_t childShaderName, sk_image_filter_t input);
+sk_image_filter_t SkImageFilters_RuntimeShader(const reskia_runtime_effect_builder_t *builder, reskia_string_view_t childShaderName, sk_image_filter_t input);
 /**
  * builder is required.
  * input may be 0.
  */
-sk_image_filter_t SkImageFilters_RuntimeShaderWithSampleRadius(const reskia_runtime_shader_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input);
+sk_image_filter_t SkImageFilters_RuntimeShaderWithSampleRadius(const reskia_runtime_effect_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input);
 /**
  * builder is required.
  * childShaderNames/inputs required when inputCount > 0.
  */
-sk_image_filter_t SkImageFilters_RuntimeShaderWithChildShaderNames(const reskia_runtime_shader_builder_t *builder, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount);
+sk_image_filter_t SkImageFilters_RuntimeShaderWithChildShaderNames(const reskia_runtime_effect_builder_t *builder, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount);
 /**
  * builder is required.
  * childShaderNames/inputs required when inputCount > 0.
  */
-sk_image_filter_t SkImageFilters_RuntimeShaderWithMaxSampleRadius(const reskia_runtime_shader_builder_t *builder, float maxSampleRadius, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount);
+sk_image_filter_t SkImageFilters_RuntimeShaderWithMaxSampleRadius(const reskia_runtime_effect_builder_t *builder, float maxSampleRadius, reskia_string_view_t *childShaderNames, const reskia_image_filter_sp_t *inputs, int inputCount);
 /**
  * shader may be 0.
  * cropRect may be NULL.
