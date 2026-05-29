@@ -34,6 +34,12 @@ public:
         fUncachedAtlasMgr.compact(fRecorder);
     }
 
+    void purge() {
+        fCachedAtlasMgr.purge(fRecorder);
+        fSmallPathAtlasMgr.purge(fRecorder);
+        fUncachedAtlasMgr.purge(fRecorder);
+    }
+
     void evictAtlases() {
         fCachedAtlasMgr.evictAll();
         fSmallPathAtlasMgr.evictAll();

@@ -90,12 +90,12 @@ bool SkUnicodeHardCodedCharProperties::isEmoji(SkUnichar unichar) {
     return false;
 }
 
-bool SkUnicodeHardCodedCharProperties::isEmojiComponent(SkUnichar utf8) {
+bool SkUnicodeHardCodedCharProperties::isEmojiComponent(SkUnichar utf8)  {
     SkDEBUGFAIL("isEmojiComponent Not implemented");
     return false;
 }
 
-bool SkUnicodeHardCodedCharProperties::isEmojiModifier(SkUnichar utf8) {
+bool SkUnicodeHardCodedCharProperties::isEmojiModifier(SkUnichar utf8)  {
     SkDEBUGFAIL("isEmojiModifier Not implemented");
     return false;
 }

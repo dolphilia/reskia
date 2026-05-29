@@ -8,8 +8,8 @@ licenses(["notice"])
 
 skia_filegroup(
     name = "public_hdrs",
-    srcs = ["GrGLMakeGLXInterface.h"],
+    srcs = ["GrGLMakeIOSInterface.h"],
     visibility = [
-        "//include/gpu/gl:__pkg__",
+        "//src/gpu/ganesh/gl/iOS:__pkg__",
     ],
 )

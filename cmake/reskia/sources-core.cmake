@@ -50,6 +50,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkMaskSwizzler.cpp
         src/codec/SkParseEncodedOrigin.cpp
         src/codec/SkPixmapUtils.cpp
+        src/codec/SkPngCodecBase.cpp
         src/codec/SkPngCodec.cpp
         src/codec/SkSampledCodec.cpp
         src/codec/SkSampler.cpp
@@ -69,7 +70,6 @@ list(APPEND SOURCE_FILES
         src/core/SkBitmapCache.cpp
         src/core/SkBitmapDevice.cpp
         src/core/SkBitmapProcState_matrixProcs.cpp
-        src/core/SkBitmapProcState_opts_hsw.cpp
         src/core/SkBitmapProcState_opts_ssse3.cpp
         src/core/SkBitmapProcState_opts.cpp
         src/core/SkBitmapProcState.cpp
@@ -389,7 +389,6 @@ list(APPEND SOURCE_FILES
         src/sksl/codegen/SkSLRasterPipelineBuilder.cpp
         src/sksl/codegen/SkSLRasterPipelineCodeGenerator.cpp
         src/sksl/codegen/SkSLSPIRVCodeGenerator.cpp
-        src/sksl/codegen/SkSLSPIRVtoHLSL.cpp
         src/sksl/codegen/SkSLWGSLCodeGenerator.cpp
         src/sksl/ir/SkSLBinaryExpression.cpp
         src/sksl/ir/SkSLBlock.cpp
@@ -883,7 +882,6 @@ if(RESKIA_BUILD_TESTS)
             src/text/gpu/SubRunContainer.cpp
             src/text/gpu/TextBlob.cpp
             src/text/gpu/VertexFiller.cpp
-            src/utils/SkTestCanvas.cpp
     )
 endif()
 

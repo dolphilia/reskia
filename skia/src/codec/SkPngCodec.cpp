@@ -389,11 +389,8 @@ std::unique_ptr<SkEncodedInfo::ICCProfile> read_color_profile(png_structp png_pt
     // an image has both truly wants the potentially more specific ICC chunk, with sRGB as a
     // backup in case the decoder does not support full color management.
     if (png_get_valid(png_ptr, info_ptr, PNG_INFO_sRGB)) {
-        // sRGB chunks also store a rendering intent: Absolute, Relative,
-        // Perceptual, and Saturation.
-        // FIXME (scroggo): Extract this information from the sRGB chunk once
-        //                  we are able to handle this information in
-        //                  skcms_ICCProfile
+        // TODO(https://crbug.com/362304558): Consider the intent field from the
+        // `sRGB` chunk.
         return nullptr;
     }
 
@@ -468,21 +465,6 @@ void SkPngCodec::allocateStorage(const SkImageInfo& dstInfo) {
     }
 }
 
-static skcms_PixelFormat png_select_xform_format(const SkEncodedInfo& info) {
-    // We use kRGB and kRGBA formats because color PNGs are always RGB or RGBA.
-    if (16 == info.bitsPerComponent()) {
-        if (SkEncodedInfo::kRGBA_Color == info.color()) {
-            return skcms_PixelFormat_RGBA_16161616BE;
-        } else if (SkEncodedInfo::kRGB_Color == info.color()) {
-            return skcms_PixelFormat_RGB_161616BE;
-        }
-    } else if (SkEncodedInfo::kGray_Color == info.color()) {
-        return skcms_PixelFormat_G_8;
-    }
-
-    return skcms_PixelFormat_RGBA_8888;
-}
-
 void SkPngCodec::applyXformRow(void* dst, const void* src) {
     switch (fXformMode) {
         case kSwizzleOnly_XformMode:
@@ -508,15 +490,18 @@ static SkCodec::Result log_and_return_error(bool success) {
 
 class SkPngNormalDecoder : public SkPngCodec {
 public:
-    SkPngNormalDecoder(SkEncodedInfo&& info, std::unique_ptr<SkStream> stream,
-            SkPngChunkReader* reader, png_structp png_ptr, png_infop info_ptr, int bitDepth)
-        : INHERITED(std::move(info), std::move(stream), reader, png_ptr, info_ptr, bitDepth)
-        , fRowsWrittenToOutput(0)
-        , fDst(nullptr)
-        , fRowBytes(0)
-        , fFirstRow(0)
-        , fLastRow(0)
-    {}
+    SkPngNormalDecoder(SkEncodedInfo&& info,
+                       std::unique_ptr<SkStream> stream,
+                       SkPngChunkReader* reader,
+                       png_structp png_ptr,
+                       png_infop info_ptr,
+                       int bitDepth)
+            : SkPngCodec(std::move(info), std::move(stream), reader, png_ptr, info_ptr, bitDepth)
+            , fRowsWrittenToOutput(0)
+            , fDst(nullptr)
+            , fRowBytes(0)
+            , fFirstRow(0)
+            , fLastRow(0) {}
 
     static void AllRowsCallback(png_structp png_ptr, png_bytep row, png_uint_32 rowNum, int /*pass*/) {
         GetDecoder(png_ptr)->allRowsCallback(row, rowNum);
@@ -535,8 +520,6 @@ private:
     int                         fFirstRow;  // FIXME: Move to baseclass?
     int                         fLastRow;
     int                         fRowsNeeded;
-
-    using INHERITED = SkPngCodec;
 
     static SkPngNormalDecoder* GetDecoder(png_structp png_ptr) {
         return static_cast<SkPngNormalDecoder*>(png_get_progressive_ptr(png_ptr));
@@ -624,17 +607,20 @@ private:
 
 class SkPngInterlacedDecoder : public SkPngCodec {
 public:
-    SkPngInterlacedDecoder(SkEncodedInfo&& info, std::unique_ptr<SkStream> stream,
-            SkPngChunkReader* reader, png_structp png_ptr,
-            png_infop info_ptr, int bitDepth, int numberPasses)
-        : INHERITED(std::move(info), std::move(stream), reader, png_ptr, info_ptr, bitDepth)
-        , fNumberPasses(numberPasses)
-        , fFirstRow(0)
-        , fLastRow(0)
-        , fLinesDecoded(0)
-        , fInterlacedComplete(false)
-        , fPng_rowbytes(0)
-    {}
+    SkPngInterlacedDecoder(SkEncodedInfo&& info,
+                           std::unique_ptr<SkStream> stream,
+                           SkPngChunkReader* reader,
+                           png_structp png_ptr,
+                           png_infop info_ptr,
+                           int bitDepth,
+                           int numberPasses)
+            : SkPngCodec(std::move(info), std::move(stream), reader, png_ptr, info_ptr, bitDepth)
+            , fNumberPasses(numberPasses)
+            , fFirstRow(0)
+            , fLastRow(0)
+            , fLinesDecoded(0)
+            , fInterlacedComplete(false)
+            , fPng_rowbytes(0) {}
 
     static void InterlacedRowCallback(png_structp png_ptr, png_bytep row, png_uint_32 rowNum, int pass) {
         auto decoder = static_cast<SkPngInterlacedDecoder*>(png_get_progressive_ptr(png_ptr));
@@ -651,8 +637,6 @@ private:
     bool                    fInterlacedComplete;
     size_t                  fPng_rowbytes;
     AutoTMalloc<png_byte> fInterlaceBuffer;
-
-    using INHERITED = SkPngCodec;
 
     // FIXME: Currently sharing interlaced callback for all rows and subset. It's not
     // as expensive as the subset version of non-interlaced, but it still does extra
@@ -858,7 +842,8 @@ void AutoCleanPng::infoCallback(size_t idatLength) {
     png_get_IHDR(fPng_ptr, fInfo_ptr, &origWidth, &origHeight, &bitDepth,
                  &encodedColorType, nullptr, nullptr, nullptr);
 
-    // TODO: Should we support 16-bits of precision for gray images?
+    // TODO(https://crbug.com/359245096): Should we support 16-bits of precision
+    // for gray images?
     if (bitDepth == 16 && (PNG_COLOR_TYPE_GRAY == encodedColorType ||
                            PNG_COLOR_TYPE_GRAY_ALPHA == encodedColorType)) {
         bitDepth = 8;
@@ -933,21 +918,8 @@ void AutoCleanPng::infoCallback(size_t idatLength) {
     if (fOutCodec) {
         SkASSERT(nullptr == *fOutCodec);
         auto profile = read_color_profile(fPng_ptr, fInfo_ptr);
-        if (profile) {
-            switch (profile->profile()->data_color_space) {
-                case skcms_Signature_CMYK:
-                    profile = nullptr;
-                    break;
-                case skcms_Signature_Gray:
-                    if (SkEncodedInfo::kGray_Color != color &&
-                        SkEncodedInfo::kGrayAlpha_Color != color)
-                    {
-                        profile = nullptr;
-                    }
-                    break;
-                default:
-                    break;
-            }
+        if (!SkPngCodecBase::isCompatibleColorProfileAndType(profile.get(), color)) {
+            profile = nullptr;
         }
 
         switch (encodedColorType) {
@@ -1002,17 +974,20 @@ void AutoCleanPng::infoCallback(size_t idatLength) {
     this->releasePngPtrs();
 }
 
-SkPngCodec::SkPngCodec(SkEncodedInfo&& encodedInfo, std::unique_ptr<SkStream> stream,
-                       SkPngChunkReader* chunkReader, void* png_ptr, void* info_ptr, int bitDepth)
-    : INHERITED(std::move(encodedInfo), png_select_xform_format(encodedInfo), std::move(stream))
-    , fPngChunkReader(SkSafeRef(chunkReader))
-    , fPng_ptr(png_ptr)
-    , fInfo_ptr(info_ptr)
-    , fColorXformSrcRow(nullptr)
-    , fBitDepth(bitDepth)
-    , fIdatLength(0)
-    , fDecodedIdat(false)
-{}
+SkPngCodec::SkPngCodec(SkEncodedInfo&& encodedInfo,
+                       std::unique_ptr<SkStream> stream,
+                       SkPngChunkReader* chunkReader,
+                       void* png_ptr,
+                       void* info_ptr,
+                       int bitDepth)
+        : SkPngCodecBase(std::move(encodedInfo), std::move(stream))
+        , fPngChunkReader(SkSafeRef(chunkReader))
+        , fPng_ptr(png_ptr)
+        , fInfo_ptr(info_ptr)
+        , fColorXformSrcRow(nullptr)
+        , fBitDepth(bitDepth)
+        , fIdatLength(0)
+        , fDecodedIdat(false) {}
 
 SkPngCodec::~SkPngCodec() {
     this->destroyReadStruct();

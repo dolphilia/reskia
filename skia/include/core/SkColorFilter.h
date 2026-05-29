@@ -104,8 +104,7 @@ public:
 
     static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&);
     static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&, Clamp clamp);
-    static sk_sp<SkColorFilter> Matrix(const float rowMajor[20]);
-    static sk_sp<SkColorFilter> Matrix(const float rowMajor[20], Clamp clamp);
+    static sk_sp<SkColorFilter> Matrix(const float rowMajor[20], Clamp clamp = Clamp::kYes);
 
     // A version of Matrix which operates in HSLA space instead of RGBA.
     // I.e. HSLA-to-RGBA(Matrix(RGBA-to-HSLA(input))).

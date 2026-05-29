@@ -208,4 +208,8 @@ void PathAtlas::DrawAtlasMgr::compact(Recorder* recorder) {
     fDrawAtlas->compact(recorder->priv().tokenTracker()->nextFlushToken());
 }
 
+void PathAtlas::DrawAtlasMgr::purge(Recorder* recorder) {
+    fDrawAtlas->purge(recorder->priv().tokenTracker()->nextFlushToken());
+}
+
 }  // namespace skgpu::graphite

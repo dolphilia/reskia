@@ -108,10 +108,6 @@ static sk_sp<SkColorFilter> MakeMatrix(const float array[20],
     return sk_make_sp<SkMatrixColorFilter>(array, domain, clamp);
 }
 
-sk_sp<SkColorFilter> SkColorFilters::Matrix(const float array[20]) {
-    return SkColorFilters::Matrix(array, Clamp::kYes);
-}
-
 sk_sp<SkColorFilter> SkColorFilters::Matrix(const float array[20], Clamp clamp) {
     return MakeMatrix(array, SkMatrixColorFilter::Domain::kRGBA, clamp);
 }

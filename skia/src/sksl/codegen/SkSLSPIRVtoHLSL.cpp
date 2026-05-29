@@ -7,8 +7,6 @@
 
 #include "src/sksl/codegen/SkSLSPIRVtoHLSL.h"
 
-#if defined(SK_ENABLE_SPIRV_CROSS)
-
 #include <spirv_hlsl.hpp>
 
 /*
@@ -40,13 +38,3 @@ void SPIRVtoHLSL(const std::string& spirv, std::string* hlsl) {
 }
 
 }  // namespace SkSL
-
-#else
-
-namespace SkSL {
-
-void SPIRVtoHLSL(const std::string&, std::string*) {}
-
-}  // namespace SkSL
-
-#endif

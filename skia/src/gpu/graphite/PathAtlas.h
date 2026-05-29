@@ -138,6 +138,7 @@ protected:
         bool recordUploads(DrawContext*, Recorder*);
         void evict(PlotLocator) override;
         void compact(Recorder*);
+        void purge(Recorder*);
 
         void evictAll();
 

@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `d50960eac8398fd1ad360198944be1376c805486`
-- next probe candidate: choose a fixed commit after `d50960eac8398fd1ad360198944be1376c805486`
+- `SKIA_REF`: `ca108745b1de1ce366393013c441abc8012794f5`
+- next probe candidate: choose a fixed commit after `ca108745b1de1ce366393013c441abc8012794f5`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -64,29 +64,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 030 accepted: `746d444f3efdc41216d94ae53b07bac3c949f887`。
 - cycle 031 accepted: `0a7c7b0b96fc897040e71ea3304d9d6a042cda8b`。
 - cycle 032 accepted: `d50960eac8398fd1ad360198944be1376c805486`。
+- cycle 033 accepted: `ca108745b1de1ce366393013c441abc8012794f5`。
 
 未実施:
 
-- cycle 033 candidate の選定。
-- cycle 033 candidate checkout を使った coverage regression。
-- cycle 033 の source/header sync と C API 追従実装。
+- cycle 034 candidate の選定。
+- cycle 034 candidate checkout を使った coverage regression。
+- cycle 034 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 033 の candidate selection から始める。
+次の作業は、cycle 034 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `d50960eac8398fd1ad360198944be1376c805486` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `ca108745b1de1ce366393013c441abc8012794f5` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 033 の比較候補メモ:
+cycle 034 の比較候補メモ:
 
-- cycle 032 では `vendor/skia-upstream-candidate` の更新済み refs を利用し、`vendor/skia-upstream` も accepted commit に同期済み。
-- 既知リスクは Graphite backend helper migration の継続、Dawn/Vulkan optional backend drift、SkSL generated churn、prebuilt `libsvg.a` と `SkColorFilters::Matrix` ABI 互換 overload。
+- cycle 033 では `vendor/skia-upstream-candidate` の更新済み refs を利用した。`vendor/skia-upstream` は次回開始時に accepted commit との同期状態を確認する。
+- 既知リスクは Ganesh header relocation の継続、Dawn/Vulkan optional backend drift、SkSL generated churn、SPIRV-Cross HLSL source omission、prebuilt `libsvg.a` と `SkColorFilters::Matrix` ABI 互換 overload。
 
 ## やってはいけないこと
 
@@ -115,23 +116,23 @@ cycle 033 の比較候補メモ:
 
 候補:
 
-- `d50960eac8398fd1ad360198944be1376c805486`
-- committer date: 2024-08-14T22:32:42Z
-- subject: `Revert "[graphite] Add DawnCaps::extractGraphicsDescs"`
+- `ca108745b1de1ce366393013c441abc8012794f5`
+- committer date: 2024-08-28T07:14:42Z
+- subject: `Roll ANGLE from 2177be94a5e5 to 851f949bc3a1 (13 revisions)`
 
-cycle 032 結果:
+cycle 033 結果:
 
-- 2週間幅候補 `d50960eac8398fd1ad360198944be1376c805486` を採用した。1週間候補は小さく、3週間候補は Graphite/SkSL drift が大きいため見送った。
+- 2週間弱の中間候補 `ca108745b1de1ce366393013c441abc8012794f5` を採用した。2週間末尾候補と3週間候補は Ganesh header relocation を含む差分が大きいため見送った。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は `stale_capi 0`、`signature_changed_review 0`。
-- C API catch-up では `Graphite_Context_currentPurgeableBytes`、`Graphite_Recorder_currentPurgeableBytes`、`Graphite_TextureInfo_isMemoryless` を追加した。
-- upstream で削除された `SkImage_readPixelsGraphite` と `SkPath_isArc` は C API と smoke 参照から削除した。
-- source/header sync では Ganesh/Graphite backend drift、SkSL Graphite generated module、skcms updates、Dawn/Vulkan optional backend drift を取り込んだ。
-- CMake source list では `src/sksl/SkSLGraphiteModules.cpp` を追加した。
+- stale C API report は `stale_capi 0`、`signature_changed_review 2`。`SkImageFilters::DropShadow` / `DropShadowOnly` は inline `SkColor` overload が残るため既存 C ABI 互換と判断した。
+- C API catch-up では新規 portable C API は追加せず、既存 C API が参照する `SkICCFloatXYZD50ToGrid16Lab` / `SkICCFloatToTable16` definitions を維持した。
+- source/header sync では Ganesh public header relocation、PNG codec base split、skcms updates、Dawn/Vulkan optional backend drift を取り込んだ。
+- CMake source list では `src/codec/SkPngCodecBase.cpp` を追加し、削除済み `src/core/SkBitmapProcState_opts_hsw.cpp` / `src/utils/SkTestCanvas.cpp` を除外した。`src/sksl/codegen/SkSLSPIRVtoHLSL.cpp` は SPIRV-Cross HLSL dependency が未整備のため除外した。
 - prebuilt `libsvg.a` が旧 `SkColorFilters::Matrix(const SkColorMatrix&)` symbol を参照するため、Reskia 側に one-arg compatibility overload を残した。prebuilt 更新時に見直す。
+- source smoke で `SkShaper` Primitive/CoreText simple `shape()` の null fallback assert を検出したため、fallback 不要経路を `TrivialFontRunIterator` に切り替えた。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 032 では対象外。
-- 次サイクルでは、accepted baseline `d50960eac8398fd1ad360198944be1376c805486` から再比較する。
+- Skottie/SKSG optional smoke は cycle 033 では対象外。
+- 次サイクルでは、accepted baseline `ca108745b1de1ce366393013c441abc8012794f5` から再比較する。
 
 cycle records:
 
@@ -167,6 +168,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-030-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-031-2026-05-24.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-032-2026-05-24.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-033-2026-05-30.md`
 
 ## Cycle close の条件
 
