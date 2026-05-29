@@ -7,3 +7,4 @@
  * This file can parse information from a JPEG without being able to decode
  * it. This does not need Skia to be built with a JPEG library.
  */
+

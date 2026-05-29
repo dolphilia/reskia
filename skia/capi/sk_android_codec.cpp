@@ -175,6 +175,23 @@ reskia_status_t SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *android
     return RESKIA_STATUS_OK;
 }
 
+reskia_status_t SkAndroidCodec_getGainmapAndroidCodec(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *out_info, sk_android_codec_t *out_gainmap_codec) {
+    if (androidCodec == nullptr || out_info == nullptr || out_gainmap_codec == nullptr) {
+        return RESKIA_STATUS_INVALID_ARGUMENT;
+    }
+    std::unique_ptr<SkAndroidCodec> gainmap_codec;
+    const bool ok = reinterpret_cast<SkAndroidCodec *>(androidCodec)->getGainmapAndroidCodec(
+        reinterpret_cast<SkGainmapInfo *>(out_info),
+        &gainmap_codec
+    );
+    if (!ok || gainmap_codec == nullptr) {
+        *out_gainmap_codec = 0;
+        return RESKIA_STATUS_NOT_FOUND;
+    }
+    *out_gainmap_codec = static_sk_android_codec_make(std::move(gainmap_codec));
+    return RESKIA_STATUS_OK;
+}
+
 // static
 
 sk_android_codec_t SkAndroidCodec_MakeFromCodec(sk_codec_t codec) {

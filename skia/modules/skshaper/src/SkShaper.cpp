@@ -187,6 +187,9 @@ std::unique_ptr<SkShaper::FontRunIterator>
 SkShaper::MakeFontMgrRunIterator(const char* utf8, size_t utf8Bytes,
                                  const SkFont& font, sk_sp<SkFontMgr> fallback)
 {
+    if (!fallback) {
+        fallback = SkFontMgr::RefEmpty();
+    }
     return std::make_unique<FontMgrRunIterator>(utf8, utf8Bytes, font, std::move(fallback));
 }
 
@@ -196,6 +199,9 @@ SkShaper::MakeFontMgrRunIterator(const char* utf8, size_t utf8Bytes, const SkFon
                                  const char* requestName, SkFontStyle requestStyle,
                                  const SkShaper::LanguageRunIterator* language)
 {
+    if (!fallback) {
+        fallback = SkFontMgr::RefEmpty();
+    }
     return std::make_unique<FontMgrRunIterator>(utf8, utf8Bytes, font, std::move(fallback),
                                                 requestName, requestStyle, language);
 }

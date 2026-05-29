@@ -64,3 +64,4 @@ std::unique_ptr<SkICULib> SkLoadICULib() {
         &SkUbrkGetLocaleByType<const UBreakIterator*>::getLocaleByType,
     });
 }
+

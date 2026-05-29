@@ -179,12 +179,16 @@ void SkShaper_CoreText::shape(const char* utf8,
                               bool,
                               SkScalar width,
                               RunHandler* handler) const {
-    TrivialFontRunIterator fontRuns(font, utf8Bytes);
+    std::unique_ptr<FontRunIterator> fontRuns(
+            MakeFontMgrRunIterator(utf8, utf8Bytes, font, nullptr));
+    if (!fontRuns) {
+        return;
+    }
     // bidi, script, and lang are all unused so we can construct them with empty data.
     TrivialBiDiRunIterator bidi{0, 0};
     TrivialScriptRunIterator script{0, 0};
     TrivialLanguageRunIterator lang{nullptr, 0};
-    return this->shape(utf8, utf8Bytes, fontRuns, bidi, script, lang, nullptr, 0, width, handler);
+    return this->shape(utf8, utf8Bytes, *fontRuns, bidi, script, lang, nullptr, 0, width, handler);
 }
 #endif
 

@@ -246,6 +246,7 @@ std::unique_ptr<SkBreakIterator> SkUnicode_client::makeBreakIterator(const char 
 std::unique_ptr<SkBreakIterator> SkUnicode_client::makeBreakIterator(BreakType breakType) {
     return std::make_unique<SkBreakIterator_client>(fData);
 }
+
 namespace SkUnicodes::Client {
 sk_sp<SkUnicode> Make(
         SkSpan<char> text,
@@ -258,3 +259,5 @@ sk_sp<SkUnicode> Make(
                                         std::move(lineBreaks));
 }
 }
+
+

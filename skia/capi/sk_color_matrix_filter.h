@@ -37,10 +37,6 @@ bool SkColorMatrixFilter_asAColorMode(reskia_color_matrix_filter_t *color_matrix
 bool SkColorMatrixFilter_asAColorMatrix(reskia_color_matrix_filter_t *color_matrix_filter, float matrix[20]); // out: matrix は 20 要素以上、非 NULL。NULL 入力では false
 bool SkColorMatrixFilter_isAlphaUnchanged(reskia_color_matrix_filter_t *color_matrix_filter); // (SkColorMatrixFilter *color_matrix_filter) -> bool
 /**
- * color_matrix_filter NULL では入力 color を返す
- */
-reskia_color_t SkColorMatrixFilter_filterColor(reskia_color_matrix_filter_t *color_matrix_filter, reskia_color_t color);
-/**
  * srcColor は非 NULL。srcCS/dstCS は NULL 許可。NULL 入力では 0
  */
 sk_color_4f_t SkColorMatrixFilter_filterColor4f(reskia_color_matrix_filter_t *color_matrix_filter, const reskia_color_4f_t *srcColor, reskia_color_space_t *srcCS, reskia_color_space_t *dstCS);

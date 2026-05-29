@@ -70,13 +70,6 @@ bool SkColorMatrixFilter_isAlphaUnchanged(reskia_color_matrix_filter_t *color_ma
     return reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->isAlphaUnchanged();
 }
 
-reskia_color_t SkColorMatrixFilter_filterColor(reskia_color_matrix_filter_t *color_matrix_filter, reskia_color_t color) {
-    if (color_matrix_filter == nullptr) {
-        return color;
-    }
-    return static_cast<reskia_color_t>(reinterpret_cast<SkColorMatrixFilter *>(color_matrix_filter)->filterColor(static_cast<SkColor>(color)));
-}
-
 sk_color_4f_t SkColorMatrixFilter_filterColor4f(reskia_color_matrix_filter_t *color_matrix_filter, const reskia_color_4f_t *srcColor, reskia_color_space_t *srcCS, reskia_color_space_t *dstCS) {
     if (color_matrix_filter == nullptr || srcColor == nullptr) {
         return 0;

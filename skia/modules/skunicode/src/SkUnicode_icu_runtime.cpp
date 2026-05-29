@@ -83,3 +83,4 @@ std::unique_ptr<SkICULib> SkLoadICULib() {
 
     return std::make_unique<SkICULib>(lib);
 }
+

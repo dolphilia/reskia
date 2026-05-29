@@ -549,20 +549,16 @@ void SkICCFloatXYZD50ToGrid16Lab(const float* xyz_float, uint8_t* grid16_lab) {
             xyz_float[2] / kD50_z,
     };
     for (size_t i = 0; i < 3; ++i) {
-        v[i] = v[i] > 0.008856f ? cbrtf(v[i]) : v[i] * 7.787f + (16 / 116.0f);
+        v[i] = std::pow(v[i], 1.0f / 3.0f);
+        if (v[i] < 6.0f / 29.0f) {
+            v[i] = (841.0f / 108.0f) * v[i] + (4.0f / 29.0f);
+        }
     }
-
-    const float Lab[3] = {
-            116 * v[1] - 16,
-            500 * (v[0] - v[1]),
-            200 * (v[1] - v[2]),
+    float Lab_unorm[3] = {
+            (116 * v[1] - 16) / 100,
+            (500 * (v[0] - v[1]) + 128) / 255,
+            (200 * (v[1] - v[2]) + 128) / 255,
     };
-    const float Lab_unorm[3] = {
-            Lab[0] * (1.0f / 100),
-            (Lab[1] + 128) * (1.0f / 255),
-            (Lab[2] + 128) * (1.0f / 255),
-    };
-    // This matches how skcms decodes grid_16 Lab values; see https://crbug.com/skia/13807.
     for (size_t i = 0; i < 3; ++i) {
         reinterpret_cast<uint16_t*>(grid16_lab)[i] =
                 SkEndian_SwapBE16(float_to_uInt16Number(Lab_unorm[i], kOne16CurveType));
