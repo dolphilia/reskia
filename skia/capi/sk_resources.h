@@ -66,6 +66,7 @@ void ExternalTrackAsset_seek(reskia_skresources_external_track_asset_t *asset, f
 
 reskia_skresources_image_asset_t *MultiFrameImageAsset_Make(sk_data_t data, reskia_skresources_image_decode_strategy_t strategy); // data is borrowed; NULL/invalid data returns NULL.
 bool MultiFrameImageAsset_isMultiFrame(reskia_skresources_image_asset_t *asset); // NULL input returns false.
+float MultiFrameImageAsset_duration(reskia_skresources_image_asset_t *asset); // NULL input returns 0.
 sk_image_t MultiFrameImageAsset_getFrame(reskia_skresources_image_asset_t *asset, float t); // returned handle owns a ref; 0 when unavailable.
 
 void ResourceProvider_ref(reskia_skresources_resource_provider_t *provider); // NULL input is no-op.

@@ -16,7 +16,6 @@ list(APPEND SOURCE_FILES
         src/base/SkQuads.cpp
         src/base/SkSafeMath.cpp
         src/base/SkSemaphore.cpp
-        src/base/SkSharedMutex.cpp
         src/base/SkSpinlock.cpp
         src/base/SkTDArray.cpp
         src/base/SkThreadID.cpp
@@ -596,7 +595,6 @@ if(RESKIA_ENABLE_PDF)
     list(APPEND SOURCE_FILES
             src/pdf/SkClusterator.cpp
             src/pdf/SkDeflate.cpp
-            src/pdf/SkJpegInfo_none.cpp
             src/pdf/SkKeyedImage.cpp
             src/pdf/SkPDFBitmap.cpp
             src/pdf/SkPDFDevice.cpp

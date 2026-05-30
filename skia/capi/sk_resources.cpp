@@ -202,6 +202,10 @@ bool MultiFrameImageAsset_isMultiFrame(reskia_skresources_image_asset_t *asset) 
     return asset != nullptr ? as_multi_frame_image_asset(asset)->isMultiFrame() : false;
 }
 
+float MultiFrameImageAsset_duration(reskia_skresources_image_asset_t *asset) {
+    return asset != nullptr ? as_multi_frame_image_asset(asset)->duration() : 0.0f;
+}
+
 sk_image_t MultiFrameImageAsset_getFrame(reskia_skresources_image_asset_t *asset, float t) {
     return asset != nullptr ? make_image_handle(as_multi_frame_image_asset(asset)->getFrame(t)) : 0;
 }
