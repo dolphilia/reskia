@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb`
-- next probe candidate: choose a fixed commit after `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb`
+- `SKIA_REF`: `b4613bade556fa6e5e8264712b2ee8ccf303a959`
+- next probe candidate: choose a fixed commit after `b4613bade556fa6e5e8264712b2ee8ccf303a959`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -73,30 +73,31 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 039 accepted: `554b798423c371d187c505b405232c974b266ebc`。
 - cycle 040 accepted: `8054b098b5cd313951983effa41f7ae9efa9d9c9`。
 - cycle 041 accepted: `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb`。
+- cycle 042 accepted: `b4613bade556fa6e5e8264712b2ee8ccf303a959`。
 
 未実施:
 
-- cycle 042 candidate の選定。
-- cycle 042 candidate checkout を使った coverage regression。
-- cycle 042 の source/header sync と C API 追従実装。
+- cycle 043 candidate の選定。
+- cycle 043 candidate checkout を使った coverage regression。
+- cycle 043 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 042 の candidate selection から始める。
+次の作業は、cycle 043 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `b4613bade556fa6e5e8264712b2ee8ccf303a959` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 042 の比較候補メモ:
+cycle 043 の比較候補メモ:
 
-- cycle 041 では前サイクル deferred candidate `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` を採用した。現 baseline からは 68 commits / `include`+`modules` 33 files の小さめの幅で、`MultiFrameImageAsset::duration()` 追加、SVG transformable bounding-box render hook 分類、`SkSharedMutex` / PDF `SkJpegInfo` source-list 削除を小さく閉じられた。
-- local refs の通常の日付窓検索では 2週間/3週間 mainline 候補が見つからなかった。`origin/raia` は mainline fixed candidate として扱えず、差分も大きかったため見送った。cycle 042 は local refs 範囲を最初に確認する。
-- 既知リスクは font scanner variation output の C ABI design、SVG render-context bounding-box hook の internal classification、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
+- cycle 042 では `vendor/skia-upstream-candidate` の 2週間候補 `b4613bade556fa6e5e8264712b2ee8ccf303a959` を採用した。baseline `a38c4ae...` から 61 commits、`include` / `modules` は 6 files changed, +55/-46、total source-list/dependency drift は 32 files changed, +212/-152 で軽かった。
+- 1週間候補 `e107cb001d4b1cc4ebccc98e4e250df03637f25d` は public header drift が小さすぎ、3週間候補 `3531a78f28898e41d4180d2094e3ecf2e55bea0e` は 134 files の source drift まで広がったため見送った。
+- 既知リスクは font scanner variation output の C ABI design、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
 
@@ -125,21 +126,21 @@ cycle 042 の比較候補メモ:
 
 候補:
 
-- `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb`
-- committer date: 2024-12-20T13:56:32-08:00
-- subject: `Limit stack calling depth from GrTriangulator::mergeCollinearEdges().`
+- `b4613bade556fa6e5e8264712b2ee8ccf303a959`
+- committer date: 2025-01-04T14:20:44-08:00
+- subject: `Roll vulkan-deps from a09312dc04d3 to d2e10146ec6f (1 revision)`
 
-cycle 041 結果:
+cycle 042 結果:
 
-- 前サイクル deferred candidate `a38c4ae...` を採用した。baseline `8054b098...` から 68 commits、`include` / `modules` は 33 files changed, +80/-48、total source-list/dependency drift は 105 files changed, +994/-1343。
+- `vendor/skia-upstream-candidate` の 2週間候補 `b4613bade...` を採用した。baseline `a38c4ae...` から 61 commits、`include` / `modules` は 6 files changed, +55/-46、total source-list/dependency drift は 32 files changed, +212/-152。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final synced stale C API report は空。final lock stale report は `signature_changed_review 2` で、既知の `SkColorFilters::Matrix` signature/default-argument text drift のみ。既存 C ABI は default clamp 相当として互換確認済み。
-- 初期 probe の `missing 7` は `MultiFrameImageAsset_duration` の追加と、SVG `onTransformableObjectBoundingBox(...)` override 群の internal render-hook `false_positive` 分類で閉じた。
-- source/header sync では SVG transformable bounding-box refactor、skresources duration helper、skcms drift、Core/GPU/PDF/ports drift を取り込んだ。`src/base/SkSharedMutex.*` と `src/pdf/SkJpegInfo.h` は削除した。
-- CMake source list は upstream 削除に合わせて `src/base/SkSharedMutex.cpp` と `src/pdf/SkJpegInfo_none.cpp` を削除した。
+- final synced stale C API report と final lock stale report は空。
+- 初期 probe の stale C API は、upstream で削除された `SkMaskFilter::approximateFilteredBounds` に対応する `SkMaskFilter_approximateFilteredBounds` 1件で、C API 宣言・実装・invalid-input smoke から削除して閉じた。
+- source/header sync では `SkMaskFilter` 削除差分、Graphite Metal public utility header split、Codec/Core/PDF/GPU drift を取り込んだ。新規 header `include/gpu/graphite/mtl/MtlGraphiteTypesUtils.h` を追加した。
+- CMake source list 変更は不要。upstream `DEPS`、Bazel/GN metadata、test-only metadata は同期対象外として残した。
 - GPU build で Metal `fastMathEnabled` deprecation warning と test `sprintf` warning、prebuilt build で既知の macOS deployment-target warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` から再比較する。cycle 041 では通常の 2週間/3週間 local date-window 候補が見つからなかったため、cycle 042 の最初に local refs 範囲を確認する。
+- 次サイクルでは、accepted baseline `b4613bade556fa6e5e8264712b2ee8ccf303a959` から再比較する。cycle 042 は 2週間幅が軽く通ったが、3週間候補は source drift が広がるため、cycle 043 でも 1/2/3週間候補を比較してから選ぶ。
 
 cycle records:
 
@@ -184,6 +185,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-039-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-040-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-041-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-042-2026-05-30.md`
 
 ## Cycle close の条件
 

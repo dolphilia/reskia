@@ -2,7 +2,6 @@
 #include "capi/sk_shader_mask_filter.h"
 #include "capi/sk_table_mask_filter.h"
 #include "handles/static_sk_mask_filter.h"
-#include "handles/static_sk_rect.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -29,12 +28,6 @@ int main() {
     SkTableMaskFilter_MakeGammaTable(nullptr, 1.0f);
     SkTableMaskFilter_MakeClipTable(nullptr, 0, 255);
     SkShaderMaskFilter_delete(nullptr);
-
-    const sk_rect_t empty_bounds = SkMaskFilter_approximateFilteredBounds(nullptr, nullptr);
-    if (!check(static_sk_rect_get_ptr(empty_bounds) != nullptr, "SkMaskFilter_approximateFilteredBounds(nullptr)")) {
-        return 1;
-    }
-    static_sk_rect_delete(empty_bounds);
 
     if (!check(SkMaskFilter_getFactory(nullptr) == 0, "SkMaskFilter_getFactory(nullptr)")) {
         return 2;
