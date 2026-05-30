@@ -245,6 +245,7 @@ void Graphite_Context_performDeferredCleanup(reskia_graphite_context_t *ctx, int
 size_t Graphite_Context_currentBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 size_t Graphite_Context_currentPurgeableBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
 size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx); // NULL input returns 0
+void Graphite_Context_setMaxBudgetedBytes(reskia_graphite_context_t *ctx, size_t bytes); // NULL input is no-op
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx); // NULL input returns false
@@ -260,6 +261,7 @@ void Graphite_Recorder_performDeferredCleanup(reskia_graphite_recorder_t *record
 size_t Graphite_Recorder_currentBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 size_t Graphite_Recorder_currentPurgeableBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 size_t Graphite_Recorder_maxBudgetedBytes(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+void Graphite_Recorder_setMaxBudgetedBytes(reskia_graphite_recorder_t *recorder, size_t bytes); // NULL input is no-op
 void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder, reskia_trace_memory_dump_t *trace_memory_dump); // NULL input is no-op
 bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owns user_data until callback if true; invalid input returns false
 reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_graphite_recorder_t *recorder); // borrowed; NULL input returns NULL

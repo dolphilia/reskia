@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `554b798423c371d187c505b405232c974b266ebc`
-- next probe candidate: choose a fixed commit after `554b798423c371d187c505b405232c974b266ebc`
+- `SKIA_REF`: `8054b098b5cd313951983effa41f7ae9efa9d9c9`
+- next probe candidate: choose a fixed commit after `8054b098b5cd313951983effa41f7ae9efa9d9c9`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -71,29 +71,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 037 accepted: `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`。
 - cycle 038 accepted: `2905e15411bb6d956f58e9b6f0b3fd351731b8fe`。
 - cycle 039 accepted: `554b798423c371d187c505b405232c974b266ebc`。
+- cycle 040 accepted: `8054b098b5cd313951983effa41f7ae9efa9d9c9`。
 
 未実施:
 
-- cycle 040 candidate の選定。
-- cycle 040 candidate checkout を使った coverage regression。
-- cycle 040 の source/header sync と C API 追従実装。
+- cycle 041 candidate の選定。
+- cycle 041 candidate checkout を使った coverage regression。
+- cycle 041 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 040 の candidate selection から始める。
+次の作業は、cycle 041 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `554b798423c371d187c505b405232c974b266ebc` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `8054b098b5cd313951983effa41f7ae9efa9d9c9` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 040 の比較候補メモ:
+cycle 041 の比較候補メモ:
 
-- cycle 039 では 3週間候補 `554b798423c371d187c505b405232c974b266ebc` を採用した。1週間候補 `6b0f264bde33023089cbae7a7d9ef1737a47fa17`、2週間候補 `c3d9596a93f81c03ae617d4662472a35a9f9529d` も比較したが、190 commits で標準幅内に収まり、C API catch-up と設計分類で閉じられる範囲だったため採用した。
-- 既知リスクは Graphite precompile context ownership design、`SkPathEffect_asADash` removal の downstream 影響、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
+- cycle 040 では 2週間候補 `8054b098b5cd313951983effa41f7ae9efa9d9c9` を採用した。1週間候補 `b37f1430f87a3c495596bd930d2f53d48b7b21f5` と3週間候補 `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` も比較したが、2週間候補が coverage/CMake/source sync を小さく閉じられる幅だった。
+- 既知リスクは font scanner variation output の C ABI design、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
 
@@ -122,22 +123,21 @@ cycle 040 の比較候補メモ:
 
 候補:
 
-- `554b798423c371d187c505b405232c974b266ebc`
-- committer date: 2024-11-29T15:36:28Z
-- subject: `Roll ANGLE from 2dc072ec71cc to a2d76f039918 (10 revisions)`
+- `8054b098b5cd313951983effa41f7ae9efa9d9c9`
+- committer date: 2024-12-13T08:53:14-08:00
+- subject: `Update delaunator to read from GoB mirror`
 
-cycle 039 結果:
+cycle 040 結果:
 
-- 3週間候補 `554b798423c371d187c505b405232c974b266ebc` を採用した。1週間候補 `6b0f264bde33023089cbae7a7d9ef1737a47fa17` と2週間候補 `c3d9596a93f81c03ae617d4662472a35a9f9529d` も比較したが、190 commits で標準幅内に収まり、public C API catch-up と設計分類で閉じられる範囲だった。
+- 2週間候補 `8054b098b5cd313951983effa41f7ae9efa9d9c9` を採用した。1週間候補 `b37f1430f87a3c495596bd930d2f53d48b7b21f5` と3週間候補 `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` も比較したが、2週間候補が public header drift と source-list drift を小さく閉じられる幅だった。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は matrix 更新後に空で、`stale_capi 0` / `signature_changed_review 0`。初期 probe では `SkTypeface` と `GrDriverBugWorkarounds` の `signature_changed_review 8` が出たが、C ABI 互換として確認済み。
-- C API catch-up では `SkCodec_hasHighBitDepthEncodedData`、`SkColorSpace_MakeCICP`、`SkTypeface_getResourceName`、`GrDirectContext_supportedGpuStats`、`Graphite_Context_supportedGpuStats` を追加し、upstream で削除された `SkPathEffect_asADash` を削除した。
-- coverage override では Graphite precompile context ownership/lifetime surface を design-required `na`、`InsertFinishInfo` constructors を `split_covered`、`PrecompileContext` destructor row を `false_positive` として記録した。
-- source/header sync では CICP/codec/typeface/GPU stats/Graphite precompile drift を取り込んだ。`include/gpu/graphite/LogPriority.h`、`include/gpu/graphite/PrecompileContext.h`、`src/gpu/graphite/PrecompileContext.*`、`src/ports/SkTypeface_proxy.*` を追加し、obsolete mirror header `src/gpu/graphite/PublicPrecompile.h` は削除した。Bazel/GN metadata と非 mirror modules は同期対象外のまま。
+- stale C API report は `stale_capi 0` / `signature_changed_review 7`。`SkColorFilters::Matrix` の optional clamp、`SkString` char helper 群、`SkSVGImage` append-child 関連の signature text drift は C ABI 互換として確認済み。
+- 初期 probe の `missing 5` は `Graphite_Context_setMaxBudgetedBytes` と `Graphite_Recorder_setMaxBudgetedBytes` の追加、`SkFontScanner::scanInstance` variation output の design-required `na`、SVG append-child virtual row の generic wrapper coverage 分類で閉じた。
+- source/header sync では PNG codec/encoder 分割、JSON reader module move、Graphite ClipAtlasManager、skcms/svg/skottie drift を取り込んだ。`modules/jsonreader/SkJSONReader.*`、`src/codec/SkPngCompositeChunkReader.*`、`src/encode/SkPngEncoderBase.*`、`src/gpu/graphite/ClipAtlasManager.*` などを追加し、`src/utils/SkJSON.*` は削除した。
+- CMake source list は `src/codec/SkPngCompositeChunkReader.cpp`、`src/encode/SkPngEncoderBase.cpp`、`modules/jsonreader/SkJSONReader.cpp` を追加し、`src/utils/SkJSON.cpp` を削除した。
 - GPU build で Metal `fastMathEnabled` deprecation warning と test `sprintf` warning、prebuilt build で既知の macOS deployment-target warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 039 では対象外。
-- 次サイクルでは、accepted baseline `554b798423c371d187c505b405232c974b266ebc` から再比較する。
+- 次サイクルでは、accepted baseline `8054b098b5cd313951983effa41f7ae9efa9d9c9` から再比較する。cycle 040 で見送った3週間候補 `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb` は新 baseline から再評価する。
 
 cycle records:
 
@@ -180,6 +180,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-037-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-038-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-039-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-040-2026-05-30.md`
 
 ## Cycle close の条件
 

@@ -2337,6 +2337,17 @@ size_t Graphite_Context_maxBudgetedBytes(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+void Graphite_Context_setMaxBudgetedBytes(reskia_graphite_context_t *ctx, size_t bytes) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr) {
+        as_graphite_context(ctx)->setMaxBudgetedBytes(bytes);
+    }
+#else
+    (void) ctx;
+    (void) bytes;
+#endif
+}
+
 void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reskia_trace_memory_dump_t *trace_memory_dump) {
 #if defined(SK_GRAPHITE)
     if (ctx != nullptr && trace_memory_dump != nullptr) {
@@ -2469,6 +2480,17 @@ size_t Graphite_Recorder_maxBudgetedBytes(reskia_graphite_recorder_t *recorder) 
 #else
     (void) recorder;
     return 0;
+#endif
+}
+
+void Graphite_Recorder_setMaxBudgetedBytes(reskia_graphite_recorder_t *recorder, size_t bytes) {
+#if defined(SK_GRAPHITE)
+    if (recorder != nullptr) {
+        as_graphite_recorder(recorder)->setMaxBudgetedBytes(bytes);
+    }
+#else
+    (void) recorder;
+    (void) bytes;
 #endif
 }
 

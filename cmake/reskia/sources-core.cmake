@@ -52,6 +52,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkPixmapUtils.cpp
         src/codec/SkPngCodecBase.cpp
         src/codec/SkPngCodec.cpp
+        src/codec/SkPngCompositeChunkReader.cpp
         src/codec/SkSampledCodec.cpp
         src/codec/SkSampler.cpp
         src/codec/SkSwizzler.cpp
@@ -291,6 +292,7 @@ list(APPEND SOURCE_FILES
         src/effects/SkTrimPathEffect.cpp
         src/encode/SkEncoder.cpp
         src/encode/SkICC.cpp
+        src/encode/SkPngEncoderBase.cpp
         src/image/SkImage_AndroidFactories.cpp
         src/image/SkImage_Base.cpp
         src/image/SkImage_Lazy.cpp
@@ -484,6 +486,7 @@ list(APPEND SOURCE_FILES
         src/text/SlugFromBuffer.cpp
         src/text/StrikeForGPU.cpp
         modules/skresources/src/SkAnimCodecPlayer.cpp
+        modules/jsonreader/SkJSONReader.cpp
         src/utils/SkCamera.cpp
         src/utils/SkCanvasStack.cpp
         src/utils/SkCanvasStateUtils.cpp
@@ -493,7 +496,6 @@ list(APPEND SOURCE_FILES
         src/utils/SkDashPath.cpp
         src/utils/SkEventTracer.cpp
         src/utils/SkFloatToDecimal.cpp
-        src/utils/SkJSON.cpp
         src/utils/SkJSONWriter.cpp
         src/utils/SkMatrix22.cpp
         src/utils/SkNullCanvas.cpp
