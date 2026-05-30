@@ -100,7 +100,7 @@ static const char kMagic[] = { 's', 'k', 'i', 'a', 'p', 'i', 'p', 'e' };
         return false;
     }
 
-    UniquePaintParamsID paintParamsID = UniquePaintParamsID::InvalidID();
+    UniquePaintParamsID paintParamsID = UniquePaintParamsID::Invalid();
     if (tmp) {
         SkAutoMalloc storage(4 * tmp);
         if (stream->read(storage.get(), 4 * tmp) != 4 * tmp) {
@@ -350,7 +350,8 @@ bool DataToPipelineDesc(const Caps* caps,
 }
 
 #if defined(GPU_TEST_UTILS)
-void DumpPipelineDesc(const char* label, ShaderCodeDictionary* shaderCodeDictionary,
+void DumpPipelineDesc(const char* label,
+                      ShaderCodeDictionary* shaderCodeDictionary,
                       const GraphicsPipelineDesc& pipelineDesc,
                       const RenderPassDesc& renderPassDesc) {
     SkString pipelineStr = pipelineDesc.toString(shaderCodeDictionary);

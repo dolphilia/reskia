@@ -42,7 +42,7 @@ public:
     SkTypeface_proxy(sk_sp<SkTypeface> realTypeface,
                      const SkFontStyle& style, bool isFixedPitch = false)
         : SkTypeface(style, isFixedPitch)
-        , fRealTypeface(std::move(realTypeface)) { }
+        , fRealTypeface(std::move(realTypeface)) { SkASSERT_RELEASE(fRealTypeface); }
 
 protected:
     int onGetUPEM() const override;
@@ -71,7 +71,7 @@ protected:
     void onCharsToGlyphs(const SkUnichar* chars, int count, SkGlyphID glyphs[]) const override;
     int onCountGlyphs() const override;
     void* onGetCTFontRef() const override;
-    bool onGetKerningPairAdjustments(const uint16_t glyphs[],
+    bool onGetKerningPairAdjustments(const SkGlyphID glyphs[],
                                      int count,
                                      int32_t adjustments[]) const override;
 private:

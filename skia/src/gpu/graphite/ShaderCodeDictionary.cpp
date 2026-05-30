@@ -255,6 +255,7 @@ std::string ShaderNode::invokeAndAssign(const ShaderInfo& shaderInfo,
                                         std::string* funcBody) const {
     std::string expr = invoke_node(shaderInfo, this, args);
     std::string outputVar = get_mangled_name("outColor", this->keyIndex());
+#if defined(SK_DEBUG)
     SkSL::String::appendf(funcBody,
                           "// [%d] %s\n"
                           "half4 %s = %s;",
@@ -262,6 +263,12 @@ std::string ShaderNode::invokeAndAssign(const ShaderInfo& shaderInfo,
                           this->entry()->fName,
                           outputVar.c_str(),
                           expr.c_str());
+#else
+    SkSL::String::appendf(funcBody,
+                          "half4 %s = %s;",
+                          outputVar.c_str(),
+                          expr.c_str());
+#endif
     return outputVar;
 }
 
@@ -276,7 +283,7 @@ UniquePaintParamsID ShaderCodeDictionary::findOrCreate(PaintParamsKeyBuilder* bu
 
 UniquePaintParamsID ShaderCodeDictionary::findOrCreate(const PaintParamsKey& ppk) {
     if (!ppk.isValid()) {
-        return UniquePaintParamsID::InvalidID();
+        return UniquePaintParamsID::Invalid();
     }
 
     SkAutoSpinlock lock{fSpinLock};
@@ -1125,6 +1132,15 @@ ShaderCodeDictionary::ShaderCodeDictionary(
             /*staticFn=*/"sk_hw_image_shader",
             SnippetRequirementFlags::kLocalCoords | SnippetRequirementFlags::kStoresSamplerDescData,
             /*uniforms=*/{ { "invImgSize",            SkSLType::kFloat2 } },
+            /*texturesAndSamplers=*/{"image"}
+    };
+
+    fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kImageShaderClamp] = {
+            /*name=*/"ImageShaderClamp",
+            /*staticFn=*/"sk_image_shader_clamp",
+            SnippetRequirementFlags::kLocalCoords | SnippetRequirementFlags::kStoresSamplerDescData,
+            /*uniforms=*/{ { "invImgSize",            SkSLType::kFloat2 },
+                           { "subsetInsetClamp",      SkSLType::kFloat4 } },
             /*texturesAndSamplers=*/{"image"}
     };
 

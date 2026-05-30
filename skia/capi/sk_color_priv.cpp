@@ -4,7 +4,7 @@
 
 #include "sk_color_priv.h"
 
-#include "include/core/SkColorPriv.h"
+#include "src/core/SkColorPriv.h"
 
 extern "C" {
 
