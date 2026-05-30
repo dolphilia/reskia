@@ -6,6 +6,7 @@
 #define RAIA_SKIA_SK_ANIMATED_IMAGE_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "../handles/static_sk_android_codec.h"
 #include "../handles/static_sk_image.h"
@@ -18,6 +19,7 @@ extern "C" {
 typedef struct reskia_animated_image_t reskia_animated_image_t;
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
+typedef int32_t reskia_animated_image_filter_mode_t;
 
 reskia_animated_image_t *SkAnimatedImage_Make(sk_android_codec_t codec);
 reskia_animated_image_t *SkAnimatedImage_MakeWithInfo(sk_android_codec_t codec, const reskia_image_info_t *info, const reskia_i_rect_t *crop_rect, sk_picture_t post_process);
@@ -30,6 +32,8 @@ int SkAnimatedImage_currentFrameDuration(reskia_animated_image_t *animated_image
 void SkAnimatedImage_setRepetitionCount(reskia_animated_image_t *animated_image, int count);
 int SkAnimatedImage_getRepetitionCount(const reskia_animated_image_t *animated_image);
 int SkAnimatedImage_getFrameCount(const reskia_animated_image_t *animated_image);
+void SkAnimatedImage_setFilterMode(reskia_animated_image_t *animated_image, reskia_animated_image_filter_mode_t filter_mode);
+reskia_animated_image_filter_mode_t SkAnimatedImage_getFilterMode(const reskia_animated_image_t *animated_image);
 
 #ifdef __cplusplus
 }

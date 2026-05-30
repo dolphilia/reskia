@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `e732cdf455c88501f22154e4a97569f020ffe41d`
-- next probe candidate: choose a fixed commit after `e732cdf455c88501f22154e4a97569f020ffe41d`
+- `SKIA_REF`: `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`
+- next probe candidate: choose a fixed commit after `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -68,29 +68,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 034 accepted: `f60608d53b08f8bf592092941ed2102faa1429bc`。
 - cycle 035 accepted: `45bccf339342dfca11887af2c569b5153455d1f1`。
 - cycle 036 accepted: `e732cdf455c88501f22154e4a97569f020ffe41d`。
+- cycle 037 accepted: `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`。
 
 未実施:
 
-- cycle 037 candidate の選定。
-- cycle 037 candidate checkout を使った coverage regression。
-- cycle 037 の source/header sync と C API 追従実装。
+- cycle 038 candidate の選定。
+- cycle 038 candidate checkout を使った coverage regression。
+- cycle 038 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 037 の candidate selection から始める。
+次の作業は、cycle 038 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `e732cdf455c88501f22154e4a97569f020ffe41d` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 037 の比較候補メモ:
+cycle 038 の比較候補メモ:
 
-- cycle 036 では 2週間候補 `e732cdf455c88501f22154e4a97569f020ffe41d` を採用した。1週間候補 `fdce28bab4fa1969ddfcccdd2ffa78de27a6c067` と3週間候補 `3b65cdd28da2457675d3b6b6cf03d272327d771c` は比較のみ行った。
-- 既知リスクは Graphite/Metal deprecation warning、CrabbyAvif と Android NDK font manager の optional backend policy、legacy Ganesh include wrapper 削除後の include drift、prebuilt static archive の macOS deployment-target warning。
+- cycle 037 では 2週間候補 `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e` を採用した。1週間候補 `3b65cdd28da2457675d3b6b6cf03d272327d771c` は小さすぎ、3週間候補 window は local refs 上で history/reland ambiguity があったため比較のみ行った。
+- 既知リスクは Graphite/Metal deprecation warning、`GrSubmitInfo` frame-boundary controls の C ABI design、CrabbyAvif/rust-png optional backend policy、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
 
@@ -119,22 +120,22 @@ cycle 037 の比較候補メモ:
 
 候補:
 
-- `e732cdf455c88501f22154e4a97569f020ffe41d`
-- committer date: 2024-10-03T21:39:13Z
-- subject: `Remove initializer_list use from SkZip.h`
+- `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`
+- committer date: 2024-10-18T20:14:11Z
+- subject: `Roll vulkan-deps from b48b5be748a7 to 7acb8149138a (7 revisions)`
 
-cycle 036 結果:
+cycle 037 結果:
 
-- 2週間候補 `e732cdf455c88501f22154e4a97569f020ffe41d` を採用した。1週間候補 `fdce28bab4fa1969ddfcccdd2ffa78de27a6c067` と3週間候補 `3b65cdd28da2457675d3b6b6cf03d272327d771c` は比較のみ行った。
+- 2週間候補 `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e` を採用した。1週間候補 `3b65cdd28da2457675d3b6b6cf03d272327d771c` は小さすぎ、3週間候補 window は local refs 上で history/reland ambiguity があったため比較のみ行った。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は空で、`stale_capi 0` / `signature_changed_review 0`。
-- C API catch-up では `SkPath_isArc` を追加し、Ganesh 関連 C API include を `include/gpu/ganesh/*` へ移行した。
-- source/header sync では `SkPath::isArc`、`SkCanvas::SaveLayerRec` backdrop tile mode、AVIF decoder split、Graphite draw type/precompile drift、Android NDK font manager 追加、legacy Ganesh compatibility header 削除を取り込んだ。
-- CrabbyAvif と Android NDK font manager は source/header を同期したが、Reskia の optional backend enablement policy は変更していない。
+- stale C API report は空で、`stale_capi 0` / `signature_changed_review 0`。probe 初期には `GrDirectContext_submit` の signature review が1件出たが、upstream の `submit(GrSyncCpu)` inline overload が残っているため既存 bool 引数 C ABI は互換と確認した。
+- C API catch-up では `SkAnimatedImage_setFilterMode` / `SkAnimatedImage_getFilterMode` を追加した。
+- source/header sync では `SkAnimatedImage` filter mode、`GrSubmitInfo` / Ganesh Vulkan frame-boundary plumbing、Graphite key/render-step drift、SkCodec Android deferred decoding、SkRect/SkExif/SkSpan drift を取り込んだ。
+- `GrSubmitInfo` frame-boundary controls、CrabbyAvif/rust-png/Dawn/Vulkan/Metal drift は source/header を同期したが、Reskia の optional backend enablement policy は変更していない。
 - GPU build で Metal `fastMathEnabled` deprecation warning、prebuilt build で既知の macOS deployment-target warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 036 では対象外。
-- 次サイクルでは、accepted baseline `e732cdf455c88501f22154e4a97569f020ffe41d` から再比較する。
+- Skottie/SKSG optional smoke は cycle 037 では対象外。
+- 次サイクルでは、accepted baseline `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e` から再比較する。
 
 cycle records:
 
@@ -174,6 +175,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-034-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-035-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-036-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-037-2026-05-30.md`
 
 ## Cycle close の条件
 

@@ -36,8 +36,6 @@ UniquePaintParamsID ExtractPaintData(Recorder* recorder,
                                      const SkM44& local2Dev,
                                      const PaintParams& p,
                                      const Geometry& geometry,
-                                     sk_sp<TextureProxy> dstTexture,
-                                     SkIPoint dstOffset,
                                      const SkColorInfo& targetColorInfo) {
     SkDEBUGCODE(builder->checkReset());
 
@@ -49,9 +47,7 @@ UniquePaintParamsID ExtractPaintData(Recorder* recorder,
                           geometry.isShape() || geometry.isEdgeAAQuad()
                                   ? KeyContext::OptimizeSampling::kYes
                                   : KeyContext::OptimizeSampling::kNo,
-                          p.color(),
-                          std::move(dstTexture),
-                          dstOffset);
+                          p.color());
     p.toKey(keyContext, builder, gatherer);
 
     return recorder->priv().shaderCodeDictionary()->findOrCreate(builder);
@@ -665,16 +661,15 @@ FragSkSLInfo BuildFragmentSkSL(const Caps* caps,
                                      &result.fHasGradientBuffer,
                                      outDescs);
 
-    // Extract blend info after integrating the RenderStep into the final fragment shader in case
-    // that changes the HW blending choice to handle analytic coverage.
     result.fBlendInfo = shaderInfo.blendInfo();
+    result.fDstReadReq = shaderInfo.dstReadRequirement();
     result.fRequiresLocalCoords = shaderInfo.needsLocalCoords();
     result.fData = {shaderInfo.data()};
     result.fLabel = writeSwizzle.asString().c_str();
     result.fLabel += " + ";
     result.fLabel = step->name();
     result.fLabel += " + ";
-    result.fLabel += dict->idToString(paintID).c_str();
+    result.fLabel += shaderInfo.label();
 
     return result;
 }
