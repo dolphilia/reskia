@@ -105,6 +105,8 @@ list(APPEND SOURCE_FILES
         src/core/SkContourMeasure.cpp
         src/core/SkConvertPixels.cpp
         src/core/SkCpu.cpp
+        src/core/SkCPUContext.cpp
+        src/core/SkCPURecorder.cpp
         src/core/SkCubicClipper.cpp
         src/core/SkCubicMap.cpp
         src/core/SkData.cpp
@@ -776,7 +778,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.c"
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cc"
-                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cpp")
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cpp"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.cpp")
         endif()
     endif()
 

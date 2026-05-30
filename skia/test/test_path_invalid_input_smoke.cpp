@@ -1,6 +1,7 @@
 #include "capi/sk_path.h"
 
 #include <cstdio>
+#include <vector>
 
 namespace {
 
@@ -24,6 +25,9 @@ int main() {
     if (!check(SkPath_interpolate(nullptr, nullptr, 0.5f, nullptr) == RESKIA_STATUS_INVALID_ARGUMENT, "SkPath_interpolate(nullptr)")) {
         return 3;
     }
+    if (!check(SkPath_makeInterpolate(nullptr, nullptr, 0.5f) == 0, "SkPath_makeInterpolate(nullptr)")) {
+        return 3;
+    }
     if (!check(SkPath_getFillType(nullptr) == 0, "SkPath_getFillType(nullptr)")) {
         return 4;
     }
@@ -37,6 +41,9 @@ int main() {
         return 4;
     }
     if (!check(SkPath_makeToggleInverseFillType(nullptr) == 0, "SkPath_makeToggleInverseFillType(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkPath_makeIsVolatile(nullptr, true) == 0, "SkPath_makeIsVolatile(nullptr)")) {
         return 4;
     }
     if (!check(SkPath_isEmpty(nullptr), "SkPath_isEmpty(nullptr)")) {
@@ -57,10 +64,16 @@ int main() {
     if (!check(SkPath_moveTo(nullptr, 1.0f, 2.0f) == nullptr, "SkPath_moveTo(nullptr)")) {
         return 10;
     }
+    if (!check(SkPath_makeOffset(nullptr, 1.0f, 2.0f) == 0, "SkPath_makeOffset(nullptr)")) {
+        return 10;
+    }
     if (!check(SkPath_writeToMemory(nullptr, nullptr) == 0, "SkPath_writeToMemory(nullptr)")) {
         return 11;
     }
     if (!check(SkPath_readFromMemory(nullptr, nullptr, 0) == 0, "SkPath_readFromMemory(nullptr)")) {
+        return 12;
+    }
+    if (!check(SkPath_ReadFromMemory(nullptr, 4, nullptr) == 0, "SkPath_ReadFromMemory(invalid buffer)")) {
         return 12;
     }
     if (!check(SkPath_Rect(nullptr, 0, 0) == 0, "SkPath_Rect(nullptr)")) {
@@ -134,6 +147,33 @@ int main() {
     }
     static_sk_path_delete(inverse_path);
 
+    sk_path_t volatile_path = SkPath_makeIsVolatile(path, true);
+    if (!check(volatile_path != 0, "SkPath_makeIsVolatile(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    if (!check(SkPath_isVolatile(reinterpret_cast<reskia_path_t *>(static_sk_path_get_ptr(volatile_path))),
+               "SkPath_makeIsVolatile result volatile")) {
+        static_sk_path_delete(volatile_path);
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(volatile_path);
+
+    sk_path_t offset_path = SkPath_makeOffset(path, 4.0f, 5.0f);
+    if (!check(offset_path != 0, "SkPath_makeOffset(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(offset_path);
+
+    sk_path_t interpolated_path = SkPath_makeInterpolate(path, path, 0.5f);
+    if (!check(interpolated_path != 0, "SkPath_makeInterpolate(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(interpolated_path);
+
     if (!check(SkPath_moveToPoint(path, nullptr) == nullptr, "SkPath_moveToPoint(path, nullptr)")) {
         SkPath_delete(path);
         return 22;
@@ -154,6 +194,19 @@ int main() {
         SkPath_delete(path);
         return 25;
     }
+    std::vector<char> serialized(serialized_size);
+    if (!check(SkPath_writeToMemory(path, serialized.data()) == serialized_size, "SkPath_writeToMemory(path, buffer)")) {
+        SkPath_delete(path);
+        return 25;
+    }
+    size_t bytes_read = 0;
+    sk_path_t read_path = SkPath_ReadFromMemory(serialized.data(), serialized.size(), &bytes_read);
+    if (!check(read_path != 0 && bytes_read > 0, "SkPath_ReadFromMemory(buffer)")) {
+        static_sk_path_delete(read_path);
+        SkPath_delete(path);
+        return 25;
+    }
+    static_sk_path_delete(read_path);
 
     reskia_path_t *other = SkPath_new();
     reskia_path_t *result = SkPath_new();

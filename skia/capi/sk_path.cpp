@@ -64,6 +64,13 @@ reskia_status_t SkPath_interpolate(reskia_path_t *path, const reskia_path_t *end
     return ok ? RESKIA_STATUS_OK : RESKIA_STATUS_INTERNAL_ERROR;
 }
 
+sk_path_t SkPath_makeInterpolate(reskia_path_t *path, const reskia_path_t *ending, float weight) {
+    if (path == nullptr || ending == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeInterpolate(*reinterpret_cast<const SkPath *>(ending), weight));
+}
+
 reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path) {
     if (path == nullptr) {
         return 0;
@@ -198,6 +205,13 @@ reskia_path_t *SkPath_setIsVolatile(reskia_path_t *path, bool isVolatile) {
     }
     auto *p = reinterpret_cast<SkPath *>(path);
     return reinterpret_cast<reskia_path_t *>(&p->setIsVolatile(isVolatile));
+}
+
+sk_path_t SkPath_makeIsVolatile(reskia_path_t *path, bool isVolatile) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeIsVolatile(isVolatile));
 }
 
 bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line) {
@@ -632,6 +646,13 @@ void SkPath_offsetInPlace(reskia_path_t *path, float dx, float dy) {
     reinterpret_cast<SkPath *>(path)->offset(dx, dy);
 }
 
+sk_path_t SkPath_makeOffset(reskia_path_t *path, float dx, float dy) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeOffset(dx, dy));
+}
+
 void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, reskia_path_perspective_clip_t pc) {
     if (path == nullptr || matrix == nullptr) {
         return;
@@ -749,6 +770,14 @@ size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t len
         return 0;
     }
     return reinterpret_cast<SkPath *>(path)->readFromMemory(buffer, length);
+}
+
+sk_path_t SkPath_ReadFromMemory(const void *buffer, size_t length, size_t *bytesRead) {
+    if (buffer == nullptr && length > 0) {
+        return 0;
+    }
+    std::optional<SkPath> path = SkPath::ReadFromMemory(buffer, length, bytesRead);
+    return path.has_value() ? static_sk_path_make(*path) : 0;
 }
 
 uint32_t SkPath_getGenerationID(reskia_path_t *path) {

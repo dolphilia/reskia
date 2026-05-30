@@ -2088,6 +2088,10 @@ reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_grap
 #endif
 }
 
+void Graphite_Recorder_delete(reskia_graphite_recorder_t *recorder) {
+    Reskia_GraphiteRecorder_Release(recorder);
+}
+
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr && as_graphite_context(ctx)->submit(to_graphite_sync_cpu(sync_cpu));
@@ -2567,6 +2571,15 @@ reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_g
 int Graphite_Recorder_backend(reskia_graphite_recorder_t *recorder) {
 #if defined(SK_GRAPHITE)
     return recorder != nullptr ? to_reskia_graphite_backend_api(as_graphite_recorder(recorder)->backend()) : 0;
+#else
+    (void) recorder;
+    return 0;
+#endif
+}
+
+int Graphite_Recorder_type(reskia_graphite_recorder_t *recorder) {
+#if defined(SK_GRAPHITE)
+    return recorder != nullptr ? static_cast<int>(as_graphite_recorder(recorder)->type()) : 0;
 #else
     (void) recorder;
     return 0;

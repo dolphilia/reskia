@@ -37,6 +37,7 @@ reskia_path_t *SkPath_newCopy(const reskia_path_t *path); // (const SkPath *path
 void SkPath_delete(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isInterpolatable(reskia_path_t *path, const reskia_path_t *compare); // (SkPath *path, const SkPath *compare) -> bool
 reskia_status_t SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out_path); // out_path: non-null
+sk_path_t SkPath_makeInterpolate(reskia_path_t *path, const reskia_path_t *ending, float weight); // NULL input returns 0
 reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path); // (SkPath *path) -> SkPathFillType
 void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft); // (SkPath *path, SkPathFillType ft)
 bool SkPath_isInverseFillType(reskia_path_t *path); // (SkPath *path) -> bool
@@ -56,6 +57,7 @@ bool SkPath_isLastContourClosed(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isFinite(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isVolatile(reskia_path_t *path); // (SkPath *path) -> bool
 reskia_path_t *SkPath_setIsVolatile(reskia_path_t *path, bool isVolatile); // (SkPath *path, bool isVolatile) -> SkPath *
+sk_path_t SkPath_makeIsVolatile(reskia_path_t *path, bool isVolatile); // NULL input returns 0
 bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line); // (SkPath *path, SkPoint line[2]) -> bool
 int SkPath_countPoints(reskia_path_t *path); // (SkPath *path) -> int
 sk_point_t SkPath_getPoint(reskia_path_t *path, int index); // (SkPath *path, int index) -> sk_point_t
@@ -116,6 +118,7 @@ reskia_path_t *SkPath_addPathWithMatrixAndMode(reskia_path_t *path, const reskia
 reskia_path_t *SkPath_reverseAddPath(reskia_path_t *path, const reskia_path_t *src); // (SkPath *path, const SkPath *src) -> SkPath *
 void SkPath_offset(reskia_path_t *path, float dx, float dy, reskia_path_t *dst); // (SkPath *path, SkScalar dx, SkScalar dy, SkPath *dst)
 void SkPath_offsetInPlace(reskia_path_t *path, float dx, float dy); // (SkPath *path, SkScalar dx, SkScalar dy)
+sk_path_t SkPath_makeOffset(reskia_path_t *path, float dx, float dy); // NULL input returns 0
 void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkPath *dst, SkApplyPerspectiveClip pc)
 void SkPath_transformInPlace(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc)
 sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *m, SkApplyPerspectiveClip pc) -> sk_path_t
@@ -137,6 +140,7 @@ void SkPath_dumpArraysDefault(reskia_path_t *path); // (SkPath *path)
 size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer);
 sk_data_t SkPath_serialize(reskia_path_t *path); // (SkPath *path) -> sk_data_t
 size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
+sk_path_t SkPath_ReadFromMemory(const void *buffer, size_t length, size_t *bytesRead); // static; invalid input returns 0
 unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
 /**

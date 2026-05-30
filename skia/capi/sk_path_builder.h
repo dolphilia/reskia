@@ -8,8 +8,10 @@
 #include <stdint.h>
 
 #include "../handles/static_sk_path.h"
+#include "../handles/static_sk_point.h"
 #include "../handles/static_sk_rect.h"
 
+typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_path_builder_t reskia_path_builder_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
@@ -143,7 +145,13 @@ void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCo
  */
 void SkPathBuilder_incReservePoints(reskia_path_builder_t *path_builder, int extraPtCount);
 reskia_path_builder_t *SkPathBuilder_offset(reskia_path_builder_t *path_builder, float dx, float dy); // (SkPathBuilder *path_builder, SkScalar dx, SkScalar dy) -> SkPathBuilder *
+reskia_path_builder_t *SkPathBuilder_transform(reskia_path_builder_t *path_builder, const reskia_matrix_t *matrix, int pc); // invalid input returns original builder or NULL
 reskia_path_builder_t *SkPathBuilder_toggleInverseFillType(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> SkPathBuilder *
+bool SkPathBuilder_isEmpty(reskia_path_builder_t *path_builder); // NULL input returns true
+sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder); // NULL or empty returns 0
+void SkPathBuilder_setLastPt(reskia_path_builder_t *path_builder, float x, float y); // NULL input is no-op
+int SkPathBuilder_countPoints(reskia_path_builder_t *path_builder); // NULL input returns 0
+bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder); // NULL input returns false
 
 #ifdef __cplusplus
 }

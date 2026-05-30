@@ -4,6 +4,7 @@
 
 #include "sk_path_builder.h"
 
+#include "include/core/SkMatrix.h"
 #include "include/core/SkPathBuilder.h"
 
 #include <initializer_list>
@@ -352,9 +353,51 @@ reskia_path_builder_t *SkPathBuilder_offset(reskia_path_builder_t *path_builder,
     return native != nullptr ? to_api(&native->offset(dx, dy)) : nullptr;
 }
 
+reskia_path_builder_t *SkPathBuilder_transform(reskia_path_builder_t *path_builder, const reskia_matrix_t *matrix, int pc) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return nullptr;
+    }
+    if (matrix == nullptr) {
+        return to_api(native);
+    }
+    return to_api(&native->transform(*reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc)));
+}
+
 reskia_path_builder_t *SkPathBuilder_toggleInverseFillType(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->toggleInverseFillType()) : nullptr;
+}
+
+bool SkPathBuilder_isEmpty(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native == nullptr || native->isEmpty();
+}
+
+sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return 0;
+    }
+    std::optional<SkPoint> point = native->getLastPt();
+    return point.has_value() ? static_sk_point_make(*point) : 0;
+}
+
+void SkPathBuilder_setLastPt(reskia_path_builder_t *path_builder, float x, float y) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr) {
+        native->setLastPt(x, y);
+    }
+}
+
+int SkPathBuilder_countPoints(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? native->countPoints() : 0;
+}
+
+bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr && native->isInverseFillType();
 }
 
 }

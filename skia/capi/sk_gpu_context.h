@@ -232,6 +232,7 @@ void Graphite_RecorderOptions_setImageProvider(reskia_graphite_recorder_options_
 int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_graphite_context_t *ctx, const reskia_graphite_recorder_options_t *options); // owned; invalid input returns NULL
+void Graphite_Recorder_delete(reskia_graphite_recorder_t *recorder); // alias of Reskia_GraphiteRecorder_Release
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
 bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
@@ -269,6 +270,7 @@ void Graphite_Recorder_dumpMemoryStatistics(reskia_graphite_recorder_t *recorder
 bool Graphite_Recorder_addFinishInfo(reskia_graphite_recorder_t *recorder, reskia_graphite_finished_proc_t proc, void *user_data, reskia_graphite_release_proc_t release_proc); // owns user_data until callback if true; invalid input returns false
 reskia_graphite_image_provider_t *Graphite_Recorder_clientImageProvider(reskia_graphite_recorder_t *recorder); // borrowed; NULL input returns NULL
 int Graphite_Recorder_backend(reskia_graphite_recorder_t *recorder); // NULL input returns 0
+int Graphite_Recorder_type(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 int Graphite_Recorder_maxTextureSize(reskia_graphite_recorder_t *recorder); // NULL input returns 0
 reskia_canvas_t *Graphite_Recorder_makeDeferredCanvas(reskia_graphite_recorder_t *recorder, const reskia_image_info_t *image_info, const reskia_graphite_texture_info_t *info); // borrowed until next snap/release; invalid input returns NULL
 reskia_graphite_recording_t *Graphite_Recorder_snap(reskia_graphite_recorder_t *recorder); // owned; NULL/no recording returns NULL
