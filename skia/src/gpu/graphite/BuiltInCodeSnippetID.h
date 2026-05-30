@@ -63,14 +63,16 @@ enum class BuiltInCodeSnippetID : int32_t {
     // Color space transform snippet and its specializations
     kColorSpaceXformColorFilter,
     kColorSpaceXformPremul,
-    // TODO(b/388849244): This seems redundant with kColorSpaceXformPremul
-    kPremulAlphaColorFilter,
+    kColorSpaceXformSRGB,
 
     // Emits special variable holding the primitiveColor emitted by a RenderStep
     kPrimitiveColor,
 
     // Analytic clip for circular roundrect and AA rect shapes
-    kCircularRRectClip,
+    kAnalyticClip,
+
+    // Analytic plus atlas-based clip
+    kAnalyticAndAtlasClip,
 
     kCompose, // compose 2 children together: outer_1(inner_0(...))
     kBlendCompose, // compose 3 children together: outer_2(inner_0(...), inner_1(...))

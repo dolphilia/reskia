@@ -39,11 +39,15 @@ bool RasterMaskHelper::init(SkISize pixmapSize, skvx::float2 transformedMaskOffs
     return true;
 }
 
+void RasterMaskHelper::clear(uint8_t alpha, const SkIRect& shapeBounds) {
+    fPixels->erase(SkColorSetARGB(alpha, 0xFF, 0xFF, 0xFF), shapeBounds);
+}
+
 void RasterMaskHelper::drawShape(const Shape& shape,
                                  const Transform& localToDevice,
                                  const SkStrokeRec& strokeRec,
-                                 const SkIRect& resultBounds) {
-    fRasterClip.setRect(resultBounds);
+                                 const SkIRect& shapeBounds) {
+    fRasterClip.setRect(shapeBounds);
 
     SkPaint paint;
     paint.setBlendMode(SkBlendMode::kSrc);  // "Replace" mode
@@ -56,8 +60,8 @@ void RasterMaskHelper::drawShape(const Shape& shape,
     // The atlas transform of the shape is `localToDevice` translated by the top-left offset of the
     // resultBounds and the inverse of the base mask transform offset for the current set of shapes.
     // We will need to translate draws so the bound's UL corner is at the origin
-    translatedMatrix.postTranslate(resultBounds.x() - fTransformedMaskOffset.x(),
-                                   resultBounds.y() - fTransformedMaskOffset.y());
+    translatedMatrix.postTranslate(shapeBounds.x() - fTransformedMaskOffset.x(),
+                                   shapeBounds.y() - fTransformedMaskOffset.y());
 
     fDraw.fCTM = &translatedMatrix;
     // TODO: use drawRect, drawRRect, drawArc
@@ -70,7 +74,7 @@ void RasterMaskHelper::drawShape(const Shape& shape,
 }
 
 void RasterMaskHelper::drawClip(const Shape& shape,
-                                const Transform& transform,
+                                const Transform& localToDevice,
                                 uint8_t alpha,
                                 const SkIRect& resultBounds) {
     fRasterClip.setRect(resultBounds);
@@ -81,11 +85,12 @@ void RasterMaskHelper::drawClip(const Shape& shape,
     // SkPaint's color is unpremul so this will produce alpha in every channel.
     paint.setColor(SkColorSetARGB(alpha, 0xFF, 0xFF, 0xFF));
 
-    SkMatrix translatedMatrix = SkMatrix(transform);
-    // The atlas transform of the shape is the linear-components (scale, rotation, skew) of
-    // `localToDevice` translated by the top-left offset of the resultBounds.
+    SkMatrix translatedMatrix = SkMatrix(localToDevice);
+    // The atlas transform of the shape is `localToDevice` translated by the top-left offset of the
+    // resultBounds and the inverse of the base mask transform offset for the current set of shapes.
     // We will need to translate draws so the bound's UL corner is at the origin
-    translatedMatrix.postTranslate(resultBounds.x(), resultBounds.y());
+    translatedMatrix.postTranslate(resultBounds.x() - fTransformedMaskOffset.x(),
+                                   resultBounds.y() - fTransformedMaskOffset.y());
 
     fDraw.fCTM = &translatedMatrix;
     // TODO: use drawRect, drawRRect, drawArc

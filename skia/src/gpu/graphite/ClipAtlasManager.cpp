@@ -8,6 +8,8 @@
 #include "src/gpu/graphite/ClipAtlasManager.h"
 
 #include "include/gpu/graphite/Recorder.h"
+#include "include/private/base/SkFixed.h"
+#include "src/base/SkFloatBits.h"
 #include "src/gpu/graphite/AtlasProvider.h"
 #include "src/gpu/graphite/RasterPathUtils.h"
 #include "src/gpu/graphite/RecorderPriv.h"
@@ -17,8 +19,8 @@ namespace skgpu::graphite {
 
 ClipAtlasManager::ClipAtlasManager(Recorder* recorder) : fRecorder(recorder) {
     static constexpr SkColorType kColorType = kAlpha_8_SkColorType;
-    static constexpr int kWidth = 2048;
-    static constexpr int kHeight = 2048;
+    static constexpr int kWidth = 4096;
+    static constexpr int kHeight = 4096;
 
     const Caps* caps = recorder->priv().caps();
     fDrawAtlas = DrawAtlas::Make(kColorType,
@@ -128,14 +130,9 @@ void draw_to_sw_mask(RasterMaskHelper* helper,
 
     // Draw the shape; based on how we've initialized the buffer and chosen alpha+invert,
     // every element is drawn with the kReplace_Op
-    if (invert) {
-        // Must invert the path
-        SkASSERT(!e.fShape.inverted());
-        // TODO: this is an extra copy effectively, just so we can toggle inversion; would be
-        // better perhaps to just call a drawPath() since we know it'll use path rendering w/
-        // the inverse fill type.
+    if (invert != e.fShape.inverted()) {
         Shape inverted(e.fShape);
-        inverted.setInverted(true);
+        inverted.setInverted(invert);
         helper->drawClip(inverted, e.fLocalToDevice, alpha, resultBounds);
     } else {
         helper->drawClip(e.fShape, e.fLocalToDevice, alpha, resultBounds);
@@ -184,7 +181,7 @@ const TextureProxy* ClipAtlasManager::addToAtlas(const ClipStack::ElementList* e
     // Offset to plot location and draw
     iShapeBounds.offset(renderPos.x() + kEntryPadding, renderPos.y() + kEntryPadding);
 
-    SkASSERT(elementsForMask->size() > 0);
+    SkASSERT(!elementsForMask->empty());
     for (int i = 0; i < elementsForMask->size(); ++i) {
         draw_to_sw_mask(&helper, *(*elementsForMask)[i], i == 0, iShapeBounds);
     }
@@ -217,7 +214,7 @@ void ClipAtlasManager::evict(PlotLocator plotLocator) {
             }
         }
         // If we removed the last one, remove the hash entry
-        if (cachedArray->size() == 0) {
+        if (cachedArray->empty()) {
             fMaskCache.remove(currEntry->fKey);
         }
         fKeyLists[index].remove(currEntry);
@@ -225,7 +222,7 @@ void ClipAtlasManager::evict(PlotLocator plotLocator) {
     }
 }
 
-void ClipAtlasManager::evictAll() {
+void ClipAtlasManager::evictAtlases() {
     fDrawAtlas->evictAllPlots();
     SkASSERT(fMaskCache.empty());
 }

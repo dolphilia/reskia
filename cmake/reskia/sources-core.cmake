@@ -153,6 +153,7 @@ list(APPEND SOURCE_FILES
         src/core/SkMaskBlurFilter.cpp
         src/core/SkMaskCache.cpp
         src/core/SkMaskFilter.cpp
+        src/core/SkMaskFilterBase.cpp
         src/core/SkMaskGamma.cpp
         src/core/SkMatrix.cpp
         src/core/SkMatrixInvert.cpp

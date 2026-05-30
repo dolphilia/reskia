@@ -392,19 +392,32 @@ std::pair<SkColorType, bool /*isRGBFormat*/> DawnCaps::supportedWritePixelsColor
         SkColorType dstColorType,
         const TextureInfo& dstTextureInfo,
         SkColorType srcColorType) const {
-    return {dstColorType, false};
+    const auto viewFormat = TextureInfos::GetDawnViewFormat(dstTextureInfo);
+    const FormatInfo& info = this->getFormatInfo(viewFormat);
+    for (int i = 0; i < info.fColorTypeInfoCount; ++i) {
+        const auto& ctInfo = info.fColorTypeInfos[i];
+        if (ctInfo.fColorType == dstColorType) {
+            return {ctInfo.fTransferColorType, false};
+        }
+    }
+    return {kUnknown_SkColorType, false};
 }
 
 std::pair<SkColorType, bool /*isRGBFormat*/> DawnCaps::supportedReadPixelsColorType(
         SkColorType srcColorType,
         const TextureInfo& srcTextureInfo,
         SkColorType dstColorType) const {
-    auto dawnFormat = getFormatFromColorType(srcColorType);
-    const FormatInfo& info = this->getFormatInfo(dawnFormat);
+    const auto viewFormat = TextureInfos::GetDawnViewFormat(srcTextureInfo);
+
+    if (DawnFormatToCompressionType(viewFormat) != SkTextureCompressionType::kNone) {
+        return {kUnknown_SkColorType, false};
+    }
+
+    const FormatInfo& info = this->getFormatInfo(viewFormat);
     for (int i = 0; i < info.fColorTypeInfoCount; ++i) {
         const auto& ctInfo = info.fColorTypeInfos[i];
         if (ctInfo.fColorType == srcColorType) {
-            return {srcColorType, false};
+            return {ctInfo.fTransferColorType, false};
         }
     }
     return {kUnknown_SkColorType, false};
@@ -582,6 +595,8 @@ void DawnCaps::initShaderCaps(const wgpu::Device& device) {
 }
 
 void DawnCaps::initFormatTable(const wgpu::Device& device) {
+    // NOTE: wgpu::TextureFormat's naming convention orders channels from least significant to most,
+    // matching the data address ordering of a little endian system.
     FormatInfo* info;
     // Format: RGBA8Unorm
     {
@@ -594,12 +609,14 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGBA_8888_SkColorType;
+            ctInfo.fTransferColorType = kRGBA_8888_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
         // Format: RGBA8Unorm, Surface: kRGB_888x
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGB_888x_SkColorType;
+            ctInfo.fTransferColorType = kRGB_888x_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle::RGB1();
         }
@@ -623,12 +640,14 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kR8_unorm_SkColorType;
+            ctInfo.fTransferColorType = kR8_unorm_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
         // Format: R8Unorm, Surface: kAlpha_8
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kAlpha_8_SkColorType;
+            ctInfo.fTransferColorType = kAlpha_8_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle("000r");
             ctInfo.fWriteSwizzle = skgpu::Swizzle("a000");
@@ -637,6 +656,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kGray_8_SkColorType;
+            ctInfo.fTransferColorType = kGray_8_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle("rrr1");
         }
@@ -657,6 +677,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
             {
                 auto& ctInfo = info->fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = kA16_unorm_SkColorType;
+                ctInfo.fTransferColorType = kA16_unorm_SkColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
                 ctInfo.fReadSwizzle = skgpu::Swizzle("000r");
                 ctInfo.fWriteSwizzle = skgpu::Swizzle("a000");
@@ -676,12 +697,16 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kBGRA_8888_SkColorType;
+            ctInfo.fTransferColorType = kBGRA_8888_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
         // Format: BGRA8Unorm, Surface: kRGB_888x
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGB_888x_SkColorType;
+            // There is no kBGR_888x color type, so report that the data is BGRA and rely on
+            // SkConvertPixels to force alpha to opaque when kRGB_888x is either the src or dst type
+            ctInfo.fTransferColorType = kBGRA_8888_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
         }
     }
@@ -697,12 +722,14 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGBA_F16_SkColorType;
+            ctInfo.fTransferColorType = kRGBA_F16_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
         // Format: RGBA16Float, Surface: RGB_F16F16F16x
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
-            ctInfo.fColorType = kRGBA_F16_SkColorType;
+            ctInfo.fColorType = kRGB_F16F16F16x_SkColorType;
+            ctInfo.fTransferColorType = kRGB_F16F16F16x_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle::RGB1();
         }
@@ -719,6 +746,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kA16_float_SkColorType;
+            ctInfo.fTransferColorType = kA16_float_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle("000r");
             ctInfo.fWriteSwizzle = skgpu::Swizzle("a000");
@@ -737,6 +765,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kR8G8_unorm_SkColorType;
+            ctInfo.fTransferColorType = kR8G8_unorm_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
     }
@@ -755,6 +784,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
             {
                 auto& ctInfo = info->fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = kR16G16_unorm_SkColorType;
+                ctInfo.fTransferColorType = kR16G16_unorm_SkColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
             }
         }
@@ -772,12 +802,14 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGBA_1010102_SkColorType;
+            ctInfo.fTransferColorType = kRGBA_1010102_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
         // Format: RGB10A2Unorm, Surface: kRGB_101010x
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGB_101010x_SkColorType;
+            ctInfo.fTransferColorType = kRGB_101010x_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             ctInfo.fReadSwizzle = skgpu::Swizzle::RGB1();
         }
@@ -794,6 +826,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kR16G16_float_SkColorType;
+            ctInfo.fTransferColorType = kR16G16_float_SkColorType;
             ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
         }
     }
@@ -810,6 +843,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
             {
                 auto& ctInfo = info->fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = kRGB_888x_SkColorType;
+                ctInfo.fTransferColorType = kRGB_888x_SkColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             }
         }
@@ -827,6 +861,7 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
             {
                 auto& ctInfo = info->fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = kRGBA_8888_SkColorType;
+                ctInfo.fTransferColorType = kRGBA_8888_SkColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag;
             }
         }
@@ -1009,7 +1044,7 @@ UniqueKey DawnCaps::makeGraphicsPipelineKey(const GraphicsPipelineDesc& pipeline
         UniqueKey::Builder builder(&pipelineKey, get_pipeline_domain(),
                                    kDawnGraphicsPipelineKeyData32Count, "DawnGraphicsPipeline");
         // Add GraphicsPipelineDesc key.
-        builder[0] = pipelineDesc.renderStepID();
+        builder[0] = static_cast<uint32_t>(pipelineDesc.renderStepID());
         builder[1] = pipelineDesc.paintParamsID().asUInt();
 
         // Add RenderPassDesc key and write swizzle (which is separate from the RenderPassDescKey
@@ -1032,8 +1067,11 @@ bool DawnCaps::extractGraphicsDescs(const UniqueKey& key,
 
     const uint32_t* rawKeyData = key.data();
 
-    const RenderStep* renderStep = rendererProvider->lookup(rawKeyData[0]);
-    *pipelineDesc = GraphicsPipelineDesc(renderStep, UniquePaintParamsID(rawKeyData[1]));
+    SkASSERT(RenderStep::IsValidRenderStepID(rawKeyData[0]));
+    RenderStep::RenderStepID renderStepID = static_cast<RenderStep::RenderStepID>(rawKeyData[0]);
+
+    SkDEBUGCODE(const RenderStep* renderStep = rendererProvider->lookup(renderStepID);)
+    *pipelineDesc = GraphicsPipelineDesc(renderStepID, UniquePaintParamsID(rawKeyData[1]));
     SkASSERT(renderStep->performsShading() == pipelineDesc->paintParamsID().isValid());
 
     uint32_t renderpassDescBits = rawKeyData[2];
@@ -1105,20 +1143,17 @@ UniqueKey DawnCaps::makeComputePipelineKey(const ComputePipelineDesc& pipelineDe
     return pipelineKey;
 }
 
-ImmutableSamplerInfo DawnCaps::getImmutableSamplerInfo(const TextureProxy* proxy) const {
+ImmutableSamplerInfo DawnCaps::getImmutableSamplerInfo(const TextureInfo& textureInfo) const {
 #if !defined(__EMSCRIPTEN__)
-    if (proxy) {
-        const wgpu::YCbCrVkDescriptor& ycbcrConversionInfo =
-                TextureInfos::GetDawnTextureSpec(proxy->textureInfo()).fYcbcrVkDescriptor;
+    const wgpu::YCbCrVkDescriptor& ycbcrConversionInfo =
+            TextureInfos::GetDawnTextureSpec(textureInfo).fYcbcrVkDescriptor;
 
-        if (DawnDescriptorIsValid(ycbcrConversionInfo)) {
-            return DawnDescriptorToImmutableSamplerInfo(ycbcrConversionInfo);
-        }
+    if (DawnDescriptorIsValid(ycbcrConversionInfo)) {
+        return DawnDescriptorToImmutableSamplerInfo(ycbcrConversionInfo);
     }
 #endif
 
-    // If the proxy is null or the YCbCr conversion for that proxy is invalid, then return a
-    // default ImmutableSamplerInfo struct.
+    // If the YCbCr conversion for is invalid, then return a default ImmutableSamplerInfo struct.
     return {};
 }
 

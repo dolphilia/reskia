@@ -252,10 +252,11 @@ private:
     inline static constexpr int kAlphaOnly    = 1;
     inline static constexpr int kNonAlphaOnly = 0;
 
-    // There are 2 potential color space transform combinations: premul/alpha-swizzle only, and a
-    // more general shader.
-    inline static constexpr int kNumColorSpaceCombos = 2;
-    inline static constexpr int kColorSpacePremul  = 1;
+    // There are 3 potential color space transform combinations: premul/alpha-swizzle only,
+    // srgb-to-srgb, and a more general shader.
+    inline static constexpr int kNumColorSpaceCombos = 3;
+    inline static constexpr int kColorSpacePremul  = 2;
+    inline static constexpr int kColorSpaceSRGB  = 1;
     inline static constexpr int kColorSpaceGeneral = 0;
 
     const int fNumSamplingTilingCombos;
@@ -298,11 +299,16 @@ private:
                 desiredSamplingTilingCombo == kHWTiled ? kHWTileableSize : kShaderTileableSize,
                 kSubset);
 
+        static sk_sp<SkColorSpace> srgbSpinColorSpace = sk_srgb_singleton()->makeColorSpin();
         ColorSpaceTransformBlock::ColorSpaceTransformData colorXformData =
                 desiredColorSpaceCombo == kColorSpacePremul
                         ? ColorSpaceTransformBlock::ColorSpaceTransformData(
                                   nullptr, kPremul_SkAlphaType,
-                                  nullptr, kUnpremul_SkAlphaType)
+                                  nullptr, kUnpremul_SkAlphaType) :
+                desiredColorSpaceCombo == kColorSpaceSRGB
+                        ? ColorSpaceTransformBlock::ColorSpaceTransformData(
+                                  sk_srgb_singleton(), kPremul_SkAlphaType,
+                                  srgbSpinColorSpace.get(), kPremul_SkAlphaType)
                         : ColorSpaceTransformBlock::ColorSpaceTransformData(
                                   sk_srgb_singleton(), kPremul_SkAlphaType,
                                   sk_srgb_linear_singleton(), kPremul_SkAlphaType);
@@ -375,22 +381,23 @@ private:
     //    HW tiling w/ swizzle
     //    cubic shader tiling
     //    non-cubic shader tiling
-    //  crossed with 3 postambles:
-    //    just premul
-    //    alpha swizzle
-    //    full-blown colorSpace transform
+    //  crossed with 3 color space transforms:
+    //    premul/alpha-swizzle only
+    //    srgb-to-srgb
+    //    general transform
     inline static constexpr int kNumTilingModes     = 4;
     inline static constexpr int kHWTiledNoSwizzle   = 3;
     inline static constexpr int kHWTiledWithSwizzle = 2;
     inline static constexpr int kCubicShaderTiled   = 1;
     inline static constexpr int kShaderTiled        = 0;
 
-    inline static constexpr int kNumPostambles       = 3;
-    inline static constexpr int kWithColorSpaceXform = 2;
-    inline static constexpr int kWithAlphaSwizzle    = 1;
-    inline static constexpr int kJustPremul          = 0;
+    inline static constexpr int kNumColorSpaceCombinations = 3;
+    inline static constexpr int kColorSpacePremul  = 2;
+    inline static constexpr int kColorSpaceSRGB    = 1;
+    inline static constexpr int kColorSpaceGeneral = 0;
 
-    inline static constexpr int kNumIntrinsicCombinations = kNumTilingModes * kNumPostambles;
+    inline static constexpr int kNumIntrinsicCombinations =
+            kNumTilingModes * kNumColorSpaceCombinations;
 
     int numIntrinsicCombinations() const override { return kNumIntrinsicCombinations; }
 
@@ -400,8 +407,8 @@ private:
                   int desiredCombination) const override {
         SkASSERT(desiredCombination < kNumIntrinsicCombinations);
 
-        int desiredPostamble = desiredCombination % kNumPostambles;
-        int desiredTiling = desiredCombination / kNumPostambles;
+        int desiredColorSpaceCombo = desiredCombination % kNumColorSpaceCombinations;
+        int desiredTiling = desiredCombination / kNumColorSpaceCombinations;
         SkASSERT(desiredTiling < kNumTilingModes);
 
         static constexpr SkSamplingOptions kDefaultCubicSampling(SkCubicResampler::Mitchell());
@@ -430,32 +437,26 @@ private:
         imgData.fYUVtoRGBMatrix.setAll(1, 0, 0, 0, 1, 0, 0, 0, 0);
         imgData.fYUVtoRGBTranslate = { 0, 0, 0 };
 
-        if (desiredPostamble == kJustPremul) {
-            Compose(keyContext, builder, gatherer,
-                    /* addInnerToKey= */ [&]() -> void {
-                        YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
-                    },
-                    /* addOuterToKey= */ [&]() -> void {
-                        builder->addBlock(BuiltInCodeSnippetID::kPremulAlphaColorFilter);
-                    });
-
-        } else {
-            const ColorSpaceTransformBlock::ColorSpaceTransformData colorXformData =
-                    desiredPostamble == kWithAlphaSwizzle
-                            ? ColorSpaceTransformBlock::ColorSpaceTransformData(
-                                      skgpu::graphite::ReadSwizzle::kRGB1)
-                            : ColorSpaceTransformBlock::ColorSpaceTransformData(
-                                      sk_srgb_singleton(), kPremul_SkAlphaType,
-                                      sk_srgb_linear_singleton(), kPremul_SkAlphaType);
-            Compose(keyContext, builder, gatherer,
-                    /* addInnerToKey= */ [&]() -> void {
-                        YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
-                    },
-                    /* addOuterToKey= */ [&]() -> void {
-                        ColorSpaceTransformBlock::AddBlock(keyContext, builder, gatherer,
-                                                           colorXformData);
-                    });
-        }
+        static sk_sp<SkColorSpace> srgbSpinColorSpace = sk_srgb_singleton()->makeColorSpin();
+        const ColorSpaceTransformBlock::ColorSpaceTransformData colorXformData =
+                desiredColorSpaceCombo == kColorSpacePremul
+                        ? ColorSpaceTransformBlock::ColorSpaceTransformData(
+                                  skgpu::graphite::ReadSwizzle::kRGB1) :
+                desiredColorSpaceCombo == kColorSpaceSRGB
+                        ? ColorSpaceTransformBlock::ColorSpaceTransformData(
+                                  sk_srgb_singleton(), kPremul_SkAlphaType,
+                                  srgbSpinColorSpace.get(), kPremul_SkAlphaType)
+                        : ColorSpaceTransformBlock::ColorSpaceTransformData(
+                                  sk_srgb_singleton(), kPremul_SkAlphaType,
+                                  sk_srgb_linear_singleton(), kPremul_SkAlphaType);
+        Compose(keyContext, builder, gatherer,
+                /* addInnerToKey= */ [&]() -> void {
+                    YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
+                },
+                /* addOuterToKey= */ [&]() -> void {
+                    ColorSpaceTransformBlock::AddBlock(keyContext, builder, gatherer,
+                                                       colorXformData);
+                });
     }
 };
 
@@ -506,8 +507,9 @@ private:
     inline static constexpr int kStopVariants[kNumStopVariants] =
             { 4, 8, GradientShaderBlocks::GradientData::kNumInternalStorageStops+1 };
 
-    inline static constexpr int kNumColorSpaceCombinations = 2;
-    inline static constexpr int kColorSpacePremul  = 1;
+    inline static constexpr int kNumColorSpaceCombinations = 3;
+    inline static constexpr int kColorSpacePremul  = 2;
+    inline static constexpr int kColorSpaceSRGB    = 1;
     inline static constexpr int kColorSpaceGeneral = 0;
 
     int numIntrinsicCombinations() const override {
@@ -530,11 +532,16 @@ private:
                                                     kStopVariants[desiredStopVariant],
                                                     useStorageBuffer);
 
+        static sk_sp<SkColorSpace> srgbSpinColorSpace = sk_srgb_singleton()->makeColorSpin();
         ColorSpaceTransformBlock::ColorSpaceTransformData csData =
                 desiredColorSpaceCombo == kColorSpacePremul
                         ? ColorSpaceTransformBlock::ColorSpaceTransformData(
                                   nullptr, kPremul_SkAlphaType,
-                                  nullptr, kUnpremul_SkAlphaType)
+                                  nullptr, kUnpremul_SkAlphaType) :
+                desiredColorSpaceCombo == kColorSpaceSRGB
+                        ? ColorSpaceTransformBlock::ColorSpaceTransformData(
+                                  sk_srgb_singleton(), kPremul_SkAlphaType,
+                                  srgbSpinColorSpace.get(), kPremul_SkAlphaType)
                         : ColorSpaceTransformBlock::ColorSpaceTransformData(
                                   sk_srgb_singleton(), kPremul_SkAlphaType,
                                   sk_srgb_linear_singleton(), kPremul_SkAlphaType);

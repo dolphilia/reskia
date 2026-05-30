@@ -95,6 +95,43 @@ bool PopulateGainmapInfo(const crabbyavif::avifGainMap& gain_map,
     return true;
 }
 
+SkEncodedOrigin ComputeSkEncodedOrigin(const crabbyavif::avifImage& image) {
+    // |angle| * 90 specifies the angle of anti-clockwise rotation in degrees.
+    // Legal values: [0-3].
+    const int angle =
+            ((image.transformFlags & crabbyavif::AVIF_TRANSFORM_IROT) && image.irot.angle <= 3)
+                    ? image.irot.angle
+                    : 0;
+    // |axis| specifies how the mirroring is performed.
+    //   -1: No mirroring.
+    //    0: The top and bottom parts of the image are exchanged.
+    //    1: The left and right parts of the image are exchanged.
+    const int axis =
+            ((image.transformFlags & crabbyavif::AVIF_TRANSFORM_IMIR) && image.imir.axis <= 1)
+                    ? image.imir.axis
+                    : -1;
+    // The first dimension is axis (with an offset of 1). The second dimension
+    // is angle.
+    const SkEncodedOrigin kAxisAngleToSkEncodedOrigin[3][4] = {
+            // No mirroring.
+            {kTopLeft_SkEncodedOrigin,
+             kLeftBottom_SkEncodedOrigin,
+             kBottomRight_SkEncodedOrigin,
+             kRightTop_SkEncodedOrigin},
+            // Top-to-bottom mirroring. Change Top<->Bottom in the first row.
+            {kBottomLeft_SkEncodedOrigin,
+             kLeftTop_SkEncodedOrigin,
+             kTopRight_SkEncodedOrigin,
+             kRightBottom_SkEncodedOrigin},
+            // Left-to-right mirroring. Change Left<->Right in the first row.
+            {kTopRight_SkEncodedOrigin,
+             kRightBottom_SkEncodedOrigin,
+             kBottomLeft_SkEncodedOrigin,
+             kLeftTop_SkEncodedOrigin},
+    };
+    return kAxisAngleToSkEncodedOrigin[axis + 1][angle];
+}
+
 }  // namespace
 
 void AvifDecoderDeleter::operator()(crabbyavif::avifDecoder* decoder) const {
@@ -154,8 +191,9 @@ std::unique_ptr<SkCodec> SkCrabbyAvifCodec::MakeFromData(std::unique_ptr<SkStrea
     // issues.
     avifDecoder->strictFlags = crabbyavif::AVIF_STRICT_DISABLED;
 
-    // TODO(vigneshv): Enable threading based on number of CPU cores available.
-    avifDecoder->maxThreads = 1;
+    // Android uses MediaCodec for decoding the underlying image. So there is no
+    // need to set maxThreads since MediaCodec doesn't allow explicit setting
+    // of threads.
 
     if (gainmapOnly) {
         avifDecoder->imageContentToDecode = crabbyavif::AVIF_IMAGE_CONTENT_GAIN_MAP;
@@ -175,7 +213,6 @@ std::unique_ptr<SkCodec> SkCrabbyAvifCodec::MakeFromData(std::unique_ptr<SkStrea
     }
 
     std::unique_ptr<SkEncodedInfo::ICCProfile> profile = nullptr;
-    // TODO(vigneshv): Get ICC Profile from the avif decoder.
 
     // CrabbyAvif uses MediaCodec, which always sets bitsPerComponent to 8.
     const int bitsPerComponent = 8;
@@ -212,11 +249,12 @@ std::unique_ptr<SkCodec> SkCrabbyAvifCodec::MakeFromData(std::unique_ptr<SkStrea
             avifDecoder->compressionFormat == crabbyavif::COMPRESSION_FORMAT_AVIF
                     ? SkEncodedImageFormat::kAVIF
                     : SkEncodedImageFormat::kHEIF;
+    const SkEncodedOrigin origin = ComputeSkEncodedOrigin(*image);
     return std::unique_ptr<SkCodec>(new SkCrabbyAvifCodec(std::move(info),
                                                           std::move(stream),
                                                           std::move(data),
                                                           std::move(avifDecoder),
-                                                          kDefault_SkEncodedOrigin,
+                                                          origin,
                                                           animation,
                                                           gainmapOnly,
                                                           format));
@@ -297,7 +335,10 @@ bool SkCrabbyAvifCodec::onGetFrameInfo(int i, FrameInfo* frameInfo) const {
     return true;
 }
 
-int SkCrabbyAvifCodec::onGetRepetitionCount() { return kRepetitionCountInfinite; }
+int SkCrabbyAvifCodec::onGetRepetitionCount() {
+    return (fAvifDecoder->repetitionCount < 0) ? kRepetitionCountInfinite
+                                               : fAvifDecoder->repetitionCount;
+}
 
 bool SkCrabbyAvifCodec::conversionSupported(const SkImageInfo& dstInfo,
                                             bool srcIsOpaque,
@@ -336,29 +377,20 @@ SkCodec::Result SkCrabbyAvifCodec::onGetPixels(const SkImageInfo& dstInfo,
     if (fGainmapOnly && !fAvifDecoder->image->gainMap) {
         return kInvalidInput;
     }
+
+    // At this point we have the decoded image. Now we have to perform cropping, subset computation
+    // and scaling. The right order of these operations is:
+    // 1) Cropping (as described by the CleanAperture property). This has to be the first step to
+    //    ensure that we don't accidentally expose the non-cropped portions of the image to the
+    //    subsequent operations.
+    // 2) Subset computation (as requested by options.fSubset).
+    // 3) Scaling (to match dstInfo.dimensions() if necessary). This has to be the last step to
+    //    ensure that we never fill in more pixels than what is requested by dstInfo.dimensions().
+
     crabbyavif::avifImage* image =
             fGainmapOnly ? fAvifDecoder->image->gainMap->image : fAvifDecoder->image;
     using AvifImagePtr =
             std::unique_ptr<crabbyavif::avifImage, decltype(&crabbyavif::crabby_avifImageDestroy)>;
-
-    AvifImagePtr scaled_image{nullptr, crabbyavif::crabby_avifImageDestroy};
-    if (this->dimensions() != dstInfo.dimensions() && !options.fSubset) {
-        // |image| contains plane pointers which point to Android MediaCodec's buffers. Those
-        // buffers are read-only and hence we cannot scale in place. Make a copy of the image and
-        // scale the copied image.
-        scaled_image.reset(crabbyavif::crabby_avifImageCreateEmpty());
-        result = crabbyavif::crabby_avifImageCopy(
-            scaled_image.get(), image, crabbyavif::AVIF_PLANES_ALL);
-        if (result != crabbyavif::AVIF_RESULT_OK) {
-            return kInvalidInput;
-        }
-        image = scaled_image.get();
-        result = crabbyavif::avifImageScale(
-                image, dstInfo.width(), dstInfo.height(), &fAvifDecoder->diag);
-        if (result != crabbyavif::AVIF_RESULT_OK) {
-            return kInvalidInput;
-        }
-    }
 
     // cropped_image is a view into the underlying image. It can be safely deleted once the pixels
     // are converted into RGB (or when it goes out of scope in one of the error paths).
@@ -391,6 +423,25 @@ SkCodec::Result SkCrabbyAvifCodec::onGetPixels(const SkImageInfo& dstInfo,
         image = subset_image.get();
     }
 
+    AvifImagePtr scaled_image{nullptr, crabbyavif::crabby_avifImageDestroy};
+    if (dstInfo.width() != image->width || dstInfo.height() != image->height) {
+        // |image| contains plane pointers which point to Android MediaCodec's buffers. Those
+        // buffers are read-only and hence we cannot scale in place. Make a copy of the image and
+        // scale the copied image.
+        scaled_image.reset(crabbyavif::crabby_avifImageCreateEmpty());
+        result = crabbyavif::crabby_avifImageCopy(
+                scaled_image.get(), image, crabbyavif::AVIF_PLANES_ALL);
+        if (result != crabbyavif::AVIF_RESULT_OK) {
+            return kInvalidInput;
+        }
+        image = scaled_image.get();
+        result = crabbyavif::avifImageScale(
+                image, dstInfo.width(), dstInfo.height(), &fAvifDecoder->diag);
+        if (result != crabbyavif::AVIF_RESULT_OK) {
+            return kInvalidInput;
+        }
+    }
+
     crabbyavif::avifRGBImage rgbImage;
     crabbyavif::avifRGBImageSetDefaults(&rgbImage, image);
 
@@ -411,9 +462,7 @@ SkCodec::Result SkCrabbyAvifCodec::onGetPixels(const SkImageInfo& dstInfo,
             rgbImage.format = crabbyavif::AVIF_RGB_FORMAT_RGB565;
             break;
         default:
-            // TODO(vigneshv): Check if more color types need to be supported.
-            // Currently android supports at least RGB565 and BGRA8888 which is
-            // not supported here.
+            // Not reached because of the checks in conversionSupported().
             return kUnimplemented;
     }
 

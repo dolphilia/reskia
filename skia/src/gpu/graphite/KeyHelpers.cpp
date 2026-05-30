@@ -507,39 +507,9 @@ void LocalMatrixShaderBlock::BeginBlock(const KeyContext& keyContext,
 
 namespace {
 
-static constexpr int kColorSpaceXformFlagAlphaSwizzle = 0x20;
-
 void add_color_space_uniforms(const SkColorSpaceXformSteps& steps,
                               ReadSwizzle readSwizzle,
                               PipelineDataGatherer* gatherer) {
-    // We have 7 source coefficients and 7 destination coefficients. We pass them via a 4x4 matrix;
-    // the first two columns hold the source values, and the second two hold the destination.
-    // (The final value of each 8-element group is ignored.)
-    // In std140, this arrangement is much more efficient than a simple array of scalars.
-    SkM44 coeffs;
-
-    int colorXformFlags = SkTo<int>(steps.flags.mask());
-    if (readSwizzle != ReadSwizzle::kRGBA) {
-        // Ensure that we do the gamut step
-        SkColorSpaceXformSteps gamutSteps;
-        gamutSteps.flags.gamut_transform = true;
-        colorXformFlags |= SkTo<int>(gamutSteps.flags.mask());
-        if (readSwizzle != ReadSwizzle::kBGRA) {
-            // TODO: Maybe add a fullMask() method to XformSteps?
-            SkASSERT(colorXformFlags < kColorSpaceXformFlagAlphaSwizzle);
-            colorXformFlags |= kColorSpaceXformFlagAlphaSwizzle;
-        }
-    }
-    gatherer->write(colorXformFlags);
-
-    if (steps.flags.linearize) {
-        gatherer->write(SkTo<int>(skcms_TransferFunction_getType(&steps.srcTF)));
-        coeffs.setCol(0, {steps.srcTF.g, steps.srcTF.a, steps.srcTF.b, steps.srcTF.c});
-        coeffs.setCol(1, {steps.srcTF.d, steps.srcTF.e, steps.srcTF.f, 0.0f});
-    } else {
-        gatherer->write(SkTo<int>(skcms_TFType::skcms_TFType_Invalid));
-    }
-
     SkMatrix gamutTransform;
     const float identity[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
     // TODO: it seems odd to copy this into an SkMatrix just to write it to the gatherer
@@ -564,32 +534,58 @@ void add_color_space_uniforms(const SkColorSpaceXformSteps& steps,
     }
     gatherer->writeHalf(gamutTransform);
 
-    if (steps.flags.encode) {
-        gatherer->write(SkTo<int>(skcms_TransferFunction_getType(&steps.dstTFInv)));
-        coeffs.setCol(2, {steps.dstTFInv.g, steps.dstTFInv.a, steps.dstTFInv.b, steps.dstTFInv.c});
-        coeffs.setCol(3, {steps.dstTFInv.d, steps.dstTFInv.e, steps.dstTFInv.f, 0.0f});
+    // To encode whether to do premul/unpremul or make the output opaque, we use
+    // srcDEF_args.w and dstDEF_args.w:
+    // - identity: {0, 1}
+    // - do unpremul: {-1, 1}
+    // - do premul: {0, 0}
+    // - do both: {-1, 0}
+    // - alpha swizzle 1: {1, 1}
+    // - alpha swizzle r: {1, 0}
+    const bool alphaSwizzleR = readSwizzle == ReadSwizzle::k000R;
+    const bool alphaSwizzle1 = readSwizzle == ReadSwizzle::kRGB1 ||
+                               readSwizzle == ReadSwizzle::kRRR1;
+
+    // It doesn't make sense to unpremul/premul in opaque cases, but we might get a request to
+    // anyways, which we can just ignore.
+    const bool unpremul = alphaSwizzle1 ? false : steps.flags.unpremul;
+    const bool premul = alphaSwizzle1 ? false : steps.flags.premul;
+
+    const float srcW = unpremul ? -1.f :
+                       (alphaSwizzleR || alphaSwizzle1) ? 1.f :
+                                                          0.f;
+    const float dstW = (premul || alphaSwizzleR) ? 0.f : 1.f;
+
+    // To encode which transfer function to apply, we use the src and dst gamma values:
+    // - identity: 0
+    // - sRGB: g > 0
+    // - PQ: -2
+    // - HLG: -1
+    if (steps.flags.linearize) {
+        const skcms_TFType type = skcms_TransferFunction_getType(&steps.srcTF);
+        const float srcG = type == skcms_TFType_sRGBish ? steps.srcTF.g :
+                           type == skcms_TFType_PQish ? -2.f :
+                           type == skcms_TFType_HLGish ? -1.f :
+                                                         0.f;
+        gatherer->writeHalf(SkV4{srcG, steps.srcTF.a, steps.srcTF.b, steps.srcTF.c});
+        gatherer->writeHalf(SkV4{steps.srcTF.d, steps.srcTF.e, steps.srcTF.f, srcW});
     } else {
-        gatherer->write(SkTo<int>(skcms_TFType::skcms_TFType_Invalid));
+        gatherer->writeHalf(SkV4{0.f, 0.f, 0.f, 0.f});
+        gatherer->writeHalf(SkV4{0.f, 0.f, 0.f, srcW});
     }
 
-    // Pack alpha swizzle in the unused coeff entries.
-    switch (readSwizzle) {
-        case ReadSwizzle::k000R:
-            coeffs.setRC(3, 1, 1.f);
-            coeffs.setRC(3, 3, 0.f);
-            break;
-        case ReadSwizzle::kRGB1:
-        case ReadSwizzle::kRRR1:
-            coeffs.setRC(3, 1, 0.f);
-            coeffs.setRC(3, 3, 1.f);
-            break;
-        default:
-            coeffs.setRC(3, 1, 0.f);
-            coeffs.setRC(3, 3, 0.f);
-            break;
+    if (steps.flags.encode) {
+        const skcms_TFType type = skcms_TransferFunction_getType(&steps.dstTFInv);
+        const float dstG = type == skcms_TFType_sRGBish ? steps.dstTFInv.g :
+                           type == skcms_TFType_PQish ? -2.f :
+                           type == skcms_TFType_HLGinvish ? -1.f :
+                                                            0.f;
+        gatherer->writeHalf(SkV4{dstG, steps.dstTFInv.a, steps.dstTFInv.b, steps.dstTFInv.c});
+        gatherer->writeHalf(SkV4{steps.dstTFInv.d, steps.dstTFInv.e, steps.dstTFInv.f, dstW});
+    } else {
+        gatherer->writeHalf(SkV4{0.f, 0.f, 0.f, 0.f});
+        gatherer->writeHalf(SkV4{0.f, 0.f, 0.f, dstW});
     }
-
-    gatherer->writeHalf(coeffs);
 }
 
 void add_image_uniform_data(const ShaderCodeDictionary* dict,
@@ -688,7 +684,11 @@ void ImageShaderBlock::AddBlock(const KeyContext& keyContext,
 
     // Image shaders must append immutable sampler data (or '0' in the more common case where
     // regular samplers are used).
-    ImmutableSamplerInfo info = caps->getImmutableSamplerInfo(imgData.fTextureProxy.get());
+    // TODO(b/392623124): In precompile mode (fTextureProxy == null), we still have a need for
+    // immutable samplers, which must be passed in somehow.
+    ImmutableSamplerInfo info = imgData.fTextureProxy
+            ? caps->getImmutableSamplerInfo(imgData.fTextureProxy->textureInfo())
+            : ImmutableSamplerInfo{};
     SamplerDesc samplerDesc {imgData.fSampling,
                              doTilingInHw ? imgData.fTileModes : kDefaultTileModes,
                              info};
@@ -1062,16 +1062,24 @@ void add_color_space_xform_premul_uniform_data(
 
     // This shader can either do nothing, or perform one of three actions. These four possibilities
     // are encoded in a half2 argument as:
-    // - identity: {0, 0}
-    // - do premul: {0, 1}
-    // - do unpremul: {-1, 0}
-    // - make opaque: {1, 0}
+    // - identity: {0, 1}
+    // - do unpremul: {-1, 1}
+    // - do premul: {0, 0}
+    // - make opaque: {1, 1}
     const bool opaque = data.fReadSwizzle == ReadSwizzle::kRGB1;
     const float x = data.fSteps.flags.unpremul ? -1.f :
                     opaque ? 1.f
                            : 0.f;
-    const float y = data.fSteps.flags.premul ? 1.f : 0.f;
+    const float y = data.fSteps.flags.premul ? 0.f : 1.f;
     gatherer->writeHalf(SkV2{x, y});
+}
+
+void add_color_space_xform_srgb_uniform_data(
+        const ShaderCodeDictionary* dict,
+        const ColorSpaceTransformBlock::ColorSpaceTransformData& data,
+        PipelineDataGatherer* gatherer) {
+    BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kColorSpaceXformSRGB)
+    add_color_space_uniforms(data.fSteps, data.fReadSwizzle, gatherer);
 }
 
 }  // anonymous namespace
@@ -1091,10 +1099,19 @@ void ColorSpaceTransformBlock::AddBlock(const KeyContext& keyContext,
     const bool swizzleNeedsGamutTransform = !(data.fReadSwizzle == ReadSwizzle::kRGBA ||
                                               data.fReadSwizzle == ReadSwizzle::kRGB1);
 
+    // Use a specialized shader if we don't need transfer function or gamut transforms.
     if (!(xformNeedsGamutOrXferFn || swizzleNeedsGamutTransform)) {
-        // Use a specialized shader if we don't need transfer function or gamut transforms.
         add_color_space_xform_premul_uniform_data(keyContext.dict(), data, gatherer);
         builder->addBlock(BuiltInCodeSnippetID::kColorSpaceXformPremul);
+        return;
+    }
+
+    // Use a specialized shader if we're transferring to and from sRGB-ish color spaces.
+    if (data.fSteps.flags.linearize && data.fSteps.flags.encode &&
+        skcms_TransferFunction_isSRGBish(&data.fSteps.srcTF) &&
+        skcms_TransferFunction_isSRGBish(&data.fSteps.dstTFInv)) {
+        add_color_space_xform_srgb_uniform_data(keyContext.dict(), data, gatherer);
+        builder->addBlock(BuiltInCodeSnippetID::kColorSpaceXformSRGB);
         return;
     }
 
@@ -1106,24 +1123,57 @@ void ColorSpaceTransformBlock::AddBlock(const KeyContext& keyContext,
 //--------------------------------------------------------------------------------------------------
 namespace {
 
-void add_circular_rrect_clip_data(
+void add_analytic_clip_data(
         const ShaderCodeDictionary* dict,
-        const CircularRRectClipBlock::CircularRRectClipData& data,
+        const NonMSAAClipBlock::NonMSAAClipData& data,
         PipelineDataGatherer* gatherer) {
-    BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kCircularRRectClip)
+    BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kAnalyticClip)
     gatherer->write(data.fRect);
     gatherer->write(data.fRadiusPlusHalf);
     gatherer->writeHalf(data.fEdgeSelect);
 }
 
+void add_analytic_and_atlas_clip_data(
+        const ShaderCodeDictionary* dict,
+        const NonMSAAClipBlock::NonMSAAClipData& data,
+        PipelineDataGatherer* gatherer) {
+    BEGIN_WRITE_UNIFORMS(gatherer, dict, BuiltInCodeSnippetID::kAnalyticAndAtlasClip)
+    gatherer->write(data.fRect);
+    gatherer->write(data.fRadiusPlusHalf);
+    gatherer->writeHalf(data.fEdgeSelect);
+    gatherer->writeHalf(data.fTexCoordOffset);
+    gatherer->writeHalf(data.fMaskBounds);
+    if (data.fAtlasTexture) {
+        gatherer->write(SkSize::Make(1.f/data.fAtlasTexture->dimensions().width(),
+                                     1.f/data.fAtlasTexture->dimensions().height()));
+    } else {
+        gatherer->write(SkSize::Make(0, 0));
+    }
+}
+
 }  // anonymous namespace
 
-void CircularRRectClipBlock::AddBlock(const KeyContext& keyContext,
-                                      PaintParamsKeyBuilder* builder,
-                                      PipelineDataGatherer* gatherer,
-                                      const CircularRRectClipData& data) {
-    add_circular_rrect_clip_data(keyContext.dict(), data, gatherer);
-    builder->addBlock(BuiltInCodeSnippetID::kCircularRRectClip);
+void NonMSAAClipBlock::AddBlock(const KeyContext& keyContext,
+                                PaintParamsKeyBuilder* builder,
+                                PipelineDataGatherer* gatherer,
+                                const NonMSAAClipData& data) {
+    if (data.fAtlasTexture) {
+        add_analytic_and_atlas_clip_data(keyContext.dict(), data, gatherer);
+        builder->beginBlock(BuiltInCodeSnippetID::kAnalyticAndAtlasClip);
+
+        const Caps* caps = keyContext.caps();
+        ImmutableSamplerInfo info =
+                caps->getImmutableSamplerInfo(data.fAtlasTexture->textureInfo());
+        SamplerDesc samplerDesc {SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone),
+                                 {SkTileMode::kClamp, SkTileMode::kClamp},
+                                 info};
+        gatherer->add(data.fAtlasTexture, samplerDesc);
+
+        builder->endBlock();
+    } else {
+        add_analytic_clip_data(keyContext.dict(), data, gatherer);
+        builder->addBlock(BuiltInCodeSnippetID::kAnalyticClip);
+    }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1720,16 +1770,6 @@ static void notify_in_use(Recorder*, DrawContext*, const SkEmptyShader*) {
     // No-op
 }
 
-static bool is_premul_alpha_only(const ColorSpaceTransformBlock::ColorSpaceTransformData& data) {
-    // A mask value of 16 means premul only.
-    if (SkTo<int>(data.fSteps.flags.mask()) != 16) {
-        return false;
-    }
-
-    // If read swizzle is RGBA or BGRA we don't need to do alpha swizzle
-    return (data.fReadSwizzle == ReadSwizzle::kRGBA || data.fReadSwizzle == ReadSwizzle::kBGRA);
-}
-
 static void add_yuv_image_to_key(const KeyContext& keyContext,
                                  PaintParamsKeyBuilder* builder,
                                  PipelineDataGatherer* gatherer,
@@ -1871,26 +1911,13 @@ static void add_yuv_image_to_key(const KeyContext& keyContext,
     }
     ColorSpaceTransformBlock::ColorSpaceTransformData data(steps);
 
-    // We only do this for YUV images because this is the only case where we expect
-    // a premul-only colorspace transformation to be common. Otherwise it's not
-    // worth the combinatorial explosion in the precompile system.
-    if (is_premul_alpha_only(data)) {
-        Compose(keyContext, builder, gatherer,
-                /* addInnerToKey= */ [&]() -> void {
-                    YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
-                },
-                /* addOuterToKey= */ [&]() -> void {
-                    builder->addBlock(BuiltInCodeSnippetID::kPremulAlphaColorFilter);
-                });
-    } else {
-        Compose(keyContext, builder, gatherer,
-                /* addInnerToKey= */ [&]() -> void {
-                    YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
-                },
-                /* addOuterToKey= */ [&]() -> void {
-                    ColorSpaceTransformBlock::AddBlock(keyContext, builder, gatherer, data);
-                });
-    }
+    Compose(keyContext, builder, gatherer,
+            /* addInnerToKey= */ [&]() -> void {
+                YUVImageShaderBlock::AddBlock(keyContext, builder, gatherer, imgData);
+            },
+            /* addOuterToKey= */ [&]() -> void {
+                ColorSpaceTransformBlock::AddBlock(keyContext, builder, gatherer, data);
+            });
 }
 
 static skgpu::graphite::ReadSwizzle swizzle_class_to_read_enum(const skgpu::Swizzle& swizzle) {
