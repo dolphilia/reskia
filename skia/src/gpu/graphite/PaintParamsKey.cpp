@@ -101,9 +101,9 @@ ShaderNode* PaintParamsKey::createNode(const ShaderCodeDictionary* dict,
         *currentIndex += dataLength;
     }
 
-    const ShaderNode** childArray = arena->makeArray<const ShaderNode*>(entry->fNumChildren);
+    ShaderNode** childArray = arena->makeArray<ShaderNode*>(entry->fNumChildren);
     for (int i = 0; i < entry->fNumChildren; ++i) {
-        const ShaderNode* child = this->createNode(dict, currentIndex, arena);
+        ShaderNode* child = this->createNode(dict, currentIndex, arena);
         if (!child) {
             return nullptr;
         }
@@ -117,8 +117,59 @@ ShaderNode* PaintParamsKey::createNode(const ShaderCodeDictionary* dict,
                                    dataSpan);
 }
 
+// Traverse a ShaderNode tree, attempting to lift any coordinate modification expressions.
+int lift_coord_expressions(SkSpan<ShaderNode*> nodes, int availableVaryings) {
+    for (ShaderNode* node : nodes) {
+        // If in the course of lifting expressions we've used up all of our available varyings,
+        // there's nothing more we can do.
+        if (availableVaryings == 0) {
+            return 0;
+        }
+
+        // If there are no local coords, there are no modifications to lift.
+        if (!(node->requiredFlags() & SnippetRequirementFlags::kLocalCoords)) {
+            continue;
+        }
+
+        // If the node has a generator, we can lift its modification of its local coords input.
+        if (node->entry()->fLiftableExpressionGenerator) {
+#if !defined(SK_USE_LEGACY_UNIFORM_LIFTING_GRAPHITE)
+            // We can potentially lift the nested expressions under here as well.
+            const int previouslyAvailableVaryings = availableVaryings - 1;
+            availableVaryings = lift_coord_expressions(node->children(), availableVaryings - 1);
+            // Don't emit a varying for this node if its output is used in other lifted expressions.
+            // TODO(b/412621191) In some cases we may want to emit varyings for nodes even when
+            // their children's expressions have been lifted. Specifically, a runtime shader node
+            // may use a lifted expression directly and also pass along the expression as input to
+            // children who further modify and use the expression. However, we don't currently
+            // detect such cases in Graphite (we never lift expressions from runtime shaders'
+            // children).
+            const bool childrenLifted = availableVaryings < previouslyAvailableVaryings;
+            if (childrenLifted) {
+                node->setOmitExpressionFlag();
+            } else {
+                node->setLiftExpressionFlag();
+            }
+#else
+            node->setLiftExpressionFlag();
+            --availableVaryings;
+#endif
+
+#if !defined(SK_USE_LEGACY_UNIFORM_LIFTING_GRAPHITE)
+        // If the node passes through its local coords to its children, we check if those perform
+        // modifications that can be lifted.
+        } else if (node->requiredFlags() & SnippetRequirementFlags::kPassthroughLocalCoords) {
+            availableVaryings = lift_coord_expressions(node->children(), availableVaryings);
+#endif
+        }
+    }
+
+    return availableVaryings;
+}
+
 SkSpan<const ShaderNode*> PaintParamsKey::getRootNodes(const ShaderCodeDictionary* dict,
-                                                       SkArenaAlloc* arena) const {
+                                                       SkArenaAlloc* arena,
+                                                       int availableVaryings) const {
     // TODO: Once the PaintParamsKey creation is organized to represent a single tree starting at
     // the final blend, there will only be a single root node and this can be simplified.
     // For now, we don't know how many roots there are, so collect them into a local array before
@@ -136,16 +187,11 @@ SkSpan<const ShaderNode*> PaintParamsKey::getRootNodes(const ShaderCodeDictionar
         roots.push_back(root);
     }
 
-    // TODO(b/402402925) This only lifts expressions from root nodes, but we want to allow
-    // combining expressions from nested nodes and skipping intermediate nodes that don't
-    // modify the operands in these expressions.
+    // TODO(b/402402925) This doesn't attempt to combine lifted transformations, which we
+    // eventually want to allow.
     const bool hasClipNode = roots.size() > 2;
     const int liftableNodes = hasClipNode ? 2 : roots.size();
-    for (ShaderNode* node : SkSpan(roots.data(), liftableNodes)) {
-        if (node->entry()->fLiftableExpressionGenerator) {
-            node->setLiftExpressionFlag();
-        }
-    }
+    lift_coord_expressions(SkSpan(roots.data(), liftableNodes), availableVaryings);
 
     // Copy the accumulated roots into a span stored in the arena
     const ShaderNode** rootSpan = arena->makeArray<const ShaderNode*>(roots.size());
@@ -180,29 +226,37 @@ static int key_to_string(SkString* str,
 
     if (entry->storesSamplerDescData()) {
         SkASSERT(currentIndex + 1 < SkTo<int>(keyData.size()));
-        const int dataLength = keyData[currentIndex++];
-        SkASSERT(currentIndex + dataLength < SkTo<int>(keyData.size()));
+
+        // If an entry stores data, then the next key value reports the quantity of key indices that
+        // are used to house the data for this snippet. This way, we know how many indices to
+        // iterate over in order to capture the snippet's data before we may encounter another
+        // snippet ID.
+        // For example:
+        // [snippetId using 2 indices worth of data] [2] [dataValue0] [dataValue1] [next snippet ID]
+        const int dataIndexCount = keyData[currentIndex++];
+        SkASSERT(currentIndex + dataIndexCount < SkTo<int>(keyData.size()));
 
         // Define a compact representation for the common case of shader snippets using just one
-        // dynamic sampler. Immutable samplers require a data length > 1 to be represented while a
-        // dynamic sampler is represented with just one, so we can simply consult the data length.
-        if (dataLength == 1) {
+        // dynamic sampler. Immutable samplers require > 1 index of data to be represented while a
+        // dynamic sampler is represented with just one, so we can simply consult dataIndexCount.
+        if (dataIndexCount == 1) {
             str->append("(0)");
         } else {
             str->append("(");
-            str->appendU32(dataLength);
+            str->appendU32(dataIndexCount);
             if (includeData) {
-                // Encode data in base64 to shorten it
                 str->append(": ");
-                SkAutoMalloc encodedData{SkBase64::EncodedSize(dataLength)};
+                // Encode data in base64 to shorten it
+                const size_t srcDataSize = dataIndexCount * sizeof(uint32_t); // size in bytes
+                SkAutoMalloc encodedData{SkBase64::EncodedSize(srcDataSize)};
                 char* dst = static_cast<char*>(encodedData.get());
-                size_t encodedLen = SkBase64::Encode(&keyData[currentIndex], dataLength, dst);
+                size_t encodedLen = SkBase64::Encode(&keyData[currentIndex], srcDataSize, dst);
                 str->append(dst, encodedLen);
             }
             str->append(")");
         }
-
-        currentIndex += dataLength;
+        // Increment current index past the indices which contain data
+        currentIndex += dataIndexCount;
     }
 
     if (entry->fNumChildren > 0) {

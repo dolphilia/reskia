@@ -759,7 +759,10 @@ bool smoke_context_create_destroy() {
     GrDirectContext_flushAndSubmit(nullptr, false);
     GrDirectContext_checkAsyncWorkCompletion(nullptr);
     GrDirectContext_dumpMemoryStatistics(nullptr, nullptr);
+    (void) GrDirectContext_canDetectNewVkPipelineCacheData(nullptr);
+    (void) GrDirectContext_hasNewVkPipelineCacheData(nullptr);
     GrDirectContext_storeVkPipelineCacheData(nullptr);
+    GrDirectContext_storeVkPipelineCacheDataWithMaxSize(nullptr, 0);
     AsyncFailState graphite_async_fail_state = {};
     Graphite_Context_asyncRescaleAndReadPixelsFromImage(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
     Graphite_Context_asyncRescaleAndReadPixelsFromSurface(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
@@ -788,6 +791,8 @@ bool smoke_context_create_destroy() {
                !GrDirectContext_wait(nullptr, 0, nullptr, false) &&
                GrDirectContext_dump(nullptr) == nullptr &&
                !GrDirectContext_supportsDistanceFieldText(nullptr) &&
+               !GrDirectContext_canDetectNewVkPipelineCacheData(nullptr) &&
+               !GrDirectContext_hasNewVkPipelineCacheData(nullptr) &&
                GrDirectContext_createBackendTexture(nullptr, 1, 1, nullptr, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, kRGBA8888GrColorType, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColor(nullptr, 1, 1, nullptr, nullptr, false, false, false, nullptr, 0) == nullptr &&
@@ -1024,11 +1029,13 @@ bool smoke_context_create_destroy() {
         size_t resource_bytes = 0;
         if (!check(!GrDirectContext_abandoned(direct_context), "GrDirectContext_abandoned(valid initial)") ||
             !check(!GrDirectContext_isDeviceLost(direct_context), "GrDirectContext_isDeviceLost(valid initial)") ||
+            !check(GrDirectContext_hasNewVkPipelineCacheData(direct_context), "GrDirectContext_hasNewVkPipelineCacheData(valid)") ||
             !check(GrDirectContext_getResourceCacheLimits(direct_context, &max_resources, &max_resource_bytes), "GrDirectContext_getResourceCacheLimits(valid)") ||
             !check(GrDirectContext_getResourceCacheUsage(direct_context, &resource_count, &resource_bytes), "GrDirectContext_getResourceCacheUsage(valid)")) {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
+        GrDirectContext_storeVkPipelineCacheDataWithMaxSize(direct_context, 0);
         reskia_gr_direct_context_id_t *context_id = GrDirectContext_directContextID(direct_context);
         if (!check(context_id != nullptr && GrDirectContextID_isValid(context_id), "GrDirectContext_directContextID(valid)")) {
             GrDirectContextID_delete(context_id);

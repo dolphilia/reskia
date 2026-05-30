@@ -864,6 +864,24 @@ bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx) {
 #endif
 }
 
+bool GrDirectContext_canDetectNewVkPipelineCacheData(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && as_direct_context(ctx)->canDetectNewVkPipelineCacheData();
+#else
+    (void) ctx;
+    return false;
+#endif
+}
+
+bool GrDirectContext_hasNewVkPipelineCacheData(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    return ctx != nullptr && as_direct_context(ctx)->hasNewVkPipelineCacheData();
+#else
+    (void) ctx;
+    return false;
+#endif
+}
+
 void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx) {
 #if defined(SK_GANESH)
     if (ctx == nullptr) {
@@ -872,6 +890,18 @@ void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx) {
     as_direct_context(ctx)->storeVkPipelineCacheData();
 #else
     (void) ctx;
+#endif
+}
+
+void GrDirectContext_storeVkPipelineCacheDataWithMaxSize(reskia_direct_context_t *ctx, size_t max_size) {
+#if defined(SK_GANESH)
+    if (ctx == nullptr) {
+        return;
+    }
+    as_direct_context(ctx)->storeVkPipelineCacheData(max_size);
+#else
+    (void) ctx;
+    (void) max_size;
 #endif
 }
 

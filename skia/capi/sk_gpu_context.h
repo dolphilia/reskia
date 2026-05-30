@@ -112,7 +112,10 @@ void GrDirectContext_checkAsyncWorkCompletion(reskia_direct_context_t *ctx); // 
 void GrDirectContext_dumpMemoryStatistics(reskia_direct_context_t *ctx, reskia_trace_memory_dump_t *traceMemoryDump); // NULL input is no-op
 reskia_string_t *GrDirectContext_dump(reskia_direct_context_t *ctx); // owned; NULL input or SK_ENABLE_DUMP_GPU-disabled build returns NULL
 bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx); // NULL input returns false
+bool GrDirectContext_canDetectNewVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input returns false
+bool GrDirectContext_hasNewVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input returns false
 void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input is no-op
+void GrDirectContext_storeVkPipelineCacheDataWithMaxSize(reskia_direct_context_t *ctx, size_t max_size); // NULL input is no-op
 void GrDirectContext_resetGLTextureBindings(reskia_direct_context_t *ctx); // NULL input is no-op
 reskia_gpu_stats_flags_t GrDirectContext_supportedGpuStats(reskia_direct_context_t *ctx); // NULL input returns 0
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx); // owned; NULL input returns NULL

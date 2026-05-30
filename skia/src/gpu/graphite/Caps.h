@@ -40,6 +40,7 @@ namespace skgpu { class ShaderErrorHandler; }
 
 namespace skgpu::graphite {
 
+struct AttachmentDesc;
 enum class BufferType : int;
 struct ContextOptions;
 class ComputePipelineDesc;
@@ -97,6 +98,17 @@ public:
     }
 #endif
 
+    // TODO(b/390473370): Once backends initialize a Caps-level format table, these will not need
+    // to be virtual anymore:
+
+    virtual bool isSampleCountSupported(TextureFormat, uint8_t requestedSampleCount) const = 0;
+    // Return the TextureFormat that satisfies `dsFlags`.
+    virtual TextureFormat getDepthStencilFormat(SkEnumBitMask<DepthStencilFlags>) const = 0;
+
+    virtual TextureInfo getDefaultAttachmentTextureInfo(AttachmentDesc,
+                                                        Protected,
+                                                        Discardable) const = 0;
+
     virtual TextureInfo getDefaultSampledTextureInfo(SkColorType,
                                                      Mipmapped mipmapped,
                                                      Protected,
@@ -108,20 +120,6 @@ public:
     virtual TextureInfo getDefaultCompressedTextureInfo(SkTextureCompressionType,
                                                         Mipmapped mipmapped,
                                                         Protected) const = 0;
-
-    virtual TextureInfo getDefaultMSAATextureInfo(const TextureInfo& singleSampledInfo,
-                                                  Discardable discardable) const = 0;
-
-    // Currently the uses of this API always are asking for a discardable DepthStencil attachment.
-    // However, we still pass in the parameter here because we don't want the backend caps to be
-    // making decisons on if a thing should be discardable or not. This also allows us to eventual
-    // use non discardable DS attachments, but there aren't any current plans to do so. If we find
-    // out over time that we really will only ever use discardable ones, we could rename this
-    // function to be getDefaultDiscardableDepthStencilTextureInfo.
-    virtual TextureInfo getDefaultDepthStencilTextureInfo(SkEnumBitMask<DepthStencilFlags>,
-                                                          uint32_t sampleCount,
-                                                          Protected,
-                                                          Discardable discardable) const = 0;
 
     virtual TextureInfo getDefaultStorageTextureInfo(SkColorType) const = 0;
 
@@ -139,9 +137,6 @@ public:
                                       RenderPassDesc*,
                                       const RendererProvider*) const { return false; }
 
-    virtual bool serializeTextureInfo(const TextureInfo&, SkWStream*) const = 0;
-    virtual bool deserializeTextureInfo(SkStream*, TextureInfo*) const = 0;
-
     bool areColorTypeAndTextureInfoCompatible(SkColorType, const TextureInfo&) const;
 
     bool isTexturable(const TextureInfo&) const;
@@ -151,7 +146,11 @@ public:
     virtual bool loadOpAffectsMSAAPipelines() const { return false; }
 
     int maxTextureSize() const { return fMaxTextureSize; }
-    int defaultMSAASamplesCount() const { return fDefaultMSAASamples; }
+    uint8_t defaultMSAASamplesCount() const { return fDefaultMSAASamples; }
+
+    // Returns the maximum number of varyings allowed in a render pipeline. Note that this is the
+    // number of varying variables, not the total number of varying scalars.
+    int maxVaryings() const { return fMaxVaryings; }
 
     virtual void buildKeyForTexture(SkISize dimensions,
                                     const TextureInfo&,
@@ -304,6 +303,15 @@ public:
      */
     bool supportsAHardwareBufferImages() const { return fSupportsAHardwareBufferImages; }
 
+    /**
+     * Returns true if the given backend supports using advanced coherent (no barriers needed,
+     * overlap permitted) blend equations on hardware
+     * TODO(b/239726010): Have backends determine support for hardware-based advanced blend modes
+     * and update fSupportsHardwareAdvancedBlending accordingly once graphite supports using it.
+     * TODO(b/393382700): Add separate check for non-coherent advanced blend support once supported.
+     */
+    bool supportsHardwareAdvancedBlending() const { return fSupportsHardwareAdvancedBlending; }
+
     // Returns the skgpu::Swizzle to use when sampling or reading back from a texture with the
     // passed in SkColorType and TextureInfo.
     skgpu::Swizzle getReadSwizzle(SkColorType, const TextureInfo&) const;
@@ -399,11 +407,13 @@ protected:
     };
 
     int fMaxTextureSize = 0;
-    int fDefaultMSAASamples = 4;
+    uint8_t fDefaultMSAASamples = 4;
     size_t fRequiredUniformBufferAlignment = 0;
     size_t fRequiredStorageBufferAlignment = 0;
     size_t fRequiredTransferBufferAlignment = 0;
     size_t fTextureDataRowBytesAlignment = 1;
+
+    int fMaxVaryings = 0;
 
     std::unique_ptr<SkSL::ShaderCaps> fShaderCaps;
 
@@ -420,6 +430,7 @@ protected:
 
     bool fComputeSupport = false;
     bool fSupportsAHardwareBufferImages = false;
+    bool fSupportsHardwareAdvancedBlending = false;
     bool fFullCompressedUploadSizeMustAlignToBlockDims = false;
 
 #if defined(GPU_TEST_UTILS)

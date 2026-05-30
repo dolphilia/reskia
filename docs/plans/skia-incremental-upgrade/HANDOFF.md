@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `3dc3ffeb45f0d3decf40f876c9d7600f163e053c`
-- next probe candidate: choose a fixed commit after `3dc3ffeb45f0d3decf40f876c9d7600f163e053c`
+- `SKIA_REF`: `fd69db63210f06f024f65a2b9981a6a76b363f46`
+- next probe candidate: choose a fixed commit after `fd69db63210f06f024f65a2b9981a6a76b363f46`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -81,31 +81,33 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 047 accepted: `de4799f97cd0b4bd971d016ed179f8c854ef4c29`。
 - cycle 048 accepted: `bc81df52bfa0d842b73d20d9f309b4e1540905a3`。
 - cycle 049 accepted: `3dc3ffeb45f0d3decf40f876c9d7600f163e053c`。
+- cycle 050 accepted: `fd69db63210f06f024f65a2b9981a6a76b363f46`。
 
 未実施:
 
-- cycle 050 candidate の選定。
-- cycle 050 candidate checkout を使った coverage regression。
-- cycle 050 の source/header sync と C API 追従実装。
+- cycle 051 candidate の選定。
+- cycle 051 candidate checkout を使った coverage regression。
+- cycle 051 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 050 の candidate selection から始める。
+次の作業は、cycle 051 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `3dc3ffeb45f0d3decf40f876c9d7600f163e053c` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `fd69db63210f06f024f65a2b9981a6a76b363f46` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 050 の比較候補メモ:
+cycle 051 の比較候補メモ:
 
-- cycle 049 では `vendor/skia-upstream-candidate` の 2週間候補 `3dc3ffeb45f0d3decf40f876c9d7600f163e053c` を採用した。baseline `bc81df52...` から 110 commits、`include` / `modules` は 11 files changed, +110/-45、total drift は 141 files changed, +2950/-2352。
-- 1週間候補 `98deb838d3b801e7943b1dbd31e2173fddd4315c` は 52 commits、4 `include` / `modules` files、65 total files。3週間候補 `50ed51d9e5294acc90db06d904bb5f3a89ca1a75` は 161 commits、17 `include` / `modules` files、222 total files まで広がったため見送った。
-- cycle 049 の新規 gap は `SkTraceMemoryDump::shouldDumpSizelessObjects` 1件。既存 TraceMemoryDump C API の null-safe getter として実装し、smoke に concrete/null path を追加して閉じた。
-- cycle 049 では Core recorder/cache split、Graphite/Ganesh source drift、generated SkSL、skcms version を同期した。Bazel/GN metadata、CanvasKit metadata、`src/*/BUILD.bazel`、raw non-tracked SkSL source は同期対象外として残した。最終 stale report は空。
+- cycle 050 では `vendor/skia-upstream-candidate` の 2週間候補 `fd69db63210f06f024f65a2b9981a6a76b363f46` を採用した。baseline `3dc3ffeb...` から 123 commits、`include` / `modules` は 15 files changed, +601/-33、total drift は 167 files changed, +3488/-2907。
+- 1週間候補 `50ed51d9e5294acc90db06d904bb5f3a89ca1a75` は 51 commits、6 `include` / `modules` files、118 total files。3週間候補 `0feee17aeacab6b88ac8be3d8b35ae4c940eeea4` は 170 commits、17 `include` / `modules` files、209 total files まで広がり、`SkPath`/`SkRegion` public drift が乗るため見送った。
+- cycle 050 の新規 real gap は `GrDirectContext::canDetectNewVkPipelineCacheData` と `GrDirectContext::hasNewVkPipelineCacheData` の2件。関連する `GrDirectContext::storeVkPipelineCacheData(size_t)` overload も C API に追加し、既存 DirectContext C API の null-safe wrapper として GPU smoke に null/valid path を追加して閉じた。
+- cycle 050 の `PaintOptions::setPaintColorIsOpaque` / `PaintOptions::isPaintColorOpaque` は Graphite precompile ABI design-required として `na` override に追加した。`TextureInfo::numSamples` は upstream 戻り値が `uint8_t` に縮小したが、C ABI は `uint32_t` 返却のまま安全に widening できるため実装変更なしで matrix を更新した。
+- cycle 050 では Ganesh Vulkan pipeline-cache detection、Graphite texture/precompile drift、Graphite/Ganesh Metal/Vulkan/Dawn source drift、generated SkSL を同期した。upstream `DEPS`、Bazel/GN metadata、CanvasKit metadata、新規 `modules/skcapture`、raw non-tracked SkSL source は同期対象外として残した。最終 stale report は空。
 - 既知リスクは Graphite precompile ABI design、Dawn/WebGPU optional backend C ABI design、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
@@ -135,21 +137,22 @@ cycle 050 の比較候補メモ:
 
 候補:
 
-- `3dc3ffeb45f0d3decf40f876c9d7600f163e053c`
-- committer date: 2025-04-18T17:38:21-07:00
-- subject: Roll vulkan-deps from b61587033344 to 16e6073c26f9 (13 revisions)
+- `fd69db63210f06f024f65a2b9981a6a76b363f46`
+- committer date: 2025-05-02T19:43:56-07:00
+- subject: Roll recipe dependencies (trivial).
 
-cycle 049 結果:
+cycle 050 結果:
 
-- `vendor/skia-upstream-candidate` の 2週間候補 `3dc3ffeb...` を採用した。baseline `bc81df52...` から 110 commits、`include` / `modules` は 11 files changed, +110/-45、total drift は 141 files changed, +2950/-2352。
+- `vendor/skia-upstream-candidate` の 2週間候補 `fd69db...` を採用した。baseline `3dc3ffeb...` から 123 commits、`include` / `modules` は 15 files changed, +601/-33、total drift は 167 files changed, +3488/-2907。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final candidate stale C API report と final lock stale report は空。signature review はなし。
-- 初期 probe の新規 `missing` は `SkTraceMemoryDump::shouldDumpSizelessObjects` 1件。既存 TraceMemoryDump C API に null-safe getter を追加し、smoke を拡張して閉じた。
-- source/header sync では Core recorder/cache split、Graphite/Ganesh atlas/task/precompile drift、Vulkan/Dawn source drift、generated SkSL、skcms version を取り込んだ。
-- upstream `DEPS`、Bazel/GN metadata、CanvasKit metadata、`src/*/BUILD.bazel`、raw non-tracked SkSL source は同期対象外として残した。
-- prebuilt/GPU build で既知の macOS deployment-target warning、C API build で `SkPathOps::TightBounds` deprecation warning、test `sprintf` warning が出たが、いずれも non-fatal。
+- final candidate stale C API report と final lock stale report は空。
+- 初期 probe の新規 `missing` は `GrDirectContext::canDetectNewVkPipelineCacheData`、`GrDirectContext::hasNewVkPipelineCacheData`、`PaintOptions::setPaintColorIsOpaque`、`PaintOptions::isPaintColorOpaque` の4件。DirectContext 2件に加え、同じ pipeline-cache surface の `storeVkPipelineCacheData(size_t)` overload を null-safe C API として実装し、PaintOptions 2件は Graphite precompile design-required `na` に分類した。
+- `TextureInfo::numSamples` の signature review は upstream 戻り値 `uint8_t` を C ABI `uint32_t` へ widening する互換確認として解消した。
+- source/header sync では Ganesh Vulkan pipeline-cache detection、Graphite texture/precompile drift、Graphite/Ganesh Metal/Vulkan/Dawn source drift、generated SkSL を取り込んだ。
+- upstream `DEPS`、Bazel/GN metadata、CanvasKit metadata、新規 `modules/skcapture`、raw non-tracked SkSL source は同期対象外として残した。
+- prebuilt/GPU build で既知の macOS deployment-target warning、GPU build で Metal `fastMathEnabled` deprecation warning、C API build で `SkPathOps::TightBounds` deprecation warning、test `sprintf` warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `3dc3ffeb45f0d3decf40f876c9d7600f163e053c` から再比較する。cycle 049 は 2週間幅が通ったが Graphite/Dawn/Android 周辺の drift は引き続き広がるため、cycle 050 でも 1/2/3週間候補を比較する。
+- 次サイクルでは、accepted baseline `fd69db63210f06f024f65a2b9981a6a76b363f46` から再比較する。cycle 050 は 2週間幅が通ったが `SkPath`/`SkRegion` と Graphite/Dawn 周辺の drift は引き続き広がるため、cycle 051 でも 1/2/3週間候補を比較する。
 
 cycle records:
 
@@ -202,6 +205,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-047-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-048-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-049-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-050-2026-05-30.md`
 
 ## Cycle close の条件
 

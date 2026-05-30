@@ -387,15 +387,24 @@ namespace {
 std::string GenerateLocalMatrixExpression(const ShaderInfo& shaderInfo,
                                           const ShaderNode* node,
                                           const ShaderSnippet::Args& args) {
-    std::string controlUni =
+    std::string uniform =
             get_mangled_uniform_name(shaderInfo, node->entry()->fUniforms[0], node->keyIndex());
-
     return SkSL::String::printf("(%s * %s.xy01).xy",
-                                controlUni.c_str(),
+                                uniform.c_str(),
                                 args.fFragCoord.c_str());
 }
 
 static constexpr int kNumCoordinateManipulateChildren = 1;
+
+std::string GenerateCoordNormalizeExpression(const ShaderInfo& shaderInfo,
+                                             const ShaderNode* node,
+                                             const ShaderSnippet::Args& args) {
+    std::string uniform =
+            get_mangled_uniform_name(shaderInfo, node->entry()->fUniforms[0], node->keyIndex());
+    return SkSL::String::printf("(%s * %s)",
+                                uniform.c_str(),
+                                args.fFragCoord.c_str());
+}
 
 // Create a helper function that manipulates the coordinates passed into a child. The specific
 // manipulation is pre-determined by the code id (local matrix or clamp).
@@ -415,7 +424,7 @@ std::string GenerateCoordManipulationPreamble(const ShaderInfo& shaderInfo,
         if (node->codeSnippetId() == (int) BuiltInCodeSnippetID::kLocalMatrixShader) {
             if (node->requiredFlags() & SnippetRequirementFlags::kLiftExpression) {
                 localArgs.fFragCoord = node->getExpressionVarying();
-            } else {
+            } else if (!(node->requiredFlags() & SnippetRequirementFlags::kOmitExpression)) {
                 localArgs.fFragCoord = GenerateLocalMatrixExpression(shaderInfo, node, defaultArgs);
             }
         } else if (node->codeSnippetId() == (int) BuiltInCodeSnippetID::kLocalMatrixShaderPersp) {
@@ -423,6 +432,13 @@ std::string GenerateCoordManipulationPreamble(const ShaderInfo& shaderInfo,
                                                         controlUni.c_str(),
                                                         defaultArgs.fFragCoord.c_str());
             localArgs.fFragCoord = "perspCoord.xy / perspCoord.w";
+        } else if (node->codeSnippetId() == (int) BuiltInCodeSnippetID::kCoordNormalizeShader) {
+            if (node->requiredFlags() & SnippetRequirementFlags::kLiftExpression) {
+                localArgs.fFragCoord = node->getExpressionVarying();
+            } else if (!(node->requiredFlags() & SnippetRequirementFlags::kOmitExpression)) {
+                localArgs.fFragCoord =
+                        GenerateCoordNormalizeExpression(shaderInfo, node, defaultArgs);
+            }
         } else {
             SkASSERT(node->codeSnippetId() == (int) BuiltInCodeSnippetID::kCoordClampShader);
             localArgs.fFragCoord = SkSL::String::printf("clamp(%s, %s.LT, %s.RB)",
@@ -728,9 +744,10 @@ ShaderSnippet ShaderCodeDictionary::convertRuntimeEffect(const SkRuntimeEffect* 
                                                          const char* name) {
     SkEnumBitMask<SnippetRequirementFlags> snippetFlags = SnippetRequirementFlags::kNone;
     if (effect->allowShader()) {
-        // SkRuntimeEffect::usesSampleCoords() can't be used to restrict this because it returns
-        // false when the only use is to pass the coord unmodified to a child. When children can
-        // refer to interpolated varyings directly in this case, we can refine the flags.
+        // TODO(b/412621191) SkRuntimeEffect::usesSampleCoords() can't be used to restrict this
+        // because it returns false when the only use is to pass the coord unmodified to a child.
+        // When children can refer to interpolated varyings directly in this case, we can refine the
+        // flags.
         snippetFlags |= SnippetRequirementFlags::kLocalCoords;
     } else if (effect->allowColorFilter()) {
         snippetFlags |= SnippetRequirementFlags::kPriorStageOutput;
@@ -1155,7 +1172,7 @@ ShaderCodeDictionary::ShaderCodeDictionary(
             /*name=*/"HardwareImage",
             /*staticFn=*/"sk_hw_image_shader",
             SnippetRequirementFlags::kLocalCoords | SnippetRequirementFlags::kStoresSamplerDescData,
-            /*uniforms=*/{ { "invImgSize",            SkSLType::kFloat2 } },
+            /*uniforms=*/{},
             /*texturesAndSamplers=*/{"image"}
     };
 
@@ -1242,6 +1259,17 @@ ShaderCodeDictionary::ShaderCodeDictionary(
                                       { "samplerU" },
                                       { "samplerV" },
                                       { "samplerA" }}
+    };
+
+    fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kCoordNormalizeShader] = {
+            /*name=*/"CoordNormalize",
+            /*staticFn=*/nullptr,
+            SnippetRequirementFlags::kNone,
+            /*uniforms=*/{ { "invDimensions", SkSLType::kFloat2 } },
+            /*texturesAndSamplers=*/{},
+            GenerateCoordNormalizeExpression,
+            GenerateCoordManipulationPreamble,
+            /*numChildren=*/kNumCoordinateManipulateChildren
     };
 
     // Like the local matrix shader, this is a no-op if the child doesn't need coords
@@ -1361,7 +1389,7 @@ ShaderCodeDictionary::ShaderCodeDictionary(
     fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kCompose] = {
             /*name=*/"Compose",
             /*staticFn=*/nullptr,
-            SnippetRequirementFlags::kNone,
+            SnippetRequirementFlags::kPassthroughLocalCoords,
             /*uniforms=*/{},
             /*texturesAndSamplers=*/{},
             /*liftableExpression=*/nullptr,
@@ -1371,7 +1399,7 @@ ShaderCodeDictionary::ShaderCodeDictionary(
     fBuiltInCodeSnippets[(int) BuiltInCodeSnippetID::kBlendCompose] = {
             /*name=*/"BlendCompose",
             /*staticFn=*/nullptr,
-            SnippetRequirementFlags::kNone,
+            SnippetRequirementFlags::kPassthroughLocalCoords,
             /*uniforms=*/{},
             /*texturesAndSamplers=*/{},
             /*liftableExpression=*/nullptr,

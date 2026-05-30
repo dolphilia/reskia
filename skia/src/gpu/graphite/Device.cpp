@@ -34,6 +34,7 @@
 #include "src/gpu/graphite/SharedContext.h"
 #include "src/gpu/graphite/SpecialImage_Graphite.h"
 #include "src/gpu/graphite/Surface_Graphite.h"
+#include "src/gpu/graphite/TextureInfoPriv.h"
 #include "src/gpu/graphite/TextureProxy.h"
 #include "src/gpu/graphite/TextureUtils.h"
 #include "src/gpu/graphite/geom/BoundsManager.h"
@@ -461,14 +462,18 @@ Device::Device(Recorder* recorder, sk_sp<DrawContext> dc)
         , fSubRunControl(recorder->priv().caps()->getSubRunControl(
                 fDC->surfaceProps().isUseDeviceIndependentFonts())) {
     SkASSERT(SkToBool(fDC) && SkToBool(fRecorder));
-    if (fRecorder->priv().caps()->defaultMSAASamplesCount() > 1) {
+    if (fDC->target()->textureInfo().numSamples() > 1) {
+        // Target is inherently multisampled
+        fMSAASupported = true;
+    } else if (fRecorder->priv().caps()->defaultMSAASamplesCount() > 1) {
         if (fRecorder->priv().caps()->msaaRenderToSingleSampledSupport()) {
+            // Backend-managed MSAA is supported
             fMSAASupported = true;
         } else {
-            TextureInfo msaaTexInfo =
-                   fRecorder->priv().caps()->getDefaultMSAATextureInfo(fDC->target()->textureInfo(),
-                                                                       Discardable::kYes);
-            fMSAASupported = msaaTexInfo.isValid();
+            // Graphite-managed MSAA is supported
+            fMSAASupported = fRecorder->priv().caps()->isSampleCountSupported(
+                    TextureInfoPriv::ViewFormat(fDC->target()->textureInfo()),
+                    fRecorder->priv().caps()->defaultMSAASamplesCount());
         }
     }
 }
@@ -1297,7 +1302,8 @@ void Device::drawGeometry(const Transform& localToDevice,
         // but preserve LCD coverage if the Renderer uses that.
         rendererCoverage = Coverage::kSingleChannel;
     }
-    bool dstReadRequired = IsDstReadRequired(fRecorder->priv().caps(), blendMode, rendererCoverage);
+    bool dstReadRequired =
+            !CanUseHardwareBlending(fRecorder->priv().caps(), blendMode, rendererCoverage);
 
     // A primitive blender should be ignored if there is no primitive color to blend against.
     // Additionally, if a renderer emits a primitive color, then a null primitive blender should
@@ -1340,7 +1346,9 @@ void Device::drawGeometry(const Transform& localToDevice,
     // Decide if we have any reason to flush pending work. We want to flush before updating the clip
     // state or making any permanent changes to a path atlas, since otherwise clip operations and/or
     // atlas entries for the current draw will be flushed.
-    DstReadStrategy dstReadStrategy = dstReadRequired ? fDC->dstReadStrategy()
+    const bool requiresMSAA = (renderer && renderer->requiresMSAA()) ||
+                              (secondaryRenderer && secondaryRenderer->requiresMSAA());
+    DstReadStrategy dstReadStrategy = dstReadRequired ? fDC->dstReadStrategy(requiresMSAA)
                                                       : DstReadStrategy::kNoneRequired;
     const bool needsFlush = this->needsFlushBeforeDraw(numNewRenderSteps, dstReadStrategy);
     if (needsFlush) {
