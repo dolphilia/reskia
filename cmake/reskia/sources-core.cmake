@@ -16,6 +16,7 @@ list(APPEND SOURCE_FILES
         src/base/SkQuads.cpp
         src/base/SkSafeMath.cpp
         src/base/SkSemaphore.cpp
+        src/base/SkSharedMutex.cpp
         src/base/SkSpinlock.cpp
         src/base/SkTDArray.cpp
         src/base/SkThreadID.cpp

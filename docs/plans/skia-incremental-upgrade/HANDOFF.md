@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `b4613bade556fa6e5e8264712b2ee8ccf303a959`
-- next probe candidate: choose a fixed commit after `b4613bade556fa6e5e8264712b2ee8ccf303a959`
+- `SKIA_REF`: `dac808134f758c75b52cd53a4c93f84dea22803a`
+- next probe candidate: choose a fixed commit after `dac808134f758c75b52cd53a4c93f84dea22803a`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -74,30 +74,32 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 040 accepted: `8054b098b5cd313951983effa41f7ae9efa9d9c9`。
 - cycle 041 accepted: `a38c4ae0287a1d6d4a57db85b8b52c0d43965deb`。
 - cycle 042 accepted: `b4613bade556fa6e5e8264712b2ee8ccf303a959`。
+- cycle 043 accepted: `dac808134f758c75b52cd53a4c93f84dea22803a`。
 
 未実施:
 
-- cycle 043 candidate の選定。
-- cycle 043 candidate checkout を使った coverage regression。
-- cycle 043 の source/header sync と C API 追従実装。
+- cycle 044 candidate の選定。
+- cycle 044 candidate checkout を使った coverage regression。
+- cycle 044 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 043 の candidate selection から始める。
+次の作業は、cycle 044 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `b4613bade556fa6e5e8264712b2ee8ccf303a959` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `dac808134f758c75b52cd53a4c93f84dea22803a` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 043 の比較候補メモ:
+cycle 044 の比較候補メモ:
 
-- cycle 042 では `vendor/skia-upstream-candidate` の 2週間候補 `b4613bade556fa6e5e8264712b2ee8ccf303a959` を採用した。baseline `a38c4ae...` から 61 commits、`include` / `modules` は 6 files changed, +55/-46、total source-list/dependency drift は 32 files changed, +212/-152 で軽かった。
-- 1週間候補 `e107cb001d4b1cc4ebccc98e4e250df03637f25d` は public header drift が小さすぎ、3週間候補 `3531a78f28898e41d4180d2094e3ecf2e55bea0e` は 134 files の source drift まで広がったため見送った。
-- 既知リスクは font scanner variation output の C ABI design、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
+- cycle 043 では `vendor/skia-upstream-candidate` の 2週間候補 `dac808134f758c75b52cd53a4c93f84dea22803a` を採用した。baseline `b4613bade...` から 124 commits、`include` / `modules` は 19 files changed, +261/-102、total source-list/dependency drift は 164 files changed, +2693/-1741。
+- 1週間候補 `539c311a3a7fa76bf50a9c83822815abdb825a18` は 67 commits、10 `include` / `modules` files、109 total files で軽かったが、2週間候補の public API 影響が小さかったため見送った。3週間候補 `121ab59415f82818051f0edfc18667195eb50411` は 195 commits、24 `include` / `modules` files、235 total files まで広がったため見送った。
+- cycle 043 の新規 gap は `PrecompileContext::purgePipelinesNotUsedInMs` 1件で、既存の Graphite precompile ABI design-required 方針に沿って `na` 分類した。
+- 既知リスクは Graphite precompile ABI design、font scanner variation output の C ABI design、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
 
@@ -126,21 +128,21 @@ cycle 043 の比較候補メモ:
 
 候補:
 
-- `b4613bade556fa6e5e8264712b2ee8ccf303a959`
-- committer date: 2025-01-04T14:20:44-08:00
-- subject: `Roll vulkan-deps from a09312dc04d3 to d2e10146ec6f (1 revision)`
+- `dac808134f758c75b52cd53a4c93f84dea22803a`
+- committer date: 2025-01-19T21:12:52-08:00
+- subject: `Roll Skia Infra from 28df2c051126 to e0480d491b7b (8 revisions)`
 
-cycle 042 結果:
+cycle 043 結果:
 
-- `vendor/skia-upstream-candidate` の 2週間候補 `b4613bade...` を採用した。baseline `a38c4ae...` から 61 commits、`include` / `modules` は 6 files changed, +55/-46、total source-list/dependency drift は 32 files changed, +212/-152。
+- `vendor/skia-upstream-candidate` の 2週間候補 `dac808134f...` を採用した。baseline `b4613bade...` から 124 commits、`include` / `modules` は 19 files changed, +261/-102、total source-list/dependency drift は 164 files changed, +2693/-1741。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final synced stale C API report と final lock stale report は空。
-- 初期 probe の stale C API は、upstream で削除された `SkMaskFilter::approximateFilteredBounds` に対応する `SkMaskFilter_approximateFilteredBounds` 1件で、C API 宣言・実装・invalid-input smoke から削除して閉じた。
-- source/header sync では `SkMaskFilter` 削除差分、Graphite Metal public utility header split、Codec/Core/PDF/GPU drift を取り込んだ。新規 header `include/gpu/graphite/mtl/MtlGraphiteTypesUtils.h` を追加した。
-- CMake source list 変更は不要。upstream `DEPS`、Bazel/GN metadata、test-only metadata は同期対象外として残した。
-- GPU build で Metal `fastMathEnabled` deprecation warning と test `sprintf` warning、prebuilt build で既知の macOS deployment-target warning が出たが、いずれも non-fatal。
+- 初期 probe の新規 `missing` は `PrecompileContext::purgePipelinesNotUsedInMs` 1件で、`PrecompileContext` ownership と broader precompile API が未設計のため `na` override に分類して閉じた。
+- source/header sync では Codec/Core/PDF/PathOps、Graphite/Ganesh/Metal/Vulkan/Dawn、Skottie/SkParagraph drift を取り込んだ。新規 source `src/base/SkSharedMutex.cpp` と header `src/base/SkSharedMutex.h` を追加し、`cmake/reskia/sources-core.cmake` に source list 追加した。
+- upstream `DEPS`、Bazel/GN metadata、modules/audioplayer、modules/canvaskit、非 CMake FontConfigInterface wrapper は同期対象外として残した。
+- GPU build で Metal `fastMathEnabled` deprecation warning、prebuilt/GPU build で既知の macOS deployment-target warning、C API build で `SkPathOps::TightBounds` deprecation warning、test `sprintf` warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `b4613bade556fa6e5e8264712b2ee8ccf303a959` から再比較する。cycle 042 は 2週間幅が軽く通ったが、3週間候補は source drift が広がるため、cycle 043 でも 1/2/3週間候補を比較してから選ぶ。
+- 次サイクルでは、accepted baseline `dac808134f758c75b52cd53a4c93f84dea22803a` から再比較する。cycle 043 は 2週間幅が通ったが Graphite source drift は広めだったため、cycle 044 でも 1/2/3週間候補を比較してから選ぶ。
 
 cycle records:
 
@@ -186,6 +188,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-040-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-041-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-042-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-043-2026-05-30.md`
 
 ## Cycle close の条件
 
