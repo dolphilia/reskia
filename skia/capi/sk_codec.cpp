@@ -138,6 +138,11 @@ reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec) {
     return native != nullptr ? static_cast<reskia_codec_encoded_origin_t>(native->getOrigin()) : -1;
 }
 
+bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr && native->hasHighBitDepthEncodedData();
+}
+
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale) {
     SkCodec *native = as_codec(codec);
     return native != nullptr ? static_sk_i_size_make(native->getScaledDimensions(desiredScale)) : 0;

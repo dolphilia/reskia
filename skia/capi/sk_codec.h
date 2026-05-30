@@ -44,6 +44,7 @@ sk_i_size_t SkCodec_dimensions(reskia_codec_t *codec); // (SkCodec* codec) -> sk
 sk_i_rect_t SkCodec_bounds(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_rect_t. NULL codec returns 0.
 const void * SkCodec_getICCProfile(reskia_codec_t *codec); // (SkCodec* codec) -> const skcms_ICCProfile*. NULL codec returns NULL.
 reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedOrigin. NULL codec returns -1.
+bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec); // NULL codec returns false.
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t. NULL codec returns 0.
 bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubset); // (SkCodec* codec, SkIRect* desiredSubset) -> bool. codec/subset are required.
 reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedImageFormat. NULL codec returns -1.

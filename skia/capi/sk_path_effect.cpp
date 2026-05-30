@@ -50,13 +50,6 @@ void SkPathEffect_release(reskia_path_effect_t *pathEffect) {
     reinterpret_cast<SkPathEffect *>(pathEffect)->unref();
 }
 
-int SkPathEffect_asADash(reskia_path_effect_t *path_effect, reskia_path_effect_dash_info_t *info) {
-    if (path_effect == nullptr) {
-        return 0;
-    }
-    return reinterpret_cast<SkPathEffect *>(path_effect)->asADash(reinterpret_cast<SkPathEffect::DashInfo *>(info));
-}
-
 bool SkPathEffect_filterPath(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR) {
     if (path_effect == nullptr || dst == nullptr || src == nullptr || rec == nullptr) {
         return false;

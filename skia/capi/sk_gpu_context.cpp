@@ -886,6 +886,17 @@ void GrDirectContext_resetGLTextureBindings(reskia_direct_context_t *ctx) {
 #endif
 }
 
+reskia_gpu_stats_flags_t GrDirectContext_supportedGpuStats(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    return ctx != nullptr
+            ? static_cast<reskia_gpu_stats_flags_t>(as_direct_context(ctx)->supportedGpuStats())
+            : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx) {
 #if defined(SK_GANESH)
     return ctx != nullptr ? reinterpret_cast<reskia_gr_direct_context_id_t *>(new GrDirectContext::DirectContextID(as_direct_context(ctx)->directContextID())) : nullptr;
@@ -2358,6 +2369,17 @@ bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx) {
 int Graphite_Context_maxTextureSize(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr ? as_graphite_context(ctx)->maxTextureSize() : 0;
+#else
+    (void) ctx;
+    return 0;
+#endif
+}
+
+reskia_gpu_stats_flags_t Graphite_Context_supportedGpuStats(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr
+            ? static_cast<reskia_gpu_stats_flags_t>(as_graphite_context(ctx)->supportedGpuStats())
+            : 0;
 #else
     (void) ctx;
     return 0;

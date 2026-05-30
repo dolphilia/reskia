@@ -18,6 +18,8 @@ typedef struct reskia_color_space_t reskia_color_space_t;
 typedef struct reskia_icc_profile_t reskia_icc_profile_t;
 typedef struct reskia_matrix3x3_t reskia_matrix3x3_t;
 typedef struct reskia_transfer_function_t reskia_transfer_function_t;
+typedef int32_t reskia_named_primaries_cicp_id_t;
+typedef int32_t reskia_named_transfer_fn_cicp_id_t;
 
 void SkColorSpace_release(reskia_color_space_t *color_space); // owned: caller が保持する参照を release する (SkColorSpace *color_space)
 /**
@@ -80,6 +82,7 @@ sk_color_space_t SkColorSpace_MakeSRGBLinear(); // () -> sk_color_space_t
  */
 sk_color_space_t SkColorSpace_MakeRGB(const reskia_transfer_function_t *transferFn, const reskia_matrix3x3_t *toXYZ);
 sk_color_space_t SkColorSpace_Make(const reskia_icc_profile_t *profile); // profile は非 NULL。NULL 入力では 0 (const skcms_ICCProfile *profile) -> sk_color_space_t
+sk_color_space_t SkColorSpace_MakeCICP(reskia_named_primaries_cicp_id_t color_primaries, reskia_named_transfer_fn_cicp_id_t transfer_characteristics);
 /**
  * raw input buffer: data は length バイト以上、非 NULL。NULL 入力では 0 (const void *data, size_t length) -> sk_color_space_t
  */

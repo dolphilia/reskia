@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `2905e15411bb6d956f58e9b6f0b3fd351731b8fe`
-- next probe candidate: choose a fixed commit after `2905e15411bb6d956f58e9b6f0b3fd351731b8fe`
+- `SKIA_REF`: `554b798423c371d187c505b405232c974b266ebc`
+- next probe candidate: choose a fixed commit after `554b798423c371d187c505b405232c974b266ebc`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -70,29 +70,30 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 036 accepted: `e732cdf455c88501f22154e4a97569f020ffe41d`。
 - cycle 037 accepted: `7b0947eb2a6f56c8c7959faa6a5acc5a7b49084e`。
 - cycle 038 accepted: `2905e15411bb6d956f58e9b6f0b3fd351731b8fe`。
+- cycle 039 accepted: `554b798423c371d187c505b405232c974b266ebc`。
 
 未実施:
 
-- cycle 039 candidate の選定。
-- cycle 039 candidate checkout を使った coverage regression。
-- cycle 039 の source/header sync と C API 追従実装。
+- cycle 040 candidate の選定。
+- cycle 040 candidate checkout を使った coverage regression。
+- cycle 040 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 039 の candidate selection から始める。
+次の作業は、cycle 040 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `2905e15411bb6d956f58e9b6f0b3fd351731b8fe` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `554b798423c371d187c505b405232c974b266ebc` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 039 の比較候補メモ:
+cycle 040 の比較候補メモ:
 
-- cycle 038 では 3週間候補 `2905e15411bb6d956f58e9b6f0b3fd351731b8fe` を採用した。1週間候補 `e5d3deaa5e33ef58b200a30b47e0141c0789cf52`、2週間候補 `6944cd1286031c1d00896227766063187e57877c` も比較したが、public C API catch-up が小さく 3週間幅でも manageable だったため採用した。
-- 既知リスクは `SkFontScanner` provider/factory C ABI design、Graphite/Metal deprecation warning、CrabbyAvif/rust-png optional backend policy、prebuilt static archive の macOS deployment-target warning。
+- cycle 039 では 3週間候補 `554b798423c371d187c505b405232c974b266ebc` を採用した。1週間候補 `6b0f264bde33023089cbae7a7d9ef1737a47fa17`、2週間候補 `c3d9596a93f81c03ae617d4662472a35a9f9529d` も比較したが、190 commits で標準幅内に収まり、C API catch-up と設計分類で閉じられる範囲だったため採用した。
+- 既知リスクは Graphite precompile context ownership design、`SkPathEffect_asADash` removal の downstream 影響、Graphite/Metal deprecation warning、prebuilt static archive の macOS deployment-target warning。
 
 ## やってはいけないこと
 
@@ -121,22 +122,22 @@ cycle 039 の比較候補メモ:
 
 候補:
 
-- `2905e15411bb6d956f58e9b6f0b3fd351731b8fe`
-- committer date: 2024-11-08T21:57:33Z
-- subject: `[skif] Check for failed blur algorithm output`
+- `554b798423c371d187c505b405232c974b266ebc`
+- committer date: 2024-11-29T15:36:28Z
+- subject: `Roll ANGLE from 2dc072ec71cc to a2d76f039918 (10 revisions)`
 
-cycle 038 結果:
+cycle 039 結果:
 
-- 3週間候補 `2905e15411bb6d956f58e9b6f0b3fd351731b8fe` を採用した。1週間候補 `e5d3deaa5e33ef58b200a30b47e0141c0789cf52` と2週間候補 `6944cd1286031c1d00896227766063187e57877c` も比較したが、174 commits で標準幅に近く public C API catch-up が限定的だった。
+- 3週間候補 `554b798423c371d187c505b405232c974b266ebc` を採用した。1週間候補 `6b0f264bde33023089cbae7a7d9ef1737a47fa17` と2週間候補 `c3d9596a93f81c03ae617d4662472a35a9f9529d` も比較したが、190 commits で標準幅内に収まり、public C API catch-up と設計分類で閉じられる範囲だった。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- stale C API report は空で、`stale_capi 0` / `signature_changed_review 0`。
-- C API catch-up では `SkString_begin` / `SkString_beginMutable` / `SkString_end` / `SkString_endMutable` を追加した。
-- coverage override では `SkContourMeasure` private rows を `false_positive`、`SkFontScanner` provider/factory interface を design-required `na` として記録した。
-- source/header sync では `SkFontScanner` public header move、Graphite shader info / circular arc render step、Ganesh GL callback drift、PDF/font/codec drift を取り込んだ。obsolete mirror header `src/core/SkFontScanner.h` と `src/ports/SkFontScanner_fontations.h` は削除した。
+- stale C API report は matrix 更新後に空で、`stale_capi 0` / `signature_changed_review 0`。初期 probe では `SkTypeface` と `GrDriverBugWorkarounds` の `signature_changed_review 8` が出たが、C ABI 互換として確認済み。
+- C API catch-up では `SkCodec_hasHighBitDepthEncodedData`、`SkColorSpace_MakeCICP`、`SkTypeface_getResourceName`、`GrDirectContext_supportedGpuStats`、`Graphite_Context_supportedGpuStats` を追加し、upstream で削除された `SkPathEffect_asADash` を削除した。
+- coverage override では Graphite precompile context ownership/lifetime surface を design-required `na`、`InsertFinishInfo` constructors を `split_covered`、`PrecompileContext` destructor row を `false_positive` として記録した。
+- source/header sync では CICP/codec/typeface/GPU stats/Graphite precompile drift を取り込んだ。`include/gpu/graphite/LogPriority.h`、`include/gpu/graphite/PrecompileContext.h`、`src/gpu/graphite/PrecompileContext.*`、`src/ports/SkTypeface_proxy.*` を追加し、obsolete mirror header `src/gpu/graphite/PublicPrecompile.h` は削除した。Bazel/GN metadata と非 mirror modules は同期対象外のまま。
 - GPU build で Metal `fastMathEnabled` deprecation warning と test `sprintf` warning、prebuilt build で既知の macOS deployment-target warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- Skottie/SKSG optional smoke は cycle 038 では対象外。
-- 次サイクルでは、accepted baseline `2905e15411bb6d956f58e9b6f0b3fd351731b8fe` から再比較する。
+- Skottie/SKSG optional smoke は cycle 039 では対象外。
+- 次サイクルでは、accepted baseline `554b798423c371d187c505b405232c974b266ebc` から再比較する。
 
 cycle records:
 
@@ -178,6 +179,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-036-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-037-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-038-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-039-2026-05-30.md`
 
 ## Cycle close の条件
 

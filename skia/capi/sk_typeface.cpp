@@ -285,6 +285,13 @@ bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *
     return as_typeface(typeface)->getPostScriptName(reinterpret_cast<SkString *>(name));
 }
 
+int SkTypeface_getResourceName(reskia_typeface_t *typeface, reskia_string_t *resourceName) {
+    if (typeface == nullptr || resourceName == nullptr) {
+        return -1;
+    }
+    return as_typeface(typeface)->getResourceName(reinterpret_cast<SkString *>(resourceName));
+}
+
 sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex) {
     if (typeface == nullptr) {
         return 0;

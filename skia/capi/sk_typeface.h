@@ -83,6 +83,7 @@ bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uin
 reskia_typeface_localized_strings_t *SkTypeface_createFamilyNameIterator(reskia_typeface_t *typeface); // NULL 入力では NULL。caller は iterator を unref する
 void SkTypeface_getFamilyName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では no-op
 bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *name); // name は非 NULL。invalid 入力では false
+int SkTypeface_getResourceName(reskia_typeface_t *typeface, reskia_string_t *resourceName); // resourceName は非 NULL。invalid 入力では -1
 sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
 sk_stream_asset_t SkTypeface_openExistingStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
 

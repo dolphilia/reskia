@@ -58,6 +58,7 @@ typedef int32_t reskia_sk_texture_compression_type_t;
 typedef int32_t reskia_graphite_rescale_gamma_t;
 typedef int32_t reskia_graphite_rescale_mode_t;
 typedef int32_t reskia_graphite_yuv_color_space_t;
+typedef uint32_t reskia_gpu_stats_flags_t;
 typedef void (*reskia_shader_error_proc_t)(void *user_data, const char *shader, const char *errors);
 typedef void (*reskia_graphite_finished_proc_t)(void *user_data, int32_t result);
 typedef void (*reskia_graphite_release_proc_t)(void *user_data);
@@ -113,6 +114,7 @@ reskia_string_t *GrDirectContext_dump(reskia_direct_context_t *ctx); // owned; N
 bool GrDirectContext_supportsDistanceFieldText(reskia_direct_context_t *ctx); // NULL input returns false
 void GrDirectContext_storeVkPipelineCacheData(reskia_direct_context_t *ctx); // NULL input is no-op
 void GrDirectContext_resetGLTextureBindings(reskia_direct_context_t *ctx); // NULL input is no-op
+reskia_gpu_stats_flags_t GrDirectContext_supportedGpuStats(reskia_direct_context_t *ctx); // NULL input returns 0
 reskia_gr_direct_context_id_t *GrDirectContext_directContextID(reskia_direct_context_t *ctx); // owned; NULL input returns NULL
 void GrDirectContextID_delete(reskia_gr_direct_context_id_t *context_id); // NULL input is no-op
 bool GrDirectContextID_isValid(reskia_gr_direct_context_id_t *context_id); // NULL input returns false
@@ -247,6 +249,7 @@ void Graphite_Context_dumpMemoryStatistics(reskia_graphite_context_t *ctx, reski
 bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx); // NULL input returns false
 int Graphite_Context_maxTextureSize(reskia_graphite_context_t *ctx); // NULL input returns 0
+reskia_gpu_stats_flags_t Graphite_Context_supportedGpuStats(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 void Graphite_ContextID_delete(reskia_graphite_context_id_t *context_id); // NULL input is no-op
 bool Graphite_ContextID_isValid(const reskia_graphite_context_id_t *context_id); // NULL input returns false

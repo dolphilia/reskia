@@ -30,9 +30,6 @@ int main() {
     SkCornerPathEffect_delete(nullptr);
     SkTrimPathEffect_delete(nullptr);
 
-    if (!check(SkPathEffect_asADash(nullptr, nullptr) == 0, "SkPathEffect_asADash(nullptr)")) {
-        return 1;
-    }
     if (!check(!SkPathEffect_filterPath(nullptr, nullptr, nullptr, nullptr, nullptr), "SkPathEffect_filterPath(nullptr)")) {
         return 2;
     }
