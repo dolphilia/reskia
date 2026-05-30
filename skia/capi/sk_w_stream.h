@@ -26,6 +26,7 @@ size_t SkWStream_bytesWritten(reskia_w_stream_t *w_stream); // (SkWStream *w_str
 bool SkWStream_write8(reskia_w_stream_t *w_stream, uint32_t value); // (SkWStream *w_stream, U8CPU value) -> bool
 bool SkWStream_write16(reskia_w_stream_t *w_stream, uint32_t value); // (SkWStream *w_stream, U16CPU value) -> bool
 bool SkWStream_write32(reskia_w_stream_t *w_stream, uint32_t v); // (SkWStream *w_stream, uint32_t v) -> bool
+bool SkWStream_write64(reskia_w_stream_t *w_stream, uint64_t value); // (SkWStream *w_stream, uint64_t value) -> bool
 bool SkWStream_writeText(reskia_w_stream_t *w_stream, const char text[]); // text: non-null C string
 bool SkWStream_newline(reskia_w_stream_t *w_stream); // (SkWStream *w_stream) -> bool
 bool SkWStream_writeDecAsText(reskia_w_stream_t *w_stream, int32_t i); // (SkWStream *w_stream, int32_t i) -> bool

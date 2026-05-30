@@ -35,6 +35,7 @@ typedef int32_t reskia_codec_encoded_image_format_t;
 typedef int32_t reskia_codec_result_code_t;
 typedef int32_t reskia_codec_scanline_order_t;
 typedef int32_t reskia_codec_selection_policy_t;
+typedef int32_t reskia_codec_is_animated_t;
 typedef bool (*reskia_codec_peek_proc_t)(const void *data, size_t size, void *user_data);
 typedef sk_codec_t (*reskia_codec_make_proc_t)(sk_stream_t stream, reskia_codec_result_t *result, void *user_data);
 
@@ -121,6 +122,7 @@ int SkCodec_getFrameCount(reskia_codec_t *codec); // (SkCodec* codec) -> int. NU
 bool SkCodec_getFrameInfo(reskia_codec_t *codec, int index, reskia_codec_frame_info_t *info);
 int SkCodec_getFrameInfoList(reskia_codec_t *codec); // (SkCodec* codec) -> int. NULL codec returns 0.
 int SkCodec_getRepetitionCount(reskia_codec_t *codec); // (SkCodec* codec) -> int. NULL codec returns 0.
+reskia_codec_is_animated_t SkCodec_isAnimated(reskia_codec_t *codec); // NULL codec returns SkCodec::IsAnimated::kUnknown.
 
 // static
 

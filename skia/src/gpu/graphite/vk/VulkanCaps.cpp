@@ -19,8 +19,7 @@
 #include "src/gpu/graphite/RenderPassDesc.h"
 #include "src/gpu/graphite/RendererProvider.h"
 #include "src/gpu/graphite/RuntimeEffectDictionary.h"
-#include "src/gpu/graphite/vk/VulkanGraphiteTypesPriv.h"
-#include "src/gpu/graphite/vk/VulkanGraphiteUtilsPriv.h"
+#include "src/gpu/graphite/vk/VulkanGraphiteUtils.h"
 #include "src/gpu/graphite/vk/VulkanRenderPass.h"
 #include "src/gpu/graphite/vk/VulkanSharedContext.h"
 #include "src/gpu/graphite/vk/VulkanYcbcrConversion.h"
@@ -402,7 +401,8 @@ TextureInfo VulkanCaps::getDefaultMSAATextureInfo(const TextureInfo& singleSampl
 
 TextureInfo VulkanCaps::getDefaultDepthStencilTextureInfo(SkEnumBitMask<DepthStencilFlags> flags,
                                                           uint32_t sampleCount,
-                                                          Protected isProtected) const {
+                                                          Protected isProtected,
+                                                          Discardable discardable) const {
     VkFormat format = this->getFormatFromDepthStencilFlags(flags);
     const DepthStencilFormatInfo& formatInfo = this->getDepthStencilFormatInfo(format);
     if ( (isProtected == Protected::kYes && !this->protectedSupport()) ||
@@ -418,7 +418,11 @@ TextureInfo VulkanCaps::getDefaultDepthStencilTextureInfo(SkEnumBitMask<DepthSte
     info.fFormat = format;
     info.fImageTiling = VK_IMAGE_TILING_OPTIMAL;
     // TODO: Passing in a discardable flag to this method, and if true, add the TRANSIENT bit.
-    info.fImageUsageFlags = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    VkImageUsageFlags usageFlags = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (discardable == Discardable::kYes && fSupportsMemorylessAttachments) {
+        usageFlags = usageFlags | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+    }
+    info.fImageUsageFlags = usageFlags;
     info.fSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     info.fAspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 
@@ -1098,10 +1102,6 @@ void VulkanCaps::SupportedSampleCounts::initSampleCounts(const skgpu::VulkanInte
     if (flags & VK_SAMPLE_COUNT_1_BIT) {
         fSampleCounts.push_back(1);
     }
-    if (kImagination_VkVendor == physProps.vendorID) {
-        // MSAA does not work on imagination
-        return;
-    }
     if (kIntel_VkVendor == physProps.vendorID) {
         // MSAA doesn't work well on Intel GPUs chromium:527565, chromium:983926
         return;
@@ -1535,6 +1535,35 @@ UniqueKey VulkanCaps::makeGraphicsPipelineKey(const GraphicsPipelineDesc& pipeli
     return pipelineKey;
 }
 
+// c.f. VulkanTextureInfoData::serialize
+bool VulkanCaps::deserializeTextureInfo(SkStream* stream,
+                                        BackendApi backendAPI,
+                                        Mipmapped mipmapped,
+                                        Protected isProtected,
+                                        uint32_t sampleCount,
+                                        TextureInfo* out) const {
+    SkASSERT(backendAPI == BackendApi::kVulkan);
+
+    VulkanTextureSpec spec;
+    if (!VulkanTextureSpec::Deserialize(stream, &spec)) {
+        return false;
+    }
+
+    SkASSERT((isProtected == Protected::kYes) ==
+             SkToBool(spec.fFlags & VK_IMAGE_CREATE_PROTECTED_BIT));
+
+    *out = TextureInfos::MakeVulkan(VulkanTextureInfo(sampleCount,
+                                                      mipmapped,
+                                                      spec.fFlags,
+                                                      spec.fFormat,
+                                                      spec.fImageTiling,
+                                                      spec.fImageUsageFlags,
+                                                      spec.fSharingMode,
+                                                      spec.fAspectMask,
+                                                      spec.fYcbcrConversionInfo));
+    return true;
+}
+
 void VulkanCaps::buildKeyForTexture(SkISize dimensions,
                                     const TextureInfo& info,
                                     ResourceType type,
@@ -1601,6 +1630,29 @@ void VulkanCaps::buildKeyForTexture(SkISize dimensions,
                    (static_cast<uint32_t>(vkSpec.fAspectMask)          << 7 ) |
                    (static_cast<uint32_t>(vkSpec.fImageUsageFlags)     << 19);
     SkASSERT(i == num32DataCnt);
+}
+
+DstReadStrategy VulkanCaps::getDstReadStrategy(const TextureInfo& info) const {
+    // We know the graphite Vulkan backend does not support frame buffer fetch, so make sure it is
+    // not marked as supported and skip checking for it.
+    SkASSERT(!this->shaderCaps()->fFBFetchSupport);
+
+    // TODO(b/383769988): Once DstReadStrategy::kReadFromInput is supported by the Vulkan backend,
+    // determine whether that strategy can be used.
+    // bool supportsInputAttachmentUsage =
+    //      GetVkUsageFlags(info) & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+// #ifdef SK_BUILD_FOR_ANDROID
+    // We expect that all Android target textures to support input attachment usage.
+    // SkASSERT(supportsInputAttachmentUsage);
+// #endif
+    // TODO(b/390458117): Add support to do this w/ MSAA textures. For now, simply default to using
+    // TextureCopy if the texture has a sample count >1.
+    // return supportsInputAttachmentUsage && info.numSamples() == 1
+    //      ? DstReadStrategy::kReadFromInput
+    //      : DstReadStrategy::kTextureCopy;
+
+    // For now, always return DstReadStrategy::kTextureCopy.
+    return DstReadStrategy::kTextureCopy;
 }
 
 ImmutableSamplerInfo VulkanCaps::getImmutableSamplerInfo(const TextureInfo& textureInfo) const {

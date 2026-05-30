@@ -41,7 +41,8 @@ RenderPassDesc RenderPassDesc::Make(const Caps* caps,
                                     SkEnumBitMask<DepthStencilFlags> depthStencilFlags,
                                     const std::array<float, 4>& clearColor,
                                     bool requiresMSAA,
-                                    Swizzle writeSwizzle) {
+                                    Swizzle writeSwizzle,
+                                    const DstReadStrategy targetReadStrategy) {
     RenderPassDesc desc;
     desc.fWriteSwizzle = writeSwizzle;
     desc.fSampleCount = 1;
@@ -92,7 +93,7 @@ RenderPassDesc RenderPassDesc::Make(const Caps* caps,
 
     if (depthStencilFlags != DepthStencilFlags::kNone) {
         desc.fDepthStencilAttachment.fTextureInfo = caps->getDefaultDepthStencilTextureInfo(
-                depthStencilFlags, desc.fSampleCount, targetInfo.isProtected());
+                depthStencilFlags, desc.fSampleCount, targetInfo.isProtected(), Discardable::kYes);
         // Always clear the depth and stencil to 0 at the start of a DrawPass, but discard at the
         // end since their contents do not affect the next frame.
         desc.fDepthStencilAttachment.fLoadOp = LoadOp::kClear;
@@ -101,10 +102,18 @@ RenderPassDesc RenderPassDesc::Make(const Caps* caps,
         desc.fDepthStencilAttachment.fStoreOp = StoreOp::kDiscard;
     }
 
+    // Should a dst read be required later on, record what dst read strategy should be used. Must be
+    // a valid strategy.
+    SkASSERT(targetReadStrategy != DstReadStrategy::kNoneRequired);
+    desc.fDstReadStrategyIfRequired = targetReadStrategy;
+
     return desc;
 }
 
 SkString RenderPassDesc::toString() const {
+    // Note: Purposefully omitting the fDstReadStrategyIfRequired attribute. Since the shader /
+    // pipeline actually determines whether a dst read is needed, it would make more sense to
+    // report the actual used dst read strategy there.
     return SkStringPrintf("RP(color: %s, resolve: %s, ds: %s, samples: %u, swizzle: %s, "
                           "clear: c(%f,%f,%f,%f), d(%f), s(0x%02x))",
                           fColorAttachment.toString().c_str(),

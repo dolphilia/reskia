@@ -70,6 +70,13 @@ bool SkStream_readS32(reskia_stream_t *stream, int32_t *i) {
     return reinterpret_cast<SkStream *>(stream)->readS32(i);
 }
 
+bool SkStream_readS64(reskia_stream_t *stream, int64_t *i) {
+    if (stream == nullptr || i == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkStream *>(stream)->readS64(i);
+}
+
 bool SkStream_readU8(reskia_stream_t *stream, uint8_t *i) {
     if (stream == nullptr || i == nullptr) {
         return false;
@@ -89,6 +96,13 @@ bool SkStream_readU32(reskia_stream_t *stream, uint32_t *i) {
         return false;
     }
     return reinterpret_cast<SkStream *>(stream)->readU32(i);
+}
+
+bool SkStream_readU64(reskia_stream_t *stream, uint64_t *i) {
+    if (stream == nullptr || i == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkStream *>(stream)->readU64(i);
 }
 
 bool SkStream_readBool(reskia_stream_t *stream, bool *b) {

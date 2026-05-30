@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 
 class SkRRect;
 
@@ -212,11 +213,9 @@ bool SkMaskFilterBase::filterRRect(const SkRRect& devRRect, const SkMatrix& matr
     // Attempt to speed up drawing by creating a nine patch. If a nine patch
     // cannot be used, return false to allow our caller to recover and perform
     // the drawing another way.
-    SkTLazy<NinePatch> patch;
-    if (FilterReturn::kTrue != this->filterRRectToNine(devRRect, matrix,
-                                                      clip.getBounds(),
-                                                      &patch)) {
-        SkASSERT(!patch.isValid());
+    std::optional<NinePatch> patch = this->filterRRectToNine(devRRect, matrix, clip.getBounds());
+
+    if (!patch.has_value()) {
         return false;
     }
     draw_nine(patch->fMask, patch->fOuterRect, patch->fCenter, true, clip, blitter);
@@ -232,11 +231,12 @@ bool SkMaskFilterBase::filterPath(const SkPath& devPath, const SkMatrix& matrix,
         rectCount = countNestedRects(devPath, rects);
     }
     if (rectCount > 0) {
-        SkTLazy<NinePatch> patch;
+        std::optional<NinePatch> patch;
 
-        switch (this->filterRectsToNine(rects, rectCount, matrix, clip.getBounds(), &patch)) {
+        switch (this->filterRectsToNine(
+                SkSpan(rects, rectCount), matrix, clip.getBounds(), &patch)) {
             case FilterReturn::kFalse:
-                SkASSERT(!patch.isValid());
+                SkASSERT(!patch.has_value());
                 return false;
 
             case FilterReturn::kTrue:
@@ -245,7 +245,7 @@ bool SkMaskFilterBase::filterPath(const SkPath& devPath, const SkMatrix& matrix,
                 return true;
 
             case FilterReturn::kUnimplemented:
-                SkASSERT(!patch.isValid());
+                SkASSERT(!patch.has_value());
                 // fall out
                 break;
         }
@@ -287,15 +287,16 @@ bool SkMaskFilterBase::filterPath(const SkPath& devPath, const SkMatrix& matrix,
     return true;
 }
 
-SkMaskFilterBase::FilterReturn
-SkMaskFilterBase::filterRRectToNine(const SkRRect&, const SkMatrix&,
-                                    const SkIRect& clipBounds, SkTLazy<NinePatch>*) const {
-    return FilterReturn::kUnimplemented;
+std::optional<SkMaskFilterBase::NinePatch> SkMaskFilterBase::filterRRectToNine(
+        const SkRRect&, const SkMatrix&, const SkIRect&) const {
+    return std::nullopt;
 }
 
-SkMaskFilterBase::FilterReturn
-SkMaskFilterBase::filterRectsToNine(const SkRect[], int count, const SkMatrix&,
-                                    const SkIRect& clipBounds, SkTLazy<NinePatch>*) const {
+SkMaskFilterBase::FilterReturn SkMaskFilterBase::filterRectsToNine(
+        SkSpan<const SkRect>,
+        const SkMatrix&,
+        const SkIRect&,
+        std::optional<NinePatch>*) const {
     return FilterReturn::kUnimplemented;
 }
 

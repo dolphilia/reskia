@@ -694,8 +694,9 @@ int ShaderCodeDictionary::findOrCreateRuntimeEffectSnippet(const SkRuntimeEffect
      SkAutoSpinlock lock{fSpinLock};
 
     if (int stableKey = SkRuntimeEffectPriv::StableKey(*effect)) {
-        SkASSERT(stableKey >= kSkiaKnownRuntimeEffectsStart &&
-                 stableKey < kSkiaKnownRuntimeEffectsStart + kStableKeyCnt);
+        // TODO(robertphillips): This assert will need to be loosened when first party stable
+        // keys are allowed (and the following code updated too).
+        SkASSERT(IsSkiaKnownRuntimeEffect(stableKey));
 
         int index = stableKey - kSkiaKnownRuntimeEffectsStart;
 
@@ -728,6 +729,14 @@ int ShaderCodeDictionary::findOrCreateRuntimeEffectSnippet(const SkRuntimeEffect
     fRuntimeEffectMap.set(key, newCodeSnippetID);
     return newCodeSnippetID;
 }
+
+#if defined(GPU_TEST_UTILS)
+int ShaderCodeDictionary::numUserDefinedRuntimeEffects() const {
+    SkAutoSpinlock lock{fSpinLock};
+
+    return fUserDefinedCodeSnippets.size();
+}
+#endif
 
 ShaderCodeDictionary::ShaderCodeDictionary(Layout layout)
         : fLayout(layout) {
@@ -1184,8 +1193,8 @@ ShaderCodeDictionary::ShaderCodeDictionary(Layout layout)
             /*uniforms=*/{ { "rect",           SkSLType::kFloat4 },
                            { "radiusPlusHalf", SkSLType::kFloat2 },
                            { "edgeSelect",     SkSLType::kHalf4 },
-                           { "texCoordOffset", SkSLType::kHalf2 },
-                           { "maskBounds",     SkSLType::kHalf4 },
+                           { "texCoordOffset", SkSLType::kFloat2 },
+                           { "maskBounds",     SkSLType::kFloat4 },
                            { "invAtlasSize",   SkSLType::kFloat2 } },
             /*texturesAndSamplers=*/{"atlasSampler"}
     };

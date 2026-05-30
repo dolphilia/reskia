@@ -45,15 +45,26 @@ public:
 
     TextureInfo getDefaultDepthStencilTextureInfo(SkEnumBitMask<DepthStencilFlags>,
                                                   uint32_t sampleCount,
-                                                  Protected) const override;
+                                                  Protected,
+                                                  Discardable discardable) const override;
 
     TextureInfo getDefaultStorageTextureInfo(SkColorType) const override;
+
+    // Override Caps's implementation in order to consult Vulkan-specific texture properties.
+    DstReadStrategy getDstReadStrategy(const TextureInfo& info) const override;
 
     ImmutableSamplerInfo getImmutableSamplerInfo(const TextureInfo&) const override;
 
     UniqueKey makeGraphicsPipelineKey(const GraphicsPipelineDesc&,
                                       const RenderPassDesc&) const override;
     UniqueKey makeComputePipelineKey(const ComputePipelineDesc&) const override { return {}; }
+
+    bool deserializeTextureInfo(SkStream*,
+                                BackendApi,
+                                Mipmapped,
+                                Protected,
+                                uint32_t sampleCount,
+                                TextureInfo* out) const override;
 
     uint32_t channelMask(const TextureInfo&) const override;
 

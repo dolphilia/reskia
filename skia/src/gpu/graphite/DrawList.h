@@ -16,7 +16,7 @@
 #include "src/gpu/graphite/PaintParams.h"
 #include "src/gpu/graphite/geom/Geometry.h"
 #include "src/gpu/graphite/geom/Rect.h"
-#include "src/gpu/graphite/geom/Transform_graphite.h"
+#include "src/gpu/graphite/geom/Transform.h"
 
 #include <limits>
 #include <optional>
@@ -102,6 +102,10 @@ private:
                 : fRenderer(renderer)
                 , fDrawParams(transform, geometry, clip, order, stroke)
                 , fPaintParams(paint ? std::optional<PaintParams>(*paint) : std::nullopt) {}
+
+        bool readsFromDst() const {
+            return fPaintParams.has_value() ? fPaintParams.value().dstReadRequired() : false;
+        }
     };
 
     // The returned Transform reference remains valid for the lifetime of the DrawList.

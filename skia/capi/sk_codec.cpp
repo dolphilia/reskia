@@ -310,6 +310,13 @@ int SkCodec_getRepetitionCount(reskia_codec_t *codec) {
     return native != nullptr ? native->getRepetitionCount() : 0;
 }
 
+reskia_codec_is_animated_t SkCodec_isAnimated(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr
+           ? static_cast<reskia_codec_is_animated_t>(native->isAnimated())
+           : static_cast<reskia_codec_is_animated_t>(SkCodec::IsAnimated::kUnknown);
+}
+
 // static
 
 size_t SkCodec_MinBufferedBytesNeeded() {

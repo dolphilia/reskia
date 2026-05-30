@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-#include "src/gpu/graphite/ClipStack_graphite.h"
+#include "src/gpu/graphite/ClipStack.h"
 
 #include "include/core/SkMatrix.h"
 #include "include/core/SkShader.h"
@@ -1391,7 +1391,7 @@ Clip ClipStack::visitClipStackForDraw(const Transform& localToDevice,
         }
     }
 
-#if defined(SK_GRAPHITE_ENABLE_CLIP_ATLAS)
+#ifdef SK_ENABLE_CLIP_ATLAS_MANAGER
     // If there is no MSAA supported, rasterize any remaining elements by flattening them
     // into a single mask and storing in an atlas. Otherwise these will be handled by
     // Device::drawClip().
@@ -1401,20 +1401,22 @@ Clip ClipStack::visitClipStackForDraw(const Transform& localToDevice,
         SkASSERT(clipAtlas);
         AtlasClip* atlasClip = &nonMSAAClip.fAtlasClip;
 
+        SkRect maskBounds = cs.outerBounds().asSkRect();
+        SkIRect iMaskBounds = maskBounds.roundOut();
         const TextureProxy* proxy = clipAtlas->findOrCreateEntry(cs.genID(),
                                                                  outEffectiveElements,
-                                                                 cs.outerBounds(),
+                                                                 iMaskBounds,
                                                                  &atlasClip->fOutPos);
         if (proxy) {
             // Add to Clip
-            atlasClip->fMaskBounds = scissor;
+            atlasClip->fMaskBounds = iMaskBounds;
             atlasClip->fAtlasTexture = sk_ref_sp(proxy);
 
             // Elements are represented in the clip atlas, discard.
             outEffectiveElements->clear();
         }
     }
-#endif
+#endif // SK_ENABLE_CLIP_ATLAS_MANAGER
 
     return Clip(drawBounds, transformedShapeBounds, scissor.asSkIRect(), nonMSAAClip, cs.shader());
 }
