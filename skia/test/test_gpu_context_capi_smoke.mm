@@ -853,9 +853,8 @@ bool smoke_context_create_destroy() {
                Graphite_TextureInfo_numSamples(nullptr) == 0 &&
                !Graphite_TextureInfo_mipmapped(nullptr) &&
                !Graphite_TextureInfo_isProtected(nullptr) &&
-               Graphite_TextureInfo_compressionType(nullptr) == 0 &&
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
-               !Graphite_TextureInfo_isCompatible(nullptr, nullptr) &&
+               !Graphite_TextureInfo_canBeFulfilledBy(nullptr, nullptr) &&
                Graphite_TextureInfo_toString(nullptr) == nullptr &&
                !Graphite_MtlTextureInfo_new(nullptr) &&
                !Graphite_MtlTextureInfo_newTexture(nullptr, nullptr) &&
@@ -1266,7 +1265,6 @@ bool smoke_context_create_destroy() {
                    Graphite_TextureInfo_numSamples(default_texture_info) == 0 &&
                    !Graphite_TextureInfo_mipmapped(default_texture_info) &&
                    !Graphite_TextureInfo_isProtected(default_texture_info) &&
-                   Graphite_TextureInfo_compressionType(default_texture_info) == 0 &&
                    texture_info_string != nullptr,
                    "Graphite_TextureInfo default")) {
             SkString_delete(texture_info_string);
@@ -1282,7 +1280,7 @@ bool smoke_context_create_destroy() {
         if (!check(copied_texture_info != nullptr &&
                    Graphite_TextureInfo_equals(default_texture_info, copied_texture_info) &&
                    !Graphite_TextureInfo_notEquals(default_texture_info, copied_texture_info) &&
-                   Graphite_TextureInfo_isCompatible(default_texture_info, copied_texture_info),
+                   Graphite_TextureInfo_canBeFulfilledBy(default_texture_info, copied_texture_info),
                    "Graphite_TextureInfo copy")) {
             Graphite_TextureInfo_delete(copied_texture_info);
             Graphite_TextureInfo_delete(default_texture_info);

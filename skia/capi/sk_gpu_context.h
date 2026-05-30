@@ -294,12 +294,9 @@ int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info); //
 uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info); // NULL input returns 0
 bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info); // NULL input returns false
-bool Graphite_TextureInfo_isMemoryless(const reskia_graphite_texture_info_t *info); // NULL input returns false
-reskia_sk_texture_compression_type_t Graphite_TextureInfo_compressionType(const reskia_graphite_texture_info_t *info); // NULL input returns 0
 bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info); // NULL/non-Metal returns false
-bool Graphite_TextureInfo_isCompatible(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
+bool Graphite_TextureInfo_canBeFulfilledBy(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
 reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_info_t *info); // owned; NULL input returns NULL
-reskia_string_t *Graphite_TextureInfo_toRPAttachmentString(const reskia_graphite_texture_info_t *info); // owned; NULL input returns NULL
 
 reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_new(); // owned; invalid default semaphore
 reskia_graphite_backend_semaphore_t *Graphite_BackendSemaphore_newMtl(void *event, uint64_t value); // owned; unavailable Metal returns NULL

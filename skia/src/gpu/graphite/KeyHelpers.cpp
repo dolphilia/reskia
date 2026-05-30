@@ -1258,19 +1258,27 @@ static void gather_runtime_effect_uniforms(const KeyContext& keyContext,
     }
 }
 
-void RuntimeEffectBlock::BeginBlock(const KeyContext& keyContext,
+// TODO(robertphillips): when BeginBlock fails we should mark the 'builder' as having failed
+// and explicitly handle the failure in ShaderCodeDictionary::findOrCreate.
+bool RuntimeEffectBlock::BeginBlock(const KeyContext& keyContext,
                                     PaintParamsKeyBuilder* builder,
                                     PipelineDataGatherer* gatherer,
                                     const ShaderData& shaderData) {
     ShaderCodeDictionary* dict = keyContext.dict();
     int codeSnippetID = dict->findOrCreateRuntimeEffectSnippet(shaderData.fEffect.get());
 
-    if (codeSnippetID >= SkKnownRuntimeEffects::kUnknownRuntimeEffectIDStart) {
+    if (codeSnippetID < 0) {
+        return false;
+    }
+
+    if (SkKnownRuntimeEffects::IsUserDefinedRuntimeEffect(codeSnippetID)) {
         keyContext.rtEffectDict()->set(codeSnippetID, shaderData.fEffect);
     }
 
     const ShaderSnippet* entry = dict->getEntry(codeSnippetID);
-    SkASSERT(entry);
+    if (!entry) {
+        return false;
+    }
 
     gather_runtime_effect_uniforms(keyContext,
                                    shaderData.fEffect.get(),
@@ -1279,6 +1287,27 @@ void RuntimeEffectBlock::BeginBlock(const KeyContext& keyContext,
                                    gatherer);
 
     builder->beginBlock(codeSnippetID);
+    return true;
+}
+
+// TODO(robertphillips): fuse this with the similar code in add_children_to_key and
+// PrecompileRTEffect::addToKey.
+void RuntimeEffectBlock::AddNoOpEffect(const KeyContext& keyContext,
+                                       PaintParamsKeyBuilder* builder,
+                                       PipelineDataGatherer* gatherer,
+                                       SkRuntimeEffect* effect) {
+    if (effect->allowShader()) {
+        // A missing shader returns transparent black
+        SolidColorShaderBlock::AddBlock(keyContext, builder, gatherer,
+                                        SK_PMColor4fTRANSPARENT);
+    } else if (effect->allowColorFilter()) {
+        // A "passthrough" color filter returns the input color as-is.
+        builder->addBlock(BuiltInCodeSnippetID::kPriorOutput);
+    } else {
+        SkASSERT(effect->allowBlender());
+        // A "passthrough" blender performs `blend_src_over(src, dest)`.
+        AddFixedBlendMode(keyContext, builder, gatherer, SkBlendMode::kSrcOver);
+    }
 }
 
 // ==================================================================
@@ -1379,8 +1408,11 @@ void add_to_key(const KeyContext& keyContext,
             keyContext.dstColorInfo().colorSpace());
     SkASSERT(uniforms);
 
-    RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer,
-                                   { effect, std::move(uniforms) });
+    if (!RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer,
+                                        { effect, std::move(uniforms) })) {
+        RuntimeEffectBlock::AddNoOpEffect(keyContext, builder, gatherer, effect.get());
+        return;
+    }
 
     add_children_to_key(keyContext, builder, gatherer,
                         blender->children(), effect.get());
@@ -1523,7 +1555,11 @@ static void add_to_key(const KeyContext& keyContext,
             effect->uniforms(), filter->uniforms(), keyContext.dstColorInfo().colorSpace());
     SkASSERT(uniforms);
 
-    RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer, {effect, std::move(uniforms)});
+    if (!RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer,
+                                        { effect, std::move(uniforms) })) {
+        RuntimeEffectBlock::AddNoOpEffect(keyContext, builder, gatherer, effect.get());
+        return;
+    }
 
     add_children_to_key(keyContext, builder, gatherer,
                         filter->children(), effect.get());
@@ -1920,24 +1956,6 @@ static void add_yuv_image_to_key(const KeyContext& keyContext,
             });
 }
 
-static skgpu::graphite::ReadSwizzle swizzle_class_to_read_enum(const skgpu::Swizzle& swizzle) {
-    if (swizzle == skgpu::Swizzle::RGBA()) {
-        return skgpu::graphite::ReadSwizzle::kRGBA;
-    } else if (swizzle == skgpu::Swizzle::RGB1()) {
-        return skgpu::graphite::ReadSwizzle::kRGB1;
-    } else if (swizzle == skgpu::Swizzle("rrr1")) {
-        return skgpu::graphite::ReadSwizzle::kRRR1;
-    } else if (swizzle == skgpu::Swizzle::BGRA()) {
-        return skgpu::graphite::ReadSwizzle::kBGRA;
-    } else if (swizzle == skgpu::Swizzle("000r")) {
-        return skgpu::graphite::ReadSwizzle::k000R;
-    } else {
-        SKGPU_LOG_W("%s is an unsupported read swizzle. Defaulting to RGBA.\n",
-                    swizzle.asString().data());
-        return skgpu::graphite::ReadSwizzle::kRGBA;
-    }
-}
-
 static void add_to_key(const KeyContext& keyContext,
                        PaintParamsKeyBuilder* builder,
                        PipelineDataGatherer* gatherer,
@@ -2014,7 +2032,7 @@ static void add_to_key(const KeyContext& keyContext,
         readSwizzle = skgpu::Swizzle::Concat(readSwizzle, skgpu::Swizzle("000a"));
     }
     ColorSpaceTransformBlock::ColorSpaceTransformData colorXformData(
-            swizzle_class_to_read_enum(readSwizzle));
+            SwizzleClassToReadEnum(readSwizzle));
 
     if (!shader->isRaw()) {
         colorXformData.fSteps = SkColorSpaceXformSteps(imageToDraw->colorSpace(),
@@ -2283,8 +2301,11 @@ static void add_to_key(const KeyContext& keyContext,
             keyContext.dstColorInfo().colorSpace());
     SkASSERT(uniforms);
 
-    RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer,
-                                   {effect, std::move(uniforms)});
+    if (!RuntimeEffectBlock::BeginBlock(keyContext, builder, gatherer,
+                                        { effect, std::move(uniforms) })) {
+        RuntimeEffectBlock::AddNoOpEffect(keyContext, builder, gatherer, effect.get());
+        return;
+    }
 
     add_children_to_key(keyContext, builder, gatherer,
                         shader->children(), effect.get());

@@ -2847,24 +2847,6 @@ bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info
 #endif
 }
 
-bool Graphite_TextureInfo_isMemoryless(const reskia_graphite_texture_info_t *info) {
-#if defined(SK_GRAPHITE)
-    return info != nullptr && as_graphite_texture_info(info)->isMemoryless();
-#else
-    (void) info;
-    return false;
-#endif
-}
-
-reskia_sk_texture_compression_type_t Graphite_TextureInfo_compressionType(const reskia_graphite_texture_info_t *info) {
-#if defined(SK_GRAPHITE)
-    return info != nullptr ? static_cast<reskia_sk_texture_compression_type_t>(as_graphite_texture_info(info)->compressionType()) : 0;
-#else
-    (void) info;
-    return 0;
-#endif
-}
-
 bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info) {
     if (out_info != nullptr) {
         *out_info = {};
@@ -2890,9 +2872,9 @@ bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t
 #endif
 }
 
-bool Graphite_TextureInfo_isCompatible(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other) {
+bool Graphite_TextureInfo_canBeFulfilledBy(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other) {
 #if defined(SK_GRAPHITE)
-    return info != nullptr && other != nullptr && as_graphite_texture_info(info)->isCompatible(*as_graphite_texture_info(other));
+    return info != nullptr && other != nullptr && as_graphite_texture_info(info)->canBeFulfilledBy(*as_graphite_texture_info(other));
 #else
     (void) info;
     (void) other;
@@ -2903,15 +2885,6 @@ bool Graphite_TextureInfo_isCompatible(const reskia_graphite_texture_info_t *inf
 reskia_string_t *Graphite_TextureInfo_toString(const reskia_graphite_texture_info_t *info) {
 #if defined(SK_GRAPHITE)
     return info != nullptr ? reinterpret_cast<reskia_string_t *>(new SkString(as_graphite_texture_info(info)->toString())) : nullptr;
-#else
-    (void) info;
-    return nullptr;
-#endif
-}
-
-reskia_string_t *Graphite_TextureInfo_toRPAttachmentString(const reskia_graphite_texture_info_t *info) {
-#if defined(SK_GRAPHITE)
-    return info != nullptr ? reinterpret_cast<reskia_string_t *>(new SkString(as_graphite_texture_info(info)->toRPAttachmentString())) : nullptr;
 #else
     (void) info;
     return nullptr;

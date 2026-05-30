@@ -23,7 +23,7 @@ reskia_pmcolor_t SkColorPriv_SkPackARGB32(reskia_u32_t a, reskia_u32_t r, reskia
 }
 
 reskia_pmcolor_t SkColorPriv_SkPackARGB32NoCheck(reskia_u32_t a, reskia_u32_t r, reskia_u32_t g, reskia_u32_t b) {
-    return static_cast<reskia_pmcolor_t>(SkPackARGB32NoCheck(static_cast<U8CPU>(a), static_cast<U8CPU>(r), static_cast<U8CPU>(g), static_cast<U8CPU>(b)));
+    return static_cast<reskia_pmcolor_t>(SkPackARGB32(static_cast<U8CPU>(a), static_cast<U8CPU>(r), static_cast<U8CPU>(g), static_cast<U8CPU>(b)));
 }
 
 reskia_pmcolor_t SkColorPriv_SkPMSrcOver(reskia_pmcolor_t src, reskia_pmcolor_t dst) {

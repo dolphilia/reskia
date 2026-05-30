@@ -14,6 +14,7 @@
 #include "src/core/SkTraceEvent.h"
 #include "src/gpu/graphite/ContextPriv.h"
 #include "src/gpu/graphite/RenderPassDesc.h"
+#include "src/gpu/graphite/TextureFormat.h"
 #include "src/gpu/graphite/vk/VulkanQueueManager.h"
 #include "src/gpu/graphite/vk/VulkanSampler.h"
 #include "src/gpu/graphite/vk/VulkanSharedContext.h"
@@ -130,38 +131,51 @@ VkDescriptorType DsTypeEnumToVkDs(DescriptorType type) {
     SkUNREACHABLE;
 }
 
-bool vkFormatIsSupported(VkFormat format) {
+TextureFormat VkFormatToTextureFormat(VkFormat format) {
     switch (format) {
-        case VK_FORMAT_R8G8B8A8_UNORM:
-        case VK_FORMAT_B8G8R8A8_UNORM:
-        case VK_FORMAT_R8G8B8A8_SRGB:
-        case VK_FORMAT_R8G8B8_UNORM:
-        case VK_FORMAT_R8G8_UNORM:
-        case VK_FORMAT_A2B10G10R10_UNORM_PACK32:
-        case VK_FORMAT_A2R10G10B10_UNORM_PACK32:
-        case VK_FORMAT_R5G6B5_UNORM_PACK16:
-        case VK_FORMAT_B4G4R4A4_UNORM_PACK16:
-        case VK_FORMAT_R4G4B4A4_UNORM_PACK16:
-        case VK_FORMAT_R8_UNORM:
-        case VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK:
-        case VK_FORMAT_BC1_RGB_UNORM_BLOCK:
-        case VK_FORMAT_BC1_RGBA_UNORM_BLOCK:
-        case VK_FORMAT_R16G16B16A16_SFLOAT:
-        case VK_FORMAT_R16_SFLOAT:
-        case VK_FORMAT_R16_UNORM:
-        case VK_FORMAT_R16G16_UNORM:
-        case VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM:
-        case VK_FORMAT_G8_B8R8_2PLANE_420_UNORM:
-        case VK_FORMAT_R16G16B16A16_UNORM:
-        case VK_FORMAT_R16G16_SFLOAT:
-        case VK_FORMAT_S8_UINT:
-        case VK_FORMAT_D16_UNORM:
-        case VK_FORMAT_D32_SFLOAT:
-        case VK_FORMAT_D24_UNORM_S8_UINT:
-        case VK_FORMAT_D32_SFLOAT_S8_UINT:
-            return true;
-        default:
-            return false;
+        case VK_FORMAT_R8_UNORM:                  return TextureFormat::kR8;
+        case VK_FORMAT_R16_UNORM:                 return TextureFormat::kR16;
+        case VK_FORMAT_R16_SFLOAT:                return TextureFormat::kR16F;
+        case VK_FORMAT_R32_SFLOAT:                return TextureFormat::kR32F;
+        case VK_FORMAT_R8G8_UNORM:                return TextureFormat::kRG8;
+        case VK_FORMAT_R16G16_UNORM:              return TextureFormat::kRG16;
+        case VK_FORMAT_R16G16_SFLOAT:             return TextureFormat::kRG16F;
+        case VK_FORMAT_R32G32_SFLOAT:             return TextureFormat::kRG32F;
+        case VK_FORMAT_R8G8B8_UNORM:              return TextureFormat::kRGB8;
+        case VK_FORMAT_B8G8R8_UNORM:              return TextureFormat::kBGR8;
+        case VK_FORMAT_R5G6B5_UNORM_PACK16:       return TextureFormat::kB5_G6_R5;
+        case VK_FORMAT_B5G6R5_UNORM_PACK16:       return TextureFormat::kR5_G6_B5;
+        case VK_FORMAT_R16G16B16_UNORM:           return TextureFormat::kRGB16;
+        case VK_FORMAT_R16G16B16_SFLOAT:          return TextureFormat::kRGB16F;
+        case VK_FORMAT_R32G32B32_SFLOAT:          return TextureFormat::kRGB32F;
+        case VK_FORMAT_R8G8B8_SRGB:               return TextureFormat::kRGB8_sRGB;
+        case VK_FORMAT_R8G8B8A8_UNORM:            return TextureFormat::kRGBA8;
+        case VK_FORMAT_A8B8G8R8_UNORM_PACK32:     return TextureFormat::kRGBA8;
+        case VK_FORMAT_R16G16B16A16_UNORM:        return TextureFormat::kRGBA16;
+        case VK_FORMAT_R16G16B16A16_SFLOAT:       return TextureFormat::kRGBA16F;
+        case VK_FORMAT_R32G32B32A32_SFLOAT:       return TextureFormat::kRGBA32F;
+        case VK_FORMAT_A2B10G10R10_UNORM_PACK32:  return TextureFormat::kRGB10_A2;
+        case VK_FORMAT_R8G8B8A8_SRGB:             return TextureFormat::kRGBA8_sRGB;
+        case VK_FORMAT_B8G8R8A8_UNORM:            return TextureFormat::kBGRA8;
+        case VK_FORMAT_A2R10G10B10_UNORM_PACK32:  return TextureFormat::kBGR10_A2;
+        case VK_FORMAT_B8G8R8A8_SRGB:             return TextureFormat::kBGRA8_sRGB;
+        case VK_FORMAT_R4G4B4A4_UNORM_PACK16:     return TextureFormat::kABGR4;
+        case VK_FORMAT_B4G4R4A4_UNORM_PACK16:     return TextureFormat::kARGB4;
+        case VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK:   return TextureFormat::kRGB8_ETC2;
+        case VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK:    return TextureFormat::kRGB8_ETC2_sRGB;
+        case VK_FORMAT_BC1_RGB_UNORM_BLOCK:       return TextureFormat::kRGB8_BC1;
+        case VK_FORMAT_BC1_RGBA_UNORM_BLOCK:      return TextureFormat::kRGBA8_BC1;
+        case VK_FORMAT_BC1_RGBA_SRGB_BLOCK:       return TextureFormat::kRGBA8_BC1_sRGB;
+        case VK_FORMAT_G8_B8R8_2PLANE_420_UNORM:  return TextureFormat::kYUV8_P2_420;
+        case VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM: return TextureFormat::kYUV8_P3_420;
+        case VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16:
+            return TextureFormat::kYUV10x6_P2_420;
+        case VK_FORMAT_S8_UINT:                   return TextureFormat::kS8;
+        case VK_FORMAT_D16_UNORM:                 return TextureFormat::kD16;
+        case VK_FORMAT_D32_SFLOAT:                return TextureFormat::kD32F;
+        case VK_FORMAT_D24_UNORM_S8_UINT:         return TextureFormat::kD24_S8;
+        case VK_FORMAT_D32_SFLOAT_S8_UINT:        return TextureFormat::kD32F_S8;
+        default:                                  return TextureFormat::kUnsupported;
     }
 }
 
@@ -182,67 +196,7 @@ VkShaderStageFlags PipelineStageFlagsToVkShaderStageFlags(
 
 bool RenderPassDescWillLoadMSAAFromResolve(const RenderPassDesc& renderPassDesc) {
     return renderPassDesc.fColorResolveAttachment.fTextureInfo.isValid() &&
-    renderPassDesc.fColorResolveAttachment.fLoadOp == LoadOp::kLoad;
-}
-
-VulkanTextureInfo VulkanTextureSpecToTextureInfo(const VulkanTextureSpec& vkSpec,
-                                                 uint32_t sampleCount,
-                                                 Mipmapped mipmapped) {
-    return VulkanTextureInfo(sampleCount,
-                             mipmapped,
-                             vkSpec.fFlags,
-                             vkSpec.fFormat,
-                             vkSpec.fImageTiling,
-                             vkSpec.fImageUsageFlags,
-                             vkSpec.fSharingMode,
-                             vkSpec.fAspectMask,
-                             vkSpec.fYcbcrConversionInfo);
-}
-
-bool VulkanTextureSpec::serialize(SkWStream* stream) const {
-    SkASSERT(SkTFitsIn<uint64_t>(fFlags));
-    SkASSERT(SkTFitsIn<uint64_t>(fFormat));
-    SkASSERT(SkTFitsIn<uint64_t>(fImageUsageFlags));
-    SkASSERT(SkTFitsIn<uint8_t>(fImageTiling));
-    SkASSERT(SkTFitsIn<uint8_t>(fSharingMode));
-    SkASSERT(SkTFitsIn<uint32_t>(fAspectMask));
-
-    if (!stream->write64(static_cast<uint64_t>(fFlags)))           { return false; }
-    if (!stream->write64(static_cast<uint64_t>(fFormat)))          { return false; }
-    if (!stream->write64(static_cast<uint64_t>(fImageUsageFlags))) { return false; }
-    if (!stream->write8(static_cast<uint8_t>(fImageTiling)))       { return false; }
-    if (!stream->write8(static_cast<uint8_t>(fSharingMode)))       { return false; }
-    if (!stream->write32(static_cast<uint32_t>(fAspectMask)))      { return false; }
-
-    return SerializeVkYCbCrInfo(stream, fYcbcrConversionInfo);
-}
-
-// TODO(robertphillips): add validity checks to deserialized values
-bool VulkanTextureSpec::Deserialize(SkStream* stream, VulkanTextureSpec* out) {
-    uint64_t tmp64;
-
-    if (!stream->readU64(&tmp64)) { return false; }
-    out->fFlags = static_cast<VkImageCreateFlags>(tmp64);
-
-    if (!stream->readU64(&tmp64)) { return false; }
-    out->fFormat = static_cast<VkFormat>(tmp64);
-
-    if (!stream->readU64(&tmp64)) { return false; }
-    out->fImageUsageFlags = static_cast<VkImageUsageFlags>(tmp64);
-
-    uint32_t tmp32;
-    uint8_t tmp8;
-
-    if (!stream->readU8(&tmp8)) { return false; }
-    out->fImageTiling = static_cast<VkImageTiling>(tmp8);
-
-    if (!stream->readU8(&tmp8)) { return false; }
-    out->fSharingMode = static_cast<VkSharingMode>(tmp8);
-
-    if (!stream->readU32(&tmp32)) { return false; }
-    out->fAspectMask = static_cast<VkImageAspectFlags>(tmp32);
-
-    return DeserializeVkYCbCrInfo(stream, &out->fYcbcrConversionInfo);
+           renderPassDesc.fColorResolveAttachment.fLoadOp == LoadOp::kLoad;
 }
 
 } // namespace skgpu::graphite
