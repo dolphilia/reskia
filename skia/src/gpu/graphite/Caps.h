@@ -287,6 +287,13 @@ public:
     // Returns whether multisampled render to single sampled is supported.
     bool msaaRenderToSingleSampledSupport() const { return fMSAARenderToSingleSampledSupport; }
 
+    // Returns whether a render pass can have MSAA/depth/stencil attachments and a resolve
+    // attachment with mismatched sizes. Note: the MSAA attachment and the depth/stencil attachment
+    // still need to match their sizes.
+    bool differentResolveAttachmentSizeSupport() const {
+        return fDifferentResolveAttachmentSizeSupport;
+    }
+
     // Returns whether compute shaders are supported.
     bool computeSupport() const { return fComputeSupport; }
 
@@ -308,12 +315,7 @@ public:
 
     // Returns what method of dst read a draw should use for obtaining the dst color. Backends can
     // use the default implementation or override this method as needed.
-    // TODO(b/390458117): Once the Vulkan backend supports DstReadStrategy::kReadFromInput for
-    // MSAA textures (and if we are comfortable assuming by this point that all render targets, at
-    // least on Android, support input attachment usage) then the TextureInfo argument can be
-    // removed and backend Caps implementations can report kReadFromInput support some other way
-    // (such as a simple member attribute bool). For now, we must check each render target's info.
-    virtual DstReadStrategy getDstReadStrategy(const TextureInfo&) const;
+    virtual DstReadStrategy getDstReadStrategy() const;
 
     float minDistanceFieldFontSize() const { return fMinDistanceFieldFontSize; }
     float glyphsAsPathsFontSize() const { return fGlyphsAsPathsFontSize; }
@@ -413,6 +415,7 @@ protected:
     bool fDrawBufferCanBeMapped = true;
     bool fBufferMapsAreAsync = false;
     bool fMSAARenderToSingleSampledSupport = false;
+    bool fDifferentResolveAttachmentSizeSupport = false;
 
     bool fComputeSupport = false;
     bool fSupportsAHardwareBufferImages = false;

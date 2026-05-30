@@ -52,6 +52,7 @@ namespace skgpu {
 enum class Mipmapped : bool;
 enum class Protected : bool;
 }
+namespace skgpu::ganesh { class SurfaceDrawContext; }
 
 class SkImage_Ganesh final : public SkImage_GaneshBase {
 public:
@@ -108,7 +109,7 @@ public:
                                                        skgpu::Mipmapped,
                                                        GrImageTexGenPolicy) const override;
 
-    std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(GrRecordingContext*,
+    std::unique_ptr<GrFragmentProcessor> asFragmentProcessor(skgpu::ganesh::SurfaceDrawContext*,
                                                              SkSamplingOptions,
                                                              const SkTileMode[2],
                                                              const SkMatrix&,
@@ -160,7 +161,7 @@ private:
         // Call when it is known for sure copy won't be necessary.
         sk_sp<GrSurfaceProxy> makeVolatileProxyStable() SK_EXCLUDES(fLock);
 
-        bool surfaceMustCopyOnWrite(GrSurfaceProxy* surfaceProxy) SK_EXCLUDES(fLock);
+        bool surfaceMustCopyOnWrite(GrSurfaceProxy* surfaceProxy) const SK_EXCLUDES(fLock);
 
         // Queries that should be independent of which proxy is in use.
         size_t gpuMemorySize() const SK_EXCLUDES(fLock);

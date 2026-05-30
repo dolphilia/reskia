@@ -58,23 +58,38 @@ public:
     void purgePipelinesNotUsedSince(
             StdSteadyClock::time_point purgeTime) SK_EXCLUDES(fSpinLock);
 
+    void reportPrecompileStats() SK_EXCLUDES(fSpinLock);
+    void reportCacheStats() SK_EXCLUDES(fSpinLock);
+
 #if defined(GPU_TEST_UTILS)
     int numGraphicsPipelines() const SK_EXCLUDES(fSpinLock);
     void resetGraphicsPipelines() SK_EXCLUDES(fSpinLock);
     void forEachGraphicsPipeline(
             const std::function<void(const UniqueKey&, const GraphicsPipeline*)>& fn)
             SK_EXCLUDES(fSpinLock);
+    uint16_t getEpoch() const SK_EXCLUDES(fSpinLock);
+    void forceNextEpochOverflow() SK_EXCLUDES(fSpinLock);
+#endif
 
     struct PipelineStats {
+#if defined(GPU_TEST_UTILS)
         int fGraphicsCacheHits = 0;
         int fGraphicsCacheMisses = 0;
         int fGraphicsCacheAdditions = 0;
         int fGraphicsRaces = 0;
         int fGraphicsPurges = 0;
+#endif
+        // Normally compiled Pipelines that were skipped bc of a preexisting Precompiled Pipeline
+        uint32_t fNormalPreemptedByPrecompile = 0;
+        // Precompiled Pipelines that made it into the cache
+        uint32_t fUnpreemptedPrecompilePipelines = 0;
+        // Precompiled Pipelines that were purged from the cache prior to use
+        uint32_t fPurgedUnusedPrecompiledPipelines = 0;
+        // The number of Pipelines requested since the last call to reportCacheStats
+        uint32_t fPipelineUsesInEpoch = 0;
     };
 
     PipelineStats getStats() const SK_EXCLUDES(fSpinLock);
-#endif
 
     // Find and add operations for ComputePipelines, with the same pattern as GraphicsPipelines.
     sk_sp<ComputePipeline> findComputePipeline(const UniqueKey&) SK_EXCLUDES(fSpinLock);
@@ -99,9 +114,11 @@ private:
         uint32_t operator()(const UniqueKey& key) const { return key.hash(); }
     };
 
-    static void LogPurge(const UniqueKey& key, sk_sp<GraphicsPipeline>* p);
+    static void LogPurge(void* context, const UniqueKey& key, sk_sp<GraphicsPipeline>* p);
     struct PurgeCB {
-        void operator()(const UniqueKey& k, sk_sp<GraphicsPipeline>* p) const { LogPurge(k, p); }
+        void operator()(void* context, const UniqueKey& k, sk_sp<GraphicsPipeline>* p) const {
+            LogPurge(context, k, p);
+        }
     };
 
     using GraphicsPipelineCache = SkLRUCache<UniqueKey, sk_sp<GraphicsPipeline>, KeyHash, PurgeCB>;
@@ -121,9 +138,12 @@ private:
     PipelineCallback fPipelineCallback SK_GUARDED_BY(fSpinLock) = nullptr;
     PipelineCallbackContext fPipelineCallbackContext SK_GUARDED_BY(fSpinLock) = nullptr;
 
-#if defined(GPU_TEST_UTILS)
     PipelineStats fStats SK_GUARDED_BY(fSpinLock);
-#endif
+
+    // An epoch is the span of time between calls to PrecompileContext::reportPipelineStats.
+    // Every Pipeline will be marked with the epoch in which it was created and then updated
+    // for each epoch in which it was used.
+    uint16_t fEpochCounter SK_GUARDED_BY(fSpinLock) = 1;
 };
 
 }  // namespace skgpu::graphite

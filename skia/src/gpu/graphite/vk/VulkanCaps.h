@@ -51,7 +51,7 @@ public:
     TextureInfo getDefaultStorageTextureInfo(SkColorType) const override;
 
     // Override Caps's implementation in order to consult Vulkan-specific texture properties.
-    DstReadStrategy getDstReadStrategy(const TextureInfo& info) const override;
+    DstReadStrategy getDstReadStrategy() const override;
 
     ImmutableSamplerInfo getImmutableSamplerInfo(const TextureInfo&) const override;
 
@@ -201,7 +201,7 @@ private:
     VkFormat getFormatFromColorType(SkColorType) const;
 
     // Map VkFormat to FormatInfo.
-    static const size_t kNumVkFormats = 22;
+    static const size_t kNumVkFormats = 23;
     FormatInfo fFormatTable[kNumVkFormats];
 
     FormatInfo& getFormatInfo(VkFormat);

@@ -940,6 +940,14 @@ void Device::drawPath(const SkPath& path, const SkPaint& paint, bool pathIsMutab
     // Alternatively, we could move this analysis to SkCanvas. Also, we could consider applying the
     // path effect, being careful about starting point and direction.
     if (!paint.getPathEffect() && !path.isInverseFillType()) {
+        SkPoint linePts[2];
+        if (path.isLine(linePts)) {
+            // A line has zero area, so stroke and stroke-and-fill are equivalent
+            if (paint.getStyle() != SkPaint::kFill_Style) {
+                this->drawPoints(SkCanvas::kLines_PointMode, 2, linePts, paint);
+            } // and if it's fill, nothing is drawn
+            return;
+        }
         if (SkRect oval; path.isOval(&oval)) {
             this->drawOval(oval, paint);
             return;
@@ -1907,14 +1915,6 @@ void Device::drawCoverageMask(const SkSpecialImage* mask,
                        paint,
                        DefaultFillStyle(),
                        DrawFlags::kIgnorePathEffect);
-}
-
-sk_sp<SkSpecialImage> Device::makeSpecial(const SkBitmap&) {
-    return nullptr;
-}
-
-sk_sp<SkSpecialImage> Device::makeSpecial(const SkImage*) {
-    return nullptr;
 }
 
 sk_sp<SkSpecialImage> Device::snapSpecial(const SkIRect& subset, bool forceCopy) {

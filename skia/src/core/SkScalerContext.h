@@ -214,7 +214,7 @@ public:
                          SkVector* scale, SkMatrix* remaining,
                          SkMatrix* remainingWithoutRotation = nullptr,
                          SkMatrix* remainingRotation = nullptr,
-                         SkMatrix* total = nullptr);
+                         SkMatrix* total = nullptr) const;
 
     SkAxisAlignment computeAxisAlignmentForHText() const;
 
@@ -381,7 +381,7 @@ public:
         SkScalerContextEffects* effects);
 
 protected:
-    SkScalerContextRec fRec;
+    const SkScalerContextRec fRec;
 
     struct GlyphMetrics {
         SkVector       advance;
@@ -444,7 +444,6 @@ protected:
     virtual void generateFontMetrics(SkFontMetrics*) = 0;
 
     void forceGenerateImageFromPath() { fGenerateImageFromPath = true; }
-    void forceOffGenerateImageFromPath() { fGenerateImageFromPath = false; }
 
 private:
     friend class PathText;  // For debug purposes

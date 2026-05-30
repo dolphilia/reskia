@@ -262,6 +262,7 @@ static constexpr VkFormat kVkFormats[] = {
     VK_FORMAT_B4G4R4A4_UNORM_PACK16,
     VK_FORMAT_R4G4B4A4_UNORM_PACK16,
     VK_FORMAT_R8G8B8A8_SRGB,
+    VK_FORMAT_B8G8R8A8_SRGB,
     VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK,
     VK_FORMAT_BC1_RGB_UNORM_BLOCK,
     VK_FORMAT_BC1_RGBA_UNORM_BLOCK,
@@ -400,8 +401,10 @@ TextureInfo VulkanCaps::getDefaultMSAATextureInfo(const TextureInfo& singleSampl
      * Graphite, unlike ganesh, does not require a dedicated MSAA attachment on every surface.
      * MSAA textures now get resolved within the scope of a render pass, which can be done simply
      * with the color attachment usage flag. So we no longer require transfer src/dst usage flags.
+     * All renderable textures in Vulkan are made with input attachment usage.
     */
-    VkImageUsageFlags flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    VkImageUsageFlags flags =
+            VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     if (discardable == Discardable::kYes && fSupportsMemorylessAttachments) {
         flags = flags | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
     }
@@ -784,8 +787,29 @@ void VulkanCaps::initFormatTable(const skgpu::VulkanInterface* interface,
                 constexpr SkColorType ct = SkColorType::kSRGBA_8888_SkColorType;
                 auto& ctInfo = info.fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = ct;
-                ctInfo.fTransferColorType = ct;
+                ctInfo.fTransferColorType = SkColorType::kSRGBA_8888_SkColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
+            }
+        }
+    }
+    // Format: VK_FORMAT_B8G8R8A8_SRGB
+    {
+        constexpr VkFormat format = VK_FORMAT_B8G8R8A8_SRGB;
+        auto& info = this->getFormatInfo(format);
+        info.init(interface, physDev, properties, format);
+         if (info.isTexturable(VK_IMAGE_TILING_OPTIMAL)) {
+            info.fColorTypeInfoCount = 1;
+            info.fColorTypeInfos = std::make_unique<ColorTypeInfo[]>(info.fColorTypeInfoCount);
+            int ctIdx = 0;
+            // Format: VK_FORMAT_B8G8R8A8_SRGB, Surface: kRGBA_8888_SRGB
+            {
+                constexpr SkColorType ct = SkColorType::kSRGBA_8888_SkColorType;
+                auto& ctInfo = info.fColorTypeInfos[ctIdx++];
+                ctInfo.fColorType = ct;
+                // Since the B and R channels are swapped and there's no BGRA sRGB color type,
+                // just disable read/writes back to the CPU.
+                ctInfo.fTransferColorType = SkColorType::kUnknown_SkColorType;
+                ctInfo.fFlags = ColorTypeInfo::kRenderable_Flag;
             }
         }
     }
@@ -982,7 +1006,8 @@ void VulkanCaps::initFormatTable(const skgpu::VulkanInterface* interface,
     this->setColorType(ct::kARGB_4444_SkColorType,          { VK_FORMAT_R4G4B4A4_UNORM_PACK16,
                                                               VK_FORMAT_B4G4R4A4_UNORM_PACK16 });
     this->setColorType(ct::kRGBA_8888_SkColorType,          { VK_FORMAT_R8G8B8A8_UNORM });
-    this->setColorType(ct::kSRGBA_8888_SkColorType,         { VK_FORMAT_R8G8B8A8_SRGB });
+    this->setColorType(ct::kSRGBA_8888_SkColorType,         { VK_FORMAT_R8G8B8A8_SRGB,
+                                                              VK_FORMAT_B8G8R8A8_SRGB });
     this->setColorType(ct::kRGB_888x_SkColorType,           { VK_FORMAT_R8G8B8_UNORM,
                                                               VK_FORMAT_R8G8B8A8_UNORM });
     this->setColorType(ct::kR8G8_unorm_SkColorType,         { VK_FORMAT_R8G8_UNORM });
@@ -1608,24 +1633,14 @@ void VulkanCaps::buildKeyForTexture(SkISize dimensions,
     SkASSERT(i == num32DataCnt);
 }
 
-DstReadStrategy VulkanCaps::getDstReadStrategy(const TextureInfo& info) const {
+DstReadStrategy VulkanCaps::getDstReadStrategy() const {
     // We know the graphite Vulkan backend does not support frame buffer fetch, so make sure it is
     // not marked as supported and skip checking for it.
     SkASSERT(!this->shaderCaps()->fFBFetchSupport);
 
-    // TODO(b/383769988): Once DstReadStrategy::kReadFromInput is supported by the Vulkan backend,
-    // determine whether that strategy can be used.
-    // bool supportsInputAttachmentUsage =
-    //      GetVkUsageFlags(info) & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-// #ifdef SK_BUILD_FOR_ANDROID
-    // We expect that all Android target textures to support input attachment usage.
-    // SkASSERT(supportsInputAttachmentUsage);
-// #endif
-    // TODO(b/390458117): Add support to do this w/ MSAA textures. For now, simply default to using
-    // TextureCopy if the texture has a sample count >1.
-    // return supportsInputAttachmentUsage && info.numSamples() == 1
-    //      ? DstReadStrategy::kReadFromInput
-    //      : DstReadStrategy::kTextureCopy;
+    // TODO(b/383769988): Return DstReadStrategy::kReadFromInput once implemented for the Vulkan
+    // backend. We assume all target textures have input attachment usage (all internally-created
+    // render targets do).
 
     // For now, always return DstReadStrategy::kTextureCopy.
     return DstReadStrategy::kTextureCopy;
