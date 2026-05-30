@@ -54,6 +54,8 @@ static inline VkFormat attrib_type_to_vkformat(VertexAttribType type) {
             return VK_FORMAT_R32G32B32_SINT;
         case VertexAttribType::kInt4:
             return VK_FORMAT_R32G32B32A32_SINT;
+        case VertexAttribType::kUInt2:
+            return VK_FORMAT_R32G32_UINT;
         case VertexAttribType::kByte:
             return VK_FORMAT_R8_SINT;
         case VertexAttribType::kByte2:
@@ -681,8 +683,8 @@ sk_sp<VulkanGraphicsPipeline> VulkanGraphicsPipeline::Make(
         bool usesExternalFormat = static_cast<bool>(
                 ((immutableSamplerInfo & ycbcrPackaging::kUseExternalFormatMask) >>
                         ycbcrPackaging::kUsesExternalFormatShift));
-        const int keyStride = usesExternalFormat ? ycbcrPackaging::kInt32sNeededExternalFormat
-                                                 : ycbcrPackaging::kInt32sNeededKnownFormat;
+        const int keyStride = usesExternalFormat ? SamplerDesc::kInt32sNeededExternalFormat
+                                                 : SamplerDesc::kInt32sNeededKnownFormat;
 
         // Request a suitable immutable sampler from the resource provider
         SamplerDesc samplerDesc;

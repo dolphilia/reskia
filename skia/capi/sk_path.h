@@ -44,6 +44,7 @@ void SkPath_toggleInverseFillType(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isConvex(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isOval(reskia_path_t *path, reskia_rect_t *bounds); // (SkPath *path, SkRect *bounds) -> bool
 bool SkPath_isRRect(reskia_path_t *path, reskia_r_rect_t *rrect); // (SkPath *path, SkRRect *rrect) -> bool
+bool SkPath_isArc(reskia_path_t *path, reskia_arc_t *arc); // (SkPath *path, SkArc *arc) -> bool
 reskia_path_t *SkPath_reset(reskia_path_t *path); // (SkPath *path) -> SkPath *
 reskia_path_t *SkPath_rewind(reskia_path_t *path); // (SkPath *path) -> SkPath *
 sk_path_t SkPath_snapshot(reskia_path_t *path); // (SkPath *path) -> sk_path_t; NULL returns 0
