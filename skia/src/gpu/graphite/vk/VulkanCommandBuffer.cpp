@@ -1008,6 +1008,11 @@ void VulkanCommandBuffer::addBarrier(BarrierType type) {
         dstStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         dstAccess = VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT;
     } else {
+        // If input reads are coherent, no barrier is needed
+        if (fSharedContext->vulkanCaps().isInputAttachmentReadCoherent()) {
+            return;
+        }
+
         SkASSERT(type == BarrierType::kReadDstFromInput);
         dstStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         dstAccess = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
@@ -1486,16 +1491,22 @@ bool VulkanCommandBuffer::onCopyBufferToBuffer(const Buffer* srcBuffer,
     // we allow to be used as the dst of a transfer are vertex and index buffers. So we check the
     // buffers usages for either of those and then set the corresponding access flag.
     VkAccessFlags dstAccess = 0;
-    VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+    VkPipelineStageFlags dstStageMask = 0;
     VkBufferUsageFlags bufferUsageFlags = vkDstBuffer->bufferUsageFlags();
     if (bufferUsageFlags & VK_BUFFER_USAGE_VERTEX_BUFFER_BIT) {
         dstAccess = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+        dstStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
     } else if (bufferUsageFlags & VK_BUFFER_USAGE_INDEX_BUFFER_BIT) {
         dstAccess = VK_ACCESS_INDEX_READ_BIT;
+        dstStageMask = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+    } else if (vkDstBuffer->bufferUsedForCpuRead()) {
+        dstAccess = VK_ACCESS_HOST_READ_BIT;
+        dstStageMask = VK_PIPELINE_STAGE_HOST_BIT;
     } else {
-        SkDEBUGFAIL("Trying to copy to non vertex or index buffer\n");
+        SkDEBUGFAIL("Unhandled type of buffer to buffer copy\n");
         return false;
     }
+    SkASSERT(dstAccess);
     vkDstBuffer->setBufferAccess(this, dstAccess, dstStageMask);
 
     return true;

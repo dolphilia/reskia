@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `e56aa7634d2667c25f360c0c4073e996d54d459b`
-- next probe candidate: choose a fixed commit after `e56aa7634d2667c25f360c0c4073e996d54d459b`
+- `SKIA_REF`: `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1`
+- next probe candidate: choose a fixed commit after `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -84,34 +84,35 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 050 accepted: `fd69db63210f06f024f65a2b9981a6a76b363f46`。
 - cycle 051 accepted: `cb1646ca59dbaa37c07a8697c2cb9a0451853932`。
 - cycle 052 accepted: `e56aa7634d2667c25f360c0c4073e996d54d459b`。
+- cycle 053 accepted: `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1`。
 
 未実施:
 
-- cycle 053 candidate の選定。
-- cycle 053 candidate checkout を使った coverage regression。
-- cycle 053 の source/header sync と C API 追従実装。
+- cycle 054 candidate の選定。
+- cycle 054 candidate checkout を使った coverage regression。
+- cycle 054 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 053 の candidate selection から始める。
+次の作業は、cycle 054 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `e56aa7634d2667c25f360c0c4073e996d54d459b` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 053 の比較候補メモ:
+cycle 054 の比較候補メモ:
 
-- cycle 052 では `vendor/skia-upstream-candidate` の 1週間候補 `e56aa7634d2667c25f360c0c4073e996d54d459b` を採用した。baseline `cb1646ca...` から 55 commits、`include` / `modules` は 16 files changed, +347/-48、total drift は 177 files changed, +5691/-1788。
-- 2週間候補 `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` は 115 commits、32 `include` / `modules` files、269 total files。Vulkan dependency roll、Android、`SkImage`/`SkCanvas`、`SkUnicode`、`skcapture`、generated SkSL ES2 削除が乗るため cycle 052 では deferred とした。3週間 local refs for 2025-06-01/02 は該当 commit なし。
-- cycle 052 の新規 real gap は `SkPath` immutable helper、`SkPathBuilder` accessor/mutator、Graphite recorder destructor/type。`SkPath_makeInterpolate` / `SkPath_makeIsVolatile` / `SkPath_makeOffset` / `SkPath_ReadFromMemory`、`SkPathBuilder_*` wrappers、`Graphite_Recorder_delete` / `Graphite_Recorder_type` を追加して閉じた。
-- `skcpu::Context` / `skcpu::Recorder` / `SkRecorder` / `makeCPURecorder` は unique_ptr ownership と raster/GPU 共通 recorder ABI の設計が必要なため `na` として記録した。
-- final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final candidate stale report は `SkPath` edit-method 20 rows と `makeScale` const-only signature review 1 row。`SK_HIDE_PATH_EDIT_METHODS` guard が WIP で未有効のため既存 C ABI は保持し、理由を cycle record に記録した。final lock stale report は空。
+- cycle 053 では cycle 052 で deferred としていた `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` を採用した。baseline `e56aa763...` から 60 commits、`include` / `modules` は 21 files changed, +709/-509、total drift は 128 files changed, +2153/-1034。
+- cycle 053 では local 1-week/3-week date windows after 2025-05-24 に追加候補がなかった。cycle 054 でも固定 commit availability を確認してから幅を決める。
+- cycle 053 の新規 `missing 4` は `SkCanvas::baseRecorder` / `SkRecorder::SkRecorder` / `SkSurface::baseRecorder` / `GrRecordingContext::asRecorder`。共通 recorder ABI 設計が必要なため `na` とした。
+- `SkImage` recorder parameter が Graphite `Recorder*` から common `SkRecorder*` に変わったため、既存 graphite-recorder C ABI は `SkRecorder*` へ cast する bridge に更新した。
+- final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final lock stale report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次 cycle では accepted baseline `e56aa7634d2667c25f360c0c4073e996d54d459b` から再比較する。既知リスクは Vulkan dependency roll、Android/SkImage/SkCanvas drift、`skcapture` move/removal、`SkUnicode` drift、generated SkSL ES2 deletion、Graphite precompile ABI design、Dawn/WebGPU optional backend C ABI design。
+- 次 cycle では accepted baseline `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` から再比較する。既知リスクは Android/source-list churn、`skcapture` move/removal、`SkImage`/`SkCanvas`/`SkRecorder` common recorder ABI、`SkUnicode` drift、Vulkan/Dawn optional backend drift、Graphite precompile ABI design。
 
 ## やってはいけないこと
 
@@ -140,21 +141,21 @@ cycle 053 の比較候補メモ:
 
 候補:
 
-- `e56aa7634d2667c25f360c0c4073e996d54d459b`
-- committer date: 2025-05-18T06:32:01-07:00
-- subject: Update SKP version
+- `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1`
+- committer date: 2025-05-24T01:24:35-07:00
+- subject: Roll vulkan-deps from fa392b2f4964 to a0de53f5f078 (1 revision)
 
-cycle 052 結果:
+cycle 053 結果:
 
-- `vendor/skia-upstream-candidate` の 1週間候補 `e56aa763...` を採用した。baseline `cb1646ca...` から 55 commits、`include` / `modules` は 16 files changed, +347/-48、total drift は 177 files changed, +5691/-1788。
+- cycle 052 で deferred としていた `91dc88dc...` を採用した。baseline `e56aa763...` から 60 commits、`include` / `modules` は 21 files changed, +709/-509、total drift は 128 files changed, +2153/-1034。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final candidate stale C API report は `stale_capi 20` / `signature_changed_review 1`。`SkPath` edit methods は upstream の WIP hide guard が未有効で build-visible のため、既存 C ABI を保持する理由を cycle record に記録した。final lock stale report は空。
-- 初期 probe の新規 gap は `SkPath` helper、`SkPathBuilder` accessor/mutator、Graphite recorder destructor/type、SkCPU/SkRecorder ownership API。low-risk wrappers を実装し、SkCPU/SkRecorder ownership API は `na` として設計待ちに分類した。
-- source/header sync では `skia/DEPS`、SkCPU/SkRecorder public headers、`SkPath`/`SkPathBuilder`/Ganesh/Graphite public headers、Core/Ganesh/Graphite/Vulkan/Dawn/source drift、generated SkSL を取り込んだ。
-- GN/Bazel metadata は同期対象外とした。
+- final lock stale C API report は空。初期 probe の `signature_changed_review 16` は `SkImage` recorder parameter generalization と `SkPathBuilder` doc/parameter drift で、ABI 互換または wrapper 変更不要として確認済み。
+- 初期 probe の新規 gap は `SkCanvas::baseRecorder` / `SkRecorder::SkRecorder` / `SkSurface::baseRecorder` / `GrRecordingContext::asRecorder`。common recorder ABI 設計が必要なため `na` として記録した。
+- source/header sync では `skia/DEPS`、public headers、Core/Ganesh/Graphite/Vulkan/Dawn/source drift、`skunicode` source drift、new `SkGaneshRecorder.h` を取り込んだ。upstream で削除された Graphite ES2 generated SkSL files は削除した。
+- GN/Bazel metadata は同期対象外とした。`skcapture` move/removal は current Reskia mirror/build surface で未参照のため同期対象外とした。
 - prebuilt/GPU build で既知の macOS deployment-target warning、GPU build で Metal `fastMathEnabled` deprecation warning、C API build で `SkPathOps::TightBounds` deprecation warning、test `sprintf` warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `e56aa7634d2667c25f360c0c4073e996d54d459b` から再比較する。cycle 052 の deferred 2週間候補 `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` は broader Vulkan/Android/Unicode/skcapture churn が乗るため、cycle 053 でも幅を比較してから採用可否を決める。
+- 次サイクルでは、accepted baseline `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1` から再比較する。既知リスクは Android/source-list churn、`skcapture` move/removal、`SkImage`/`SkCanvas`/`SkRecorder` common recorder ABI、`SkUnicode` drift、Vulkan/Dawn optional backend drift、Graphite precompile ABI design。
 
 cycle records:
 
@@ -210,6 +211,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-050-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-051-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-052-2026-05-30.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-053-2026-05-30.md`
 
 ## Cycle close の条件
 
