@@ -41,6 +41,8 @@ reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path); // (SkPath *pat
 void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft); // (SkPath *path, SkPathFillType ft)
 bool SkPath_isInverseFillType(reskia_path_t *path); // (SkPath *path) -> bool
 void SkPath_toggleInverseFillType(reskia_path_t *path); // (SkPath *path)
+sk_path_t SkPath_makeFillType(reskia_path_t *path, reskia_path_fill_type_t newFillType); // (SkPath *path, SkPathFillType newFillType) -> sk_path_t
+sk_path_t SkPath_makeToggleInverseFillType(reskia_path_t *path); // (SkPath *path) -> sk_path_t
 bool SkPath_isConvex(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isOval(reskia_path_t *path, reskia_rect_t *bounds); // (SkPath *path, SkRect *bounds) -> bool
 bool SkPath_isRRect(reskia_path_t *path, reskia_r_rect_t *rrect); // (SkPath *path, SkRRect *rrect) -> bool

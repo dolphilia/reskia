@@ -33,6 +33,12 @@ int main() {
     if (!check(SkPath_detach(nullptr) == 0, "SkPath_detach(nullptr)")) {
         return 4;
     }
+    if (!check(SkPath_makeFillType(nullptr, 0) == 0, "SkPath_makeFillType(nullptr)")) {
+        return 4;
+    }
+    if (!check(SkPath_makeToggleInverseFillType(nullptr) == 0, "SkPath_makeToggleInverseFillType(nullptr)")) {
+        return 4;
+    }
     if (!check(SkPath_isEmpty(nullptr), "SkPath_isEmpty(nullptr)")) {
         return 5;
     }
@@ -100,6 +106,33 @@ int main() {
         return 21;
     }
     static_sk_path_delete(detached);
+
+    SkPath_setFillType(path, 0);
+    sk_path_t even_odd_path = SkPath_makeFillType(path, 1);
+    if (!check(even_odd_path != 0, "SkPath_makeFillType(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    if (!check(SkPath_getFillType(reinterpret_cast<reskia_path_t *>(static_sk_path_get_ptr(even_odd_path))) == 1,
+               "SkPath_makeFillType result fill type")) {
+        static_sk_path_delete(even_odd_path);
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(even_odd_path);
+
+    sk_path_t inverse_path = SkPath_makeToggleInverseFillType(path);
+    if (!check(inverse_path != 0, "SkPath_makeToggleInverseFillType(path)")) {
+        SkPath_delete(path);
+        return 21;
+    }
+    if (!check(SkPath_isInverseFillType(reinterpret_cast<reskia_path_t *>(static_sk_path_get_ptr(inverse_path))),
+               "SkPath_makeToggleInverseFillType result inverse fill type")) {
+        static_sk_path_delete(inverse_path);
+        SkPath_delete(path);
+        return 21;
+    }
+    static_sk_path_delete(inverse_path);
 
     if (!check(SkPath_moveToPoint(path, nullptr) == nullptr, "SkPath_moveToPoint(path, nullptr)")) {
         SkPath_delete(path);

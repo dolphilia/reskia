@@ -92,6 +92,20 @@ void SkPath_toggleInverseFillType(reskia_path_t *path) {
     reinterpret_cast<SkPath *>(path)->toggleInverseFillType();
 }
 
+sk_path_t SkPath_makeFillType(reskia_path_t *path, reskia_path_fill_type_t newFillType) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeFillType(static_cast<SkPathFillType>(newFillType)));
+}
+
+sk_path_t SkPath_makeToggleInverseFillType(reskia_path_t *path) {
+    if (path == nullptr) {
+        return 0;
+    }
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeToggleInverseFillType());
+}
+
 bool SkPath_isConvex(reskia_path_t *path) {
     if (path == nullptr) {
         return false;
