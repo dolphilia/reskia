@@ -63,16 +63,16 @@ static bool draw_path_to_pixmap(const Shape& shape,
     return true;
 }
 
-const TextureProxy* RasterPathAtlas::onAddShape(const Shape& shape,
+sk_sp<TextureProxy> RasterPathAtlas::onAddShape(const Shape& shape,
                                                 const Transform& localToDevice,
                                                 const SkStrokeRec& strokeRec,
                                                 skvx::half2 maskOrigin,
                                                 skvx::half2 maskSize,
                                                 SkIVector transformedMaskOffset,
                                                 skvx::half2* outPos) {
-    const TextureProxy* proxy = nullptr;
+    sk_sp<TextureProxy> proxy;
 
-    if (!shape.isVolatile()) {
+    if (!shape.isVolatilePath()) {
         constexpr int kMaxSmallPathSize = 162;
         // Try to locate or add to cached DrawAtlas
         if (maskSize.x() <= kMaxSmallPathSize && maskSize.y() <= kMaxSmallPathSize) {
@@ -150,7 +150,7 @@ const TextureProxy* RasterPathAtlas::onAddShape(const Shape& shape,
             });
 
     *outPos = { kEntryPadding, kEntryPadding };
-    return cachedProxy.get();
+    return cachedProxy;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

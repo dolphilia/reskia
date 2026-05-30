@@ -1397,7 +1397,9 @@ bool VulkanCaps::isRenderable(const TextureInfo& texInfo) const {
 
 bool VulkanCaps::isRenderable(const VulkanTextureInfo& vkInfo) const {
     const FormatInfo& info = this->getFormatInfo(vkInfo.fFormat);
-    return info.isRenderable(vkInfo.fImageTiling, vkInfo.fSampleCount);
+    // All renderable vulkan textures within graphite must also support input attachment usage
+    return info.isRenderable(vkInfo.fImageTiling, vkInfo.fSampleCount) &&
+           SkToBool(vkInfo.fImageUsageFlags & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT);
 }
 
 bool VulkanCaps::isStorage(const TextureInfo& texInfo) const {
@@ -1531,7 +1533,7 @@ UniqueKey VulkanCaps::makeGraphicsPipelineKey(const GraphicsPipelineDesc& pipeli
         static const skgpu::UniqueKey::Domain kGraphicsPipelineDomain =
             UniqueKey::GenerateDomain();
 
-        VulkanRenderPass::VulkanRenderPassMetaData rpMetaData {renderPassDesc};
+        VulkanRenderPass::Metadata rpMetadata{renderPassDesc};
 
         // Reserve 3 uint32s for the render step id, paint id, and write swizzle.
         static constexpr int kUint32sNeededForPipelineInfo = 3;
@@ -1539,7 +1541,7 @@ UniqueKey VulkanCaps::makeGraphicsPipelineKey(const GraphicsPipelineDesc& pipeli
         // determine how many to reserve.
         UniqueKey::Builder builder(&pipelineKey,
                                    kGraphicsPipelineDomain,
-                                   kUint32sNeededForPipelineInfo + rpMetaData.fUint32DataCnt,
+                                   kUint32sNeededForPipelineInfo + rpMetadata.keySize(),
                                    "GraphicsPipeline");
 
         int idx = 0;
@@ -1549,7 +1551,7 @@ UniqueKey VulkanCaps::makeGraphicsPipelineKey(const GraphicsPipelineDesc& pipeli
         // Add RenderPass info relevant for pipeline creation that's not captured in RenderPass keys
         builder[idx++] = renderPassDesc.fWriteSwizzle.asKey();
         // Add RenderPassDesc information
-        VulkanRenderPass::AddRenderPassInfoToKey(rpMetaData, builder, idx, /*compatibleOnly=*/true);
+        rpMetadata.addToKey(builder, idx, /*compatibleOnly=*/true);
 
         builder.finish();
     }
@@ -1638,12 +1640,8 @@ DstReadStrategy VulkanCaps::getDstReadStrategy() const {
     // not marked as supported and skip checking for it.
     SkASSERT(!this->shaderCaps()->fFBFetchSupport);
 
-    // TODO(b/383769988): Return DstReadStrategy::kReadFromInput once implemented for the Vulkan
-    // backend. We assume all target textures have input attachment usage (all internally-created
-    // render targets do).
-
-    // For now, always return DstReadStrategy::kTextureCopy.
-    return DstReadStrategy::kTextureCopy;
+    // All render target textures are expected to have VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT.
+    return DstReadStrategy::kReadFromInput;
 }
 
 ImmutableSamplerInfo VulkanCaps::getImmutableSamplerInfo(const TextureInfo& textureInfo) const {

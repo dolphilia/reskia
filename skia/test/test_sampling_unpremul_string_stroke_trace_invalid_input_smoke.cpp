@@ -57,6 +57,10 @@ public:
         events.push_back(std::string(str) + ":" + (b ? "true" : "false"));
     }
 
+    bool shouldDumpSizelessObjects() const override {
+        return true;
+    }
+
     std::vector<std::string> events;
 };
 
@@ -153,6 +157,7 @@ int main() {
     ok &= check(SkTraceMemoryDump_getRequestedDetails(dump_ptr) == 0, "TraceMemoryDump valid details sentinel");
     ok &= check(SkTraceMemoryDump_shouldDumpWrappedObjects(dump_ptr), "TraceMemoryDump valid wrapped predicate");
     ok &= check(SkTraceMemoryDump_shouldDumpUnbudgetedObjects(dump_ptr), "TraceMemoryDump valid unbudgeted predicate");
+    ok &= check(SkTraceMemoryDump_shouldDumpSizelessObjects(dump_ptr), "TraceMemoryDump valid sizeless predicate");
     ok &= check(event_count_after_valid == 5 && dump.events.size() == event_count_after_valid, "TraceMemoryDump invalid strings no-op on concrete dump");
 
     SkPath_delete(dst_path);

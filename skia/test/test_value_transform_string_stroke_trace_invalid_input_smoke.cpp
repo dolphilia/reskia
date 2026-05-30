@@ -150,6 +150,7 @@ int main() {
     SkTraceMemoryDump_dumpWrappedState(nullptr, "state", true);
     ok &= check(!SkTraceMemoryDump_shouldDumpUnbudgetedObjects(nullptr), "TraceMemoryDump null unbudgeted predicate");
     SkTraceMemoryDump_dumpBudgetedState(nullptr, "state", true);
+    ok &= check(!SkTraceMemoryDump_shouldDumpSizelessObjects(nullptr), "TraceMemoryDump null sizeless predicate");
 
     SkString_delete(string);
     static_sk_stroke_rec_delete(stroke_handle);

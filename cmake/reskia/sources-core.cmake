@@ -197,15 +197,16 @@ list(APPEND SOURCE_FILES
         src/core/SkReadBuffer.cpp
         src/core/SkReadPixelsRec.cpp
         src/core/SkRecord.cpp
+        src/core/SkRecordCanvas.cpp
         src/core/SkRecordDraw.cpp
         src/core/SkRecordedDrawable.cpp
-        src/core/SkRecorder.cpp
         src/core/SkRecordOpts.cpp
         src/core/SkRecords.cpp
         src/core/SkRect.cpp
         src/core/SkRegion_path.cpp
         src/core/SkRegion.cpp
         src/core/SkResourceCache.cpp
+        src/core/SkSynchronizedResourceCache.cpp
         src/core/SkRRect.cpp
         src/core/SkRSXform.cpp
         src/core/SkRTree.cpp
