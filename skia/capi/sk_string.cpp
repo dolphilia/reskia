@@ -81,6 +81,34 @@ size_t SkString_size(reskia_string_t *string) {
     return reinterpret_cast<SkString *>(string)->size();
 }
 
+const char * SkString_begin(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->begin();
+}
+
+char * SkString_beginMutable(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->begin();
+}
+
+const char * SkString_end(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->end();
+}
+
+char * SkString_endMutable(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->end();
+}
+
 const char * SkString_data(reskia_string_t *string) {
     if (string == nullptr) {
         return nullptr;
