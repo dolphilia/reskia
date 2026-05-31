@@ -285,10 +285,10 @@ protected:
     std::unique_ptr<SkScalerContext> onCreateScalerContext(const SkScalerContextEffects&,
                                                            const SkDescriptor*) const override;
     void onFilterRec(SkScalerContextRec*) const override;
-    void getGlyphToUnicodeMap(SkUnichar*) const override;
+    void getGlyphToUnicodeMap(SkSpan<SkUnichar>) const override;
     std::unique_ptr<SkAdvancedTypefaceMetrics> onGetAdvancedMetrics() const override;
     void onGetFontDescriptor(SkFontDescriptor*, bool*) const override;
-    void onCharsToGlyphs(const SkUnichar* chars, int count, SkGlyphID glyphs[]) const override;
+    void onCharsToGlyphs(SkSpan<const SkUnichar>, SkSpan<SkGlyphID>) const override;
     int onCountGlyphs() const override;
     void getPostScriptGlyphNames(SkString*) const override;
     int onGetUPEM() const override;
@@ -296,17 +296,16 @@ protected:
     bool onGetPostScriptName(SkString*) const override { return false; }
     SkTypeface::LocalizedStrings* onCreateFamilyNameIterator() const override;
     bool onGlyphMaskNeedsCurrentColor() const override { return false; }
-    int onGetVariationDesignPosition(SkFontArguments::VariationPosition::Coordinate coordinates[],
-                                     int coordinateCount) const override
+    int onGetVariationDesignPosition(
+                             SkSpan<SkFontArguments::VariationPosition::Coordinate>) const override
     {
         return -1;
     }
-    int onGetVariationDesignParameters(SkFontParameters::Variation::Axis parameters[],
-                                       int parameterCount) const override
+    int onGetVariationDesignParameters(SkSpan<SkFontParameters::Variation::Axis>) const override
     {
         return -1;
     }
-    int onGetTableTags(SkFontTableTag tags[]) const override;
+    int onGetTableTags(SkSpan<SkFontTableTag>) const override;
     size_t onGetTableData(SkFontTableTag, size_t offset, size_t length, void* data) const override;
     sk_sp<SkData> onCopyTableData(SkFontTableTag) const override;
 };
@@ -395,8 +394,8 @@ void SkLOGFONTFromTypeface(const SkTypeface* face, LOGFONT* lf) {
 // require parsing the TTF cmap table (platform 4, encoding 12) directly instead
 // of calling GetFontUnicodeRange().
 static void populate_glyph_to_unicode(HDC fontHdc, const unsigned glyphCount,
-                                      SkUnichar* glyphToUnicode) {
-    sk_bzero(glyphToUnicode, sizeof(SkUnichar) * glyphCount);
+                                      SkSpan<SkUnichar> glyphToUnicode) {
+    sk_bzero(glyphToUnicode.data(), glyphToUnicode.size_bytes());
     DWORD glyphSetBufferSize = GetFontUnicodeRanges(fontHdc, nullptr);
     if (!glyphSetBufferSize) {
         return;
@@ -896,13 +895,13 @@ SkScalerContext::GlyphMetrics SkScalerContext_GDI::generateMetrics(const SkGlyph
         sk_bzero(&gm, sizeof(gm));
         status = GetGlyphOutlineW(fDDC, glyphId, GGO_METRICS | GGO_GLYPH_INDEX, &gm, 0, nullptr, &fHighResMat22);
         if (GDI_ERROR != status) {
-            mx.advance = fHiResMatrix.mapXY(SkIntToScalar(gm.gmCellIncX),
-                                            SkIntToScalar(gm.gmCellIncY));
+            mx.advance = fHiResMatrix.mapPoint({SkIntToScalar(gm.gmCellIncX),
+                                                SkIntToScalar(gm.gmCellIncY)});
         }
     } else if (!isAxisAligned(this->fRec)) {
         status = GetGlyphOutlineW(fDDC, glyphId, GGO_METRICS | GGO_GLYPH_INDEX, &gm, 0, nullptr, &fGsA);
         if (GDI_ERROR != status) {
-            mx.advance = fG_inv.mapXY(SkIntToScalar(gm.gmCellIncX), SkIntToScalar(gm.gmCellIncY));
+            mx.advance = fG_inv.mapPoint({SkIntToScalar(gm.gmCellIncX), SkIntToScalar(gm.gmCellIncY)});
         }
     }
 
@@ -1624,10 +1623,10 @@ void LogFontTypeface::onGetFontDescriptor(SkFontDescriptor* desc,
     *isLocalStream = this->fSerializeAsStream;
 }
 
-void LogFontTypeface::getGlyphToUnicodeMap(SkUnichar* dstArray) const {
+void LogFontTypeface::getGlyphToUnicodeMap(SkSpan<SkUnichar> dstArray) const {
     SkAutoHDC hdc(fLogFont);
     unsigned int glyphCount = calculateGlyphCount(hdc, fLogFont);
-    populate_glyph_to_unicode(hdc, glyphCount, dstArray);
+    populate_glyph_to_unicode(hdc, std::min<unsigned>(glyphCount, dstArray.size()), dstArray);
 }
 
 std::unique_ptr<SkAdvancedTypefaceMetrics> LogFontTypeface::onGetAdvancedMetrics() const {
@@ -1780,7 +1779,7 @@ static HRESULT create_unique_font_name(char* buffer, size_t bufferSize) {
    Introduces a font to GDI. On failure will return nullptr. The returned handle
    should eventually be passed to RemoveFontMemResourceEx.
 */
-static HANDLE activate_font(SkData* fontData) {
+static HANDLE activate_font(const SkData* fontData) {
     DWORD numFonts = 0;
     //AddFontMemResourceEx just copies the data, but does not specify const.
     HANDLE fontHandle = AddFontMemResourceEx(const_cast<void*>(fontData->data()),
@@ -1949,9 +1948,9 @@ static uint16_t nonBmpCharToGlyph(HDC hdc, SCRIPT_CACHE* scriptCache, const WCHA
     return index;
 }
 
-void LogFontTypeface::onCharsToGlyphs(const SkUnichar* uni, int glyphCount,
-                                      SkGlyphID glyphs[]) const
-{
+void LogFontTypeface::onCharsToGlyphs(SkSpan<const SkUnichar> uni, SkSpan<SkGlyphID> glyphs) const {
+    SkASSERT(uni.size() == glyphs.size());
+
     SkAutoHDC hdc(fLogFont);
 
     TEXTMETRIC tm;
@@ -1967,7 +1966,8 @@ void LogFontTypeface::onCharsToGlyphs(const SkUnichar* uni, int glyphCount,
     static const int scratchCount = 256;
     WCHAR scratch[scratchCount];
     int glyphIndex = 0;
-    const uint32_t* utf32 = reinterpret_cast<const uint32_t*>(uni);
+    const int glyphCount = SkToInt(glyphs.size());
+    const uint32_t* utf32 = reinterpret_cast<const uint32_t*>(uni.data());
     while (glyphIndex < glyphCount) {
         // Try a run of bmp.
         int glyphsLeft = std::min(glyphCount - glyphIndex, scratchCount);
@@ -2018,22 +2018,23 @@ SkTypeface::LocalizedStrings* LogFontTypeface::onCreateFamilyNameIterator() cons
     return nameIter.release();
 }
 
-int LogFontTypeface::onGetTableTags(SkFontTableTag tags[]) const {
+int LogFontTypeface::onGetTableTags(SkSpan<SkFontTableTag> tags) const {
     SkSFNTHeader header;
     if (sizeof(header) != this->onGetTableData(0, 0, sizeof(header), &header)) {
         return 0;
     }
 
-    int numTables = SkEndian_SwapBE16(header.numTables);
+    size_t numTables = SkEndian_SwapBE16(header.numTables);
 
-    if (tags) {
+    if (!tags.empty()) {
         size_t size = numTables * sizeof(SkSFNTHeader::TableDirectoryEntry);
         AutoSTMalloc<0x20, SkSFNTHeader::TableDirectoryEntry> dir(numTables);
         if (size != this->onGetTableData(0, sizeof(header), size, dir.get())) {
             return 0;
         }
 
-        for (int i = 0; i < numTables; ++i) {
+        const size_t n = std::min(numTables, tags.size());
+        for (size_t i = 0; i < n; ++i) {
             tags[i] = SkEndian_SwapBE32(dir[i].tag);
         }
     }

@@ -382,6 +382,11 @@ bool SkPathBuilder_isEmpty(reskia_path_builder_t *path_builder) {
     return native == nullptr || native->isEmpty();
 }
 
+bool SkPathBuilder_isFinite(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native == nullptr || native->isFinite();
+}
+
 sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     if (native == nullptr) {

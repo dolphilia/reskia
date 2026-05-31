@@ -150,6 +150,7 @@ reskia_path_builder_t *SkPathBuilder_offset(reskia_path_builder_t *path_builder,
 reskia_path_builder_t *SkPathBuilder_transform(reskia_path_builder_t *path_builder, const reskia_matrix_t *matrix, int pc); // invalid input returns original builder or NULL
 reskia_path_builder_t *SkPathBuilder_toggleInverseFillType(reskia_path_builder_t *path_builder); // (SkPathBuilder *path_builder) -> SkPathBuilder *
 bool SkPathBuilder_isEmpty(reskia_path_builder_t *path_builder); // NULL input returns true
+bool SkPathBuilder_isFinite(reskia_path_builder_t *path_builder); // NULL input returns true
 sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder); // NULL or empty returns 0
 void SkPathBuilder_setLastPt(reskia_path_builder_t *path_builder, float x, float y); // NULL input is no-op
 int SkPathBuilder_countPoints(reskia_path_builder_t *path_builder); // NULL input returns 0
