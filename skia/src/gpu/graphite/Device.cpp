@@ -704,8 +704,22 @@ bool Device::onWritePixels(const SkPixmap& src, int x, int y) {
     // The new upload will be executed before any new draws are recorded and also ensures that
     // the next call to flushDeviceToRecorder() will produce a non-null DrawTask. If this Device's
     // target is mipmapped, mipmap generation tasks will be added automatically at that point.
-    return fDC->recordUpload(fRecorder, fDC->refTarget(), src.info().colorInfo(),
-                             this->imageInfo().colorInfo(), levels, dstRect, nullptr);
+    const UploadSource uploadSource = UploadSource::Make(fRecorder->priv().caps(),
+                                                         *fDC->refTarget(),
+                                                         src.info().colorInfo(),
+                                                         this->imageInfo().colorInfo(),
+                                                         levels,
+                                                         dstRect);
+    if (!uploadSource.isValid()) {
+        return false;
+    }
+    return fDC->recordUpload(fRecorder,
+                             fDC->refTarget(),
+                             src.info().colorInfo(),
+                             this->imageInfo().colorInfo(),
+                             uploadSource,
+                             dstRect,
+                             nullptr);
 }
 
 
@@ -740,8 +754,7 @@ void Device::android_utils_clipAsRgn(SkRegion* region) const {
         if (e.fShape.isRect() && e.fLocalToDevice.type() == Transform::Type::kIdentity) {
             tmp.setRect(rect_to_pixelbounds(e.fShape.rect()));
         } else {
-            SkPath tmpPath = e.fShape.asPath();
-            tmpPath.transform(e.fLocalToDevice);
+            SkPath tmpPath = e.fShape.asPath().makeTransform(e.fLocalToDevice);
             tmp.setPath(tmpPath, deviceBounds);
         }
 
@@ -1423,8 +1436,7 @@ void Device::drawGeometry(const Transform& localToDevice,
     // issues).
     if (geometry.isShape() && localToDevice.type() == Transform::Type::kPerspective &&
         !is_simple_shape(geometry.shape(), style.getStyle())) {
-        SkPath devicePath = geometry.shape().asPath();
-        devicePath.transform(localToDevice.matrix().asM33());
+        SkPath devicePath = geometry.shape().asPath().makeTransform(localToDevice.matrix().asM33());
         devicePath.setIsVolatile(true);
         this->drawGeometry(Transform::Identity(), Geometry(Shape(devicePath)), paint, style, flags,
                            std::move(primitiveBlender), skipColorXform);
@@ -1766,8 +1778,7 @@ void Device::drawClipShape(const Transform& localToDevice,
     // Clips draws are depth-only (null PaintParams), and filled (null StrokeStyle).
     // TODO: Remove this CPU-transform once perspective is supported for all path renderers
     if (localToDevice.type() == Transform::Type::kPerspective) {
-        SkPath devicePath = geometry.shape().asPath();
-        devicePath.transform(localToDevice.matrix().asM33());
+        SkPath devicePath = geometry.shape().asPath().makeTransform(localToDevice.matrix().asM33());
         fDC->recordDraw(renderer, Transform::Identity(), Geometry(Shape(devicePath)), clip, order,
                         /*paint*/nullptr, /*stroke*/nullptr, /*dependsOnDst*/false,
                         /*dstReadReq*/false);
