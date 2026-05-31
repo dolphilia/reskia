@@ -2496,6 +2496,18 @@ reskia_gpu_stats_flags_t Graphite_Context_supportedGpuStats(reskia_graphite_cont
 #endif
 }
 
+void Graphite_Context_syncPipelineData(reskia_graphite_context_t *ctx, size_t max_size) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr) {
+        return;
+    }
+    as_graphite_context(ctx)->syncPipelineData(max_size);
+#else
+    (void) ctx;
+    (void) max_size;
+#endif
+}
+
 reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx) {
 #if defined(SK_GRAPHITE)
     return ctx != nullptr

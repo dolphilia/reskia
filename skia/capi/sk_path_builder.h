@@ -36,11 +36,14 @@ reskia_path_builder_t *SkPathBuilder_newFromPath(const reskia_path_t *path); // 
  */
 reskia_path_builder_t *SkPathBuilder_newCopy(const reskia_path_builder_t *builder);
 void SkPathBuilder_delete(reskia_path_builder_t *path_builder); // NULL path_builder は no-op (SkPathBuilder *path_builder)
+bool SkPathBuilder_equals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other); // NULL input returns false
+bool SkPathBuilder_notEquals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other); // NULL input returns false
 /**
  * NULL path_builder なら 0 (SkPathBuilder *path_builder) -> SkPathFillType
  */
 reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder);
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_rect_t
+bool SkPathBuilder_computeFiniteBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds); // NULL/non-finite returns false
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_path_t
 sk_path_t SkPathBuilder_detach(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_path_t
 /**
@@ -147,6 +150,7 @@ reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder,
  * NULL path_builder は no-op (SkPathBuilder *path_builder, int extraPtCount, int extraVerbCount)
  */
 void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount);
+void SkPathBuilder_incReserveWithConics(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount, int extraConicCount);
 /**
  * NULL path_builder は no-op (SkPathBuilder *path_builder, int extraPtCount)
  */

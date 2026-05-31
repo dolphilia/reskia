@@ -177,6 +177,8 @@ list(APPEND SOURCE_FILES
         src/core/SkPath_serial.cpp
         src/core/SkPath.cpp
         src/core/SkPathBuilder.cpp
+        src/core/SkPathData.cpp
+        src/core/SkPathDump.cpp
         src/core/SkPathEffect.cpp
         src/core/SkPathIter.cpp
         src/core/SkPathMeasure.cpp

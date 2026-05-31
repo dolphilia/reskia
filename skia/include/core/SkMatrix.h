@@ -28,16 +28,11 @@ struct SkSize;
 // Remove when clients are updated to live without this
 #define SK_SUPPORT_LEGACY_MATRIX_RECTTORECT
 
-#ifndef SK_SUPPORT_LEGACY_APPLYPERSPECTIVECLIP
-    #define SK_SUPPORT_LEGACY_APPLYPERSPECTIVECLIP
-#endif
-
-#ifdef SK_SUPPORT_LEGACY_APPLYPERSPECTIVECLIP
+// Compatibility symbols for prebuilt modules compiled before SkApplyPerspectiveClip was removed.
 enum class SkApplyPerspectiveClip {
-    kNo,    //!< Don't pre-clip the geometry before applying the (perspective) matrix
-    kYes,   //!< Do pre-clip the geometry before applying the (perspective) matrix
+    kNo,
+    kYes,
 };
-#endif
 
 /** \class SkMatrix
     SkMatrix holds a 3x3 matrix for transforming coordinates. This allows mapping
@@ -1505,18 +1500,7 @@ public:
         example: https://fiddle.skia.org/c/@Matrix_mapRect
     */
     bool mapRect(SkRect* dst, const SkRect& src) const;
-
-#ifdef SK_SUPPORT_LEGACY_APPLYPERSPECTIVECLIP
-    bool mapRect(SkRect* dst, const SkRect& src, SkApplyPerspectiveClip) const {
-        return this->mapRect(dst, src);
-    }
-    bool mapRect(SkRect* rect, SkApplyPerspectiveClip) const {
-        return this->mapRect(rect, *rect);
-    }
-    SkRect mapRect(const SkRect& src, SkApplyPerspectiveClip) const {
-        return this->mapRect(src);
-    }
-#endif
+    bool mapRect(SkRect* dst, const SkRect& src, SkApplyPerspectiveClip) const;
 
     /** Sets rect to bounds of rect corners mapped by SkMatrix.
         Returns true if mapped corners are computed rect corners.
@@ -1530,6 +1514,7 @@ public:
     bool mapRect(SkRect* rect) const {
         return this->mapRect(rect, *rect);
     }
+    bool mapRect(SkRect* rect, SkApplyPerspectiveClip) const;
 
     /** Returns bounds of src corners mapped by SkMatrix.
 
@@ -1541,6 +1526,7 @@ public:
         (void)this->mapRect(&dst, src);
         return dst;
     }
+    SkRect mapRect(const SkRect& src, SkApplyPerspectiveClip) const;
 
     /** Maps four corners of rect to dst. SkPoint are mapped by multiplying each
         rect corner by SkMatrix. rect corner is processed in this order:

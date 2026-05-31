@@ -76,6 +76,8 @@ class Clip;
 class DrawContext;
 class Geometry;
 class Image;
+class PaintParamsKeyBuilder;
+class PipelineDataGatherer;
 class PathAtlas;
 class Renderer;
 class Shape;
@@ -161,6 +163,15 @@ public:
     // Only used for scratch devices.
     sk_sp<Task> lastDrawTask() const;
 
+    // Called by an Image wrapping this Device to mark that the pending contents of this Device
+    // will be read by `recorder`, and specifically by `drawContext` (if non-null). Flushes any
+    // necessary work (depending on scratch state) and records task dependencies. Returns true if
+    // the caller does not need to track the Device on the Image anymore.
+    bool notifyInUse(Recorder* recorder, DrawContext* drawContext);
+
+    // Returns true if the Device has pending reads to the given texture
+    bool hasPendingReads(const TextureProxy* texture) const;
+
     bool useDrawCoverageMaskForMaskFilters() const override { return true; }
 
     // Clipping
@@ -196,7 +207,7 @@ public:
     void drawRRect(const SkRRect& rr, const SkPaint&) override;
     void drawArc(const SkArc& arc, const SkPaint&) override;
     void drawPoints(SkCanvas::PointMode, SkSpan<const SkPoint>, const SkPaint&) override;
-    void drawPath(const SkPath& path, const SkPaint&, bool pathIsMutable = false) override;
+    void drawPath(const SkPath& path, const SkPaint&) override;
     void drawDRRect(const SkRRect& outer, const SkRRect& inner, const SkPaint&) override;
 
     // No need to specialize drawRegion or drawPatch as the default impls all route to drawPath,
@@ -340,6 +351,9 @@ private:
     // in the long-term, these scratch draw tasks will only be executed if they are referenced by
     // some other task chain that makes it to the root list.
     sk_sp<Task> fLastTask;
+
+    std::unique_ptr<PaintParamsKeyBuilder> fKeyBuilder;
+    std::unique_ptr<PipelineDataGatherer> fDataGatherer;
 
     ClipStack fClip;
 

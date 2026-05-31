@@ -9,6 +9,7 @@
 #include "src/core/SkPathRaw.h"
 
 #include <initializer_list>
+#include <optional>
 
 #include "../handles/static_sk_path.h"
 #include "../handles/static_sk_point.h"
@@ -77,6 +78,18 @@ void SkPathBuilder_delete(reskia_path_builder_t *path_builder) {
     delete as_builder(path_builder);
 }
 
+bool SkPathBuilder_equals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    const SkPathBuilder *other_native = as_builder(other);
+    return native != nullptr && other_native != nullptr && *native == *other_native;
+}
+
+bool SkPathBuilder_notEquals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    const SkPathBuilder *other_native = as_builder(other);
+    return native != nullptr && other_native != nullptr && *native != *other_native;
+}
+
 reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? static_cast<reskia_path_builder_fill_type_t>(native->fillType()) : 0;
@@ -85,6 +98,19 @@ reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *pa
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? static_sk_rect_make(native->computeBounds()) : 0;
+}
+
+bool SkPathBuilder_computeFiniteBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr || out_bounds == nullptr) {
+        return false;
+    }
+    std::optional<SkRect> bounds = native->computeFiniteBounds();
+    if (!bounds.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkRect *>(out_bounds) = *bounds;
+    return true;
 }
 
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder) {
@@ -381,7 +407,14 @@ reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder,
 void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount) {
     SkPathBuilder *native = as_builder(path_builder);
     if (native != nullptr) {
-        native->incReserve(extraPtCount, extraVerbCount);
+        native->incReserve(extraPtCount, extraVerbCount, 0);
+    }
+}
+
+void SkPathBuilder_incReserveWithConics(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount, int extraConicCount) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr) {
+        native->incReserve(extraPtCount, extraVerbCount, extraConicCount);
     }
 }
 
@@ -405,7 +438,8 @@ reskia_path_builder_t *SkPathBuilder_transform(reskia_path_builder_t *path_build
     if (matrix == nullptr) {
         return to_api(native);
     }
-    return to_api(&native->transform(*reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc)));
+    (void) pc;
+    return to_api(&native->transform(*reinterpret_cast<const SkMatrix *>(matrix)));
 }
 
 reskia_path_builder_t *SkPathBuilder_toggleInverseFillType(reskia_path_builder_t *path_builder) {

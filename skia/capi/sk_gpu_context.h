@@ -272,6 +272,7 @@ bool Graphite_Context_supportsProtectedContent(reskia_graphite_context_t *ctx); 
 bool Graphite_Context_isDeviceLost(reskia_graphite_context_t *ctx); // NULL input returns false
 int Graphite_Context_maxTextureSize(reskia_graphite_context_t *ctx); // NULL input returns 0
 reskia_gpu_stats_flags_t Graphite_Context_supportedGpuStats(reskia_graphite_context_t *ctx); // NULL input returns 0
+void Graphite_Context_syncPipelineData(reskia_graphite_context_t *ctx, size_t max_size); // NULL input is no-op
 reskia_graphite_context_id_t *Graphite_Context_contextID(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 void Graphite_ContextID_delete(reskia_graphite_context_id_t *context_id); // NULL input is no-op
 bool Graphite_ContextID_isValid(const reskia_graphite_context_id_t *context_id); // NULL input returns false

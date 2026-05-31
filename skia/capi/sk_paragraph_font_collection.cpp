@@ -13,6 +13,7 @@
 #include "../handles/static_sk_typeface-internal.h"
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -184,7 +185,7 @@ sk_typeface_t SkParagraph_FontCollection_defaultFallbackForChar(reskia_paragraph
     if (collection == nullptr) {
         return 0;
     }
-    return make_typeface_handle(as_font_collection(collection)->defaultFallback(static_cast<SkUnichar>(unicode), font_style_or_normal(font_style), SkString(locale == nullptr ? "" : locale)));
+    return make_typeface_handle(as_font_collection(collection)->defaultFallback(static_cast<SkUnichar>(unicode), font_style_or_normal(font_style), SkString(locale == nullptr ? "" : locale), std::nullopt));
 }
 
 sk_typeface_t SkParagraph_FontCollection_defaultEmojiFallback(reskia_paragraph_font_collection_t *collection, int32_t emoji_start, sk_font_style_t font_style, const char *locale) {

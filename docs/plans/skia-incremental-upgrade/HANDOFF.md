@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `1c10d9bb7d5846f08c474538b400f61a10a507fb`
-- next probe candidate: select a fixed mainline commit after `1c10d9bb7d5846f08c474538b400f61a10a507fb`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`
+- next probe candidate: select a fixed mainline commit after `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -100,27 +100,28 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 066 split-required: local refs did not contain a fixed commit after `844288bf88af93e6ee50ebf1b4f473c79d2ee176`; lock unchanged.
 - cycle 067 accepted: `7a8e9f5d35d8d08c10da95ea8e0d872b995c43f3`。
 - cycle 068 accepted: `1c10d9bb7d5846f08c474538b400f61a10a507fb`。
+- cycle 069 accepted: `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`。
 
 未実施:
 
-- cycle 069 candidate selection from `1c10d9bb7d5846f08c474538b400f61a10a507fb`.
-- cycle 069 candidate checkout を使った coverage regression。
-- cycle 069 の source/header sync と C API 追従実装。
+- cycle 070 candidate selection from `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`.
+- cycle 070 candidate checkout を使った coverage regression。
+- cycle 070 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 069 の candidate selection から始める。
+次の作業は、cycle 070 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `1c10d9bb7d5846f08c474538b400f61a10a507fb` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 6. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 069 の比較候補メモ:
+cycle 070 の比較候補メモ:
 
 - cycle 065 では baseline `46ec77ae39545acb1d6734028d9e2fbfef55f1c3` から `844288bf88af93e6ee50ebf1b4f473c79d2ee176` を採用した。189 commits、`include` / `modules` は 34 files changed, +919/-170、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 202 files changed, +4736/-2781。
 - cycle 065 の主変更は `SkPath` / `SkPathBuilder` iterator API、new `SkPathIter` / `SkPathContourIter`、SkParagraph style accessors、Graphite precompile WCS overload、SkColorFilters signature drift、skcms/prebuilt compatibility drift。
@@ -142,6 +143,12 @@ cycle 069 の比較候補メモ:
 - prebuilt static libraries が旧 symbol を参照するため、`SkPathBuilder::snapshot()` / `detach()` と `Op` / `Simplify` / `AsWinding` の out-param compatibility symbols を Reskia 側で維持した。
 - cycle 068 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final stale C API report は 5 `signature_changed_review` rows で、cycle record に互換理由を記録済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
+- cycle 069 では `vendor/skia-upstream-candidate` を local ref source として使い、2週間候補 `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8` を採用した。184 commits、`include` / `modules` は 50 files changed, +598/-281、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 221 files changed, +4684/-3187。
+- cycle 069 の初期 missing は 12 rows: `SkPathBuilder` comparison/bounds/data/dump helpers、`Graphite_Context::syncPipelineData`、`PersistentPipelineStorage`。C API 追従と分類で全て closed。
+- cycle 069 では PathData/PathRef migration、Graphite resource/pipeline churn、encode API、Skottie/SkParagraph/SVG drift を同期した。Rust PNG optional backend、Android NDK encoder、GN/Bazel-only metadata は同期対象外。
+- prebuilt static library compatibility のため、旧 `SkApplyPerspectiveClip` overload symbols と no-arg `SkPathBuilder::snapshot()` / `detach()` symbols を Reskia 側で維持した。
+- cycle 069 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final stale C API report は 2 `stale_capi` rows と 19 `signature_changed_review` rows で、cycle record に互換理由を記録済み。
+- prebuilt/source build は pass。GPU smoke と source smoke は未実施。
 
 ## やってはいけないこと
 
@@ -170,20 +177,20 @@ cycle 069 の比較候補メモ:
 
 候補:
 
-- `1c10d9bb7d5846f08c474538b400f61a10a507fb`
-- committer date: 2025-09-28
-- subject: Roll Skia Infra from 77be60075080 to ed3dfff05a5e (3 revisions)
+- `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`
+- committer date: 2025-10-13
+- subject: Roll recipe dependencies (trivial).
 
-cycle 068 結果:
+cycle 069 結果:
 
-- baseline `7a8e9f5...` から `1c10d9b...` を採用した。149 commits、`include` / `modules` は 37 files changed, +454/-192、`DEPS` / `include` / `modules` / `src` drift は 199 files changed, +4530/-1531。
-- `SkCodec::getHdrMetadata`、`SkExecutor` helpers、`SkPathBuilder::addLine`、`graphite::SubmitInfo` の C API を追加した。
-- HDR metadata、PNG、path/pathops、SkExecutor、Graphite/Ganesh、SVG、Vulkan/Dawn/Metal drift を同期した。`src/codec/SkHdrMetadata.cpp` は CMake core list に追加した。
-- prebuilt static library compatibility のため、`SkPathBuilder::snapshot()` / `detach()` と pathops out-param symbols を維持した。
+- baseline `1c10d9b...` から `ec032db...` を採用した。184 commits、`include` / `modules` は 50 files changed, +598/-281、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 221 files changed, +4684/-3187。
+- `SkPathBuilder` comparison/bounds/reserve helpers と `Graphite_Context::syncPipelineData` の C API を追加した。
+- PathData/PathRef migration、Graphite resource/pipeline、encode API、Skottie/SkParagraph/SVG drift を同期した。`src/core/SkPathData.cpp` と `src/core/SkPathDump.cpp` は CMake core list に追加した。
+- prebuilt static library compatibility のため、旧 `SkApplyPerspectiveClip` overload symbols と no-arg `SkPathBuilder::snapshot()` / `detach()` symbols を維持した。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は 5 `signature_changed_review` rows で、互換理由は cycle 068 record に記録済み。
-- prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `1c10d9bb7d5846f08c474538b400f61a10a507fb` から再比較する。既知リスクは PNG/HDR metadata drift、Rust PNG optional backend、Graphite `SubmitInfo` / precompile / pipeline churn、SVG/pathops ABI compatibility、Dawn/Vulkan/ANGLE rolls、prebuilt static library symbol compatibility。
+- final lock stale C API report は 2 `stale_capi` rows と 19 `signature_changed_review` rows で、互換理由は cycle 069 record に記録済み。
+- prebuilt/source build は pass。GPU smoke と source SVG/provider smoke は未実施。
+- 次サイクルでは、accepted baseline `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8` から再比較する。既知リスクは PathData/PathRef migration、Graphite persistent pipeline storage/provider design、legacy prebuilt SVG symbol compatibility、Rust PNG optional backend、Dawn/Vulkan/ANGLE rolls。
 
 cycle records:
 
@@ -255,6 +262,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-066-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-067-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-068-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-069-2026-05-31.md`
 
 ## Cycle close の条件
 

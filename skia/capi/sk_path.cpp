@@ -719,21 +719,24 @@ void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia
     if (path == nullptr || matrix == nullptr) {
         return;
     }
-    reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<SkPath *>(dst), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), reinterpret_cast<SkPath *>(dst));
 }
 
 void SkPath_transformInPlace(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc) {
     if (path == nullptr || matrix == nullptr) {
         return;
     }
-    reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    reinterpret_cast<SkPath *>(path)->transform(* reinterpret_cast<const SkMatrix *>(matrix));
 }
 
 sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc) {
     if (path == nullptr || m == nullptr) {
         return 0;
     }
-    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeTransform(* reinterpret_cast<const SkMatrix *>(m), static_cast<SkApplyPerspectiveClip>(pc)));
+    (void) pc;
+    return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeTransform(* reinterpret_cast<const SkMatrix *>(m)));
 }
 
 sk_path_t SkPath_makeScale(reskia_path_t *path, float sx, float sy) {

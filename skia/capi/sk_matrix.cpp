@@ -662,21 +662,24 @@ bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_
     if (matrix == nullptr || dst == nullptr || src == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src));
 }
 
 bool SkMatrix_mapRectInPlace(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc) {
     if (matrix == nullptr || rect == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), *reinterpret_cast<const SkRect *>(rect));
 }
 
 sk_rect_t SkMatrix_mapRectFromSource(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
     if (matrix == nullptr || src == nullptr) {
         return static_sk_rect_make(SkRect::MakeEmpty());
     }
-    return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc)));
+    (void) pc;
+    return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src)));
 }
 
 void SkMatrix_mapRectToQuad(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_rect_t *rect) {
