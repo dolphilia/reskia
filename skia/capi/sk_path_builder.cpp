@@ -467,4 +467,19 @@ const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, si
     return reinterpret_cast<const uint8_t *>(verbs.data());
 }
 
+const float *SkPathBuilder_conicWeights(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const float> weights = native->conicWeights();
+    if (count != nullptr) {
+        *count = weights.size();
+    }
+    return weights.data();
+}
+
 }

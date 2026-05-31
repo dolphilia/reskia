@@ -134,13 +134,6 @@ bool SkPath_isRRect(reskia_path_t *path, reskia_r_rect_t *rrect) {
     return reinterpret_cast<SkPath *>(path)->isRRect(reinterpret_cast<SkRRect *>(rrect));
 }
 
-bool SkPath_isArc(reskia_path_t *path, reskia_arc_t *arc) {
-    if (path == nullptr) {
-        return false;
-    }
-    return reinterpret_cast<SkPath *>(path)->isArc(reinterpret_cast<SkArc *>(arc));
-}
-
 reskia_path_t *SkPath_reset(reskia_path_t *path) {
     if (path == nullptr) {
         return nullptr;

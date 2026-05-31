@@ -158,6 +158,7 @@ bool SkMatrix_isFinite(reskia_matrix_t *matrix); // NULL 入力では false
 // static
 
 sk_matrix_t SkMatrix_Scale(float sx, float sy); // (SkScalar sx, SkScalar sy) -> sk_matrix_t
+sk_matrix_t SkMatrix_ScaleTranslate(float sx, float sy, float tx, float ty); // (SkScalar sx, SkScalar sy, SkScalar tx, SkScalar ty) -> sk_matrix_t
 sk_matrix_t SkMatrix_Translate(float dx, float dy); // (SkScalar dx, SkScalar dy) -> sk_matrix_t
 sk_matrix_t SkMatrix_TranslateFromPoint(sk_point_t t); // (sk_point_t t) -> sk_matrix_t
 sk_matrix_t SkMatrix_TranslateFromIPoint(sk_i_point_t t); // (sk_i_point_t t) -> sk_matrix_t
@@ -165,6 +166,8 @@ sk_matrix_t SkMatrix_RotateDeg(float deg); // (SkScalar deg) -> sk_matrix_t
 sk_matrix_t SkMatrix_RotateDegAroundPoint(float deg, sk_point_t pt); // (SkScalar deg, sk_point_t pt) -> sk_matrix_t
 sk_matrix_t SkMatrix_RotateRad(float rad); // (SkScalar rad) -> sk_matrix_t
 sk_matrix_t SkMatrix_Skew(float kx, float ky); // (SkScalar kx, SkScalar ky) -> sk_matrix_t
+bool SkMatrix_Rect2Rect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode, reskia_matrix_t *result); // src/dst/result は非 NULL。invalid 入力では false
+sk_matrix_t SkMatrix_RectToRectOrIdentity(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode); // src/dst NULL では identity
 sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode); // src/dst は非 NULL。NULL 入力では 0
 sk_matrix_t SkMatrix_MakeAll(float scaleX, float skewX, float transX, float skewY, float scaleY, float transY, float pers0, float pers1, float pers2); // (SkScalar scaleX, SkScalar skewX, SkScalar transX, SkScalar skewY, SkScalar scaleY, SkScalar transY, SkScalar pers0, SkScalar pers1, SkScalar pers2) -> sk_matrix_t
 sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t stf); // src/dst は非 NULL。NULL 入力では 0

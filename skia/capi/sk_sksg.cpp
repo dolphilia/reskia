@@ -444,6 +444,14 @@ reskia_sksg_geometry_node_t *SkSG_OffsetEffect_Make(reskia_sksg_geometry_node_t 
                    : nullptr;
 }
 
+reskia_sksg_geometry_node_t *SkSG_FillTypeOverride_Make(reskia_sksg_geometry_node_t *child, int fill_type) {
+    return child != nullptr && to_geometry_node_holder(child)->node != nullptr
+                   ? wrap_geometry_node(sksg::FillTypeOverride::Make(
+                             to_geometry_node_holder(child)->node,
+                             static_cast<SkPathFillType>(fill_type)))
+                   : nullptr;
+}
+
 reskia_sksg_geometry_node_t *SkSG_GeometryTransform_Make(reskia_sksg_geometry_node_t *child, reskia_sksg_transform_t *transform) {
     return child != nullptr && transform != nullptr &&
                    to_geometry_node_holder(child)->node != nullptr &&

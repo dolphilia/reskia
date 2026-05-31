@@ -16,6 +16,8 @@
 #include "../handles/static_sk_point-internal.h"
 #include "../handles/static_sk_rect-internal.h"
 
+#include <optional>
+
 namespace {
 
 constexpr int kMatrixValueCount = 9;
@@ -761,6 +763,10 @@ sk_matrix_t SkMatrix_Scale(float sx, float sy) {
     return static_sk_matrix_make(SkMatrix::Scale(sx, sy));
 }
 
+sk_matrix_t SkMatrix_ScaleTranslate(float sx, float sy, float tx, float ty) {
+    return static_sk_matrix_make(SkMatrix::ScaleTranslate(sx, sy, tx, ty));
+}
+
 sk_matrix_t SkMatrix_Translate(float dx, float dy) {
     return static_sk_matrix_make(SkMatrix::Translate(dx, dy));
 }
@@ -789,11 +795,36 @@ sk_matrix_t SkMatrix_Skew(float kx, float ky) {
     return static_sk_matrix_make(SkMatrix::Skew(kx, ky));
 }
 
+bool SkMatrix_Rect2Rect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode, reskia_matrix_t *result) {
+    if (src == nullptr || dst == nullptr || result == nullptr) {
+        return false;
+    }
+    std::optional<SkMatrix> matrix = SkMatrix::Rect2Rect(
+            *reinterpret_cast<const SkRect *>(src),
+            *reinterpret_cast<const SkRect *>(dst),
+            static_cast<SkMatrix::ScaleToFit>(mode));
+    if (!matrix.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkMatrix *>(result) = *matrix;
+    return true;
+}
+
+sk_matrix_t SkMatrix_RectToRectOrIdentity(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode) {
+    if (src == nullptr || dst == nullptr) {
+        return static_sk_matrix_make(SkMatrix::I());
+    }
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(
+            *reinterpret_cast<const SkRect *>(src),
+            *reinterpret_cast<const SkRect *>(dst),
+            static_cast<SkMatrix::ScaleToFit>(mode)));
+}
+
 sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode) {
     if (src == nullptr || dst == nullptr) {
         return 0;
     }
-    return static_sk_matrix_make(SkMatrix::RectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(mode)));
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(mode)));
 }
 
 sk_matrix_t SkMatrix_MakeAll(float scaleX, float skewX, float transX, float skewY, float scaleY, float transY, float pers0, float pers1, float pers2) {
@@ -804,7 +835,7 @@ sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_
     if (src == nullptr || dst == nullptr) {
         return 0;
     }
-    return static_sk_matrix_make(SkMatrix::MakeRectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf)));
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf)));
 }
 
 void SkMatrix_SetAffineIdentity(float *affine) {
