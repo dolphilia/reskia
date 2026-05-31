@@ -3,10 +3,17 @@
 //
 
 #include "sk_path.h"
+#include "sk_path_builder.h"
 
 #include "include/core/SkArc.h"
 #include "include/core/SkPath.h"
+#include "include/core/SkPathBuilder.h"
+#include "include/core/SkPathIter.h"
 #include "include/pathops/SkPathOps.h"
+
+#include <optional>
+#include <utility>
+#include <vector>
 
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_rect.h"
@@ -19,6 +26,47 @@
 #include "../handles/static_sk_data-internal.h"
 
 namespace {
+
+std::vector<SkPathVerb> make_verb_vector(const uint8_t *verbs, size_t verbs_count) {
+    std::vector<SkPathVerb> native_verbs;
+    native_verbs.reserve(verbs_count);
+    for (size_t i = 0; i < verbs_count; ++i) {
+        native_verbs.push_back(static_cast<SkPathVerb>(verbs[i]));
+    }
+    return native_verbs;
+}
+
+struct PathIterBox {
+    std::vector<SkPathVerb> owned_verbs;
+    SkPathIter iter;
+
+    explicit PathIterBox(SkPathIter native_iter) : iter(std::move(native_iter)) {}
+
+    PathIterBox(SkSpan<const SkPoint> points, const uint8_t *verbs, size_t verbs_count, SkSpan<const float> conic_weights)
+            : owned_verbs(make_verb_vector(verbs, verbs_count))
+            , iter(points, {owned_verbs.data(), owned_verbs.size()}, conic_weights) {}
+};
+
+struct PathContourIterBox {
+    std::vector<SkPathVerb> owned_verbs;
+    SkPathContourIter iter;
+
+    PathContourIterBox(SkSpan<const SkPoint> points, const uint8_t *verbs, size_t verbs_count, SkSpan<const float> conic_weights)
+            : owned_verbs(make_verb_vector(verbs, verbs_count))
+            , iter(points, {owned_verbs.data(), owned_verbs.size()}, conic_weights) {}
+};
+
+PathIterBox *as_path_iter(reskia_path_iter_t *iter) {
+    return reinterpret_cast<PathIterBox *>(iter);
+}
+
+const PathIterBox *as_path_iter(const reskia_path_iter_t *iter) {
+    return reinterpret_cast<const PathIterBox *>(iter);
+}
+
+PathContourIterBox *as_path_contour_iter(reskia_path_contour_iter_t *iter) {
+    return reinterpret_cast<PathContourIterBox *>(iter);
+}
 
 bool is_valid_path_op(reskia_path_op_t op) {
     return op >= kDifference_SkPathOp && op <= kReverseDifference_SkPathOp;
@@ -249,6 +297,20 @@ int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max) {
     }
     return reinterpret_cast<SkPath *>(path)->getVerbs(
             {reinterpret_cast<uint8_t *>(verbs), static_cast<size_t>(max)});
+}
+
+reskia_path_iter_t *SkPath_iter(const reskia_path_t *path) {
+    if (path == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_path_iter_t *>(new PathIterBox(reinterpret_cast<const SkPath *>(path)->iter()));
+}
+
+reskia_path_iter_t *SkPathBuilder_iter(const reskia_path_builder_t *path_builder) {
+    if (path_builder == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_path_iter_t *>(new PathIterBox(reinterpret_cast<const SkPathBuilder *>(path_builder)->iter()));
 }
 
 size_t SkPath_approximateBytesUsed(reskia_path_t *path) {
@@ -948,6 +1010,80 @@ int SkPath_ConvertConicToQuads(const reskia_point_t *p0, const reskia_point_t *p
         return 0;
     }
     return SkPath::ConvertConicToQuads(* reinterpret_cast<const SkPoint *>(p0), * reinterpret_cast<const SkPoint *>(p1), * reinterpret_cast<const SkPoint *>(p2), w, reinterpret_cast<SkPoint *>(pts), pow2);
+}
+
+reskia_path_iter_t *SkPathIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count) {
+    if ((points_count > 0 && points == nullptr) || (verbs_count > 0 && verbs == nullptr) || (conic_weights_count > 0 && conic_weights == nullptr)) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_path_iter_t *>(new PathIterBox(
+            {reinterpret_cast<const SkPoint *>(points), points_count},
+            verbs,
+            verbs_count,
+            {conic_weights, conic_weights_count}));
+}
+
+void SkPathIter_delete(reskia_path_iter_t *iter) {
+    delete as_path_iter(iter);
+}
+
+bool SkPathIter_next(reskia_path_iter_t *iter, reskia_path_iter_rec_t *out_rec) {
+    if (iter == nullptr || out_rec == nullptr) {
+        return false;
+    }
+    std::optional<SkPathIter::Rec> rec = as_path_iter(iter)->iter.next();
+    if (!rec.has_value()) {
+        return false;
+    }
+    out_rec->points = reinterpret_cast<const reskia_point_t *>(rec->fPoints.data());
+    out_rec->points_count = rec->fPoints.size();
+    out_rec->conic_weight = rec->fConicWeight;
+    out_rec->verb = static_cast<uint8_t>(rec->fVerb);
+    return true;
+}
+
+bool SkPathIter_peekNextVerb(const reskia_path_iter_t *iter, uint8_t *out_verb) {
+    if (iter == nullptr || out_verb == nullptr) {
+        return false;
+    }
+    std::optional<SkPathVerb> verb = as_path_iter(iter)->iter.peekNextVerb();
+    if (!verb.has_value()) {
+        return false;
+    }
+    *out_verb = static_cast<uint8_t>(*verb);
+    return true;
+}
+
+reskia_path_contour_iter_t *SkPathContourIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count) {
+    if ((points_count > 0 && points == nullptr) || (verbs_count > 0 && verbs == nullptr) || (conic_weights_count > 0 && conic_weights == nullptr)) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_path_contour_iter_t *>(new PathContourIterBox(
+            {reinterpret_cast<const SkPoint *>(points), points_count},
+            verbs,
+            verbs_count,
+            {conic_weights, conic_weights_count}));
+}
+
+void SkPathContourIter_delete(reskia_path_contour_iter_t *iter) {
+    delete as_path_contour_iter(iter);
+}
+
+bool SkPathContourIter_next(reskia_path_contour_iter_t *iter, reskia_path_contour_iter_rec_t *out_rec) {
+    if (iter == nullptr || out_rec == nullptr) {
+        return false;
+    }
+    std::optional<SkPathContourIter::Rec> rec = as_path_contour_iter(iter)->iter.next();
+    if (!rec.has_value()) {
+        return false;
+    }
+    out_rec->points = reinterpret_cast<const reskia_point_t *>(rec->fPoints.data());
+    out_rec->points_count = rec->fPoints.size();
+    out_rec->verbs = reinterpret_cast<const uint8_t *>(rec->fVerbs.data());
+    out_rec->verbs_count = rec->fVerbs.size();
+    out_rec->conic_weights = rec->fConics.data();
+    out_rec->conic_weights_count = rec->fConics.size();
+    return true;
 }
 
 }

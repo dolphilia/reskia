@@ -122,7 +122,6 @@ list(APPEND SOURCE_FILES
         src/core/SkDraw_vertices.cpp
         src/core/SkDraw.cpp
         src/core/SkDrawable.cpp
-        src/core/SkDrawBase.cpp
         src/core/SkDrawShadowInfo.cpp
         src/core/SkEdge.cpp
         src/core/SkEdgeBuilder.cpp
@@ -179,6 +178,7 @@ list(APPEND SOURCE_FILES
         src/core/SkPath.cpp
         src/core/SkPathBuilder.cpp
         src/core/SkPathEffect.cpp
+        src/core/SkPathIter.cpp
         src/core/SkPathMeasure.cpp
         src/core/SkPathPriv.cpp
         src/core/SkPathRaw.cpp

@@ -26,6 +26,7 @@ namespace skgpu::graphite {
 
 class CommandBuffer;
 class DrawList;
+class FloatStorageManager;
 class GraphicsPipeline;
 class Recorder;
 struct RenderPassDesc;
@@ -67,6 +68,7 @@ public:
     // contained within its dimensions.
     const SkIRect&      bounds() const { return fBounds;       }
     TextureProxy* target() const { return fTarget.get(); }
+    FloatStorageManager* floatStorageManager() const { return fFloatStorageManager.get(); }
     std::pair<LoadOp, StoreOp> ops() const { return fOps; }
     std::array<float, 4> clearColor() const { return fClearColor; }
 
@@ -76,8 +78,10 @@ public:
     // Instantiate and prepare any resources used by the DrawPass that require the Recorder's
     // ResourceProvider. This includes things likes GraphicsPipelines, sampled Textures, Samplers,
     // etc.
+    // Note that, due to possible threaded compilation, the Pipelines are not guaranteed to be
+    // complete until Context::insertRecording time.
     bool prepareResources(ResourceProvider*,
-                          const RuntimeEffectDictionary*,
+                          sk_sp<const RuntimeEffectDictionary>,
                           const RenderPassDesc&);
 
     DrawPassCommands::List::Iter commands() const {
@@ -93,14 +97,15 @@ public:
     // Not valid until after prepareResources() is called
     SkSpan<const sk_sp<GraphicsPipeline>> pipelines() const { return fFullPipelines; }
 
-    void addResourceRefs(CommandBuffer*) const;
+    [[nodiscard]] bool addResourceRefs(ResourceProvider*, CommandBuffer*);
 
 private:
     class SortKey;
 
     DrawPass(sk_sp<TextureProxy> target,
              std::pair<LoadOp, StoreOp> ops,
-             std::array<float, 4> clearColor);
+             std::array<float, 4> clearColor,
+             sk_sp<FloatStorageManager> floatStorageManager);
 
     DrawPassCommands::List fCommandList;
 
@@ -117,6 +122,8 @@ private:
     // These resources all get instantiated during prepareResources.
     skia_private::TArray<sk_sp<GraphicsPipeline>> fFullPipelines;
     skia_private::TArray<sk_sp<TextureProxy>> fSampledTextures;
+
+    sk_sp<FloatStorageManager> fFloatStorageManager;
 
 #if defined(SK_TRACE_GRAPHITE_PIPELINE_USE)
     skia_private::TArray<float> fPipelineDrawAreas;

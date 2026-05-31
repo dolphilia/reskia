@@ -94,8 +94,7 @@ public:
 
     enum class Clamp : bool { kNo, kYes };
 
-    static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&);
-    static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&, Clamp clamp);
+    static sk_sp<SkColorFilter> Matrix(const SkColorMatrix&, Clamp clamp = Clamp::kYes);
     static sk_sp<SkColorFilter> Matrix(const float rowMajor[20], Clamp clamp = Clamp::kYes);
 
     // A version of Matrix which operates in HSLA space instead of RGBA.

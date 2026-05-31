@@ -51,6 +51,7 @@ class BackendTexture;
 class Context;
 class Device;
 class DrawBufferManager;
+class FloatStorageManager;
 class ImageProvider;
 class ProxyReadCountMap;
 class RecorderPriv;
@@ -276,7 +277,8 @@ private:
     sk_sp<SharedContext> fSharedContext;
     ResourceProvider* fResourceProvider; // May point to the Context's resource provider
     std::unique_ptr<ResourceProvider> fOwnedResourceProvider; // May be null
-    std::unique_ptr<RuntimeEffectDictionary> fRuntimeEffectDict;
+
+    sk_sp<RuntimeEffectDictionary> fRuntimeEffectDict;
 
     // NOTE: These are stored by pointer to allow them to be forward declared.
     std::unique_ptr<TaskList> fRootTaskList;
@@ -285,6 +287,7 @@ private:
 
     std::unique_ptr<DrawBufferManager> fDrawBufferManager;
     std::unique_ptr<UploadBufferManager> fUploadBufferManager;
+    sk_sp<FloatStorageManager> fFloatStorageManager;
     std::unique_ptr<ProxyReadCountMap> fProxyReadCounts;
 
     // Iterating over tracked devices in flushTrackedDevices() needs to be re-entrant and support

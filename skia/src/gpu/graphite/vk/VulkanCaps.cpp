@@ -872,7 +872,7 @@ void VulkanCaps::initFormatTable(const skgpu::VulkanInterface* interface,
         auto& info = this->getFormatInfo(format);
         info.init(interface, *this, physDev, format);
         if (info.isTexturable(VK_IMAGE_TILING_OPTIMAL)) {
-            info.fColorTypeInfoCount = 1;
+            info.fColorTypeInfoCount = 2;
             info.fColorTypeInfos = std::make_unique<ColorTypeInfo[]>(info.fColorTypeInfoCount);
             int ctIdx = 0;
             // Format: VK_FORMAT_B8G8R8A8_UNORM, Surface: kBGRA_8888
@@ -881,6 +881,56 @@ void VulkanCaps::initFormatTable(const skgpu::VulkanInterface* interface,
                 auto& ctInfo = info.fColorTypeInfos[ctIdx++];
                 ctInfo.fColorType = ct;
                 ctInfo.fTransferColorType = ct;
+                ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
+            }
+            // TODO: This is currently brittle, but add kExternalFormatColorType as a valid color
+            // type for VK_FORMAT_B8G8R8A8_UNORM in order to pass texture format + color type
+            // compatibility checks.
+            //
+            // b/431290055 exposed an issue where we could end up using an SkColorType that is not
+            // compatible with the BackendTexture's VkFormat. In this case, the driver reported that
+            // an AHardwareBuffer with the format AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM (only
+            // present in Android framework builds) could be treated as VK_FORMAT_B8G8R8A8_UNORM.
+            // This is not an officially supported equivalency per the spec (
+            // https://docs.vulkan.org/spec/latest/chapters/memory.html#memory-external-android-hardware-buffer-formats),
+            // but clients would benefit from having the driver's suggested VkFormat be used rather
+            // than falling back to importing the AHwBuf using its external format (which is less
+            // performant).
+            //
+            // Using the driver-recommended VkFormat led to failing Skia checks which rely upon
+            // surfaces + images having an SkColorType that is compatible with a texture's native
+            // format. When *creating* a Surface or Image from an AHwBuf-based BackendTexture, its
+            // color type is determined by the *AHwBuf format* (using
+            // `AHardwareBufferUtils::GetSkColorTypeFromBufferFormat`). However, when
+            // *validating* the surface/image, Skia checks whether the color type is compatible with
+            // the texture's *VkFormat* (which is distinct from an AndroidHardwareBuffer format).
+            //
+            // Ideally, we would simply add the AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM -->
+            // VK_FORMAT_B8G8R8A8_UNORM mapping to `GetSkColorTypeFromBufferFormat`. However, this
+            // utility is public and shared b/w both ganesh and graphite. Adding this introduced
+            // nontrivial complexity in ganesh (e.g., its SkImages::DeferredFromAHardwareBuffer API
+            // does not know the AHwBuf format at creation). This could be worked around, but the
+            // change would be more invasive and no clients have requested that we allow the use of
+            // a driver's non-spec reported VkFormat equivalency in ganesh. Therefore, we simply
+            // default to assigning kExternalFormatColorType for
+            // AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM and add it as a supported color type for
+            // VK_FORMAT_B8G8R8A8_UNORM here in the Caps table. This should allow BackendTextures
+            // based on AHwBufs with this format to pass validity checks and theoretically still be
+            // used normally (see below for explanation as to why this works).
+            //
+            // Format: VK_FORMAT_B8G8R8A8_UNORM, Surface: kRGBA_8888
+            {
+                auto& ctInfo = info.fColorTypeInfos[ctIdx++];
+                // `Caps::areColorTypeAndTextureInfoCompatible` consults the fColorType field, so
+                // make sure it aligns with the color type we expect to see for AHardwareBuffers
+                // that use AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM (kExternalFormatColorType).
+                ctInfo.fColorType = kExternalFormatColorType;
+                // fTransferColorType is currently not referenced, but the actual color type
+                // (e.g. for readbacks) should be kBGRA_8888_SkColorType so use that here. Simply
+                // omit assigning any read/write swizzles because we actually already know the
+                // texture format is compatible with kBGRA_8888_SkColorType.
+                constexpr SkColorType transferColorType = SkColorType::kBGRA_8888_SkColorType;
+                ctInfo.fTransferColorType = transferColorType;
                 ctInfo.fFlags = ColorTypeInfo::kUploadData_Flag | ColorTypeInfo::kRenderable_Flag;
             }
         }
@@ -1962,25 +2012,27 @@ void VulkanCaps::buildKeyForTexture(SkISize dimensions,
     Protected isProtected = info.isProtected();
 
     // Confirm all the below parts of the key can fit in a single uint32_t. The sum of the shift
-    // amounts in the asserts must be less than or equal to 32. vkInfo.fFlags will go into its
-    // own 32-bit block.
+    // amounts in the asserts must be less than or equal to 32. vkInfo.fFlags and
+    // vkInfo.fImageUsageFlags will go into their own 32-bit block.
     SkASSERT(samples                            < (1u << 3));  // sample key is first 3 bits
     SkASSERT(static_cast<uint32_t>(isMipped)    < (1u << 1));  // isMapped is 4th bit
     SkASSERT(static_cast<uint32_t>(isProtected) < (1u << 1));  // isProtected is 5th bit
     SkASSERT(vkInfo.fImageTiling                < (1u << 1));  // imageTiling is 6th bit
     SkASSERT(vkInfo.fSharingMode                < (1u << 1));  // sharingMode is 7th bit
     SkASSERT(vkInfo.fAspectMask                 < (1u << 11)); // aspectMask is bits 8 - 19
-    SkASSERT(vkInfo.fImageUsageFlags            < (1u << 12)); // imageUsageFlags are bits 20-32
 
-    // We need two uint32_ts for dimensions, 1 for format, and 2 for the rest of the information.
-    static constexpr int kNum32DataCntNoYcbcr =  2 + 1 + 2;
+    // We need two uint32_ts for dimensions and 3 for miscellaneous information.
+    static constexpr int kNum32DimensionDataCnt = 2;
+    static constexpr int kNum32MiscDataCnt = 3;
+    // Non-YCbCr formats need 1 int for format.
     // YCbCr conversion needs 1 int for non-format flags, and a 64-bit format (external or regular).
-    static constexpr int kNum32DataCntYcbcr = 3;
-    int num32DataCnt = kNum32DataCntNoYcbcr;
+    static constexpr int kNum32FormatDataCntNoYcbcr = 1;
+    static constexpr int kNum32FormatDataCntYcbcr = 3;
 
-    // If a texture w/ an external format is being used, that information must also be appended.
     const VulkanYcbcrConversionInfo& ycbcrInfo = vkInfo.fYcbcrConversionInfo;
-    num32DataCnt += vkInfo.fYcbcrConversionInfo.isValid() ? kNum32DataCntYcbcr : 0;
+    const int num32DataCnt =
+            kNum32DimensionDataCnt + kNum32MiscDataCnt +
+            (ycbcrInfo.isValid() ? kNum32FormatDataCntYcbcr : kNum32FormatDataCntNoYcbcr);
 
     GraphiteResourceKey::Builder builder(key, type, num32DataCnt);
 
@@ -1999,14 +2051,14 @@ void VulkanCaps::buildKeyForTexture(SkISize dimensions,
         builder[i++] = format;
     }
 
-    builder[i++] = (static_cast<uint32_t>(vkInfo.fFlags));
-    builder[i++] = (samples                                            << 0 ) |
-                   (static_cast<uint32_t>(isMipped)                    << 3 ) |
-                   (static_cast<uint32_t>(isProtected)                 << 4 ) |
-                   (static_cast<uint32_t>(vkInfo.fImageTiling)         << 5 ) |
-                   (static_cast<uint32_t>(vkInfo.fSharingMode)         << 6 ) |
-                   (static_cast<uint32_t>(vkInfo.fAspectMask)          << 7 ) |
-                   (static_cast<uint32_t>(vkInfo.fImageUsageFlags)     << 19);
+    builder[i++] = static_cast<uint32_t>(vkInfo.fFlags);
+    builder[i++] = static_cast<uint32_t>(vkInfo.fImageUsageFlags);
+    builder[i++] = (samples                                            << 0) |
+                   (static_cast<uint32_t>(isMipped)                    << 3) |
+                   (static_cast<uint32_t>(isProtected)                 << 4) |
+                   (static_cast<uint32_t>(vkInfo.fImageTiling)         << 5) |
+                   (static_cast<uint32_t>(vkInfo.fSharingMode)         << 6) |
+                   (static_cast<uint32_t>(vkInfo.fAspectMask)          << 7);
     SkASSERT(i == num32DataCnt);
 }
 

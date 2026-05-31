@@ -97,6 +97,8 @@ bool SkParagraph_ParagraphStyle_ellipsized(const reskia_paragraph_style_t *style
 reskia_paragraph_text_align_t SkParagraph_ParagraphStyle_effective_align(const reskia_paragraph_style_t *style);
 bool SkParagraph_ParagraphStyle_hintingIsOn(const reskia_paragraph_style_t *style);
 void SkParagraph_ParagraphStyle_turnHintingOff(reskia_paragraph_style_t *style);
+bool SkParagraph_ParagraphStyle_fakeMissingFontStyles(const reskia_paragraph_style_t *style);
+void SkParagraph_ParagraphStyle_setFakeMissingFontStyles(reskia_paragraph_style_t *style, bool value);
 bool SkParagraph_ParagraphStyle_getReplaceTabCharacters(const reskia_paragraph_style_t *style);
 void SkParagraph_ParagraphStyle_setReplaceTabCharacters(reskia_paragraph_style_t *style, bool value);
 bool SkParagraph_ParagraphStyle_getApplyRoundingHack(const reskia_paragraph_style_t *style);

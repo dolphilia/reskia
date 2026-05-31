@@ -440,9 +440,21 @@ void SkPath::validateRef() const {
 #endif
 bool SkPath::isRect(SkRect* rect, bool* isClosed, SkPathDirection* direction) const {
     SkDEBUGCODE(this->validate();)
-    int currVerb = 0;
-    const SkPoint* pts = fPathRef->points();
-    return SkPathPriv::IsRectContour(*this, false, &currVerb, &pts, isClosed, direction, rect);
+    SkSpan<const SkPoint> pts = {fPathRef->points(), fPathRef->countPoints()};
+    SkSpan<const SkPathVerb> vbs = fPathRef->verbs();
+    if (auto rc = SkPathPriv::IsRectContour(pts, vbs, false)) {
+        if (rect) {
+            *rect = rc->fRect;
+        }
+        if (isClosed) {
+            *isClosed = rc->fIsClosed;
+        }
+        if (direction) {
+            *direction = rc->fDirection;
+        }
+        return true;
+    }
+    return false;
 }
 
 bool SkPath::isOval(SkRect* bounds) const {
@@ -833,16 +845,20 @@ void SkPath::addRaw(const SkPathRaw& raw) {
     this->incReserve(raw.points().size(), raw.verbs().size());
 
     for (auto iter = raw.iter(); auto rec = iter.next();) {
-        const auto pts = rec->pts;
-        switch (rec->vrb) {
+        const auto pts = rec->fPoints;
+        switch (rec->fVerb) {
             case SkPathVerb::kMove:  this->moveTo( pts[0]); break;
             case SkPathVerb::kLine:  this->lineTo( pts[1]); break;
             case SkPathVerb::kQuad:  this->quadTo( pts[1], pts[2]); break;
-            case SkPathVerb::kConic: this->conicTo(pts[1], pts[2], rec->w); break;
+            case SkPathVerb::kConic: this->conicTo(pts[1], pts[2], rec->fConicWeight); break;
             case SkPathVerb::kCubic: this->cubicTo(pts[1], pts[2], pts[3]); break;
             case SkPathVerb::kClose: this->close(); break;
         }
     }
+}
+
+SkPathIter SkPath::iter() const {
+    return { fPathRef->fPoints, fPathRef->verbs(), fPathRef->fConicWeights };
 }
 
 static bool arc_is_lone_point(const SkRect& oval, SkScalar startAngle, SkScalar sweepAngle,

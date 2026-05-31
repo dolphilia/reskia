@@ -45,6 +45,7 @@
 #include "include/private/base/SkTemplates.h"
 #include "include/private/gpu/ganesh/GrTypesPriv.h"
 #include "src/base/SkFloatBits.h"
+#include "src/base/SkSafeMath.h"
 #include "src/base/SkTLazy.h"
 #include "src/core/SkBlurMaskFilterImpl.h"
 #include "src/core/SkColorData.h"
@@ -187,7 +188,7 @@ static GrSurfaceProxyView sw_create_filtered_mask(GrRecordingContext* rContext,
                                                         ? SkStrokeRec::kHairline_InitStyle
                                                         : SkStrokeRec::kFill_InitStyle;
 
-        // TODO: it seems like we could create an SkDraw here and set its fMatrix field rather
+        // TODO: it seems like we could create an skcpu::Draw here and set its fMatrix field rather
         // than explicitly transforming the path to device space.
         SkPath devPath;
 
@@ -196,9 +197,13 @@ static GrSurfaceProxyView sw_create_filtered_mask(GrRecordingContext* rContext,
         devPath.transform(viewMatrix);
 
         SkMaskBuilder srcM, dstM;
-        if (!SkDraw::DrawToMask(devPath, clipBounds, filter, &viewMatrix, &srcM,
-                                SkMaskBuilder::kComputeBoundsAndRenderImage_CreateMode,
-                                fillOrHairline)) {
+        if (!skcpu::DrawToMask(devPath,
+                               clipBounds,
+                               filter,
+                               &viewMatrix,
+                               &srcM,
+                               SkMaskBuilder::kComputeBoundsAndRenderImage_CreateMode,
+                               fillOrHairline)) {
             return {};
         }
         SkAutoMaskFreeImage autoSrc(srcM.image());
@@ -1501,10 +1506,25 @@ bool ComputeBlurredRRectParams(const SkRRect& srcRRect,
     const SkScalar srcRight = std::max<SkScalar>(srcRadiiUR.fX, srcRadiiLR.fX);
     const SkScalar srcBot = std::max<SkScalar>(srcRadiiLL.fY, srcRadiiLR.fY);
 
-    int newRRWidth = 2 * devBlurRadius + devLeft + devRight + 1;
-    int newRRHeight = 2 * devBlurRadius + devTop + devBot + 1;
-    widthHeight->fWidth = newRRWidth + 2 * devBlurRadius;
-    widthHeight->fHeight = newRRHeight + 2 * devBlurRadius;
+    SkSafeMath safe;
+    int newRRWidth_safe = safe.addInt(devLeft, devRight);
+    newRRWidth_safe = safe.addInt(newRRWidth_safe, safe.mulInt(2, devBlurRadius));
+    newRRWidth_safe = safe.addInt(newRRWidth_safe, 1);
+
+    int newRRHeight_safe = safe.addInt(devTop, devBot);
+    newRRHeight_safe = safe.addInt(newRRHeight_safe, safe.mulInt(2, devBlurRadius));
+    newRRHeight_safe = safe.addInt(newRRHeight_safe, 1);
+
+    int width_safe = safe.addInt(newRRWidth_safe, safe.mulInt(2, devBlurRadius));
+    int height_safe = safe.addInt(newRRHeight_safe, safe.mulInt(2, devBlurRadius));
+
+    if (!safe.ok()) {
+        return false;
+    }
+    int newRRWidth = newRRWidth_safe;
+    int newRRHeight = newRRHeight_safe;
+    widthHeight->fWidth = width_safe;
+    widthHeight->fHeight = height_safe;
 
     const SkRect srcProxyRect = srcRRect.getBounds().makeOutset(srcBlurRadius, srcBlurRadius);
 

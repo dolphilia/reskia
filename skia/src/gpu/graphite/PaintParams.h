@@ -11,6 +11,7 @@
 #include "include/core/SkColor.h"
 #include "include/core/SkPaint.h"
 #include "src/gpu/graphite/Caps.h"
+#include "src/gpu/graphite/Renderer.h"
 #include "src/gpu/graphite/geom/NonMSAAClip.h"
 
 class SkColorInfo;
@@ -38,7 +39,8 @@ public:
                          sk_sp<SkBlender> primitiveBlender,
                          const NonMSAAClip& nonMSAAClip,
                          sk_sp<SkShader> clipShader,
-                         bool dstReadRequired,
+                         Coverage coverage,
+                         TextureFormat targetFormat,
                          bool skipColorXform);
 
     PaintParams(const PaintParams&);
@@ -61,24 +63,26 @@ public:
     SkBlender* primitiveBlender() const { return fPrimitiveBlender.get(); }
     sk_sp<SkBlender> refPrimitiveBlender() const;
 
-    bool dstReadRequired() const { return fDstReadRequired; }
-    bool skipColorXform() const { return fSkipColorXform; }
-    bool dither() const { return fDither; }
+    TextureFormat targetFormat() const { return fTargetFormat;   }
+    bool skipColorXform()        const { return fSkipColorXform; }
+    bool dither()                const { return fDither;         }
 
     /** Converts an SkColor4f to the destination color space. */
     static SkColor4f Color4fPrepForDst(SkColor4f srgb, const SkColorInfo& dstColorInfo);
 
-    void toKey(const KeyContext&) const;
+    using Result = std::tuple</*dependsOnDst*/bool, /*dstReadRequired*/bool,
+                              /*usesAdvancedBlend*/bool>;
+    std::optional<Result> toKey(const KeyContext&) const;
 
     void notifyImagesInUse(Recorder*, DrawContext*) const;
 
 private:
-    void addPaintColorToKey(const KeyContext&) const;
-    void handlePrimitiveColor(const KeyContext&) const;
-    void handlePaintAlpha(const KeyContext&) const;
-    void handleColorFilter(const KeyContext&) const;
-    void handleDithering(const KeyContext&) const;
-    void handleDstRead(const KeyContext&) const;
+    bool addPaintColorToKey(const KeyContext&) const;
+    bool handlePrimitiveColor(const KeyContext&) const;
+    bool handlePaintAlpha(const KeyContext&) const;
+    bool handleColorFilter(const KeyContext&) const;
+    bool handleDithering(const KeyContext&) const;
+    bool handleDstRead(const KeyContext&) const;
     void handleClipping(const KeyContext&) const;
 
     SkColor4f            fColor;
@@ -91,7 +95,8 @@ private:
     sk_sp<SkBlender>     fPrimitiveBlender;
     NonMSAAClip          fNonMSAAClip;
     sk_sp<SkShader>      fClipShader;
-    bool                 fDstReadRequired;
+    Coverage             fRendererCoverage;
+    TextureFormat        fTargetFormat;
     bool                 fSkipColorXform;
     bool                 fDither;
 };

@@ -311,8 +311,6 @@ int gather_lines_and_quads(const SkPath& path,
                            PtArray* conics,
                            IntArray* quadSubdivCnts,
                            FloatArray* conicWeights) {
-    SkPath::Iter iter(path, false);
-
     int totalQuadCount = 0;
     bool persp = m.hasPerspective();
 
@@ -360,6 +358,22 @@ int gather_lines_and_quads(const SkPath& path,
         }
     };
 
+    // common code for handline lines
+    auto handleLineVerb = [&](SkSpan<const SkPoint> pathPts) {
+        SkPoint devPts[2];
+        m.mapPoints(devPts, pathPts);
+        if (SkIRect::Intersects(devClipBounds, safeIBounds({devPts, 2}))) {
+            SkPoint* pts = lines->push_back_n(2);
+            pts[0] = devPts[0];
+            pts[1] = devPts[1];
+            if (verbsInContour == 0 && pts[0] == pts[1]) {
+                seenZeroLengthVerb = true;
+                zeroVerbPt = pts[0];
+            }
+        }
+        verbsInContour++;
+    };
+
     // Applies the view matrix to quad src points and calls the above helper.
     auto addSrcChoppedQuad = [&](const SkPoint srcSpaceQuadPts[3], bool isContourStart) {
         SkPoint devPts[3];
@@ -368,7 +382,7 @@ int gather_lines_and_quads(const SkPath& path,
     };
 
     SkPoint pathPts[4] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
-    while (auto rec = iter.next()) {
+    for (auto iter = path.iter(); auto rec = iter.next();) {
         std::copy(rec->fPoints.begin(), rec->fPoints.end(), pathPts);
         switch (rec->fVerb) {
             case SkPathVerb::kConic:
@@ -426,21 +440,9 @@ int gather_lines_and_quads(const SkPath& path,
                 verbsInContour = 0;
                 seenZeroLengthVerb = false;
                 break;
-            case SkPathVerb::kLine: {
-                SkPoint devPts[2];
-                m.mapPoints(devPts, {pathPts, 2});
-                if (SkIRect::Intersects(devClipBounds, safeIBounds({devPts, 2}))) {
-                    SkPoint* pts = lines->push_back_n(2);
-                    pts[0] = devPts[0];
-                    pts[1] = devPts[1];
-                    if (verbsInContour == 0 && pts[0] == pts[1]) {
-                        seenZeroLengthVerb = true;
-                        zeroVerbPt = pts[0];
-                    }
-                }
-                verbsInContour++;
+            case SkPathVerb::kLine:
+                handleLineVerb({pathPts, 2});
                 break;
-            }
             case SkPathVerb::kQuad: {
                 SkPoint choppedPts[5];
                 // Chopping the quad helps when the quad is either degenerate or nearly degenerate.
@@ -481,6 +483,9 @@ int gather_lines_and_quads(const SkPath& path,
                 break;
             }
             case SkPathVerb::kClose:
+                if (pathPts[0] != pathPts[1]) {
+                    handleLineVerb({pathPts, 2});
+                }
                 // Contour is closed, so we don't need to grow the starting line, unless it's
                 // *just* a zero length subpath. (SVG Spec 11.4, 'stroke').
                 if (capLength > 0) {

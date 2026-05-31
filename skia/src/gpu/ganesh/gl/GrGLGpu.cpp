@@ -69,6 +69,7 @@
 #include "src/gpu/ganesh/gl/builders/GrGLShaderStringBuilder.h"
 #include "src/sksl/SkSLProgramKind.h"
 #include "src/sksl/SkSLProgramSettings.h"
+#include "src/sksl/codegen/SkSLNativeShader.h"
 #include "src/sksl/ir/SkSLProgram.h"
 
 #include <algorithm>
@@ -351,7 +352,7 @@ public:
     }
 
     void abandon() {
-        fSamplers.foreach([](uint32_t* key, Sampler* sampler) { sampler->abandon(); });
+        fSamplers.foreach([](const uint32_t* key, Sampler* sampler) { sampler->abandon(); });
         fTextureUnitStates.reset();
         fNumTextureUnits = 0;
     }
@@ -3372,7 +3373,7 @@ bool GrGLGpu::createCopyProgram(GrTexture* srcTex) {
     std::string fragmentSkSL{fshaderTxt.c_str(), fshaderTxt.size()};
 
     auto errorHandler = this->getContext()->priv().getShaderErrorHandler();
-    std::string glsl[kGrShaderTypeCount];
+    SkSL::NativeShader glsl[kGrShaderTypeCount];
     SkSL::ProgramSettings settings;
     SkSL::Program::Interface interface;
     skgpu::SkSLToGLSL(shaderCaps, vertexSkSL, SkSL::ProgramKind::kVertex, settings,
@@ -3556,7 +3557,7 @@ bool GrGLGpu::createMipmapProgram(int progIdx) {
     std::string fragmentSkSL{fshaderTxt.c_str(), fshaderTxt.size()};
 
     auto errorHandler = this->getContext()->priv().getShaderErrorHandler();
-    std::string glsl[kGrShaderTypeCount];
+    SkSL::NativeShader glsl[kGrShaderTypeCount];
     SkSL::ProgramSettings settings;
     SkSL::Program::Interface interface;
 

@@ -17,6 +17,8 @@
 typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_path_t reskia_path_t;
+typedef struct reskia_path_iter_t reskia_path_iter_t;
+typedef struct reskia_path_contour_iter_t reskia_path_contour_iter_t;
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_r_rect_t reskia_r_rect_t;
 typedef struct reskia_arc_t reskia_arc_t;
@@ -26,6 +28,22 @@ typedef int32_t reskia_path_fill_type_t;
 typedef int32_t reskia_path_direction_t;
 typedef int32_t reskia_path_perspective_clip_t;
 typedef int32_t reskia_path_op_t;
+
+typedef struct reskia_path_iter_rec_t {
+    const reskia_point_t *points;
+    size_t points_count;
+    float conic_weight;
+    uint8_t verb;
+} reskia_path_iter_rec_t;
+
+typedef struct reskia_path_contour_iter_rec_t {
+    const reskia_point_t *points;
+    size_t points_count;
+    const uint8_t *verbs;
+    size_t verbs_count;
+    const float *conic_weights;
+    size_t conic_weights_count;
+} reskia_path_contour_iter_rec_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,6 +81,7 @@ sk_point_t SkPath_getPoint(reskia_path_t *path, int index); // (SkPath *path, in
 int SkPath_getPoints(reskia_path_t *path, reskia_point_t *points, int max); // (SkPath *path, SkPoint points[], int max) -> int
 int SkPath_countVerbs(reskia_path_t *path); // (SkPath *path) -> int
 int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max); // (SkPath *path, uint8_t verbs[], int max) -> int
+reskia_path_iter_t *SkPath_iter(const reskia_path_t *path); // borrowed path storage; delete iterator with SkPathIter_delete
 size_t SkPath_approximateBytesUsed(reskia_path_t *path); // (SkPath *path) -> size_t
 void SkPath_swap(reskia_path_t *path, reskia_path_t *other); // (SkPath *path, SkPath *other)
 const reskia_rect_t *SkPath_getBounds(reskia_path_t *path); // (SkPath *path) -> const SkRect *
@@ -172,6 +191,14 @@ bool SkPath_IsLineDegenerate(const reskia_point_t *p1, const reskia_point_t *p2,
 bool SkPath_IsQuadDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, bool exact) -> bool
 bool SkPath_IsCubicDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, const reskia_point_t *p4, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, const SkPoint *p4, bool exact) -> bool
 int SkPath_ConvertConicToQuads(const reskia_point_t *p0, const reskia_point_t *p1, const reskia_point_t *p2, float w, reskia_point_t *pts, int pow2); // (const SkPoint *p0, const SkPoint *p1, const SkPoint *p2, SkScalar w, SkPoint pts[], int pow2) -> int
+
+reskia_path_iter_t *SkPathIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count); // arrays are borrowed through iterator lifetime
+void SkPathIter_delete(reskia_path_iter_t *iter); // NULL input is no-op
+bool SkPathIter_next(reskia_path_iter_t *iter, reskia_path_iter_rec_t *out_rec); // false when exhausted or invalid
+bool SkPathIter_peekNextVerb(const reskia_path_iter_t *iter, uint8_t *out_verb); // false when exhausted or invalid
+reskia_path_contour_iter_t *SkPathContourIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count); // arrays are borrowed through iterator lifetime
+void SkPathContourIter_delete(reskia_path_contour_iter_t *iter); // NULL input is no-op
+bool SkPathContourIter_next(reskia_path_contour_iter_t *iter, reskia_path_contour_iter_rec_t *out_rec); // false when exhausted or invalid
 
 #ifdef __cplusplus
 }

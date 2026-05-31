@@ -55,12 +55,6 @@ uint16_t float_to_uInt16Number(float x, uint16_t one) {
     return static_cast<uint16_t>(x);
 }
 
-float lab_f(float t) {
-    constexpr float kEpsilon = 216.f / 24389.f;
-    constexpr float kKappa = 24389.f / 27.f;
-    return t > kEpsilon ? std::cbrt(t) : (kKappa * t + 16.f) / 116.f;
-}
-
 // The uInt16Number used by curveType has 1.0 map to 0xFFFF. See section "10.6. curveType".
 constexpr uint16_t kOne16CurveType = 0xFFFF;
 
@@ -228,10 +222,12 @@ uint32_t get_cicp_trfn(const skcms_TransferFunction& fn) {
                 return kCICPTrfnLinear;
             }
             break;
+        case skcms_TFType_PQ:
         case skcms_TFType_PQish:
             // All PQ transfer functions are mapped to the single PQ value,
             // ignoring their SDR white level.
             return kCICPTrfnPQ;
+        case skcms_TFType_HLG:
         case skcms_TFType_HLGish:
             // All HLG transfer functions are mapped to the single HLG value.
             return kCICPTrfnHLG;
@@ -549,26 +545,6 @@ sk_sp<SkData> write_mAB_or_mBA_tag(uint32_t type,
 
 }  // namespace
 
-void SkICCFloatXYZD50ToGrid16Lab(const float* float_xyz, uint8_t* grid16_lab) {
-    const float fx = lab_f(float_xyz[0] / kD50_x);
-    const float fy = lab_f(float_xyz[1] / kD50_y);
-    const float fz = lab_f(float_xyz[2] / kD50_z);
-    const float l = std::max(0.f, std::min(100.f, 116.f * fy - 16.f));
-    const float a = std::max(-128.f, std::min(127.f, 500.f * (fx - fy)));
-    const float b = std::max(-128.f, std::min(127.f, 200.f * (fy - fz)));
-    const uint16_t lab[3] = {
-        SkEndian_SwapBE16(float_to_uInt16Number(l / 100.f, 0xFFFF)),
-        SkEndian_SwapBE16(float_to_uInt16Number((a + 128.f) / 255.f, 0xFFFF)),
-        SkEndian_SwapBE16(float_to_uInt16Number((b + 128.f) / 255.f, 0xFFFF)),
-    };
-    memcpy(grid16_lab, lab, sizeof(lab));
-}
-
-void SkICCFloatToTable16(const float f, uint8_t* table_16) {
-    const uint16_t value = SkEndian_SwapBE16(float_to_uInt16Number(f, kOne16CurveType));
-    memcpy(table_16, &value, sizeof(value));
-}
-
 sk_sp<SkData> SkWriteICCProfile(const skcms_ICCProfile* profile, const char* desc) {
     ICCHeader header;
 
@@ -682,7 +658,7 @@ sk_sp<SkData> SkWriteICCProfile(const skcms_ICCProfile* profile, const char* des
     size_t last_tag_offset = sizeof(header) + tag_table_size;
     size_t last_tag_size = 0;
     for (const auto& tag : tags) {
-        if (!tag.second->isEmpty()) {
+        if (!tag.second->empty()) {
             last_tag_offset = last_tag_offset + last_tag_size;
             last_tag_size = tag.second->size();
         }
@@ -697,7 +673,7 @@ sk_sp<SkData> SkWriteICCProfile(const skcms_ICCProfile* profile, const char* des
 
     // Write the tags.
     for (const auto& tag : tags) {
-        if (tag.second->isEmpty()) continue;
+        if (tag.second->empty()) continue;
         memcpy(ptr, tag.second->data(), tag.second->size());
         ptr += tag.second->size();
     }

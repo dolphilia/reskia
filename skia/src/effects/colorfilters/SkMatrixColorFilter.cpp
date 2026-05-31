@@ -112,13 +112,17 @@ sk_sp<SkColorFilter> SkColorFilters::Matrix(const float array[20], Clamp clamp) 
     return MakeMatrix(array, SkMatrixColorFilter::Domain::kRGBA, clamp);
 }
 
-sk_sp<SkColorFilter> SkColorFilters::Matrix(const SkColorMatrix& cm) {
-    return SkColorFilters::Matrix(cm, Clamp::kYes);
-}
-
 sk_sp<SkColorFilter> SkColorFilters::Matrix(const SkColorMatrix& cm, Clamp clamp) {
     return MakeMatrix(cm.fMat.data(), SkMatrixColorFilter::Domain::kRGBA, clamp);
 }
+
+#if defined(__APPLE__)
+sk_sp<SkColorFilter> SkColorFilters_Matrix_SkColorMatrix_prebuilt_compat(
+        const SkColorMatrix& cm) asm("__ZN14SkColorFilters6MatrixERK13SkColorMatrix");
+sk_sp<SkColorFilter> SkColorFilters_Matrix_SkColorMatrix_prebuilt_compat(const SkColorMatrix& cm) {
+    return SkColorFilters::Matrix(cm, SkColorFilters::Clamp::kYes);
+}
+#endif
 
 sk_sp<SkColorFilter> SkColorFilters::HSLAMatrix(const float array[20]) {
     return MakeMatrix(array, SkMatrixColorFilter::Domain::kHSLA, Clamp::kYes);

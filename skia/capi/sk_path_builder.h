@@ -13,6 +13,7 @@
 #include "../handles/static_sk_rect.h"
 
 typedef struct reskia_matrix_t reskia_matrix_t;
+typedef struct reskia_path_iter_t reskia_path_iter_t;
 typedef struct reskia_path_builder_t reskia_path_builder_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
@@ -160,6 +161,7 @@ bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder); // NU
 const reskia_point_t *SkPathBuilder_points(const reskia_path_builder_t *path_builder, size_t *count); // borrowed; NULL input returns NULL and count 0
 const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, size_t *count); // borrowed; NULL input returns NULL and count 0
 const float *SkPathBuilder_conicWeights(const reskia_path_builder_t *path_builder, size_t *count); // borrowed; NULL input returns NULL and count 0
+reskia_path_iter_t *SkPathBuilder_iter(const reskia_path_builder_t *path_builder); // borrowed builder storage; delete iterator with SkPathIter_delete
 
 #ifdef __cplusplus
 }
