@@ -49,8 +49,8 @@ struct Contour {
     bool fReverse{false};
 };
 
-static int VerbPtCount(SkPathVerb verb) {
-    static const int kPtCount[] = { 1, 1, 2, 2, 3, 0 };
+static unsigned VerbPtCount(SkPathVerb verb) {
+    static const uint8_t kPtCount[] = { 1, 1, 2, 2, 3, 0 };
     unsigned index = static_cast<unsigned>(verb);
     SkASSERT(index < std::size(kPtCount));
     return kPtCount[index];
@@ -268,7 +268,7 @@ public:
 
             SkSpan<const SkPoint> pts = rec->fPoints;
             bool horizontal = true;
-            for (int index = 1; index <= VerbPtCount(verb); ++index) {
+            for (size_t index = 1; index <= VerbPtCount(verb); ++index) {
                 if (pts[0].fY != pts[index].fY) {
                     horizontal = false;
                     break;
@@ -456,12 +456,4 @@ std::optional<SkPath> AsWinding(const SkPath& path) {
         return path.makeFillType(fillType);
     }
     return winder.reverseMarkedContours(contours, fillType);
-}
-
-bool AsWinding(const SkPath& path, SkPath* result) {
-    if (auto res = AsWinding(path)) {
-        *result = *res;
-        return true;
-    }
-    return false;
 }

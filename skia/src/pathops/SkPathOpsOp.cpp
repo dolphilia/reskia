@@ -389,11 +389,3 @@ std::optional<SkPath> Op(const SkPath& one, const SkPath& two, SkPathOp op) {
     }
     return {};
 }
-
-bool Op(const SkPath& one, const SkPath& two, SkPathOp op, SkPath* result) {
-    if (auto res = Op(one, two, op)) {
-        *result = *res;
-        return true;
-    }
-    return false;
-}

@@ -132,7 +132,7 @@ def class_definitions(skia_root: Path, path: Path) -> list[tuple[str, str, str, 
     text = strip_comments(path.read_text(errors="ignore"))
     macros = "|".join(re.escape(m) for m in API_MACROS)
     pattern = re.compile(
-        rf"\b(class|struct)\s+(?:(?:{macros})\s+)?([A-Za-z_][A-Za-z0-9_]*)\b[^;{{]*{{"
+        rf"\b(class|struct)\s+(?:(?:{macros})\s+)?(?:\[\[[^\]]+\]\]\s+)*([A-Za-z_][A-Za-z0-9_]*)\b[^;{{]*{{"
     )
 
     results: list[tuple[str, str, str, int, str]] = []

@@ -273,16 +273,22 @@ private:
     sk_sp<skif::Backend> createImageFilteringBackend(const SkSurfaceProps& surfaceProps,
                                                      SkColorType colorType) const override;
 
-    // Handles applying path effects, stroke-and-fill styles, and hairlines based on provided
-    // SkStrokeRec and SkPathEffect. Shading is determined by the PaintParams and augmented by
-    // any clipping required based on the current clip stack state.
+    // Applies any path effect and modifies the geometry and style before calling drawGeometry(),
+    // or forwards to drawGeometry directly if `pathEffect` is null.
+    void drawGeometryWithPathEffect(const Transform&,
+                                    Geometry&&,
+                                    const PaintParams&,
+                                    SkStrokeRec,
+                                    const SkPathEffect* pathEffect);
+
+    // Record a draw with the given style and paint effects, applying any analytic clipping or
+    // depth-based clipping automatically based on the current clip stack state.
     //
     // All overridden SkDevice::draw() functions should bottom-out with calls to drawGeometry().
     void drawGeometry(const Transform&,
                       Geometry&&,
                       const PaintParams&,
-                      SkStrokeRec,
-                      const SkPathEffect* pathEffect);
+                      SkStrokeRec);
 
     // Like drawGeometry() but is Shape-only, depth-only, fill-only, and lets the ClipStack define
     // the transform, clip, and DrawOrder (although Device still tracks stencil buffer usage).
@@ -362,12 +368,12 @@ private:
     // tracked devices for dependencies.
     bool fMustFlushDependencies = false;
 
-    // TODO(b/330864257): Clean up once flushPendingWorkToRecorder() doesn't have to be re-entrant
-    bool fIsFlushing = false;
-
     const sktext::gpu::SubRunControl fSubRunControl;
 
 #if defined(SK_DEBUG)
+    // Tracks the flushing state to ensure recursive flushing does not occur.
+    bool fIsFlushing = false;
+
     // When not 0, this Device is an unregistered scratch device that is intended to go out of
     // scope before the Recorder is snapped. Assuming controlling code is valid, that means the
     // Device's recorder's next recording ID should still be the the recording ID at the time the

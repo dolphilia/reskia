@@ -221,12 +221,10 @@ struct SamplerDesc {
     constexpr SamplerDesc(const SamplerDesc&) = default;
     constexpr SamplerDesc& operator=(const SamplerDesc&) = default;
 
-#if defined(GPU_TEST_UTILS)
     constexpr SamplerDesc(uint32_t desc, uint32_t format, uint32_t extFormatMSB)
             : fDesc(desc)
             , fFormat(format)
             , fExternalFormatMostSignificantBits(extFormatMSB) {}
-#endif
 
     bool operator==(const SamplerDesc& o) const {
         return o.fDesc == fDesc && o.fFormat == fFormat &&
@@ -269,7 +267,7 @@ struct SamplerDesc {
 
     SkSpan<const uint32_t> asSpan() const {
         // Span length depends upon whether the sampler is immutable and if it uses a known format
-        return {&fDesc, 1 + this->isImmutable() + this->usesExternalFormat()};
+        return {&fDesc, 1u + this->isImmutable() + this->usesExternalFormat()};
     }
 
     // These are public such that backends can bitshift data in order to determine whatever

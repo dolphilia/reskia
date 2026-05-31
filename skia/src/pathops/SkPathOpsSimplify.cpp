@@ -283,11 +283,3 @@ std::optional<SkPath> Simplify(const SkPath& path) {
 #endif
     return result;
 }
-
-bool Simplify(const SkPath& path, SkPath* result) {
-    if (auto res = Simplify(path)) {
-        *result = *res;
-        return true;
-    }
-    return false;
-}

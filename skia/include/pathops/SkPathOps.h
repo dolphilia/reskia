@@ -47,7 +47,13 @@ enum SkPathOp {
 std::optional<SkPath> SK_API Op(const SkPath& one, const SkPath& two, SkPathOp op);
 
 // DEPRECATED
-bool SK_API Op(const SkPath& one, const SkPath& two, SkPathOp op, SkPath* result);
+static inline bool Op(const SkPath& one, const SkPath& two, SkPathOp op, SkPath* result) {
+    if (auto res = Op(one, two, op)) {
+        *result = *res;
+        return true;
+    }
+    return false;
+}
 
 /** Return a path with a set of non-overlapping contours that describe the
     same area as the original path.
@@ -60,7 +66,13 @@ bool SK_API Op(const SkPath& one, const SkPath& two, SkPathOp op, SkPath* result
 std::optional<SkPath> SK_API Simplify(const SkPath& path);
 
 // DEPRECATED
-bool SK_API Simplify(const SkPath& path, SkPath* result);
+static inline bool Simplify(const SkPath& path, SkPath* result) {
+    if (auto res = Simplify(path)) {
+        *result = *res;
+        return true;
+    }
+    return false;
+}
 
 /** Set the resulting rectangle to the tight bounds of the path.
 
@@ -90,7 +102,13 @@ static inline bool TightBounds(const SkPath& path, SkRect* result) {
 std::optional<SkPath> SK_API AsWinding(const SkPath& path);
 
 // DEPRECATED
-bool SK_API AsWinding(const SkPath& path, SkPath* result);
+static inline bool AsWinding(const SkPath& path, SkPath* result) {
+    if (auto res = AsWinding(path)) {
+        *result = *res;
+        return true;
+    }
+    return false;
+}
 
 /** Perform a series of path operations, optimized for unioning many paths together.
   */

@@ -280,21 +280,21 @@ static int key_to_string(const Caps* caps,
         // snippet ID.
         // For example:
         // [snippetId using 2 indices worth of data] [2] [dataValue0] [dataValue1] [next snippet ID]
-        const int dataIndexCount = keyData[currentIndex++];
-        SkASSERT(currentIndex + dataIndexCount < SkTo<int>(keyData.size()));
+        const size_t dataIndexCount = keyData[currentIndex++];
+        SkASSERT(currentIndex + dataIndexCount < keyData.size());
 
         bool descriptiveFormAppended = false;
         if (dataIndexCount == 0) {
             // We shorten the string for the common case of no extra data.
             str->append("(0)");
             descriptiveFormAppended = true;
-        }
-#if 0 // To be turned on in the next CL
-        else {
-            SkASSERT(dataIndexCount == 3);
+        } else {
+            SkASSERTF(dataIndexCount == 2 || dataIndexCount == 3, "count %zu", dataIndexCount);
 
             // Attempt to append the sampler data as human-readable YCbCr information
-            SamplerDesc s(keyData[currentIndex], keyData[currentIndex+1], keyData[currentIndex+2]);
+            SamplerDesc s(keyData[currentIndex],
+                          keyData[currentIndex+1],
+                          /* extFormatMSB= */ dataIndexCount == 3 ? keyData[currentIndex+2] : 0);
 
             if (s.isImmutable()) {
                 std::string tmp = caps->toString(s.immutableSamplerInfo());
@@ -306,7 +306,6 @@ static int key_to_string(const Caps* caps,
                 }
             }
         }
-#endif
 
         if (!descriptiveFormAppended) {
             append_as_base64(str, { &keyData[currentIndex], dataIndexCount });
