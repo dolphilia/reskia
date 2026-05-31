@@ -45,7 +45,7 @@ public:
         @param fillType  SkPathFillType to set on the SkPathBuilder.
         @return          empty SkPathBuilder
     */
-    SkPathBuilder(SkPathFillType fillType);
+    explicit SkPathBuilder(SkPathFillType fillType);
 
     /** Constructs an SkPathBuilder that is a copy of an existing SkPath.
         Copies the FillType and replays all of the verbs from the SkPath into the SkPathBuilder.
@@ -53,7 +53,7 @@ public:
         @param path  SkPath to copy
         @return      SkPathBuilder
     */
-    SkPathBuilder(const SkPath& path);
+    explicit SkPathBuilder(const SkPath& path);
 
     SkPathBuilder(const SkPathBuilder&) = default;
     ~SkPathBuilder();
@@ -89,6 +89,12 @@ public:
     std::optional<SkRect> computeFiniteBounds() const {
         return SkRect::Bounds(fPts);
     }
+
+    /** Like computeFiniteBounds() but returns a 'tight' bounds, meaning when there are curve
+     *  segments, this computes the X/Y limits of the curve itself, not the curve's control
+     *  point(s). For a polygon, this returns the same as computeFiniteBounds().
+    */
+    std::optional<SkRect> computeTightBounds() const;
 
     // DEPRECATED -- returns "empty" if the bounds are non-finite
     SkRect computeBounds() const {
@@ -551,6 +557,8 @@ public:
         return this->rCubicTo({x1, y1}, {x2, y2}, {x3, y3});
     }
 
+    // Arcs
+
     enum ArcSize {
         kSmall_ArcSize, //!< smaller of arc pair
         kLarge_ArcSize, //!< larger of arc pair
@@ -573,19 +581,15 @@ public:
         opposite the integer value of sweep; SVG "sweep-flag" uses 1 for clockwise, while
         kCW_Direction cast to int is zero.
 
-        @param rx           radius before x-axis rotation
-        @param ry           radius before x-axis rotation
+        @param r            radii on axes before x-axis rotation
         @param xAxisRotate  x-axis rotation in degrees; positive values are clockwise
         @param largeArc     chooses smaller or larger arc
         @param sweep        chooses clockwise or counterclockwise arc
-        @param dx           x-axis offset end of arc from last SkPath SkPoint
-        @param dy           y-axis offset end of arc from last SkPath SkPoint
+        @param dxdy         offset end of arc from last SkPath point
         @return             reference to SkPath
     */
-    SkPathBuilder& rArcTo(SkScalar rx, SkScalar ry, SkScalar xAxisRotate, ArcSize largeArc,
-                          SkPathDirection sweep, SkScalar dx, SkScalar dy);
-
-    // Arcs
+    SkPathBuilder& rArcTo(SkPoint r, SkScalar xAxisRotate, ArcSize largeArc,
+                          SkPathDirection sweep, SkPoint dxdy);
 
     /** Appends arc to the builder. Arc added is part of ellipse
         bounded by oval, from startAngle through sweepAngle. Both startAngle and
@@ -889,7 +893,7 @@ public:
         unmodified by the original SkPathFillType.
     */
     SkPathBuilder& toggleInverseFillType() {
-        fFillType = (SkPathFillType)((unsigned)fFillType ^ 2);
+        fFillType = SkPathFillType_ToggleInverse(fFillType);
         return *this;
     }
 
@@ -908,6 +912,14 @@ public:
         example: https://fiddle.skia.org/c/@Path_getLastPt
     */
     std::optional<SkPoint> getLastPt() const;
+
+    /** Change the point at the specified index (see countPoints()).
+     *  If index is out of range, the call does nothing.
+     *
+     *  @param index which point to replace
+     *  @param p the new point value
+     */
+    void setPoint(size_t index, SkPoint p);
 
     /** Sets the last point on the path. If SkPoint array is empty, append kMove_Verb to
         verb array and append p to SkPoint array.
@@ -963,6 +975,8 @@ public:
     // can't use default argument easily in debugger, so we name this
     // helper explicitly.
     void dump() const { this->dump(DumpFormat::kDecimal); }
+
+    bool contains(SkPoint) const;
 
 private:
     SkPathRef::PointsArray fPts;

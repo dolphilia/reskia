@@ -77,9 +77,12 @@ reskia_path_t *SkPath_setIsVolatile(reskia_path_t *path, bool isVolatile); // (S
 sk_path_t SkPath_makeIsVolatile(reskia_path_t *path, bool isVolatile); // NULL input returns 0
 bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line); // (SkPath *path, SkPoint line[2]) -> bool
 int SkPath_countPoints(reskia_path_t *path); // (SkPath *path) -> int
+const reskia_point_t *SkPath_points(const reskia_path_t *path, size_t *out_count); // borrowed storage; valid while path is unchanged
 sk_point_t SkPath_getPoint(reskia_path_t *path, int index); // (SkPath *path, int index) -> sk_point_t
 int SkPath_getPoints(reskia_path_t *path, reskia_point_t *points, int max); // (SkPath *path, SkPoint points[], int max) -> int
 int SkPath_countVerbs(reskia_path_t *path); // (SkPath *path) -> int
+const uint8_t *SkPath_verbs(const reskia_path_t *path, size_t *out_count); // borrowed SkPathVerb byte storage; valid while path is unchanged
+const float *SkPath_conicWeights(const reskia_path_t *path, size_t *out_count); // borrowed storage; valid while path is unchanged
 int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max); // (SkPath *path, uint8_t verbs[], int max) -> int
 reskia_path_iter_t *SkPath_iter(const reskia_path_t *path); // borrowed path storage; delete iterator with SkPathIter_delete
 size_t SkPath_approximateBytesUsed(reskia_path_t *path); // (SkPath *path) -> size_t

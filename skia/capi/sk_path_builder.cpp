@@ -113,6 +113,10 @@ bool SkPathBuilder_computeFiniteBounds(reskia_path_builder_t *path_builder, resk
     return true;
 }
 
+bool SkPathBuilder_computeTightBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds) {
+    return SkPathBuilder_computeFiniteBounds(path_builder, out_bounds);
+}
+
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? static_sk_path_make(native->snapshot()) : 0;
@@ -285,12 +289,32 @@ reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *
 
 reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy) {
     SkPathBuilder *native = as_builder(path_builder);
-    return native != nullptr ? to_api(&native->rArcTo(rx, ry, xAxisRotate, static_cast<SkPathBuilder::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), dx, dy)) : nullptr;
+    return native != nullptr
+        ? to_api(&native->rArcTo(
+            SkPoint::Make(rx, ry),
+            xAxisRotate,
+            static_cast<SkPathBuilder::ArcSize>(largeArc),
+            static_cast<SkPathDirection>(sweep),
+            SkPoint::Make(dx, dy)))
+        : nullptr;
 }
 
 reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->rMoveTo(static_sk_point_get_entity(pt))) : nullptr;
+}
+
+void SkPathBuilder_setPoint(reskia_path_builder_t *path_builder, size_t index, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr || index >= static_cast<size_t>(native->countPoints())) {
+        return;
+    }
+    native->setPoint(index, static_sk_point_get_entity(point));
+}
+
+bool SkPathBuilder_contains(reskia_path_builder_t *path_builder, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr && native->contains(static_sk_point_get_entity(point));
 }
 
 reskia_path_builder_t *SkPathBuilder_arcTo(reskia_path_builder_t *path_builder, const reskia_rect_t *oval, float startAngleDeg, float sweepAngleDeg, bool forceMoveTo) {

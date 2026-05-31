@@ -44,6 +44,7 @@ bool SkPathBuilder_notEquals(const reskia_path_builder_t *path_builder, const re
 reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder);
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_rect_t
 bool SkPathBuilder_computeFiniteBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds); // NULL/non-finite returns false
+bool SkPathBuilder_computeTightBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds); // NULL/non-finite returns false
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_path_t
 sk_path_t SkPathBuilder_detach(reskia_path_builder_t *path_builder); // NULL path_builder なら 0 (SkPathBuilder *path_builder) -> sk_path_t
 /**
@@ -98,6 +99,8 @@ reskia_path_builder_t *SkPathBuilder_rCubicTo(reskia_path_builder_t *path_builde
 reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2, float x3, float y3); // (SkPathBuilder *path_builder, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar x3, SkScalar y3) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy); // (SkPathBuilder *path_builder, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt); // NULL path_builder returns NULL
+void SkPathBuilder_setPoint(reskia_path_builder_t *path_builder, size_t index, sk_point_t point); // NULL path_builder is no-op
+bool SkPathBuilder_contains(reskia_path_builder_t *path_builder, sk_point_t point); // NULL path_builder returns false
 /**
  * oval は非 NULL。NULL oval は no-op、NULL path_builder なら NULL (SkPathBuilder *path_builder, const SkRect *oval, SkScalar startAngleDeg, SkScalar sweepAngleDeg, bool forceMoveTo) -> SkPathBuilder *
  */

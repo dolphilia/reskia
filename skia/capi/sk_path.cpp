@@ -269,6 +269,20 @@ int SkPath_countPoints(reskia_path_t *path) {
     return reinterpret_cast<SkPath *>(path)->countPoints();
 }
 
+const reskia_point_t *SkPath_points(const reskia_path_t *path, size_t *out_count) {
+    if (out_count != nullptr) {
+        *out_count = 0;
+    }
+    if (path == nullptr) {
+        return nullptr;
+    }
+    SkSpan<const SkPoint> points = reinterpret_cast<const SkPath *>(path)->points();
+    if (out_count != nullptr) {
+        *out_count = points.size();
+    }
+    return reinterpret_cast<const reskia_point_t *>(points.data());
+}
+
 sk_point_t SkPath_getPoint(reskia_path_t *path, int index) {
     if (path == nullptr) {
         return 0;
@@ -289,6 +303,34 @@ int SkPath_countVerbs(reskia_path_t *path) {
         return 0;
     }
     return reinterpret_cast<SkPath *>(path)->countVerbs();
+}
+
+const uint8_t *SkPath_verbs(const reskia_path_t *path, size_t *out_count) {
+    if (out_count != nullptr) {
+        *out_count = 0;
+    }
+    if (path == nullptr) {
+        return nullptr;
+    }
+    SkSpan<const SkPathVerb> verbs = reinterpret_cast<const SkPath *>(path)->verbs();
+    if (out_count != nullptr) {
+        *out_count = verbs.size();
+    }
+    return reinterpret_cast<const uint8_t *>(verbs.data());
+}
+
+const float *SkPath_conicWeights(const reskia_path_t *path, size_t *out_count) {
+    if (out_count != nullptr) {
+        *out_count = 0;
+    }
+    if (path == nullptr) {
+        return nullptr;
+    }
+    SkSpan<const float> weights = reinterpret_cast<const SkPath *>(path)->conicWeights();
+    if (out_count != nullptr) {
+        *out_count = weights.size();
+    }
+    return weights.data();
 }
 
 int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max) {
