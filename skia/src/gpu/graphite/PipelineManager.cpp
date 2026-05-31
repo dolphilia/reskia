@@ -15,6 +15,7 @@
 #include "src/gpu/graphite/RenderPassDesc.h"
 #include "src/gpu/graphite/ResourceProvider.h"
 #include "src/gpu/graphite/RuntimeEffectDictionary.h"
+#include "src/gpu/graphite/SharedContext.h"
 
 namespace skgpu::graphite {
 
@@ -36,11 +37,12 @@ uint32_t PipelineManager::Traits::Hash(const UniqueKey& pipelineKey) {
 }
 
 GraphicsPipelineHandle PipelineManager::createHandle(
-        ResourceProvider* resourceProvider,
+        SharedContext* sharedContext,
         const GraphicsPipelineDesc& pipelineDesc,
         const RenderPassDesc& renderPassDesc,
         SkEnumBitMask<PipelineCreationFlags> pipelineCreationFlags) {
-    const Caps* caps = resourceProvider->caps();
+    GlobalCache* globalCache = sharedContext->globalCache();
+    const Caps* caps = sharedContext->caps();
 
     UniqueKey pipelineKey = caps->makeGraphicsPipelineKey(pipelineDesc, renderPassDesc);
 
@@ -50,7 +52,7 @@ GraphicsPipelineHandle PipelineManager::createHandle(
         return GraphicsPipelineHandle(std::move(task));
     }
 
-    sk_sp<GraphicsPipeline> pipeline = resourceProvider->findGraphicsPipeline(
+    sk_sp<GraphicsPipeline> pipeline = globalCache->findGraphicsPipeline(
             pipelineKey,
             pipelineCreationFlags);
     if (pipeline) {
@@ -64,7 +66,8 @@ GraphicsPipelineHandle PipelineManager::createHandle(
     return GraphicsPipelineHandle(std::move(task));
 }
 
-void PipelineManager::startPipelineCreationTask(ResourceProvider* resourceProvider,
+void PipelineManager::startPipelineCreationTask(SharedContext* sharedContext,
+                                                ResourceProvider* resourceProvider,
                                                 sk_sp<const RuntimeEffectDictionary> runtimeDict,
                                                 const GraphicsPipelineHandle& handle) {
     if (std::holds_alternative<sk_sp<GraphicsPipeline>>(handle.fTaskOrPipeline)) {
@@ -74,7 +77,8 @@ void PipelineManager::startPipelineCreationTask(ResourceProvider* resourceProvid
     sk_sp<PipelineCreationTask> task =
             std::get<sk_sp<PipelineCreationTask>>(handle.fTaskOrPipeline);
 
-    sk_sp<GraphicsPipeline> pipeline = resourceProvider->findOrCreateGraphicsPipeline(
+    sk_sp<GraphicsPipeline> pipeline = sharedContext->findOrCreateGraphicsPipeline(
+            resourceProvider,
             runtimeDict.get(),
             task->fPipelineKey,
             task->fGraphicsPipelineDesc,

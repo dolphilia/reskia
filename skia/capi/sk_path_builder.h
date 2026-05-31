@@ -56,6 +56,8 @@ reskia_path_builder_t *SkPathBuilder_moveTo(reskia_path_builder_t *path_builder,
 reskia_path_builder_t *SkPathBuilder_moveToPoint(reskia_path_builder_t *path_builder, float x, float y); // (SkPathBuilder *path_builder, SkScalar x, SkScalar y) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_lineTo(reskia_path_builder_t *path_builder, int pt); // (SkPathBuilder *path_builder, sk_point_t pt) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_lineToPoint(reskia_path_builder_t *path_builder, float x, float y); // (SkPathBuilder *path_builder, SkScalar x, SkScalar y) -> SkPathBuilder *
+reskia_path_builder_t *SkPathBuilder_addLine(reskia_path_builder_t *path_builder, int a, int b); // (SkPathBuilder *path_builder, SkPoint a, SkPoint b) -> SkPathBuilder *
+reskia_path_builder_t *SkPathBuilder_addLinePoints(reskia_path_builder_t *path_builder, float ax, float ay, float bx, float by); // (SkPathBuilder *path_builder, SkScalar ax, SkScalar ay, SkScalar bx, SkScalar by) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_quadTo(reskia_path_builder_t *path_builder, int pt1, int pt2); // (SkPathBuilder *path_builder, sk_point_t pt1, sk_point_t pt2) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_quadToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2); // (SkPathBuilder *path_builder, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2) -> SkPathBuilder *
 /**

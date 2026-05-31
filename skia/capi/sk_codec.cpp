@@ -133,6 +133,11 @@ const void *SkCodec_getICCProfile(reskia_codec_t *codec) {
     return native != nullptr ? native->getICCProfile() : nullptr;
 }
 
+const reskia_hdr_metadata_t *SkCodec_getHdrMetadata(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr ? reinterpret_cast<const reskia_hdr_metadata_t *>(&native->getHdrMetadata()) : nullptr;
+}
+
 reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec) {
     SkCodec *native = as_codec(codec);
     return native != nullptr ? static_cast<reskia_codec_encoded_origin_t>(native->getOrigin()) : -1;

@@ -76,6 +76,12 @@ typedef struct reskia_graphite_mtl_texture_info_t {
     bool framebuffer_only;
 } reskia_graphite_mtl_texture_info_t;
 
+typedef struct reskia_graphite_submit_info_t {
+    bool sync_cpu;
+    bool mark_frame_boundary;
+    uint64_t frame_id;
+} reskia_graphite_submit_info_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -239,6 +245,10 @@ reskia_graphite_insert_status_t Graphite_InsertStatus_newWithValue(int32_t value
 int32_t Graphite_InsertStatus_operator_InsertStatus_V(reskia_graphite_insert_status_t status); // raw InsertStatus::V value
 bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status); // true only for success
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
+reskia_graphite_submit_info_t Graphite_SubmitInfo_new(); // default submit info
+reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSync(bool sync_cpu);
+reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSyncAndFrameID(bool sync_cpu, uint64_t frame_id);
+bool Graphite_Context_submitWithInfo(reskia_graphite_context_t *ctx, const reskia_graphite_submit_info_t *submit_info); // invalid input returns false
 bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
 void Graphite_Context_startCapture(reskia_graphite_context_t *ctx); // NULL input is no-op

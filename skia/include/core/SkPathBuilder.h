@@ -86,16 +86,20 @@ public:
     /** Returns an SkPath representing the current state of the SkPathBuilder. The builder is
         unchanged after returning the path.
 
+        @param mx if present, applied to the points after they are copied into the resulting path.
         @return  SkPath representing the current state of the builder.
      */
     SkPath snapshot() const;
+    SkPath snapshot(const SkMatrix* mx) const;
 
     /** Returns an SkPath representing the current state of the SkPathBuilder. The builder is
         reset to empty after returning the path.
 
+        @param mx if present, applied to the points after they are copied into the resulting path.
         @return  SkPath representing the current state of the builder.
      */
     SkPath detach();
+    SkPath detach(const SkMatrix* mx);
 
     /** Sets SkPathFillType, the rule used to fill SkPath. While there is no
         check that ft is legal, values outside of SkPathFillType are not supported.
@@ -646,6 +650,10 @@ public:
     */
     SkPathBuilder& addArc(const SkRect& oval, SkScalar startAngleDeg, SkScalar sweepAngleDeg);
 
+    SkPathBuilder& addLine(SkPoint a, SkPoint b) {
+        return this->moveTo(a).lineTo(b);
+    }
+
     /** Adds a new contour to the SkPathBuilder, defined by the rect, and wound in the
         specified direction. The verbs added to the path will be:
 
@@ -975,4 +983,3 @@ private:
 };
 
 #endif
-

@@ -95,12 +95,6 @@ VulkanResourceProvider::VulkanResourceProvider(SharedContext* sharedContext,
         , fUniformBufferDescSetCache(kMaxNumberOfCachedBufferDescSets) {}
 
 VulkanResourceProvider::~VulkanResourceProvider() {
-    if (fPipelineCache != VK_NULL_HANDLE) {
-        VULKAN_CALL(this->vulkanSharedContext()->interface(),
-                    DestroyPipelineCache(this->vulkanSharedContext()->device(),
-                                         fPipelineCache,
-                                         nullptr));
-    }
     if (fMockPipelineLayout) {
         VULKAN_CALL(this->vulkanSharedContext()->interface(),
                     DestroyPipelineLayout(this->vulkanSharedContext()->device(),
@@ -455,26 +449,6 @@ sk_sp<VulkanRenderPass> VulkanResourceProvider::findOrCreateRenderPass(
     return renderPass;
 }
 
-VkPipelineCache VulkanResourceProvider::pipelineCache() {
-    if (fPipelineCache == VK_NULL_HANDLE) {
-        VkPipelineCacheCreateInfo createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-        createInfo.initialDataSize = 0;
-        createInfo.pInitialData = nullptr;
-        VkResult result;
-        VULKAN_CALL_RESULT(this->vulkanSharedContext(),
-                           result,
-                           CreatePipelineCache(this->vulkanSharedContext()->device(),
-                                               &createInfo,
-                                               nullptr,
-                                               &fPipelineCache));
-        if (VK_SUCCESS != result) {
-            fPipelineCache = VK_NULL_HANDLE;
-        }
-    }
-    return fPipelineCache;
-}
-
 namespace {
 
 void gather_attachment_views(skia_private::TArray<VkImageView>& attachmentViews,
@@ -733,7 +707,7 @@ BackendTexture VulkanResourceProvider::onCreateBackendTexture(AHardwareBuffer* h
     externalFormat.sType = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
     externalFormat.pNext = nullptr;
     externalFormat.externalFormat = 0;  // If this is zero it is as if we aren't using this struct.
-    if (importAsExternalFormat) {
+    if (importAsExternalFormat || skgpu::VkFormatNeedsYcbcrSampler(hwbFormatProps.format)) {
         GetYcbcrConversionInfoFromFormatProps(&ycbcrInfo, hwbFormatProps);
         if (!ycbcrInfo.isValid()) {
             SKGPU_LOG_W("Failed to create valid YCbCr conversion information from hardware buffer"

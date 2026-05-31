@@ -132,6 +132,18 @@ reskia_path_builder_t *SkPathBuilder_lineToPoint(reskia_path_builder_t *path_bui
     return native != nullptr ? to_api(&native->lineTo(x, y)) : nullptr;
 }
 
+reskia_path_builder_t *SkPathBuilder_addLine(reskia_path_builder_t *path_builder, sk_point_t a, sk_point_t b) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr
+        ? to_api(&native->addLine(static_sk_point_get_entity(a), static_sk_point_get_entity(b)))
+        : nullptr;
+}
+
+reskia_path_builder_t *SkPathBuilder_addLinePoints(reskia_path_builder_t *path_builder, float ax, float ay, float bx, float by) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? to_api(&native->addLine(SkPoint::Make(ax, ay), SkPoint::Make(bx, by))) : nullptr;
+}
+
 reskia_path_builder_t *SkPathBuilder_quadTo(reskia_path_builder_t *path_builder, sk_point_t pt1, sk_point_t pt2) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->quadTo(static_sk_point_get_entity(pt1), static_sk_point_get_entity(pt2))) : nullptr;

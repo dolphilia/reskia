@@ -25,6 +25,7 @@ typedef struct reskia_codec_options_t reskia_codec_options_t;
 typedef struct reskia_codec_result_t reskia_codec_result_t;
 typedef struct reskia_codec_yuva_pixmap_info_t reskia_codec_yuva_pixmap_info_t;
 typedef struct reskia_codec_yuva_pixmaps_t reskia_codec_yuva_pixmaps_t;
+typedef struct reskia_hdr_metadata_t reskia_hdr_metadata_t;
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
@@ -44,6 +45,7 @@ sk_image_info_t SkCodec_getInfo(reskia_codec_t *codec); // (SkCodec* codec) -> s
 sk_i_size_t SkCodec_dimensions(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_size_t. NULL codec returns 0.
 sk_i_rect_t SkCodec_bounds(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_rect_t. NULL codec returns 0.
 const void * SkCodec_getICCProfile(reskia_codec_t *codec); // (SkCodec* codec) -> const skcms_ICCProfile*. NULL codec returns NULL.
+const reskia_hdr_metadata_t *SkCodec_getHdrMetadata(reskia_codec_t *codec); // borrowed; NULL codec returns NULL.
 reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedOrigin. NULL codec returns -1.
 bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec); // NULL codec returns false.
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t. NULL codec returns 0.

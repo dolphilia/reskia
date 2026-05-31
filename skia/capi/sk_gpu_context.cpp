@@ -2094,10 +2094,39 @@ void Graphite_Recorder_delete(reskia_graphite_recorder_t *recorder) {
 
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu) {
 #if defined(SK_GRAPHITE)
-    return ctx != nullptr && as_graphite_context(ctx)->submit(to_graphite_sync_cpu(sync_cpu));
+    return ctx != nullptr && as_graphite_context(ctx)->submit(skgpu::graphite::SubmitInfo(to_graphite_sync_cpu(sync_cpu)));
 #else
     (void) ctx;
     (void) sync_cpu;
+    return false;
+#endif
+}
+
+reskia_graphite_submit_info_t Graphite_SubmitInfo_new() {
+    return {false, false, 0};
+}
+
+reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSync(bool sync_cpu) {
+    return {sync_cpu, false, 0};
+}
+
+reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSyncAndFrameID(bool sync_cpu, uint64_t frame_id) {
+    return {sync_cpu, true, frame_id};
+}
+
+bool Graphite_Context_submitWithInfo(reskia_graphite_context_t *ctx, const reskia_graphite_submit_info_t *submit_info) {
+#if defined(SK_GRAPHITE)
+    if (ctx == nullptr || submit_info == nullptr) {
+        return false;
+    }
+    skgpu::graphite::SubmitInfo native(to_graphite_sync_cpu(submit_info->sync_cpu));
+    if (submit_info->mark_frame_boundary) {
+        native = skgpu::graphite::SubmitInfo(to_graphite_sync_cpu(submit_info->sync_cpu), submit_info->frame_id);
+    }
+    return as_graphite_context(ctx)->submit(native);
+#else
+    (void) ctx;
+    (void) submit_info;
     return false;
 #endif
 }
