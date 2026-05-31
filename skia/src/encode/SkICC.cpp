@@ -55,6 +55,12 @@ uint16_t float_to_uInt16Number(float x, uint16_t one) {
     return static_cast<uint16_t>(x);
 }
 
+float lab_f(float t) {
+    constexpr float kEpsilon = 216.f / 24389.f;
+    constexpr float kKappa = 24389.f / 27.f;
+    return t > kEpsilon ? std::cbrt(t) : (kKappa * t + 16.f) / 116.f;
+}
+
 // The uInt16Number used by curveType has 1.0 map to 0xFFFF. See section "10.6. curveType".
 constexpr uint16_t kOne16CurveType = 0xFFFF;
 
@@ -211,7 +217,7 @@ constexpr uint32_t kCICPTrfnHLG = 18;
 
 uint32_t get_cicp_trfn(const skcms_TransferFunction& fn) {
     switch (skcms_TransferFunction_getType(&fn)) {
-        case skcms_TFType_Invalid:
+        default:
             return 0;
         case skcms_TFType_sRGBish:
             if (nearly_equal(fn, SkNamedTransferFn::kSRGB)) {
@@ -543,30 +549,24 @@ sk_sp<SkData> write_mAB_or_mBA_tag(uint32_t type,
 
 }  // namespace
 
-void SkICCFloatXYZD50ToGrid16Lab(const float* xyz_float, uint8_t* grid16_lab) {
-    float v[3] = {
-            xyz_float[0] / kD50_x,
-            xyz_float[1] / kD50_y,
-            xyz_float[2] / kD50_z,
+void SkICCFloatXYZD50ToGrid16Lab(const float* float_xyz, uint8_t* grid16_lab) {
+    const float fx = lab_f(float_xyz[0] / kD50_x);
+    const float fy = lab_f(float_xyz[1] / kD50_y);
+    const float fz = lab_f(float_xyz[2] / kD50_z);
+    const float l = std::max(0.f, std::min(100.f, 116.f * fy - 16.f));
+    const float a = std::max(-128.f, std::min(127.f, 500.f * (fx - fy)));
+    const float b = std::max(-128.f, std::min(127.f, 200.f * (fy - fz)));
+    const uint16_t lab[3] = {
+        SkEndian_SwapBE16(float_to_uInt16Number(l / 100.f, 0xFFFF)),
+        SkEndian_SwapBE16(float_to_uInt16Number((a + 128.f) / 255.f, 0xFFFF)),
+        SkEndian_SwapBE16(float_to_uInt16Number((b + 128.f) / 255.f, 0xFFFF)),
     };
-    for (size_t i = 0; i < 3; ++i) {
-        v[i] = v[i] > 0.008856f ? cbrtf(v[i]) : v[i] * 7.787f + (16 / 116.0f);
-    }
-    float Lab_unorm[3] = {
-            (116 * v[1] - 16) / 100,
-            (500 * (v[0] - v[1]) + 128) / 255,
-            (200 * (v[1] - v[2]) + 128) / 255,
-    };
-    // This matches how skcms decodes grid_16 Lab values; see https://crbug.com/skia/13807.
-    for (size_t i = 0; i < 3; ++i) {
-        reinterpret_cast<uint16_t*>(grid16_lab)[i] =
-                SkEndian_SwapBE16(float_to_uInt16Number(Lab_unorm[i], kOne16CurveType));
-    }
+    memcpy(grid16_lab, lab, sizeof(lab));
 }
 
 void SkICCFloatToTable16(const float f, uint8_t* table_16) {
-    *reinterpret_cast<uint16_t*>(table_16) =
-            SkEndian_SwapBE16(float_to_uInt16Number(f, kOne16CurveType));
+    const uint16_t value = SkEndian_SwapBE16(float_to_uInt16Number(f, kOne16CurveType));
+    memcpy(table_16, &value, sizeof(value));
 }
 
 sk_sp<SkData> SkWriteICCProfile(const skcms_ICCProfile* profile, const char* desc) {
