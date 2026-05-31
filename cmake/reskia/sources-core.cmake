@@ -37,6 +37,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkEncodedInfo.cpp
         src/codec/SkExif.cpp
         src/codec/SkGainmapInfo.cpp
+        src/codec/SkHdrAgtm.cpp
         src/codec/SkHdrMetadata.cpp
         src/codec/SkIcoCodec.cpp
         src/codec/SkImageGenerator_FromEncoded.cpp
@@ -188,6 +189,8 @@ list(APPEND SOURCE_FILES
         src/core/SkPathRawShapes.cpp
         src/core/SkPathRef.cpp
         src/core/SkPath_editing.cpp
+        src/core/SkPath_interpolate.cpp
+        src/core/SkPath_pathdata.cpp
         src/core/SkPath_pathref.cpp
         src/core/SkPathUtils.cpp
         src/core/SkPicture.cpp
@@ -201,6 +204,7 @@ list(APPEND SOURCE_FILES
         src/core/SkPixmapDraw.cpp
         src/core/SkPoint.cpp
         src/core/SkPoint3.cpp
+        src/core/SkPrebuiltCompat.cpp
         src/core/SkPtrRecorder.cpp
         src/core/SkQuadClipper.cpp
         src/core/SkRasterClip.cpp

@@ -333,6 +333,13 @@ void SkString_append(reskia_string_t *string, const char text[]) {
     reinterpret_cast<SkString *>(string)->append(text);
 }
 
+void SkString_addAssign(reskia_string_t *string, char c) {
+    if (string == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkString *>(string) += c;
+}
+
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len) {
     if (string == nullptr || (text == nullptr && len > 0)) {
         return;

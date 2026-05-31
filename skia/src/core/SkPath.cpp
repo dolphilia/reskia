@@ -45,19 +45,6 @@ SkPath::~SkPath() {
     SkDEBUGCODE(this->validate();)
 }
 
-bool SkPath::isInterpolatable(const SkPath& compare) const {
-    // need the same structure (verbs, conicweights) and same point-count
-    return this->points().size() == compare.points().size() &&
-           SkSpanPriv::EQ(this->verbs(), compare.verbs()) &&
-           SkSpanPriv::EQ(this->conicWeights(), compare.conicWeights());
-}
-
-SkPath SkPath::makeInterpolate(const SkPath& ending, SkScalar weight) const {
-    SkPath out;
-    this->interpolate(ending, weight, &out);
-    return out;
-}
-
 static inline bool check_edge_against_rect(const SkPoint& p0,
                                            const SkPoint& p1,
                                            const SkRect& rect,
@@ -192,7 +179,7 @@ bool SkPath::isRect(SkRect* rect, bool* isClosed, SkPathDirection* direction) co
     SkDEBUGCODE(this->validate();)
     SkSpan<const SkPoint> pts = this->points();
     SkSpan<const SkPathVerb> vbs = this->verbs();
-    if (auto rc = SkPathPriv::IsRectContour(pts, vbs, fPathRef->getSegmentMasks(), false)) {
+    if (auto rc = SkPathPriv::IsRectContour(pts, vbs, this->getSegmentMasks(), false)) {
         if (rect) {
             *rect = rc->fRect;
         }
@@ -201,6 +188,26 @@ bool SkPath::isRect(SkRect* rect, bool* isClosed, SkPathDirection* direction) co
         }
         if (direction) {
             *direction = rc->fDirection;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool SkPath::isOval(SkRect* bounds) const {
+    if (auto info = this->getOvalInfo()) {
+        if (bounds) {
+            *bounds = info->fBounds;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool SkPath::isRRect(SkRRect* rrect) const {
+    if (auto info = this->getRRectInfo()) {
+        if (rrect) {
+            *rrect = info->fRRect;
         }
         return true;
     }
@@ -503,6 +510,22 @@ std::optional<SkPath::IterRec> SkPath::RawIter::next() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SkPath SkPath::makeFillType(SkPathFillType ft) const {
+    SkPath copy = *this;
+    copy.setFillType(ft);
+    return copy;
+}
+
+SkPath SkPath::makeToggleInverseFillType() const {
+    return this->makeFillType(SkPathFillType_ToggleInverse(fFillType));
+}
+
+SkPath SkPath::makeIsVolatile(bool v) const {
+    SkPath copy = *this;
+    copy.fIsVolatile = v;
+    return copy;
+}
+
 SkPathConvexity SkPath::computeConvexity() const {
     if (auto c = this->getConvexityOrUnknown(); c != SkPathConvexity::kUnknown) {
         return c;
@@ -688,9 +711,13 @@ static std::optional<SkPath> clip(const SkPath& path, const SkHalfPlane& plane) 
         return {};
     }
 
-    SkPath rotated = path.makeTransform(*inv);
-    auto raw = SkPathPriv::Raw(rotated, SkResolveConvexity::kNo);
+    auto rotated = path.tryMakeTransform(*inv);
+    if (!rotated) {
+        return {};
+    }
+    auto raw = SkPathPriv::Raw(*rotated, SkResolveConvexity::kNo);
     if (!raw) {
+        SkASSERT(false);    // if rotated was valid, so should the raw
         return {};
     }
 

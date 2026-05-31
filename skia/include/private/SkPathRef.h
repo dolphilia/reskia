@@ -118,7 +118,7 @@ public:
     {
         fBoundsIsDirty = true;    // this also invalidates fIsFinite
         fGenerationID = 0;        // recompute
-        fSegmentMask = segmentMask;
+        fSegmentMask = SkToU8(segmentMask);
         fType = SkPathIsAType::kGeneral;
         SkDEBUGCODE(fEditorsAttached.store(0);)
         if (mx && !mx->isIdentity()) {
@@ -329,8 +329,6 @@ public:
     SkPoint atPoint(int index) const { return fPoints[index]; }
 
     bool operator== (const SkPathRef& ref) const;
-
-    void interpolate(const SkPathRef& ending, SkScalar weight, SkPathRef* out) const;
 
     /**
      * Gets an ID that uniquely identifies the contents of the path ref. If two path refs have the

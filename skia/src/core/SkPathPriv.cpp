@@ -1530,8 +1530,7 @@ SkRect SkPathPriv::ComputeTightBounds(SkSpan<const SkPoint> points,
           R = points[0].fX,
           B = points[0].fY;
 
-    for (auto [verb, pts, w] : SkPathPriv::Iterate(verbs.begin(), verbs.end(),
-                                                   points.data(), conicWeights.data())) {
+    for (auto [verb, pts, w] : SkPathPriv::Iterate(verbs, points.data(), conicWeights.data())) {
         SkPoint extremas[5]; // big enough to hold worst-case curve type (cubic) extremas + 1
         int count = 0;
         switch (verb) {
@@ -1566,3 +1565,22 @@ SkRect SkPathPriv::ComputeTightBounds(SkSpan<const SkPoint> points,
     return {L, T, R, B};
 }
 
+int SkPathPriv::FindLastMoveToIndex(SkSpan<const SkPathVerb> verbs, const size_t ptCount) {
+    if (verbs.empty()) {
+        SkASSERT(ptCount == 0);
+        return -1;
+    }
+    SkASSERT(verbs[0] == SkPathVerb::kMove);
+    SkASSERT(ptCount > 0);
+
+    int ptIndex = SkToInt(ptCount) - 1;
+    for (auto it = verbs.rbegin(), end = verbs.rend(); it != end; ++it) {
+        const SkPathVerb verb = *it;
+        if (verb == SkPathVerb::kMove) {
+            break;
+        }
+        ptIndex -= PtsInVerb(verb);
+    }
+    SkASSERT(ptIndex >= 0);
+    return ptIndex;
+}

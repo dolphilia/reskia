@@ -310,4 +310,13 @@ sk_r_rect_t SkRRect_MakeRectXY(const reskia_rect_t *rect, float xRad, float yRad
     return static_sk_r_rect_make(SkRRect::MakeRectXY(*reinterpret_cast<const SkRect *>(rect), xRad, yRad));
 }
 
+sk_r_rect_t SkRRect_MakeRectRadii(const reskia_rect_t *rect, const reskia_vector_t *radii) {
+    if (rect == nullptr || radii == nullptr) {
+        return 0;
+    }
+    return static_sk_r_rect_make(SkRRect::MakeRectRadii(
+            *reinterpret_cast<const SkRect *>(rect),
+            reinterpret_cast<const SkVector *>(radii)));
+}
+
 }

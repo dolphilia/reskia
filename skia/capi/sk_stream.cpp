@@ -200,7 +200,7 @@ sk_data_t SkStream_getData(reskia_stream_t *stream) {
     if (stream == nullptr) {
         return 0;
     }
-    return static_sk_data_make(reinterpret_cast<SkStream *>(stream)->getData());
+    return static_const_sk_data_make(reinterpret_cast<SkStream *>(stream)->getData());
 }
 
 // static

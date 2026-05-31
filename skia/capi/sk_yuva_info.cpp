@@ -193,6 +193,11 @@ sk_matrix_t SkYUVAInfo_originMatrix(reskia_yuva_info_t *yuva_info) {
     return native != nullptr ? static_sk_matrix_make(native->originMatrix()) : 0;
 }
 
+sk_matrix_t SkYUVAInfo_inverseOriginMatrix(reskia_yuva_info_t *yuva_info) {
+    const SkYUVAInfo *native = as_yuva_info(yuva_info);
+    return native != nullptr ? static_sk_matrix_make(native->inverseOriginMatrix()) : 0;
+}
+
 bool SkYUVAInfo_hasAlpha(reskia_yuva_info_t *yuva_info) {
     const SkYUVAInfo *native = as_yuva_info(yuva_info);
     return native != nullptr && native->hasAlpha();

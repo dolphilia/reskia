@@ -788,6 +788,30 @@ sk_path_t SkPath_makeScale(reskia_path_t *path, float sx, float sy) {
     return static_sk_path_make(reinterpret_cast<SkPath *>(path)->makeScale(sx, sy));
 }
 
+sk_path_t SkPath_tryMakeTransform(reskia_path_t *path, const reskia_matrix_t *matrix) {
+    if (path == nullptr || matrix == nullptr) {
+        return 0;
+    }
+    auto result = reinterpret_cast<SkPath *>(path)->tryMakeTransform(*reinterpret_cast<const SkMatrix *>(matrix));
+    return result.has_value() ? static_sk_path_make(std::move(*result)) : 0;
+}
+
+sk_path_t SkPath_tryMakeOffset(reskia_path_t *path, float dx, float dy) {
+    if (path == nullptr) {
+        return 0;
+    }
+    auto result = reinterpret_cast<SkPath *>(path)->tryMakeOffset(dx, dy);
+    return result.has_value() ? static_sk_path_make(std::move(*result)) : 0;
+}
+
+sk_path_t SkPath_tryMakeScale(reskia_path_t *path, float sx, float sy) {
+    if (path == nullptr) {
+        return 0;
+    }
+    auto result = reinterpret_cast<SkPath *>(path)->tryMakeScale(sx, sy);
+    return result.has_value() ? static_sk_path_make(std::move(*result)) : 0;
+}
+
 bool SkPath_getLastPt(reskia_path_t *path, reskia_point_t *lastPt) {
     if (path == nullptr || lastPt == nullptr) {
         return false;
@@ -842,20 +866,6 @@ void SkPath_dumpHex(reskia_path_t *path) {
         return;
     }
     reinterpret_cast<SkPath *>(path)->dumpHex();
-}
-
-void SkPath_dumpArrays(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex) {
-    if (path == nullptr || stream == nullptr) {
-        return;
-    }
-    reinterpret_cast<SkPath *>(path)->dumpArrays(reinterpret_cast<SkWStream *>(stream), dumpAsHex);
-}
-
-void SkPath_dumpArraysDefault(reskia_path_t *path) {
-    if (path == nullptr) {
-        return;
-    }
-    reinterpret_cast<SkPath *>(path)->dumpArrays();
 }
 
 size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer) {

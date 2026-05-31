@@ -48,6 +48,7 @@ reskia_yuva_info_siting_t SkYUVAInfo_sitingX(reskia_yuva_info_t *yuva_info); // 
 reskia_yuva_info_siting_t SkYUVAInfo_sitingY(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> SkYUVAInfo::Siting
 reskia_yuva_info_encoded_origin_t SkYUVAInfo_origin(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> SkEncodedOrigin
 sk_matrix_t SkYUVAInfo_originMatrix(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> sk_matrix_t
+sk_matrix_t SkYUVAInfo_inverseOriginMatrix(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> sk_matrix_t
 bool SkYUVAInfo_hasAlpha(reskia_yuva_info_t *yuva_info); // (SkYUVAInfo *yuva_info) -> bool
 int SkYUVAInfo_planeDimensions(reskia_yuva_info_t *yuva_info, reskia_i_size_t *planeDimensions); // (SkYUVAInfo *yuva_info, SkISize planeDimensions[SkYUVAInfo::kMaxPlanes]) -> int
 size_t SkYUVAInfo_computeTotalBytes(reskia_yuva_info_t *yuva_info, const size_t *rowBytes, size_t *planeSizes); // (SkYUVAInfo *yuva_info, const size_t rowBytes[SkYUVAInfo::kMaxPlanes], size_t planeSizes[SkYUVAInfo::kMaxPlanes]) -> size_t

@@ -144,6 +144,9 @@ void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia
 void SkPath_transformInPlace(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc)
 sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *m, SkApplyPerspectiveClip pc) -> sk_path_t
 sk_path_t SkPath_makeScale(reskia_path_t *path, float sx, float sy); // (SkPath *path, SkScalar sx, SkScalar sy) -> sk_path_t
+sk_path_t SkPath_tryMakeTransform(reskia_path_t *path, const reskia_matrix_t *matrix); // NULL/no result returns 0
+sk_path_t SkPath_tryMakeOffset(reskia_path_t *path, float dx, float dy); // NULL/no result returns 0
+sk_path_t SkPath_tryMakeScale(reskia_path_t *path, float sx, float sy); // NULL/no result returns 0
 bool SkPath_getLastPt(reskia_path_t *path, reskia_point_t *lastPt); // (SkPath *path, SkPoint *lastPt) -> bool
 void SkPath_setLastPt(reskia_path_t *path, float x, float y); // (SkPath *path, SkScalar x, SkScalar y)
 void SkPath_setLastPtPoint(reskia_path_t *path, const reskia_point_t *p); // (SkPath *path, const SkPoint *p)
@@ -152,8 +155,6 @@ bool SkPath_contains(reskia_path_t *path, float x, float y); // (SkPath *path, S
 void SkPath_dump(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex); // (SkPath *path, SkWStream *stream, bool dumpAsHex)
 void SkPath_dumpDefault(reskia_path_t *path); // (SkPath *path)
 void SkPath_dumpHex(reskia_path_t *path); // (SkPath *path)
-void SkPath_dumpArrays(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex); // (SkPath *path, SkWStream *stream, bool dumpAsHex)
-void SkPath_dumpArraysDefault(reskia_path_t *path); // (SkPath *path)
 /**
  * buffer may be null to query required byte size.
  * otherwise caller owns writable buffer with returned-size capacity.

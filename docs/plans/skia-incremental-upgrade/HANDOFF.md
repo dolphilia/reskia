@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `0682b51e060f4f82b757f0872cf5d8e380540213`
-- next probe candidate: select a fixed mainline commit after `0682b51e060f4f82b757f0872cf5d8e380540213`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `5e03cbcadaf57b0d6a16029a08627f924d3c7352`
+- next probe candidate: select a fixed mainline commit after `5e03cbcadaf57b0d6a16029a08627f924d3c7352`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -103,20 +103,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 069 accepted: `ec032dbe0e04e305b06bfc7a01dd6d2e1d5f3dc8`。
 - cycle 070 accepted: `9a43169d5cadb5c3a56e78c6d19ca71b51097e5e`。
 - cycle 071 accepted: `0682b51e060f4f82b757f0872cf5d8e380540213`。
+- cycle 072 accepted: `5e03cbcadaf57b0d6a16029a08627f924d3c7352`。
 
 未実施:
 
-- cycle 072 candidate selection from `0682b51e060f4f82b757f0872cf5d8e380540213`.
-- cycle 072 candidate checkout を使った coverage regression。
-- cycle 072 の source/header sync と C API 追従実装。
+- cycle 073 candidate selection from `5e03cbcadaf57b0d6a16029a08627f924d3c7352`.
+- cycle 073 candidate checkout を使った coverage regression。
+- cycle 073 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 072 の candidate selection から始める。
+次の作業は、cycle 073 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `0682b51e060f4f82b757f0872cf5d8e380540213` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `5e03cbcadaf57b0d6a16029a08627f924d3c7352` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
@@ -164,6 +165,13 @@ cycle 072 の比較候補メモ:
 - cycle 071 では `scripts/generate_public_api_coverage.py` が `--previous-matrix` 指定時に exact signature の既存分類を引き継ぐよう修正した。これにより、レビュー済みの constructor/classification 行が no-op regeneration で `missing` に戻らない。
 - cycle 071 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- cycle 072 では `vendor/skia-upstream-candidate` を local ref source として使い、2週間候補 `5e03cbcadaf57b0d6a16029a08627f924d3c7352` を採用した。187 commits、`include` / `modules` は 52 files changed, +1389/-1090、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 202 files changed, +4994/-3380。
+- cycle 072 の初期 missing は 23 rows: `SkPath` tryMake helpers、`SkRRect::MakeRectRadii`、`SkString::operator+=(char)`、`SkYUVAInfo::inverseOriginMatrix`、`VulkanYcbcrConversionInfo` constructor/accessor/conversion rows。C API 追従と optional-backend `na` 分類で全て closed。
+- cycle 072 の初期 stale C API report は 2 `stale_capi` rows と 26 `signature_changed_review` rows。upstream で削除された `SkPath::dumpArrays` C API は削除し、value/const signature drift は既存 C ABI 互換として記録した。
+- cycle 072 では PathData/PathRef migration、HDR AGTM codec source、Graphite resource/provider/precompile churn、Vulkan YCbcr conversion、XPS helper cleanup、SVG/SkParagraph drift を同期した。Bazel-only metadata と Rust PNG optional backend implementation files は同期対象外。
+- prebuilt static library compatibility のため、旧 no-arg `SkPathBuilder::detach()` と旧 `SkPath::transform(..., SkApplyPerspectiveClip)` symbols を `SkPrebuiltCompat.cpp` で維持した。
+- cycle 072 の final matrix は `covered 3026` / `split_covered 42` / `false_positive 296` / `na 276` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final stale C API report は 26 `signature_changed_review` rows で、cycle record に互換理由を記録済み。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
 
 ## やってはいけないこと
 
@@ -192,19 +200,22 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `0682b51e060f4f82b757f0872cf5d8e380540213`
-- committer date: 2025-10-21
-- subject: Delete PathKit
+- `5e03cbcadaf57b0d6a16029a08627f924d3c7352`
+- committer date: 2025-11-04
+- subject: Roll recipe dependencies (trivial).
 
-cycle 071 結果:
+cycle 072 結果:
 
-- baseline `9a43169...` から `0682b51...` を採用した。1 commit、`include` / `modules` は 42 files changed, +2/-35853、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift も 42 files changed, +2/-35853。
-- `Delete PathKit` を単独 commit として split した。Reskia は `modules/pathkit` と CanvasKit を追跡・build していないため、tracked source/header sync と C API 追従は不要だった。
-- `scripts/generate_public_api_coverage.py` が `--previous-matrix` 指定時に exact signature の既存分類を引き継ぐよう修正した。
-- final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は空。
+- baseline `0682b51...` から `5e03cbc...` を採用した。187 commits、`include` / `modules` は 52 files changed, +1389/-1090、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 202 files changed, +4994/-3380。
+- PathData/PathRef migration、Graphite resource/provider/precompile churn、Vulkan YCbcr conversion、XPS helper cleanup、SVG/SkParagraph drift を同期した。
+- C API は `SkPath_tryMakeTransform` / `SkPath_tryMakeOffset` / `SkPath_tryMakeScale`、`SkRRect_MakeRectRadii`、`SkString_addAssign`、`SkYUVAInfo_inverseOriginMatrix` を追加し、`SkStream_getData` / `SkMemoryStream_getData` を `sk_sp<const SkData>` 対応に更新した。
+- upstream で削除された `SkPath_dumpArrays` / `SkPath_dumpArraysDefault` は削除した。
+- Vulkan YCbcr conversion public rows は optional-backend として `na` に分類した。
+- prebuilt static library compatibility のため、旧 no-arg `SkPathBuilder::detach()` と旧 `SkPath::transform(..., SkApplyPerspectiveClip)` symbols を `SkPrebuiltCompat.cpp` で維持した。
+- final coverage は `covered 3026` / `split_covered 42` / `false_positive 296` / `na 276` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は 26 `signature_changed_review` rows で、cycle record に互換理由を記録済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `0682b51e060f4f82b757f0872cf5d8e380540213` から再比較する。1週間候補 `024d8ec8ccbd3f00d87c93d56f8e997736683d46` は PathKit 削除後の 101 commits なので、2週/3週候補と比較してから採用幅を決める。PathData/PathRef migration、Graphite capture/resource/provider churn、legacy prebuilt SVG symbol compatibility、Rust PNG optional backend、Dawn/Vulkan/ANGLE rolls が既知リスク。
+- 次サイクルでは、accepted baseline `5e03cbcadaf57b0d6a16029a08627f924d3c7352` から再比較する。1週/2週/3週候補を local refs から再確認する。PathData/PathRef migration、Graphite resource/provider/precompile churn、legacy prebuilt SVG symbol compatibility、Rust PNG optional backend、XPS optional source drift、Dawn/Vulkan/ANGLE rolls が既知リスク。
 
 cycle records:
 
@@ -279,6 +290,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-069-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-070-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-071-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-072-2026-06-01.md`
 
 ## Cycle close の条件
 

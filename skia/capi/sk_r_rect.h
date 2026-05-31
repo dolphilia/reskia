@@ -82,6 +82,7 @@ sk_r_rect_t SkRRect_MakeEmpty(); // () -> sk_r_rect_t
 sk_r_rect_t SkRRect_MakeRect(const reskia_rect_t *r); // (const SkRect *r) -> sk_r_rect_t
 sk_r_rect_t SkRRect_MakeOval(const reskia_rect_t *oval); // (const SkRect *oval) -> sk_r_rect_t
 sk_r_rect_t SkRRect_MakeRectXY(const reskia_rect_t *rect, float xRad, float yRad); // (const SkRect *rect, SkScalar xRad, SkScalar yRad) -> sk_r_rect_t
+sk_r_rect_t SkRRect_MakeRectRadii(const reskia_rect_t *rect, const reskia_vector_t *radii); // radii: non-null SkVector[4]
 
 #ifdef __cplusplus
 }

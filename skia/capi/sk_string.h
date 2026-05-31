@@ -74,6 +74,7 @@ void SkString_insertU64(reskia_string_t *string, size_t offset, uint64_t value, 
 void SkString_insertHex(reskia_string_t *string, size_t offset, uint32_t value, int minDigits); // (SkString *string, size_t offset, uint32_t value, int minDigits)
 void SkString_insertScalar(reskia_string_t *string, size_t offset, float v); // (SkString *string, size_t offset, SkScalar v)
 void SkString_append(reskia_string_t *string, const char text[]); // NULL input is no-op.
+void SkString_addAssign(reskia_string_t *string, char c); // operator+=(char); NULL string is no-op.
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
 void SkString_appendString(reskia_string_t *string, const reskia_string_t *str); // NULL input is no-op.
 void SkString_appendStringView(reskia_string_t *string, int str); // NULL string or invalid string_view handle is no-op.

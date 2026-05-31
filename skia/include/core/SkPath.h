@@ -28,18 +28,33 @@
 #include <tuple>
 
 class SkData;
-class SkPathRef;
 class SkRRect;
 class SkWStream;
 enum class SkPathConvexity;
+enum class SkResolveConvexity;
 struct SkPathRaw;
 struct SkPathVerbAnalysis;
+struct SkPathOvalInfo;
+struct SkPathRRectInfo;
 
 // WIP -- define this locally, and fix call-sites to use SkPathBuilder (skbug.com/40040287)
+#ifndef SK_HIDE_PATH_EDIT_METHODS
 //#define SK_HIDE_PATH_EDIT_METHODS
+#endif
 
 // Migrate clients so this is unneeded
 #define SK_LEGACY_PATH_ACCESSORS
+
+#ifdef SK_HIDE_PATH_EDIT_METHODS
+    // enable this to try using SkPathData
+    //#define SK_PATH_USES_PATHDATA
+#endif
+
+#ifdef SK_PATH_USES_PATHDATA
+class SkPathData;
+#else
+class SkPathRef;
+#endif
 
 /** \class SkPath
     SkPath contain geometry. SkPath may be empty, or contain one or more verbs that
@@ -104,7 +119,7 @@ public:
                           SkPathFillType fillType = SkPathFillType::kDefault,
                           bool isVolatile = false);
 
-    static SkPath Line(const SkPoint a, const SkPoint b) {
+    static SkPath Line(SkPoint a, SkPoint b) {
         return Polygon({a, b}, false);
     }
 
@@ -191,6 +206,9 @@ public:
         return !(a == b);
     }
 
+// Note: These 3 interpolate() methods no long use any private access/info,
+//       and could trivially be implemented directly by the client.
+
     /** Returns true if SkPath contain equal verbs and equal weights.
         If SkPath contain one or more conics, the weights must match.
 
@@ -226,6 +244,29 @@ public:
         example: https://fiddle.skia.org/c/@Path_interpolate
     */
     SkPath makeInterpolate(const SkPath& ending, SkScalar weight) const;
+
+    /** Interpolates between SkPath with SkPoint array of equal size.
+        Copy verb array and weights to out, and set out SkPoint array to a weighted
+        average of this SkPoint array and ending SkPoint array, using the formula:
+        (Path Point * weight) + ending Point * (1 - weight).
+
+        weight is most useful when between zero (ending SkPoint array) and
+        one (this Point_Array); will work with values outside of this
+        range.
+
+        interpolate() returns false and leaves out unchanged if SkPoint array is not
+        the same size as ending SkPoint array. Call isInterpolatable() to check SkPath
+        compatibility prior to calling interpolate().
+
+        @param ending  SkPoint array averaged with this SkPoint array
+        @param weight  contribution of this SkPoint array, and
+                       one minus contribution of ending SkPoint array
+        @param out     SkPath replaced by interpolated averages
+        @return        true if SkPath contain same number of SkPoint
+
+        example: https://fiddle.skia.org/c/@Path_interpolate
+    */
+    bool interpolate(const SkPath& ending, SkScalar weight, SkPath* out) const;
 
     /** Returns SkPathFillType, the rule used to fill SkPath.
 
@@ -602,12 +643,34 @@ public:
     /** Return a copy of SkPath with verb array, SkPoint array, and weight transformed
         by matrix. makeTransform may change verbs and increase their number.
 
+        If the resulting path has any non-finite values, returns {}.
+
         @param matrix  SkMatrix to apply to SkPath
-        @param pc      whether to apply perspective clipping
+        @return        SkPath if finite, or {}
+    */
+    std::optional<SkPath> tryMakeTransform(const SkMatrix& matrix) const;
+
+    std::optional<SkPath> tryMakeOffset(float dx, float dy) const {
+        return this->tryMakeTransform(SkMatrix::Translate(dx, dy));
+    }
+
+    std::optional<SkPath> tryMakeScale(float sx, float sy) const {
+        return this->tryMakeTransform(SkMatrix::Scale(sx, sy));
+    }
+
+    /** Return a copy of SkPath with verb array, SkPoint array, and weight transformed
+        by matrix. makeTransform may change verbs and increase their number.
+
+        If the resulting path has any non-finite values, this will still return a path
+        but that path will return true for isFinite().
+
+        The newer pattern is to call tryMakeTransform(matrix) which will only return a
+        path if the result is finite.
+
+        @param matrix  SkMatrix to apply to SkPath
         @return        SkPath
     */
     SkPath makeTransform(const SkMatrix& matrix) const;
-    SkPath makeTransform(const SkMatrix& matrix, SkApplyPerspectiveClip) const;
 
     /** Returns SkPath with SkPoint array offset by (dx, dy).
 
@@ -691,29 +754,6 @@ public:
         example: https://fiddle.skia.org/c/@Path_swap
     */
     void swap(SkPath& other);
-
-    /** Interpolates between SkPath with SkPoint array of equal size.
-        Copy verb array and weights to out, and set out SkPoint array to a weighted
-        average of this SkPoint array and ending SkPoint array, using the formula:
-        (Path Point * weight) + ending Point * (1 - weight).
-
-        weight is most useful when between zero (ending SkPoint array) and
-        one (this Point_Array); will work with values outside of this
-        range.
-
-        interpolate() returns false and leaves out unchanged if SkPoint array is not
-        the same size as ending SkPoint array. Call isInterpolatable() to check SkPath
-        compatibility prior to calling interpolate().
-
-        @param ending  SkPoint array averaged with this SkPoint array
-        @param weight  contribution of this SkPoint array, and
-                       one minus contribution of ending SkPoint array
-        @param out     SkPath replaced by interpolated averages
-        @return        true if SkPath contain same number of SkPoint
-
-        example: https://fiddle.skia.org/c/@Path_interpolate
-    */
-    bool interpolate(const SkPath& ending, SkScalar weight, SkPath* out) const;
 
     /** Sets SkPathFillType, the rule used to fill SkPath. While there is no
         check that ft is legal, values outside of SkPathFillType are not supported.
@@ -1100,7 +1140,7 @@ public:
         @param radius  distance from arc to circle center
         @return        reference to SkPath
     */
-    SkPath& arcTo(const SkPoint p1, const SkPoint p2, SkScalar radius) {
+    SkPath& arcTo(SkPoint p1, SkPoint p2, SkScalar radius) {
         return this->arcTo(p1.fX, p1.fY, p2.fX, p2.fY, radius);
     }
 
@@ -1154,8 +1194,11 @@ public:
         @param xy           end of arc
         @return             reference to SkPath
     */
-    SkPath& arcTo(const SkPoint r, SkScalar xAxisRotate, ArcSize largeArc, SkPathDirection sweep,
-               const SkPoint xy) {
+    SkPath& arcTo(SkPoint r,
+                  SkScalar xAxisRotate,
+                  ArcSize largeArc,
+                  SkPathDirection sweep,
+                  const SkPoint xy) {
         return this->arcTo(r.fX, r.fY, xAxisRotate, largeArc, sweep, xy.fX, xy.fY);
     }
 
@@ -1488,7 +1531,6 @@ private:
         example: https://fiddle.skia.org/c/@Path_transform
     */
     void transform(const SkMatrix& matrix, SkPath* dst) const;
-    void transform(const SkMatrix& matrix, SkPath* dst, SkApplyPerspectiveClip) const;
 
     /** Transforms verb array, SkPoint array, and weight by matrix.
         transform may change verbs and increase their number.
@@ -1501,7 +1543,6 @@ private:
         this->transform(matrix, this);
         return *this;
     }
-    void transform(const SkMatrix& matrix, SkApplyPerspectiveClip) { this->transform(matrix); }
 #ifdef SK_HIDE_PATH_EDIT_METHODS
 public:
 #endif
@@ -1527,6 +1568,7 @@ public:
     int getVerbs(uint8_t verbs[], int max) const {
         return (int)this->getVerbs({verbs, max});
     }
+#ifndef SK_HIDE_PATH_EDIT_METHODS
     SkPath& addRoundRect(const SkRect& rect, const SkScalar radii[],
                          SkPathDirection dir = SkPathDirection::kCW) {
         return this->addRoundRect(rect, {radii, radii ? 8 : 0}, dir);
@@ -1534,7 +1576,8 @@ public:
     SkPath& addPoly(const SkPoint pts[], int count, bool close) {
         return this->addPoly({pts, count}, close);
     }
-#endif
+#endif  // SK_HIDE_PATH_EDIT_METHODS
+#endif  // SK_SUPPORT_UNSPANNED_APIS
 
     SkPathIter iter() const;
 
@@ -1650,6 +1693,10 @@ public:
     };
 
 private:
+    std::optional<SkPathOvalInfo> getOvalInfo() const;
+    std::optional<SkPathRRectInfo> getRRectInfo() const;
+    std::optional<SkPathRaw> raw(SkResolveConvexity) const;
+
     /** \class SkPath::RangeIter
         Iterates through a raw range of path verbs, points, and conics. All values are returned
         unaltered.
@@ -1818,10 +1865,6 @@ public:
     void dump() const { this->dump(nullptr, false); }
     void dumpHex() const { this->dump(nullptr, true); }
 
-    // Like dump(), but outputs for the SkPath::Make() factory
-    void dumpArrays(SkWStream* stream, bool dumpAsHex) const;
-    void dumpArrays() const { this->dumpArrays(nullptr, false); }
-
     /** Writes SkPath to buffer, returning the number of bytes written.
         Pass nullptr to obtain the storage size.
 
@@ -1901,6 +1944,16 @@ public:
     using sk_is_trivially_relocatable = std::true_type;
 
 private:
+#ifdef SK_PATH_USES_PATHDATA
+    static SkPath MakeNullCheck(sk_sp<SkPathData>, SkPathFillType, bool isVolatile);
+    static SkPathData* PeekErrorSingleton();
+
+    SkPath(sk_sp<SkPathData>, SkPathFillType, bool isVolatile);
+
+    sk_sp<SkPathData> fPathData;
+    SkPathFillType    fFillType;
+    bool              fIsVolatile;
+#else
     SkPath(sk_sp<SkPathRef>, SkPathFillType, bool isVolatile, SkPathConvexity);
 
     sk_sp<SkPathRef>             fPathRef;
@@ -1921,6 +1974,16 @@ private:
      *  Doesn't change fGenerationID or fSourcePath on Android.
      */
     void copyFields(const SkPath& that);
+
+    // Creates a new Path after the supplied arguments have been validated by
+    // SkPathPriv::AnalyzeVerbs().
+    static SkPath MakeInternal(const SkPathVerbAnalysis&,
+                               const SkPoint[],
+                               SkSpan<const SkPathVerb>,
+                               const float conics[],
+                               SkPathFillType,
+                               bool isVolatile);
+#endif
 
     size_t writeToMemoryAsRRect(void* buffer) const;
     size_t readAsRRect(const void*, size_t);
@@ -1973,10 +2036,6 @@ private:
 
     SkPath& dirtyAfterEdit();
 
-    // Bottlenecks for working with fConvexity and fFirstDirection.
-    // Notice the setters are const... these are mutable atomic fields.
-    void setConvexity(SkPathConvexity) const;
-
     void addRaw(const SkPathRaw&);
 
     /** Returns the comvexity type, computing if needed. Never returns kUnknown.
@@ -1989,19 +2048,8 @@ private:
     /** Stores a convexity type for this path. This is what will be returned if
      *  getConvexityOrUnknown() is called. If you pass kUnknown, then if getContexityType()
      *  is called, the real convexity will be computed.
-     *
-     *  example: https://fiddle.skia.org/c/@Path_setConvexity
      */
-    void setConvexity(SkPathConvexity convexity);
-
-    // Creates a new Path after the supplied arguments have been validated by
-    // SkPathPriv::AnalyzeVerbs().
-    static SkPath MakeInternal(const SkPathVerbAnalysis& analsis,
-                               const SkPoint points[],
-                               SkSpan<const SkPathVerb> verbs,
-                               const SkScalar conics[],
-                               SkPathFillType fillType,
-                               bool isVolatile);
+    void setConvexity(SkPathConvexity) const;
 
     friend class SkAutoAddSimpleShape;  // setConvexity
     friend class SkPathBuilder;
