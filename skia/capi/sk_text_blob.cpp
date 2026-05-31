@@ -76,6 +76,10 @@ bool has_text_input(const void *text, size_t byteLength) {
     return byteLength == 0 || text != nullptr;
 }
 
+bool has_span_input(const void *data, size_t count) {
+    return count == 0 || data != nullptr;
+}
+
 } // namespace
 
 extern "C" {
@@ -211,6 +215,30 @@ sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength
         return 0;
     }
     return make_text_blob_handle(SkTextBlob::MakeFromRSXform(text, byteLength, reinterpret_cast<const SkRSXform *>(xform), *sourceFont, to_text_encoding(encoding)));
+}
+
+sk_text_blob_t SkTextBlob_MakeFromPosHGlyphs(const uint16_t *glyphs, size_t glyph_count, const float *xpos, float constY, const reskia_font_t *font) {
+    const SkFont *sourceFont = as_font(font);
+    if (!has_span_input(glyphs, glyph_count) || !has_span_input(xpos, glyph_count) || sourceFont == nullptr) {
+        return 0;
+    }
+    return make_text_blob_handle(SkTextBlob::MakeFromPosHGlyphs({reinterpret_cast<const SkGlyphID *>(glyphs), glyph_count}, {xpos, glyph_count}, constY, *sourceFont));
+}
+
+sk_text_blob_t SkTextBlob_MakeFromPosGlyphs(const uint16_t *glyphs, size_t glyph_count, const reskia_point_t *pos, const reskia_font_t *font) {
+    const SkFont *sourceFont = as_font(font);
+    if (!has_span_input(glyphs, glyph_count) || !has_span_input(pos, glyph_count) || sourceFont == nullptr) {
+        return 0;
+    }
+    return make_text_blob_handle(SkTextBlob::MakeFromPosGlyphs({reinterpret_cast<const SkGlyphID *>(glyphs), glyph_count}, {reinterpret_cast<const SkPoint *>(pos), glyph_count}, *sourceFont));
+}
+
+sk_text_blob_t SkTextBlob_MakeFromRSXformGlyphs(const uint16_t *glyphs, size_t glyph_count, const reskia_rsxform_t *xform, const reskia_font_t *font) {
+    const SkFont *sourceFont = as_font(font);
+    if (!has_span_input(glyphs, glyph_count) || !has_span_input(xform, glyph_count) || sourceFont == nullptr) {
+        return 0;
+    }
+    return make_text_blob_handle(SkTextBlob::MakeFromRSXformGlyphs({reinterpret_cast<const SkGlyphID *>(glyphs), glyph_count}, {reinterpret_cast<const SkRSXform *>(xform), glyph_count}, *sourceFont));
 }
 
 sk_text_blob_t SkTextBlob_Deserialize(const uint8_t *data, size_t size, const reskia_deserial_procs_t *procs) {

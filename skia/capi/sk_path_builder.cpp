@@ -243,6 +243,11 @@ reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *
     return native != nullptr ? to_api(&native->rCubicTo(x1, y1, x2, y2, x3, y3)) : nullptr;
 }
 
+reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? to_api(&native->rArcTo(rx, ry, xAxisRotate, static_cast<SkPathBuilder::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), dx, dy)) : nullptr;
+}
+
 reskia_path_builder_t *SkPathBuilder_arcTo(reskia_path_builder_t *path_builder, const reskia_rect_t *oval, float startAngleDeg, float sweepAngleDeg, bool forceMoveTo) {
     SkPathBuilder *native = as_builder(path_builder);
     const SkRect *native_oval = as_rect(oval);

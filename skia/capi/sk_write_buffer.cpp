@@ -73,7 +73,7 @@ void SkWriteBuffer_writeScalarArray(reskia_write_buffer_t *writeBuffer, const fl
     if (writer == nullptr || !has_input(value, count)) {
         return;
     }
-    writer->writeScalarArray(value, count);
+    writer->writeScalarArray({value, count});
 }
 
 void SkWriteBuffer_writeInt(reskia_write_buffer_t *writeBuffer, int32_t value) {
@@ -89,7 +89,7 @@ void SkWriteBuffer_writeIntArray(reskia_write_buffer_t *writeBuffer, const int32
     if (writer == nullptr || !has_input(value, count)) {
         return;
     }
-    writer->writeIntArray(value, count);
+    writer->writeIntArray({value, count});
 }
 
 void SkWriteBuffer_writeUInt(reskia_write_buffer_t *writeBuffer, uint32_t value) {
@@ -137,7 +137,7 @@ void SkWriteBuffer_writeColorArray(reskia_write_buffer_t *writeBuffer, const res
     if (writer == nullptr || !has_input(color, count)) {
         return;
     }
-    writer->writeColorArray(reinterpret_cast<const SkColor *>(color), count);
+    writer->writeColorArray({reinterpret_cast<const SkColor *>(color), count});
 }
 
 void SkWriteBuffer_writeColor4f(reskia_write_buffer_t *writeBuffer, const reskia_color_4f_t *color) {
@@ -153,7 +153,7 @@ void SkWriteBuffer_writeColor4fArray(reskia_write_buffer_t *writeBuffer, const r
     if (writer == nullptr || !has_input(color, count)) {
         return;
     }
-    writer->writeColor4fArray(reinterpret_cast<const SkColor4f *>(color), count);
+    writer->writeColor4fArray({reinterpret_cast<const SkColor4f *>(color), count});
 }
 
 void SkWriteBuffer_writePoint(reskia_write_buffer_t *writeBuffer, const reskia_point_t *point) {
@@ -169,7 +169,7 @@ void SkWriteBuffer_writePointArray(reskia_write_buffer_t *writeBuffer, const res
     if (writer == nullptr || !has_input(point, count)) {
         return;
     }
-    writer->writePointArray(reinterpret_cast<const SkPoint *>(point), count);
+    writer->writePointArray({reinterpret_cast<const SkPoint *>(point), count});
 }
 
 void SkWriteBuffer_writePoint3(reskia_write_buffer_t *writeBuffer, const reskia_point3_t *point) {

@@ -89,6 +89,7 @@ reskia_path_builder_t *SkPathBuilder_rConicTo(reskia_path_builder_t *path_builde
 reskia_path_builder_t *SkPathBuilder_rConicToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2, float w); // (SkPathBuilder *path_builder, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar w) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rCubicTo(reskia_path_builder_t *path_builder, int pt1, int pt2, int pt3); // (SkPathBuilder *path_builder, sk_point_t pt1, sk_point_t pt2, sk_point_t pt3) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2, float x3, float y3); // (SkPathBuilder *path_builder, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar x3, SkScalar y3) -> SkPathBuilder *
+reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy); // (SkPathBuilder *path_builder, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) -> SkPathBuilder *
 /**
  * oval は非 NULL。NULL oval は no-op、NULL path_builder なら NULL (SkPathBuilder *path_builder, const SkRect *oval, SkScalar startAngleDeg, SkScalar sweepAngleDeg, bool forceMoveTo) -> SkPathBuilder *
  */

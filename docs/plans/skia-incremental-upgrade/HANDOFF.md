@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `9100700840668a8a3276c05f114463f9b8c7a264`
-- next probe candidate: choose a fixed commit after `9100700840668a8a3276c05f114463f9b8c7a264`
+- `SKIA_REF`: `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`
+- next probe candidate: choose a fixed commit after `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -87,35 +87,36 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 053 accepted: `91dc88dc70e5c7e8debbe21d4d5566d5e9f121e1`。
 - cycle 054 accepted: `6366bcd2e0c185b433b51245483dec2b29fb2675`。
 - cycle 055 accepted: `9100700840668a8a3276c05f114463f9b8c7a264`。
+- cycle 056 accepted: `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`。
 
 未実施:
 
-- cycle 056 candidate の選定。
-- cycle 056 candidate checkout を使った coverage regression。
-- cycle 056 の source/header sync と C API 追従実装。
+- cycle 057 candidate の選定。
+- cycle 057 candidate checkout を使った coverage regression。
+- cycle 057 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 056 の candidate selection から始める。
+次の作業は、cycle 057 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `9100700840668a8a3276c05f114463f9b8c7a264` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `80bffd1ae51733a54cbfbf777a38060e2f8e5c30` から1-2週間後の固定 commit を第一候補にする。
 2. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 056 の比較候補メモ:
+cycle 057 の比較候補メモ:
 
-- cycle 055 では baseline `6366bcd2...` から `9100700840668a8a3276c05f114463f9b8c7a264` を採用した。99 commits、`include` / `modules` は 38 files changed, +548/-396、`DEPS` / `include` / `modules` / `src` drift は 239 files changed, +2562/-1781。
-- cycle 055 で比較した `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` は、cycle 054 baseline から 163 commits、`include` / `modules` は 118 files changed, +25096/-545 と重く、pathops/module churn が大きかったため見送った。新 baseline `910070...` からは 64 commits 後なので、cycle 056 で改めて候補として評価する。
-- cycle 055 の新規 `missing 7` / `partial 2` は `SkFont::getWidth`、`SkMatrix` homogeneous/affine helpers、`SkTypeface::readTableTags`、recorder `cpuRecorder()` 系。前者は C ABI を追加し、recorder `cpuRecorder()` は ownership/type 設計 bucket で `na` とした。
-- SkSpan signature drift により初期 stale `signature_changed_review 38` が出たが、matrix 更新と ABI 互換確認後の final lock stale report は空。
-- `SkPathBuilder::addPath` は prebuilt SVG ABI 互換のため 1引数/2引数 overload を out-of-line 定義として保持した。
+- cycle 056 では baseline `9100700840668a8a3276c05f114463f9b8c7a264` から `80bffd1ae51733a54cbfbf777a38060e2f8e5c30` を採用した。60 commits、`include` / `modules` は 12 files changed, +115/-28、`DEPS` / `include` / `modules` / `src` drift は 110 files changed, +1434/-967。
+- cycle 056 で比較した `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` は、新 baseline `80bffd1...` からは 4 commits 後だが、`move pathops into a module` を含み、`include` / `modules` は 85 files changed, +24552/-153 と重い。cycle 057 では pathops module movement policy と CMake mirror 方針を確認してから再評価する。
+- cycle 056 の新規 `missing 4` は `SkPathBuilder::rArcTo` と `SkTextBlob` glyph factory 3件。すべて pointer/count ベースの C ABI を追加した。
+- SkSpan signature drift により初期 stale `signature_changed_review 9` が出たが、matrix 更新と ABI 互換確認後の final lock stale report は空。
+- `SkPathBuilder::addPath` 1引数/2引数 overload と `SkColorFilters::Matrix(const SkColorMatrix&)` は prebuilt SVG ABI 互換のため out-of-line 定義として保持した。
 - final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final lock stale report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次 cycle では accepted baseline `9100700840668a8a3276c05f114463f9b8c7a264` から再比較する。既知リスクは pathops module movement、Graphite Android/YCbCr precompile、Vulkan/Dawn rolls、Vulkan header churn、recorder ABI design、SkSpan signature churn。
+- 次 cycle では accepted baseline `80bffd1ae51733a54cbfbf777a38060e2f8e5c30` から再比較する。既知リスクは pathops module movement、`modules/pathops` CMake mirror policy、Graphite Android/YCbCr precompile、Vulkan/Dawn rolls、Vulkan header churn、SkSpan signature churn。
 
 ## やってはいけないこと
 
@@ -144,23 +145,23 @@ cycle 056 の比較候補メモ:
 
 候補:
 
-- `9100700840668a8a3276c05f114463f9b8c7a264`
-- committer date: 2025-06-06T10:56:56-07:00
-- subject: use SkSpan in SkMatrix API
+- `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`
+- committer date: 2025-06-13T05:25:38-07:00
+- subject: [SkPathBuilder] Add rArcTo
 
-cycle 055 結果:
+cycle 056 結果:
 
-- baseline `6366bcd2...` から `91007008...` を採用した。99 commits、`include` / `modules` は 38 files changed, +548/-396、`DEPS` / `include` / `modules` / `src` drift は 239 files changed, +2562/-1781。
-- 比較候補 `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` は cycle 054 baseline から 163 commits、`include` / `modules` は 118 files changed, +25096/-545 と重かったため見送った。新 baseline からは 64 commits 後なので、cycle 056 で再評価する。
+- baseline `91007008...` から `80bffd1...` を採用した。60 commits、`include` / `modules` は 12 files changed, +115/-28、`DEPS` / `include` / `modules` / `src` drift は 110 files changed, +1434/-967。
+- 比較候補 `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` は pathops module movement が重いため見送った。新 baseline からは 4 commits 後なので、cycle 057 で pathops module movement policy として再評価する。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は空。初期 probe の `signature_changed_review 38` は `SkFont` / `SkMatrix` / `SkPath` / `SkPathBuilder` / `SkTypeface` の SkSpan signature drift で、ABI 互換または catch-up 済みとして確認した。
-- 初期 probe の新規 gap は `SkFont::getWidth`、`SkMatrix` homogeneous/affine helpers、`SkTypeface::readTableTags`、recorder `cpuRecorder()` 系。low-risk API は C ABI を追加し、recorder `cpuRecorder()` は ownership/type 設計が必要なため `na` とした。
-- source/header sync では `skia/DEPS`、public headers、Core/Ganesh/Graphite/Vulkan/Dawn/source drift、`skcms`/`skottie`/`skparagraph`/`skplaintexteditor`/`skshaper`/`svg` drift を取り込んだ。
-- GN/Bazel metadata と untracked optional module tree は同期対象外とした。`modules/canvaskit`、`modules/jetski`、`modules/pathkit`、`src/gpu/android`、`include/config/copts.bzl` は current CMake mirror/build surface で未追跡のため追加しない。
-- prebuilt link 互換のため `SkPathBuilder::addPath` out-of-line definitions を保持した。
+- final lock stale C API report は空。初期 probe の `signature_changed_review 9` は `SkFont` / `SkTextBlob` / `SkTypeface` / `SkDashPathEffect` の SkSpan signature drift で、ABI 互換または catch-up 済みとして確認した。
+- 初期 probe の新規 gap は `SkPathBuilder::rArcTo` と `SkTextBlob` glyph factory 3件。low-risk API として C ABI を追加した。
+- source/header sync では `skia/DEPS`、public headers、Core/Ganesh/Graphite/Vulkan/Metal/source drift、`skparagraph`/`sksg`/`svg` drift を取り込んだ。
+- GN/Bazel metadata は current CMake mirror/build surface で未追跡のため追加しない。
+- prebuilt link 互換のため `SkPathBuilder::addPath` out-of-line definitions と `SkColorFilters::Matrix(const SkColorMatrix&)` を保持した。
 - prebuilt/GPU build で既知の macOS deployment-target warning、GPU build で Metal `fastMathEnabled` deprecation warning、C API build で `SkPathOps::TightBounds` deprecation warning が出たが、いずれも non-fatal。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `9100700840668a8a3276c05f114463f9b8c7a264` から再比較する。既知リスクは pathops module movement、Graphite Android/YCbCr precompile、Vulkan/Dawn rolls、Vulkan header churn、recorder ABI design、SkSpan signature churn。
+- 次サイクルでは、accepted baseline `80bffd1ae51733a54cbfbf777a38060e2f8e5c30` から再比較する。既知リスクは pathops module movement、`modules/pathops` CMake mirror policy、Graphite Android/YCbCr precompile、Vulkan/Dawn rolls、Vulkan header churn、SkSpan signature churn。
 
 cycle records:
 
@@ -219,6 +220,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-053-2026-05-30.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-054-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-055-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-056-2026-05-31.md`
 
 ## Cycle close の条件
 
