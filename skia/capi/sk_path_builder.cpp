@@ -6,6 +6,7 @@
 
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPathBuilder.h"
+#include "src/core/SkPathRaw.h"
 
 #include <initializer_list>
 
@@ -249,6 +250,11 @@ reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder,
     return native != nullptr ? to_api(&native->rArcTo(rx, ry, xAxisRotate, static_cast<SkPathBuilder::ArcSize>(largeArc), static_cast<SkPathDirection>(sweep), dx, dy)) : nullptr;
 }
 
+reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? to_api(&native->rMoveTo(static_sk_point_get_entity(pt))) : nullptr;
+}
+
 reskia_path_builder_t *SkPathBuilder_arcTo(reskia_path_builder_t *path_builder, const reskia_rect_t *oval, float startAngleDeg, float sweepAngleDeg, bool forceMoveTo) {
     SkPathBuilder *native = as_builder(path_builder);
     const SkRect *native_oval = as_rect(oval);
@@ -340,6 +346,24 @@ reskia_path_builder_t *SkPathBuilder_addPath(reskia_path_builder_t *path_builder
     SkPathBuilder *native = as_builder(path_builder);
     const SkPath *native_path = as_path(path);
     return native != nullptr && native_path != nullptr ? to_api(&native->addPath(*native_path)) : return_self_or_null(native);
+}
+
+reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder, const reskia_point_t *points, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return nullptr;
+    }
+    if (pointCount < 0 || verbCount < 0 || conicWeightCount < 0 ||
+        (pointCount > 0 && points == nullptr) ||
+        (verbCount > 0 && verbs == nullptr) ||
+        (conicWeightCount > 0 && conicWeights == nullptr)) {
+        return to_api(native);
+    }
+    SkPathRaw raw{
+            {reinterpret_cast<const SkPoint *>(points), static_cast<size_t>(pointCount)},
+            {reinterpret_cast<const SkPathVerb *>(verbs), static_cast<size_t>(verbCount)},
+            {reinterpret_cast<const SkScalar *>(conicWeights), static_cast<size_t>(conicWeightCount)}};
+    return to_api(&native->addRaw(raw));
 }
 
 void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount) {
@@ -436,11 +460,11 @@ const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, si
         }
         return nullptr;
     }
-    SkSpan<const uint8_t> verbs = native->verbs();
+    SkSpan<const SkPathVerb> verbs = native->verbs();
     if (count != nullptr) {
         *count = verbs.size();
     }
-    return verbs.data();
+    return reinterpret_cast<const uint8_t *>(verbs.data());
 }
 
 }

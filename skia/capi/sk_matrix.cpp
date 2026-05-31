@@ -487,7 +487,19 @@ bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, 
     if (matrix == nullptr || count < 0 || count > 4 || (count > 0 && (src == nullptr || dst == nullptr))) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->setPolyToPoly(reinterpret_cast<const SkPoint *>(src), reinterpret_cast<const SkPoint *>(dst), count);
+    return reinterpret_cast<SkMatrix *>(matrix)->setPolyToPoly(
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(dst), static_cast<size_t>(count)});
+}
+
+sk_matrix_t SkMatrix_PolyToPoly(const reskia_point_t *src, const reskia_point_t *dst, int count) {
+    if (count < 0 || count > 4 || (count > 0 && (src == nullptr || dst == nullptr))) {
+        return 0;
+    }
+    std::optional<SkMatrix> matrix = SkMatrix::PolyToPoly(
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(dst), static_cast<size_t>(count)});
+    return matrix.has_value() ? static_sk_matrix_make(*matrix) : 0;
 }
 
 bool SkMatrix_invert(reskia_matrix_t *matrix, reskia_matrix_t *inverse) {

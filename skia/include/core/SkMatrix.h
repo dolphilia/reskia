@@ -20,6 +20,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <optional>
 
 struct SkRSXform;
 struct SkSize;
@@ -1179,40 +1180,38 @@ private:
 public:
 #endif
 
-    /** Sets SkMatrix to map src to dst. count must be zero or greater, and four or less.
+    /** Compute a matrix from two polygons, such that if the matrix was applied
+     *  to the src polygon, it would produce the dst polygon.
+     *
+     *  If the size of the two spans are not equal, or if they are > 4, return {}.
+     *  If the resulting matrix is non-invertible, return {}.
+     *
+     *  example: https://fiddle.skia.org/c/@Matrix_setPolyToPoly
+     */
+    static std::optional<SkMatrix> PolyToPoly(SkSpan<const SkPoint> src, SkSpan<const SkPoint> dst);
 
-        If count is zero, sets SkMatrix to identity and returns true.
-        If count is one, sets SkMatrix to translate and returns true.
-        If count is two or more, sets SkMatrix to map SkPoint if possible; returns false
-        if SkMatrix cannot be constructed. If count is four, SkMatrix may include
-        perspective.
+    bool setPolyToPoly(SkSpan<const SkPoint> src, SkSpan<const SkPoint> dst) {
+        if (auto mx = PolyToPoly(src, dst)) {
+            *this = *mx;
+            return true;
+        }
+        return false;
+    }
 
-        @param src    SkPoint to map from
-        @param dst    SkPoint to map to
-        @param count  number of SkPoint in src and dst
-        @return       true if SkMatrix was constructed successfully
-
-        example: https://fiddle.skia.org/c/@Matrix_setPolyToPoly
+    /*
+     * If this matrix is invertible, return its inverse, else return {}.
     */
-    bool setPolyToPoly(const SkPoint src[], const SkPoint dst[], int count);
+    std::optional<SkMatrix> invert() const;
 
-    /** Sets inverse to reciprocal matrix, returning true if SkMatrix can be inverted.
-        Geometrically, if SkMatrix maps from source to destination, inverse SkMatrix
-        maps from destination to source. If SkMatrix can not be inverted, inverse is
-        unchanged.
-
-        @param inverse  storage for inverted SkMatrix; may be nullptr
-        @return         true if SkMatrix can be inverted
-    */
+    // deprecated
     [[nodiscard]] bool invert(SkMatrix* inverse) const {
-        // Allow the trivial case to be inlined.
-        if (this->isIdentity()) {
+        if (auto inv = this->invert()) {
             if (inverse) {
-                inverse->reset();
+                *inverse = *inv;
             }
             return true;
         }
-        return this->invertNonIdentity(inverse);
+        return false;
     }
 
     /** Fills affine with identity values in column major order.
@@ -1587,8 +1586,7 @@ public:
     */
     void mapRectToQuad(SkPoint dst[4], const SkRect& rect) const {
         // This could potentially be faster if we only transformed each x and y of the rect once.
-        rect.toQuad(dst);
-        this->mapPoints({dst, 4});
+        this->mapPoints({dst, 4}, rect.toQuad());
     }
 
     /** Sets dst to bounds of src corners mapped by SkMatrix. If matrix contains
@@ -1802,6 +1800,10 @@ public:
     bool isFinite() const { return SkIsFinite(fMat, 9); }
 
 #ifdef SK_SUPPORT_UNSPANNED_APIS
+    bool setPolyToPoly(const SkPoint src[], const SkPoint dst[], int count) {
+        return this->setPolyToPoly({src, count}, {dst, count});
+    }
+
     void mapPoints(SkPoint dst[], const SkPoint src[], int count) const {
         this->mapPoints({dst, count}, {src, count});
     }
@@ -1940,8 +1942,6 @@ private:
     MapPtsProc getMapPtsProc() const {
         return GetMapPtsProc(this->getType());
     }
-
-    [[nodiscard]] bool invertNonIdentity(SkMatrix* inverse) const;
 
     static bool Poly2Proc(const SkPoint[], SkMatrix*);
     static bool Poly3Proc(const SkPoint[], SkMatrix*);

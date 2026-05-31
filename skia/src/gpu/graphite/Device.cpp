@@ -48,7 +48,9 @@
 #include "src/core/SkImageFilterTypes.h"  // IWYU pragma: keep
 #include "src/core/SkImagePriv.h"
 #include "src/core/SkPaintPriv.h"
+#include "src/core/SkPathPriv.h"
 #include "src/core/SkRRectPriv.h"
+#include "src/core/SkRectPriv.h"
 #include "src/core/SkSpecialImage.h"
 #include "src/core/SkStrikeCache.h"
 #include "src/core/SkTraceEvent.h"
@@ -77,6 +79,7 @@
 #include "src/gpu/graphite/Renderer.h"
 #include "src/gpu/graphite/RendererProvider.h"
 #include "src/gpu/graphite/SpecialImage_Graphite.h"
+#include "src/gpu/graphite/TextureFormat.h"
 #include "src/gpu/graphite/TextureInfoPriv.h"
 #include "src/gpu/graphite/TextureProxy.h"
 #include "src/gpu/graphite/TextureProxyView.h"
@@ -138,71 +141,65 @@ const SkStrokeRec& DefaultFillStyle() {
     return kFillStyle;
 }
 
-bool blender_depends_on_dst(const SkBlender* blender, bool srcIsTransparent) {
-    std::optional<SkBlendMode> bm = blender ? as_BB(blender)->asBlendMode() : SkBlendMode::kSrcOver;
-    if (!bm.has_value()) {
-        return true;
-    }
-    if (bm.value() == SkBlendMode::kSrc || bm.value() == SkBlendMode::kClear) {
-        // src and clear blending never depends on dst
-        return false;
-    }
-    if (bm.value() == SkBlendMode::kSrcOver) {
-        // src-over depends on dst if src is transparent (a != 1)
-        return srcIsTransparent;
-    }
-    // TODO: Are their other modes that don't depend on dst that can be trivially detected?
-    return true;
-}
-
-bool paint_depends_on_dst(SkColor4f color,
-                          const SkShader* shader,
-                          const SkColorFilter* colorFilter,
-                          const SkBlender* finalBlender,
-                          const SkBlender* primitiveBlender) {
-    const bool srcIsTransparent = !color.isOpaque() || (shader && !shader->isOpaque()) ||
-                                  (colorFilter && !colorFilter->isAlphaUnchanged());
-
-    if (primitiveBlender && blender_depends_on_dst(primitiveBlender, srcIsTransparent)) {
-        return true;
-    }
-
-    return blender_depends_on_dst(finalBlender, srcIsTransparent);
-}
-
 bool paint_depends_on_dst(const PaintParams& paintParams) {
-    return paint_depends_on_dst(paintParams.color(),
-                                paintParams.shader(),
-                                paintParams.colorFilter(),
-                                paintParams.finalBlender(),
-                                paintParams.primitiveBlender());
-}
+    std::optional<SkBlendMode> bm = paintParams.asFinalBlendMode();
+    if (!bm.has_value()) {
+        return true; // Runtime blenders always depend on the dst
+    }
 
-bool paint_depends_on_dst(const SkPaint& paint) {
-    // CAUTION: getMaskFilter is intentionally ignored here.
-    SkASSERT(!paint.getImageFilter());  // no paints in SkDevice should have an image filter
-    return paint_depends_on_dst(paint.getColor4f(),
-                                paint.getShader(),
-                                paint.getColorFilter(),
-                                paint.getBlender(),
-                                /*primitiveBlender=*/nullptr);
+    if (bm == SkBlendMode::kClear || bm == SkBlendMode::kSrc) {
+        // src and clear blending never depend on dst
+        return false;
+    } else if (bm != SkBlendMode::kSrcOver && bm != SkBlendMode::kDstOut) {
+        // any other blend mode besides src-over and dst-out use dst in some way
+        return true;
+    }
+
+    // At this point, we depend on the dst if source alpha != 1, so analyze the paint to
+    // see if it's opaque.
+    bool srcIsTransparent = !paintParams.color().isOpaque() ||
+                                  (paintParams.shader() && !paintParams.shader()->isOpaque()) ||
+                                  (paintParams.colorFilter() &&
+                                        !paintParams.colorFilter()->isAlphaUnchanged());
+
+    if (paintParams.primitiveBlender()) {
+        std::optional<SkBlendMode> primBlend = as_BB(paintParams.primitiveBlender())->asBlendMode();
+        // The primitive blender does not blend against the dst color, but it might change whether
+        // or not the src is transparent.
+        if (primBlend && !srcIsTransparent) {
+            // Since dst might be transparent, we can only preserve opacity for cases where the
+            // src coefficient is one and the dst coefficient is zero (when src alpha = 1).
+            srcIsTransparent = primBlend != SkBlendMode::kSrcOver && primBlend != SkBlendMode::kSrc;
+        } else {
+            // Runtime blender or complex blend modifies the final src color so assume it has alpha
+            srcIsTransparent = true;
+        }
+    }
+
+    return srcIsTransparent;
 }
 
 /** If the paint can be reduced to a solid flood-fill, determine the correct color to fill with. */
-std::optional<SkColor4f> extract_paint_color(const SkPaint& paint,
+std::optional<SkColor4f> extract_paint_color(const PaintParams& paint,
                                              const SkColorInfo& dstColorInfo) {
     SkASSERT(!paint_depends_on_dst(paint));
-    if (paint.getShader()) {
+
+    std::optional<SkBlendMode> bm = paint.asFinalBlendMode();
+    // Since we don't depend on the dst, a dst-out blend mode implies source is
+    // opaque, which causes dst-out to behave like clear.
+    if (bm == SkBlendMode::kClear || bm == SkBlendMode::kDstOut) {
+        return SkColors::kTransparent;
+    }
+
+    // PaintParams has already consolidated constant shaders and applied color filters to constant
+    // input colors. If the paint still has any of those fields, then we can't extract it.
+    if (paint.shader() || paint.colorFilter()) {
         return std::nullopt;
     }
 
-    SkColor4f dstPaintColor = PaintParams::Color4fPrepForDst(paint.getColor4f(), dstColorInfo);
-
-    if (SkColorFilter* filter = paint.getColorFilter()) {
-        SkColorSpace* dstCS = dstColorInfo.colorSpace();
-        return filter->filterColor4f(dstPaintColor, dstCS, dstCS);
-    }
-    return dstPaintColor;
+    // However, PaintParams converted the color in sRGB and we need to return this in the
+    // destination color space.
+    return PaintParams::Color4fPrepForDst(paint.color(), dstColorInfo);
 }
 
 // Returns a local rect that has been adjusted such that when it's rasterized with `localToDevice`
@@ -303,7 +300,7 @@ Rect get_inner_bounds(const Geometry& geometry, const Transform& localToDevice) 
         rect.inset(aaInset);
         // Only add a second draw if it will have a reasonable number of covered pixels; otherwise
         // we are just adding draws to sort and pipelines to switch around.
-        static constexpr float kInnerFillArea = 256*256;
+        static constexpr float kInnerFillArea = 64*64;
         // Approximate the device-space area based on the minimum scale factor of the transform.
         float scaleFactor = sk_ieee_float_divide(1.f, aaInset);
         return scaleFactor*rect.area() >= kInnerFillArea ? rect : Rect::InfiniteInverted();
@@ -492,7 +489,7 @@ sk_sp<Device> Device::Make(Recorder* recorder,
 // TODO: These could be exposed as context options or surface options, and we may want to have
 // different strategies in place for a base device vs. a layer's device.
 static constexpr int kGridCellSize = 16;
-static constexpr int kMaxBruteForceN = 64;
+static constexpr int kMaxBruteForceN = 512;
 static constexpr int kMaxGridSize = 32;
 
 Device::Device(Recorder* recorder, sk_sp<DrawContext> dc)
@@ -814,22 +811,6 @@ void Device::replaceClip(const SkIRect& rect) {
 
 void Device::drawPaint(const SkPaint& paint) {
     ASSERT_SINGLE_OWNER
-    // We never want to do a fullscreen clear on a fully-lazy render target, because the device size
-    // may be smaller than the final surface we draw to, in which case we don't want to fill the
-    // entire final surface.
-    if (this->isClipWideOpen() && !fDC->target()->isFullyLazy()) {
-        if (!paint_depends_on_dst(paint)) {
-            if (std::optional<SkColor4f> color = extract_paint_color(paint, fDC->colorInfo())) {
-                // do fullscreen clear
-                fDC->clear(*color);
-                return;
-            } else {
-                // This paint does not depend on the destination and covers the entire surface, so
-                // discard everything previously recorded and proceed with the draw.
-                fDC->discard();
-            }
-        }
-    }
 
     Shape inverseFill; // defaults to empty
     inverseFill.setInverted(true);
@@ -988,6 +969,130 @@ void Device::drawRRect(const SkRRect& rr, const SkPaint& paint) {
     this->drawGeometry(this->localToDeviceTransform(), Geometry(rrectToDraw), paint, style);
 }
 
+void Device::drawDRRect(const SkRRect& outer, const SkRRect& inner, const SkPaint& paint) {
+#if !defined(SK_DISABLE_CLIP_DRAW_GEOMETRIC_INTERSECTION)
+    // If there's a path effect or inverse fill, fall back to path rendering
+    if (paint.getPathEffect() || paint.getStyle() != SkPaint::kFill_Style) {
+        this->SkDevice::drawDRRect(outer, inner, paint);
+        return;
+    }
+
+    // This holds the positive insets from `outer` to `inner`
+    Rect strokeRect{outer.rect()};
+    skvx::float4 gap = Rect(inner.rect()).vals() - strokeRect.vals();
+    const float tolerance = 0.001f * this->localToDeviceTransform().localAARadius(strokeRect);
+    const float strokeWidth = gap[0];
+    if (!all((gap > tolerance) & abs(gap - strokeWidth) <= tolerance)) {
+        // Either not approximately equal insets on all sides, or it would create a hairline stroke
+        // which is something that should be requested via paint style.
+        //
+        // But we can try subtracting inner from outer if they are both rectangular to see if it
+        // leaves a valid filled rect.
+        SkRect diff;
+        if (outer.isRect() && inner.isRect() &&
+            SkRectPriv::Subtract(outer.rect(), inner.rect(), &diff)) {
+            this->drawRect(diff, paint);
+            return;
+        }
+
+        // Fall through to the draw+clip handling
+    } else {
+        // The shape is possibly expressible as a stroked [r]rect.
+        const float strokeRadius = 0.5f * strokeWidth;
+        strokeRect.inset(strokeRadius);
+
+        SkPaint strokePaint = paint;
+        strokePaint.setStroke(true);
+        strokePaint.setStrokeWidth(strokeWidth);
+        strokePaint.setStrokeCap(SkPaint::kButt_Cap);
+        strokePaint.setStrokeMiter(4.f); // large enough to not trigger bevels for 90 degree corners
+
+        // Check the corners to see if they are equivalent to a stroked round rect. If `outer` has
+        // rounded corners, they must be circular and be at least `strokeRadius`. An outer corner
+        // can have a 0 radius if we assume a miter join style, but if an outer corner is exactly
+        // the stroke radius then we have to use a round join style. The matching corners of `inner`
+        // must also be rounded, and be exactly strokeWidth less, or they must be 0 if the
+        // difference would be negative.
+        int validCorners = 0;
+        int rectCorners = 0;
+        SkVector strokeCorners[4];
+        std::optional<SkPaint::Join> requiredJoin;
+        for (int i = 0; i < 4; ++i) {
+            SkVector outerCornerRadii = outer.radii((SkRRect::Corner) i);
+            SkVector innerCornerRadii = inner.radii((SkRRect::Corner) i);
+
+            float strokeCorner;
+            if (!SkScalarNearlyEqual(outerCornerRadii.fX, outerCornerRadii.fY, tolerance)) {
+                // Not circular; a stroked ellipse is not just a larger ellipse
+                break;
+            } else if (SkScalarNearlyZero(outerCornerRadii.fX, tolerance)) {
+                // A rectangular outer corner requires miter joins
+                if (requiredJoin.has_value() && *requiredJoin != SkPaint::kMiter_Join) {
+                    break;
+                }
+                requiredJoin = SkPaint::kMiter_Join;
+                strokeCorner = 0.f;
+                rectCorners++;
+            } else {
+                strokeCorner = outerCornerRadii.fX - strokeRadius;
+                if (strokeCorner < -tolerance) {
+                    // Corner is rounded but less than the stroke radius, which isn't representable
+                    break;
+                } else if (strokeCorner <= tolerance) {
+                    // Corner is rounded to the stroke radius, which can only be represented as an
+                    // underlying rect corner and round join
+                    if (requiredJoin.has_value() && *requiredJoin != SkPaint::kRound_Join) {
+                        break;
+                    }
+                    requiredJoin = SkPaint::kRound_Join;
+                    strokeCorner = 0.f;
+                    rectCorners++;
+                }
+            }
+
+            float expectedInnerRadius = std::max(0.f, strokeCorner - strokeRadius);
+            if (!SkScalarNearlyEqual(innerCornerRadii.fX, expectedInnerRadius) ||
+                !SkScalarNearlyEqual(innerCornerRadii.fY, expectedInnerRadius)) {
+                // Inner corner doesn't match expectation
+                break;
+            }
+
+            strokeCorners[i] = {strokeCorner, strokeCorner};
+            validCorners++;
+        }
+
+        if (validCorners == 4) {
+            strokePaint.setStrokeJoin(requiredJoin.value_or(SkPaint::kRound_Join));
+            if (rectCorners == 4) {
+                this->drawRect(strokeRect.asSkRect(), strokePaint);
+            } else {
+                SkRRect strokeRRect;
+                strokeRRect.setRectRadii(strokeRect.asSkRect(), strokeCorners);
+                this->drawRRect(strokeRRect, strokePaint);
+            }
+            return;
+        }
+        // Otherwise fall through to draw+clip handling
+    }
+
+    // To avoid path rendering, treat DRRects as a drawRRect(outer) with a clipRRect(inner, kDiff)
+    fClip.save();
+    fClip.clipShape(this->localToDeviceTransform(),
+                    inner.isRect() ? Shape{inner.rect()} : Shape{inner},
+                    SkClipOp::kDifference,
+                    paint.isAntiAlias() ? ClipStack::PixelSnapping::kNo
+                                        : ClipStack::PixelSnapping::kYes);
+    if (outer.isRect()) {
+        this->drawRect(outer.rect(), paint);
+    } else {
+        this->drawRRect(outer, paint);
+    }
+    fClip.restore();
+#else
+    this->SkDevice::drawDRRect(outer, inner, paint);
+#endif
+}
+
 void Device::drawPath(const SkPath& path, const SkPaint& paint, bool pathIsMutable) {
     // Alternatively, we could move this analysis to SkCanvas. Also, we could consider applying the
     // path effect, being careful about starting point and direction.
@@ -1017,6 +1122,23 @@ void Device::drawPath(const SkPath& path, const SkPaint& paint, bool pathIsMutab
             this->drawRect(rect, paint);
             return;
         }
+#if !defined(SK_DISABLE_CLIP_DRAW_GEOMETRIC_INTERSECTION)
+        // Detect filled nested rect contours
+        SkRect rects[2];
+        SkPathDirection dirs[2];
+        if (paint.getStyle() == SkPaint::kFill_Style &&
+            SkPathPriv::IsNestedFillRects(path, rects, dirs)) {
+            // For winding fills with contours going the same direction, there isn't any cutout
+            if (path.getFillType() == SkPathFillType::kWinding && dirs[0] == dirs[1]) {
+                this->drawRect(rects[0], paint);
+                return;
+            } else {
+                // The inner is cut out from the outer rect. Delegate to drawDRRect.
+                this->drawDRRect(SkRRect::MakeRect(rects[0]), SkRRect::MakeRect(rects[1]), paint);
+                return;
+            }
+        }
+#endif
     }
     this->drawGeometry(this->localToDeviceTransform(), Geometry(Shape(path)),
                        paint, SkStrokeRec(paint));
@@ -1340,7 +1462,7 @@ void Device::drawGeometry(const Transform& localToDevice,
     auto [renderer, pathAtlas] = this->chooseRenderer(localToDevice,
                                                       geometry,
                                                       style,
-                                                      clip.drawBounds(),
+                                                      clip.transformedShapeBounds(),
                                                       /*requireMSAA=*/false);
     if (!renderer && !pathAtlas) {
         SKGPU_LOG_W("Skipping draw with no supported renderer or PathAtlas.");
@@ -1390,6 +1512,39 @@ void Device::drawGeometry(const Transform& localToDevice,
                         skipColorXform};
     const bool dependsOnDst = paint_depends_on_dst(shading) ||
                               clip.shader() || !clip.nonMSAAClip().isEmpty();
+
+    // If we are unclipped, do not depend on the dst, and cover the target, then we can adjust
+    // load ops of the renderpass to more optimally handle the draw (and avoid redundant clears).
+    // NOTE: We skip this for fully-lazy render targets because the load ops may impact a larger
+    // area than the Device's theoretical bounds.
+    const bool overwritesAllPixels = !dependsOnDst &&
+                                     geometry.isShape() &&
+                                     geometry.shape().isFloodFill() &&
+                                     !fDC->target()->isFullyLazy() &&
+                                     clipElements.empty() &&
+                                     clip.scissor().contains(this->bounds());
+    if (overwritesAllPixels) {
+        if (std::optional<SkColor4f> color = extract_paint_color(shading, fDC->colorInfo())) {
+            // Fullscreen clear, so nothing has to be rendered at all
+            fDC->clear(*color);
+            return;
+        } else {
+            // This paint does not depend on the destination and covers the entire surface, so
+            // discard everything previously recorded and proceed with the draw. However, if we are
+            // here because of a paint with src-over blending that just happens to be opaque, the
+            // discarded dst can still be accessed. For non-floating point formats, that is fine,
+            // but float formats can have NaNs after a discard that cause blending to fail. To
+            // avoid that scenario, we clear to a known value instead.
+            if (shading.asFinalBlendMode() == SkBlendMode::kSrcOver &&
+                TextureFormatIsFloatingPoint(
+                        TextureInfoPriv::ViewFormat(fDC->target()->textureInfo()))) {
+                fDC->clear(SkColors::kMagenta); // This color doesn't matter
+            } else {
+                fDC->discard();
+            }
+            // But then continue to render the flood fill with shading
+        }
+    }
 
     // Some shapes and styles combine multiple draws so the total render step count is split between
     // the main renderer and possibly a secondaryRenderer.
@@ -1578,7 +1733,7 @@ void Device::drawClipShape(const Transform& localToDevice,
     auto [renderer, pathAtlas] = this->chooseRenderer(localToDevice,
                                                       geometry,
                                                       DefaultFillStyle(),
-                                                      clip.drawBounds(),
+                                                      clip.transformedShapeBounds(),
                                                       /*requireMSAA=*/true);
     if (!renderer) {
         SKGPU_LOG_W("Skipping clip with no supported path renderer.");
@@ -1722,7 +1877,7 @@ std::pair<const Renderer*, PathAtlas*> Device::chooseRenderer(const Transform& l
     //       compute renderer cannot render the shape efficiently yet (based on the result of
     //       `isSuitableForAtlasing`).
     //    2. Fall back to CPU raster AA if hardware MSAA is disabled or it was explicitly requested
-    //       via ContextOptions.
+    //       via ContextOptions (including if the path is small enough).
     //    3. Otherwise use tessellation.
 #if defined(GPU_TEST_UTILS)
     PathRendererStrategy strategy = fRecorder->priv().caps()->requestedPathRendererStrategy();
@@ -1749,10 +1904,12 @@ std::pair<const Renderer*, PathAtlas*> Device::chooseRenderer(const Transform& l
 
     // Fall back to CPU rendered paths when multisampling is disabled and the compute atlas is not
     // available.
-    // TODO: enable other uses of the software path renderer
+    const float minPathSizeForMSAA = fRecorder->priv().caps()->minPathSizeForMSAA();
+    const bool useRasterAtlasByDefault =
+            !fMSAASupported || all(drawBounds.size() <= minPathSizeForMSAA);
     if (!pathAtlas && atlasProvider->isAvailable(AtlasProvider::PathAtlasFlags::kRaster) &&
         (strategy == PathRendererStrategy::kRasterAA ||
-         (strategy == PathRendererStrategy::kDefault && !fMSAASupported))) {
+         (strategy == PathRendererStrategy::kDefault && useRasterAtlasByDefault))) {
         // NOTE: RasterPathAtlas doesn't implement `PathAtlas::isSuitableForAtlasing` as it doesn't
         // reject paths (unlike ComputePathAtlas).
         pathAtlas = atlasProvider->getRasterPathAtlas();

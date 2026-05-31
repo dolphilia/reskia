@@ -91,6 +91,7 @@ reskia_path_builder_t *SkPathBuilder_rConicToCoordinates(reskia_path_builder_t *
 reskia_path_builder_t *SkPathBuilder_rCubicTo(reskia_path_builder_t *path_builder, int pt1, int pt2, int pt3); // (SkPathBuilder *path_builder, sk_point_t pt1, sk_point_t pt2, sk_point_t pt3) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2, float x3, float y3); // (SkPathBuilder *path_builder, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar x3, SkScalar y3) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy); // (SkPathBuilder *path_builder, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) -> SkPathBuilder *
+reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt); // NULL path_builder returns NULL
 /**
  * oval は非 NULL。NULL oval は no-op、NULL path_builder なら NULL (SkPathBuilder *path_builder, const SkRect *oval, SkScalar startAngleDeg, SkScalar sweepAngleDeg, bool forceMoveTo) -> SkPathBuilder *
  */
@@ -138,6 +139,7 @@ reskia_path_builder_t *SkPathBuilder_addPolygonFromList(reskia_path_builder_t *p
  * path は非 NULL。NULL path は no-op、NULL path_builder なら NULL (SkPathBuilder *path_builder, const SkPath *path) -> SkPathBuilder *
  */
 reskia_path_builder_t *SkPathBuilder_addPath(reskia_path_builder_t *path_builder, const reskia_path_t *path);
+reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder, const reskia_point_t *points, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount); // invalid raw input is no-op
 /**
  * NULL path_builder は no-op (SkPathBuilder *path_builder, int extraPtCount, int extraVerbCount)
  */

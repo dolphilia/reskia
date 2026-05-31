@@ -91,6 +91,8 @@ sk_rect_t SkRect_MakeLTRB(float l, float t, float r, float b); // (float l, floa
 sk_rect_t SkRect_MakeXYWH(float x, float y, float w, float h); // (float x, float y, float w, float h) -> sk_rect_t
 sk_rect_t SkRect_Make(const reskia_i_size_t *size); // (const SkISize *size) -> sk_rect_t
 sk_rect_t SkRect_MakeFromIRect(const reskia_i_rect_t *irect); // (const SkIRect *irect) -> sk_rect_t
+sk_rect_t SkRect_Bounds(const reskia_point_t *pts, int count); // invalid/no bounds returns 0
+sk_rect_t SkRect_BoundsOrEmpty(const reskia_point_t *pts, int count); // invalid input returns empty rect
 bool SkRect_Intersects(const reskia_rect_t *a, const reskia_rect_t *b); // (const SkRect *a, const SkRect *b) -> bool
 
 #ifdef __cplusplus

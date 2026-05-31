@@ -191,7 +191,9 @@ void SkDevice::drawImageLattice(const SkImage* image, const SkCanvas::Lattice& l
     }
 }
 
-static SkPoint* quad_to_tris(SkPoint tris[6], const SkPoint quad[4]) {
+static SkPoint* quad_to_tris(SkPoint tris[6], SkSpan<const SkPoint> quad) {
+    SkASSERT(quad.size() == 4);
+
     tris[0] = quad[0];
     tris[1] = quad[1];
     tris[2] = quad[2];
@@ -225,8 +227,7 @@ void SkDevice::drawAtlas(SkSpan<const SkRSXform> xform,
         xform[i].toQuad(tex[i].width(), tex[i].height(), tmp);
         vPos = quad_to_tris(vPos, tmp);
 
-        tex[i].toQuad(tmp);
-        vTex = quad_to_tris(vTex, tmp);
+        vTex = quad_to_tris(vTex, tex[i].toQuad());
 
         if (!colors.empty()) {
             SkOpts::memset32(vCol, colors[i], 6);
@@ -397,8 +398,8 @@ bool SkDevice::peekPixels(SkPixmap* pmap) {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 static sk_sp<SkShader> make_post_inverse_lm(const SkShader* shader, const SkMatrix& lm) {
-     SkMatrix inverse_lm;
-    if (!shader || !lm.invert(&inverse_lm)) {
+    auto inverse_lm = lm.invert();
+    if (!shader || !inverse_lm) {
         return nullptr;
     }
 
@@ -415,10 +416,10 @@ static sk_sp<SkShader> make_post_inverse_lm(const SkShader* shader, const SkMatr
         shader = nested_shader.get();
     }
 
-    return shader->makeWithLocalMatrix(inverse_lm * prev_local_matrix);
+    return shader->makeWithLocalMatrix(*inverse_lm * prev_local_matrix);
 #endif
 
-    return shader->makeWithLocalMatrix(inverse_lm);
+    return shader->makeWithLocalMatrix(*inverse_lm);
 }
 
 void SkDevice::drawGlyphRunList(SkCanvas* canvas,

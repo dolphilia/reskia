@@ -59,6 +59,8 @@ list(APPEND SOURCE_FILES
         src/codec/SkTiffUtility.cpp
         src/codec/SkWbmpCodec.cpp
         src/codec/SkWebpCodec.cpp
+        src/capture/SkCaptureCanvas.cpp
+        src/capture/SkCaptureManager.cpp
         src/core/SkAAClip.cpp
         src/core/SkAlphaRuns.cpp
         src/core/SkAnalyticEdge.cpp
@@ -178,7 +180,9 @@ list(APPEND SOURCE_FILES
         src/core/SkPathBuilder.cpp
         src/core/SkPathEffect.cpp
         src/core/SkPathMeasure.cpp
+        src/core/SkPathPriv.cpp
         src/core/SkPathRaw.cpp
+        src/core/SkPathRawShapes.cpp
         src/core/SkPathRef.cpp
         src/core/SkPathUtils.cpp
         src/core/SkPicture.cpp

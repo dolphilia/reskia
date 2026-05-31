@@ -154,6 +154,7 @@ bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // p
 // static
 
 sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile); // point/i/v may be null only when their corresponding count is 0
+sk_path_t SkPath_Raw(const reskia_point_t *point, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile); // verbs are SkPathVerb byte values
 sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
 sk_path_t SkPath_Oval(const reskia_rect_t *rect, reskia_path_direction_t dir); // (const SkRect *rect, SkPathDirection dir) -> sk_path_t
 sk_path_t SkPath_OvalWithStart(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t

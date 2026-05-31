@@ -28,6 +28,7 @@
 #include "src/core/SkCoreBlitters.h"
 #include "src/core/SkDraw.h"
 #include "src/core/SkEffectPriv.h"
+#include "src/core/SkPathRawShapes.h"
 #include "src/core/SkRasterClip.h"
 #include "src/core/SkRasterPipeline.h"
 #include "src/core/SkRasterPipelineOpContexts.h"
@@ -49,15 +50,14 @@ struct SkRSXform;
 static void fill_rect(const SkMatrix& ctm, const SkRasterClip& rc,
                       const SkRect& r, SkBlitter* blitter) {
     if (ctm.rectStaysRect()) {
-        SkRect dr;
-        ctm.mapRect(&dr, r);
-        SkScan::FillRect(dr, rc, blitter);
+        SkScan::FillRect(ctm.mapRect(r), rc, blitter);
     } else {
-        SkPoint pts[4];
-        r.toQuad(pts);
-        ctm.mapPoints(pts);
-        // todo: great place for SkPathRaw
-        SkScan::FillPath(SkPath::Polygon(pts, true), rc, blitter);
+        SkPathRawShapes::Rect raw(r);
+        ctm.mapPoints(raw.fStorage);
+        if (auto bounds = SkRect::Bounds(raw.fStorage)) {
+            raw.fBounds = *bounds;
+            SkScan::FillPathRaw(raw, rc, blitter);
+        }
     }
 }
 
@@ -142,12 +142,12 @@ void SkDraw::drawAtlas(SkSpan<const SkRSXform> xform,
         mx.setRSXform(xform[i]);
         mx.preTranslate(-textures[i].fLeft, -textures[i].fTop);
         mx.postConcat(*fCTM);
-        SkMatrix inv;
-        if (!mx.invert(&inv)) {
-            return;
-        }
-        if (transformShader->update(inv)) {
-            fill_rect(mx, *fRC, textures[i], blitter);
+        if (auto inv = mx.invert()) {
+            if (transformShader->update(*inv)) {
+                fill_rect(mx, *fRC, textures[i], blitter);
+            }
+        } else {
+            return; // non-invertible
         }
     }
 }

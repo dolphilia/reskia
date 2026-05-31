@@ -335,7 +335,9 @@ void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path) {
     if (readBuffer == nullptr || path == nullptr) {
         return;
     }
-    return readBuffer->readPath(reinterpret_cast<SkPath *>(path));
+    if (std::optional<SkPath> value = readBuffer->readPath()) {
+        *reinterpret_cast<SkPath *>(path) = *value;
+    }
 }
 
 sk_paint_t SkReadBuffer_readPaint(reskia_read_buffer_t *buffer) {

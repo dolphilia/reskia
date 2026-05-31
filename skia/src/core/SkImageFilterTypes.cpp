@@ -398,8 +398,7 @@ SkMatrix Mapping::map<SkMatrix>(const SkMatrix& m, const SkMatrix& matrix) {
     // operates on, and outputs to, the C1 coord space, we want to return a new matrix that is
     // equivalent to 'm' that operates on and outputs to C2. This is the same as mapping the input
     // from C2 to C1 (matrix^-1), then transforming by 'm', and then mapping from C1 to C2 (matrix).
-    SkMatrix inv;
-    SkAssertResult(matrix.invert(&inv));
+    SkMatrix inv = matrix.invert().value_or(SkMatrix());
     inv.postConcat(m);
     inv.postConcat(matrix);
     return inv;
@@ -1617,7 +1616,8 @@ void draw_tiled_border(SkCanvas* canvas,
 
 FilterResult FilterResult::rescale(const Context& ctx,
                                    const LayerSpace<SkSize>& scale,
-                                   bool enforceDecal) const {
+                                   bool enforceDecal,
+                                   bool allowOverscaling) const {
     LayerSpace<SkIRect> visibleLayerBounds = fLayerBounds;
     if (!fImage || !visibleLayerBounds.intersect(ctx.desiredOutput()) ||
         scale.width() <= 0.f || scale.height() <= 0.f) {
@@ -1770,13 +1770,15 @@ FilterResult FilterResult::rescale(const Context& ctx,
     do {
         float sx = 1.f;
         if (xSteps > 0) {
-            sx = xSteps > 1 ? 0.5f : srcRect.width()*finalScaleX / stepBoundsF.width();
+            sx = xSteps > 1 || allowOverscaling
+                    ? 0.5f : srcRect.width()*finalScaleX / stepBoundsF.width();
             xSteps--;
         }
 
         float sy = 1.f;
         if (ySteps > 0) {
-            sy = ySteps > 1 ? 0.5f : srcRect.height()*finalScaleY / stepBoundsF.height();
+            sy = ySteps > 1 || allowOverscaling
+                    ? 0.5f : srcRect.height()*finalScaleY / stepBoundsF.height();
             ySteps--;
         }
 
@@ -2007,7 +2009,7 @@ SkSpan<sk_sp<SkShader>> FilterResult::Builder::createInputShaders(
         // into is being sampled in parameter space. Add the inverse of the layerMatrix() (i.e.
         // layer to parameter space) as a local matrix to convert from the parameter-space coords
         // of the outer shader to the layer-space coords of the FilterResult).
-        SkAssertResult(fContext.mapping().layerMatrix().asM33().invert(&layerToParam));
+        layerToParam = fContext.mapping().layerMatrix().asM33().invert().value_or(SkMatrix());
         // Automatically add nonTrivial sampling if the layer-to-parameter space mapping isn't
         // also pixel aligned.
         if (!is_nearly_integer_translation(LayerSpace<SkMatrix>(layerToParam))) {
@@ -2129,10 +2131,18 @@ FilterResult FilterResult::Builder::blur(const LayerSpace<SkSize>& sigma) {
     // For identity scale factors, this rescale() is a no-op when possible, but otherwise it will
     // also handle resolving any color filters or transform similar to a resolve() except that it
     // can defer the tile mode.
+    //
+    // Always allow overscaling for higher quality filtering, and because we can adjust the blur
+    // sigma applied to the low res image to account for any extra scale factor.
     FilterResult lowResImage = fInputs[0].fImage.rescale(
             fContext.withNewDesiredOutput(sampleBounds),
             LayerSpace<SkSize>({sx, sy}),
-            algorithm->supportsOnlyDecalTiling());
+            algorithm->supportsOnlyDecalTiling(),
+#if defined(SK_DISABLE_BLUR_OVERSCALING)
+            /*allowOverscaling=*/false); // for staging only
+#else
+            /*allowOverscaling=*/true);
+#endif
     if (!lowResImage) {
         return {};
     }

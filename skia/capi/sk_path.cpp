@@ -846,6 +846,21 @@ sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t
             isVolatile));
 }
 
+sk_path_t SkPath_Raw(const reskia_point_t *point, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile) {
+    if (pointCount < 0 || verbCount < 0 || conicWeightCount < 0 ||
+        (pointCount > 0 && point == nullptr) ||
+        (verbCount > 0 && verbs == nullptr) ||
+        (conicWeightCount > 0 && conicWeights == nullptr)) {
+        return 0;
+    }
+    return static_sk_path_make(SkPath::Raw(
+            {reinterpret_cast<const SkPoint *>(point), static_cast<size_t>(pointCount)},
+            {reinterpret_cast<const SkPathVerb *>(verbs), static_cast<size_t>(verbCount)},
+            {reinterpret_cast<const SkScalar *>(conicWeights), static_cast<size_t>(conicWeightCount)},
+            static_cast<SkPathFillType>(type),
+            isVolatile));
+}
+
 sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
     if (rect == nullptr) {
         return 0;

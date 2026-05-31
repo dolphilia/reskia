@@ -101,6 +101,7 @@ bool SkMatrix_setRectToRect(reskia_matrix_t *matrix, const reskia_rect_t *src, c
  * count は 0..4。count > 0 では src/dst 非 NULL。invalid 入力では false
  */
 bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, const reskia_point_t *dst, int count);
+sk_matrix_t SkMatrix_PolyToPoly(const reskia_point_t *src, const reskia_point_t *dst, int count); // count は 0..4。invalid/unsolvable 入力では 0
 bool SkMatrix_invert(reskia_matrix_t *matrix, reskia_matrix_t *inverse); // inverse は NULL 許可。matrix NULL では false
 bool SkMatrix_asAffine(reskia_matrix_t *matrix, float *affine); // affine は 6 要素以上、非 NULL。NULL 入力では false
 sk_matrix_t SkMatrix_setAffine(reskia_matrix_t *matrix, const float *affine); // affine は 6 要素以上、非 NULL。NULL 入力では 0

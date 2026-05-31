@@ -2142,6 +2142,26 @@ bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_gra
 #endif
 }
 
+void Graphite_Context_startCapture(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr) {
+        as_graphite_context(ctx)->startCapture();
+    }
+#else
+    (void) ctx;
+#endif
+}
+
+void Graphite_Context_endCapture(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    if (ctx != nullptr) {
+        as_graphite_context(ctx)->endCapture();
+    }
+#else
+    (void) ctx;
+#endif
+}
+
 void Graphite_Context_asyncRescaleAndReadPixelsFromImage(reskia_graphite_context_t *ctx, const reskia_image_t *image, const reskia_image_info_t *dst_info, const reskia_i_rect_t *src_rect, reskia_graphite_rescale_gamma_t rescale_gamma, reskia_graphite_rescale_mode_t rescale_mode, reskia_async_read_pixels_callback_t callback, void *callback_context) {
 #if defined(SK_GRAPHITE)
     if (ctx == nullptr || image == nullptr || dst_info == nullptr || src_rect == nullptr || callback == nullptr ||

@@ -458,6 +458,23 @@ sk_rect_t SkRect_MakeFromIRect(const reskia_i_rect_t *irect) {
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkIRect *>(irect)));
 }
 
+sk_rect_t SkRect_Bounds(const reskia_point_t *pts, int count) {
+    if (count < 0 || (count > 0 && pts == nullptr)) {
+        return 0;
+    }
+    std::optional<SkRect> bounds = SkRect::Bounds(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
+    return bounds.has_value() ? static_sk_rect_make(*bounds) : 0;
+}
+
+sk_rect_t SkRect_BoundsOrEmpty(const reskia_point_t *pts, int count) {
+    if (count < 0 || (count > 0 && pts == nullptr)) {
+        return static_sk_rect_make(SkRect::MakeEmpty());
+    }
+    return static_sk_rect_make(SkRect::BoundsOrEmpty(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)}));
+}
+
 bool SkRect_Intersects(const reskia_rect_t *a, const reskia_rect_t *b) {
     if (a == nullptr || b == nullptr) {
         return false;

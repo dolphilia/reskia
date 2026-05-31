@@ -60,16 +60,14 @@ bool SkDrawBase::computeConservativeLocalClipBounds(SkRect* localBounds) const {
         return false;
     }
 
-    SkMatrix inverse;
-    if (!fCTM->invert(&inverse)) {
-        return false;
+    if (auto inverse = fCTM->invert()) {
+        SkIRect devBounds = fRC->getBounds();
+        // outset to have slop for antialasing and hairlines
+        devBounds.outset(1, 1);
+        inverse->mapRect(localBounds, SkRect::Make(devBounds));
+        return true;
     }
-
-    SkIRect devBounds = fRC->getBounds();
-    // outset to have slop for antialasing and hairlines
-    devBounds.outset(1, 1);
-    inverse.mapRect(localBounds, SkRect::Make(devBounds));
-    return true;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -279,6 +277,16 @@ bool SkDrawTreatAAStrokeAsHairline(SkScalar strokeWidth, const SkMatrix& matrix,
         return true;
     }
     return false;
+}
+
+void SkDrawBase::drawOval(const SkRect& oval, const SkPaint& paint) const {
+    SkDEBUGCODE(this->validate());
+
+    if (fRC->isEmpty()) {
+        return;
+    }
+
+    this->drawPath(SkPath::Oval(oval), paint, nullptr, true);
 }
 
 void SkDrawBase::drawRRect(const SkRRect& rrect, const SkPaint& paint) const {
