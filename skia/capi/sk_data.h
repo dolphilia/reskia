@@ -20,6 +20,7 @@ typedef struct reskia_stream_t reskia_stream_t;
 void SkData_release(reskia_data_t *sk_data); // owned: caller が保持する参照を release する (SkData *sk_data)
 size_t SkData_size(reskia_data_t *sk_data); // (SkData *sk_data) -> size_t
 bool SkData_isEmpty(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
+bool SkData_empty(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
 /**
  * borrowed: valid while sk_data remains alive.
  * caller must not free.
@@ -35,8 +36,12 @@ const uint8_t * SkData_bytes(reskia_data_t *sk_data);
  * only mutate while SkData is uniquely owned.
  */
 uint8_t * SkData_writable_data(reskia_data_t *sk_data);
+const uint8_t * SkData_byteSpan(reskia_data_t *sk_data, size_t *size); // borrowed bytes; size may be NULL
+sk_data_t SkData_copySubset(const reskia_data_t *sk_data, size_t offset, size_t length); // returns 0 if range is invalid
+sk_data_t SkData_shareSubset(reskia_data_t *sk_data, size_t offset, size_t length); // returns 0 if range is invalid
 size_t SkData_copyRange(reskia_data_t *sk_data, size_t offset, size_t length, uint8_t *buffer); // buffer may be null to query clamped copy size
 bool SkData_equals(reskia_data_t *sk_data, const reskia_data_t *other); // (SkData *sk_data, const SkData *other) -> bool
+bool SkData_notEquals(reskia_data_t *sk_data, const reskia_data_t *other); // (SkData *sk_data, const SkData *other) -> bool
 bool SkData_unique(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
 void SkData_ref(reskia_data_t *sk_data); // retained: 参照カウントを増やす (SkData *sk_data)
 void SkData_unref(reskia_data_t *sk_data); // owned: 参照カウントを減らす (SkData *sk_data)

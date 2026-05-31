@@ -189,7 +189,8 @@ reskia_path_builder_t *SkPathBuilder_polylineTo(reskia_path_builder_t *path_buil
     if (pts == nullptr || count <= 0) {
         return to_api(native);
     }
-    return to_api(&native->polylineTo(reinterpret_cast<const SkPoint *>(pts), count));
+    return to_api(&native->polylineTo(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)}));
 }
 
 reskia_path_builder_t *SkPathBuilder_polylineToFromList(reskia_path_builder_t *path_builder, const void *list) {
@@ -319,7 +320,9 @@ reskia_path_builder_t *SkPathBuilder_addPolygon(reskia_path_builder_t *path_buil
     if (pts == nullptr || count <= 0) {
         return to_api(native);
     }
-    return to_api(&native->addPolygon(reinterpret_cast<const SkPoint *>(pts), count, isClosed));
+    return to_api(&native->addPolygon(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)},
+            isClosed));
 }
 
 reskia_path_builder_t *SkPathBuilder_addPolygonFromList(reskia_path_builder_t *path_builder, const void *list, bool isClosed) {

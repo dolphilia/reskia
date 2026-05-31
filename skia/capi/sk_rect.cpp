@@ -150,21 +150,24 @@ void SkRect_setBounds(reskia_rect_t *rect, const reskia_point_t *pts, int count)
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return;
     }
-    reinterpret_cast<SkRect *>(rect)->setBounds(reinterpret_cast<const SkPoint *>(pts), count);
+    reinterpret_cast<SkRect *>(rect)->setBounds(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 bool SkRect_setBoundsCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return false;
     }
-    return reinterpret_cast<SkRect *>(rect)->setBoundsCheck(reinterpret_cast<const SkPoint *>(pts), count);
+    return reinterpret_cast<SkRect *>(rect)->setBoundsCheck(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return;
     }
-    reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(reinterpret_cast<const SkPoint *>(pts), count);
+    reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 void SkRect_setFromPoints(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1) {

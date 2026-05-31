@@ -38,7 +38,8 @@ sk_path_effect_t SkDashPathEffect_Make(const float * intervals, int count, float
     if (intervals == nullptr || count <= 0) {
         return 0;
     }
-    return make_path_effect_handle(SkDashPathEffect::Make(intervals, count, phase));
+    return make_path_effect_handle(
+            SkDashPathEffect::Make({intervals, static_cast<size_t>(count)}, phase));
 }
 
 }

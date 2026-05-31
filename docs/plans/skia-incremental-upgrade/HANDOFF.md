@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a`
-- next probe candidate: choose a fixed commit after `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a`
+- `SKIA_REF`: `203469ef4672898f1190088a8a13a1538db59485`
+- next probe candidate: choose a fixed commit after `203469ef4672898f1190088a8a13a1538db59485`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -89,33 +89,35 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 055 accepted: `9100700840668a8a3276c05f114463f9b8c7a264`。
 - cycle 056 accepted: `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`。
 - cycle 057 accepted: `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a`。
+- cycle 058 accepted: `203469ef4672898f1190088a8a13a1538db59485`。
 
 未実施:
 
-- cycle 058 candidate の選定。
-- cycle 058 candidate checkout を使った coverage regression。
-- cycle 058 の source/header sync と C API 追従実装。
+- cycle 059 candidate の選定。
+- cycle 059 candidate checkout を使った coverage regression。
+- cycle 059 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 058 の candidate selection から始める。
+次の作業は、cycle 059 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` から1-2週間後の固定 commit を第一候補にする。
+1. baseline `203469ef4672898f1190088a8a13a1538db59485` から1週間程度の固定 commit を第一候補にする。
 2. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 058 の比較候補メモ:
+cycle 059 の比較候補メモ:
 
-- cycle 057 では baseline `80bffd1ae51733a54cbfbf777a38060e2f8e5c30` から `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` を採用した。4 commits、`include` / `modules` は 74 files changed, +24437/-125、`DEPS` / `include` / `modules` / `src` drift は 102 files changed, +756/-627。
-- cycle 057 の主変更は `move pathops into a module`。Reskia では `skia/modules/pathops` を追加し、`cmake/reskia/sources-core.cmake` の pathops source list を `modules/pathops/src` へ移した。
-- cycle 057 の初期 `signature_changed_review 1` は `SkCanvas::drawAtlas` の SkSpan primary signature。C ABI は pointer/count のまま維持し、内部呼び出しを SkSpan に変更した。
-- cycle 057 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。final lock stale report は空。
+- cycle 058 では baseline `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` から `203469ef4672898f1190088a8a13a1538db59485` を採用した。73 commits、`include` / `modules` は 86 files changed, +460/-24499、`DEPS` / `include` / `modules` / `src` drift は 211 files changed, +4624/-1984。
+- cycle 058 の主変更は pathops module move の revert、SkSpan primary signature drift、SkData subset/span helpers、Vulkan preferred features optional-backend header。
+- cycle 058 の初期 `missing 11` は `SkData` 6 rows と `VulkanPreferredFeatures` 5 rows。`SkData` は C API を追加し、`VulkanPreferredFeatures` は optional-backend helper として `na` に分類した。
+- cycle 058 の初期 `signature_changed_review 7` は `SkData` の内部表現・signature drift。C ABI は互換維持し、final lock stale report は空。
+- cycle 058 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次 cycle では accepted baseline `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` から再比較する。直後の local commits には Vulkan/ANGLE rolls、Bazel generated-file housekeeper churn、DirectWrite SPI export、Graphite managed texture release proc、protected rendering attachment changes、skcms build metadata drift がある。
+- 次 cycle では accepted baseline `203469ef4672898f1190088a8a13a1538db59485` から再比較する。近傍には Vulkan/ANGLE rolls、FreeType default removal、Graphite/Dawn drift があるため、幅は狭めを推奨する。
 
 ## やってはいけないこと
 
@@ -144,18 +146,21 @@ cycle 058 の比較候補メモ:
 
 候補:
 
-- `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a`
-- committer date: 2025-06-13T15:15:40-07:00
-- subject: Speed up SkFont::getBounds
+- `203469ef4672898f1190088a8a13a1538db59485`
+- committer date: 2025-06-21T04:21:56-07:00
+- subject: Roll vulkan-deps from a875f13dac14 to 317a1e4780ef (3 revisions)
 
-cycle 057 結果:
+cycle 058 結果:
 
-- baseline `80bffd1...` から `f8cd9fe...` を採用した。4 commits、`include` / `modules` は 74 files changed, +24437/-125、`DEPS` / `include` / `modules` / `src` drift は 102 files changed, +756/-627。
-- pathops module movement を同期し、旧 `skia/src/pathops` を削除、`skia/modules/pathops` を追加、CMake source list を `modules/pathops/src` へ更新した。
+- baseline `f8cd9fe...` から `203469e...` を採用した。73 commits、`include` / `modules` は 86 files changed, +460/-24499、`DEPS` / `include` / `modules` / `src` drift は 211 files changed, +4624/-1984。
+- pathops module move の upstream revert に追従し、`skia/modules/pathops` を削除、`skia/src/pathops` を復元、CMake source list を `src/pathops` へ戻した。
+- SkData missing rows を C API に追加し、SkSpan primary signature drift は C ABI を pointer/count のまま維持して内部呼び出しを更新した。
+- `VulkanPreferredFeatures` は optional-backend helper として `na` に分類した。
+- prebuilt module archive の旧 unspanned C++ symbol 参照に対応するため `src/core/SkUnspannedApiCompat.cpp` を追加した。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は空。初期 probe の `signature_changed_review 1` は `SkCanvas::drawAtlas` の SkSpan signature drift で、C ABI は pointer/count のまま内部を SkSpan 呼び出しに追従した。
+- final lock stale C API report は空。初期 probe の `signature_changed_review 7` は `SkData` signature drift で、C ABI 互換を維持した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` から再比較する。既知リスクは Vulkan/ANGLE rolls、Bazel/GN generated metadata churn、DirectWrite SPI export、Graphite managed texture release proc、protected rendering attachment changes、skcms build metadata drift。
+- 次サイクルでは、accepted baseline `203469ef4672898f1190088a8a13a1538db59485` から再比較する。既知リスクは Vulkan/ANGLE rolls、FreeType default removal、Graphite/Dawn drift。
 
 cycle records:
 
@@ -216,6 +221,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-055-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-056-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-057-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-058-2026-05-31.md`
 
 ## Cycle close の条件
 

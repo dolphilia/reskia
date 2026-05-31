@@ -239,7 +239,8 @@ int SkPath_getPoints(reskia_path_t *path, reskia_point_t *points, int max) {
     if (path == nullptr || max < 0 || (max > 0 && points == nullptr)) {
         return 0;
     }
-    return reinterpret_cast<SkPath *>(path)->getPoints(reinterpret_cast<SkPoint *>(points), max);
+    return reinterpret_cast<SkPath *>(path)->getPoints(
+            {reinterpret_cast<SkPoint *>(points), static_cast<size_t>(max)});
 }
 
 int SkPath_countVerbs(reskia_path_t *path) {
@@ -253,7 +254,8 @@ int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max) {
     if (path == nullptr || max < 0 || (max > 0 && verbs == nullptr)) {
         return 0;
     }
-    return reinterpret_cast<SkPath *>(path)->getVerbs(reinterpret_cast<uint8_t *>(verbs), max);
+    return reinterpret_cast<SkPath *>(path)->getVerbs(
+            {reinterpret_cast<uint8_t *>(verbs), static_cast<size_t>(max)});
 }
 
 size_t SkPath_approximateBytesUsed(reskia_path_t *path) {
@@ -565,7 +567,10 @@ reskia_path_t *SkPath_addRoundRectWithRadii(reskia_path_t *path, const reskia_re
         return nullptr;
     }
     auto *p = reinterpret_cast<SkPath *>(path);
-    return reinterpret_cast<reskia_path_t *>(&p->addRoundRect(* reinterpret_cast<const SkRect *>(rect), reinterpret_cast<const SkScalar *>(radii), static_cast<SkPathDirection>(dir)));
+    return reinterpret_cast<reskia_path_t *>(&p->addRoundRect(
+            *reinterpret_cast<const SkRect *>(rect),
+            {reinterpret_cast<const SkScalar *>(radii), 8},
+            static_cast<SkPathDirection>(dir)));
 }
 
 reskia_path_t *SkPath_addRRect(reskia_path_t *path, const reskia_r_rect_t *rrect, int dir) {
@@ -589,7 +594,9 @@ reskia_path_t *SkPath_addPoly(reskia_path_t *path, const reskia_point_t *pts, in
         return nullptr;
     }
     auto *p = reinterpret_cast<SkPath *>(path);
-    return reinterpret_cast<reskia_path_t *>(&p->addPoly(reinterpret_cast<const SkPoint *>(pts), count, close));
+    return reinterpret_cast<reskia_path_t *>(&p->addPoly(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)},
+            close));
 }
 
 reskia_path_t *SkPath_addPolyFromList(reskia_path_t *path, const void *list, bool close) {
@@ -831,7 +838,12 @@ sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t
         (conicWeightCount > 0 && v == nullptr)) {
         return 0;
     }
-    return static_sk_path_make(SkPath::Make(reinterpret_cast<const SkPoint *>(point), pointCount, reinterpret_cast<const uint8_t *>(i), verbCount, reinterpret_cast<const SkScalar *>(v), conicWeightCount, static_cast<SkPathFillType>(type), isVolatile));
+    return static_sk_path_make(SkPath::Make(
+            {reinterpret_cast<const SkPoint *>(point), static_cast<size_t>(pointCount)},
+            {reinterpret_cast<const uint8_t *>(i), static_cast<size_t>(verbCount)},
+            {reinterpret_cast<const SkScalar *>(v), static_cast<size_t>(conicWeightCount)},
+            static_cast<SkPathFillType>(type),
+            isVolatile));
 }
 
 sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex) {
@@ -884,7 +896,11 @@ sk_path_t SkPath_Polygon(const reskia_point_t *pts, int count, bool isClosed, re
     if (count < 0 || (count > 0 && pts == nullptr)) {
         return 0;
     }
-    return static_sk_path_make(SkPath::Polygon(reinterpret_cast<const SkPoint *>(pts), count, isClosed, static_cast<SkPathFillType>(type), isVolatile));
+    return static_sk_path_make(SkPath::Polygon(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)},
+            isClosed,
+            static_cast<SkPathFillType>(type),
+            isVolatile));
 }
 
 sk_path_t SkPath_PolygonFromList(const void *list, bool isClosed, reskia_path_fill_type_t fillType, bool isVolatile) {

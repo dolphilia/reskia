@@ -33,6 +33,13 @@ bool SkData_isEmpty(reskia_data_t *sk_data) {
     return reinterpret_cast<SkData *>(sk_data)->isEmpty();
 }
 
+bool SkData_empty(reskia_data_t *sk_data) {
+    if (sk_data == nullptr) {
+        return true;
+    }
+    return reinterpret_cast<SkData *>(sk_data)->empty();
+}
+
 const uint8_t * SkData_data(reskia_data_t *sk_data) {
     if (sk_data == nullptr) {
         return nullptr;
@@ -54,6 +61,34 @@ uint8_t * SkData_writable_data(reskia_data_t *sk_data) {
     return reinterpret_cast<uint8_t *>(reinterpret_cast<SkData *>(sk_data)->writable_data());
 }
 
+const uint8_t * SkData_byteSpan(reskia_data_t *sk_data, size_t *size) {
+    if (sk_data == nullptr) {
+        if (size != nullptr) {
+            *size = 0;
+        }
+        return nullptr;
+    }
+    auto span = reinterpret_cast<SkData *>(sk_data)->byteSpan();
+    if (size != nullptr) {
+        *size = span.size();
+    }
+    return span.data();
+}
+
+sk_data_t SkData_copySubset(const reskia_data_t *sk_data, size_t offset, size_t length) {
+    if (sk_data == nullptr) {
+        return 0;
+    }
+    return static_sk_data_make(reinterpret_cast<const SkData *>(sk_data)->copySubset(offset, length));
+}
+
+sk_data_t SkData_shareSubset(reskia_data_t *sk_data, size_t offset, size_t length) {
+    if (sk_data == nullptr) {
+        return 0;
+    }
+    return static_sk_data_make(reinterpret_cast<SkData *>(sk_data)->shareSubset(offset, length));
+}
+
 size_t SkData_copyRange(reskia_data_t *sk_data, size_t offset, size_t length, uint8_t *buffer) {
     if (sk_data == nullptr) {
         return 0;
@@ -66,6 +101,13 @@ bool SkData_equals(reskia_data_t *sk_data, const reskia_data_t *other) {
         return false;
     }
     return reinterpret_cast<SkData *>(sk_data)->equals(reinterpret_cast<const SkData *>(other));
+}
+
+bool SkData_notEquals(reskia_data_t *sk_data, const reskia_data_t *other) {
+    if (sk_data == nullptr || other == nullptr) {
+        return false;
+    }
+    return *reinterpret_cast<SkData *>(sk_data) != *reinterpret_cast<const SkData *>(other);
 }
 
 bool SkData_unique(reskia_data_t *sk_data) {

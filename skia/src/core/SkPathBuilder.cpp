@@ -852,18 +852,6 @@ SkPathBuilder& SkPathBuilder::addPath(const SkPath& path, SkScalar dx, SkScalar 
     return this->addPath(path, matrix, mode);
 }
 
-SkPathBuilder& SkPathBuilder::addPath(const SkPath& src) {
-    SkMatrix matrix;
-    matrix.reset();
-    return this->addPath(src, matrix, SkPath::kAppend_AddPathMode);
-}
-
-SkPathBuilder& SkPathBuilder::addPath(const SkPath& src, SkPath::AddPathMode mode) {
-    SkMatrix matrix;
-    matrix.reset();
-    return this->addPath(src, matrix, mode);
-}
-
 SkPathBuilder& SkPathBuilder::addPath(const SkPath& src, const SkMatrix& matrix,
                                       SkPath::AddPathMode mode) {
     if (src.isEmpty()) {

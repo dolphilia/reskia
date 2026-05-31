@@ -196,7 +196,8 @@ sk_text_blob_t SkTextBlob_MakeFromPosTextH(const uint8_t *text, size_t byteLengt
         sourceFont == nullptr || !is_valid_text_encoding(encoding)) {
         return 0;
     }
-    return make_text_blob_handle(SkTextBlob::MakeFromPosTextH(text, byteLength, xpos, constY, *sourceFont, to_text_encoding(encoding)));
+    return make_text_blob_handle(SkTextBlob::MakeFromPosTextH(
+            text, byteLength, {xpos, byteLength}, constY, *sourceFont, to_text_encoding(encoding)));
 }
 
 sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength, const reskia_point_t *pos, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
@@ -205,7 +206,12 @@ sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength
         sourceFont == nullptr || !is_valid_text_encoding(encoding)) {
         return 0;
     }
-    return make_text_blob_handle(SkTextBlob::MakeFromPosText(text, byteLength, reinterpret_cast<const SkPoint *>(pos), *sourceFont, to_text_encoding(encoding)));
+    return make_text_blob_handle(SkTextBlob::MakeFromPosText(
+            text,
+            byteLength,
+            {reinterpret_cast<const SkPoint *>(pos), byteLength},
+            *sourceFont,
+            to_text_encoding(encoding)));
 }
 
 sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding) {
@@ -214,7 +220,12 @@ sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength
         sourceFont == nullptr || !is_valid_text_encoding(encoding)) {
         return 0;
     }
-    return make_text_blob_handle(SkTextBlob::MakeFromRSXform(text, byteLength, reinterpret_cast<const SkRSXform *>(xform), *sourceFont, to_text_encoding(encoding)));
+    return make_text_blob_handle(SkTextBlob::MakeFromRSXform(
+            text,
+            byteLength,
+            {reinterpret_cast<const SkRSXform *>(xform), byteLength},
+            *sourceFont,
+            to_text_encoding(encoding)));
 }
 
 sk_text_blob_t SkTextBlob_MakeFromPosHGlyphs(const uint16_t *glyphs, size_t glyph_count, const float *xpos, float constY, const reskia_font_t *font) {
