@@ -9,8 +9,8 @@
 #include "include/core/SkPathTypes.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkStream.h"
+#include "include/pathops/SkPathOps.h"
 #include "include/private/base/SkAssert.h"
-#include "modules/pathops/include/SkPathOps.h"
 #include "src/pdf/SkPDFUtils.h"
 #include "src/utils/SkClipStackUtils.h"
 
@@ -75,8 +75,7 @@ static void apply_clip(const SkClipStack& stack, const SkRect& outerBounds, F fn
     SkClipStack::Iter iter(stack, SkClipStack::Iter::kBottom_IterStart);
     SkRect bounds = outerBounds;
     while (const SkClipStack::Element* element = iter.next()) {
-        SkPath operand;
-        element->asDeviceSpacePath(&operand);
+        SkPath operand = element->asDeviceSpacePath();
         SkPathOp op;
         switch (element->getOp()) {
             case SkClipOp::kDifference: op = kDifference_SkPathOp; break;

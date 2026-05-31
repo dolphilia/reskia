@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `e84f5ed7d152063a4efd1399eb379305ebe5d3d6`
-- next probe candidate: choose a fixed commit after `e84f5ed7d152063a4efd1399eb379305ebe5d3d6`
+- `SKIA_REF`: `92354f64e37f96bec944fb20256e85a8925f9fe5`
+- next probe candidate: choose a fixed commit after `92354f64e37f96bec944fb20256e85a8925f9fe5`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -92,34 +92,35 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 058 accepted: `203469ef4672898f1190088a8a13a1538db59485`。
 - cycle 059 accepted: `2dc747ddcc4ef84284de56e69382b00bcefaa06d`。
 - cycle 060 accepted: `e84f5ed7d152063a4efd1399eb379305ebe5d3d6`。
+- cycle 061 accepted: `92354f64e37f96bec944fb20256e85a8925f9fe5`。
 
 未実施:
 
-- cycle 061 candidate の選定。
-- cycle 061 candidate checkout を使った coverage regression。
-- cycle 061 の source/header sync と C API 追従実装。
+- cycle 062 candidate の選定。
+- cycle 062 candidate checkout を使った coverage regression。
+- cycle 062 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 061 の candidate selection から始める。
+次の作業は、cycle 062 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `e84f5ed7d152063a4efd1399eb379305ebe5d3d6` から1週間程度の固定 commit を第一候補にする。
+1. baseline `92354f64e37f96bec944fb20256e85a8925f9fe5` から1週間程度の固定 commit を第一候補にする。
 2. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 061 の比較候補メモ:
+cycle 062 の比較候補メモ:
 
-- cycle 060 では baseline `2dc747ddcc4ef84284de56e69382b00bcefaa06d` から `e84f5ed7d152063a4efd1399eb379305ebe5d3d6` を採用した。66 commits、`include` / `modules` は 28 files changed, +171/-108、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 117 files changed, +991/-792。
-- cycle 060 の主変更は `SkPathBuilder::isFinite`、`SkStrokeRec::applyToPath` の `SkPathBuilder*` destination 変更、SkUnicode iterator special member 追加、codec/core/path/text/source drift。
-- cycle 060 の初期 `missing 5` は `SkPathBuilder::isFinite` と SkUnicode iterator default/copy ctor。`isFinite` C API を追加し、abstract iterator special member は false_positive override に分類した。
-- cycle 060 の初期 `signature_changed_review 1` は `SkStrokeRec_applyToPath`。C ABI は `SkPath*` output のまま維持し、wrapper 内部で `SkPathBuilder` に適用後 `detach()` して dst に代入する実装へ更新した。final lock stale report は空。
-- cycle 060 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- cycle 061 では baseline `e84f5ed7d152063a4efd1399eb379305ebe5d3d6` から `92354f64e37f96bec944fb20256e85a8925f9fe5` を採用した。73 commits、`include` / `modules` は 20 files changed, +180/-64、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 147 files changed, +2334/-1373。
+- cycle 061 の主変更は `SkRegion::addBoundaryPath(SkPathBuilder*)` 追加、`SkRegion::getBoundaryPath(SkPath*)` の `SK_HIDE_PATH_EDIT_METHODS` guard 化、`PaintOptions::addBlendMode` の public 化、core/image/path/region と Ganesh/Graphite source drift。
+- cycle 061 の初期 `missing 2` は `SkRegion::addBoundaryPath` と `PaintOptions::addBlendMode`。`SkRegion_addBoundaryPath` C API を追加し、Graphite precompile helper は design-required の `na` override に分類した。
+- cycle 061 の stale report は baseline/candidate/final lock とも空。`SkRegion_getBoundaryPath` は既存 C ABI の `SkPath*` output を維持し、wrapper 内部で `SkPathBuilder` を使う実装へ更新した。
+- cycle 061 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次 cycle では accepted baseline `e84f5ed7d152063a4efd1399eb379305ebe5d3d6` から再比較する。2-week 候補 `92354f64e37f96bec944fb20256e85a8925f9fe5` は 139 commits / public 46 files / source drift 245 files、3-week 候補 `1b4c975e89ade7fa5a50fda12f454e1a5fa35b63` は 231 commits / public 56 files / source drift 323 files まで広がるため、引き続き 1-week 幅を推奨する。
+- 次 cycle では accepted baseline `92354f64e37f96bec944fb20256e85a8925f9fe5` から再比較する。1-week 候補 `df39eefbeef3d86d8237d24692208b9ba78d1c5d` は 80 commits / public 19 files / source drift 135 files。2-week 候補 `9c8aeb9b328fa5874e467a2053b408e8edaecd3a` は 162 commits / public 44 files / source drift 259 files、3-week 候補 `fb7334edc4de5833a67324e6bca1a9143dd4d607` は 245 commits / public 63 files / source drift 318 files まで広がるため、引き続き 1-week 幅を推奨する。
 
 ## やってはいけないこと
 
@@ -148,21 +149,21 @@ cycle 061 の比較候補メモ:
 
 候補:
 
-- `e84f5ed7d152063a4efd1399eb379305ebe5d3d6`
-- committer date: 2025-07-04T23:25:50-07:00
-- subject: Roll vulkan-deps from 7b14a70b47da to ab8b8743ea91 (8 revisions)
+- `92354f64e37f96bec944fb20256e85a8925f9fe5`
+- committer date: 2025-07-11T12:11:00-07:00
+- subject: [graphite] Add more resource/recorder tracking for 407062399
 
-cycle 060 結果:
+cycle 061 結果:
 
-- baseline `2dc747d...` から `e84f5ed...` を採用した。66 commits、`include` / `modules` は 28 files changed, +171/-108、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 117 files changed, +991/-792。
-- `SkPathBuilder::isFinite` を C API として追加した。
-- `SkStrokeRec::applyToPath` の destination 型変更に追従し、既存 C ABI の `SkPath*` output を維持した。
-- SkUnicode abstract iterator default/copy ctor は直接構築不能な special member として false_positive override に分類した。
-- tracked mirror surface の codec/core/path/text/Graphite/source drift を同期した。
+- baseline `e84f5ed...` から `92354f...` を採用した。73 commits、`include` / `modules` は 20 files changed, +180/-64、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 147 files changed, +2334/-1373。
+- `SkRegion_addBoundaryPath` を C API として追加した。
+- `SkRegion::getBoundaryPath(SkPath*)` の upstream guard 化に追従し、既存 C ABI の `SkPath*` output を維持したまま内部で `SkPathBuilder` を使う実装へ更新した。
+- Graphite precompile の `PaintOptions::addBlendMode` は、opaque ownership、`SkSpan`/`sk_sp` policy、`RESKIA_ENABLE_GPU_GRAPHITE` backend policy が必要な design-required API として `na` override に分類した。
+- tracked mirror surface の core/image/path/region、Ganesh/Graphite、skresources、pdf/ports/utils source drift を同期した。GPU smoke build 中に露出した `TiledTextureUtils.h` の header/source mismatch も同期で解消した。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は空。初期 probe の `signature_changed_review 1` は `SkStrokeRec_applyToPath` signature drift で、C ABI 互換を維持した。
+- final lock stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `e84f5ed7d152063a4efd1399eb379305ebe5d3d6` から再比較する。既知リスクは引き続き Dawn/Vulkan rolls、Graphite churn、path/core signature drift。
+- 次サイクルでは、accepted baseline `92354f64e37f96bec944fb20256e85a8925f9fe5` から再比較する。既知リスクは ANGLE/Dawn/Vulkan rolls、Graphite resource/recorder churn、path/core signature drift。
 
 cycle records:
 
@@ -226,6 +227,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-058-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-059-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-060-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-061-2026-05-31.md`
 
 ## Cycle close の条件
 

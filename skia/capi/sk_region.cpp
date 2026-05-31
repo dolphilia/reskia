@@ -4,6 +4,7 @@
 
 #include "sk_region.h"
 
+#include "include/core/SkPathBuilder.h"
 #include "include/core/SkRegion.h"
 
 namespace {
@@ -26,6 +27,10 @@ const SkPath *as_path(const reskia_path_t *path) {
 
 SkPath *as_path(reskia_path_t *path) {
     return reinterpret_cast<SkPath *>(path);
+}
+
+SkPathBuilder *as_path_builder(reskia_path_builder_t *path_builder) {
+    return reinterpret_cast<SkPathBuilder *>(path_builder);
 }
 
 bool is_valid_op(reskia_region_op_t op) {
@@ -143,13 +148,27 @@ int SkRegion_computeRegionComplexity(reskia_region_t *region) {
     return rgn->computeRegionComplexity();
 }
 
+bool SkRegion_addBoundaryPath(reskia_region_t *region, reskia_path_builder_t *path_builder) {
+    const SkRegion *rgn = as_region(region);
+    SkPathBuilder *builder = as_path_builder(path_builder);
+    if (rgn == nullptr || builder == nullptr) {
+        return false;
+    }
+    return rgn->addBoundaryPath(builder);
+}
+
 bool SkRegion_getBoundaryPath(reskia_region_t *region, reskia_path_t *path) {
     const SkRegion *rgn = as_region(region);
     SkPath *dst = as_path(path);
     if (rgn == nullptr || dst == nullptr) {
         return false;
     }
-    return rgn->getBoundaryPath(dst);
+    SkPathBuilder builder;
+    const bool result = rgn->addBoundaryPath(&builder);
+    if (result) {
+        *dst = builder.detach();
+    }
+    return result;
 }
 
 bool SkRegion_setEmpty(reskia_region_t *region) {

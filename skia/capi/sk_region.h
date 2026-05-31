@@ -10,6 +10,7 @@
 
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_path_t reskia_path_t;
+typedef struct reskia_path_builder_t reskia_path_builder_t;
 typedef struct reskia_region_t reskia_region_t;
 typedef int32_t reskia_region_op_t;
 
@@ -31,6 +32,7 @@ bool SkRegion_isRect(reskia_region_t *region); // (SkRegion *region) -> bool. NU
 bool SkRegion_isComplex(reskia_region_t *region); // (SkRegion *region) -> bool. NULL region returns false.
 const reskia_i_rect_t *SkRegion_getBounds(reskia_region_t *region); // (SkRegion *region) -> const SkIRect *. Borrowed pointer; NULL region returns NULL.
 int SkRegion_computeRegionComplexity(reskia_region_t *region); // (SkRegion *region) -> int. NULL region returns 0.
+bool SkRegion_addBoundaryPath(reskia_region_t *region, reskia_path_builder_t *path_builder); // (SkRegion *region, SkPathBuilder *path_builder) -> bool. region/path_builder are required.
 bool SkRegion_getBoundaryPath(reskia_region_t *region, reskia_path_t *path); // (SkRegion *region, SkPath *path) -> bool. region/path are required.
 bool SkRegion_setEmpty(reskia_region_t *region); // (SkRegion *region) -> bool. NULL region returns false.
 bool SkRegion_setRect(reskia_region_t *region, const reskia_i_rect_t *rect); // (SkRegion *region, const SkIRect *rect) -> bool. region/rect are required.
