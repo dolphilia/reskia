@@ -229,6 +229,16 @@ int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags) {
     return as_typeface(typeface)->getTableTags(reinterpret_cast<SkFontTableTag *>(tags));
 }
 
+int SkTypeface_readTableTags(reskia_typeface_t *typeface, uint32_t *tags, size_t tagCount) {
+    if (typeface == nullptr) {
+        return 0;
+    }
+    if (tags == nullptr) {
+        tagCount = 0;
+    }
+    return as_typeface(typeface)->readTableTags({reinterpret_cast<SkFontTableTag *>(tags), tagCount});
+}
+
 size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag) {
     if (typeface == nullptr) {
         return 0;

@@ -114,11 +114,15 @@ void SkMatrix_mapPointsInPlace(reskia_matrix_t *matrix, reskia_point_t *pts, int
  * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
  */
 void SkMatrix_mapHomogeneousPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src, int count);
+void SkMatrix_mapHomogeneousPoint(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src); // dst/src は非 NULL。NULL 入力では no-op
 /**
  * dst/src は count 要素以上。count <= 0 や NULL 入力では no-op
  */
 void SkMatrix_mapHomogeneousPointsFromPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count);
+void SkMatrix_mapPointsToHomogeneous(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count);
+void SkMatrix_mapPointToHomogeneous(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src); // dst/src は非 NULL。NULL 入力では no-op
 sk_point_t SkMatrix_mapPoint(reskia_matrix_t *matrix, sk_point_t pt); // (SkMatrix *matrix, sk_point_t pt) -> sk_point_t
+sk_point_t SkMatrix_mapPointAffine(reskia_matrix_t *matrix, sk_point_t pt); // NULL 入力では 0
 void SkMatrix_mapXY(reskia_matrix_t *matrix, float x, float y, reskia_point_t *result); // result は非 NULL。NULL 入力では no-op
 sk_point_t SkMatrix_mapXYToPoint(reskia_matrix_t *matrix, float x, float y); // (SkMatrix *matrix, SkScalar x, SkScalar y) -> sk_point_t
 sk_point_t SkMatrix_mapOrigin(reskia_matrix_t *matrix); // (SkMatrix *matrix) -> sk_point_t

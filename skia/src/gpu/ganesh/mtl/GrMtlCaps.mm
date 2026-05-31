@@ -1186,7 +1186,7 @@ GrCaps::SupportedRead GrMtlCaps::onSupportedReadPixelsColorType(
     SkTextureCompressionType compression = GrBackendFormatToCompressionType(srcBackendFormat);
     if (compression != SkTextureCompressionType::kNone) {
 #ifdef SK_BUILD_FOR_IOS
-        // Reading back to kRGB_888x doesn't work on Metal/iOS (skbug.com/9839)
+        // Reading back to kRGB_888x doesn't work on Metal/iOS (skbug.com/40041169)
         return { GrColorType::kUnknown, 0 };
 #else
         return { SkTextureCompressionTypeIsOpaque(compression) ? GrColorType::kRGB_888x

@@ -320,6 +320,13 @@ void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, fl
     as_font(font)->getWidths(glyphs, count, widths, reinterpret_cast<SkRect *>(bounds));
 }
 
+float SkFont_getWidth(reskia_font_t *font, uint16_t glyph) {
+    if (font == nullptr) {
+        return 0.0f;
+    }
+    return as_font(font)->getWidth(glyph);
+}
+
 // TODO
 void SkFont_getWidths_2(reskia_font_t *font, const void * glyphs, int count, void * widths, std::nullptr_t ptr) {
     if (font == nullptr || count <= 0 || glyphs == nullptr || widths == nullptr) {

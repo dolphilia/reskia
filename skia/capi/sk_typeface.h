@@ -69,6 +69,7 @@ uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_
 int SkTypeface_countGlyphs(reskia_typeface_t *typeface); // NULL 入力では 0
 int SkTypeface_countTables(reskia_typeface_t *typeface); // NULL 入力では 0
 int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags); // tags は NULL 許可。NULL typeface では 0
+int SkTypeface_readTableTags(reskia_typeface_t *typeface, uint32_t *tags, size_t tagCount); // tags は NULL 許可。NULL typeface では 0
 size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag); // NULL 入力では 0
 /**
  * length > 0 では data 非 NULL。invalid 入力では 0

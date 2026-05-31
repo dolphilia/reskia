@@ -88,6 +88,7 @@ float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size
  * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths/bounds は NULL 許可
  */
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds);
+float SkFont_getWidth(reskia_font_t *font, uint16_t glyph); // NULL 入力では 0
 
 // TODO
 //void SkFont_getWidths_2(void *font, const void * glyphs, int count, void * widths, std::nullptr_t ptr); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar widths[], std::nullptr_t ptr)
