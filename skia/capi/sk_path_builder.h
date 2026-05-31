@@ -5,6 +5,7 @@
 #ifndef RAIA_SKIA_SK_PATH_BUILDER_H
 #define RAIA_SKIA_SK_PATH_BUILDER_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "../handles/static_sk_path.h"
@@ -153,6 +154,8 @@ sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder); // NULL
 void SkPathBuilder_setLastPt(reskia_path_builder_t *path_builder, float x, float y); // NULL input is no-op
 int SkPathBuilder_countPoints(reskia_path_builder_t *path_builder); // NULL input returns 0
 bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder); // NULL input returns false
+const reskia_point_t *SkPathBuilder_points(const reskia_path_builder_t *path_builder, size_t *count); // borrowed; NULL input returns NULL and count 0
+const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, size_t *count); // borrowed; NULL input returns NULL and count 0
 
 #ifdef __cplusplus
 }

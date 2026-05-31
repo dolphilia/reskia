@@ -91,7 +91,10 @@ public:
     const Texture* getTexture(size_t index) const;
     const Sampler* getSampler(size_t index) const;
 
-    skia_private::TArray<sk_sp<TextureProxy>> sampledTextures() const { return fSampledTextures; }
+    // Proxies are always valid but may not be instantiated until after prepareResources() is called
+    SkSpan<const sk_sp<TextureProxy>> sampledTextures() const { return fSampledTextures; }
+    // Not valid until after prepareResources() is called
+    SkSpan<const sk_sp<GraphicsPipeline>> pipelines() const { return fFullPipelines; }
 
     void addResourceRefs(CommandBuffer*) const;
 
@@ -119,6 +122,10 @@ private:
     skia_private::TArray<sk_sp<GraphicsPipeline>> fFullPipelines;
     skia_private::TArray<sk_sp<TextureProxy>> fSampledTextures;
     skia_private::TArray<sk_sp<Sampler>> fSamplers;
+
+#if defined(SK_TRACE_GRAPHITE_PIPELINE_USE)
+    skia_private::TArray<float> fPipelineDrawAreas;
+#endif
 };
 
 } // namespace skgpu::graphite

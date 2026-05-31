@@ -7,12 +7,13 @@
 #include "include/core/SkPathBuilder.h"
 #include "include/effects/SkDashPathEffect.h"
 
-SkPathBuilder& SkPathBuilder::addPath(const SkPath& src) {
-    return this->addPath(src, SkPath::kAppend_AddPathMode);
-}
-
-SkPathBuilder& SkPathBuilder::addPath(const SkPath& src, SkPath::AddPathMode mode) {
-    return this->addPath(src, SkMatrix::I(), mode);
+SkPathBuilder& SkPathBuilder_addPathUnspannedCompat(
+        SkPathBuilder* builder,
+        const SkPath& src) asm("__ZN13SkPathBuilder7addPathERK6SkPath");
+SkPathBuilder& SkPathBuilder_addPathUnspannedCompat(
+        SkPathBuilder* builder,
+        const SkPath& src) {
+    return builder->addPath(src, SkPath::kAppend_AddPathMode);
 }
 
 sk_sp<SkPathEffect> SkDashPathEffect_MakeUnspannedCompat(

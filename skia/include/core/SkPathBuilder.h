@@ -20,6 +20,7 @@
 #include "include/private/SkPathRef.h"
 #include "include/private/base/SkTArray.h"
 
+#include <cstdint>
 #include <optional>
 #include <tuple>
 
@@ -785,8 +786,12 @@ public:
         @param mode  kAppend_AddPathMode or kExtend_AddPathMode
         @return      reference to SkPathBuilder
     */
-    SkPathBuilder& addPath(const SkPath& src);
-    SkPathBuilder& addPath(const SkPath& src, SkPath::AddPathMode mode);
+    SkPathBuilder& addPath(const SkPath& src,
+                           SkPath::AddPathMode mode = SkPath::kAppend_AddPathMode) {
+        SkMatrix m;
+        m.reset();
+        return this->addPath(src, m, mode);
+    }
 
     /** Appends src to SkPathBuilder, transformed by matrix. Transformed curves may have different
         verbs, SkPoint, and conic weights.
@@ -895,6 +900,13 @@ public:
     }
 #endif
 
+    SkSpan<const SkPoint> points() const {
+        return fPts;
+    }
+    SkSpan<const uint8_t> verbs() const {
+        return fVerbs;
+    }
+
 private:
     SkPathRef::PointsArray fPts;
     SkPathRef::VerbsArray fVerbs;
@@ -939,3 +951,4 @@ private:
 };
 
 #endif
+

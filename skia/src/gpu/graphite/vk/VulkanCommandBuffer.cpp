@@ -432,9 +432,7 @@ bool VulkanCommandBuffer::onAddRenderPass(const RenderPassDesc& rpDesc,
         // Our current implementation of setting texture image layouts does not allow layout changes
         // once we have already begun a render pass, so prior to any other commands, set the layout
         // of all sampled textures from the drawpass so they can be sampled from the shader.
-        const skia_private::TArray<sk_sp<TextureProxy>>& sampledTextureProxies =
-                drawPass->sampledTextures();
-        for (const sk_sp<TextureProxy>& textureProxy : sampledTextureProxies) {
+        for (const sk_sp<TextureProxy>& textureProxy : drawPass->sampledTextures()) {
             VulkanTexture* vulkanTexture = const_cast<VulkanTexture*>(
                                            static_cast<const VulkanTexture*>(
                                            textureProxy->texture()));
@@ -522,7 +520,10 @@ bool VulkanCommandBuffer::updateAndBindInputAttachment(const VulkanTexture& text
     textureInfo.sampler = VK_NULL_HANDLE;
     textureInfo.imageView =
             texture.getImageView(VulkanImageView::Usage::kAttachment)->imageView();
-    textureInfo.imageLayout = texture.currentLayout();
+    // Even though the image is in the VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, the subpass
+    // is configured to implicitly use VK_IMAGE_LAYOUT_GENERAL in VkAttachmentReference::layout as
+    // part of VkSubpassDescription.
+    textureInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
 
     VkWriteDescriptorSet writeInfo = {};
     writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -633,13 +634,10 @@ void assign_color_texture_layout(VulkanCommandBuffer* cmdBuf,
     VkImageLayout layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     // If any draws within a render pass read from the dst color texture as an input attachment,
-    // we must use a general image layout and add additional pipeline stage + access flags.
+    // we must add additional pipeline stage + access flags.
     if (rpReadsDstAsInput) {
         stageFlags |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         access |= VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
-        // Note: Using VK_IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT may be more optimal,
-        // though not many devices support it.
-        layout = VK_IMAGE_LAYOUT_GENERAL;
     }
 
     colorTexture->setImageLayout(cmdBuf, layout, access, stageFlags, /*byRegion=*/false);
@@ -650,8 +648,10 @@ void assign_resolve_texture_layout(VulkanCommandBuffer* cmdBuf,
                                    bool loadMSAAFromResolve) {
     VkPipelineStageFlags stageFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     VkAccessFlags access = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-    VkImageLayout layout = loadMSAAFromResolve ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                                               : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // The resolve image uses the color attachment layout. If loadMSAAFromResolve is true, the
+    // additional subpass will set the appropriate layout in VkAttachmentReference::layout, and
+    // layout transitions are performed automatically between subpasses.
+    VkImageLayout layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     // If loading MSAA from resolve, then the resolve texture is used in the first subpass
     // as an input attachment and is referenced within the fragment shader. Add to the access and
@@ -695,7 +695,8 @@ void setup_texture_layouts(VulkanCommandBuffer* cmdBuf,
 static constexpr int kMaxNumAttachments = 3;
 void gather_clear_values(const RenderPassDesc& rpDesc,
                          STArray<kMaxNumAttachments, VkClearValue>* clearValues) {
-    // NOTE: This must stay in sync with the attachment order defined in VulkanRenderPass::Metadata
+    // NOTE: This must stay in sync with the attachment order defined in VulkanRenderPass.cpp, in
+    // populate_attachment_refs().
     if (rpDesc.fColorAttachment.fFormat != TextureFormat::kUnsupported) {
         VkClearValue& colorAttachmentClear = clearValues->push_back();
         colorAttachmentClear.color = {{rpDesc.fClearColor[0],

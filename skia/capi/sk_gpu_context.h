@@ -57,6 +57,7 @@ typedef int32_t reskia_gr_semaphores_submitted_t;
 typedef int32_t reskia_sk_texture_compression_type_t;
 typedef int32_t reskia_graphite_rescale_gamma_t;
 typedef int32_t reskia_graphite_rescale_mode_t;
+typedef int32_t reskia_graphite_insert_status_t;
 typedef int32_t reskia_graphite_yuv_color_space_t;
 typedef uint32_t reskia_gpu_stats_flags_t;
 typedef void (*reskia_shader_error_proc_t)(void *user_data, const char *shader, const char *errors);
@@ -233,6 +234,10 @@ int Graphite_Context_backend(reskia_graphite_context_t *ctx); // NULL input retu
 reskia_graphite_recorder_t *Graphite_Context_makeRecorder(reskia_graphite_context_t *ctx); // owned; NULL input returns NULL
 reskia_graphite_recorder_t *Graphite_Context_makeRecorderWithOptions(reskia_graphite_context_t *ctx, const reskia_graphite_recorder_options_t *options); // owned; invalid input returns NULL
 void Graphite_Recorder_delete(reskia_graphite_recorder_t *recorder); // alias of Reskia_GraphiteRecorder_Release
+reskia_graphite_insert_status_t Graphite_InsertStatus_new(); // success
+reskia_graphite_insert_status_t Graphite_InsertStatus_newWithValue(int32_t value); // invalid value maps to success
+int32_t Graphite_InsertStatus_operator_InsertStatus_V(reskia_graphite_insert_status_t status); // raw InsertStatus::V value
+bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status); // true only for success
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
 bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false

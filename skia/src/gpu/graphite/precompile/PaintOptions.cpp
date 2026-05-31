@@ -157,6 +157,7 @@ void PaintOptions::createKey(const KeyContext& keyContext,
                              PipelineDataGatherer* gatherer,
                              int desiredCombination,
                              bool addPrimitiveBlender,
+                             bool addAnalyticClip,
                              Coverage coverage) const {
     SkDEBUGCODE(keyBuilder->checkReset();)
     SkASSERT(desiredCombination < this->numCombinations());
@@ -202,12 +203,14 @@ void PaintOptions::createKey(const KeyContext& keyContext,
                        PrecompileBase::SelectOption(SkSpan(fColorFilterOptions),
                                                     desiredColorFilterCombination),
                        addPrimitiveBlender,
+                       fPrimitiveBlendMode,
                        clipShader,
                        /*dstReadRequired=*/!CanUseHardwareBlending(keyContext.caps(),
                                                                    targetFormat,
                                                                    blendMode,
                                                                    coverage),
-                       fDither);
+                       fDither,
+                       addAnalyticClip);
 
     option.toKey(keyContext, keyBuilder, gatherer);
 }
@@ -314,7 +317,8 @@ void PaintOptions::buildCombinations(
             gatherer->resetWithNewLayout(Layout::kMetal);
 
             this->createKey(keyContext, renderPassDesc.fColorAttachment.fFormat,
-                            &builder, gatherer, i, withPrimitiveBlender, coverage);
+                            &builder, gatherer, i, withPrimitiveBlender,
+                            SkToBool(drawTypes & DrawTypeFlags::kAnalyticClip), coverage);
 
             // The 'findOrCreate' calls lockAsKey on builder and then destroys the returned
             // PaintParamsKey. This serves to reset the builder.

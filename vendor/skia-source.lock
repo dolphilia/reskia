@@ -3,5 +3,5 @@
 
 SKIA_UPSTREAM_URL="https://github.com/google/skia.git"
 SKIA_FORK_URL="https://github.com/dolphilia/skia.git"
-SKIA_REF="203469ef4672898f1190088a8a13a1538db59485"
-SKIA_BASELINE_DATE="2025-06-21"
+SKIA_REF="2dc747ddcc4ef84284de56e69382b00bcefaa06d"
+SKIA_BASELINE_DATE="2025-06-27"

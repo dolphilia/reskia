@@ -2111,6 +2111,22 @@ bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+reskia_graphite_insert_status_t Graphite_InsertStatus_new() {
+    return 0;
+}
+
+reskia_graphite_insert_status_t Graphite_InsertStatus_newWithValue(int32_t value) {
+    return value >= 0 && value <= 4 ? value : 0;
+}
+
+int32_t Graphite_InsertStatus_operator_InsertStatus_V(reskia_graphite_insert_status_t status) {
+    return Graphite_InsertStatus_newWithValue(status);
+}
+
+bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status) {
+    return Graphite_InsertStatus_newWithValue(status) == 0;
+}
+
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording) {
 #if defined(SK_GRAPHITE)
     if (ctx == nullptr || recording == nullptr) {
@@ -2118,7 +2134,7 @@ bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_gra
     }
     skgpu::graphite::InsertRecordingInfo info;
     info.fRecording = as_graphite_recording(recording);
-    return as_graphite_context(ctx)->insertRecording(info);
+    return static_cast<bool>(as_graphite_context(ctx)->insertRecording(info));
 #else
     (void) ctx;
     (void) recording;

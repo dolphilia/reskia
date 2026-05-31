@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `203469ef4672898f1190088a8a13a1538db59485`
-- next probe candidate: choose a fixed commit after `203469ef4672898f1190088a8a13a1538db59485`
+- `SKIA_REF`: `2dc747ddcc4ef84284de56e69382b00bcefaa06d`
+- next probe candidate: choose a fixed commit after `2dc747ddcc4ef84284de56e69382b00bcefaa06d`
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -90,34 +90,35 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 056 accepted: `80bffd1ae51733a54cbfbf777a38060e2f8e5c30`。
 - cycle 057 accepted: `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a`。
 - cycle 058 accepted: `203469ef4672898f1190088a8a13a1538db59485`。
+- cycle 059 accepted: `2dc747ddcc4ef84284de56e69382b00bcefaa06d`。
 
 未実施:
 
-- cycle 059 candidate の選定。
-- cycle 059 candidate checkout を使った coverage regression。
-- cycle 059 の source/header sync と C API 追従実装。
+- cycle 060 candidate の選定。
+- cycle 060 candidate checkout を使った coverage regression。
+- cycle 060 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 059 の candidate selection から始める。
+次の作業は、cycle 060 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `203469ef4672898f1190088a8a13a1538db59485` から1週間程度の固定 commit を第一候補にする。
+1. baseline `2dc747ddcc4ef84284de56e69382b00bcefaa06d` から1週間程度の固定 commit を第一候補にする。
 2. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 3. candidate checkout を用意して coverage regression と stale C API report を取る。
 4. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
 5. low-risk source/header sync と C API catch-up へ進む。
 
-cycle 059 の比較候補メモ:
+cycle 060 の比較候補メモ:
 
-- cycle 058 では baseline `f8cd9fe75f21d3be759cbf9491ddc582efcf1e2a` から `203469ef4672898f1190088a8a13a1538db59485` を採用した。73 commits、`include` / `modules` は 86 files changed, +460/-24499、`DEPS` / `include` / `modules` / `src` drift は 211 files changed, +4624/-1984。
-- cycle 058 の主変更は pathops module move の revert、SkSpan primary signature drift、SkData subset/span helpers、Vulkan preferred features optional-backend header。
-- cycle 058 の初期 `missing 11` は `SkData` 6 rows と `VulkanPreferredFeatures` 5 rows。`SkData` は C API を追加し、`VulkanPreferredFeatures` は optional-backend helper として `na` に分類した。
-- cycle 058 の初期 `signature_changed_review 7` は `SkData` の内部表現・signature drift。C ABI は互換維持し、final lock stale report は空。
-- cycle 058 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- cycle 059 では baseline `203469ef4672898f1190088a8a13a1538db59485` から `2dc747ddcc4ef84284de56e69382b00bcefaa06d` を採用した。68 commits、`include` / `modules` は 12 files changed, +65/-16、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 64 files changed, +1357/-683。
+- cycle 059 の主変更は `SkPathBuilder` borrowed views、Graphite `InsertStatus` と `Context::insertRecording` return drift、FreeType default factory removal、Graphite/Metal/SkSL native shader drift。
+- cycle 059 の初期 `missing 6` は `SkPathBuilder` 2 rows と `InsertStatus` 4 rows。C API を追加して coverage を閉じた。
+- cycle 059 の初期 `signature_changed_review 1` は `Graphite_Context_insertRecording` の戻り値 drift。C ABI は bool のまま維持し、final lock stale report は空。
+- cycle 059 の final matrix は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次 cycle では accepted baseline `203469ef4672898f1190088a8a13a1538db59485` から再比較する。近傍には Vulkan/ANGLE rolls、FreeType default removal、Graphite/Dawn drift があるため、幅は狭めを推奨する。
+- 次 cycle では accepted baseline `2dc747ddcc4ef84284de56e69382b00bcefaa06d` から再比較する。近傍には Graphite/Dawn/Vulkan rolls と SkSL/Metal native shader drift があるため、幅は狭めを推奨する。
 
 ## やってはいけないこと
 
@@ -146,21 +147,21 @@ cycle 059 の比較候補メモ:
 
 候補:
 
-- `203469ef4672898f1190088a8a13a1538db59485`
-- committer date: 2025-06-21T04:21:56-07:00
-- subject: Roll vulkan-deps from a875f13dac14 to 317a1e4780ef (3 revisions)
+- `2dc747ddcc4ef84284de56e69382b00bcefaa06d`
+- committer date: 2025-06-27T12:39:49-07:00
+- subject: Remove SkFontMgr_New_* FreeType defaults
 
-cycle 058 結果:
+cycle 059 結果:
 
-- baseline `f8cd9fe...` から `203469e...` を採用した。73 commits、`include` / `modules` は 86 files changed, +460/-24499、`DEPS` / `include` / `modules` / `src` drift は 211 files changed, +4624/-1984。
-- pathops module move の upstream revert に追従し、`skia/modules/pathops` を削除、`skia/src/pathops` を復元、CMake source list を `src/pathops` へ戻した。
-- SkData missing rows を C API に追加し、SkSpan primary signature drift は C ABI を pointer/count のまま維持して内部呼び出しを更新した。
-- `VulkanPreferredFeatures` は optional-backend helper として `na` に分類した。
-- prebuilt module archive の旧 unspanned C++ symbol 参照に対応するため `src/core/SkUnspannedApiCompat.cpp` を追加した。
+- baseline `203469e...` から `2dc747d...` を採用した。68 commits、`include` / `modules` は 12 files changed, +65/-16、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 64 files changed, +1357/-683。
+- `SkPathBuilder::points` / `verbs` missing rows を pointer/count の borrowed view C API として追加した。
+- Graphite `InsertStatus` C API を追加し、`Context::insertRecording` は既存 C ABI の bool 戻り値を維持した。
+- FreeType default factory removal に追従し、`SkFontMgr_fontconfig_freetype.cpp` を削除、`SkFontMgr_FontConfigInterface.h` を public mirror に追加した。
+- Graphite/Metal/SkSL native shader drift に追従するため、configured GPU build surface の source/header を同期した。
 - final coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final lock stale C API report は空。初期 probe の `signature_changed_review 7` は `SkData` signature drift で、C ABI 互換を維持した。
+- final lock stale C API report は空。初期 probe の `signature_changed_review 1` は `Graphite_Context_insertRecording` return drift で、C ABI 互換を維持した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/path smoke は pass。
-- 次サイクルでは、accepted baseline `203469ef4672898f1190088a8a13a1538db59485` から再比較する。既知リスクは Vulkan/ANGLE rolls、FreeType default removal、Graphite/Dawn drift。
+- 次サイクルでは、accepted baseline `2dc747ddcc4ef84284de56e69382b00bcefaa06d` から再比較する。既知リスクは Graphite/Dawn/Vulkan rolls と SkSL/Metal native shader drift。
 
 cycle records:
 
@@ -222,6 +223,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-056-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-057-2026-05-31.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-058-2026-05-31.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-059-2026-05-31.md`
 
 ## Cycle close の条件
 

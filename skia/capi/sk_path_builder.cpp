@@ -408,4 +408,34 @@ bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder) {
     return native != nullptr && native->isInverseFillType();
 }
 
+const reskia_point_t *SkPathBuilder_points(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const SkPoint> points = native->points();
+    if (count != nullptr) {
+        *count = points.size();
+    }
+    return reinterpret_cast<const reskia_point_t *>(points.data());
+}
+
+const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const uint8_t> verbs = native->verbs();
+    if (count != nullptr) {
+        *count = verbs.size();
+    }
+    return verbs.data();
+}
+
 }
