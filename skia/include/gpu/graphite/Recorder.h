@@ -58,15 +58,11 @@ class ResourceProvider;
 class RuntimeEffectDictionary;
 class SharedContext;
 class TaskList;
-class TextureDataBlock;
 class TextureInfo;
 class UploadBufferManager;
 class UploadList;
 
 struct RecorderOptionsPriv;
-
-template<typename T> class PipelineDataCache;
-using TextureDataCache = PipelineDataCache<TextureDataBlock>;
 
 struct SK_API RecorderOptions final {
     RecorderOptions();
@@ -285,7 +281,6 @@ private:
     // Aggregated one-time uploads that preceed all tasks in the root task list.
     std::unique_ptr<UploadList> fRootUploads;
 
-    std::unique_ptr<TextureDataCache> fTextureDataCache;
     std::unique_ptr<DrawBufferManager> fDrawBufferManager;
     std::unique_ptr<UploadBufferManager> fUploadBufferManager;
     std::unique_ptr<ProxyReadCountMap> fProxyReadCounts;
@@ -329,6 +324,10 @@ private:
     int fMaxTexturesPerRecording = 0;
     int fMaxAliveRecordings = 0;
     int fMaxCommandBufferResources = 0;
+    int fMaxRecordingsPerCommandBuffer = 0;
+    int fMaxVizRecordingsPerCommandBuffer = 0;
+    int fMaxMainRecordingsPerCommandBuffer = 0;
+    int fMaxAsyncReadRecordingsPerCommandBuffer = 0;
 
     // Cloned from UploadBufferManager for storage
     int fMaxReusedUploadBufferCount = 0;
