@@ -346,7 +346,15 @@ void SkCanvas_drawAtlas(reskia_canvas_t *canvas, const reskia_image_t * atlas, c
     if (atlas == nullptr || xform == nullptr || tex == nullptr || !valid_blend_mode(mode) || sampling == nullptr) {
         return;
     }
-    reinterpret_cast<SkCanvas *>(canvas)->drawAtlas(reinterpret_cast<const SkImage *>(atlas), reinterpret_cast<const SkRSXform *>(xform), reinterpret_cast<const SkRect *>(tex), reinterpret_cast<const SkColor *>(colors), count, static_cast<SkBlendMode>(mode), * reinterpret_cast<const SkSamplingOptions *>(sampling), reinterpret_cast<const SkRect *>(cullRect), reinterpret_cast<const SkPaint *>(paint));
+    reinterpret_cast<SkCanvas *>(canvas)->drawAtlas(
+            reinterpret_cast<const SkImage *>(atlas),
+            {reinterpret_cast<const SkRSXform *>(xform), count},
+            {reinterpret_cast<const SkRect *>(tex), count},
+            {reinterpret_cast<const SkColor *>(colors), colors != nullptr ? count : 0},
+            static_cast<SkBlendMode>(mode),
+            * reinterpret_cast<const SkSamplingOptions *>(sampling),
+            reinterpret_cast<const SkRect *>(cullRect),
+            reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkCanvas_drawCircle(reskia_canvas_t *canvas, sk_point_t center, float radius, const reskia_paint_t * paint) {

@@ -314,38 +314,38 @@ list(APPEND SOURCE_FILES
         src/image/SkTiledImageUtils.cpp
         src/lazy/SkDiscardableMemoryPool.cpp
         src/opts/SkOpts_hsw.cpp
-        src/pathops/SkAddIntersections.cpp
-        src/pathops/SkDConicLineIntersection.cpp
-        src/pathops/SkDCubicLineIntersection.cpp
-        src/pathops/SkDCubicToQuads.cpp
-        src/pathops/SkDLineIntersection.cpp
-        src/pathops/SkDQuadLineIntersection.cpp
-        src/pathops/SkIntersections.cpp
-        src/pathops/SkOpAngle.cpp
-        src/pathops/SkOpBuilder.cpp
-        src/pathops/SkOpCoincidence.cpp
-        src/pathops/SkOpContour.cpp
-        src/pathops/SkOpCubicHull.cpp
-        src/pathops/SkOpEdgeBuilder.cpp
-        src/pathops/SkOpSegment.cpp
-        src/pathops/SkOpSpan.cpp
-        src/pathops/SkPathOpsAsWinding.cpp
-        src/pathops/SkPathOpsCommon.cpp
-        src/pathops/SkPathOpsConic.cpp
-        src/pathops/SkPathOpsCubic.cpp
-        src/pathops/SkPathOpsCurve.cpp
-        src/pathops/SkPathOpsDebug.cpp
-        src/pathops/SkPathOpsLine.cpp
-        src/pathops/SkPathOpsOp.cpp
-        src/pathops/SkPathOpsQuad.cpp
-        src/pathops/SkPathOpsRect.cpp
-        src/pathops/SkPathOpsSimplify.cpp
-        src/pathops/SkPathOpsTightBounds.cpp
-        src/pathops/SkPathOpsTSect.cpp
-        src/pathops/SkPathOpsTypes.cpp
-        src/pathops/SkPathOpsWinding.cpp
-        src/pathops/SkPathWriter.cpp
-        src/pathops/SkReduceOrder.cpp
+        modules/pathops/src/SkAddIntersections.cpp
+        modules/pathops/src/SkDConicLineIntersection.cpp
+        modules/pathops/src/SkDCubicLineIntersection.cpp
+        modules/pathops/src/SkDCubicToQuads.cpp
+        modules/pathops/src/SkDLineIntersection.cpp
+        modules/pathops/src/SkDQuadLineIntersection.cpp
+        modules/pathops/src/SkIntersections.cpp
+        modules/pathops/src/SkOpAngle.cpp
+        modules/pathops/src/SkOpBuilder.cpp
+        modules/pathops/src/SkOpCoincidence.cpp
+        modules/pathops/src/SkOpContour.cpp
+        modules/pathops/src/SkOpCubicHull.cpp
+        modules/pathops/src/SkOpEdgeBuilder.cpp
+        modules/pathops/src/SkOpSegment.cpp
+        modules/pathops/src/SkOpSpan.cpp
+        modules/pathops/src/SkPathOpsAsWinding.cpp
+        modules/pathops/src/SkPathOpsCommon.cpp
+        modules/pathops/src/SkPathOpsConic.cpp
+        modules/pathops/src/SkPathOpsCubic.cpp
+        modules/pathops/src/SkPathOpsCurve.cpp
+        modules/pathops/src/SkPathOpsDebug.cpp
+        modules/pathops/src/SkPathOpsLine.cpp
+        modules/pathops/src/SkPathOpsOp.cpp
+        modules/pathops/src/SkPathOpsQuad.cpp
+        modules/pathops/src/SkPathOpsRect.cpp
+        modules/pathops/src/SkPathOpsSimplify.cpp
+        modules/pathops/src/SkPathOpsTightBounds.cpp
+        modules/pathops/src/SkPathOpsTSect.cpp
+        modules/pathops/src/SkPathOpsTypes.cpp
+        modules/pathops/src/SkPathOpsWinding.cpp
+        modules/pathops/src/SkPathWriter.cpp
+        modules/pathops/src/SkReduceOrder.cpp
         src/ports/SkDebug_stdio.cpp
         src/ports/SkGlobalInitialization_default.cpp
         src/ports/SkMemory_malloc.cpp
