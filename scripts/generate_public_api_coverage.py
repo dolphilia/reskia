@@ -57,6 +57,7 @@ class PublicClass:
 class MethodOverride:
     status: str
     note: str
+    matched_capi: str = ""
 
 
 @dataclass(frozen=True)
@@ -395,6 +396,43 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
     return overrides
 
 
+def load_previous_method_overrides(previous_matrix: Path | None) -> dict[tuple[str, str, str, str, str], MethodOverride]:
+    if previous_matrix is None:
+        return {}
+
+    reusable_statuses = {
+        "covered",
+        "split_covered",
+        "partial",
+        "overcovered",
+        "na",
+        "false_positive",
+        "deferred",
+    }
+    overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
+    with previous_matrix.open(newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            status = row.get("method_status", "")
+            signature = row.get("signature", "")
+            method = row.get("method", "")
+            if status not in reusable_statuses or not signature or not method:
+                continue
+            key = method_key(
+                row.get("area", ""),
+                row.get("header", ""),
+                row.get("class", ""),
+                method,
+                signature,
+            )
+            overrides[key] = MethodOverride(
+                status=status,
+                note=row.get("note", ""),
+                matched_capi=row.get("matched_capi", ""),
+            )
+    return overrides
+
+
 def class_prefix_candidates(class_name: str, path: str) -> set[str]:
     names = {class_name}
     if path.startswith("modules/skottie/") and class_name == "Animation":
@@ -600,9 +638,15 @@ def write_stale_capi_report(
                 )
 
 
-def write_matrix_from_classes(repo: Path, classes: list[PublicClass], output: Path) -> None:
+def write_matrix_from_classes(
+    repo: Path,
+    classes: list[PublicClass],
+    output: Path,
+    previous_matrix: Path | None = None,
+) -> None:
     functions = capi_function_names(repo)
     overrides = load_method_overrides(repo)
+    previous_overrides = load_previous_method_overrides(previous_matrix)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="") as f:
         writer = csv.writer(f)
@@ -647,9 +691,29 @@ def write_matrix_from_classes(repo: Path, classes: list[PublicClass], output: Pa
             for method in cls.methods:
                 method_status, method_match = status_for_method(cls, method, functions)
                 override = overrides.get(method_key(cls.area, cls.path, cls.name, method.name, method.signature))
+                previous_override = previous_overrides.get(
+                    method_key(cls.area, cls.path, cls.name, method.name, method.signature)
+                )
                 note = ""
+                if previous_override is not None:
+                    previous_matches = [
+                        name for name in previous_override.matched_capi.split("|") if name in functions
+                    ]
+                    previous_needs_match = previous_override.status in {
+                        "covered",
+                        "split_covered",
+                        "partial",
+                        "overcovered",
+                    }
+                    if not previous_needs_match or previous_matches:
+                        method_status = previous_override.status
+                        if previous_matches:
+                            method_match = "|".join(previous_matches[:8])
+                        note = previous_override.note
                 if override is not None:
                     method_status = override.status
+                    if override.matched_capi:
+                        method_match = override.matched_capi
                     note = override.note
                 writer.writerow(
                     [
@@ -676,7 +740,7 @@ def write_matrix(repo: Path, skia_root: Path, output: Path) -> None:
 
 def write_reports(repo: Path, skia_root: Path, output: Path, previous_matrix: Path | None, stale_output: Path | None) -> None:
     classes = public_classes(skia_root)
-    write_matrix_from_classes(repo, classes, output)
+    write_matrix_from_classes(repo, classes, output, previous_matrix)
     if previous_matrix is not None and stale_output is not None:
         write_stale_capi_report(repo, classes, previous_matrix, stale_output)
 
