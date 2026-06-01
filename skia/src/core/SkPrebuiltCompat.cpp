@@ -9,7 +9,6 @@
 #include "include/core/SkPoint.h"
 #include "include/core/SkShader.h"
 #include "include/effects/SkGradient.h"
-#include "include/effects/SkGradientShader.h"
 #include "include/pathops/SkPathOps.h"
 #include "modules/skcms/src/skcms_public.h"
 

@@ -761,7 +761,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cpp")
     endif()
 
     if(RESKIA_ENABLE_GPU_GRAPHITE)

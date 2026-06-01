@@ -145,6 +145,14 @@ bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface) {
     return typeface != nullptr && as_typeface(typeface)->isFixedPitch();
 }
 
+bool SkTypeface_isSyntheticBold(reskia_typeface_t *typeface) {
+    return typeface != nullptr && as_typeface(typeface)->isSyntheticBold();
+}
+
+bool SkTypeface_isSyntheticOblique(reskia_typeface_t *typeface) {
+    return typeface != nullptr && as_typeface(typeface)->isSyntheticOblique();
+}
+
 int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount) {
     if (typeface == nullptr || coordinateCount < 0) {
         return -1;

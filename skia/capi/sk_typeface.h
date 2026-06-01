@@ -42,6 +42,8 @@ sk_font_style_t SkTypeface_fontStyle(reskia_typeface_t *typeface); // NULL 入�
 bool SkTypeface_isBold(reskia_typeface_t *typeface); // NULL 入力では false
 bool SkTypeface_isItalic(reskia_typeface_t *typeface); // NULL 入力では false
 bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface); // NULL 入力では false
+bool SkTypeface_isSyntheticBold(reskia_typeface_t *typeface); // NULL 入力では false
+bool SkTypeface_isSyntheticOblique(reskia_typeface_t *typeface); // NULL 入力では false
 /**
  * coordinates は NULL 許可。negative count/NULL typeface では -1
  */

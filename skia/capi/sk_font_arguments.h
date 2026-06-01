@@ -23,6 +23,10 @@ int SkFontArguments_getCollectionIndex(reskia_font_arguments_t *font_arguments);
 sk_font_arguments_variation_position_t SkFontArguments_getVariationDesignPosition(reskia_font_arguments_t *font_arguments); // NULL 入力では 0
 sk_font_arguments_t SkFontArguments_setPalette(reskia_font_arguments_t *font_arguments, sk_font_arguments_palette_t palette); // invalid font_arguments では 0。invalid palette handle は default palette として扱う
 sk_font_arguments_palette_t SkFontArguments_getPalette(reskia_font_arguments_t *font_arguments); // NULL 入力では 0
+sk_font_arguments_t SkFontArguments_setSyntheticBold(reskia_font_arguments_t *font_arguments, bool hasValue, bool bold); // invalid font_arguments では 0
+bool SkFontArguments_getSyntheticBold(reskia_font_arguments_t *font_arguments, bool *bold); // value ありなら true を返して bold に書く。NULL 入力では false
+sk_font_arguments_t SkFontArguments_setSyntheticOblique(reskia_font_arguments_t *font_arguments, bool hasValue, bool oblique); // invalid font_arguments では 0
+bool SkFontArguments_getSyntheticOblique(reskia_font_arguments_t *font_arguments, bool *oblique); // value ありなら true を返して oblique に書く。NULL 入力では false
 
 #ifdef __cplusplus
 }

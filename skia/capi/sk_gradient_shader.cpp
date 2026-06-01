@@ -5,7 +5,6 @@
 #include "sk_gradient_shader.h"
 
 #include "include/effects/SkGradient.h"
-#include "include/effects/SkGradientShader.h"
 
 #include "../handles/static_sk_shader.h"
 #include "../handles/static_sk_color_space.h"
@@ -75,7 +74,7 @@ SkGradient make_gradient_from_colors(const reskia_color_t *colors,
 extern "C" {
 
 void SkGradientShader_delete(reskia_gradient_shader_t *gradientShader) {
-    delete reinterpret_cast<SkGradientShader *>(gradientShader);
+    (void)gradientShader;
 }
 
 // static
