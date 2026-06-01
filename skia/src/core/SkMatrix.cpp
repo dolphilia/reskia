@@ -1170,18 +1170,6 @@ bool SkMatrix::mapRect(SkRect* dst, const SkRect& src) const {
     }
 }
 
-bool SkMatrix::mapRect(SkRect* dst, const SkRect& src, SkApplyPerspectiveClip) const {
-    return this->mapRect(dst, src);
-}
-
-bool SkMatrix::mapRect(SkRect* rect, SkApplyPerspectiveClip) const {
-    return this->mapRect(rect, *rect);
-}
-
-SkRect SkMatrix::mapRect(const SkRect& src, SkApplyPerspectiveClip) const {
-    return this->mapRect(src);
-}
-
 SkScalar SkMatrix::mapRadius(SkScalar radius) const {
     SkVector    vec[2];
 

@@ -14,6 +14,11 @@
 
 #include <utility>
 
+enum SkApplyPerspectiveClip {
+    kNo_SkApplyPerspectiveClip,
+    kYes_SkApplyPerspectiveClip,
+};
+
 extern "C" SkPath SkPathBuilder_detach_noarg_compat(SkPathBuilder* self)
         __asm("__ZN13SkPathBuilder6detachEv");
 
@@ -39,6 +44,21 @@ extern "C" void SkPath_transform_perspective_clip_compat(
     if (dst != nullptr) {
         *dst = self->makeTransform(matrix);
     }
+}
+
+extern "C" bool SkMatrix_mapRect_perspective_clip_compat(
+        const SkMatrix* self,
+        SkRect* dst,
+        const SkRect& src,
+        SkApplyPerspectiveClip)
+        __asm("__ZNK8SkMatrix7mapRectEP6SkRectRKS0_22SkApplyPerspectiveClip");
+
+extern "C" bool SkMatrix_mapRect_perspective_clip_compat(
+        const SkMatrix* self,
+        SkRect* dst,
+        const SkRect& src,
+        SkApplyPerspectiveClip) {
+    return self != nullptr && self->mapRect(dst, src);
 }
 
 extern "C" bool SkPathOps_Op_outparam_compat(

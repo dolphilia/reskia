@@ -604,14 +604,6 @@ sk_point_t SkMatrix_mapPointAffine(reskia_matrix_t *matrix, sk_point_t pt) {
     return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapPointAffine(static_sk_point_get_entity(pt)));
 }
 
-void SkMatrix_mapXY(reskia_matrix_t *matrix, float x, float y, reskia_point_t *result) {
-    if (matrix == nullptr || result == nullptr) {
-        return;
-    }
-    *reinterpret_cast<SkPoint *>(result) =
-            reinterpret_cast<SkMatrix *>(matrix)->mapPoint(SkPoint::Make(x, y));
-}
-
 sk_point_t SkMatrix_mapXYToPoint(reskia_matrix_t *matrix, float x, float y) {
     if (matrix == nullptr) {
         return static_sk_point_make({});

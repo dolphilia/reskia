@@ -198,7 +198,8 @@ void VulkanCaps::init(const ContextOptions& contextOptions,
 
 #ifdef SK_BUILD_FOR_ANDROID
     if (extensions->hasExtension(
-            VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME, 2)) {
+                VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME, 2) &&
+        extensions->hasExtension(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, 1)) {
         fSupportsAHardwareBufferImages = true;
     }
 #endif
@@ -1027,6 +1028,10 @@ void VulkanCaps::initFormatTable(const skgpu::VulkanInterface* interface,
                 // `Caps::areColorTypeAndTextureInfoCompatible` consults the fColorType field, so
                 // make sure it aligns with the color type we expect to see for AHardwareBuffers
                 // that use AHARDWAREBUFFER_FORMAT_B8G8R8A8_UNORM (kExternalFormatColorType).
+                // This *MUST* match AHardwareBufferUtils::kExternalFormatColorType, which is
+                // only conditionally compiled so not included here. If it becomes out sync,
+                // wrapping BGRA textures from AHB's may fail unexpected.
+                static constexpr SkColorType kExternalFormatColorType = kRGBA_8888_SkColorType;
                 ctInfo.fColorType = kExternalFormatColorType;
                 // fTransferColorType is currently not referenced, but the actual color type
                 // (e.g. for readbacks) should be kBGRA_8888_SkColorType so use that here. Simply
@@ -1952,7 +1957,18 @@ SkSpan<const Caps::ColorTypeInfo> VulkanCaps::getColorTypeInfos(
         // If VkFormat is undefined but there is a valid YCbCr conversion associated with the
         // texture, then we know we are using an external format and can return color type
         // info representative of external format color information.
-        return vkInfo.fYcbcrConversionInfo.isValid() ? SkSpan(&fExternalFormatColorTypeInfo, 1)
+        static const ColorTypeInfo kExternalColorTypeInfos[2] = {
+                {/*ct=*/kRGBA_8888_SkColorType,
+                 /*transferCt=*/kUnknown_SkColorType,
+                 /*flags=*/0,
+                 /*readSwizzle=*/Swizzle::RGBA(),
+                 /*writeSwizzle=*/{}},
+                {/*ct=*/kRGB_888x_SkColorType,
+                 /*transferCt=*/kUnknown_SkColorType,
+                 /*flags=*/0,
+                 /*readSwizzle=*/Swizzle::RGB1(),
+                 /*writeSwizzle=*/{}}};
+        return vkInfo.fYcbcrConversionInfo.isValid() ? SkSpan(kExternalColorTypeInfos, 2)
                                                      : SkSpan<const ColorTypeInfo>();
     }
 

@@ -238,7 +238,7 @@ include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-handles.cmake")
 
 if (WIN32)
     list(APPEND SOURCE_FILES
-            src/ports/SkDebug_win.cpp
+            src/ports/SkLog_win.cpp
             src/ports/SkOSFile_win.cpp
             src/ports/SkTypeface_win_dw.cpp
             src/ports/SkScalerContext_win_dw.cpp

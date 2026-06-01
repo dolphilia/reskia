@@ -11,6 +11,7 @@ list(APPEND SOURCE_FILES
         src/base/SkDeque.cpp
         src/base/SkFloatingPoint.cpp
         src/base/SkHalf.cpp
+        src/base/SkLog.cpp
         src/base/SkMalloc.cpp
         src/base/SkMathPriv.cpp
         src/base/SkQuads.cpp
@@ -190,7 +191,6 @@ list(APPEND SOURCE_FILES
         src/core/SkPathRaw.cpp
         src/core/SkPathRawShapes.cpp
         src/core/SkPath_interpolate.cpp
-        src/core/SkPath_pathdata.cpp
         src/core/SkPathUtils.cpp
         src/core/SkPicture.cpp
         src/core/SkPictureData.cpp
@@ -360,7 +360,7 @@ list(APPEND SOURCE_FILES
         src/pathops/SkPathOpsWinding.cpp
         src/pathops/SkPathWriter.cpp
         src/pathops/SkReduceOrder.cpp
-        src/ports/SkDebug_stdio.cpp
+        src/ports/SkLog_stdio.cpp
         src/ports/SkGlobalInitialization_default.cpp
         src/ports/SkMemory_malloc.cpp
         src/ports/SkOSFile_stdio.cpp

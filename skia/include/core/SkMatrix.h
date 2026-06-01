@@ -28,12 +28,6 @@ struct SkSize;
 // Remove when clients are updated to live without this
 #define SK_SUPPORT_LEGACY_MATRIX_RECTTORECT
 
-// Compatibility symbols for prebuilt modules compiled before SkApplyPerspectiveClip was removed.
-enum class SkApplyPerspectiveClip {
-    kNo,
-    kYes,
-};
-
 /** \class SkMatrix
     SkMatrix holds a 3x3 matrix for transforming coordinates. This allows mapping
     SkPoint and vectors with translation, scaling, skewing, rotation, and
@@ -1500,7 +1494,6 @@ public:
         example: https://fiddle.skia.org/c/@Matrix_mapRect
     */
     bool mapRect(SkRect* dst, const SkRect& src) const;
-    bool mapRect(SkRect* dst, const SkRect& src, SkApplyPerspectiveClip) const;
 
     /** Sets rect to bounds of rect corners mapped by SkMatrix.
         Returns true if mapped corners are computed rect corners.
@@ -1514,7 +1507,6 @@ public:
     bool mapRect(SkRect* rect) const {
         return this->mapRect(rect, *rect);
     }
-    bool mapRect(SkRect* rect, SkApplyPerspectiveClip) const;
 
     /** Returns bounds of src corners mapped by SkMatrix.
 
@@ -1526,7 +1518,6 @@ public:
         (void)this->mapRect(&dst, src);
         return dst;
     }
-    SkRect mapRect(const SkRect& src, SkApplyPerspectiveClip) const;
 
     /** Maps four corners of rect to dst. SkPoint are mapped by multiplying each
         rect corner by SkMatrix. rect corner is processed in this order:
@@ -1748,43 +1739,6 @@ public:
         @return  true if matrix has only finite elements
     */
     bool isFinite() const { return SkIsFinite(fMat, 9); }
-
-#ifdef SK_SUPPORT_UNSPANNED_APIS
-    bool setPolyToPoly(const SkPoint src[], const SkPoint dst[], int count) {
-        return this->setPolyToPoly({src, count}, {dst, count});
-    }
-
-    void mapPoints(SkPoint dst[], const SkPoint src[], int count) const {
-        this->mapPoints({dst, count}, {src, count});
-    }
-    void mapPoints(SkPoint pts[], int count) const {
-        this->mapPoints(pts, pts, count);
-    }
-
-    void mapHomogeneousPoints(SkPoint3 dst[], const SkPoint3 src[], int count) const {
-        this->mapHomogeneousPoints({dst, count}, {src, count});
-    }
-    void mapHomogeneousPoints(SkPoint3 dst[], const SkPoint src[], int count) const {
-        this->mapPointsToHomogeneous({dst, count}, {src, count});
-    }
-
-    void mapVectors(SkVector dst[], const SkVector src[], int count) const {
-        this->mapVectors({dst, count}, {src, count});
-    }
-    void mapVectors(SkVector vecs[], int count) const {
-        this->mapVectors({vecs, count});
-    }
-    void mapXY(SkScalar x, SkScalar y, SkPoint* result) const {
-        *result = this->mapPoint({x, y});
-    }
-    SkPoint mapXY(SkScalar x, SkScalar y) const {
-        return this->mapPoint({x, y});
-    }
-    void mapVector(SkScalar dx, SkScalar dy, SkVector* result) const {
-        SkVector vec = { dx, dy };
-        this->mapVectors({result, 1}, {&vec, 1});
-    }
-#endif
 
 private:
     /** Set if the matrix will map a rectangle to another rectangle. This

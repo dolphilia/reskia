@@ -240,15 +240,6 @@ int SkTypeface_countTables(reskia_typeface_t *typeface) {
     return as_typeface(typeface)->countTables();
 }
 
-int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags) {
-    if (typeface == nullptr) {
-        return 0;
-    }
-    const int table_count = as_typeface(typeface)->countTables();
-    return as_typeface(typeface)->readTableTags(
-            {reinterpret_cast<SkFontTableTag *>(tags), tags == nullptr ? 0 : static_cast<size_t>(table_count)});
-}
-
 int SkTypeface_readTableTags(reskia_typeface_t *typeface, uint32_t *tags, size_t tagCount) {
     if (typeface == nullptr) {
         return 0;

@@ -62,7 +62,7 @@ int main() {
     if (!check(SkTypeface_countTables(nullptr) == 0, "SkTypeface_countTables(nullptr)")) {
         return 13;
     }
-    if (!check(SkTypeface_getTableTags(nullptr, nullptr) == 0, "SkTypeface_getTableTags(nullptr)")) {
+    if (!check(SkTypeface_readTableTags(nullptr, nullptr, 0) == 0, "SkTypeface_readTableTags(nullptr)")) {
         return 14;
     }
     if (!check(SkTypeface_getTableSize(nullptr, 0) == 0, "SkTypeface_getTableSize(nullptr)")) {

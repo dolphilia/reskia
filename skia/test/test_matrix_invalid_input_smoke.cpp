@@ -25,7 +25,6 @@ int main() {
     SkMatrix_mapPointsInPlace(nullptr, nullptr, 1);
     SkMatrix_mapHomogeneousPoints(nullptr, nullptr, nullptr, 1);
     SkMatrix_mapHomogeneousPointsFromPoints(nullptr, nullptr, nullptr, 1);
-    SkMatrix_mapXY(nullptr, 1.0f, 2.0f, nullptr);
     SkMatrix_mapVectors(nullptr, nullptr, nullptr, 1);
     SkMatrix_mapVectorsInPlace(nullptr, nullptr, 1);
     SkMatrix_mapVector(nullptr, 1.0f, 2.0f, nullptr);

@@ -426,11 +426,15 @@ void DawnCaps::initCaps(const DawnBackendContext& backendContext, const ContextO
     }
 #endif
 
+    fSupportsHalfPrecision = backendContext.fDevice.HasFeature(wgpu::FeatureName::ShaderF16);
     fResourceBindingReqs.fBackendApi = BackendApi::kDawn;
-    fResourceBindingReqs.fUniformBufferLayout = Layout::kStd140;
     // The WGSL generator assumes tightly packed std430 layout for SSBOs which is also the default
-    // for all types outside the uniform address space in WGSL.
-    fResourceBindingReqs.fStorageBufferLayout = Layout::kStd430;
+    // for all types outside the uniform address space in WGSL (which is emulated to 140 by SkSL's
+    // WGSL generation). If ShaderF16 is supported, we switch the layout to upload half data.
+    fResourceBindingReqs.fUniformBufferLayout = fSupportsHalfPrecision ? Layout::kStd140_F16
+                                                                       : Layout::kStd140;
+    fResourceBindingReqs.fStorageBufferLayout = fSupportsHalfPrecision ? Layout::kStd430_F16
+                                                                       : Layout::kStd430;
     fResourceBindingReqs.fSeparateTextureAndSamplerBinding = true;
 
 #if !defined(__EMSCRIPTEN__)
@@ -888,13 +892,18 @@ void DawnCaps::initFormatTable(const wgpu::Device& device) {
     {
         info = &fFormatTable[GetFormatIndex(wgpu::TextureFormat::External)];
         info->fFlags = FormatInfo::kTexturable_Flag;
-        info->fColorTypeInfoCount = 1;
+        info->fColorTypeInfoCount = 2;
         info->fColorTypeInfos = std::make_unique<ColorTypeInfo[]>(info->fColorTypeInfoCount);
         int ctIdx = 0;
         // Format: External, Surface: kRGBA_8888
         {
             auto& ctInfo = info->fColorTypeInfos[ctIdx++];
             ctInfo.fColorType = kRGBA_8888_SkColorType;
+        }
+        // Format: External, Surface: kRGB_888x
+        {
+            auto& ctInfo = info->fColorTypeInfos[ctIdx++];
+            ctInfo.fColorType = kRGB_888x_SkColorType;
         }
     }
 #endif
