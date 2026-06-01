@@ -168,6 +168,10 @@ public:
                       PrettyPrint pp,
                       IncludeSyntheticCode isc)
             : CodeGenerator(context, caps, program, out)
+            , fWrittenInverse({false, false, false})
+            , fWrittenOuterProduct({std::array{false, false, false},
+                                    std::array{false, false, false},
+                                    std::array{false, false, false}})
             , fPrettyPrint(pp)
             , fGenSyntheticCode(isc) {}
 
@@ -175,6 +179,7 @@ public:
 
 private:
     using Precedence = OperatorPrecedence;
+    class AutoConstEvalWorkaround;
 
     // Called by generateCode() as the first step.
     void preprocessProgram();
@@ -240,10 +245,17 @@ private:
 
     bool binaryOpNeedsComponentwiseMatrixPolyfill(const Type& left, const Type& right, Operator op);
 
+    enum AssembleMode {
+        kAuto,              // Will either be inlined expression or let to avoid const-eval
+        kUsedMultipleTimes, // Will be inlined if trivial, or a let so reuse by caller is free
+        kForceLet,          // Will be written to a let
+    };
     // Writers for expressions. These return the final expression text as a string, and emit any
     // necessary setup code directly into the program as necessary. The returned expression may be
     // a `let`-alias that cannot be assigned-into; use `makeLValue` for an assignable expression.
-    std::string assembleExpression(const Expression& e, Precedence parentPrecedence);
+    std::string assembleExpression(const Expression& e, Precedence parentPrecedence,
+                                   AssembleMode mode = kAuto);
+
     std::string assembleBinaryExpression(const BinaryExpression& b, Precedence parentPrecedence);
     std::string assembleBinaryExpression(const Expression& left,
                                          Operator op,
@@ -286,6 +298,7 @@ private:
                                                                   const Expression& sampler,
                                                                   const Expression& coords);
     std::string assembleInversePolyfill(const FunctionCall& call);
+    std::string assembleOuterProductPolyfill(const FunctionCall& call);
     std::string assembleComponentwiseMatrixBinary(const Type& leftType,
                                                   const Type& rightType,
                                                   const std::string& left,
@@ -316,14 +329,12 @@ private:
     std::string writeScratchVar(const Type& type, const std::string& value = "");
 
     // Writes a scratch let-variable into the program, gives it the value of `expr`, and returns its
-    // name (e.g. `_skTemp123`).
+    // name (e.g. `_skTemp123`). This can be `const` instead of `let` when isCompileTimeConstant is
+    // true and at function scope.
+    //
+    // Prefer using assembleExpression() with an AssembleMode to control when scratch lets should
+    // be created automatically.
     std::string writeScratchLet(const std::string& expr, bool isCompileTimeConstant = false);
-    std::string writeScratchLet(const Expression& expr, Precedence parentPrecedence);
-
-    // Converts `expr` into a string and returns a scratch let-variable associated with the
-    // expression. Compile-time constants and plain variable references will return the expression
-    // directly and omit the let-variable.
-    std::string writeNontrivialScratchLet(const Expression& expr, Precedence parentPrecedence);
 
     // Generic recursive ProgramElement visitor.
     void writeProgramElement(const ProgramElement& e);
@@ -386,10 +397,10 @@ private:
     skia_private::TArray<const Variable*> fPipelineOutputs;
 
     // These fields track whether we have written the polyfill for `inverse()` for a given matrix
-    // type.
-    bool fWrittenInverse2 = false;
-    bool fWrittenInverse3 = false;
-    bool fWrittenInverse4 = false;
+    // type. Indexed by row or column count - 2, i.e. [2,3,4] -> idx [0,1,2]
+    std::array<bool, 3> fWrittenInverse;
+    std::array<std::array<bool, 3>, 3> fWrittenOuterProduct;
+
     PrettyPrint fPrettyPrint;
     IncludeSyntheticCode fGenSyntheticCode;
 
@@ -413,6 +424,7 @@ private:
     bool fAtLineStart = false;
     bool fHasUnconditionalReturn = false;
     bool fAtFunctionScope = false;
+    bool fNeedsConstEvalWorkaround = false; // See skbug.com/40045457
     int fConditionalScopeDepth = 0;
     int fLocalSizeX = 1;
     int fLocalSizeY = 1;
@@ -978,6 +990,36 @@ const char* delimiter_to_str(WGSLCodeGenerator::Delimiter delimiter) {
     return "";
 }
 
+bool all_arguments_constant(const ExpressionArray& arguments) {
+    // Returns true if all arguments in the ExpressionArray are compile-time constants. If we are
+    // calling an intrinsic and all of its inputs are constant, but we didn't constant-fold it, this
+    // generally indicates that constant-folding resulted in an infinity or nan. The WGSL compiler
+    // will reject such an expression with a compile-time error. We can dodge the error, taking on
+    // the risk of indeterminate behavior instead, by replacing one of the constant values with a
+    // scratch let-variable. (skbug.com/40045457)
+    for (const std::unique_ptr<Expression>& arg : arguments) {
+        if (!ConstantFolder::GetConstantValueOrNull(*arg)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_nontrivial_expression(const Expression& expr) {
+    // We consider a "trivial expression" one which we can repeat multiple times in the output
+    // without being dangerous or spammy. We avoid emitting temporary variables for very trivial
+    // expressions: literals, unadorned variable references, or constant vectors.
+    if (expr.is<VariableReference>() || expr.is<Literal>()) {
+        // Variables and literals are trivial; adding a let-declaration won't simplify anything.
+        return false;
+    }
+    if (expr.type().isVector() && Analysis::IsConstantExpression(expr)) {
+        // Compile-time constant vectors are also considered trivial; they're short and sweet.
+        return false;
+    }
+    return true;
+}
+
 // FunctionDependencyResolver visits the IR tree rooted at a particular function definition and
 // computes that function's dependencies on pipeline stage IO parameters. These are later used to
 // synthesize arguments when writing out function definitions.
@@ -1289,6 +1331,54 @@ private:
     ComponentArray fUntouchedComponents;
     ComponentArray fReintegrationSwizzle;
     bool fReintegrateNewValueFirst = false;
+};
+
+class WGSLCodeGenerator::AutoConstEvalWorkaround {
+public:
+    AutoConstEvalWorkaround(WGSLCodeGenerator* generator, const Expression& parent)
+            : fGenerator(generator)
+            , fOriginalValue(generator->fNeedsConstEvalWorkaround) {
+        // Each scope can apply the workaround separately from the parent scope, so default to
+        // not requiring it
+        fGenerator->fNeedsConstEvalWorkaround = false;
+
+        // Intrinsic function calls and operators can be const-evaluated by the WGSL compiler,
+        // which may cause it complain if said evaluation would produce non-finite values.
+        if (parent.kind() == ExpressionKind::kFunctionCall) {
+            const FunctionCall& call = parent.as<FunctionCall>();
+            // User-defined functions can never be const-evaluated.
+            if (call.function().isIntrinsic() && all_arguments_constant(call.arguments())) {
+                fGenerator->fNeedsConstEvalWorkaround = true;
+            }
+        } else if (parent.kind() == ExpressionKind::kBinary) {
+            const BinaryExpression& op = parent.as<BinaryExpression>();
+            fGenerator->fNeedsConstEvalWorkaround =
+                    op_needs_workaround(*op.left(), *op.right(), op.getOperator().kind());
+
+        }
+    }
+
+    ~AutoConstEvalWorkaround() {
+        fGenerator->fNeedsConstEvalWorkaround = fOriginalValue;
+    }
+
+private:
+    static bool op_needs_workaround(const Expression& l, const Expression& r, OperatorKind op) {
+        // Only ops that produce overflows or non-finite values need to be worked round: +,-,*,/
+        switch (op) {
+            case Operator::Kind::MINUS:
+            case Operator::Kind::PLUS:
+            case Operator::Kind::STAR:
+            case Operator::Kind::SLASH:
+                return ConstantFolder::GetConstantValueOrNull(l) &&
+                       ConstantFolder::GetConstantValueOrNull(r);
+            default:
+                return false;
+        }
+    }
+
+    WGSLCodeGenerator* fGenerator;
+    bool fOriginalValue;
 };
 
 bool WGSLCodeGenerator::generateCode() {
@@ -2323,7 +2413,8 @@ void WGSLCodeGenerator::writeSwitchStatement(const SwitchStatement& s) {
     // should give us good performance in the common case, since most switches naturally conform.
 
     // First, let's emit the switch itself.
-    std::string valueExpr = this->writeNontrivialScratchLet(*s.value(), Precedence::kExpression);
+    std::string valueExpr = this->assembleExpression(*s.value(), Precedence::kExpression,
+                                                     kUsedMultipleTimes);
     this->write("switch ");
     this->write(valueExpr);
     this->writeLine(" {");
@@ -2472,7 +2563,31 @@ std::unique_ptr<WGSLCodeGenerator::LValue> WGSLCodeGenerator::makeLValue(const E
 }
 
 std::string WGSLCodeGenerator::assembleExpression(const Expression& e,
-                                                  Precedence parentPrecedence) {
+                                                  Precedence parentPrecedence,
+                                                  AssembleMode mode) {
+    // Determine if we need to introduce a scratch let for this expression. There are three
+    // situations that require this:
+    //   1. Explicitly requested by caller.
+    //   2. outer context would reference it multiple reasons for *reasons*, and the expression is
+    //      not trivial
+    //   3. skbug.com/asdf, where the first child const expression needs to be lifted to avoid
+    //      WGSL's stricter const eval rules.
+    if (mode == kForceLet ||
+        (mode == kUsedMultipleTimes && is_nontrivial_expression(e)) ||
+        /* mode == kAuto && */ fNeedsConstEvalWorkaround) {
+        // Allow the scratch let to be considered const as long as we don't have to force it to
+        // a let for the const-eval workaround or by `mode`.
+        const bool canBeConst = !fNeedsConstEvalWorkaround &&
+                                mode != kForceLet &&
+                                Analysis::IsCompileTimeConstant(e);
+        // Setting this to false and not overriding the AssembleMode means this next call to
+        // assembleExpression gives us the original expression value.
+        fNeedsConstEvalWorkaround = false;
+        std::string expr = this->assembleExpression(e, Precedence::kAssignment);
+        return this->writeScratchLet(expr, canBeConst);
+    }
+
+    AutoConstEvalWorkaround constEval{this, e};
     switch (e.kind()) {
         case Expression::Kind::kBinary:
             return this->assembleBinaryExpression(e.as<BinaryExpression>(), parentPrecedence);
@@ -2536,21 +2651,6 @@ std::string WGSLCodeGenerator::assembleExpression(const Expression& e,
             SkDEBUGFAILF("unsupported expression:\n%s", e.description().c_str());
             return {};
     }
-}
-
-static bool is_nontrivial_expression(const Expression& expr) {
-    // We consider a "trivial expression" one which we can repeat multiple times in the output
-    // without being dangerous or spammy. We avoid emitting temporary variables for very trivial
-    // expressions: literals, unadorned variable references, or constant vectors.
-    if (expr.is<VariableReference>() || expr.is<Literal>()) {
-        // Variables and literals are trivial; adding a let-declaration won't simplify anything.
-        return false;
-    }
-    if (expr.type().isVector() && Analysis::IsConstantExpression(expr)) {
-        // Compile-time constant vectors are also considered trivial; they're short and sweet.
-        return false;
-    }
-    return true;
 }
 
 static bool binary_op_is_ambiguous_in_wgsl(Operator op) {
@@ -2724,13 +2824,10 @@ std::string WGSLCodeGenerator::assembleBinaryExpression(const Expression& left,
             op = op.removeAssignment();
 
             std::string lhs = lvalue->load();
-            std::string rhs = this->assembleExpression(right, op.getBinaryPrecedence());
+            std::string rhs = this->assembleExpression(right, op.getBinaryPrecedence(),
+                                                       compMatrixOp ? kUsedMultipleTimes : kAuto);
 
             if (compMatrixOp) {
-                if (is_nontrivial_expression(right)) {
-                    rhs = this->writeScratchLet(rhs);
-                }
-
                 expr = this->assembleComponentwiseMatrixBinary(left.type(), right.type(),
                                                                lhs, rhs, op);
             } else {
@@ -2758,32 +2855,13 @@ std::string WGSLCodeGenerator::assembleBinaryExpression(const Expression& left,
         expr = "(";
     }
 
-    // If we are emitting `constant + constant`, this generally indicates that the values could not
-    // be constant-folded. This happens when the values overflow or become nan. WGSL will refuse to
-    // compile such expressions, as WGSL 1.0 has no infinity/nan support. However, the WGSL
-    // compile-time check can be dodged by putting one side into a let-variable. This technically
-    // gives us an indeterminate result, but the vast majority of backends will just calculate an
-    // infinity or nan here, as we would expect. (skbug.com/40045457)
-    bool bothSidesConstant = ConstantFolder::GetConstantValueOrNull(left) &&
-                             ConstantFolder::GetConstantValueOrNull(right);
-
-    std::string lhs = this->assembleExpression(left, precedence);
-    std::string rhs = this->assembleExpression(right, precedence);
-
+    std::string lhs = this->assembleExpression(left, precedence,
+                                               compMatrixOp ? kUsedMultipleTimes : kAuto);
+    std::string rhs = this->assembleExpression(right, precedence,
+                                               compMatrixOp ? kUsedMultipleTimes : kAuto);
     if (compMatrixOp) {
-        if (bothSidesConstant || is_nontrivial_expression(left)) {
-            lhs = this->writeScratchLet(lhs);
-        }
-        if (is_nontrivial_expression(right)) {
-            rhs = this->writeScratchLet(rhs);
-        }
-
         expr += this->assembleComponentwiseMatrixBinary(left.type(), right.type(), lhs, rhs, op);
     } else {
-        if (bothSidesConstant) {
-            lhs = this->writeScratchLet(lhs);
-        }
-
         expr += lhs + operator_name(op) + rhs;
     }
 
@@ -2843,21 +2921,6 @@ std::string WGSLCodeGenerator::assembleFieldAccess(const FieldAccess& f) {
     return expr;
 }
 
-static bool all_arguments_constant(const ExpressionArray& arguments) {
-    // Returns true if all arguments in the ExpressionArray are compile-time constants. If we are
-    // calling an intrinsic and all of its inputs are constant, but we didn't constant-fold it, this
-    // generally indicates that constant-folding resulted in an infinity or nan. The WGSL compiler
-    // will reject such an expression with a compile-time error. We can dodge the error, taking on
-    // the risk of indeterminate behavior instead, by replacing one of the constant values with a
-    // scratch let-variable. (skbug.com/40045457)
-    for (const std::unique_ptr<Expression>& arg : arguments) {
-        if (!ConstantFolder::GetConstantValueOrNull(*arg)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 std::string WGSLCodeGenerator::assembleSimpleIntrinsic(std::string_view intrinsicName,
                                                        const FunctionCall& call) {
     // Invoke the function, passing each function argument.
@@ -2865,7 +2928,6 @@ std::string WGSLCodeGenerator::assembleSimpleIntrinsic(std::string_view intrinsi
     expr.push_back('(');
     const ExpressionArray& args = call.arguments();
     auto separator = SkSL::String::Separator();
-    bool allConstant = all_arguments_constant(call.arguments());
     for (int index = 0; index < args.size(); ++index) {
         expr += separator();
 
@@ -2874,9 +2936,6 @@ std::string WGSLCodeGenerator::assembleSimpleIntrinsic(std::string_view intrinsi
             // WGSL passes atomic values to intrinsics as pointers.
             expr += '&';
             expr += argument;
-        } else if (allConstant && index == 0) {
-            // We can use a scratch-let for argument 0 to dodge WGSL overflow errors. (skbug.com/40045457)
-            expr += this->writeScratchLet(argument);
         } else {
             expr += argument;
         }
@@ -2897,7 +2956,6 @@ std::string WGSLCodeGenerator::assembleVectorizedIntrinsic(std::string_view intr
     auto separator = SkSL::String::Separator();
     const ExpressionArray& args = call.arguments();
     bool returnsVector = call.type().isVector();
-    bool allConstant = all_arguments_constant(call.arguments());
     for (int index = 0; index < args.size(); ++index) {
         expr += separator();
 
@@ -2907,10 +2965,7 @@ std::string WGSLCodeGenerator::assembleVectorizedIntrinsic(std::string_view intr
             expr.push_back('(');
         }
 
-        // We can use a scratch-let for argument 0 to dodge WGSL overflow errors. (skbug.com/40045457)
-        std::string argument = this->assembleExpression(*args[index], Precedence::kSequence);
-        expr += (allConstant && index == 0) ? this->writeScratchLet(argument)
-                                            : argument;
+        expr += this->assembleExpression(*args[index], Precedence::kSequence);
         if (vectorize) {
             expr.push_back(')');
         }
@@ -2955,10 +3010,7 @@ std::string WGSLCodeGenerator::assembleBinaryOpIntrinsic(Operator op,
         expr.push_back('(');
     }
 
-    // We can use a scratch-let for argument 0 to dodge WGSL overflow errors. (skbug.com/40045457)
-    std::string argument = this->assembleExpression(*call.arguments()[0], precedence);
-    expr += all_arguments_constant(call.arguments()) ? this->writeScratchLet(argument)
-                                                     : argument;
+    expr += this->assembleExpression(*call.arguments()[0], precedence);
     expr += operator_name(op);
     expr += this->assembleExpression(*call.arguments()[1], precedence);
 
@@ -2980,14 +3032,10 @@ std::string WGSLCodeGenerator::assembleOutAssignedIntrinsic(std::string_view int
     SkASSERT(call.arguments().size() == 2);
     SkASSERT(call.function().parameters()[1]->modifierFlags() & ModifierFlag::kOut);
 
+    // Invoke the intrinsic with the first parameter.
     std::string expr = std::string(intrinsicName);
     expr += "(";
-
-    // Invoke the intrinsic with the first parameter. Use a scratch-let if argument is a constant
-    // to dodge WGSL overflow errors. (skbug.com/40045457)
-    std::string argument = this->assembleExpression(*call.arguments()[0], Precedence::kSequence);
-    expr += ConstantFolder::GetConstantValueOrNull(*call.arguments()[0])
-            ? this->writeScratchLet(argument) : argument;
+    expr += this->assembleExpression(*call.arguments()[0], Precedence::kSequence);
     expr += ")";
     // In WGSL the intrinsic returns a struct; assign it to a local so that its fields can be
     // accessed multiple times.
@@ -3035,7 +3083,12 @@ std::pair<std::string, const char*> WGSLCodeGenerator::assemblePartialSampleCall
     SkASSERT(coords.type().isVector());
     if (coords.type().columns() == 3) {
         // The coordinates were passed as a vec3, so we need to emit `coords.xy / coords.z`.
-        std::string vec3Coords = this->writeScratchLet(coords, Precedence::kMultiplicative);
+        // This is a binary op applied to `coords` twice, so explicitly reapply the const eval
+        // workaround with just it in mind.
+        const bool coordsConst = ConstantFolder::GetConstantValueOrNull(coords);
+        std::string vec3Coords = this->assembleExpression(coords, Precedence::kMultiplicative,
+                                                          coordsConst ? kForceLet
+                                                                      : kUsedMultipleTimes);
         expr += vec3Coords + ".xy / " + vec3Coords + ".z";
     } else {
         // The coordinates should be a plain vec2; emit the expression as-is.
@@ -3084,7 +3137,8 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
     // infinity or nan with a compile error. If all arguments to an intrinsic are compile-time
     // constants (`all_arguments_constant`), it is safest to copy one argument into a scratch-let so
     // that the call will be seen as runtime-evaluated, which defuses the overflow checks.
-    // Don't worry; a competent driver should still optimize it away.
+    // Don't worry; a competent driver should still optimize it away. This was automatically handled
+    // in appendExpression()'s AutoConstEvalWorkaround before this was reached.
 
     const ExpressionArray& arguments = call.arguments();
     switch (kind) {
@@ -3111,15 +3165,17 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
         case k_faceforward_IntrinsicKind: {
             if (arguments[0]->type().isScalar()) {
                 // select(-N, N, (I * Nref) < 0)
-                std::string N = this->writeNontrivialScratchLet(*arguments[0],
-                                                                Precedence::kAssignment);
-                return "select(-" + N + ", " + N + ", " +
-                       this->assembleBinaryExpression(*arguments[1],
-                                                      OperatorKind::STAR,
-                                                      *arguments[2],
-                                                      arguments[1]->type(),
-                                                      Precedence::kRelational) +
-                       " < 0)";
+                fNeedsConstEvalWorkaround = false; // Disable for N, we'll handle it in I*Nref
+                std::string N = this->assembleExpression(*arguments[0], Precedence::kPrefix,
+                                                         kUsedMultipleTimes);
+                const bool INrefConst = ConstantFolder::GetConstantValueOrNull(*arguments[1]) &&
+                                        ConstantFolder::GetConstantValueOrNull(*arguments[2]);
+                std::string I = this->assembleExpression(*arguments[1],
+                                                         Precedence::kMultiplicative,
+                                                         INrefConst ? kForceLet : kAuto);
+                std::string Nref = this->assembleExpression(*arguments[2],
+                                                            Precedence::kMultiplicative);
+                return "select(-" + N + ", " + N + ", " + I + " * " + Nref + " < 0)";
             }
             return this->assembleSimpleIntrinsic("faceForward", call);
         }
@@ -3137,6 +3193,9 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
         case k_inverse_IntrinsicKind:
             return this->assembleInversePolyfill(call);
 
+        case k_outerProduct_IntrinsicKind:
+            return this->assembleOuterProductPolyfill(call);
+
         case k_inversesqrt_IntrinsicKind:
             return this->assembleSimpleIntrinsic("inverseSqrt", call);
 
@@ -3147,11 +3206,10 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
             return this->assembleBinaryOpIntrinsic(OperatorKind::LTEQ, call, parentPrecedence);
 
         case k_matrixCompMult_IntrinsicKind: {
-            // We use a scratch-let for arg0 to avoid the potential for WGSL overflow. (skbug.com/40045457)
-            std::string arg0 = all_arguments_constant(arguments)
-                            ? this->writeScratchLet(*arguments[0], Precedence::kPostfix)
-                            : this->writeNontrivialScratchLet(*arguments[0], Precedence::kPostfix);
-            std::string arg1 = this->writeNontrivialScratchLet(*arguments[1], Precedence::kPostfix);
+            std::string arg0 = this->assembleExpression(*arguments[0], Precedence::kPostfix,
+                                                        kUsedMultipleTimes);
+            std::string arg1 = this->assembleExpression(*arguments[1], Precedence::kPostfix,
+                                                        kUsedMultipleTimes);
             return this->assembleComponentwiseMatrixBinary(arguments[0]->type(),
                                                            arguments[1]->type(),
                                                            arg0,
@@ -3164,13 +3222,13 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
         }
         case k_mod_IntrinsicKind: {
             // WGSL has no intrinsic equivalent to `mod`. Synthesize `x - y * floor(x / y)`.
-            // We can use a scratch-let on one side to dodge WGSL overflow errors.  In practice, I
-            // can't find any values of x or y which would overflow, but it can't hurt. (skbug.com/40045457)
-            std::string arg0 = all_arguments_constant(arguments)
-                            ? this->writeScratchLet(*arguments[0], Precedence::kAdditive)
-                            : this->writeNontrivialScratchLet(*arguments[0], Precedence::kAdditive);
-            std::string arg1 = this->writeNontrivialScratchLet(*arguments[1],
-                                                               Precedence::kAdditive);
+            // NOTE: While we are introducing a new binary op between two possible constant
+            // expressions, it is consistent with the const-ness already handled by
+            // AutoConstEvalWorkaround.
+            std::string arg0 = this->assembleExpression(*arguments[0], Precedence::kAdditive,
+                                                        kUsedMultipleTimes);
+            std::string arg1 = this->assembleExpression(*arguments[1], Precedence::kAdditive,
+                                                        kUsedMultipleTimes);
             return "(" + arg0 + " - " + arg1 + " * floor(" + arg0 + " / " + arg1 + "))";
         }
 
@@ -3204,15 +3262,61 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
         case k_packUnorm4x8_IntrinsicKind:
             return this->assembleSimpleIntrinsic("pack4x8unorm", call);
 
+        case k_findLSB_IntrinsicKind: {
+            // firstTrailingBit (and firstLeadingBit) return a type matching their input, but
+            // findLSB and findMSB in SkSL return signed types. Add a cast if needed.
+            std::string lsb = this->assembleSimpleIntrinsic("firstTrailingBit", call);
+            return arguments[0]->type().componentType().isSigned() ? lsb :
+                    (to_wgsl_type(fContext, call.type()) + "(" + lsb + ")");
+        }
+
+        case k_findMSB_IntrinsicKind: {
+            std::string msb = this->assembleSimpleIntrinsic("firstLeadingBit", call);
+            return arguments[0]->type().componentType().isSigned() ? msb :
+                    (to_wgsl_type(fContext, call.type()) + "(" + msb + ")");
+        }
+
+        case k_bitCount_IntrinsicKind: {
+            // countOneBits returns a type matching its input, but bitCount in SkSL returns a
+            // signed type. Add a cast if needed.
+            std::string bitCount = this->assembleSimpleIntrinsic("countOneBits", call);
+            return arguments[0]->type().componentType().isSigned() ? bitCount :
+                    (to_wgsl_type(fContext, call.type()) + "(" + bitCount + ")");
+        }
+
+        case k_floatBitsToInt_IntrinsicKind:
+        case k_floatBitsToUint_IntrinsicKind:
+        case k_intBitsToFloat_IntrinsicKind:
+        case k_uintBitsToFloat_IntrinsicKind: {
+            std::string outputType = to_wgsl_type(fContext, call.type());
+            return this->assembleSimpleIntrinsic("bitcast<" + outputType + ">", call);
+        }
+
+        case k_roundEven_IntrinsicKind:
+        case k_round_IntrinsicKind:
+            // WGSL has no built-in roundEven(), but its round() is defined as:
+            //     "When e lies halfway between integers k and k + 1, the result is k when k is
+            //      even, and k + 1 when k is odd."
+            // This is equivalent to GLSL's roundEven(). GLSL's round() is allowed to just match
+            // roundEven().
+            return this->assembleSimpleIntrinsic("round", call);
+
         case k_reflect_IntrinsicKind:
             if (arguments[0]->type().isScalar()) {
                 // I - 2 * N * I * N
-                // We can use a scratch-let for N to dodge WGSL overflow errors. (skbug.com/40045457)
-                std::string I = this->writeNontrivialScratchLet(*arguments[0],
-                                                                Precedence::kAdditive);
-                std::string N = all_arguments_constant(arguments)
-                      ? this->writeScratchLet(*arguments[1], Precedence::kMultiplicative)
-                      : this->writeNontrivialScratchLet(*arguments[1], Precedence::kMultiplicative);
+                // Manually override the auto const-eval workaround since both I and N are used
+                // multiple times in new binary expressions.
+                fNeedsConstEvalWorkaround = false;
+                std::string I = this->assembleExpression(*arguments[0], Precedence::kMultiplicative,
+                                                         kUsedMultipleTimes);
+                // We force N into a let when it is constant, ensuring (2*N), (N*I), and (I*N)
+                // avoid issues with const eval compilation failures. Technically if we were already
+                // lifting I to a let, we could skip lifting N if we knew (2*N) would not overflow,
+                // but this keeps logic simpler.
+                AssembleMode mode = ConstantFolder::GetConstantValueOrNull(*arguments[1]) ?
+                        kForceLet : kUsedMultipleTimes;
+                std::string N = this->assembleExpression(*arguments[1], Precedence::kMultiplicative,
+                                                         mode);
                 return String::printf("(%s - 2 * %s * %s * %s)",
                                       I.c_str(), N.c_str(),
                                       I.c_str(), N.c_str());
@@ -3223,14 +3327,9 @@ std::string WGSLCodeGenerator::assembleIntrinsicCall(const FunctionCall& call,
             if (arguments[0]->type().isScalar()) {
                 // WGSL only implements refract for vectors; rather than reimplementing refract from
                 // scratch, we can replace the call with `refract(float2(I,0), float2(N,0), eta).x`.
-                std::string I = this->writeNontrivialScratchLet(*arguments[0],
-                                                                Precedence::kSequence);
-                std::string N = this->writeNontrivialScratchLet(*arguments[1],
-                                                                Precedence::kSequence);
-                // We can use a scratch-let for Eta to avoid WGSL overflow errors. (skbug.com/40045457)
-                std::string Eta = all_arguments_constant(arguments)
-                      ? this->writeScratchLet(*arguments[2], Precedence::kSequence)
-                      : this->writeNontrivialScratchLet(*arguments[2], Precedence::kSequence);
+                std::string I = this->assembleExpression(*arguments[0], Precedence::kSequence);
+                std::string N = this->assembleExpression(*arguments[1], Precedence::kSequence);
+                std::string Eta = this->assembleExpression(*arguments[2], Precedence::kSequence);
                 return String::printf("refract(vec2<%s>(%s, 0), vec2<%s>(%s, 0), %s).x",
                                       to_wgsl_type(fContext, arguments[0]->type()).c_str(),
                                       I.c_str(),
@@ -3419,6 +3518,22 @@ static constexpr char kInverse4x4[] =
 "\n" "}"
 "\n";
 
+// Generates outer_product_$Cx$R(vec$R<f32}>, vec$C<f32>) -> mat$Cx$R<f32>
+static std::string gen_outer_product_fn(int c, int r) {
+    return String::printf(
+            "fn outer_product%dx%d(a: vec%d<f32>, b: vec%d<f32>) -> mat%dx%d<f32> {\n"
+                "var m : mat%dx%d<f32>;\n"
+                "for (var c = 0; c < %d; c++) { m[c] = a * b[c]; }\n"
+                "return m;\n"
+            "}\n",
+            /* outer_product$Cx$R */ c, r,
+            /* vec$R */ r,
+            /* vec$C */ c,
+            /* mat$Cx$R */ c, r,
+            /* mat$Cx$R */ c, r,
+            /* c < $C */ c);
+}
+
 std::string WGSLCodeGenerator::assembleInversePolyfill(const FunctionCall& call) {
     const ExpressionArray& arguments = call.arguments();
     const Type& type = arguments.front()->type();
@@ -3430,32 +3545,37 @@ std::string WGSLCodeGenerator::assembleInversePolyfill(const FunctionCall& call)
     SkASSERT(type.isMatrix());
     SkASSERT(type.rows() == type.columns());
 
-    switch (type.slotCount()) {
-        case 4:
-            if (!fWrittenInverse2) {
-                fWrittenInverse2 = true;
-                fHeader.writeText(kInverse2x2);
-            }
-            return this->assembleSimpleIntrinsic("mat2_inverse", call);
-
-        case 9:
-            if (!fWrittenInverse3) {
-                fWrittenInverse3 = true;
-                fHeader.writeText(kInverse3x3);
-            }
-            return this->assembleSimpleIntrinsic("mat3_inverse", call);
-
-        case 16:
-            if (!fWrittenInverse4) {
-                fWrittenInverse4 = true;
-                fHeader.writeText(kInverse4x4);
-            }
-            return this->assembleSimpleIntrinsic("mat4_inverse", call);
-
-        default:
-            // We only support square matrices.
-            SkUNREACHABLE;
+    const int idx = type.rows() - 2;
+    if (!fWrittenInverse[idx]) {
+        static constexpr std::array<const char*, 3> kTemplates{kInverse2x2,
+                                                               kInverse3x3,
+                                                               kInverse4x4};
+        fWrittenInverse[idx] = true;
+        fHeader.writeText(kTemplates[idx]);
     }
+    return this->assembleSimpleIntrinsic(String::printf("mat%d_inverse", type.rows()), call);
+}
+
+std::string WGSLCodeGenerator::assembleOuterProductPolyfill(const FunctionCall& call) {
+    // The outer product should take two vector arguments, with the first type's component count
+    // defining R and the second type's component count defining C.
+    const ExpressionArray& arguments = call.arguments();
+    SkASSERT(arguments.size() == 2);
+    SkASSERT(arguments[0]->type().isVector() && arguments[1]->type().isVector());
+    SkASSERT(call.type().isMatrix());
+
+    const int r = arguments[0]->type().columns();
+    const int c = arguments[1]->type().columns();
+    SkASSERT(r == call.type().rows() && c == call.type().columns());
+
+    const int cIdx = c - 2;
+    const int rIdx = r - 2;
+    if (!fWrittenOuterProduct[cIdx][rIdx]) {
+        fWrittenOuterProduct[cIdx][rIdx] = true;
+        fHeader.writeText(gen_outer_product_fn(c, r).c_str());
+    }
+
+    return this->assembleSimpleIntrinsic(String::printf("outer_product%dx%d", c, r), call);
 }
 
 std::string WGSLCodeGenerator::assembleFunctionCall(const FunctionCall& call,
@@ -3590,7 +3710,8 @@ std::string WGSLCodeGenerator::assembleFunctionCall(const FunctionCall& call,
 
 std::string WGSLCodeGenerator::assembleIndexExpression(const IndexExpression& i) {
     // Put the index value into a let-expression.
-    std::string idx = this->writeNontrivialScratchLet(*i.index(), Precedence::kExpression);
+    std::string idx = this->assembleExpression(*i.index(), Precedence::kExpression,
+                                               kUsedMultipleTimes);
     return this->assembleExpression(*i.base(), Precedence::kPostfix) + "[" + idx + "]";
 }
 
@@ -3734,19 +3855,6 @@ std::string WGSLCodeGenerator::writeScratchLet(const std::string& expr,
     this->write(expr);
     this->writeLine(";");
     return scratchVarName;
-}
-
-std::string WGSLCodeGenerator::writeScratchLet(const Expression& expr,
-                                               Precedence parentPrecedence) {
-    return this->writeScratchLet(this->assembleExpression(expr, parentPrecedence));
-}
-
-std::string WGSLCodeGenerator::writeNontrivialScratchLet(const Expression& expr,
-                                                         Precedence parentPrecedence) {
-    std::string result = this->assembleExpression(expr, parentPrecedence);
-    return is_nontrivial_expression(expr)
-                   ? this->writeScratchLet(result, Analysis::IsCompileTimeConstant(expr))
-                   : result;
 }
 
 std::string WGSLCodeGenerator::assembleTernaryExpression(const TernaryExpression& t,
@@ -3922,7 +4030,8 @@ std::string WGSLCodeGenerator::assembleConstructorCompoundVector(const Construct
             SkASSERT(arg.type().columns() == 2);
             SkASSERT(arg.type().rows() == 2);
 
-            std::string matrix = this->writeNontrivialScratchLet(arg, Precedence::kPostfix);
+            std::string matrix = this->assembleExpression(arg, Precedence::kPostfix,
+                                                          kUsedMultipleTimes);
             return String::printf("%s(%s[0], %s[1])", to_wgsl_type(fContext, c.type()).c_str(),
                                                       matrix.c_str(),
                                                       matrix.c_str());
@@ -3943,7 +4052,8 @@ std::string WGSLCodeGenerator::assembleConstructorCompoundMatrix(const Construct
             expr += separator();
             expr += this->assembleExpression(*arg, Precedence::kSequence);
         } else {
-            std::string inner = this->writeNontrivialScratchLet(*arg, Precedence::kSequence);
+            std::string inner = this->assembleExpression(*arg, Precedence::kSequence,
+                                                         kUsedMultipleTimes);
             int numSlots = arg->type().slotCount();
             for (int slot = 0; slot < numSlots; ++slot) {
                 String::appendf(&expr, "%s%s[%d]", separator().c_str(), inner.c_str(), slot);
@@ -3960,7 +4070,8 @@ std::string WGSLCodeGenerator::assembleConstructorDiagonalMatrix(
     SkASSERT(c.argument()->type().isScalar());
 
     // Evaluate the inner-expression, creating a scratch variable if necessary.
-    std::string inner = this->writeNontrivialScratchLet(*c.argument(), Precedence::kAssignment);
+    std::string inner = this->assembleExpression(*c.argument(), Precedence::kAssignment,
+                                                 kUsedMultipleTimes);
 
     // Assemble a diagonal-matrix expression.
     std::string expr = to_wgsl_type(fContext, type) + '(';
@@ -3980,7 +4091,8 @@ std::string WGSLCodeGenerator::assembleConstructorDiagonalMatrix(
 
 std::string WGSLCodeGenerator::assembleConstructorMatrixResize(
         const ConstructorMatrixResize& ctor) {
-    std::string source = this->writeNontrivialScratchLet(*ctor.argument(), Precedence::kSequence);
+    std::string source = this->assembleExpression(*ctor.argument(), Precedence::kSequence,
+                                                  kUsedMultipleTimes);
     int columns = ctor.type().columns();
     int rows = ctor.type().rows();
     int sourceColumns = ctor.argument()->type().columns();
@@ -4097,16 +4209,13 @@ std::string WGSLCodeGenerator::assembleEqualityExpression(const Expression& left
                                                           const Expression& right,
                                                           Operator op,
                                                           Precedence parentPrecedence) {
-    std::string leftName, rightName;
-    if (left.type().isScalar() || left.type().isVector()) {
-        // WGSL supports scalar and vector comparisons natively. We know the expressions will only
-        // be emitted once, so there isn't a benefit to creating a let-declaration.
-        leftName = this->assembleExpression(left, Precedence::kParentheses);
-        rightName = this->assembleExpression(right, Precedence::kParentheses);
-    } else {
-        leftName = this->writeNontrivialScratchLet(left, Precedence::kAssignment);
-        rightName = this->writeNontrivialScratchLet(right, Precedence::kAssignment);
-    }
+    // WGSL supports scalar and vector comparisons natively. We know the expressions will only
+    // be emitted once in that case. Every other case will be poly-filled, resulting in referencing
+    // the left and right expressions multiple times.
+    AssembleMode mode = !left.type().isScalar() && !left.type().isVector() ?
+            kUsedMultipleTimes : kAuto;
+    std::string leftName = this->assembleExpression(left, Precedence::kParentheses, mode);
+    std::string rightName = this->assembleExpression(right, Precedence::kParentheses, mode);
     return this->assembleEqualityExpression(left.type(), leftName, right.type(), rightName,
                                             op, parentPrecedence);
 }

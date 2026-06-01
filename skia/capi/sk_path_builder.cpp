@@ -312,6 +312,13 @@ void SkPathBuilder_setPoint(reskia_path_builder_t *path_builder, size_t index, s
     native->setPoint(index, static_sk_point_get_entity(point));
 }
 
+void SkPathBuilder_setLastPoint(reskia_path_builder_t *path_builder, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr && native->countPoints() > 0) {
+        native->setLastPoint(static_sk_point_get_entity(point));
+    }
+}
+
 bool SkPathBuilder_contains(reskia_path_builder_t *path_builder, sk_point_t point) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr && native->contains(static_sk_point_get_entity(point));

@@ -108,20 +108,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 074 accepted: `e3c2686662294e45d56923b21c991c32a6c0863d`。
 - cycle 075 accepted: `b1569739f431d0b0f974f639c9356b06400682e9`。
 - cycle 076 accepted: `1a5fb55a686feacb0103d15fcac869fac279a06d`。
+- cycle 077 accepted: `a1f0df04bd133ec1594cd7fd463ed57845464b47`。
 
 未実施:
 
-- cycle 077 candidate selection from `1a5fb55a686feacb0103d15fcac869fac279a06d`.
-- cycle 077 candidate checkout を使った coverage regression。
-- cycle 077 の source/header sync と C API 追従実装。
+- cycle 078 candidate selection from `a1f0df04bd133ec1594cd7fd463ed57845464b47`.
+- cycle 078 candidate checkout を使った coverage regression。
+- cycle 078 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 077 の candidate selection から始める。
+次の作業は、cycle 078 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `1a5fb55a686feacb0103d15fcac869fac279a06d` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `a1f0df04bd133ec1594cd7fd463ed57845464b47` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
@@ -204,21 +205,20 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `1a5fb55a686feacb0103d15fcac869fac279a06d`
-- committer date: 2025-12-31
-- subject: Roll ANGLE from 9be55a77889f to bd9feb4e259c (1 revision)
+- `a1f0df04bd133ec1594cd7fd463ed57845464b47`
+- committer date: 2026-01-15
+- subject: Reland "[graphite] Separate input generation from PaintParamsKeyTest"
 
-cycle 076 結果:
+cycle 077 結果:
 
-- baseline `b1569739f431d0b0f974f639c9356b06400682e9` から `1a5fb55a686feacb0103d15fcac869fac279a06d` を採用した。85 commits、`include` / `modules` は 39 files changed, +149/-3479、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 92 files changed, +709/-5911。
-- 1週間候補は 62 commits、3週間候補は 141 commits。2週間候補は deletion churn の大半が untracked `modules/jetski` で、3週間候補より Android/Graphite Vulkan surface の追加リスクが小さいため採用した。
-- `SkPathRef.cpp` / `SkPath_editing.cpp` / `SkPath_pathref.cpp` 削除と PathData/PathBuilder churn、`SkBitmap::installMaskPixels` 削除、`SkFont::getPath` optional return 化、旧 gradient static factory symbol drift を同期・追従した。
-- C API は旧 mutating `SkPath_*` ABI を `SkPathBuilder` 経由で維持し、`SkBitmap_installMaskPixels` は A8 mask から `installPixels` に変換する互換実装にした。`SkFont_getPath` と gradient shader wrappers は新 API に追従した。
-- prebuilt static library compatibility のため、旧 path transform compat と旧 gradient interpolation compat symbols を `SkPrebuiltCompat.cpp` で維持した。
-- final coverage は `covered 3032` / `split_covered 42` / `false_positive 296` / `na 284` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- baseline `1a5fb55a686feacb0103d15fcac869fac279a06d` から `a1f0df04bd133ec1594cd7fd463ed57845464b47` を採用した。136 commits、`include` / `modules` は 13 files changed, +193/-68、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 56 files changed, +1324/-959。
+- 1週間候補は 61 commits、3週間候補は 215 commits。2週間候補は public header churn が小さく、AGTM/Graphite/codegen drift を標準幅で拾えるため採用した。
+- `skhdr` AGTM/metadata、`SkPathBuilder::setLastPoint`、`SkGraphics` image-generator factory の const-data callback、PDF attribute list、Graphite/Vulkan/Dawn helper、SkSL WGSL/Metal codegen drift を同期・追従した。
+- C API は `SkPathBuilder_setLastPoint` を追加し、`SkGraphics` image-generator bridge の C++ signature を `sk_sp<const SkData>` に合わせた。C ABI callback 形状は維持した。
+- final coverage は `covered 2988` / `split_covered 42` / `false_positive 296` / `na 284` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `1a5fb55a686feacb0103d15fcac869fac279a06d` から再比較する。1週/2週/3週候補を local refs から再確認する。PathData/PathBuilder churn、Graphite/Vulkan/Dawn/ANGLE rolls、codec color-profile churn、Rust PNG optional backend、SkParagraph/SkShaper signature churn、SVG/Skottie gradient changes、prebuilt compatibility drift が既知リスク。
+- 次サイクルでは、accepted baseline `a1f0df04bd133ec1594cd7fd463ed57845464b47` から再比較する。1週/2週/3週候補を local refs から再確認する。Graphite/Vulkan/Dawn/ANGLE rolls、AGTM/HDR metadata churn、image-generator constness fallout、SkPathBuilder/path migration、PDF attribute-list signature drift、SkSL WGSL/Metal codegen churn、Rust PNG optional backend が既知リスク。
 
 cycle records:
 
@@ -298,6 +298,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-074-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-075-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-076-2026-06-01.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-077-2026-06-01.md`
 
 ## Cycle close の条件
 

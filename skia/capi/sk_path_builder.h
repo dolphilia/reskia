@@ -100,6 +100,7 @@ reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *
 reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy); // (SkPathBuilder *path_builder, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt); // NULL path_builder returns NULL
 void SkPathBuilder_setPoint(reskia_path_builder_t *path_builder, size_t index, sk_point_t point); // NULL path_builder is no-op
+void SkPathBuilder_setLastPoint(reskia_path_builder_t *path_builder, sk_point_t point); // NULL input is no-op
 bool SkPathBuilder_contains(reskia_path_builder_t *path_builder, sk_point_t point); // NULL path_builder returns false
 /**
  * oval は非 NULL。NULL oval は no-op、NULL path_builder なら NULL (SkPathBuilder *path_builder, const SkRect *oval, SkScalar startAngleDeg, SkScalar sweepAngleDeg, bool forceMoveTo) -> SkPathBuilder *

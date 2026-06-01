@@ -29,7 +29,7 @@ struct ImageGeneratorFactoryContext {
 std::mutex g_image_generator_factory_mutex;
 std::shared_ptr<const ImageGeneratorFactoryContext> g_image_generator_factory_context;
 
-std::unique_ptr<SkImageGenerator> reskia_image_generator_from_encoded_data_factory(sk_sp<SkData> data) {
+std::unique_ptr<SkImageGenerator> reskia_image_generator_from_encoded_data_factory(sk_sp<const SkData> data) {
     std::shared_ptr<const ImageGeneratorFactoryContext> context;
     {
         std::lock_guard<std::mutex> lock(g_image_generator_factory_mutex);
