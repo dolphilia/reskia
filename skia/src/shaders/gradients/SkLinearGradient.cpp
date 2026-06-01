@@ -13,7 +13,7 @@
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkScalar.h"
 #include "include/core/SkShader.h"
-#include "include/effects/SkGradientShader.h"
+#include "include/effects/SkGradient.h"
 #include "include/private/base/SkFloatingPoint.h"
 #include "include/private/base/SkTArray.h"
 #include "src/core/SkReadBuffer.h"
@@ -137,3 +137,4 @@ sk_sp<SkShader> SkGradientShader::MakeLinear(const SkPoint pts[2],
                       localMatrix);
 }
 #endif
+

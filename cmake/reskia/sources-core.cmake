@@ -189,11 +189,8 @@ list(APPEND SOURCE_FILES
         src/core/SkPathPriv.cpp
         src/core/SkPathRaw.cpp
         src/core/SkPathRawShapes.cpp
-        src/core/SkPathRef.cpp
-        src/core/SkPath_editing.cpp
         src/core/SkPath_interpolate.cpp
         src/core/SkPath_pathdata.cpp
-        src/core/SkPath_pathref.cpp
         src/core/SkPathUtils.cpp
         src/core/SkPicture.cpp
         src/core/SkPictureData.cpp

@@ -5,6 +5,8 @@
 #include "sk_bitmap.h"
 
 #include "include/core/SkBitmap.h"
+#include "include/core/SkImageInfo.h"
+#include "src/core/SkMask.h"
 
 #include "../handles/static_sk_color_4f.h"
 #include "../handles/static_sk_color_space.h"
@@ -331,7 +333,16 @@ bool SkBitmap_installMaskPixels(reskia_bitmap_t *bitmap, reskia_mask_builder_t *
     if (bitmap == nullptr || mask == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkBitmap *>(bitmap)->installMaskPixels(* reinterpret_cast<SkMaskBuilder *>(mask));
+    auto *native_bitmap = reinterpret_cast<SkBitmap *>(bitmap);
+    auto *native_mask = reinterpret_cast<SkMaskBuilder *>(mask);
+    if (SkMask::kA8_Format != native_mask->format()) {
+        native_bitmap->reset();
+        return false;
+    }
+    return native_bitmap->installPixels(
+            SkImageInfo::MakeA8(native_mask->bounds().width(), native_mask->bounds().height()),
+            native_mask->image(),
+            native_mask->rowBytes());
 }
 
 bool SkBitmap_installPixels(reskia_bitmap_t *bitmap, const reskia_image_info_t *info, void *pixels, size_t rowBytes) { // inline

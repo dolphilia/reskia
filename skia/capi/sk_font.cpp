@@ -17,6 +17,7 @@
 #include "../handles/static_std_vector_sk_scalar-internal.h"
 #include "../handles/static_sk_typeface-internal.h"
 
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -423,7 +424,12 @@ bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path) 
     if (font == nullptr || path == nullptr) {
         return false;
     }
-    return as_font(font)->getPath(glyphID, reinterpret_cast<SkPath *>(path));
+    std::optional<SkPath> glyphPath = as_font(font)->getPath(glyphID);
+    if (!glyphPath.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(path) = std::move(*glyphPath);
+    return true;
 }
 
 void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx) {
