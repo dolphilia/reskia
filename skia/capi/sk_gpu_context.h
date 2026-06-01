@@ -243,6 +243,7 @@ void Graphite_Recorder_delete(reskia_graphite_recorder_t *recorder); // alias of
 reskia_graphite_insert_status_t Graphite_InsertStatus_new(); // success
 reskia_graphite_insert_status_t Graphite_InsertStatus_newWithValue(int32_t value); // invalid value maps to success
 int32_t Graphite_InsertStatus_operator_InsertStatus_V(reskia_graphite_insert_status_t status); // raw InsertStatus::V value
+reskia_string_t *Graphite_InsertStatus_message(reskia_graphite_insert_status_t status); // owned; current C ABI status values have an empty message
 bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status); // true only for success
 bool Graphite_Context_submit(reskia_graphite_context_t *ctx, bool sync_cpu); // NULL input returns false
 reskia_graphite_submit_info_t Graphite_SubmitInfo_new(); // default submit info

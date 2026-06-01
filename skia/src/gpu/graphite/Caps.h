@@ -125,11 +125,6 @@ public:
     /* Returns whether multisampled render to single sampled is supported. */
     bool msaaRenderToSingleSampledSupport() const { return fMSAARenderToSingleSampledSupport; }
 
-    /* Returns whether multisampled render to single sampled is supported for a given texture. */
-    virtual bool msaaTextureRenderToSingleSampledSupport(const TextureInfo& info) const {
-        return this->msaaRenderToSingleSampledSupport();
-    }
-
     /**
      * Returns whether a render pass can have MSAA/depth/stencil attachments and a resolve
      * attachment with mismatched sizes. Note: the MSAA attachment and the depth/stencil attachment
@@ -142,33 +137,30 @@ public:
 
     /* Get required depth attachment dimensions for a givin color attachment info and dimensions. */
     virtual SkISize getDepthAttachmentDimensions(const TextureInfo&,
-                                                 const SkISize colorAttachmentDimensions) const;
+                                                 const SkISize colorAttachmentDimensions) const {
+        return colorAttachmentDimensions;
+    }
 
-    /**
-     * TODO(b/390473370): Once backends initialize a Caps-level format table, these will not need
-     * to be virtual anymore:
-     */
-    virtual bool isSampleCountSupported(TextureFormat, SampleCount) const = 0;
+    bool isSampleCountSupported(TextureFormat, SampleCount) const;
     /* Return the TextureFormat that satisfies `dsFlags`. */
-    virtual TextureFormat getDepthStencilFormat(SkEnumBitMask<DepthStencilFlags>) const = 0;
+    TextureFormat getDepthStencilFormat(SkEnumBitMask<DepthStencilFlags>) const;
 
-    virtual TextureInfo getDefaultAttachmentTextureInfo(AttachmentDesc,
-                                                        Protected,
-                                                        Discardable) const = 0;
+    TextureInfo getDefaultAttachmentTextureInfo(AttachmentDesc,
+                                                Protected,
+                                                Discardable) const;
 
-    virtual TextureInfo getDefaultSampledTextureInfo(SkColorType,
-                                                     Mipmapped,
-                                                     Protected,
-                                                     Renderable) const = 0;
+    TextureInfo getDefaultSampledTextureInfo(SkColorType,
+                                             Mipmapped,
+                                             Protected,
+                                             Renderable) const;
 
-    virtual TextureInfo getTextureInfoForSampledCopy(const TextureInfo&,
-                                                     Mipmapped) const = 0;
+    TextureInfo getTextureInfoForSampledCopy(const TextureInfo&,  Mipmapped) const;
 
-    virtual TextureInfo getDefaultCompressedTextureInfo(SkTextureCompressionType,
-                                                        Mipmapped,
-                                                        Protected) const = 0;
+    TextureInfo getDefaultCompressedTextureInfo(SkTextureCompressionType,
+                                                Mipmapped,
+                                                Protected) const;
 
-    virtual TextureInfo getDefaultStorageTextureInfo(SkColorType) const = 0;
+    TextureInfo getDefaultStorageTextureInfo(SkColorType) const;
 
     SkColorType getDefaultColorType(const TextureInfo&) const;
 
@@ -183,23 +175,22 @@ public:
     // sampled targets to show MSAA isn't supported.
     SampleCount getCompatibleMSAASampleCount(const TextureInfo&) const;
 
-    bool isTexturable(const TextureInfo&) const;
-    virtual bool isRenderable(const TextureInfo&) const = 0;
-    virtual bool isStorage(const TextureInfo&) const = 0;
-    /**
-     * Backends may have restrictions on what types of textures support Device::writePixels().
-     * If this returns false then the caller should implement a fallback where a temporary texture
-     * is created, pixels are written to it, and then that is copied or drawn into the surface.
-     */
-    virtual bool supportsWritePixels(const TextureInfo&) const = 0;
-
-    /**
-     * Backends may have restrictions on what types of textures support Device::readPixels().
-     * If this returns false then the caller should implement a fallback where a temporary texture
-     * is created, the original texture is copied or drawn into it, and then pixels read from
-     * the temporary texture.
-     */
-    virtual bool supportsReadPixels(const TextureInfo&) const = 0;
+    // If true, the texture can be sampled within a shader (possibly with MSAA, although by default
+    // we consider multisampled textures not to be sampleable because that requires backend-specific
+    // shader code not exposed in SkSL).
+    bool isTexturable(const TextureInfo&, bool allowMSAA=false) const;
+    // If true, the texture can be rasterized and/or resolved to (possibly with MSAA)
+    bool isRenderable(const TextureInfo&) const;
+    // If true, the texture can be rasterized using multisample-render-to-single-sample features.
+    bool isRenderableWithMSRTSS(const TextureInfo&) const;
+    // If true, the texture can be the source of data copied to another texture or to a buffer.
+    // If false, the texture can only be copied via drawing (which requires isTexturable()).
+    bool isCopyableSrc(const TextureInfo&) const;
+    // If true, the texture can be the destination of data copied from another texture or buffer.
+    // If false, the texture can only be updated by drawing (which requires isRenderable()).
+    bool isCopyableDst(const TextureInfo&) const;
+    // If true, the texture can be used as a storage texture in compute shaders.
+    bool isStorage(const TextureInfo&) const;
 
      /**
      * Backends can optionally override this method to return meaningful sampler conversion info.
@@ -227,6 +218,9 @@ public:
     std::pair<SkColorType, bool /*isRGB888Format*/> supportedTransferColorType(
             SkColorType colorType,
             const TextureInfo& textureInfo) const;
+
+    // If true, uses experimental drawListLayer ordering.
+    bool useDrawListLayer() const { return fDrawListLayer; }
 
     /**
      * Returns the skgpu::Swizzle to use when sampling or reading back from a texture with the
@@ -512,6 +506,7 @@ protected:
     bool fMSAARenderToSingleSampledSupport = false;
     bool fDifferentResolveAttachmentSizeSupport = false;
     bool fAvoidMSAA = false;
+    bool fDrawListLayer = false;
 
     bool fComputeSupport = false;
     bool fSupportsAHardwareBufferImages = false;
@@ -573,10 +568,53 @@ protected:
     bool fSetBackendLabels = false;
 
 private:
-    virtual bool onIsTexturable(const TextureInfo&) const = 0;
-    virtual SkSpan<const ColorTypeInfo> getColorTypeInfos(const TextureInfo&) const = 0;
-
+    // TODO(michaelludwig): Remove these functions as Caps takes a more TextureFormat/Usage oriented
+    // approach to textures and color types.
     const ColorTypeInfo* getColorTypeInfo(SkColorType, const TextureInfo&) const;
+    virtual SkSpan<const ColorTypeInfo> getColorTypeInfos(const TextureInfo&) const = 0;
+    virtual TextureFormat getFormatForColorType(SkColorType) const = 0;
+
+    // Return a TextureInfo that is configured to support the given usages with the requested format
+    // and other properties. This is only called if getTextureSupport() matches for kOptimal tiling.
+    virtual TextureInfo onGetDefaultTextureInfo(SkEnumBitMask<TextureUsage> usage,
+                                                TextureFormat,
+                                                SampleCount,
+                                                Mipmapped,
+                                                Protected,
+                                                Discardable) const = 0;
+    // Validates format support and calls onGetDefaultTextureInfo if it would be valid
+    TextureInfo getDefaultTextureInfo(SkEnumBitMask<TextureUsage> usage,
+                                      TextureFormat,
+                                      SampleCount,
+                                      Mipmapped,
+                                      Protected,
+                                      Discardable) const;
+
+    // Return the supported TextureUsages and SampleCounts for a texture of the given format and
+    // tiling, assuming the textures are created with the requisite usages.
+    virtual std::pair<SkEnumBitMask<TextureUsage>, SkEnumBitMask<SampleCount>> getTextureSupport(
+            TextureFormat format, Tiling) const = 0;
+
+    // Return the mask of TextureUsages supported by the described texture, as well as its tiling
+    // representation. Subclasses can assume that this will only be called on valid TextureInfos
+    // and do not need to account for TextureFormat supported features; Caps will combine the usage
+    // and format support automatically.
+    virtual std::pair<SkEnumBitMask<TextureUsage>, Tiling> getTextureUsage(
+            const TextureInfo&) const = 0;
+
+    // Returns true if the texture supports all usages in `test`, checking its declared usages
+    // against its format's supported usages and its sample count against its format's supported
+    // sample counts.
+    //
+    // `allowMSAA=false` forces false to be returned for any info with a sample count > 1. The other
+    // allow flags are validation checks that are asserted against (and presumably implicit in the
+    // usages that a format supports).
+    bool isSupported(const TextureInfo&,
+                     SkEnumBitMask<TextureUsage> test,
+                     bool allowMSAA,
+                     bool allowExternal,
+                     bool allowCompressed,
+                     bool allowProtected) const;
 
     sk_sp<SkCapabilities> fCapabilities;
 };

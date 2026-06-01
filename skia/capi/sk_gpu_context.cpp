@@ -2146,11 +2146,16 @@ reskia_graphite_insert_status_t Graphite_InsertStatus_new() {
 }
 
 reskia_graphite_insert_status_t Graphite_InsertStatus_newWithValue(int32_t value) {
-    return value >= 0 && value <= 4 ? value : 0;
+    return value >= 0 && value <= 5 ? value : 0;
 }
 
 int32_t Graphite_InsertStatus_operator_InsertStatus_V(reskia_graphite_insert_status_t status) {
     return Graphite_InsertStatus_newWithValue(status);
+}
+
+reskia_string_t *Graphite_InsertStatus_message(reskia_graphite_insert_status_t status) {
+    (void) status;
+    return reinterpret_cast<reskia_string_t *>(new SkString());
 }
 
 bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status) {

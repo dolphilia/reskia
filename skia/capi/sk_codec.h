@@ -51,7 +51,6 @@ bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec); // NULL codec re
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t. NULL codec returns 0.
 bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubset); // (SkCodec* codec, SkIRect* desiredSubset) -> bool. codec/subset are required.
 reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedImageFormat. NULL codec returns -1.
-sk_stream_t SkCodec_getEncodedData(reskia_codec_t *codec); // NULL codec or missing encoded stream returns 0.
 /**
  * codec/info/pixels are required.
  * invalid input returns kInvalidParameters.

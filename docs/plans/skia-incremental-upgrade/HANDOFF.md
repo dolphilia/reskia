@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `dcbb6588a6c54754b1bf6251531fed974e80ce18`
-- next probe candidate: select a fixed mainline commit after `dcbb6588a6c54754b1bf6251531fed974e80ce18`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `ed220c490eea2ab10fcefe1a5786262724499b88`
+- next probe candidate: select a fixed mainline commit after `ed220c490eea2ab10fcefe1a5786262724499b88`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -111,20 +111,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 077 accepted: `a1f0df04bd133ec1594cd7fd463ed57845464b47`。
 - cycle 078 accepted: `bef2a0fe6b96f0a067e26abfdac4ae4f8f588f20`。
 - cycle 079 accepted: `dcbb6588a6c54754b1bf6251531fed974e80ce18`。
+- cycle 080 accepted: `ed220c490eea2ab10fcefe1a5786262724499b88`。
 
 未実施:
 
-- cycle 080 candidate selection from `dcbb6588a6c54754b1bf6251531fed974e80ce18`.
-- cycle 080 candidate checkout を使った coverage regression。
-- cycle 080 の source/header sync と C API 追従実装。
+- cycle 081 candidate selection from `ed220c490eea2ab10fcefe1a5786262724499b88`.
+- cycle 081 candidate checkout を使った coverage regression。
+- cycle 081 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 080 の candidate selection から始める。
+次の作業は、cycle 081 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `dcbb6588a6c54754b1bf6251531fed974e80ce18` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `ed220c490eea2ab10fcefe1a5786262724499b88` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
@@ -207,21 +208,23 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `dcbb6588a6c54754b1bf6251531fed974e80ce18`
-- committer date: 2026-02-12
-- subject: Roll ANGLE from 1d00645675b0 to 71ead6fdeb53 (16 revisions)
+- `ed220c490eea2ab10fcefe1a5786262724499b88`
+- committer date: 2026-02-26
+- subject: Roll ANGLE from 1f84f5a46684 to 62f0f79b7d4d (17 revisions)
 
-cycle 079 結果:
+cycle 080 結果:
 
-- baseline `bef2a0fe6b96f0a067e26abfdac4ae4f8f588f20` から `dcbb6588a6c54754b1bf6251531fed974e80ce18` を採用した。159 commits、`include` / `modules` は 40 files changed, +302/-484、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 138 files changed, +1711/-1759。
-- 1週間候補は 73 commits、3週間候補は 248 commits。2週間候補は standard width で、Core span helper migration、SkLog/ports rename、SkParagraph/Skottie、Graphite/Ganesh/Vulkan/Dawn/ANGLE drift を拾えるため採用した。
-- Core span helper migration、PathData cleanup、SkLog ports rename、SkParagraph/Skottie drift、Graphite/Ganesh/Vulkan/Dawn/ANGLE drift を同期した。
-- C API は upstream で削除された `SkMatrix::mapXY` / `SkTypeface::getTableTags` に対応する `SkMatrix_mapXY` / `SkTypeface_getTableTags` を削除した。既存代替の `SkMatrix_mapXYToPoint` と `SkTypeface_readTableTags` は維持した。
-- prebuilt `libsvg.a` が参照する旧 `SkPath::transform(..., SkApplyPerspectiveClip)` と `SkMatrix::mapRect(..., SkApplyPerspectiveClip)` は `SkPrebuiltCompat.cpp` の shim で維持した。
-- final coverage は `covered 2944` / `split_covered 42` / `false_positive 296` / `na 274` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final stale C API report は `stale_capi 0`。52 `signature_changed_review` rows は既存 C ABI の pointer/count 互換 adapter として cycle record に記録済み。
+- baseline `dcbb6588a6c54754b1bf6251531fed974e80ce18` から `ed220c490eea2ab10fcefe1a5786262724499b88` を採用した。169 commits、`include` / `modules` は 30 files changed, +238/-248、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 254 files changed, +6545/-4220。
+- 1週間候補は 89 commits、3週間候補は 236 commits。2週間候補は standard width で、Graphite/Ganesh text GPU refactor、D3D backend surface split、codec/source drift、SkParagraph/Skottie drift、Dawn/ANGLE rolls を拾えるため採用した。
+- tracked `skia/DEPS`、`include`、`modules/skparagraph`、`src` を同期した。GN/Bazel/CanvasKit/test-only files と optional Rust PNG/ICC implementation `.cpp` は同期対象外にした。
+- C API は upstream public surface から外れた `SkCodec_getEncodedData` を削除し、`Graphite_InsertStatus_message` と status range expansion を追加した。現行 C ABI は status value のみ保持するため `message()` は owned empty `SkString` を返す。
+- `FontCollection::~FontCollection()` は lifetime-only として `false_positive` に分類した。既存の `SkParagraph_FontCollection_delete` が lifetime を表現している。
+- candidate の text/gpu が C++20 concepts を使うため、GPU または SkParagraph 有効時の `reskia` compile feature を C++20 にした。通常 prebuilt/source build は C++17 のまま。
+- prebuilt `libsvg.a` が参照する旧 `SkDOM::build(SkStream&)` overload は compatibility overload として維持した。
+- final coverage は `covered 2943` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は `stale_capi 0`。10 `signature_changed_review` rows は D3D native info 非公開または既存 C ABI 互換として cycle record に記録済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `dcbb6588a6c54754b1bf6251531fed974e80ce18` から再比較する。1週/2週/3週候補を local refs から再確認する。Graphite/Vulkan/Dawn/ANGLE rolls、SkLog port fallout、span-helper signature-review churn、SkParagraph/Skottie text drift、optional Android/Vulkan/D3D backend drift、prebuilt compatibility symbols が既知リスク。
+- 次サイクルでは、accepted baseline `ed220c490eea2ab10fcefe1a5786262724499b88` から再比較する。1週/2週/3週候補を local refs から再確認する。C++20 text/gpu requirements、Graphite/Ganesh text GPU churn、D3D/Dawn/Vulkan/ANGLE rolls、codec encoded-data public surface removal、prebuilt `SkDOM` compatibility、optional Rust backend drift が既知リスク。
 
 cycle records:
 
@@ -304,6 +307,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-077-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-078-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-079-2026-06-01.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-080-2026-06-01.md`
 
 ## Cycle close の条件
 
