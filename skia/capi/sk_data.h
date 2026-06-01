@@ -50,6 +50,7 @@ bool SkData_refCntGreaterThan(reskia_data_t *sk_data, int32_t threadIsolatedTest
 
 // static
 
+bool SkData_Equals(const reskia_data_t *a, const reskia_data_t *b); // NULL equals NULL only
 sk_data_t SkData_MakeWithCopy(const uint8_t *data, size_t length); // data may be null only when length == 0; contents are copied
 sk_data_t SkData_MakeUninitialized(size_t length); // (size_t length) -> sk_data_t
 sk_data_t SkData_MakeZeroInitialized(size_t length); // (size_t length) -> sk_data_t

@@ -61,7 +61,7 @@ SkISize Caps::getDepthAttachmentDimensions(const TextureInfo& textureInfo,
 }
 
 bool Caps::isTexturable(const TextureInfo& info) const {
-    if (info.numSamples() > 1) {
+    if (info.sampleCount() > SampleCount::k1) {
         return false;
     }
     return this->onIsTexturable(info);

@@ -28,6 +28,13 @@ sk_data_t make_data_handle(sk_sp<SkData> data) {
     return static_sk_data_make(std::move(data));
 }
 
+sk_data_t make_data_handle(sk_sp<const SkData> data) {
+    if (!data) {
+        return 0;
+    }
+    return static_sk_data_make(sk_ref_sp(const_cast<SkData *>(data.get())));
+}
+
 SkRecorder *as_sk_recorder(reskia_recording_context_t *context) {
     return nullptr;
 }

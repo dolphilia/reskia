@@ -46,6 +46,10 @@ sk_data_t make_data_handle(sk_sp<SkData> data) {
     return data ? static_sk_data_make(std::move(data)) : 0;
 }
 
+sk_data_t make_data_handle(sk_sp<const SkData> data) {
+    return data ? static_sk_data_make(sk_ref_sp(const_cast<SkData *>(data.get()))) : 0;
+}
+
 bool has_i_size_handle(sk_i_size_t size) {
     return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
 }

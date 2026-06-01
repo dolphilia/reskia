@@ -314,7 +314,7 @@ bool Graphite_TextureInfo_equals(const reskia_graphite_texture_info_t *info, con
 bool Graphite_TextureInfo_notEquals(const reskia_graphite_texture_info_t *info, const reskia_graphite_texture_info_t *other); // NULL input returns false
 bool Graphite_TextureInfo_isValid(const reskia_graphite_texture_info_t *info); // NULL input returns false
 int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info); // NULL input returns 0
-uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info); // NULL input returns 0
+uint32_t Graphite_TextureInfo_sampleCount(const reskia_graphite_texture_info_t *info); // NULL input returns 0
 bool Graphite_TextureInfo_mipmapped(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_isProtected(const reskia_graphite_texture_info_t *info); // NULL input returns false
 bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t *info, reskia_graphite_mtl_texture_info_t *out_info); // NULL/non-Metal returns false

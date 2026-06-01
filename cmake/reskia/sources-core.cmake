@@ -38,6 +38,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkExif.cpp
         src/codec/SkGainmapInfo.cpp
         src/codec/SkHdrAgtm.cpp
+        src/codec/SkHdrAgtmParse.cpp
         src/codec/SkHdrMetadata.cpp
         src/codec/SkIcoCodec.cpp
         src/codec/SkImageGenerator_FromEncoded.cpp

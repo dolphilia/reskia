@@ -2833,7 +2833,7 @@ reskia_graphite_texture_info_t *Graphite_TextureInfo_newMtl(const reskia_graphit
         return nullptr;
     }
     skgpu::graphite::MtlTextureInfo mtl_info(
-            info->sample_count,
+            skgpu::graphite::ToSampleCount(info->sample_count),
             to_graphite_mipmapped(info->mipmapped),
             static_cast<MTLPixelFormat>(info->format),
             static_cast<MTLTextureUsage>(info->usage),
@@ -2865,7 +2865,7 @@ bool Graphite_MtlTextureInfo_newTexture(void *texture, reskia_graphite_mtl_textu
         return false;
     }
     skgpu::graphite::MtlTextureInfo mtl_info(reinterpret_cast<CFTypeRef>(texture));
-    out_info->sample_count = mtl_info.fSampleCount;
+    out_info->sample_count = static_cast<uint8_t>(mtl_info.fSampleCount);
     out_info->mipmapped = from_graphite_mipmapped(mtl_info.fMipmapped);
     out_info->format = mtl_info.fFormat;
     out_info->usage = mtl_info.fUsage;
@@ -2941,9 +2941,9 @@ int Graphite_TextureInfo_backend(const reskia_graphite_texture_info_t *info) {
 #endif
 }
 
-uint32_t Graphite_TextureInfo_numSamples(const reskia_graphite_texture_info_t *info) {
+uint32_t Graphite_TextureInfo_sampleCount(const reskia_graphite_texture_info_t *info) {
 #if defined(SK_GRAPHITE)
-    return info != nullptr ? as_graphite_texture_info(info)->numSamples() : 0;
+    return info != nullptr ? static_cast<uint8_t>(as_graphite_texture_info(info)->sampleCount()) : 0;
 #else
     (void) info;
     return 0;
@@ -2980,7 +2980,7 @@ bool Graphite_TextureInfo_getMtlTextureInfo(const reskia_graphite_texture_info_t
     if (!skgpu::graphite::TextureInfos::GetMtlTextureInfo(*as_graphite_texture_info(info), &mtl_info)) {
         return false;
     }
-    out_info->sample_count = mtl_info.fSampleCount;
+    out_info->sample_count = static_cast<uint8_t>(mtl_info.fSampleCount);
     out_info->mipmapped = from_graphite_mipmapped(mtl_info.fMipmapped);
     out_info->format = mtl_info.fFormat;
     out_info->usage = mtl_info.fUsage;

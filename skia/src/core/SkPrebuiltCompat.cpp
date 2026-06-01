@@ -7,6 +7,7 @@
 #include "include/core/SkPath.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/pathops/SkPathOps.h"
+#include "modules/skcms/src/skcms_public.h"
 
 extern "C" SkPath SkPathBuilder_detach_noarg_compat(SkPathBuilder* self)
         __asm("__ZN13SkPathBuilder6detachEv");
@@ -89,4 +90,24 @@ extern "C" bool SkPathOps_AsWinding_outparam_compat(
         return true;
     }
     return false;
+}
+
+extern "C" __attribute__((weak)) bool skcms_TransferFunction_isPQ(
+        const skcms_TransferFunction* tf) {
+    return tf != nullptr &&
+           tf->g == -static_cast<float>(skcms_TFType_PQ) &&
+           tf->b == 0.0f &&
+           tf->c == 0.0f &&
+           tf->d == 0.0f &&
+           tf->e == 0.0f &&
+           tf->f == 0.0f;
+}
+
+extern "C" __attribute__((weak)) bool skcms_TransferFunction_isHLG(
+        const skcms_TransferFunction* tf) {
+    return tf != nullptr &&
+           tf->g == -static_cast<float>(skcms_TFType_HLG) &&
+           tf->d == 0.0f &&
+           tf->e == 0.0f &&
+           tf->f == 0.0f;
 }

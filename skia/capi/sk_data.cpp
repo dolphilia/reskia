@@ -147,6 +147,10 @@ bool SkData_refCntGreaterThan(reskia_data_t *sk_data, int32_t threadIsolatedTest
 
 // static
 
+bool SkData_Equals(const reskia_data_t *a, const reskia_data_t *b) {
+    return SkData::Equals(reinterpret_cast<const SkData *>(a), reinterpret_cast<const SkData *>(b));
+}
+
 sk_data_t SkData_MakeWithCopy(const uint8_t *data, size_t length) {
     if (data == nullptr && length > 0) {
         return 0;

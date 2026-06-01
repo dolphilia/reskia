@@ -855,7 +855,7 @@ bool smoke_context_create_destroy() {
                !Graphite_TextureInfo_equals(nullptr, nullptr) &&
                !Graphite_TextureInfo_isValid(nullptr) &&
                Graphite_TextureInfo_backend(nullptr) == 0 &&
-               Graphite_TextureInfo_numSamples(nullptr) == 0 &&
+               Graphite_TextureInfo_sampleCount(nullptr) == 0 &&
                !Graphite_TextureInfo_mipmapped(nullptr) &&
                !Graphite_TextureInfo_isProtected(nullptr) &&
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
@@ -1269,7 +1269,7 @@ bool smoke_context_create_destroy() {
         if (!check(default_texture_info != nullptr &&
                    !Graphite_TextureInfo_isValid(default_texture_info) &&
                    Graphite_TextureInfo_backend(default_texture_info) == 0 &&
-                   Graphite_TextureInfo_numSamples(default_texture_info) == 0 &&
+                   Graphite_TextureInfo_sampleCount(default_texture_info) == 0 &&
                    !Graphite_TextureInfo_mipmapped(default_texture_info) &&
                    !Graphite_TextureInfo_isProtected(default_texture_info) &&
                    texture_info_string != nullptr,
