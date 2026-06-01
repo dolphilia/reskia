@@ -14,6 +14,8 @@
 #include "modules/skparagraph/include/ParagraphBuilder.h"
 #include "modules/skparagraph/include/ParagraphStyle.h"
 #include "modules/skparagraph/include/TextStyle.h"
+#include "modules/skunicode/include/SkUnicode.h"
+#include "modules/skunicode/include/SkUnicode_icu.h"
 
 namespace {
 
@@ -36,6 +38,10 @@ bool has_non_white_pixel(const SkBitmap& bitmap) {
     return false;
 }
 
+sk_sp<SkUnicode> make_unicode() {
+    return SkUnicodes::ICU::Make();
+}
+
 bool smoke_layout_and_paint() {
     using namespace skia::textlayout;
 
@@ -53,11 +59,11 @@ bool smoke_layout_and_paint() {
     text_style.setFontFamilies({SkString("sans-serif")});
     paragraph_style.setTextStyle(text_style);
 
-    std::unique_ptr<ParagraphBuilder> builder = ParagraphBuilder::make(paragraph_style, fonts);
+    std::unique_ptr<ParagraphBuilder> builder = ParagraphBuilder::make(paragraph_style, fonts, make_unicode());
     if (!check(builder != nullptr, "ParagraphBuilder::make")) return false;
 
     builder->pushStyle(text_style);
-    builder->addText(u8"Hello 日本語\nمرحبا 123");
+    builder->addText("Hello Skia\nParagraph 123");
     builder->pop();
 
     std::unique_ptr<Paragraph> paragraph = builder->Build();

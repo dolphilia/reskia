@@ -76,6 +76,7 @@ void AttributeList_delete(reskia_pdf_attribute_list_t *attributes);
 void AttributeList_appendInt(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], int value);
 void AttributeList_appendFloat(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], float value);
 void AttributeList_appendName(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const char value[]);
+void AttributeList_appendTextString(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const char value[]);
 void AttributeList_appendFloatArray(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], const float values[], size_t count);
 void AttributeList_appendNodeIdArray(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const int nodeIds[], size_t count);
 void DateTime_toISO8601(const reskia_pdf_date_time_t *date_time, reskia_string_t *dst);

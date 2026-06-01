@@ -15,6 +15,7 @@
 #include "modules/skparagraph/include/TextStyle.h"
 #include "modules/skparagraph/src/ParagraphImpl.h"
 #include "modules/skunicode/include/SkUnicode.h"
+#include "modules/skunicode/include/SkUnicode_icu.h"
 
 #include <algorithm>
 #include <memory>
@@ -161,6 +162,14 @@ std::vector<SkUnicode::LineBreakBefore> make_line_breaks(const size_t *positions
     return out;
 }
 
+sk_sp<SkUnicode> make_unicode() {
+#if defined(SK_UNICODE_ICU_IMPLEMENTATION)
+    return SkUnicodes::ICU::Make();
+#else
+    return nullptr;
+#endif
+}
+
 }  // namespace
 
 extern "C" {
@@ -225,7 +234,10 @@ reskia_paragraph_builder_t *SkParagraph_ParagraphBuilder_make(const reskia_parag
     if (style == nullptr || font_collection == nullptr) {
         return nullptr;
     }
-    auto builder = ParagraphBuilder::make(*as_paragraph_style(style), sk_ref_sp(as_font_collection(font_collection)));
+    auto builder = ParagraphBuilder::make(
+        *as_paragraph_style(style),
+        sk_ref_sp(as_font_collection(font_collection)),
+        make_unicode());
     return reinterpret_cast<reskia_paragraph_builder_t *>(builder.release());
 }
 

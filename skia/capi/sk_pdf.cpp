@@ -153,6 +153,13 @@ void AttributeList_appendName(reskia_pdf_attribute_list_t *attributes, const cha
     reinterpret_cast<SkPDF::AttributeList *>(attributes)->appendName(owner, attrName, value);
 }
 
+void AttributeList_appendTextString(reskia_pdf_attribute_list_t *attributes, const char owner[], const char attrName[], const char value[]) {
+    if (attributes == nullptr || owner == nullptr || attrName == nullptr || value == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkPDF::AttributeList *>(attributes)->appendTextString(owner, attrName, value);
+}
+
 void AttributeList_appendFloatArray(reskia_pdf_attribute_list_t *attributes, const char owner[], const char name[], const float values[], size_t count) {
     if (attributes == nullptr || owner == nullptr || name == nullptr || (values == nullptr && count > 0)) {
         return;

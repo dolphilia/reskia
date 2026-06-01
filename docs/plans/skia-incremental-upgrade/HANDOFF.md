@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `e3c2686662294e45d56923b21c991c32a6c0863d`
-- next probe candidate: select a fixed mainline commit after `e3c2686662294e45d56923b21c991c32a6c0863d`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `b1569739f431d0b0f974f639c9356b06400682e9`
+- next probe candidate: select a fixed mainline commit after `b1569739f431d0b0f974f639c9356b06400682e9`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -106,20 +106,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 072 accepted: `5e03cbcadaf57b0d6a16029a08627f924d3c7352`。
 - cycle 073 accepted: `d13c1deb15577be689ef622de3c9bc7299cd0579`。
 - cycle 074 accepted: `e3c2686662294e45d56923b21c991c32a6c0863d`。
+- cycle 075 accepted: `b1569739f431d0b0f974f639c9356b06400682e9`。
 
 未実施:
 
-- cycle 075 candidate selection from `e3c2686662294e45d56923b21c991c32a6c0863d`.
-- cycle 075 candidate checkout を使った coverage regression。
-- cycle 075 の source/header sync と C API 追従実装。
+- cycle 076 candidate selection from `b1569739f431d0b0f974f639c9356b06400682e9`.
+- cycle 076 candidate checkout を使った coverage regression。
+- cycle 076 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 075 の candidate selection から始める。
+次の作業は、cycle 076 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `e3c2686662294e45d56923b21c991c32a6c0863d` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `b1569739f431d0b0f974f639c9356b06400682e9` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
@@ -202,21 +203,21 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `e3c2686662294e45d56923b21c991c32a6c0863d`
-- committer date: 2025-12-02
-- subject: Add skhdr::Agtm interface
+- `b1569739f431d0b0f974f639c9356b06400682e9`
+- committer date: 2025-12-16
+- subject: Roll ANGLE from 1d38433509dc to 4f4f02fe5be1 (14 revisions)
 
-cycle 074 結果:
+cycle 075 結果:
 
-- baseline `d13c1de...` から `e3c2686...` を採用した。136 commits、`include` / `modules` は 40 files changed, +280/-83、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 155 files changed, +2840/-1353。
-- codec/HDR AGTM and metadata、`SkData`/encoded-data const drift、Graphite `SampleCount`、Dawn/Vulkan/Metal texture info churn、skcms roll を同期した。
-- C API は `SkData_Equals` と `Graphite_TextureInfo_sampleCount` を追加し、upstream で削除された `Graphite_TextureInfo_numSamples` を削除した。
-- `SampleCount` value object と Dawn/Vulkan optional backend constructor rows は、既存 optional-backend policy に沿って `na` に分類した。
-- prebuilt static library compatibility のため、旧 skcms にない `skcms_TransferFunction_isPQ` / `skcms_TransferFunction_isHLG` weak symbols を `SkPrebuiltCompat.cpp` で維持した。
-- final coverage は `covered 3028` / `split_covered 42` / `false_positive 296` / `na 284` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- baseline `e3c2686...` から `b156973...` を採用した。176 commits、`include` / `modules` は 33 files changed, +349/-312、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 131 files changed, +2113/-1621。
+- `SkGradient` 新規 public API、PDF structure attribute、codec color profile、SkParagraph builder/fallback signature drift、Graphite/Vulkan/precompile drift、SVG/Skottie gradient drift を同期した。
+- C API は `SkGradient` opaque wrappers と `AttributeList_appendTextString` を追加し、SkParagraph wrappers は新しい `SkUnicode` / fallback families 引数に追従した。
+- `SkPathBuilder::computeFiniteBounds` の `std::optional<SkRect>` 化は、既存 bool/out-param C ABI 互換として維持した。
+- prebuilt static library compatibility のため、旧 `SkGradientShader::MakeLinear` / `MakeRadial` / `MakeTwoPointConical` symbols を `SkPrebuiltCompat.cpp` で forward した。
+- final coverage は `covered 3032` / `split_covered 42` / `false_positive 296` / `na 284` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `e3c2686662294e45d56923b21c991c32a6c0863d` から再比較する。1週/2週/3週候補を local refs から再確認する。Graphite `SampleCount` migration、Dawn/Vulkan/ANGLE rolls、libpng/FreeType rolls、Rust PNG optional backend、SkParagraph/SkShaper churn、prebuilt compatibility drift が既知リスク。
+- 次サイクルでは、accepted baseline `b1569739f431d0b0f974f639c9356b06400682e9` から再比較する。1週/2週/3週候補を local refs から再確認する。Graphite/Vulkan/Dawn/ANGLE rolls、codec color-profile churn、Rust PNG optional backend、SkParagraph/SkShaper signature churn、SVG/Skottie gradient changes、prebuilt compatibility drift が既知リスク。
 
 cycle records:
 
@@ -294,6 +295,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-072-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-073-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-074-2026-06-01.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-075-2026-06-01.md`
 
 ## Cycle close の条件
 

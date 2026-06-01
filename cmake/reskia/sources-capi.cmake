@@ -55,6 +55,7 @@ list(APPEND SOURCE_FILES
         capi/sk_font_style_set.cpp
         capi/sk_font_style.cpp
         capi/sk_font.cpp
+        capi/sk_gradient.cpp
         capi/sk_gradient_shader.cpp
         capi/sk_graphics.cpp
         capi/sk_gpu_backend_surface.cpp

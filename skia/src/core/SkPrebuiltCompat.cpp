@@ -6,8 +6,13 @@
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPath.h"
 #include "include/core/SkPathBuilder.h"
+#include "include/core/SkPoint.h"
+#include "include/core/SkShader.h"
+#include "include/effects/SkGradientShader.h"
 #include "include/pathops/SkPathOps.h"
 #include "modules/skcms/src/skcms_public.h"
+
+#include <utility>
 
 extern "C" SkPath SkPathBuilder_detach_noarg_compat(SkPathBuilder* self)
         __asm("__ZN13SkPathBuilder6detachEv");
@@ -110,4 +115,85 @@ extern "C" __attribute__((weak)) bool skcms_TransferFunction_isHLG(
            tf->d == 0.0f &&
            tf->e == 0.0f &&
            tf->f == 0.0f;
+}
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeLinear_old_interp_compat(
+        const SkPoint pts[2],
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix)
+        __asm("__ZN16SkGradientShader10MakeLinearEPK7SkPointPK8SkRGBA4fIL11SkAlphaType3EE5sk_spI12SkColorSpaceEPKfi10SkTileModeRKNS_13InterpolationEPK8SkMatrix");
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeLinear_old_interp_compat(
+        const SkPoint pts[2],
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix) {
+    return SkGradientShader::MakeLinear(
+            pts, colors, std::move(colorSpace), pos, colorCount, mode, interp, localMatrix);
+}
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeRadial_old_interp_compat(
+        const SkPoint& center,
+        SkScalar radius,
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix)
+        __asm("__ZN16SkGradientShader10MakeRadialERK7SkPointfPK8SkRGBA4fIL11SkAlphaType3EE5sk_spI12SkColorSpaceEPKfi10SkTileModeRKNS_13InterpolationEPK8SkMatrix");
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeRadial_old_interp_compat(
+        const SkPoint& center,
+        SkScalar radius,
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix) {
+    return SkGradientShader::MakeRadial(
+            center, radius, colors, std::move(colorSpace), pos, colorCount, mode, interp, localMatrix);
+}
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeTwoPointConical_old_interp_compat(
+        const SkPoint& start,
+        SkScalar startRadius,
+        const SkPoint& end,
+        SkScalar endRadius,
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix)
+        __asm("__ZN16SkGradientShader19MakeTwoPointConicalERK7SkPointfS2_fPK8SkRGBA4fIL11SkAlphaType3EE5sk_spI12SkColorSpaceEPKfi10SkTileModeRKNS_13InterpolationEPK8SkMatrix");
+
+extern "C" sk_sp<SkShader> SkGradientShader_MakeTwoPointConical_old_interp_compat(
+        const SkPoint& start,
+        SkScalar startRadius,
+        const SkPoint& end,
+        SkScalar endRadius,
+        const SkColor4f colors[],
+        sk_sp<SkColorSpace> colorSpace,
+        const SkScalar pos[],
+        int colorCount,
+        SkTileMode mode,
+        const SkGradient::Interpolation& interp,
+        const SkMatrix* localMatrix) {
+    return SkGradientShader::MakeTwoPointConical(
+            start, startRadius, end, endRadius, colors, std::move(colorSpace), pos, colorCount,
+            mode, interp, localMatrix);
 }

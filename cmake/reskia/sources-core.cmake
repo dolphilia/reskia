@@ -32,6 +32,7 @@ list(APPEND SOURCE_FILES
         src/codec/SkBmpRLECodec.cpp
         src/codec/SkBmpStandardCodec.cpp
         src/codec/SkCodec.cpp
+        src/codec/SkCodecColorProfile.cpp
         src/codec/SkCodecImageGenerator.cpp
         src/codec/SkColorPalette.cpp
         src/codec/SkEncodedInfo.cpp
