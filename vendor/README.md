@@ -1,24 +1,36 @@
 # vendor
 
-比較・参照用の Skia ソース取得先を管理するディレクトリです。
+This directory stores the Skia source lock and local reference checkouts used
+when Reskia tracks upstream Skia.
 
-- `skia-source.lock`: 取得元 URL と固定コミットを管理するロックファイル（追跡対象）
-- `skia-upstream/`: 比較・参照用の実クローン（`.gitignore` で追跡対象外）
+## Files
 
-現在の baseline:
+- `skia-source.lock`: tracked lock file containing the accepted Skia source URL
+  and commit.
+- `skia-upstream/`: local checkout of the accepted baseline, ignored by git.
+- `skia-upstream-candidate/`: optional local checkout for upgrade probes,
+  ignored by git.
+
+## Current Baseline
 
 - `SKIA_REF=70f9d90bc8e6a56101d036153cfef28088e57f5b`
 - `SKIA_BASELINE_DATE=2026-06-01`
 
-取得・更新は以下を使います。
+Fetch or refresh the local reference checkout with:
 
 ```bash
 scripts/fetch_skia_upstream.sh
 ```
 
-段階的アップグレードでは、probe と verification が完了するまで `skia-source.lock` を更新しません。候補 commit は固定 hash として扱い、floating `main` を baseline にしないでください。
+## Upgrade Rule
 
-関連文書:
+During an incremental Skia upgrade, do not update `skia-source.lock` until the
+candidate commit has passed probe and verification.
 
+Always treat upgrade candidates as fixed commit hashes. Do not use a floating
+`main` branch as the baseline or as an accepted candidate.
+
+## Related Documents
+
+- `docs/en/guides/skia-upgrade-workflow.md`
 - `docs/ja/plans/skia-incremental-upgrade/`
-- `docs/ja/notes/skia-incremental-upgrade-readiness-2026-05-22.md`

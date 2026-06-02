@@ -1,21 +1,26 @@
 # window_shapes
 
-`window_shapes.rs` は、Reskia で CPU ラスタ描画した図形を `winit + softbuffer` のウィンドウへ表示する最小サンプルです。
+`window_shapes.rs` is a minimal example that draws CPU-rasterized shapes with
+Reskia and presents them in a `winit` + `softbuffer` window.
 
-## 事前準備
+## Build Reskia
 
-`libreskia` をビルドしておきます（例: prebuilt Debug）。
+Build `libreskia` first. The default dependency mode is `prebuilt`.
 
 ```bash
 cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Debug
 cmake --build skia/cmake-build-local -j 8
 ```
 
-## 実行
+## Run the Example
+
+Run the example from the repository root and point `RESKIA_LIB_DIR` at the
+directory that contains `libreskia.dylib` or the platform equivalent.
 
 ```bash
-RESKIA_LIB_DIR=/Users/dolphilia/github/reskia/skia/cmake-build-local \
+RESKIA_LIB_DIR="$PWD/skia/cmake-build-local" \
   cargo run -p reskia --example window_shapes
 ```
 
-`RESKIA_LIB_DIR` は `libreskia.dylib` があるディレクトリに合わせて変更してください。
+On macOS, the built library is normally
+`skia/cmake-build-local/libreskia.dylib`.

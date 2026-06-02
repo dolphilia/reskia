@@ -5,14 +5,12 @@ Reskia rebuilds Google Skia with CMake and provides C API bindings for use from 
 ## Documentation
 
 - [日本語](docs/ja/README.md)
-- English: planned (`docs/en/`)
+- [English](docs/en/README.md)
 - Deutsch: planned (`docs/de/`)
 
 ## Quick Start
 
-The current detailed setup, build, and maintenance notes are available in the Japanese documentation:
+The current detailed setup, build, and maintenance notes are available in Japanese and English:
 
-- [Repository guide](docs/ja/README.md)
-- [Guides](docs/ja/guides/)
-- [Notes](docs/ja/notes/)
-- [Plans](docs/ja/plans/)
+- [English documentation](docs/en/README.md)
+- [Japanese documentation](docs/ja/README.md)
