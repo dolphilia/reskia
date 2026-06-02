@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `ed220c490eea2ab10fcefe1a5786262724499b88`
-- next probe candidate: select a fixed mainline commit after `ed220c490eea2ab10fcefe1a5786262724499b88`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `38761e1803d05e0eca689a296a4ed6ab20e0323f`
+- next probe candidate: select a fixed mainline commit after `38761e1803d05e0eca689a296a4ed6ab20e0323f`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -112,20 +112,21 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 078 accepted: `bef2a0fe6b96f0a067e26abfdac4ae4f8f588f20`。
 - cycle 079 accepted: `dcbb6588a6c54754b1bf6251531fed974e80ce18`。
 - cycle 080 accepted: `ed220c490eea2ab10fcefe1a5786262724499b88`。
+- cycle 081 accepted: `38761e1803d05e0eca689a296a4ed6ab20e0323f`。
 
 未実施:
 
-- cycle 081 candidate selection from `ed220c490eea2ab10fcefe1a5786262724499b88`.
-- cycle 081 candidate checkout を使った coverage regression。
-- cycle 081 の source/header sync と C API 追従実装。
+- cycle 082 candidate selection from `38761e1803d05e0eca689a296a4ed6ab20e0323f`.
+- cycle 082 candidate checkout を使った coverage regression。
+- cycle 082 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 081 の candidate selection から始める。
+次の作業は、cycle 082 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `ed220c490eea2ab10fcefe1a5786262724499b88` より後の固定 mainline commit を local refs から選ぶ。
+1. baseline `38761e1803d05e0eca689a296a4ed6ab20e0323f` より後の固定 mainline commit を local refs から選ぶ。
 2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
@@ -208,23 +209,22 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `ed220c490eea2ab10fcefe1a5786262724499b88`
-- committer date: 2026-02-26
-- subject: Roll ANGLE from 1f84f5a46684 to 62f0f79b7d4d (17 revisions)
+- `38761e1803d05e0eca689a296a4ed6ab20e0323f`
+- committer date: 2026-03-12
+- subject: Reland "Graphite: add an API function to check whether there is pending GPU work"
 
-cycle 080 結果:
+cycle 081 結果:
 
-- baseline `dcbb6588a6c54754b1bf6251531fed974e80ce18` から `ed220c490eea2ab10fcefe1a5786262724499b88` を採用した。169 commits、`include` / `modules` は 30 files changed, +238/-248、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 254 files changed, +6545/-4220。
-- 1週間候補は 89 commits、3週間候補は 236 commits。2週間候補は standard width で、Graphite/Ganesh text GPU refactor、D3D backend surface split、codec/source drift、SkParagraph/Skottie drift、Dawn/ANGLE rolls を拾えるため採用した。
-- tracked `skia/DEPS`、`include`、`modules/skparagraph`、`src` を同期した。GN/Bazel/CanvasKit/test-only files と optional Rust PNG/ICC implementation `.cpp` は同期対象外にした。
-- C API は upstream public surface から外れた `SkCodec_getEncodedData` を削除し、`Graphite_InsertStatus_message` と status range expansion を追加した。現行 C ABI は status value のみ保持するため `message()` は owned empty `SkString` を返す。
-- `FontCollection::~FontCollection()` は lifetime-only として `false_positive` に分類した。既存の `SkParagraph_FontCollection_delete` が lifetime を表現している。
-- candidate の text/gpu が C++20 concepts を使うため、GPU または SkParagraph 有効時の `reskia` compile feature を C++20 にした。通常 prebuilt/source build は C++17 のまま。
-- prebuilt `libsvg.a` が参照する旧 `SkDOM::build(SkStream&)` overload は compatibility overload として維持した。
-- final coverage は `covered 2943` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final stale C API report は `stale_capi 0`。10 `signature_changed_review` rows は D3D native info 非公開または既存 C ABI 互換として cycle record に記録済み。
+- baseline `ed220c490eea2ab10fcefe1a5786262724499b88` から `38761e1803d05e0eca689a296a4ed6ab20e0323f` を採用した。132 commits、`include` / `modules` は 14 files changed, +200/-57、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 174 files changed, +4124/-2876。
+- 1週間候補は 59 commits、3週間候補は 214 commits。3週間候補は `include` / `modules` 408 files changed と大きく、CanvasKit/npm churn が混ざるため見送った。2週間窓内でも HarfBuzz roll 手前の `38761e...` を採用した。
+- tracked `skia/DEPS`、`include`、`src` を同期した。GN/Bazel/CanvasKit/test-only metadata と未導入 `modules/bentleyottmann` は同期対象外にした。
+- C API は `Graphite_Context_hasPendingGPUWork` を追加した。
+- `SkEventTracer_SetInstance` は upstream が `leakTracer` 引数を削除したため、C ABI 互換として引数を受け取りつつ無視して単一引数 API へ渡す実装にした。
+- candidate で削除された `src/gpu/graphite/AtlasTypes.*` と `src/gpu/graphite/ReadSwizzle.h` を mirror から削除した。追加 GPU source は既存 glob で拾われるため CMake 明示リスト変更は不要だった。
+- final coverage は `covered 2944` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は `stale_capi 0`。3 `signature_changed_review` rows は Mock backend と `SkEventTracer_SetInstance` の既存 C ABI 互換として cycle record に記録済み。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `ed220c490eea2ab10fcefe1a5786262724499b88` から再比較する。1週/2週/3週候補を local refs から再確認する。C++20 text/gpu requirements、Graphite/Ganesh text GPU churn、D3D/Dawn/Vulkan/ANGLE rolls、codec encoded-data public surface removal、prebuilt `SkDOM` compatibility、optional Rust backend drift が既知リスク。
+- 次サイクルでは、accepted baseline `38761e1803d05e0eca689a296a4ed6ab20e0323f` から再比較する。1週/2週/3週候補を local refs から再確認し、HarfBuzz/FreeType roll、Graphite/Ganesh resource/readback churn、Dawn/Vulkan/ANGLE rolls、Mock backend signature drift、optional backend policy を既知リスクとして扱う。
 
 cycle records:
 
@@ -308,6 +308,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-078-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-079-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-080-2026-06-01.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-081-2026-06-02.md`
 
 ## Cycle close の条件
 

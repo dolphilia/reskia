@@ -2141,6 +2141,15 @@ bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx) {
 #endif
 }
 
+bool Graphite_Context_hasPendingGPUWork(reskia_graphite_context_t *ctx) {
+#if defined(SK_GRAPHITE)
+    return ctx != nullptr && as_graphite_context(ctx)->hasPendingGPUWork();
+#else
+    (void) ctx;
+    return false;
+#endif
+}
+
 reskia_graphite_insert_status_t Graphite_InsertStatus_new() {
     return 0;
 }

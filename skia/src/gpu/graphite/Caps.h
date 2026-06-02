@@ -162,10 +162,6 @@ public:
 
     TextureInfo getDefaultStorageTextureInfo(SkColorType) const;
 
-    SkColorType getDefaultColorType(const TextureInfo&) const;
-
-    bool areColorTypeAndTextureInfoCompatible(SkColorType, const TextureInfo&) const;
-
     // Tries to return a sample count > 1 if needing MSAA to render into the target specification.
     // If the target is already multisampled, it will be that count; otherwise it will be the
     // highest supported sample count less than the configured max internal sample count.
@@ -221,25 +217,6 @@ public:
 
     // If true, uses experimental drawListLayer ordering.
     bool useDrawListLayer() const { return fDrawListLayer; }
-
-    /**
-     * Returns the skgpu::Swizzle to use when sampling or reading back from a texture with the
-     * passed in SkColorType and TextureInfo.
-     */
-    skgpu::Swizzle getReadSwizzle(SkColorType, const TextureInfo&) const;
-
-    /**
-     * Returns the skgpu::Swizzle to use when writing colors to a surface with the passed in
-     * SkColorType and TextureInfo.
-     */
-    skgpu::Swizzle getWriteSwizzle(SkColorType, const TextureInfo&) const;
-
-    /**
-     * Checks whether the passed color type is renderable. If so, the same color type is passed
-     * back. If not, provides an alternative (perhaps lower bit depth and/or unorm instead of float)
-     * color type that is supported or kUnknown if there no renderable fallback format.
-     */
-    SkColorType getRenderableColorType(SkColorType) const;
 
     int maxTextureSize() const { return fMaxTextureSize; }
 
@@ -572,7 +549,15 @@ private:
     // approach to textures and color types.
     const ColorTypeInfo* getColorTypeInfo(SkColorType, const TextureInfo&) const;
     virtual SkSpan<const ColorTypeInfo> getColorTypeInfos(const TextureInfo&) const = 0;
-    virtual TextureFormat getFormatForColorType(SkColorType) const = 0;
+
+    // Validates format support and calls onGetDefaultTextureInfo if it would be valid, returning
+    // a TextureInfo for the first format that is supported.
+    TextureInfo getDefaultTextureInfo(SkEnumBitMask<TextureUsage> usage,
+                                      SkSpan<const TextureFormat>,
+                                      SampleCount,
+                                      Mipmapped,
+                                      Protected,
+                                      Discardable) const;
 
     // Return a TextureInfo that is configured to support the given usages with the requested format
     // and other properties. This is only called if getTextureSupport() matches for kOptimal tiling.
@@ -582,13 +567,6 @@ private:
                                                 Mipmapped,
                                                 Protected,
                                                 Discardable) const = 0;
-    // Validates format support and calls onGetDefaultTextureInfo if it would be valid
-    TextureInfo getDefaultTextureInfo(SkEnumBitMask<TextureUsage> usage,
-                                      TextureFormat,
-                                      SampleCount,
-                                      Mipmapped,
-                                      Protected,
-                                      Discardable) const;
 
     // Return the supported TextureUsages and SampleCounts for a texture of the given format and
     // tiling, assuming the textures are created with the requisite usages.

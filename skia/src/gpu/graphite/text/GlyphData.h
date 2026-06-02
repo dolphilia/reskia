@@ -10,7 +10,7 @@
 
 #include "include/core/SkRefCnt.h"
 #include "src/core/SkGlyph.h"
-#include "src/gpu/graphite/AtlasTypes.h"
+#include "src/gpu/graphite/DrawAtlas.h"
 #include "src/gpu/graphite/text/TextStrike.h"
 
 #include <cstdint>
@@ -31,14 +31,32 @@ class DrawWriter;
 class Recorder;
 class TextStrike;
 
+struct GlyphEntryKey {
+    explicit GlyphEntryKey(SkPackedGlyphID id, MaskFormat format) : fPackedID(id), fFormat(format) {}
+
+    const SkPackedGlyphID fPackedID;
+    MaskFormat fFormat;
+
+    bool operator==(const GlyphEntryKey& that) const {
+        return fPackedID == that.fPackedID && fFormat == that.fFormat;
+    }
+    bool operator!=(const GlyphEntryKey& that) const {
+        return !(*this == that);
+    }
+
+    uint32_t hash() const {
+        return fPackedID.hash();
+    }
+};
+
 /**
  * Graphite-specific glyph type with atlas location information.
  */
-struct GlyphEntry final {
-    explicit GlyphEntry(SkPackedGlyphID id) : fPackedID(id) {}
+struct GlyphEntry {
+    explicit GlyphEntry(SkPackedGlyphID id, MaskFormat format) : fGlyphEntryKey(id, format) {}
 
-    const SkPackedGlyphID fPackedID;
-    AtlasLocator fAtlasLocator;
+    const GlyphEntryKey fGlyphEntryKey;
+    DrawAtlas::AtlasLocator fAtlasLocator;
 };
 
 /** Adapts GlyphEntry* to conform to GlyphVector's GlyphType requirements. */
@@ -53,7 +71,7 @@ class Glyph final {
 
 public:
     explicit Glyph(GlyphEntry* entry) : fEntry{entry} { SkASSERT(entry); }
-    SkPackedGlyphID packedID() const { return fEntry->fPackedID; }
+    SkPackedGlyphID packedID() const { return fEntry->fGlyphEntryKey.fPackedID; }
     GlyphEntry& entry() const { return *fEntry; }
 };
 
@@ -71,7 +89,7 @@ public:
 
     ~GlyphData();
 
-    Glyph makeGlyphFromID(SkPackedGlyphID);
+    Glyph makeGlyphFromID(SkPackedGlyphID, MaskFormat);
 
     // Regenerate atlas entries for glyphs in range [begin, end).
     // Returns {success, glyphs_placed_in_atlas}.
@@ -98,8 +116,8 @@ private:
     GlyphData& operator=(GlyphData&&) = delete;
 
     sk_sp<TextStrike> fTextStrike;
-    uint64_t fAtlasGeneration{AtlasGenerationCounter::kInvalidGeneration};
-    BulkUsePlotUpdater fBulkUseUpdater;
+    uint64_t fAtlasGeneration{DrawAtlas::GenerationCounter::kInvalidGeneration};
+    DrawAtlas::BulkUsePlotUpdater fBulkUseUpdater;
 };
 
 }  // namespace skgpu::graphite

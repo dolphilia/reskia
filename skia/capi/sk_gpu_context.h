@@ -251,6 +251,7 @@ reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSync(bool sync_cpu);
 reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSyncAndFrameID(bool sync_cpu, uint64_t frame_id);
 bool Graphite_Context_submitWithInfo(reskia_graphite_context_t *ctx, const reskia_graphite_submit_info_t *submit_info); // invalid input returns false
 bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
+bool Graphite_Context_hasPendingGPUWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
 void Graphite_Context_startCapture(reskia_graphite_context_t *ctx); // NULL input is no-op
 void Graphite_Context_endCapture(reskia_graphite_context_t *ctx); // NULL input is no-op

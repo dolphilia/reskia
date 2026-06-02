@@ -33,6 +33,7 @@ public:
         return fSupportedResolveTextureLoadOp;
     }
     bool supportsPartialLoadResolve() const { return fSupportsPartialLoadResolve; }
+    bool supportsRenderPassRenderArea() const { return fSupportsRenderPassRenderArea; }
 
     SkISize getDepthAttachmentDimensions(const TextureInfo&,
                                          const SkISize colorAttachmentDimensions) const override;
@@ -69,7 +70,6 @@ public:
 
 private:
     SkSpan<const ColorTypeInfo> getColorTypeInfos(const TextureInfo&) const override;
-    TextureFormat getFormatForColorType(SkColorType) const override;
     TextureInfo onGetDefaultTextureInfo(SkEnumBitMask<TextureUsage> usage,
                                         TextureFormat,
                                         SampleCount,
@@ -84,11 +84,6 @@ private:
     void initCaps(const DawnBackendContext&, const ContextOptions&);
     void initShaderCaps(const wgpu::Device&);
     void initFormatTable(const wgpu::Device&);
-
-    wgpu::TextureFormat getFormatFromColorType(SkColorType colorType) const {
-        int idx = static_cast<int>(colorType);
-        return fColorTypeToFormatTable[idx];
-    }
 
     struct FormatInfo {
         uint32_t colorTypeFlags(SkColorType colorType) const {
@@ -116,17 +111,18 @@ private:
         int fColorTypeInfoCount = 0;
     };
     // Size here must be at least the size of kFormats in DawnCaps.cpp.
-    static constexpr size_t kFormatCount = 18;
+    static constexpr int kFormatCount = 31;
     std::array<FormatInfo, kFormatCount> fFormatTable;
 
     static size_t GetFormatIndex(wgpu::TextureFormat format);
     const FormatInfo& getFormatInfo(wgpu::TextureFormat format) const {
+        static const FormatInfo kInvalid;
+        if (format == wgpu::TextureFormat::Undefined) {
+            return kInvalid;
+        }
         size_t index = GetFormatIndex(format);
         return fFormatTable[index];
     }
-
-    wgpu::TextureFormat fColorTypeToFormatTable[kSkColorTypeCnt];
-    void setColorType(SkColorType, std::initializer_list<wgpu::TextureFormat> formats);
 
     // When supported, this value will hold the TransientAttachment usage symbol that is only
     // defined in Dawn native builds and not EMSCRIPTEN but this avoids having to #define guard it.
@@ -137,6 +133,7 @@ private:
     // and resolve. With this feature, we can do that partially according to the actual damage
     // region.
     bool fSupportsPartialLoadResolve = false;
+    bool fSupportsRenderPassRenderArea = false;
 
     bool fEmulateLoadStoreResolve = false;
 
