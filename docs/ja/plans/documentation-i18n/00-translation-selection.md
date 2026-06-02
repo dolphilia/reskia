@@ -42,12 +42,12 @@
 
 | 参照元 | 推奨英語文書 | 判断 | 備考 |
 | --- | --- | --- | --- |
-| `docs/ja/notes/bindings/capi-and-handle-binding-coverage-survey-2026-05-06.md` | `docs/en/guides/c-api-bindings-overview.md` | distill | C API / handles の全体像と代表例は有用。古い coverage 状態は削り、現行方針だけ抽出する。 |
-| `docs/ja/notes/bindings/public-api-coverage-matrix-progress-2026-05-06.md` | `docs/en/guides/public-api-coverage-workflow.md` | distill | coverage generator の使い方、status の意味は contributor に有用。数値 snapshot は最新化または削除する。 |
-| `docs/ja/plans/skia-incremental-upgrade/00-continuous-upgrade-cycle.md` | `docs/en/guides/skia-upgrade-workflow.md` | distill | maintainer 向けには重要。ただし運用細部と履歴文脈が多いため、英語版では短い workflow guide にする。 |
-| `docs/ja/notes/vendor-skia-management-2026-02-14.md` | `docs/en/guides/skia-upstream-management.md` | distill | lock + untracked checkout model の説明は有用。単独翻訳ではなく upgrade workflow と統合する。 |
-| `docs/ja/plans/stability-hardening/00-plan.md` | `docs/en/guides/c-api-safety-guidelines.md` or `docs/en/guides/testing-and-stability.md` | distill | 安定化方針は有用だが、進捗計画としては古くなる。規約・検証方針だけ抽出する。 |
-| `docs/ja/notes/project-overview-and-next-tasks-2026-05-06.md` | `docs/en/guides/architecture-overview.md` | distill | 全体像の材料として使えるが、next tasks は古くなりやすい。直接翻訳しない。 |
+| `docs/ja/notes/bindings/capi-and-handle-binding-coverage-survey-2026-05-06.md` | `docs/en/guides/c-api-bindings-overview.md` | ja guide ready | `docs/ja/guides/c-api-bindings-overview.md` に現行方針を抽出済み。 |
+| `docs/ja/notes/bindings/public-api-coverage-matrix-progress-2026-05-06.md` | `docs/en/guides/public-api-coverage-workflow.md` | ja guide ready | `docs/ja/guides/public-api-coverage-workflow.md` に workflow と status 説明を抽出済み。 |
+| `docs/ja/plans/skia-incremental-upgrade/00-continuous-upgrade-cycle.md` | `docs/en/guides/skia-upgrade-workflow.md` | ja guide ready | `docs/ja/guides/skia-upgrade-workflow.md` に短い workflow guide として再編済み。 |
+| `docs/ja/notes/vendor-skia-management-2026-02-14.md` | `docs/en/guides/skia-upstream-management.md` | integrated | lock + untracked checkout model は `docs/ja/guides/skia-upgrade-workflow.md` に統合済み。 |
+| `docs/ja/plans/stability-hardening/00-plan.md` | `docs/en/guides/c-api-safety-guidelines.md` or `docs/en/guides/testing-and-stability.md` | ja guide ready | 検証方針を `docs/ja/guides/testing-and-stability.md` に抽出済み。 |
+| `docs/ja/notes/project-overview-and-next-tasks-2026-05-06.md` | `docs/en/guides/architecture-overview.md` | ja guide ready | 全体像を `docs/ja/guides/architecture-overview.md` に抽出済み。 |
 
 ## P2: 条件付きで英訳する候補
 
@@ -91,9 +91,11 @@ docs/en/
     cmake-migration-guide.md
     c-api-safety-guidelines.md
     repository-structure.md
+    architecture-overview.md
     c-api-bindings-overview.md
     public-api-coverage-workflow.md
     skia-upgrade-workflow.md
+    testing-and-stability.md
 ```
 
 ただし、英訳前に `docs/ja/README.md` と `docs/ja/guides/` を現行状態に合わせて整理する。特に `repository-structure.md` は、調査ログではなく短い構造ガイドに作り直してから翻訳する。
@@ -105,7 +107,7 @@ docs/en/
    - `docs/ja/guides/repository-structure.md`
    - `docs/ja/guides/cmake-migration-guide.md`
    - `docs/ja/guides/c-api-safety-guidelines.md`
-2. P1 文書から、現行情報だけを `docs/ja/guides/` の新規ガイドへ抽出する。
+2. P1 文書から、現行情報だけを `docs/ja/guides/` の新規ガイドへ抽出する。（完了）
 3. `docs/en/` を作成し、P0 から翻訳する。
 4. P1 の再編済みガイドを翻訳する。
 5. feature guide は、外部利用者向けに必要になった時点で個別に追加する。
