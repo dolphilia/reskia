@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `38761e1803d05e0eca689a296a4ed6ab20e0323f`
-- next probe candidate: select a fixed mainline commit after `38761e1803d05e0eca689a296a4ed6ab20e0323f`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `3f328b35d929c70d2ef57599c8e3872e4db867a8`
+- next probe candidate: first re-evaluate `e4d0350f477005ae71691642ec0db96cce7e3266` or another fixed mainline commit after `3f328b35d929c70d2ef57599c8e3872e4db867a8`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -113,21 +113,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 079 accepted: `dcbb6588a6c54754b1bf6251531fed974e80ce18`。
 - cycle 080 accepted: `ed220c490eea2ab10fcefe1a5786262724499b88`。
 - cycle 081 accepted: `38761e1803d05e0eca689a296a4ed6ab20e0323f`。
+- cycle 082 accepted: `3f328b35d929c70d2ef57599c8e3872e4db867a8`。
 
 未実施:
 
-- cycle 082 candidate selection from `38761e1803d05e0eca689a296a4ed6ab20e0323f`.
-- cycle 082 candidate checkout を使った coverage regression。
-- cycle 082 の source/header sync と C API 追従実装。
+- cycle 083 candidate selection from `3f328b35d929c70d2ef57599c8e3872e4db867a8`.
+- cycle 083 candidate checkout を使った coverage regression。
+- cycle 083 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 082 の candidate selection から始める。
+次の作業は、cycle 083 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `38761e1803d05e0eca689a296a4ed6ab20e0323f` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先し、1週間程度の固定 commit を第一候補にする。
+1. baseline `3f328b35d929c70d2ef57599c8e3872e4db867a8` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先し、まず `e4d0350f477005ae71691642ec0db96cce7e3266` の preamble churn split を再評価する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -209,22 +210,21 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `38761e1803d05e0eca689a296a4ed6ab20e0323f`
-- committer date: 2026-03-12
-- subject: Reland "Graphite: add an API function to check whether there is pending GPU work"
+- `3f328b35d929c70d2ef57599c8e3872e4db867a8`
+- committer date: 2026-03-13
+- subject: Reland: Use modern imageDataProc in mskp's SkSharingProc
 
-cycle 081 結果:
+cycle 082 結果:
 
-- baseline `ed220c490eea2ab10fcefe1a5786262724499b88` から `38761e1803d05e0eca689a296a4ed6ab20e0323f` を採用した。132 commits、`include` / `modules` は 14 files changed, +200/-57、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 174 files changed, +4124/-2876。
-- 1週間候補は 59 commits、3週間候補は 214 commits。3週間候補は `include` / `modules` 408 files changed と大きく、CanvasKit/npm churn が混ざるため見送った。2週間窓内でも HarfBuzz roll 手前の `38761e...` を採用した。
-- tracked `skia/DEPS`、`include`、`src` を同期した。GN/Bazel/CanvasKit/test-only metadata と未導入 `modules/bentleyottmann` は同期対象外にした。
-- C API は `Graphite_Context_hasPendingGPUWork` を追加した。
-- `SkEventTracer_SetInstance` は upstream が `leakTracer` 引数を削除したため、C ABI 互換として引数を受け取りつつ無視して単一引数 API へ渡す実装にした。
-- candidate で削除された `src/gpu/graphite/AtlasTypes.*` と `src/gpu/graphite/ReadSwizzle.h` を mirror から削除した。追加 GPU source は既存 glob で拾われるため CMake 明示リスト変更は不要だった。
+- baseline `38761e1803d05e0eca689a296a4ed6ab20e0323f` から `3f328b35d929c70d2ef57599c8e3872e4db867a8` を採用した。15 commits、`include` / `modules` は no changes、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 19 files changed, +119/-107。
+- 通常の1週間候補 `812822ad5caa8f39ff4cf5ab96f48fe942562252` は 98 commits だが、`include` / `modules` 401 files changed。2週間候補は 408 files、3週間候補は 461 files かつ大量 generated/npm churn を含むため、cycle 082 では `e4d0350...` preamble churn の直前で split した。
+- tracked `skia/DEPS` と `skia/src/gpu/graphite` の既存 source/header を同期した。GN/Bazel metadata と非 mirror build metadata は同期対象外にした。
+- C API 追加・削除は不要だった。
+- Graphite Resource label update の公開範囲縮小、ResourceCache 経由の label update、Vulkan include cleanup を同期した。追加/削除 source はなく CMake 明示リスト変更は不要だった。
 - final coverage は `covered 2944` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final stale C API report は `stale_capi 0`。3 `signature_changed_review` rows は Mock backend と `SkEventTracer_SetInstance` の既存 C ABI 互換として cycle record に記録済み。
+- final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `38761e1803d05e0eca689a296a4ed6ab20e0323f` から再比較する。1週/2週/3週候補を local refs から再確認し、HarfBuzz/FreeType roll、Graphite/Ganesh resource/readback churn、Dawn/Vulkan/ANGLE rolls、Mock backend signature drift、optional backend policy を既知リスクとして扱う。
+- 次サイクルでは、accepted baseline `3f328b35d929c70d2ef57599c8e3872e4db867a8` から再比較する。まず `e4d0350f477005ae71691642ec0db96cce7e3266` の preamble-only mass churn（18 commits、`include` / `modules` 390 files, +395/-397、broader drift 917 files, +958/-951）を単独 split として扱うか判断する。CanvasKit/npm release churn、later FreeType/HarfBuzz/Dawn/Vulkan/ANGLE rolls、Graphite/Ganesh resource/readback churn、optional backend policy を既知リスクとして扱う。
 
 cycle records:
 
@@ -309,6 +309,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-079-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-080-2026-06-01.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-081-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-082-2026-06-02.md`
 
 ## Cycle close の条件
 
