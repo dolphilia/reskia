@@ -87,13 +87,13 @@ extern "C" {
 #endif
 
 /**
- * owned: 呼び出し側が Reskia_DirectContext_Release で解放する (void *device, void *queue) -> GrDirectContext *
+ * Owned: release with Reskia_DirectContext_Release. (void *device, void *queue) -> GrDirectContext *
  */
 reskia_direct_context_t *Reskia_GaneshContext_MakeMetal(void *device, void *queue);
 reskia_direct_context_t *GrDirectContext_MakeMock(); // owned; unavailable Ganesh returns NULL
 void Reskia_DirectContext_FlushAndSubmit(reskia_direct_context_t *ctx, bool sync_cpu); // (GrDirectContext *ctx, bool sync_cpu)
 void Reskia_DirectContext_Abandon(reskia_direct_context_t *ctx); // (GrDirectContext *ctx)
-void Reskia_DirectContext_Release(reskia_direct_context_t *ctx); // owned: 呼び出し側が保持する参照を release する (GrDirectContext *ctx)
+void Reskia_DirectContext_Release(reskia_direct_context_t *ctx); // owned: releases the caller-held reference. (GrDirectContext *ctx)
 
 void GrDirectContext_resetContext(reskia_direct_context_t *ctx, uint32_t state); // NULL input is no-op
 void GrDirectContext_abandonContext(reskia_direct_context_t *ctx); // NULL input is no-op
@@ -209,20 +209,20 @@ bool GrSurfaceCharacterization_isMipMapped(const reskia_gr_surface_characterizat
 reskia_gr_backend_format_t *GrSurfaceCharacterization_backendFormat(const reskia_gr_surface_characterization_t *characterization); // owned; NULL input returns NULL
 
 /**
- * owned: 呼び出し側が Reskia_GraphiteContext_Release で解放する (void *device, void *queue) -> skgpu::graphite::Context *
+ * Owned: release with Reskia_GraphiteContext_Release. (void *device, void *queue) -> skgpu::graphite::Context *
  */
 reskia_graphite_context_t *Reskia_GraphiteContext_MakeMetal(void *device, void *queue);
 /**
- * owned: 呼び出し側が Reskia_GraphiteContext_Release で解放する (const skgpu::VulkanBackendContext *backend_context) -> skgpu::graphite::Context *
+ * Owned: release with Reskia_GraphiteContext_Release. (const skgpu::VulkanBackendContext *backend_context) -> skgpu::graphite::Context *
  */
 reskia_graphite_context_t *Reskia_GraphiteContext_MakeVulkan(const void *backend_context);
 /**
- * owned: 呼び出し側が Reskia_GraphiteRecorder_Release で解放する (skgpu::graphite::Context *ctx) -> skgpu::graphite::Recorder *
+ * Owned: release with Reskia_GraphiteRecorder_Release. (skgpu::graphite::Context *ctx) -> skgpu::graphite::Recorder *
  */
 reskia_graphite_recorder_t *Reskia_GraphiteContext_MakeRecorder(reskia_graphite_context_t *ctx);
 bool Reskia_GraphiteContext_InsertRecordingAndSubmit(reskia_graphite_context_t *ctx, reskia_graphite_recorder_t *recorder, bool sync_cpu); // (skgpu::graphite::Context *ctx, skgpu::graphite::Recorder *recorder, bool sync_cpu) -> bool
-void Reskia_GraphiteRecorder_Release(reskia_graphite_recorder_t *recorder); // owned: 呼び出し側が保持する recorder を解放する (skgpu::graphite::Recorder *recorder)
-void Reskia_GraphiteContext_Release(reskia_graphite_context_t *ctx); // owned: 呼び出し側が保持する context を解放する (skgpu::graphite::Context *ctx)
+void Reskia_GraphiteRecorder_Release(reskia_graphite_recorder_t *recorder); // owned: releases the caller-held recorder. (skgpu::graphite::Recorder *recorder)
+void Reskia_GraphiteContext_Release(reskia_graphite_context_t *ctx); // owned: releases the caller-held context. (skgpu::graphite::Context *ctx)
 
 reskia_graphite_context_options_t *Graphite_ContextOptions_new(); // owned
 void Graphite_ContextOptions_delete(reskia_graphite_context_options_t *options); // NULL input is no-op

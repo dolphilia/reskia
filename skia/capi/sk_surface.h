@@ -39,17 +39,17 @@ typedef int32_t reskia_surface_yuv_color_space_t;
 extern "C" {
 #endif
 
-void SkSurface_release(reskia_surface_t *surface); // owned: caller が保持する参照を release する (SkSurface *surface)
+void SkSurface_release(reskia_surface_t *surface); // Owned reference: releases the caller-held reference. (SkSurface *surface)
 bool SkSurface_isCompatible(reskia_surface_t *surface, const reskia_surface_characterization_t *characterization); // (SkSurface *surface, const GrSurfaceCharacterization *characterization) -> bool
 int SkSurface_width(reskia_surface_t *surface); // (SkSurface *surface) -> int
 int SkSurface_height(reskia_surface_t *surface); // (SkSurface *surface) -> int
 sk_image_info_t SkSurface_imageInfo(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_info_t
 uint32_t SkSurface_generationID(reskia_surface_t *surface); // (SkSurface *surface) -> uint32_t
 void SkSurface_notifyContentWillChange(reskia_surface_t *surface, reskia_surface_content_change_mode_t mode); // (SkSurface *surface, SkSurface::ContentChangeMode mode)
-reskia_recording_context_t *SkSurface_recordingContext(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> GrRecordingContext *
-reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> skgpu::graphite::Recorder *
+reskia_recording_context_t *SkSurface_recordingContext(reskia_surface_t *surface); // Borrowed pointer; do not free. (SkSurface *surface) -> GrRecordingContext *
+reskia_graphite_recorder_t *SkSurface_recorder(reskia_surface_t *surface); // Borrowed pointer; do not free. (SkSurface *surface) -> skgpu::graphite::Recorder *
 bool SkSurface_replaceBackendTexture(reskia_surface_t *surface, const reskia_backend_texture_t *backendTexture, int origin, reskia_surface_content_change_mode_t mode, void(* proc)(void *), void * context); // (SkSurface *surface, const GrBackendTexture *backendTexture, GrSurfaceOrigin origin, SkSurface::ContentChangeMode mode, SkSurface::TextureReleaseProc proc, SkSurface::ReleaseContext context) -> bool
-reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> SkCanvas *
+reskia_canvas_t *SkSurface_getCanvas(reskia_surface_t *surface); // Borrowed pointer; do not free. (SkSurface *surface) -> SkCanvas *
 int SkSurface_capabilities(reskia_surface_t *surface); // (SkSurface *surface) -> const_sk_capabilities_t
 sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image_info_t *imageInfo); // (SkSurface *surface, const SkImageInfo *imageInfo) -> sk_surface_t
 sk_surface_t SkSurface_makeSurfaceWithDimensions(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
@@ -108,12 +108,12 @@ void SkSurface_writePixels(reskia_surface_t *surface, const reskia_pixmap_t *src
  * invalid input is no-op (SkSurface *surface, const SkBitmap *src, int dstX, int dstY)
  */
 void SkSurface_writePixelsWithBitmap(reskia_surface_t *surface, const reskia_bitmap_t *src, int dstX, int dstY);
-const reskia_surface_props_t *SkSurface_props(reskia_surface_t *surface); // borrowed: 解放不要の借用ポインタ (SkSurface *surface) -> const SkSurfaceProps *
+const reskia_surface_props_t *SkSurface_props(reskia_surface_t *surface); // Borrowed pointer; do not free. (SkSurface *surface) -> const SkSurfaceProps *
 bool SkSurface_wait(reskia_surface_t *surface, int numSemaphores, const reskia_backend_semaphore_t *waitSemaphores, bool deleteSemaphoresAfterWait); // (SkSurface *surface, int numSemaphores, const GrBackendSemaphore *waitSemaphores, bool deleteSemaphoresAfterWait) -> bool
 bool SkSurface_characterize(reskia_surface_t *surface, reskia_surface_characterization_t *characterization); // (SkSurface *surface, GrSurfaceCharacterization *characterization) -> bool
 bool SkSurface_unique(reskia_surface_t *surface); // (SkSurface *surface) -> bool
-void SkSurface_ref(reskia_surface_t *surface); // retained: 参照カウントを増やす (SkSurface *surface)
-void SkSurface_unref(reskia_surface_t *surface); // owned: 参照カウントを減らす (SkSurface *surface)
+void SkSurface_ref(reskia_surface_t *surface); // Retains the object by incrementing the reference count. (SkSurface *surface)
+void SkSurface_unref(reskia_surface_t *surface); // Releases the object by decrementing the reference count. (SkSurface *surface)
 
 #ifdef __cplusplus
 }

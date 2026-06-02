@@ -14,10 +14,11 @@ typedef struct reskia_matrix3x3_t reskia_matrix3x3_t;
 
 void SkColorSpacePrimaries_delete(reskia_color_space_primaries_t *color_pace_primaries); // (SkColorSpacePrimaries *color_pace_primaries)
 /**
- * out: toXYZD50 は非 NULL。NULL 入力では no-op (SkColorSpacePrimaries *color_pace_primaries, skcms_Matrix3x3 *toXYZD50)
+ * out: toXYZD50 must be non-NULL. No-op for NULL input.
+ * (SkColorSpacePrimaries *color_pace_primaries, skcms_Matrix3x3 *toXYZD50)
  */
 void SkColorSpacePrimaries_toXYZD50(reskia_color_space_primaries_t *color_pace_primaries, reskia_matrix3x3_t *toXYZD50);
-bool SkColorSpacePrimaries_Equal(const reskia_color_space_primaries_t *a, const reskia_color_space_primaries_t *b); // NULL 同士は true、片方 NULL は false
+bool SkColorSpacePrimaries_Equal(const reskia_color_space_primaries_t *a, const reskia_color_space_primaries_t *b); // Returns true when both inputs are NULL, false when only one is NULL.
 
 #ifdef __cplusplus
 }

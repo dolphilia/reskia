@@ -25,7 +25,7 @@ void SkCustomTypefaceBuilder_setGlyphDrawable(reskia_custom_typeface_builder_t *
 void SkCustomTypefaceBuilder_setMetrics(reskia_custom_typeface_builder_t *builder, const reskia_font_metrics_t *metrics, float scale);
 void SkCustomTypefaceBuilder_setFontStyle(reskia_custom_typeface_builder_t *builder, const reskia_font_style_t *font_style);
 sk_typeface_t SkCustomTypefaceBuilder_detach(reskia_custom_typeface_builder_t *builder); // returned handle owns a ref; delete with static_sk_typeface_delete.
-sk_typeface_t SkCustomTypefaceBuilder_MakeFromStream(sk_stream_asset_t stream_asset, const reskia_font_arguments_t *font_arguments); // stream_asset は consumed。invalid 入力や生成不能では 0
+sk_typeface_t SkCustomTypefaceBuilder_MakeFromStream(sk_stream_asset_t stream_asset, const reskia_font_arguments_t *font_arguments); // stream_asset is consumed. Returns 0 for invalid input or creation failure.
 
 #ifdef __cplusplus
 }

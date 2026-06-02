@@ -15,29 +15,32 @@ extern "C" {
 
 typedef struct reskia_data_table_t reskia_data_table_t;
 
-void SkDataTable_release(reskia_data_table_t *data_table); // owned: caller が保持する参照を release する。NULL 入力では no-op
-bool SkDataTable_isEmpty(reskia_data_table_t *data_table); // NULL 入力では true (SkDataTable *data_table) -> bool
-int SkDataTable_count(reskia_data_table_t *data_table); // NULL 入力では 0 (SkDataTable *data_table) -> int
-size_t SkDataTable_atSize(reskia_data_table_t *data_table, int index); // 範囲外/NULL 入力では 0 (SkDataTable *data_table, int index) -> size_t
-const uint8_t * SkDataTable_at(reskia_data_table_t *data_table, int index, size_t *size); // borrowed: 解放不要。範囲外/NULL 入力では NULL、size が非 NULL なら 0
-const char * SkDataTable_atStr(reskia_data_table_t *data_table, int index); // borrowed: 解放不要。範囲外/NULL 入力では NULL
+void SkDataTable_release(reskia_data_table_t *data_table); // owned: releases the caller-held reference. No-op for NULL input.
+bool SkDataTable_isEmpty(reskia_data_table_t *data_table); // Returns true for NULL input. (SkDataTable *data_table) -> bool
+int SkDataTable_count(reskia_data_table_t *data_table); // Returns 0 for NULL input. (SkDataTable *data_table) -> int
+size_t SkDataTable_atSize(reskia_data_table_t *data_table, int index); // Returns 0 for out-of-range/NULL input. (SkDataTable *data_table, int index) -> size_t
+const uint8_t * SkDataTable_at(reskia_data_table_t *data_table, int index, size_t *size); // borrowed: do not free. Returns NULL for out-of-range/NULL input and writes 0 when size is non-NULL.
+const char * SkDataTable_atStr(reskia_data_table_t *data_table, int index); // borrowed: do not free. Returns NULL for out-of-range/NULL input.
 bool SkDataTable_unique(reskia_data_table_t *data_table); // (SkDataTable *data_table) -> bool
-void SkDataTable_ref(reskia_data_table_t *data_table); // retained: 参照カウントを増やす。NULL 入力では no-op
-void SkDataTable_unref(reskia_data_table_t *data_table); // owned: 参照カウントを減らす。NULL 入力では no-op
+void SkDataTable_ref(reskia_data_table_t *data_table); // retained: increments the reference count. No-op for NULL input.
+void SkDataTable_unref(reskia_data_table_t *data_table); // owned: decrements the reference count. No-op for NULL input.
 
 // static
 
 sk_data_table_t SkDataTable_MakeEmpty(); // () -> sk_data_table_t
 /**
- * ptrs/sizes は count 要素以上。count <= 0 は空 table。NULL 入力では 0
+ * ptrs and sizes must contain at least count elements. count <= 0 creates an empty table.
+ * Returns 0 for NULL input.
  */
 sk_data_table_t SkDataTable_MakeCopyArrays(const uint8_t * const *ptrs, const size_t *sizes, int count);
 /**
- * array は elemSize*count バイト以上。count <= 0 は空 table。NULL/elemSize 0 では 0
+ * array must contain at least elemSize * count bytes. count <= 0 creates an empty table.
+ * Returns 0 when array is NULL or elemSize is 0.
  */
 sk_data_table_t SkDataTable_MakeCopyArray(const uint8_t *array, size_t elemSize, int count);
 /**
- * array ownership を渡す。count <= 0 は空 table。NULL/elemSize 0 では 0
+ * Transfers array ownership. count <= 0 creates an empty table.
+ * Returns 0 when array is NULL or elemSize is 0.
  */
 sk_data_table_t SkDataTable_MakeArrayProc(const uint8_t *array, size_t elemSize, int count, void (*proc)(void*), void *context);
 

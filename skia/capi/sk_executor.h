@@ -16,8 +16,8 @@ extern "C" {
 typedef struct reskia_executor_t reskia_executor_t;
 
 void SkExecutor_delete(reskia_executor_t *executor); // (SkExecutor *executor)
-reskia_status_t SkExecutor_add(reskia_executor_t *executor, function_void_void_t function_key); // executor: non-null, function_key: 有効キー必須
-reskia_status_t SkExecutor_addToWorkList(reskia_executor_t *executor, function_void_void_t function_key, int work_list); // executor: non-null, function_key: 有効キー必須
+reskia_status_t SkExecutor_add(reskia_executor_t *executor, function_void_void_t function_key); // executor must be non-NULL, and function_key must be valid.
+reskia_status_t SkExecutor_addToWorkList(reskia_executor_t *executor, function_void_void_t function_key, int work_list); // executor must be non-NULL, and function_key must be valid.
 int SkExecutor_discardAllPendingWork(reskia_executor_t *executor); // NULL executor returns 0
 void SkExecutor_borrow(reskia_executor_t *executor); // (SkExecutor *executor)
 

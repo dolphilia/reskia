@@ -17,8 +17,8 @@ typedef struct reskia_typeface_t reskia_typeface_t;
 extern "C" {
 #endif
 
-sk_typeface_t Mac_SkMakeTypefaceFromCTFont(const reskia_ct_font_t *fontRef); // fontRef は非 NULL。生成不能では 0
-const reskia_ct_font_t *Mac_SkTypeface_GetCTFontRef(const reskia_typeface_t *face); // NULL face や CTFontRef なしでは NULL。borrowed pointer
+sk_typeface_t Mac_SkMakeTypefaceFromCTFont(const reskia_ct_font_t *fontRef); // fontRef must be non-NULL. Returns 0 on creation failure.
+const reskia_ct_font_t *Mac_SkTypeface_GetCTFontRef(const reskia_typeface_t *face); // Returns NULL for NULL face or when no CTFontRef exists. Borrowed pointer.
 
 #ifdef __cplusplus
 }

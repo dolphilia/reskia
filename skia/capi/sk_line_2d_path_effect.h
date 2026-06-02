@@ -19,7 +19,8 @@ void SkLine2DPathEffect_delete(reskia_line_2d_path_effect_t *line2DPathEffect); 
 // static
 
 /**
- * matrix は非 NULL。生成不能なら 0 (SkScalar width, const SkMatrix *matrix) -> sk_path_effect_t
+ * matrix must be non-NULL. Returns 0 on failure.
+ * (SkScalar width, const SkMatrix *matrix) -> sk_path_effect_t
  */
 sk_path_effect_t SkLine2DPathEffect_Make(float width, const reskia_matrix_t *matrix);
 void SkLine2DPathEffect_RegisterFlattenables(); // ()

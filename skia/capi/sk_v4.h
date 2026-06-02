@@ -20,18 +20,18 @@ sk_v4_t SkV4_add(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns d
 sk_v4_t SkV4_subtract(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
 sk_v4_t SkV4_multiply(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
 
-void SkV4_delete(reskia_v4_t *v4); // NULL 入力では no-op
-float SkV4_lengthSquared(reskia_v4_t *v4); // NULL 入力では 0
-float SkV4_length(reskia_v4_t *v4); // NULL 入力では 0
-float SkV4_dot(reskia_v4_t *v4, const reskia_v4_t *v); // v は非 NULL。NULL 入力では 0
-sk_v4_t SkV4_normalize(reskia_v4_t *v4); // NULL 入力では default vector handle
-const float *SkV4_ptr(reskia_v4_t *v4); // borrowed: 4 要素、解放不要。NULL 入力では NULL
-float *SkV4_ptrMutable(reskia_v4_t *v4); // borrowed mutable: 4 要素、解放不要。NULL 入力では NULL
+void SkV4_delete(reskia_v4_t *v4); // No-op for NULL input.
+float SkV4_lengthSquared(reskia_v4_t *v4); // Returns 0 for NULL input.
+float SkV4_length(reskia_v4_t *v4); // Returns 0 for NULL input.
+float SkV4_dot(reskia_v4_t *v4, const reskia_v4_t *v); // v must be non-NULL. Returns 0 for NULL input.
+sk_v4_t SkV4_normalize(reskia_v4_t *v4); // Returns default vector handle for NULL input.
+const float *SkV4_ptr(reskia_v4_t *v4); // borrowed: 4 elements. Do not free. Returns NULL for NULL input.
+float *SkV4_ptrMutable(reskia_v4_t *v4); // borrowed mutable: 4 elements. Do not free. Returns NULL for NULL input.
 
 // static
 
-float SkV4_Dot(const reskia_v4_t *a, const reskia_v4_t *b); // a/b は非 NULL。NULL 入力では 0
-sk_v4_t SkV4_Normalize(const reskia_v4_t *v); // v は非 NULL。NULL 入力では default vector handle
+float SkV4_Dot(const reskia_v4_t *a, const reskia_v4_t *b); // a and b must be non-NULL. Returns 0 for NULL input.
+sk_v4_t SkV4_Normalize(const reskia_v4_t *v); // v must be non-NULL. Returns default vector handle for NULL input.
 
 #ifdef __cplusplus
 }

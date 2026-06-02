@@ -11,11 +11,11 @@ typedef struct reskia_ref_cnt_base_t reskia_ref_cnt_base_t;
 extern "C" {
 #endif
 
-reskia_ref_cnt_base_t *SkRefCntBase_new(); // owned: 呼び出し側が解放責務を持つ新規オブジェクト
-void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base); // owned: caller が保持する参照を release する。NULL 入力では no-op。
-bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base); // NULL 入力では false。
-void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base); // retained: 参照カウントを増やす。NULL 入力では no-op。
-void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base); // owned: 参照カウントを減らす。NULL 入力では no-op。
+reskia_ref_cnt_base_t *SkRefCntBase_new(); // owned: new object that the caller is responsible for releasing.
+void SkRefCntBase_release(reskia_ref_cnt_base_t *ref_cnt_base); // owned: releases the caller-held reference. No-op for NULL input.
+bool SkRefCntBase_unique(reskia_ref_cnt_base_t *ref_cnt_base); // Returns false for NULL input.
+void SkRefCntBase_ref(reskia_ref_cnt_base_t *ref_cnt_base); // retained: increments the reference count. No-op for NULL input.
+void SkRefCntBase_unref(reskia_ref_cnt_base_t *ref_cnt_base); // owned: decrements the reference count. No-op for NULL input.
 
 #ifdef __cplusplus
 }

@@ -13,9 +13,9 @@ extern "C" {
 
 typedef struct reskia_cubic_resampler_t reskia_cubic_resampler_t;
 
-void SkCubicResampler_delete(reskia_cubic_resampler_t *cubicResampler); // NULL 入力では no-op
-sk_cubic_resampler_t SkCubicResampler_Mitchell(); // 成功時は non-zero handle
-sk_cubic_resampler_t SkCubicResampler_CatmullRom(); // 成功時は non-zero handle
+void SkCubicResampler_delete(reskia_cubic_resampler_t *cubicResampler); // No-op for NULL input.
+sk_cubic_resampler_t SkCubicResampler_Mitchell(); // Returns a nonzero handle on success.
+sk_cubic_resampler_t SkCubicResampler_CatmullRom(); // Returns a nonzero handle on success.
 
 #ifdef __cplusplus
 }

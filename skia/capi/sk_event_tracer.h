@@ -47,8 +47,8 @@ reskia_event_tracer_t *SkEventTracer_new(
         void *user_data,
         reskia_callback_release_proc_t release_proc);
 void SkEventTracer_delete(reskia_event_tracer_t *tracer);
-bool SkEventTracer_SetInstance(reskia_event_tracer_t *tracer, bool leak_tracer); // tracer は consumed。失敗時も Skia 側で破棄される
-reskia_event_tracer_t *SkEventTracer_GetInstance(void); // borrowed singleton。delete 不可
+bool SkEventTracer_SetInstance(reskia_event_tracer_t *tracer, bool leak_tracer); // tracer is consumed. Skia destroys it even on failure.
+reskia_event_tracer_t *SkEventTracer_GetInstance(void); // Borrowed singleton; do not delete.
 const uint8_t *SkEventTracer_getCategoryGroupEnabled(reskia_event_tracer_t *tracer, const char *name);
 const char *SkEventTracer_getCategoryGroupName(reskia_event_tracer_t *tracer, const uint8_t *category_enabled_flag);
 reskia_event_tracer_handle_t SkEventTracer_addTraceEvent(

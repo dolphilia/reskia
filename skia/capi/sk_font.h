@@ -31,100 +31,114 @@ typedef int32_t reskia_unichar_t;
 typedef void (*reskia_font_glyph_path_proc_t)(const reskia_path_t *path_or_null, const reskia_matrix_t *matrix, void *ctx);
 
 reskia_font_t *SkFont_new(); // () -> SkFont *
-reskia_font_t *SkFont_newWithTypefaceAndSize(int typeface, float size); // invalid/0 typeface handle は default/null typeface として扱う
-reskia_font_t *SkFont_newWithTypeface(int typeface); // invalid/0 typeface handle は default/null typeface として扱う
-reskia_font_t *SkFont_newWithTypefaceSizeScaleXSkewX(int typeface, float size, float scaleX, float skewX); // invalid/0 typeface handle は default/null typeface として扱う
-void SkFont_delete(reskia_font_t *font); // NULL 入力では no-op
-bool SkFont_equals(reskia_font_t *font, const reskia_font_t *other); // NULL 入力では false
-bool SkFont_notEquals(reskia_font_t *font, const reskia_font_t *other); // NULL 入力では false
-bool SkFont_isForceAutoHinting(reskia_font_t *font); // NULL 入力では false
-bool SkFont_isEmbeddedBitmaps(reskia_font_t *font); // NULL 入力では false
-bool SkFont_isSubpixel(reskia_font_t *font); // NULL 入力では false
-bool SkFont_isLinearMetrics(reskia_font_t *font); // NULL 入力では false
-bool SkFont_isEmbolden(reskia_font_t *font); // NULL 入力では false
-bool SkFont_isBaselineSnap(reskia_font_t *font); // NULL 入力では false
-void SkFont_setForceAutoHinting(reskia_font_t *font, bool forceAutoHinting); // NULL 入力では no-op
-void SkFont_setEmbeddedBitmaps(reskia_font_t *font, bool embeddedBitmaps); // NULL 入力では no-op
-void SkFont_setSubpixel(reskia_font_t *font, bool subpixel); // NULL 入力では no-op
-void SkFont_setLinearMetrics(reskia_font_t *font, bool linearMetrics); // NULL 入力では no-op
-void SkFont_setEmbolden(reskia_font_t *font, bool embolden); // NULL 入力では no-op
-void SkFont_setBaselineSnap(reskia_font_t *font, bool baselineSnap); // NULL 入力では no-op
-reskia_font_edging_t SkFont_getEdging(reskia_font_t *font); // NULL 入力では -1
-void SkFont_setEdging(reskia_font_t *font, reskia_font_edging_t edging); // NULL/invalid enum 入力では no-op
-void SkFont_setHinting(reskia_font_t *font, reskia_font_hinting_t hintingLevel); // NULL/invalid enum 入力では no-op
-reskia_font_hinting_t SkFont_getHinting(reskia_font_t *font); // NULL 入力では -1
-sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size); // NULL 入力では 0
-sk_strike_ref_t SkFont_makeStrikeRef(reskia_font_t *font); // NULL 入力や strike 生成不能では 0
-reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font); // borrowed pointer。NULL 入力や未設定では NULL。caller は解放しない
-float SkFont_getSize(reskia_font_t *font); // NULL 入力では 0
-float SkFont_getScaleX(reskia_font_t *font); // NULL 入力では 0
-float SkFont_getSkewX(reskia_font_t *font); // NULL 入力では 0
-sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // NULL 入力や未設定では 0
+reskia_font_t *SkFont_newWithTypefaceAndSize(int typeface, float size); // Invalid or 0 typeface handles are treated as the default/null typeface.
+reskia_font_t *SkFont_newWithTypeface(int typeface); // Invalid or 0 typeface handles are treated as the default/null typeface.
+reskia_font_t *SkFont_newWithTypefaceSizeScaleXSkewX(int typeface, float size, float scaleX, float skewX); // Invalid or 0 typeface handles are treated as the default/null typeface.
+void SkFont_delete(reskia_font_t *font); // No-op for NULL input.
+bool SkFont_equals(reskia_font_t *font, const reskia_font_t *other); // Returns false for NULL input.
+bool SkFont_notEquals(reskia_font_t *font, const reskia_font_t *other); // Returns false for NULL input.
+bool SkFont_isForceAutoHinting(reskia_font_t *font); // Returns false for NULL input.
+bool SkFont_isEmbeddedBitmaps(reskia_font_t *font); // Returns false for NULL input.
+bool SkFont_isSubpixel(reskia_font_t *font); // Returns false for NULL input.
+bool SkFont_isLinearMetrics(reskia_font_t *font); // Returns false for NULL input.
+bool SkFont_isEmbolden(reskia_font_t *font); // Returns false for NULL input.
+bool SkFont_isBaselineSnap(reskia_font_t *font); // Returns false for NULL input.
+void SkFont_setForceAutoHinting(reskia_font_t *font, bool forceAutoHinting); // No-op for NULL input.
+void SkFont_setEmbeddedBitmaps(reskia_font_t *font, bool embeddedBitmaps); // No-op for NULL input.
+void SkFont_setSubpixel(reskia_font_t *font, bool subpixel); // No-op for NULL input.
+void SkFont_setLinearMetrics(reskia_font_t *font, bool linearMetrics); // No-op for NULL input.
+void SkFont_setEmbolden(reskia_font_t *font, bool embolden); // No-op for NULL input.
+void SkFont_setBaselineSnap(reskia_font_t *font, bool baselineSnap); // No-op for NULL input.
+reskia_font_edging_t SkFont_getEdging(reskia_font_t *font); // Returns -1 for NULL input.
+void SkFont_setEdging(reskia_font_t *font, reskia_font_edging_t edging); // No-op for NULL or invalid enum input.
+void SkFont_setHinting(reskia_font_t *font, reskia_font_hinting_t hintingLevel); // No-op for NULL or invalid enum input.
+reskia_font_hinting_t SkFont_getHinting(reskia_font_t *font); // Returns -1 for NULL input.
+sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size); // Returns 0 for NULL input.
+sk_strike_ref_t SkFont_makeStrikeRef(reskia_font_t *font); // Returns 0 for NULL input or strike creation failure.
+reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font); // Borrowed pointer. Returns NULL for NULL input or when unset. The caller must not free it.
+float SkFont_getSize(reskia_font_t *font); // Returns 0 for NULL input.
+float SkFont_getScaleX(reskia_font_t *font); // Returns 0 for NULL input.
+float SkFont_getSkewX(reskia_font_t *font); // Returns 0 for NULL input.
+sk_typeface_t SkFont_refTypeface(reskia_font_t *font); // Returns 0 for NULL input or when unset.
 
-void SkFont_setTypeface(reskia_font_t *font, sk_typeface_t typeface); // NULL font では no-op。invalid/0 typeface handle は null typeface として設定
-void SkFont_setSize(reskia_font_t *font, float textSize); // NULL 入力では no-op
-void SkFont_setScaleX(reskia_font_t *font, float scaleX); // NULL 入力では no-op
-void SkFont_setSkewX(reskia_font_t *font, float skewX); // NULL 入力では no-op
+void SkFont_setTypeface(reskia_font_t *font, sk_typeface_t typeface); // No-op for NULL font. Invalid or 0 typeface handles are set as the null typeface.
+void SkFont_setSize(reskia_font_t *font, float textSize); // No-op for NULL input.
+void SkFont_setScaleX(reskia_font_t *font, float scaleX); // No-op for NULL input.
+void SkFont_setSkewX(reskia_font_t *font, float skewX); // No-op for NULL input.
 /**
- * byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。glyphs は NULL 許可。invalid 入力では 0
+ * Returns 0 when byteLength is 0. text must be non-NULL when byteLength is greater than 0.
+ * encoding must be 0..3, and glyphs may be NULL. Returns 0 for invalid input.
  */
 int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount);
-uint16_t SkFont_unicharToGlyph(reskia_font_t *font, reskia_unichar_t uni); // NULL 入力では 0
+uint16_t SkFont_unicharToGlyph(reskia_font_t *font, reskia_unichar_t uni); // Returns 0 for NULL input.
 /**
- * count > 0 では uni/glyphs は count 要素以上、非 NULL。invalid 入力では no-op
+ * uni and glyphs must contain at least count elements and be non-NULL when count is greater than 0.
+ * No-op for invalid input.
  */
 void SkFont_unicharsToGlyphs(reskia_font_t *font, const int32_t *uni, int count, uint16_t *glyphs);
 /**
- * byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。invalid 入力では 0
+ * Returns 0 when byteLength is 0. text must be non-NULL when byteLength is greater than 0.
+ * encoding must be 0..3. Returns 0 for invalid input.
  */
 int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding);
 /**
- * byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。bounds は NULL 許可。invalid 入力では 0
+ * Returns 0 when byteLength is 0. text must be non-NULL when byteLength is greater than 0.
+ * encoding must be 0..3, and bounds may be NULL. Returns 0 for invalid input.
  */
 float SkFont_measureText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds);
 /**
- * byteLength == 0 では 0。byteLength > 0 では text 非 NULL。encoding は 0..3。bounds/paint は NULL 許可。invalid 入力では 0
+ * Returns 0 when byteLength is 0. text must be non-NULL when byteLength is greater than 0.
+ * encoding must be 0..3, and bounds/paint may be NULL. Returns 0 for invalid input.
  */
 float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, reskia_rect_t *bounds, const reskia_paint_t *paint);
 /**
- * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths/bounds は NULL 許可
+ * No-op when count is <= 0. glyphs must contain at least count elements and be non-NULL
+ * when count is greater than 0. widths and bounds may be NULL.
  */
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds);
-float SkFont_getWidth(reskia_font_t *font, uint16_t glyph); // NULL 入力では 0
+float SkFont_getWidth(reskia_font_t *font, uint16_t glyph); // Returns 0 for NULL input.
 
 /**
- * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths は NULL 許可
+ * No-op when count is <= 0. glyphs must contain at least count elements and be non-NULL
+ * when count is greater than 0. widths may be NULL.
  */
 void SkFont_getWidthsWithoutBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths);
 /**
- * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths/bounds/paint は NULL 許可
+ * No-op when count is <= 0. glyphs must contain at least count elements and be non-NULL
+ * when count is greater than 0. widths, bounds, and paint may be NULL.
  */
 void SkFont_getWidthsBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds, const reskia_paint_t *paint);
 /**
- * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。bounds/paint は NULL 許可
+ * No-op when count is <= 0. glyphs must contain at least count elements and be non-NULL
+ * when count is greater than 0. bounds and paint may be NULL.
  */
 void SkFont_getBounds(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_rect_t *bounds, const reskia_paint_t *paint);
 /**
- * count <= 0 では no-op。count > 0 では glyphs/pos は count 要素以上、非 NULL。origin handle 0 は {0,0} として扱う
+ * No-op when count is <= 0. glyphs and pos must contain at least count elements and be non-NULL
+ * when count is greater than 0. Origin handle 0 is treated as {0,0}.
  */
 void SkFont_getPos(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_point_t *pos, sk_point_t origin);
 /**
- * count <= 0 では no-op。count > 0 では glyphs/xpos は count 要素以上、非 NULL
+ * No-op when count is <= 0. glyphs and xpos must contain at least count elements and be non-NULL
+ * when count is greater than 0.
  */
 void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, float *xpos, float origin);
 /**
- * count <= 0 では 0。count > 0 では glyphs/pos は count 要素以上、非 NULL。paint は NULL 許可。invalid/empty 結果では 0
+ * Returns 0 when count is <= 0. glyphs and pos must contain at least count elements and be non-NULL
+ * when count is greater than 0. paint may be NULL. Returns 0 for invalid input or an empty result.
  */
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint);
-bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path); // path は非 NULL。invalid 入力では false
+bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path); // path must be non-NULL. Returns false for invalid input.
 
 /**
- * count > 0 では glyphIDs/glyphPathProc は非 NULL。callback 中の path_or_null/matrix は借用で保持不可。invalid 入力では no-op
+ * glyphIDs and glyphPathProc must be non-NULL when count is greater than 0.
+ * path_or_null and matrix passed to the callback are borrowed and must not be retained.
+ * No-op for invalid input.
  */
 void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx);
-float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics); // metrics は NULL 許可。NULL font では 0
-float SkFont_getSpacing(reskia_font_t *font); // NULL 入力では 0
-void SkFont_dump(reskia_font_t *font); // NULL 入力では no-op
+float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics); // metrics may be NULL. Returns 0 for NULL font.
+float SkFont_getSpacing(reskia_font_t *font); // Returns 0 for NULL input.
+void SkFont_dump(reskia_font_t *font); // No-op for NULL input.
 
 #ifdef __cplusplus
 }

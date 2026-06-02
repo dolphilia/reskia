@@ -93,7 +93,7 @@ static constexpr reskia_paint_blend_mode_t kBlendModeScreen = 14;
 static constexpr reskia_paint_blend_mode_t kBlendModeOverlay = 15;
 
 /**
- * 矩形を描画する
+ * Draws a rectangle.
  */
 UTEST(cskia, drawRect) {
     const int image_width = 500;
@@ -108,7 +108,7 @@ UTEST(cskia, drawRect) {
 
     reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
-    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
+    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // Rectangle position and size
     SkCanvas_drawRect(canvas, rect_key, paint);
     static_sk_rect_delete(rect_key);
 
@@ -125,7 +125,7 @@ UTEST(cskia, drawRect) {
 }
 
 /**
- * パス（星）を描画する
+ * Draws a star path.
  */
 UTEST(cskia, drawPath) {
     int image_width = 500;
@@ -170,7 +170,7 @@ UTEST(cskia, drawPath) {
 }
 
 /**
- * キャンバスを回転させる
+ * Rotates the canvas.
  */
 UTEST(cskia, drawRect_rotate) {
     const int image_width = 500;
@@ -205,7 +205,7 @@ UTEST(cskia, drawRect_rotate) {
 }
 
 /**
- * インストール済みフォントで文字を描画する macOS
+ * Draws text with an installed font on macOS.
  */
 #if defined(__APPLE__)
 UTEST(cskia, drawTextBlob_Installedfont) {
@@ -265,7 +265,7 @@ UTEST(cskia, drawTextBlob_Installedfont) {
 }
 #endif
 
-// インストール済みフォントで描画する windows
+// Draws text with an installed font on Windows.
 #if defined(_WIN32) || defined(_WIN64)
 /*
 #include "include/core/SkCanvas.h"
@@ -337,7 +337,7 @@ UTEST(cskia, drawTextBlob_Installedfont) {
 #endif
 
 /**
- * 外部フォントで文字を描画する（macOSのみ）
+ * Draws text with an external font on macOS.
  */
 #if defined(__APPLE__)
 UTEST(cskia, drawTextBlob_fromFile) {
@@ -370,19 +370,19 @@ UTEST(cskia, drawTextBlob_fromFile) {
     SkPaint_setColor(paint3, SkColorSetRGB(136, 136, 136));
 
 
-    // フォントファイルのパスを指定
+    // Specify the font file path.
     CFStringRef fontPath = CFStringCreateWithCString(kCFAllocatorDefault, "Mplus1-Regular.ttf", kCFStringEncodingUTF8);
     CFURLRef fontURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, fontPath, kCFURLPOSIXPathStyle, false);
-    CFRelease(fontPath); // CFStringRefを解放
+    CFRelease(fontPath); // Release the CFStringRef.
 
-    // フォント記述子を作成
+    // Create font descriptors.
     CFArrayRef fontDescriptors = CTFontManagerCreateFontDescriptorsFromURL(fontURL);
-    CFRelease(fontURL); // CFURLRefを解放
+    CFRelease(fontURL); // Release the CFURLRef.
 
-    // 配列から最初のフォント記述子を取得
+    // Get the first font descriptor from the array.
     CTFontDescriptorRef fontDescriptor = (CTFontDescriptorRef)CFArrayGetValueAtIndex(fontDescriptors, 0);
 
-    // フォント記述子を使用してCTFontを作成
+    // Create a CTFont from the font descriptor.
     CTFontRef theCTFont = CTFontCreateWithFontDescriptor(fontDescriptor, 12.0, NULL);
 
 
@@ -416,7 +416,7 @@ UTEST(cskia, drawTextBlob_fromFile) {
 #endif
 
 /**
- * 非推奨：空 typeface で文字描画 API の呼び出し経路を確認する
+ * Deprecated: checks the text drawing API path with an empty typeface.
  */
 UTEST(cskia, SkTypeface_MakeEmpty) {
     const int image_width = 500;
@@ -469,7 +469,7 @@ UTEST(cskia, SkTypeface_MakeEmpty) {
 }
 
 /**
- * グラデーションを描画する
+ * Draws a gradient.
  */
 //#ifdef __MACOS__
 UTEST(cskia, SkGradientShader) {
@@ -507,7 +507,7 @@ UTEST(cskia, SkGradientShader) {
 //#endif
 
 /**
- * フラクタルノイズを描画する
+ * Draws fractal noise.
  */
 UTEST(cskia, FractalNoise) {
     const int image_width = 500;
@@ -537,7 +537,7 @@ UTEST(cskia, FractalNoise) {
 }
 
 /**
- * 画像を読み込んで描画する
+ * Loads and draws an image.
  */
 
 UTEST(cskia, LoadImage) {
@@ -554,7 +554,7 @@ UTEST(cskia, LoadImage) {
     reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
 
-    // PNG画像を読み込む
+    // Load a PNG image.
     int image_file_id = SkStream_MakeFromFile("miga.png");
     auto *stream_asset = reinterpret_cast<reskia_stream_asset_t *>(static_sk_stream_asset_get_ptr(image_file_id));
     size_t size = SkStreamAsset_getLength(stream_asset);
@@ -576,7 +576,7 @@ UTEST(cskia, LoadImage) {
 }
 
 /**
- * 円を描画する
+ * Draws a circle.
  */
 UTEST(cskia, drawRRect) {
     const int image_width = 500;
@@ -589,7 +589,7 @@ UTEST(cskia, drawRRect) {
 
     reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
-    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
+    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // Rectangle position and size
     reskia_r_rect_t *rrect = SkRRect_new();
     const reskia_rect_t *rect = get_rect_ptr(rect_key);
     SkRRect_setOval(rrect, rect);
@@ -611,7 +611,7 @@ UTEST(cskia, drawRRect) {
 }
 
 /**
- * 角丸を描画する
+ * Draws a rounded rectangle.
  */
 UTEST(cskia, drawRoundRect) {
     const int image_width = 500;
@@ -624,7 +624,7 @@ UTEST(cskia, drawRoundRect) {
 
     reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
-    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
+    int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // Rectangle position and size
     const reskia_rect_t *rect = get_rect_ptr(rect_key);
     SkCanvas_drawRoundRect(canvas, rect, 10, 10, paint);
     static_sk_rect_delete(rect_key);
@@ -642,7 +642,7 @@ UTEST(cskia, drawRoundRect) {
 }
 
 /**
- * 矩形を描画する
+ * Draws rectangles.
  */
 UTEST(cskia, BlendMode) {
     const int image_width = 500;
@@ -657,12 +657,12 @@ UTEST(cskia, BlendMode) {
 
     SkPaint_setBlendMode(paint, kBlendModeOverlay);
     SkPaint_setColor(paint,SK_ColorRED);
-    int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // 矩形の位置とサイズ
+    int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // Rectangle position and size
     SkCanvas_drawRect(canvas, rect_key, paint);
 
     SkPaint_setBlendMode(paint, kBlendModeScreen);
     SkPaint_setColor(paint,SK_ColorBLUE);
-    rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // 矩形の位置とサイズ
+    rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // Rectangle position and size
     SkCanvas_drawRect(canvas, rect_key, paint);
 
     static_sk_rect_delete(rect_key);
@@ -680,7 +680,7 @@ UTEST(cskia, BlendMode) {
 }
 
 /**
- * 矩形を描画する
+ * Draws an image loaded through stb_image.
  */
 UTEST(cskia, stb_image) {
     if (!file_exists("miga.png")) {
@@ -696,19 +696,19 @@ UTEST(cskia, stb_image) {
     reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
     reskia_paint_t *paint = SkPaint_new();
 
-    // LodePNGを使ってPNGファイルを読み込む
+    // Select the PNG file to load.
     const char* filePath = "miga.png";
 
-    // PNGファイルをバイナリデータとして読み込む
+    // Load the PNG file as binary image data.
     int width, height, channels;
-    // STB_IMAGEを使って画像データを読み込む
+    // Load image data with STB_IMAGE.
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, STBI_rgb_alpha);
     if (!data) {
         std::cerr << "Error loading PNG file: " << stbi_failure_reason() << std::endl;
         exit(1);
     }
 
-    // Skiaで使用するために画像データをSkImageに変換する
+    // Convert image data to an SkImage for Skia.
     sk_image_info_t image_info = SkImageInfo_Make(width, height, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kUnpremul_SkAlphaType);
     const reskia_image_info_t *image_info_ptr = get_image_info_ptr(image_info);
 
@@ -724,16 +724,16 @@ UTEST(cskia, stb_image) {
 
 
 
-    //canvas->drawBitmap(bitmap, 100, 100, &paint); // 位置(100, 100)に描画
+    //canvas->drawBitmap(bitmap, 100, 100, &paint); // Draw at position (100, 100)
 
 //    SkPaint_setBlendMode(paint, SkBlendMode::kOverlay);
 //    SkPaint_setColor(paint,SK_ColorRED);
-//    int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // 矩形の位置とサイズ
+//    int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // Rectangle position and size
 //    SkCanvas_drawRect(canvas, rect_key, paint);
 //
 //    SkPaint_setBlendMode(paint, SkBlendMode::kScreen);
 //    SkPaint_setColor(paint,SK_ColorBLUE);
-//    rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // 矩形の位置とサイズ
+//    rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // Rectangle position and size
 //    SkCanvas_drawRect(canvas, rect_key, paint);
 //
 //    static_sk_rect_delete(rect_key);
@@ -763,7 +763,7 @@ UTEST(cskia, SkColors_SkPoints) {
 }
 
 /**
- * パス曲線を描画する
+ * Draws a curved path.
  */
 UTEST(cskia, drawPath2) {
     int image_width = 500;
@@ -776,32 +776,32 @@ UTEST(cskia, drawPath2) {
 
     reskia_path_t *path = SkPath_new();
     //SkPath_moveTo(path, 100, 100);
-    //SkPath_quadTo(path, 150, 50, 200, 100); // 二次ベジェ曲線を追加
-    //SkPath_cubicTo(path, 250, 150, 300, 50, 350, 100); // 三次ベジェ曲線を追加
-    //SkPath_lineTo(path, 400, 200);     // 直線を追加
-    SkPath_moveTo(path, 200, 100);      // 始点
-    SkPath_lineTo(path, 400, 100);      // 上辺
-    SkPath_arcToTangent(path, 450, 100, 450, 150, 50); // 右上の角を丸める
-    SkPath_lineTo(path, 450, 250);      // 右辺
-    SkPath_arcToTangent(path, 450, 300, 400, 300, 50); // 右下の角を丸める
-    SkPath_lineTo(path, 250, 300);      // 下辺
-    SkPath_lineTo(path, 220, 350);      // 吹き出しのポイント部分
-    SkPath_lineTo(path, 200, 300);      // 吹き出しのポイント部分
-    SkPath_lineTo(path, 150, 300);      // 下辺
-    SkPath_arcToTangent(path, 100, 300, 100, 250, 50); // 左下の角を丸める
-    SkPath_lineTo(path, 100, 150);      // 左辺
-    SkPath_arcToTangent(path, 100, 100, 150, 100, 50); // 左上の角を丸める
+    //SkPath_quadTo(path, 150, 50, 200, 100); // Add a quadratic Bezier curve.
+    //SkPath_cubicTo(path, 250, 150, 300, 50, 350, 100); // Add a cubic Bezier curve.
+    //SkPath_lineTo(path, 400, 200);     // Add a straight line.
+    SkPath_moveTo(path, 200, 100);      // Start point
+    SkPath_lineTo(path, 400, 100);      // Top edge
+    SkPath_arcToTangent(path, 450, 100, 450, 150, 50); // Round the upper-right corner.
+    SkPath_lineTo(path, 450, 250);      // Right edge
+    SkPath_arcToTangent(path, 450, 300, 400, 300, 50); // Round the lower-right corner.
+    SkPath_lineTo(path, 250, 300);      // Bottom edge
+    SkPath_lineTo(path, 220, 350);      // Callout point
+    SkPath_lineTo(path, 200, 300);      // Callout point
+    SkPath_lineTo(path, 150, 300);      // Bottom edge
+    SkPath_arcToTangent(path, 100, 300, 100, 250, 50); // Round the lower-left corner.
+    SkPath_lineTo(path, 100, 150);      // Left edge
+    SkPath_arcToTangent(path, 100, 100, 150, 100, 50); // Round the upper-left corner.
     SkPath_close(path);
 
     reskia_paint_t *paint = SkPaint_new();
     SkPaint_setAntiAlias(paint, true);
 
-    // 塗りつぶし
+    // Fill
     SkPaint_setColor(paint,SK_ColorYELLOW);
     SkPaint_setStyle(paint, kPaintFillStyle);
     SkCanvas_drawPath(canvas, path, paint);
 
-    // 線
+    // Stroke
     SkPaint_setColor(paint, SK_ColorBLACK);
     SkPaint_setStyle(paint, kPaintStrokeStyle);
     SkPaint_setStrokeWidth(paint, 4);

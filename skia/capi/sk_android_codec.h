@@ -36,7 +36,7 @@ typedef int32_t reskia_encoded_image_format_t;
 
 /**
  * owned: NULL is no-op.
- * caller が保持する参照を解放する (SkAndroidCodec *androidCodec)
+ * Releases the caller-held reference. (SkAndroidCodec *androidCodec)
  */
 void SkAndroidCodec_delete(reskia_android_codec_t *androidCodec);
 /**

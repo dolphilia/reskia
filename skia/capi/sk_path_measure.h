@@ -22,25 +22,25 @@ extern "C" {
 
 reskia_path_measure_t *SkPathMeasure_new(); // () -> SkPathMeasure *
 /**
- * path NULL では空の SkPathMeasure を返す
+ * Returns an empty SkPathMeasure when path is NULL.
  */
 reskia_path_measure_t *SkPathMeasure_newWithPathForceClosedAndResScale(const reskia_path_t *path, bool forceClosed, float resScale);
 void SkPathMeasure_delete(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure)
 /**
- * path は NULL 許可で reset。path_measure NULL では no-op
+ * path may be NULL and resets the measure. No-op when path_measure is NULL.
  */
 void SkPathMeasure_setPath(reskia_path_measure_t *path_measure, const reskia_path_t *path, bool forceClosed);
-float SkPathMeasure_getLength(reskia_path_measure_t *path_measure); // NULL 入力では 0
+float SkPathMeasure_getLength(reskia_path_measure_t *path_measure); // Returns 0 for NULL input.
 /**
- * position/tangent は非 NULL。NULL 入力では false
+ * position and tangent must be non-NULL. Returns false for NULL input.
  */
 bool SkPathMeasure_getPosTan(reskia_path_measure_t *path_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent);
 /**
- * matrix は非 NULL。NULL 入力では false
+ * matrix must be non-NULL. Returns false for NULL input.
  */
 bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance, reskia_matrix_t *matrix, reskia_path_measure_matrix_flags_t flags);
 /**
- * dst は非 NULL。NULL 入力では false
+ * dst must be non-NULL. Returns false for NULL input.
  */
 bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo);
 bool SkPathMeasure_isClosed(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool

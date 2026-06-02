@@ -17,7 +17,7 @@ typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_file_t reskia_file_t;
 typedef struct reskia_stream_t reskia_stream_t;
 
-void SkData_release(reskia_data_t *sk_data); // owned: caller が保持する参照を release する (SkData *sk_data)
+void SkData_release(reskia_data_t *sk_data); // owned: releases the caller-held reference. (SkData *sk_data)
 size_t SkData_size(reskia_data_t *sk_data); // (SkData *sk_data) -> size_t
 bool SkData_isEmpty(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
 bool SkData_empty(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
@@ -43,8 +43,8 @@ size_t SkData_copyRange(reskia_data_t *sk_data, size_t offset, size_t length, ui
 bool SkData_equals(reskia_data_t *sk_data, const reskia_data_t *other); // (SkData *sk_data, const SkData *other) -> bool
 bool SkData_notEquals(reskia_data_t *sk_data, const reskia_data_t *other); // (SkData *sk_data, const SkData *other) -> bool
 bool SkData_unique(reskia_data_t *sk_data); // (SkData *sk_data) -> bool
-void SkData_ref(reskia_data_t *sk_data); // retained: 参照カウントを増やす (SkData *sk_data)
-void SkData_unref(reskia_data_t *sk_data); // owned: 参照カウントを減らす (SkData *sk_data)
+void SkData_ref(reskia_data_t *sk_data); // retained: increments the reference count. (SkData *sk_data)
+void SkData_unref(reskia_data_t *sk_data); // owned: decrements the reference count. (SkData *sk_data)
 void SkData_deref(reskia_data_t *sk_data); // (SkData *sk_data)
 bool SkData_refCntGreaterThan(reskia_data_t *sk_data, int32_t threadIsolatedTestCnt); // (SkData *sk_data, int32_t threadIsolatedTestCnt) -> bool
 

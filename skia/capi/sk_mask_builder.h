@@ -22,23 +22,24 @@ typedef int32_t reskia_mask_builder_alloc_type_t;
 
 reskia_mask_builder_t *SkMaskBuilder_new(); // () -> SkMaskBuilder *
 /**
- * img は borrowed mutable。bounds 非 NULL、format valid。invalid 入力では NULL
+ * img is borrowed mutable storage. bounds must be non-NULL, and format must be valid.
+ * Returns NULL for invalid input.
  */
 reskia_mask_builder_t *SkMaskBuilder_newWithImageBoundsRowBytesFormat(uint8_t *img, const reskia_i_rect_t *bounds, uint32_t rowBytes, reskia_mask_builder_format_t format);
-void SkMaskBuilder_delete(reskia_mask_builder_t *maskBuilder); // NULL 入力では no-op
-uint8_t *SkMaskBuilder_image(reskia_mask_builder_t *maskBuilder); // borrowed mutable。NULL 入力では NULL
-reskia_i_rect_t *SkMaskBuilder_bounds(reskia_mask_builder_t *maskBuilder); // borrowed mutable。NULL 入力では NULL
-uint32_t SkMaskBuilder_rowBytes(reskia_mask_builder_t *maskBuilder); // NULL 入力では 0
-reskia_mask_builder_format_t SkMaskBuilder_format(reskia_mask_builder_t *maskBuilder); // NULL 入力では -1
-uint8_t *SkMaskBuilder_getAddr1(reskia_mask_builder_t *maskBuilder, int x, int y); // borrowed mutable。format/bounds/image 不一致や NULL 入力では NULL
-uint8_t *SkMaskBuilder_getAddr8(reskia_mask_builder_t *maskBuilder, int x, int y); // borrowed mutable。format/bounds/image 不一致や NULL 入力では NULL
-uint16_t *SkMaskBuilder_getAddrLCD16(reskia_mask_builder_t *maskBuilder, int x, int y); // borrowed mutable。format/bounds/image 不一致や NULL 入力では NULL
-uint32_t *SkMaskBuilder_getAddr32(reskia_mask_builder_t *maskBuilder, int x, int y); // borrowed mutable。format/bounds/image 不一致や NULL 入力では NULL
-void *SkMaskBuilder_getAddr(reskia_mask_builder_t *maskBuilder, int x, int y); // borrowed mutable。BW/format/bounds/image 不一致や NULL 入力では NULL
+void SkMaskBuilder_delete(reskia_mask_builder_t *maskBuilder); // No-op for NULL input.
+uint8_t *SkMaskBuilder_image(reskia_mask_builder_t *maskBuilder); // Borrowed mutable storage. Returns NULL for NULL input.
+reskia_i_rect_t *SkMaskBuilder_bounds(reskia_mask_builder_t *maskBuilder); // Borrowed mutable storage. Returns NULL for NULL input.
+uint32_t SkMaskBuilder_rowBytes(reskia_mask_builder_t *maskBuilder); // Returns 0 for NULL input.
+reskia_mask_builder_format_t SkMaskBuilder_format(reskia_mask_builder_t *maskBuilder); // Returns -1 for NULL input.
+uint8_t *SkMaskBuilder_getAddr1(reskia_mask_builder_t *maskBuilder, int x, int y); // Borrowed mutable storage. Returns NULL when format/bounds/image are inconsistent or input is NULL.
+uint8_t *SkMaskBuilder_getAddr8(reskia_mask_builder_t *maskBuilder, int x, int y); // Borrowed mutable storage. Returns NULL when format/bounds/image are inconsistent or input is NULL.
+uint16_t *SkMaskBuilder_getAddrLCD16(reskia_mask_builder_t *maskBuilder, int x, int y); // Borrowed mutable storage. Returns NULL when format/bounds/image are inconsistent or input is NULL.
+uint32_t *SkMaskBuilder_getAddr32(reskia_mask_builder_t *maskBuilder, int x, int y); // Borrowed mutable storage. Returns NULL when format/bounds/image are inconsistent or input is NULL.
+void *SkMaskBuilder_getAddr(reskia_mask_builder_t *maskBuilder, int x, int y); // Borrowed mutable storage. Returns NULL when BW/format/bounds/image are inconsistent or input is NULL.
 // static
-uint8_t *SkMaskBuilder_AllocImage(size_t bytes, reskia_mask_builder_alloc_type_t alloc); // bytes > 0。0 や割当不能では NULL
-void SkMaskBuilder_FreeImage(void *image); // NULL 入力では no-op
-sk_mask_builder_t SkMaskBuilder_PrepareDestination(int radiusX, int radiusY, const reskia_mask_t *src); // src 非 NULL。NULL 入力では 0
+uint8_t *SkMaskBuilder_AllocImage(size_t bytes, reskia_mask_builder_alloc_type_t alloc); // bytes must be greater than 0. Returns NULL for 0 bytes or allocation failure.
+void SkMaskBuilder_FreeImage(void *image); // No-op for NULL input.
+sk_mask_builder_t SkMaskBuilder_PrepareDestination(int radiusX, int radiusY, const reskia_mask_t *src); // src must be non-NULL. Returns 0 for NULL input.
 
 #ifdef __cplusplus
 }

@@ -24,27 +24,27 @@ extern "C" {
  * owned: negative width/height returns NULL. addr may be NULL if caller intentionally creates an empty/borrowed pixel ref.
  */
 reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes);
-void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref); // owned: caller が保持する参照を release する。NULL 入力では no-op。
-reskia_pixel_storage_type_t SkPixelRef_type(reskia_pixel_ref_t *pixel_ref); // NULL 入力では -1。
-sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
-int SkPixelRef_width(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
-int SkPixelRef_height(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
-void * SkPixelRef_pixels(reskia_pixel_ref_t *pixel_ref); // borrowed: 解放不要の借用ポインタ。NULL 入力では NULL。
-size_t SkPixelRef_rowBytes(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
-uint32_t SkPixelRef_getGenerationID(reskia_pixel_ref_t *pixel_ref); // NULL 入力では 0。
-void SkPixelRef_notifyPixelsChanged(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
-bool SkPixelRef_isImmutable(reskia_pixel_ref_t *pixel_ref); // NULL 入力では false。
-void SkPixelRef_setImmutable(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
+void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref); // Owned reference: releases the caller-held reference. No-op for NULL input.
+reskia_pixel_storage_type_t SkPixelRef_type(reskia_pixel_ref_t *pixel_ref); // Returns -1 for NULL input.
+sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
+int SkPixelRef_width(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
+int SkPixelRef_height(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
+void * SkPixelRef_pixels(reskia_pixel_ref_t *pixel_ref); // Borrowed pointer; do not free. Returns NULL for NULL input.
+size_t SkPixelRef_rowBytes(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
+uint32_t SkPixelRef_getGenerationID(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
+void SkPixelRef_notifyPixelsChanged(reskia_pixel_ref_t *pixel_ref); // No-op for NULL input.
+bool SkPixelRef_isImmutable(reskia_pixel_ref_t *pixel_ref); // Returns false for NULL input.
+void SkPixelRef_setImmutable(reskia_pixel_ref_t *pixel_ref); // No-op for NULL input.
 /**
  * pixel_ref and listener handle are required.
  * invalid input is no-op.
  */
 void SkPixelRef_addGenIDChangeListener(reskia_pixel_ref_t *pixel_ref, sk_id_change_listener_t id_change_listener);
-void SkPixelRef_notifyAddedToCache(reskia_pixel_ref_t *pixel_ref); // NULL 入力では no-op。
-reskia_discardable_memory_t * SkPixelRef_diagnostic_only_getDiscardable(reskia_pixel_ref_t *pixel_ref); // borrowed: 解放不要の借用ポインタ。NULL 入力では NULL。
-bool SkPixelRef_unique(reskia_pixel_ref_t *pixel_ref); // NULL 入力では false。
-void SkPixelRef_ref(reskia_pixel_ref_t *pixel_ref); // retained: 参照カウントを増やす。NULL 入力では no-op。
-void SkPixelRef_unref(reskia_pixel_ref_t *pixel_ref); // owned: 参照カウントを減らす。NULL 入力では no-op。
+void SkPixelRef_notifyAddedToCache(reskia_pixel_ref_t *pixel_ref); // No-op for NULL input.
+reskia_discardable_memory_t * SkPixelRef_diagnostic_only_getDiscardable(reskia_pixel_ref_t *pixel_ref); // Borrowed pointer; do not free. Returns NULL for NULL input.
+bool SkPixelRef_unique(reskia_pixel_ref_t *pixel_ref); // Returns false for NULL input.
+void SkPixelRef_ref(reskia_pixel_ref_t *pixel_ref); // Retains the object by incrementing the reference count. No-op for NULL input.
+void SkPixelRef_unref(reskia_pixel_ref_t *pixel_ref); // Releases the object by decrementing the reference count. No-op for NULL input.
 
 #ifdef __cplusplus
 }

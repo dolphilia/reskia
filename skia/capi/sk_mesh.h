@@ -28,30 +28,32 @@ typedef struct reskia_mesh_vertex_buffer_t reskia_mesh_vertex_buffer_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef int32_t reskia_mesh_mode_t;
 
-void SkMesh_delete(reskia_mesh_t * mesh); // NULL 入力では no-op
-sk_mesh_specification_t SkMesh_refSpec(reskia_mesh_t * mesh); // NULL mesh では 0
-reskia_mesh_specification_t * SkMesh_spec(reskia_mesh_t * mesh); // borrowed pointer。NULL mesh では NULL
-reskia_mesh_mode_t SkMesh_mode(reskia_mesh_t * mesh); // NULL mesh では -1
-sk_mesh_vertex_buffer_t SkMesh_refVertexBuffer(reskia_mesh_t * mesh); // NULL mesh では 0
-reskia_mesh_vertex_buffer_t * SkMesh_vertexBuffer(reskia_mesh_t * mesh); // borrowed pointer。NULL mesh では NULL
-size_t SkMesh_vertexOffset(reskia_mesh_t * mesh); // NULL mesh では 0
-size_t SkMesh_vertexCount(reskia_mesh_t * mesh); // NULL mesh では 0
-sk_mesh_index_buffer_t SkMesh_refIndexBuffer(reskia_mesh_t * mesh); // NULL mesh では 0
-reskia_mesh_index_buffer_t * SkMesh_indexBuffer(reskia_mesh_t * mesh); // borrowed pointer。NULL mesh では NULL
-size_t SkMesh_indexOffset(reskia_mesh_t * mesh); // NULL mesh では 0
-size_t SkMesh_indexCount(reskia_mesh_t * mesh); // NULL mesh では 0
-const_sk_data_t SkMesh_refUniforms(reskia_mesh_t * mesh); // NULL mesh では 0
-const reskia_data_t * SkMesh_uniforms(reskia_mesh_t * mesh); // borrowed pointer。NULL mesh では NULL
-const_sk_mesh_child_ptr_t SkMesh_children(reskia_mesh_t * mesh); // NULL mesh では 0。戻り値 span は mesh に借用依存
-sk_rect_t SkMesh_bounds(reskia_mesh_t * mesh); // NULL mesh では 0
-bool SkMesh_isValid(reskia_mesh_t * mesh); // NULL mesh では false
+void SkMesh_delete(reskia_mesh_t * mesh); // No-op for NULL input.
+sk_mesh_specification_t SkMesh_refSpec(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+reskia_mesh_specification_t * SkMesh_spec(reskia_mesh_t * mesh); // Borrowed pointer. Returns NULL for NULL mesh.
+reskia_mesh_mode_t SkMesh_mode(reskia_mesh_t * mesh); // Returns -1 for NULL mesh.
+sk_mesh_vertex_buffer_t SkMesh_refVertexBuffer(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+reskia_mesh_vertex_buffer_t * SkMesh_vertexBuffer(reskia_mesh_t * mesh); // Borrowed pointer. Returns NULL for NULL mesh.
+size_t SkMesh_vertexOffset(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+size_t SkMesh_vertexCount(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+sk_mesh_index_buffer_t SkMesh_refIndexBuffer(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+reskia_mesh_index_buffer_t * SkMesh_indexBuffer(reskia_mesh_t * mesh); // Borrowed pointer. Returns NULL for NULL mesh.
+size_t SkMesh_indexOffset(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+size_t SkMesh_indexCount(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+const_sk_data_t SkMesh_refUniforms(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+const reskia_data_t * SkMesh_uniforms(reskia_mesh_t * mesh); // Borrowed pointer. Returns NULL for NULL mesh.
+const_sk_mesh_child_ptr_t SkMesh_children(reskia_mesh_t * mesh); // Returns 0 for NULL mesh. Returned span is borrowed from mesh.
+sk_rect_t SkMesh_bounds(reskia_mesh_t * mesh); // Returns 0 for NULL mesh.
+bool SkMesh_isValid(reskia_mesh_t * mesh); // Returns false for NULL mesh.
 // static
 /**
- * bounds は非 NULL。invalid 入力では 0 または invalid result
+ * bounds must be non-NULL.
+ * Returns 0 or an invalid result for invalid input.
  */
 sk_mesh_result_t SkMesh_Make(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds);
 /**
- * bounds は非 NULL。invalid 入力では 0 または invalid result
+ * bounds must be non-NULL.
+ * Returns 0 or an invalid result for invalid input.
  */
 sk_mesh_result_t SkMesh_MakeIndexed(sk_mesh_specification_t spec, reskia_mesh_mode_t mode, sk_mesh_vertex_buffer_t vBuffer, size_t vertexCount, size_t vertexOffset, sk_mesh_index_buffer_t iBuffer, size_t indexCount, size_t indexOffset, const_sk_data_t uniforms, sk_mesh_child_ptr_t children, const reskia_rect_t * bounds);
 

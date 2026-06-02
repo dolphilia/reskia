@@ -19,26 +19,27 @@ typedef struct reskia_vector_t reskia_vector_t;
 typedef int32_t reskia_contour_measure_matrix_flags_t;
 
 /**
- * owned: caller が保持する参照を release する。NULL 入力では no-op (SkContourMeasure *contour_measure)
+ * owned: releases the caller-held reference. No-op for NULL input.
+ * (SkContourMeasure *contour_measure)
  */
 void SkContourMeasure_release(reskia_contour_measure_t *contour_measure);
-float SkContourMeasure_length(reskia_contour_measure_t *contour_measure); // NULL 入力では 0 (SkContourMeasure *contour_measure) -> SkScalar
+float SkContourMeasure_length(reskia_contour_measure_t *contour_measure); // Returns 0 for NULL input. (SkContourMeasure *contour_measure) -> SkScalar
 /**
- * position/tangent は非 NULL。NULL 入力では false
+ * position and tangent must be non-NULL. Returns false for NULL input.
  */
 bool SkContourMeasure_getPosTan(reskia_contour_measure_t *contour_measure, float distance, reskia_point_t *position, reskia_vector_t *tangent);
 /**
- * matrix は非 NULL。NULL 入力では false
+ * matrix must be non-NULL. Returns false for NULL input.
  */
 bool SkContourMeasure_getMatrix(reskia_contour_measure_t *contour_measure, float distance, reskia_matrix_t *matrix, reskia_contour_measure_matrix_flags_t flags);
 /**
- * dst は非 NULL。NULL 入力では false
+ * dst must be non-NULL. Returns false for NULL input.
  */
 bool SkContourMeasure_getSegment(reskia_contour_measure_t *contour_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo);
 bool SkContourMeasure_isClosed(reskia_contour_measure_t *contour_measure); // (SkContourMeasure *contour_measure) -> bool
 bool SkContourMeasure_unique(reskia_contour_measure_t *contour_measure); // (SkContourMeasure *contour_measure) -> bool
-void SkContourMeasure_ref(reskia_contour_measure_t *contour_measure); // retained: 参照カウントを増やす。NULL 入力では no-op
-void SkContourMeasure_unref(reskia_contour_measure_t *contour_measure); // owned: 参照カウントを減らす。NULL 入力では no-op
+void SkContourMeasure_ref(reskia_contour_measure_t *contour_measure); // retained: increments the reference count. No-op for NULL input.
+void SkContourMeasure_unref(reskia_contour_measure_t *contour_measure); // owned: decrements the reference count. No-op for NULL input.
 
 #ifdef __cplusplus
 }

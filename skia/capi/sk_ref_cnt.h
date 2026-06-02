@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-void SkRefCnt_release(void * refCnt); // owned: caller が保持する参照を release する。NULL 入力では no-op。
-bool SkRefCnt_unique(void * ref_cnt); // NULL 入力では false。
-void SkRefCnt_ref(void * ref_cnt); // retained: 参照カウントを増やす。NULL 入力では no-op。
-void SkRefCnt_unref(void * ref_cnt); // owned: 参照カウントを減らす。NULL 入力では no-op。
+void SkRefCnt_release(void * refCnt); // owned: releases the caller-held reference. No-op for NULL input.
+bool SkRefCnt_unique(void * ref_cnt); // Returns false for NULL input.
+void SkRefCnt_ref(void * ref_cnt); // retained: increments the reference count. No-op for NULL input.
+void SkRefCnt_unref(void * ref_cnt); // owned: decrements the reference count. No-op for NULL input.
 
 #ifdef __cplusplus
 }

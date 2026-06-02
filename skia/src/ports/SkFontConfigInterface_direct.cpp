@@ -227,7 +227,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { SYMBOL, "Symbol" },
         { SYMBOL, "Symbol Neu" },
 
-        // ＭＳ Ｐゴシック
+        // MS PGothic Japanese-name alias
         { PGOTHIC, "MS PGothic" },
         { PGOTHIC, "\xef\xbc\xad\xef\xbc\xb3 \xef\xbc\xb0"
                    "\xe3\x82\xb4\xe3\x82\xb7\xe3\x83\x83\xe3\x82\xaf" },
@@ -235,7 +235,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { PGOTHIC, "IPAPGothic" },
         { PGOTHIC, "MotoyaG04Gothic" },
 
-        // ＭＳ ゴシック
+        // MS Gothic Japanese-name alias
         { GOTHIC, "MS Gothic" },
         { GOTHIC, "\xef\xbc\xad\xef\xbc\xb3 "
                   "\xe3\x82\xb4\xe3\x82\xb7\xe3\x83\x83\xe3\x82\xaf" },
@@ -243,7 +243,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { GOTHIC, "IPAGothic" },
         { GOTHIC, "MotoyaG04GothicMono" },
 
-        // ＭＳ Ｐ明朝
+        // MS PMincho Japanese-name alias
         { PMINCHO, "MS PMincho" },
         { PMINCHO, "\xef\xbc\xad\xef\xbc\xb3 \xef\xbc\xb0"
                    "\xe6\x98\x8e\xe6\x9c\x9d"},
@@ -251,53 +251,53 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { PMINCHO, "IPAPMincho" },
         { PMINCHO, "MotoyaG04Mincho" },
 
-        // ＭＳ 明朝
+        // MS Mincho Japanese-name alias
         { MINCHO, "MS Mincho" },
         { MINCHO, "\xef\xbc\xad\xef\xbc\xb3 \xe6\x98\x8e\xe6\x9c\x9d" },
         { MINCHO, "Noto Serif CJK JP" },
         { MINCHO, "IPAMincho" },
         { MINCHO, "MotoyaG04MinchoMono" },
 
-        // 宋体
+        // Simsun Chinese-name alias
         { SIMSUN, "Simsun" },
         { SIMSUN, "\xe5\xae\x8b\xe4\xbd\x93" },
         { SIMSUN, "Noto Serif CJK SC" },
         { SIMSUN, "MSung GB18030" },
         { SIMSUN, "Song ASC" },
 
-        // 新宋体
+        // NSimsun Chinese-name alias
         { NSIMSUN, "NSimsun" },
         { NSIMSUN, "\xe6\x96\xb0\xe5\xae\x8b\xe4\xbd\x93" },
         { NSIMSUN, "Noto Serif CJK SC" },
         { NSIMSUN, "MSung GB18030" },
         { NSIMSUN, "N Song ASC" },
 
-        // 黑体
+        // Simhei Chinese-name alias
         { SIMHEI, "Simhei" },
         { SIMHEI, "\xe9\xbb\x91\xe4\xbd\x93" },
         { SIMHEI, "Noto Sans CJK SC" },
         { SIMHEI, "MYingHeiGB18030" },
         { SIMHEI, "MYingHeiB5HK" },
 
-        // 新細明體
+        // PMingLiU Chinese-name alias
         { PMINGLIU, "PMingLiU"},
         { PMINGLIU, "\xe6\x96\xb0\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94" },
         { PMINGLIU, "Noto Serif CJK TC"},
         { PMINGLIU, "MSung B5HK"},
 
-        // 細明體
+        // MingLiU Chinese-name alias
         { MINGLIU, "MingLiU"},
         { MINGLIU, "\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94" },
         { MINGLIU, "Noto Serif CJK TC"},
         { MINGLIU, "MSung B5HK"},
 
-        // 新細明體
+        // PMingLiU_HKSCS Chinese-name alias
         { PMINGLIUHK, "PMingLiU_HKSCS"},
         { PMINGLIUHK, "\xe6\x96\xb0\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94_HKSCS" },
         { PMINGLIUHK, "Noto Serif CJK TC"},
         { PMINGLIUHK, "MSung B5HK"},
 
-        // 細明體
+        // MingLiU_HKSCS Chinese-name alias
         { MINGLIUHK, "MingLiU_HKSCS"},
         { MINGLIUHK, "\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94_HKSCS" },
         { MINGLIUHK, "Noto Serif CJK TC"},

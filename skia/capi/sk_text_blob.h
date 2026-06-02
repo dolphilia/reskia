@@ -25,8 +25,8 @@ typedef int32_t reskia_text_blob_text_encoding_t;
 extern "C" {
 #endif
 
-void SkTextBlob_release(reskia_text_blob_t *text_blob); // owned: caller が保持する参照を release する。NULL text_blob は no-op。
-const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob); // borrowed: 解放不要の借用ポインタ。NULL text_blob returns NULL.
+void SkTextBlob_release(reskia_text_blob_t *text_blob); // Owned reference: releases the caller-held reference. No-op for NULL text_blob.
+const reskia_rect_t *SkTextBlob_bounds(reskia_text_blob_t *text_blob); // Borrowed pointer; do not free. Returns NULL for NULL text_blob.
 uint32_t SkTextBlob_uniqueID(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> uint32_t. NULL text_blob returns 0.
 /**
  * bounds[2] is required.
@@ -43,8 +43,8 @@ size_t SkTextBlob_serialize(reskia_text_blob_t *text_blob, const reskia_serial_p
  */
 sk_data_t SkTextBlob_serializeToData(reskia_text_blob_t *text_blob, const reskia_serial_procs_t *procs);
 bool SkTextBlob_unique(reskia_text_blob_t *text_blob); // (SkTextBlob *text_blob) -> bool. NULL text_blob returns false.
-void SkTextBlob_ref(reskia_text_blob_t *text_blob); // retained: 参照カウントを増やす。NULL text_blob は no-op。
-void SkTextBlob_unref(reskia_text_blob_t *text_blob); // owned: 参照カウントを減らす。NULL text_blob は no-op。
+void SkTextBlob_ref(reskia_text_blob_t *text_blob); // Retains the object by incrementing the reference count. No-op for NULL text_blob.
+void SkTextBlob_unref(reskia_text_blob_t *text_blob); // Releases the object by decrementing the reference count. No-op for NULL text_blob.
 void SkTextBlob_deref(reskia_text_blob_t *text_blob); // NULL text_blob is no-op.
 bool SkTextBlob_refCntGreaterThan(reskia_text_blob_t *text_blob, int threadIsolatedTestCnt); // NULL text_blob returns false.
 

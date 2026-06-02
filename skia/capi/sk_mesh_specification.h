@@ -28,40 +28,47 @@ typedef struct reskia_string_t reskia_string_t;
 typedef struct reskia_string_view_t reskia_string_view_t;
 typedef int32_t reskia_mesh_specification_alpha_type_t;
 
-void SkMeshSpecification_delete(reskia_mesh_specification_t* spec); // NULL 入力では no-op
-sk_mesh_specification_attribute_t SkMeshSpecification_attributes(reskia_mesh_specification_t* spec); // spec NULL では 0。戻り値 span handle は spec に借用依存
-size_t SkMeshSpecification_uniformSize(reskia_mesh_specification_t* spec); // spec NULL では 0
-int SkMeshSpecification_uniforms(reskia_mesh_specification_t* spec); // spec NULL では 0。戻り値 span handle は spec に借用依存
-int SkMeshSpecification_children(reskia_mesh_specification_t* spec); // spec NULL では 0。戻り値 span handle は spec に借用依存
+void SkMeshSpecification_delete(reskia_mesh_specification_t* spec); // No-op for NULL input.
+sk_mesh_specification_attribute_t SkMeshSpecification_attributes(reskia_mesh_specification_t* spec); // Returns 0 for NULL spec. Returned span handle is borrowed from spec.
+size_t SkMeshSpecification_uniformSize(reskia_mesh_specification_t* spec); // Returns 0 for NULL spec.
+int SkMeshSpecification_uniforms(reskia_mesh_specification_t* spec); // Returns 0 for NULL spec. Returned span handle is borrowed from spec.
+int SkMeshSpecification_children(reskia_mesh_specification_t* spec); // Returns 0 for NULL spec. Returned span handle is borrowed from spec.
 /**
- * spec/name NULL や未検出では NULL。戻り値は spec に借用依存
+ * Returns NULL for NULL spec/name or when not found.
+ * Returned pointer is borrowed from spec.
  */
 const reskia_runtime_effect_child_t * SkMeshSpecification_findChild(reskia_mesh_specification_t* spec, const reskia_string_view_t * name);
 /**
- * spec/name NULL や未検出では NULL。戻り値は spec に借用依存
+ * Returns NULL for NULL spec/name or when not found.
+ * Returned pointer is borrowed from spec.
  */
 const reskia_runtime_effect_uniform_t * SkMeshSpecification_findUniform(reskia_mesh_specification_t* spec, const reskia_string_view_t * name);
 /**
- * spec/name NULL や未検出では NULL。戻り値は spec に借用依存
+ * Returns NULL for NULL spec/name or when not found.
+ * Returned pointer is borrowed from spec.
  */
 const reskia_mesh_specification_attribute_t * SkMeshSpecification_findAttribute(reskia_mesh_specification_t* spec, const reskia_string_view_t * name);
 /**
- * spec/name NULL や未検出では NULL。戻り値は spec に借用依存
+ * Returns NULL for NULL spec/name or when not found.
+ * Returned pointer is borrowed from spec.
  */
 const reskia_mesh_specification_varying_t * SkMeshSpecification_findVarying(reskia_mesh_specification_t* spec, const reskia_string_view_t * name);
-size_t SkMeshSpecification_stride(reskia_mesh_specification_t* spec); // spec NULL では 0
-reskia_color_space_t *SkMeshSpecification_colorSpace(reskia_mesh_specification_t* spec); // borrowed pointer。spec NULL では NULL
+size_t SkMeshSpecification_stride(reskia_mesh_specification_t* spec); // Returns 0 for NULL spec.
+reskia_color_space_t *SkMeshSpecification_colorSpace(reskia_mesh_specification_t* spec); // Borrowed pointer. Returns NULL for NULL spec.
 // static
 /**
- * attributes/varyings/vs/fs は非 NULL。invalid 入力では 0
+ * attributes, varyings, vs, and fs must be non-NULL.
+ * Returns 0 for invalid input.
  */
 sk_mesh_specification_result_t SkMeshSpecification_Make(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs);
 /**
- * attributes/varyings/vs/fs は非 NULL。cs は NULL 許可。invalid 入力では 0
+ * attributes, varyings, vs, and fs must be non-NULL. cs may be NULL.
+ * Returns 0 for invalid input.
  */
 sk_mesh_specification_result_t SkMeshSpecification_MakeWithColorSpace(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs);
 /**
- * attributes/varyings/vs/fs は非 NULL。cs は NULL 許可。invalid 入力では 0
+ * attributes, varyings, vs, and fs must be non-NULL. cs may be NULL.
+ * Returns 0 for invalid input.
  */
 sk_mesh_specification_result_t SkMeshSpecification_MakeWithColorSpaceAndAlphaType(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs, reskia_color_space_sp_t * cs, reskia_mesh_specification_alpha_type_t at);
 

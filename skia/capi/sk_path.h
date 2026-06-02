@@ -165,12 +165,13 @@ sk_path_t SkPath_ReadFromMemory(const void *buffer, size_t length, size_t *bytes
 unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
 /**
- * one/two/result は非 NULL、op は SkPathOp 範囲内。invalid 入力では false
+ * one, two, and result must be non-NULL, and op must be in the SkPathOp range.
+ * Returns false for invalid input.
  */
 bool SkPathOps_Op(const reskia_path_t *one, const reskia_path_t *two, reskia_path_op_t op, reskia_path_t *result);
-bool SkPathOps_Simplify(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
-bool SkPathOps_TightBounds(const reskia_path_t *path, reskia_rect_t *result); // path/result は非 NULL。invalid 入力では false
-bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // path/result は非 NULL。invalid 入力では false
+bool SkPathOps_Simplify(const reskia_path_t *path, reskia_path_t *result); // path and result must be non-NULL. Returns false for invalid input.
+bool SkPathOps_TightBounds(const reskia_path_t *path, reskia_rect_t *result); // path and result must be non-NULL. Returns false for invalid input.
+bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // path and result must be non-NULL. Returns false for invalid input.
 
 // static
 
