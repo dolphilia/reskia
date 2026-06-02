@@ -24,7 +24,6 @@ bool is_valid_mipmap_mode(int mm) {
 
 extern "C" {
 
-//SkSamplingOptions *SkSamplingOptions_newCopy & operator=(const SkSamplingOptions &that) {
 //    return new SkSamplingOptions();
 //}
 
@@ -53,7 +52,7 @@ reskia_sampling_options_t *SkSamplingOptions_newWithFilterMode(int fm) {
     return reinterpret_cast<reskia_sampling_options_t *>(new SkSamplingOptions(static_cast<SkFilterMode>(fm)));
 }
 
-reskia_sampling_options_t *SkSamplingOptions_new_5(const reskia_cubic_resampler_t *c) {
+reskia_sampling_options_t *SkSamplingOptions_newWithCubic(const reskia_cubic_resampler_t *c) {
     if (c == nullptr) {
         return nullptr;
     }

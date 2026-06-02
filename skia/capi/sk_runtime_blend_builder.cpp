@@ -33,7 +33,6 @@ bool has_string_view_handle(string_view_t name) {
 extern "C" {
 
 //SkRuntimeBlendBuilder(const SkRuntimeBlendBuilder &)=delete
-//SkRuntimeBlendBuilder & operator=(const SkRuntimeBlendBuilder &)=delete
 
 reskia_runtime_blend_builder_t *SkRuntimeBlendBuilder_new(sk_runtime_effect_t runtime_effect) {
     sk_sp<SkRuntimeEffect> native_effect = static_sk_runtime_effect_get_entity(runtime_effect);

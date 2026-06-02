@@ -49,7 +49,6 @@ typedef struct reskia_path_contour_iter_rec_t {
 extern "C" {
 #endif
 
-//SkPath & operator=(const SkPath &path)
 reskia_path_t *SkPath_new(); // () -> SkPath *
 reskia_path_t *SkPath_newCopy(const reskia_path_t *path); // (const SkPath *path) -> SkPath *
 void SkPath_delete(reskia_path_t *path); // (SkPath *path)
@@ -112,7 +111,7 @@ reskia_path_t *SkPath_arcTo(reskia_path_t *path, const reskia_rect_t *oval, floa
 reskia_path_t *SkPath_arcToTangent(reskia_path_t *path, float x1, float y1, float x2, float y2, float radius); // (SkPath *path, SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2, SkScalar radius) -> SkPath *
 reskia_path_t *SkPath_arcToPoints(reskia_path_t *path, int p1, int p2, float radius); // (SkPath *path, sk_point_t p1, sk_point_t p2, SkScalar radius) -> SkPath *
 reskia_path_t *SkPath_arcToArcSize(reskia_path_t *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float x, float y); // (SkPath *path, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, SkScalar x, SkScalar y) -> SkPath *
-reskia_path_t *SkPath_arcTo_5(reskia_path_t *path, int r, float xAxisRotate, int largeArc, int sweep, int xy); // (SkPath *path, sk_point_t r, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, sk_point_t xy) -> SkPath *
+reskia_path_t *SkPath_arcToArcSizePoints(reskia_path_t *path, int r, float xAxisRotate, int largeArc, int sweep, int xy); // (SkPath *path, sk_point_t r, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, sk_point_t xy) -> SkPath *
 reskia_path_t *SkPath_rArcTo(reskia_path_t *path, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy); // (SkPath *path, SkScalar rx, SkScalar ry, SkScalar xAxisRotate, SkPath::ArcSize largeArc, SkPathDirection sweep, SkScalar dx, SkScalar dy) -> SkPath *
 reskia_path_t *SkPath_close(reskia_path_t *path); // (SkPath *path) -> SkPath *
 bool SkPath_isRect(reskia_path_t *path, reskia_rect_t *rect, bool *isClosed, int *direction); // (SkPath *path, SkRect *rect, bool *isClosed, SkPathDirection *direction) -> bool

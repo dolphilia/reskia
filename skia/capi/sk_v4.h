@@ -19,8 +19,6 @@ sk_v4_t SkV4_negate(reskia_v4_t *v4); // NULL input returns default vector handl
 sk_v4_t SkV4_add(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
 sk_v4_t SkV4_subtract(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
 sk_v4_t SkV4_multiply(reskia_v4_t *v4, const reskia_v4_t *v); // NULL input returns default vector handle.
-// float operator[](int i)
-// float & operator[](int i)
 
 void SkV4_delete(reskia_v4_t *v4); // NULL 入力では no-op
 float SkV4_lengthSquared(reskia_v4_t *v4); // NULL 入力では 0

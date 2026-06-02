@@ -24,7 +24,6 @@ typedef int32_t reskia_r_rect_corner_t;
 extern "C" {
 #endif
 
-//SkRRect & operator=(const SkRRect &rrect)
 reskia_r_rect_t *SkRRect_new(); // () -> SkRRect *
 reskia_r_rect_t *SkRRect_newCopy(const reskia_r_rect_t *rrect); // (const SkRRect *rrect) -> SkRRect *
 void SkRRect_delete(reskia_r_rect_t *rrect); // (SkRRect *rrect)

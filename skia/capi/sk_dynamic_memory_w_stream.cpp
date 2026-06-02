@@ -21,10 +21,6 @@ reskia_dynamic_memory_w_stream_t *SkDynamicMemoryWStream_new() {
     return reinterpret_cast<reskia_dynamic_memory_w_stream_t *>(new SkDynamicMemoryWStream());
 }
 
-//SkDynamicMemoryWStream * SkDynamicMemoryWStream_new_2(SkDynamicMemoryWStream &&stream) {
-//    return new SkDynamicMemoryWStream(&stream);
-//}
-
 void SkDynamicMemoryWStream_delete(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream) {
     delete reinterpret_cast<SkDynamicMemoryWStream *>(dynamic_memory_w_stream);
 }

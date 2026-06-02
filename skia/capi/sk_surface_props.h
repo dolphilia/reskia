@@ -16,14 +16,12 @@ typedef int32_t reskia_surface_props_pixel_geometry_t;
 extern "C" {
 #endif
 
-// SkSurfaceProps & operator=(const SkSurfaceProps &)
-// bool operator==(const SkSurfaceProps &that)
-// bool operator!=(const SkSurfaceProps &that)
-
 reskia_surface_props_t *SkSurfaceProps_new(); // () -> SkSurfaceProps *
 reskia_surface_props_t *SkSurfaceProps_newWithFlagsAndGeometry(uint32_t flags, reskia_surface_props_pixel_geometry_t geometry); // (uint32_t flags, SkPixelGeometry geometry) -> SkSurfaceProps *
 reskia_surface_props_t *SkSurfaceProps_newCopy(const reskia_surface_props_t *props); // NULL props なら NULL (const SkSurfaceProps *props) -> SkSurfaceProps *
 void SkSurfaceProps_delete(reskia_surface_props_t *surface_props); // NULL surface_props は no-op (SkSurfaceProps *surface_props)
+bool SkSurfaceProps_equals(const reskia_surface_props_t *surface_props, const reskia_surface_props_t *that); // NULL 入力では false
+bool SkSurfaceProps_notEquals(const reskia_surface_props_t *surface_props, const reskia_surface_props_t *that); // NULL 入力では false
 /**
  * NULL surface_props なら 0 (SkSurfaceProps *surface_props, SkPixelGeometry newPixelGeometry) -> sk_surface_props_t
  */

@@ -20,15 +20,11 @@ typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_v3_t reskia_v3_t;
 typedef struct reskia_v4_t reskia_v4_t;
 
-//SkM44 & operator=(const SkM44 &src)
-//SkV4 operator*(const SkV4 &v)
-//SkV3 operator*(SkV3 v)
-
 reskia_m_44_t *SkM44_new(const reskia_m_44_t *src); // src は非 NULL。NULL 入力では NULL
 reskia_m_44_t *SkM44_newFromMatrix(const reskia_matrix_t *src); // src は非 NULL。NULL 入力では NULL
 reskia_m_44_t *SkM44_newDefault(); // () -> SkM44 *
 reskia_m_44_t *SkM44_newFromConcat(const reskia_m_44_t *a, const reskia_m_44_t *b); // a/b は非 NULL。NULL 入力では NULL
-reskia_m_44_t *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15); // (SkScalar m0, SkScalar m4, SkScalar m8, SkScalar m12, SkScalar m1, SkScalar m5, SkScalar m9, SkScalar m13, SkScalar m2, SkScalar m6, SkScalar m10, SkScalar m14, SkScalar m3, SkScalar m7, SkScalar m11, SkScalar m15) -> SkM44 *
+reskia_m_44_t *SkM44_newFromScalars(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15); // (SkScalar m0, SkScalar m4, SkScalar m8, SkScalar m12, SkScalar m1, SkScalar m5, SkScalar m9, SkScalar m13, SkScalar m2, SkScalar m6, SkScalar m10, SkScalar m14, SkScalar m3, SkScalar m7, SkScalar m11, SkScalar m15) -> SkM44 *
 void SkM44_delete(reskia_m_44_t *m44); // NULL 入力では no-op
 bool SkM44_equals(reskia_m_44_t *m44, const reskia_m_44_t *other); // NULL 入力では false
 bool SkM44_notEquals(reskia_m_44_t *m44, const reskia_m_44_t *other); // NULL 入力では false
@@ -56,6 +52,8 @@ bool SkM44_invert(reskia_m_44_t *m44, reskia_m_44_t *inverse); // inverse は NU
 sk_m_44_t SkM44_transpose(reskia_m_44_t *m44); // NULL 入力では 0
 void SkM44_dump(reskia_m_44_t *m44); // NULL 入力では no-op
 sk_v4_t SkM44_map(reskia_m_44_t *m44, float x, float y, float z, float w); // NULL 入力では default vector handle
+sk_v4_t SkM44_multiplyV4(reskia_m_44_t *m44, const reskia_v4_t *v); // NULL 入力では default vector handle
+sk_v3_t SkM44_multiplyV3(reskia_m_44_t *m44, const reskia_v3_t *v); // NULL 入力では default vector handle
 sk_matrix_t SkM44_asM33(reskia_m_44_t *m44); // NULL 入力では 0
 sk_m_44_t SkM44_preTranslate(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t
 sk_m_44_t SkM44_postTranslate(reskia_m_44_t *m44, float x, float y, float z); // (SkM44 *m44, SkScalar x, SkScalar y, SkScalar z) -> sk_m_44_t

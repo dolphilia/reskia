@@ -18,7 +18,6 @@ typedef int32_t reskia_region_op_t;
 extern "C" {
 #endif
 
-//SkRegion & operator=(const SkRegion &region)
 reskia_region_t *SkRegion_new(); // () -> SkRegion *
 reskia_region_t *SkRegion_newCopy(const reskia_region_t *region); // (const SkRegion *region) -> SkRegion *. NULL region returns NULL.
 reskia_region_t *SkRegion_newFromIRect(const reskia_i_rect_t *rect); // (const SkIRect *rect) -> SkRegion *. rect is required.
@@ -56,7 +55,7 @@ bool SkRegion_op(reskia_region_t *region, const reskia_i_rect_t *rect, reskia_re
 bool SkRegion_opWithRegion(reskia_region_t *region, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgn, SkRegion::Op op) -> bool. inputs and valid op are required.
 bool SkRegion_opWithIRectAndRegion(reskia_region_t *region, const reskia_i_rect_t *rect, const reskia_region_t *rgn, reskia_region_op_t op); // (SkRegion *region, const SkIRect *rect, const SkRegion *rgn, SkRegion::Op op) -> bool. inputs and valid op are required.
 bool SkRegion_opWithRegionAndIRect(reskia_region_t *region, const reskia_region_t *rgn, const reskia_i_rect_t *rect, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgn, const SkIRect *rect, SkRegion::Op op) -> bool. inputs and valid op are required.
-bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgna, const SkRegion *rgnb, SkRegion::Op op) -> bool. inputs and valid op are required.
+bool SkRegion_opWithRegions(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op); // (SkRegion *region, const SkRegion *rgna, const SkRegion *rgnb, SkRegion::Op op) -> bool. inputs and valid op are required.
 size_t SkRegion_writeToMemory(reskia_region_t *region, void *buffer); // (SkRegion *region, void *buffer) -> size_t. buffer may be NULL for size query; NULL region returns 0.
 size_t SkRegion_readFromMemory(reskia_region_t *region, const void *buffer, size_t length); // (SkRegion *region, const void *buffer, size_t length) -> size_t. region/buffer are required.
 

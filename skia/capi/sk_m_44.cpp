@@ -30,10 +30,6 @@ bool is_valid_m44_rc(int r, int c) {
 
 extern "C" {
 
-//SkM44 & operator=(const SkM44 &src)
-//SkV4 operator*(const SkV4 &v)
-//SkV3 operator*(SkV3 v)
-
 reskia_m_44_t *SkM44_new(const reskia_m_44_t *src) {
     if (src == nullptr) {
         return nullptr;
@@ -59,7 +55,7 @@ reskia_m_44_t *SkM44_newFromConcat(const reskia_m_44_t *a, const reskia_m_44_t *
     return reinterpret_cast<reskia_m_44_t *>(new SkM44(*reinterpret_cast<const SkM44 *>(a), *reinterpret_cast<const SkM44 *>(b)));
 }
 
-reskia_m_44_t *SkM44_new_5(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15) {
+reskia_m_44_t *SkM44_newFromScalars(float m0, float m4, float m8, float m12, float m1, float m5, float m9, float m13, float m2, float m6, float m10, float m14, float m3, float m7, float m11, float m15) {
     return reinterpret_cast<reskia_m_44_t *>(new SkM44(m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, m15));
 }
 
@@ -250,6 +246,20 @@ sk_v4_t SkM44_map(reskia_m_44_t *m44, float x, float y, float z, float w) {
         return static_sk_v4_make({});
     }
     return static_sk_v4_make(reinterpret_cast<SkM44 *>(m44)->map(x, y, z, w));
+}
+
+sk_v4_t SkM44_multiplyV4(reskia_m_44_t *m44, const reskia_v4_t *v) {
+    if (m44 == nullptr || v == nullptr) {
+        return static_sk_v4_make({});
+    }
+    return static_sk_v4_make(*reinterpret_cast<SkM44 *>(m44) * *reinterpret_cast<const SkV4 *>(v));
+}
+
+sk_v3_t SkM44_multiplyV3(reskia_m_44_t *m44, const reskia_v3_t *v) {
+    if (m44 == nullptr || v == nullptr) {
+        return static_sk_v3_make({});
+    }
+    return static_sk_v3_make(*reinterpret_cast<SkM44 *>(m44) * *reinterpret_cast<const SkV3 *>(v));
 }
 
 sk_matrix_t SkM44_asM33(reskia_m_44_t *m44) {

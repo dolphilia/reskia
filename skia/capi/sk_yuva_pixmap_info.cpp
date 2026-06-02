@@ -58,7 +58,6 @@ bool has_plane_index(const SkYUVAPixmapInfo *info, int i) {
 
 extern "C" {
 
-// SkYUVAPixmapInfo & operator=(const SkYUVAPixmapInfo &)
 reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new() {
     return reinterpret_cast<reskia_yuva_pixmap_info_t *>(new SkYUVAPixmapInfo());
 }

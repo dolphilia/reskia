@@ -99,7 +99,7 @@ int main() {
     if (!check(!SkRegion_opWithRegionAndIRect(nullptr, nullptr, nullptr, 0), "SkRegion_opWithRegionAndIRect(nullptr)")) {
         return 28;
     }
-    if (!check(!SkRegion_op_5(nullptr, nullptr, nullptr, 0), "SkRegion_op_5(nullptr)")) {
+    if (!check(!SkRegion_opWithRegions(nullptr, nullptr, nullptr, 0), "SkRegion_opWithRegions(nullptr)")) {
         return 29;
     }
     if (!check(SkRegion_writeToMemory(nullptr, nullptr) == 0, "SkRegion_writeToMemory(nullptr)")) {

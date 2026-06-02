@@ -25,9 +25,6 @@ uint32_t SkVertices_uniqueID(reskia_vertices_t *vertices); // NULL 入力では 
 const reskia_rect_t *SkVertices_bounds(reskia_vertices_t *vertices); // borrowed: 解放不要。NULL 入力では NULL
 size_t SkVertices_approximateSize(reskia_vertices_t *vertices); // NULL 入力では 0
 
-// SkVerticesPriv SkVertices_priv(SkVertices *vertices); // (SkVertices *vertices) -> SkVerticesPriv
-// const SkVerticesPriv SkVertices_priv_2(SkVertices *vertices); // (SkVertices *vertices) -> const SkVerticesPriv
-
 bool SkVertices_unique(reskia_vertices_t *vertices); // NULL 入力では false
 void SkVertices_ref(reskia_vertices_t *vertices); // retained: 参照カウントを増やす。NULL 入力では no-op
 void SkVertices_unref(reskia_vertices_t *vertices); // owned: 参照カウントを減らす。NULL 入力では no-op

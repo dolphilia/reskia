@@ -16,8 +16,6 @@
 
 extern "C" {
 
-//SkRRect & operator=(const SkRRect &rrect)
-
 reskia_r_rect_t *SkRRect_new() {
     return reinterpret_cast<reskia_r_rect_t *>(new SkRRect());
 }

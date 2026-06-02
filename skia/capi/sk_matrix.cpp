@@ -34,9 +34,6 @@ bool is_valid_rc(int r, int c) {
 
 extern "C" {
 
-// SkScalar operator[](int index)
-// SkScalar & operator[](int index)
-
 reskia_matrix_t *SkMatrix_new(reskia_matrix_t *matrix) {
     if (matrix == nullptr) {
         return nullptr;

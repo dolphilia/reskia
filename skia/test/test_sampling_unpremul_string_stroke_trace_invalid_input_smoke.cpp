@@ -81,13 +81,13 @@ int main() {
     ok &= check(SkSamplingOptions_newWithFilterAndMipmapModes(-1, 0) == nullptr, "SamplingOptions invalid filter");
     ok &= check(SkSamplingOptions_newWithFilterAndMipmapModes(0, 99) == nullptr, "SamplingOptions invalid mipmap");
     ok &= check(SkSamplingOptions_newWithFilterMode(99) == nullptr, "SamplingOptions invalid single filter");
-    ok &= check(SkSamplingOptions_new_5(nullptr) == nullptr, "SamplingOptions null cubic");
+    ok &= check(SkSamplingOptions_newWithCubic(nullptr) == nullptr, "SamplingOptions null cubic");
     ok &= check(!SkSamplingOptions_equals(nullptr, nullptr), "SamplingOptions equals null");
     ok &= check(!SkSamplingOptions_notEquals(nullptr, nullptr), "SamplingOptions notEquals null");
     ok &= check(!SkSamplingOptions_isAniso(nullptr), "SamplingOptions isAniso null");
     const sk_cubic_resampler_t cubic_handle = SkCubicResampler_Mitchell();
     auto *cubic = static_cast<reskia_cubic_resampler_t *>(static_sk_cubic_resampler_get_ptr(cubic_handle));
-    auto *cubic_options = SkSamplingOptions_new_5(cubic);
+    auto *cubic_options = SkSamplingOptions_newWithCubic(cubic);
     ok &= check(cubic != nullptr && cubic_options != nullptr && !SkSamplingOptions_isAniso(cubic_options), "SamplingOptions valid cubic");
     const sk_sampling_options_t aniso_handle = SkSamplingOptions_Aniso(0);
     auto *aniso = static_cast<reskia_sampling_options_t *>(static_sk_sampling_options_get_ptr(aniso_handle));
@@ -105,7 +105,7 @@ int main() {
     ok &= check(SkUnPreMultiply_ApplyScale(1, 256) == 0, "UnPreMultiply invalid component");
     ok &= check(SkUnPreMultiply_PMColorToColor(0) == 0, "UnPreMultiply transparent color");
 
-    ok &= check(SkString_new_7(999999) == nullptr, "String invalid string_view constructor");
+    ok &= check(SkString_newFromStringView(999999) == nullptr, "String invalid string_view constructor");
     auto *string = SkString_newFromText("base");
     ok &= check(string != nullptr, "String base allocation");
     ok &= check(!SkString_endsWith(nullptr, "se"), "String endsWith null string");
@@ -120,7 +120,7 @@ int main() {
     SkString_prependStringView(string, 999999);
     ok &= check(SkString_size(string) == before_invalid_view, "String invalid string_view no-op");
     const string_view_t view = static_string_view_make("ok");
-    auto *from_view = SkString_new_7(view);
+    auto *from_view = SkString_newFromStringView(view);
     ok &= check(from_view != nullptr && SkString_size(from_view) == 2, "String valid string_view constructor");
     SkString_setStringView(string, view);
     ok &= check(SkString_size(string) == 2, "String valid string_view set");

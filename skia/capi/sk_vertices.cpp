@@ -65,14 +65,6 @@ size_t SkVertices_approximateSize(reskia_vertices_t *vertices) {
     return reinterpret_cast<SkVertices *>(vertices)->approximateSize();
 }
 
-//SkVerticesPriv SkVertices_priv(SkVertices *vertices) {
-//    return vertices->priv();
-//}
-
-//const SkVerticesPriv SkVertices_priv_2(SkVertices *vertices) {
-//    return vertices->priv();
-//}
-
 bool SkVertices_unique(reskia_vertices_t *vertices) {
     if (vertices == nullptr) {
         return false;

@@ -75,7 +75,7 @@ sk_image_info_t SkImageInfo_Make(int width, int height, reskia_image_info_color_
 sk_image_info_t SkImageInfo_MakeWithColorSpace(int width, int height, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at, sk_color_space_t color_space); // color_space handle 0 means null color space
 sk_image_info_t SkImageInfo_MakeWithDimensions(sk_i_size_t dimensions, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at) -> sk_image_info_t
 sk_image_info_t SkImageInfo_MakeWithDimensionsAndColorSpace(sk_i_size_t dimensions, reskia_image_info_color_type_t ct, reskia_image_info_alpha_type_t at, sk_color_space_t color_space); // (sk_i_size_t dimensions, SkColorType ct, SkAlphaType at, sk_color_space_t color_space) -> sk_image_info_t
-sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo); // colorInfo: non-null
+sk_image_info_t SkImageInfo_MakeWithDimensionsAndColorInfo(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo); // colorInfo: non-null
 sk_image_info_t SkImageInfo_MakeN32(int width, int height, reskia_image_info_alpha_type_t at); // (int width, int height, SkAlphaType at) -> sk_image_info_t
 sk_image_info_t SkImageInfo_MakeN32WithColorSpace(int width, int height, reskia_image_info_alpha_type_t at, sk_color_space_t color_space); // color_space handle 0 means null color space
 sk_image_info_t SkImageInfo_MakeS32(int width, int height, reskia_image_info_alpha_type_t at); // (int width, int height, SkAlphaType at) -> sk_image_info_t

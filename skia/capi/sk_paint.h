@@ -35,9 +35,6 @@ typedef int32_t reskia_paint_cap_t;
 typedef int32_t reskia_paint_join_t;
 typedef int32_t reskia_paint_blend_mode_t;
 
-//SkPaint & operator=(const SkPaint &paint)
-//SkPaint & operator=(SkPaint &&paint)
-
 reskia_paint_t *SkPaint_new(); // () -> SkPaint *
 /**
  * color: non-null.

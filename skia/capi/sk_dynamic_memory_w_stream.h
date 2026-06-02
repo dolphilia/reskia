@@ -21,7 +21,6 @@ typedef struct reskia_stream_asset_t reskia_stream_asset_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
 
 reskia_dynamic_memory_w_stream_t *SkDynamicMemoryWStream_new(); // () -> SkDynamicMemoryWStream *
-// SkDynamicMemoryWStream * SkDynamicMemoryWStream_new_2(SkDynamicMemoryWStream &&stream)
 void SkDynamicMemoryWStream_delete(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)
 bool SkDynamicMemoryWStream_write(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, const uint8_t *buffer, size_t size); // buffer may be null only when size == 0
 size_t SkDynamicMemoryWStream_bytesWritten(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> size_t

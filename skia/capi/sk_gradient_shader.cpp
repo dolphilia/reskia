@@ -293,7 +293,7 @@ sk_shader_t SkGradientShader_MakeSweep4fWithFlags(float cx, float cy, const resk
             reinterpret_cast<const SkMatrix *>(localMatrix)));
 }
 
-sk_shader_t SkGradientShader_MakeSweep_5(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, uint32_t flags, const reskia_matrix_t *localMatrix) {
+sk_shader_t SkGradientShader_MakeSweep4fWithFlagsOnly(float cx, float cy, const reskia_color_4f_t *colors, sk_color_space_t color_space, const float *pos, int count, uint32_t flags, const reskia_matrix_t *localMatrix) {
     if (colors == nullptr || count <= 0) {
         return 0;
     }

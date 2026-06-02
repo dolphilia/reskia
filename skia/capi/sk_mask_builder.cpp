@@ -12,8 +12,6 @@
 
 //    SkMaskBuilder(const SkMaskBuilder&)
 //    SkMaskBuilder(SkMaskBuilder&&)
-//    SkMaskBuilder& operator=(const SkMaskBuilder&)
-//    SkMaskBuilder& operator=(SkMaskBuilder&& that)
 
 namespace {
 

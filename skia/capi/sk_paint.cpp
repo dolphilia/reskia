@@ -26,9 +26,6 @@
 
 extern "C" {
 
-//SkPaint & operator=(const SkPaint &paint)
-//SkPaint & operator=(SkPaint &&paint)
-
 reskia_paint_t *SkPaint_new() {
     return reinterpret_cast<reskia_paint_t *>(new SkPaint());
 }

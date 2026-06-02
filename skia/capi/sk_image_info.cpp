@@ -242,7 +242,7 @@ sk_image_info_t SkImageInfo_MakeWithDimensionsAndColorSpace(sk_i_size_t dimensio
     return static_sk_image_info_make(SkImageInfo::Make(static_sk_i_size_get_entity(dimensions), static_cast<SkColorType>(ct), static_cast<SkAlphaType>(at), static_sk_color_space_get_entity(color_space)));
 }
 
-sk_image_info_t SkImageInfo_Make_5(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo) {
+sk_image_info_t SkImageInfo_MakeWithDimensionsAndColorInfo(sk_i_size_t dimensions, const reskia_color_info_t *colorInfo) {
     if (colorInfo == nullptr) {
         return 0;
     }

@@ -45,7 +45,6 @@ SkRegion::Op to_region_op(reskia_region_op_t op) {
 
 extern "C" {
 
-//SkRegion & operator=(const SkRegion &region)
 reskia_region_t *SkRegion_new() {
     return reinterpret_cast<reskia_region_t *>(new SkRegion());
 }
@@ -341,7 +340,7 @@ bool SkRegion_opWithRegionAndIRect(reskia_region_t *region, const reskia_region_
     return dst->op(*srcRegion, *srcRect, to_region_op(op));
 }
 
-bool SkRegion_op_5(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op) {
+bool SkRegion_opWithRegions(reskia_region_t *region, const reskia_region_t *rgna, const reskia_region_t *rgnb, reskia_region_op_t op) {
     SkRegion *dst = as_region(region);
     const SkRegion *region_a = as_region(rgna);
     const SkRegion *region_b = as_region(rgnb);

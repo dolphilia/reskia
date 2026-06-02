@@ -65,8 +65,6 @@ sk_yuva_pixmaps_t make_yuva_pixmaps_handle_if_valid(SkYUVAPixmaps pixmaps) {
 
 extern "C" {
 
-// SkYUVAPixmaps & operator=(SkYUVAPixmaps &&that)
-// SkYUVAPixmaps & operator=(const SkYUVAPixmaps &that)
 
 reskia_yuva_pixmaps_t *SkYUVAPixmaps_new() {
     return reinterpret_cast<reskia_yuva_pixmaps_t *>(new SkYUVAPixmaps());

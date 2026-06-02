@@ -86,8 +86,8 @@ int main() {
 
     ok &= check(SkString_newFromText(nullptr) == nullptr, "String newFromText null");
     ok &= check(SkString_newFromTextWithLength(nullptr, 1) == nullptr, "String newFromTextWithLength null");
-    ok &= check(SkString_new_5(nullptr) == nullptr, "String copy null");
-    ok &= check(SkString_new_6(nullptr) == nullptr, "String std copy null");
+    ok &= check(SkString_newCopy(nullptr) == nullptr, "String copy null");
+    ok &= check(SkString_newFromStdString(nullptr) == nullptr, "String std copy null");
     ok &= check(SkString_isEmpty(nullptr), "String null isEmpty");
     ok &= check(SkString_size(nullptr) == 0, "String null size");
     ok &= check(SkString_data(nullptr) == nullptr && SkString_dataMutable(nullptr) == nullptr && SkString_c_str(nullptr) == nullptr, "String null borrowed data");

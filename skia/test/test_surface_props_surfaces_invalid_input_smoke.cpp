@@ -23,6 +23,8 @@ int main() {
     ok &= check(SkSurfaceProps_cloneWithPixelGeometry(nullptr, 0) == 0, "SurfaceProps clone null");
     ok &= check(SkSurfaceProps_flags(nullptr) == 0, "SurfaceProps flags null");
     ok &= check(SkSurfaceProps_pixelGeometry(nullptr) == 0, "SurfaceProps pixelGeometry null");
+    ok &= check(!SkSurfaceProps_equals(nullptr, nullptr), "SurfaceProps equals null");
+    ok &= check(!SkSurfaceProps_notEquals(nullptr, nullptr), "SurfaceProps notEquals null");
     ok &= check(!SkSurfaceProps_isUseDeviceIndependentFonts(nullptr), "SurfaceProps use device independent fonts null");
     ok &= check(!SkSurfaceProps_isAlwaysDither(nullptr), "SurfaceProps always dither null");
 
@@ -31,6 +33,10 @@ int main() {
     if (props != nullptr) {
         reskia_surface_props_t *copy = SkSurfaceProps_newCopy(props);
         ok &= check(copy != nullptr, "SurfaceProps newCopy valid");
+        ok &= check(SkSurfaceProps_equals(props, copy), "SurfaceProps equals valid");
+        reskia_surface_props_t *other = SkSurfaceProps_newWithFlagsAndGeometry(0, 1);
+        ok &= check(other != nullptr && SkSurfaceProps_notEquals(props, other), "SurfaceProps notEquals valid");
+        SkSurfaceProps_delete(other);
         SkSurfaceProps_delete(copy);
 
         const sk_surface_props_t clone = SkSurfaceProps_cloneWithPixelGeometry(props, 0);

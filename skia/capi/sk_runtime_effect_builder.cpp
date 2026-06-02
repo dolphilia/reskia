@@ -114,7 +114,5 @@ const_sk_runtime_effect_child_ptr_t SkRuntimeEffectBuilder_children(reskia_runti
 
 // SkRuntimeEffectBuilder()=delete
 // SkRuntimeEffectBuilder(SkRuntimeEffectBuilder &&)
-// SkRuntimeEffectBuilder & operator=(SkRuntimeEffectBuilder &&)=delete
-// SkRuntimeEffectBuilder & operator=(const SkRuntimeEffectBuilder &)=delete
 
 }

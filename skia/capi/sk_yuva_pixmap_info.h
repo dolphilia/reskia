@@ -21,7 +21,6 @@ typedef int32_t reskia_yuva_pixmap_info_color_type_t; // SkColorType
 extern "C" {
 #endif
 
-// SkYUVAPixmapInfo & operator=(const SkYUVAPixmapInfo &)
 reskia_yuva_pixmap_info_t *SkYUVAPixmapInfo_new(); // () -> SkYUVAPixmapInfo *
 /**
  * info/type: non-null.

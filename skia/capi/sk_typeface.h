@@ -88,10 +88,6 @@ bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *
 int SkTypeface_getResourceName(reskia_typeface_t *typeface, reskia_string_t *resourceName); // resourceName は非 NULL。invalid 入力では -1
 sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
 sk_stream_asset_t SkTypeface_openExistingStream(reskia_typeface_t *typeface, int *ttcIndex); // ttcIndex は NULL 許可。NULL 入力や生成不能では 0
-
-// TODO
-//std::unique_ptr<SkScalerContext> SkTypeface_createScalerContext(SkTypeface *typeface, const SkScalerContextEffects &effects, const SkDescriptor *descriptor);
-
 sk_rect_t SkTypeface_getBounds(reskia_typeface_t *typeface); // NULL 入力では 0
 void SkTypeface_filterRec(reskia_typeface_t *typeface, reskia_scaler_context_rec_t *rec); // rec は非 NULL。invalid 入力では no-op
 void SkTypeface_getFontDescriptor(reskia_typeface_t *typeface, reskia_font_descriptor_t *desc, bool *isLocal); // desc/isLocal は非 NULL。invalid 入力では no-op

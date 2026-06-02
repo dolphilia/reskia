@@ -19,7 +19,6 @@ typedef int32_t reskia_path_measure_matrix_flags_t;
 extern "C" {
 #endif
 
-// SkPathMeasure & operator=(SkPathMeasure &&)
 
 reskia_path_measure_t *SkPathMeasure_new(); // () -> SkPathMeasure *
 /**

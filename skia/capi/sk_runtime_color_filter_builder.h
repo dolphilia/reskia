@@ -17,7 +17,6 @@ extern "C" {
 #endif
 
 //SkRuntimeColorFilterBuilder(const SkRuntimeColorFilterBuilder &)=delete
-//SkRuntimeColorFilterBuilder & operator=(const SkRuntimeColorFilterBuilder &)=delete
 
 /**
  * Invalid runtime_effect handle returns NULL.

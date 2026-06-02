@@ -25,8 +25,6 @@ typedef int32_t reskia_path_builder_fill_type_t;
 extern "C" {
 #endif
 
-// SkPathBuilder & operator=(const SkPath &)
-// SkPathBuilder & operator=(const SkPathBuilder &)
 
 reskia_path_builder_t *SkPathBuilder_new(); // () -> SkPathBuilder *
 reskia_path_builder_t *SkPathBuilder_newWithFillType(int type); // (SkPathFillType type) -> SkPathBuilder *

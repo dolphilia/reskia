@@ -12,15 +12,6 @@
 
 extern "C" {
 
-// SkString & operator=(const SkString &)
-// SkString & operator=(SkString &&)
-// SkString & operator=(const char text[])
-// SkString & operator+=(const SkString &s)
-// SkString & operator+=(const char text[])
-// SkString & operator+=(const char c)
-// char operator[](size_t n)
-// char & operator[](size_t n)
-
 reskia_string_t *SkString_new() {
     return reinterpret_cast<reskia_string_t *>(new SkString());
 }
@@ -43,21 +34,21 @@ reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len) {
     return reinterpret_cast<reskia_string_t *>(new SkString(text, len));
 }
 
-reskia_string_t *SkString_new_5(const reskia_string_t *str) {
+reskia_string_t *SkString_newCopy(const reskia_string_t *str) {
     if (str == nullptr) {
         return nullptr;
     }
     return reinterpret_cast<reskia_string_t *>(new SkString(* reinterpret_cast<const SkString *>(str)));
 }
 
-reskia_string_t *SkString_new_6(const reskia_std_string_t *str) {
+reskia_string_t *SkString_newFromStdString(const reskia_std_string_t *str) {
     if (str == nullptr) {
         return nullptr;
     }
     return reinterpret_cast<reskia_string_t *>(new SkString(* reinterpret_cast<const std::string *>(str)));
 }
 
-reskia_string_t *SkString_new_7(string_view_t view) {
+reskia_string_t *SkString_newFromStringView(string_view_t view) {
     if (!static_string_view_contains(view)) {
         return nullptr;
     }

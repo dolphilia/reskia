@@ -10,7 +10,6 @@
 
 extern "C" {
 
-// SkPathMeasure & operator=(SkPathMeasure &&)
 
 reskia_path_measure_t *SkPathMeasure_new() {
     return reinterpret_cast<reskia_path_measure_t *>(new SkPathMeasure());

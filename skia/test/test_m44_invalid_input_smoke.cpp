@@ -4,7 +4,9 @@
 #include "handles/static_sk_m_44.h"
 #include "handles/static_sk_matrix.h"
 #include "handles/static_sk_rect.h"
+#include "handles/static_sk_v3.h"
 #include "handles/static_sk_v4.h"
+#include "include/core/SkM44.h"
 
 #include <cstdio>
 
@@ -78,6 +80,16 @@ int main() {
         return 14;
     }
     static_sk_v4_delete(null_map);
+    const sk_v4_t null_multiply_v4 = SkM44_multiplyV4(nullptr, nullptr);
+    if (!check(static_sk_v4_get_ptr(null_multiply_v4) != nullptr, "SkM44_multiplyV4(nullptr)")) {
+        return 31;
+    }
+    static_sk_v4_delete(null_multiply_v4);
+    const sk_v3_t null_multiply_v3 = SkM44_multiplyV3(nullptr, nullptr);
+    if (!check(static_sk_v3_get_ptr(null_multiply_v3) != nullptr, "SkM44_multiplyV3(nullptr)")) {
+        return 32;
+    }
+    static_sk_v3_delete(null_multiply_v3);
     if (!check(SkM44_asM33(nullptr) == 0, "SkM44_asM33(nullptr)")) {
         return 15;
     }
@@ -141,6 +153,28 @@ int main() {
         return 27;
     }
     static_sk_m_44_delete(as_transpose);
+
+    const SkV4 v4 = {1.0f, 2.0f, 3.0f, 1.0f};
+    const sk_v4_t mapped_v4_handle = SkM44_multiplyV4(translated_ptr, reinterpret_cast<const reskia_v4_t *>(&v4));
+    auto *mapped_v4 = static_cast<const SkV4 *>(static_sk_v4_get_ptr(mapped_v4_handle));
+    if (!check(mapped_v4 != nullptr && mapped_v4->x == 2.0f && mapped_v4->y == 4.0f && mapped_v4->z == 6.0f && mapped_v4->w == 1.0f, "SkM44_multiplyV4(valid)")) {
+        static_sk_v4_delete(mapped_v4_handle);
+        static_sk_m_44_delete(translated);
+        SkM44_delete(m44);
+        return 33;
+    }
+    static_sk_v4_delete(mapped_v4_handle);
+
+    const SkV3 v3 = {1.0f, 2.0f, 3.0f};
+    const sk_v3_t mapped_v3_handle = SkM44_multiplyV3(translated_ptr, reinterpret_cast<const reskia_v3_t *>(&v3));
+    auto *mapped_v3 = static_cast<const SkV3 *>(static_sk_v3_get_ptr(mapped_v3_handle));
+    if (!check(mapped_v3 != nullptr && mapped_v3->x == 1.0f && mapped_v3->y == 2.0f && mapped_v3->z == 3.0f, "SkM44_multiplyV3(valid)")) {
+        static_sk_v3_delete(mapped_v3_handle);
+        static_sk_m_44_delete(translated);
+        SkM44_delete(m44);
+        return 34;
+    }
+    static_sk_v3_delete(mapped_v3_handle);
 
     const sk_matrix_t as_m33 = SkM44_asM33(translated_ptr);
     if (!check(as_m33 != 0 && static_sk_matrix_get_ptr(as_m33) != nullptr, "SkM44_asM33(valid)")) {

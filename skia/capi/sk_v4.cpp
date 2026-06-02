@@ -53,9 +53,6 @@ sk_v4_t SkV4_multiply(reskia_v4_t *v4, const reskia_v4_t *v) {
     return static_sk_v4_make(*reinterpret_cast<SkV4 *>(v4) * *reinterpret_cast<const SkV4 *>(v));
 }
 
-// float operator[](int i)
-// float & operator[](int i)
-
 void SkV4_delete(reskia_v4_t *v4) {
     if (v4 == nullptr) {
         return;

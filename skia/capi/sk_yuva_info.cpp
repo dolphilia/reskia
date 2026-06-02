@@ -92,7 +92,6 @@ void clear_yuva_locations(reskia_yuva_location_t *locations) {
 
 extern "C" {
 
-// SkYUVAInfo & operator=(const SkYUVAInfo &that)
 reskia_yuva_info_t *SkYUVAInfo_new() {
     return reinterpret_cast<reskia_yuva_info_t *>(new SkYUVAInfo());
 }

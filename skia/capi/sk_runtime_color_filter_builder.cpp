@@ -33,7 +33,6 @@ bool has_string_view_handle(string_view_t name) {
 extern "C" {
 
 //SkRuntimeColorFilterBuilder(const SkRuntimeColorFilterBuilder &)=delete
-//SkRuntimeColorFilterBuilder & operator=(const SkRuntimeColorFilterBuilder &)=delete
 
 reskia_runtime_color_filter_builder_t *SkRuntimeColorFilterBuilder_new(sk_runtime_effect_t runtime_effect) {
     sk_sp<SkRuntimeEffect> native_effect = static_sk_runtime_effect_get_entity(runtime_effect);

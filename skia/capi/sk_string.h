@@ -18,22 +18,13 @@ extern "C" {
 
 #include <stdarg.h>
 
-// SkString & operator=(const SkString &)
-// SkString & operator=(SkString &&)
-// SkString & operator=(const char text[])
-// SkString & operator+=(const SkString &s)
-// SkString & operator+=(const char text[])
-// SkString & operator+=(const char c)
-// char operator[](size_t n)
-// char & operator[](size_t n)
-
 reskia_string_t *SkString_new(); // () -> SkString *
 reskia_string_t *SkString_newWithLength(size_t len); // (size_t len) -> SkString *
 reskia_string_t *SkString_newFromText(const char text[]); // text is required; NULL returns NULL.
 reskia_string_t *SkString_newFromTextWithLength(const char text[], size_t len); // text is required when len > 0; invalid input returns NULL.
-reskia_string_t *SkString_new_5(const reskia_string_t *str); // str is required; NULL returns NULL.
-reskia_string_t *SkString_new_6(const reskia_std_string_t *str); // str is required; NULL returns NULL.
-reskia_string_t *SkString_new_7(int view); // view must be a valid string_view handle; invalid handle returns NULL.
+reskia_string_t *SkString_newCopy(const reskia_string_t *str); // str is required; NULL returns NULL.
+reskia_string_t *SkString_newFromStdString(const reskia_std_string_t *str); // str is required; NULL returns NULL.
+reskia_string_t *SkString_newFromStringView(int view); // view must be a valid string_view handle; invalid handle returns NULL.
 void SkString_delete(reskia_string_t *string); // (SkString *string)
 bool SkString_isEmpty(reskia_string_t *string); // NULL string returns true.
 size_t SkString_size(reskia_string_t *string); // NULL string returns 0.

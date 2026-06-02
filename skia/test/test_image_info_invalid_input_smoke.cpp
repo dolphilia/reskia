@@ -63,7 +63,7 @@ int main() {
     if (!check(!SkImageInfo_validRowBytes(nullptr, 0), "SkImageInfo_validRowBytes(nullptr)")) {
         return 16;
     }
-    if (!check(SkImageInfo_Make_5(0, nullptr) == 0, "SkImageInfo_Make_5(nullptr)")) {
+    if (!check(SkImageInfo_MakeWithDimensionsAndColorInfo(0, nullptr) == 0, "SkImageInfo_MakeWithDimensionsAndColorInfo(nullptr)")) {
         return 17;
     }
 

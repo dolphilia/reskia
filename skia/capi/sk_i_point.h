@@ -11,9 +11,6 @@
 extern "C" {
 #endif
 
-// SkIPoint operator-()
-// void operator+=(const SkIVector& v)
-// void operator-=(const SkIVector& v)
 
 void SkIPoint_delete(void * i_point); // NULL i_point is no-op.
 int SkIPoint_x(void * i_point); // NULL i_point returns 0.

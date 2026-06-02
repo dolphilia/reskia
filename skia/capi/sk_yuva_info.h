@@ -30,7 +30,6 @@ typedef struct reskia_yuva_location_t {
 extern "C" {
 #endif
 
-// SkYUVAInfo & operator=(const SkYUVAInfo &that)
 reskia_yuva_info_t *SkYUVAInfo_new(); // () -> SkYUVAInfo *
 reskia_yuva_info_t *SkYUVAInfo_newCopy(const reskia_yuva_info_t *info); // (const SkYUVAInfo *info) -> SkYUVAInfo *
 reskia_yuva_info_t *SkYUVAInfo_newWithDimensionsConfigSubsamplingSpaceOriginAndSiting(sk_i_size_t dimensions, int config, int subsampling, int space, int origin, int sitingX, int sitingY); // (sk_i_size_t dimensions, SkYUVAInfo::PlaneConfig config, SkYUVAInfo::Subsampling subsampling, SkYUVColorSpace space, SkEncodedOrigin origin, SkYUVAInfo::Siting sitingX, SkYUVAInfo::Siting sitingY) -> SkYUVAInfo *

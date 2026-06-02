@@ -24,10 +24,6 @@ const SkSurfaceProps *as_props(const reskia_surface_props_t *surface_props) {
 
 extern "C" {
 
-// SkSurfaceProps & operator=(const SkSurfaceProps &)
-// bool operator==(const SkSurfaceProps &that)
-// bool operator!=(const SkSurfaceProps &that)
-
 reskia_surface_props_t *SkSurfaceProps_new() {
     return reinterpret_cast<reskia_surface_props_t *>(new SkSurfaceProps());
 }
@@ -43,6 +39,18 @@ reskia_surface_props_t *SkSurfaceProps_newCopy(const reskia_surface_props_t *pro
 
 void SkSurfaceProps_delete(reskia_surface_props_t *surface_props) {
     delete as_props(surface_props);
+}
+
+bool SkSurfaceProps_equals(const reskia_surface_props_t *surface_props, const reskia_surface_props_t *that) {
+    const SkSurfaceProps *lhs = as_props(surface_props);
+    const SkSurfaceProps *rhs = as_props(that);
+    return lhs != nullptr && rhs != nullptr ? *lhs == *rhs : false;
+}
+
+bool SkSurfaceProps_notEquals(const reskia_surface_props_t *surface_props, const reskia_surface_props_t *that) {
+    const SkSurfaceProps *lhs = as_props(surface_props);
+    const SkSurfaceProps *rhs = as_props(that);
+    return lhs != nullptr && rhs != nullptr ? *lhs != *rhs : false;
 }
 
 sk_surface_props_t SkSurfaceProps_cloneWithPixelGeometry(reskia_surface_props_t *surface_props, reskia_surface_props_pixel_geometry_t newPixelGeometry) {

@@ -17,7 +17,6 @@ extern "C" {
 #endif
 
 //SkRuntimeBlendBuilder(const SkRuntimeBlendBuilder &)=delete
-//SkRuntimeBlendBuilder & operator=(const SkRuntimeBlendBuilder &)=delete
 
 /**
  * Invalid runtime_effect handle returns NULL.

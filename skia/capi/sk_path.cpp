@@ -151,8 +151,6 @@ bool is_valid_path_op(reskia_path_op_t op) {
 
 extern "C" {
 
-//SkPath & operator=(const SkPath &path)
-
 reskia_path_t *SkPath_new() {
     return reinterpret_cast<reskia_path_t *>(new SkPath());
 }
@@ -634,7 +632,7 @@ reskia_path_t *SkPath_arcToArcSize(reskia_path_t *path, float rx, float ry, floa
     });
 }
 
-reskia_path_t *SkPath_arcTo_5(reskia_path_t *path, sk_point_t r, float xAxisRotate, int largeArc, int sweep, sk_point_t xy) {
+reskia_path_t *SkPath_arcToArcSizePoints(reskia_path_t *path, sk_point_t r, float xAxisRotate, int largeArc, int sweep, sk_point_t xy) {
     const SkPoint radius = static_sk_point_get_entity(r);
     const SkPoint end = static_sk_point_get_entity(xy);
     return mutate_path_with_builder(path, [=](SkPathBuilder& builder) {

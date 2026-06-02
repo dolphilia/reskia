@@ -53,8 +53,6 @@ reskia_path_builder_t *return_self_or_null(SkPathBuilder *path_builder) {
 
 extern "C" {
 
-// SkPathBuilder & operator=(const SkPath &)
-// SkPathBuilder & operator=(const SkPathBuilder &)
 
 reskia_path_builder_t *SkPathBuilder_new() {
     return reinterpret_cast<reskia_path_builder_t *>(new SkPathBuilder());

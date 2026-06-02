@@ -23,8 +23,6 @@ typedef int32_t reskia_yuva_pixmaps_color_type_t; // SkColorType
 extern "C" {
 #endif
 
-// SkYUVAPixmaps & operator=(SkYUVAPixmaps &&that)
-// SkYUVAPixmaps & operator=(const SkYUVAPixmaps &that)
 
 reskia_yuva_pixmaps_t *SkYUVAPixmaps_new(); // () -> SkYUVAPixmaps *
 reskia_yuva_pixmaps_t *SkYUVAPixmaps_newCopy(const reskia_yuva_pixmaps_t *pixmaps); // returns null on null pixmaps

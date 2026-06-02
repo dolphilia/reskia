@@ -329,11 +329,6 @@ sk_stream_asset_t SkTypeface_openExistingStream(reskia_typeface_t *typeface, int
     return make_stream_asset_handle(as_typeface(typeface)->openExistingStream(ttcIndex));
 }
 
-//@TODO
-//std::unique_ptr<SkScalerContext> SkTypeface_createScalerContext(SkTypeface *typeface, const SkScalerContextEffects &effects, const SkDescriptor *descriptor) {
-//    return typeface->createScalerContext(effects, descriptor);
-//}
-
 sk_rect_t SkTypeface_getBounds(reskia_typeface_t *typeface) {
     if (typeface == nullptr) {
         return 0;

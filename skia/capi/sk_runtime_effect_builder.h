@@ -94,8 +94,6 @@ int SkRuntimeEffectBuilder_children(reskia_runtime_effect_builder_t *runtime_eff
 
 // SkRuntimeEffectBuilder()=delete
 // SkRuntimeEffectBuilder(SkRuntimeEffectBuilder &&)
-// SkRuntimeEffectBuilder & operator=(SkRuntimeEffectBuilder &&)=delete
-// SkRuntimeEffectBuilder & operator=(const SkRuntimeEffectBuilder &)=delete
 
 #ifdef __cplusplus
 }

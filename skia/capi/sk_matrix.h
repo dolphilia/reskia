@@ -27,9 +27,6 @@ typedef int32_t reskia_matrix_type_mask_t;
 typedef int32_t reskia_matrix_scale_to_fit_t;
 typedef int32_t reskia_matrix_apply_perspective_clip_t;
 
-// SkScalar operator[](int index)
-// SkScalar & operator[](int index)
-
 reskia_matrix_t *SkMatrix_new(reskia_matrix_t *matrix); // copy constructor。NULL 入力では NULL
 void SkMatrix_delete(reskia_matrix_t *matrix); // NULL 入力では no-op
 reskia_matrix_type_mask_t SkMatrix_getType(reskia_matrix_t *matrix); // NULL 入力では -1
