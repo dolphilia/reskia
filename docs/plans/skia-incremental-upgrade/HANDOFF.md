@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `aba405ee605f2578f3054bc4d997e2f32f57f291`
-- next probe candidate: start from `aba405ee605f2578f3054bc4d997e2f32f57f291`; re-evaluate the Vulkan header roll at `bf15cfab3bc0242fa854483cf8a36571c3331858` and the deferred boundary `f37239a7a689d64268b73fc7eb45b5c40a7f7013` before accepting.
+- `SKIA_REF`: `f37239a7a689d64268b73fc7eb45b5c40a7f7013`
+- next probe candidate: start from `f37239a7a689d64268b73fc7eb45b5c40a7f7013`; local refs currently did not contain a fixed commit after this baseline, so begin cycle 088 by rechecking local refs and record refs insufficiency if still true.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -118,21 +118,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 084 accepted: `812822ad5caa8f39ff4cf5ab96f48fe942562252`。
 - cycle 085 accepted: `f04d09d1075926a5e5ef0a52171c9c12043fab03`。
 - cycle 086 accepted: `aba405ee605f2578f3054bc4d997e2f32f57f291`。
+- cycle 087 accepted: `f37239a7a689d64268b73fc7eb45b5c40a7f7013`。
 
 未実施:
 
-- cycle 087 candidate selection from `aba405ee605f2578f3054bc4d997e2f32f57f291`.
-- cycle 087 candidate checkout を使った coverage regression。
-- cycle 087 の source/header sync と C API 追従実装。
+- cycle 088 candidate selection from `f37239a7a689d64268b73fc7eb45b5c40a7f7013`.
+- cycle 088 candidate checkout を使った coverage regression。
+- cycle 088 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 087 の candidate selection から始める。
+次の作業は、cycle 088 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `aba405ee605f2578f3054bc4d997e2f32f57f291` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先し、まず `bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll と `f37239a7a689d64268b73fc7eb45b5c40a7f7013` の deferred boundary を再評価する。tracked mirror surface だけなら進めてもよいが、必要ならもう一段 split する。
+1. baseline `f37239a7a689d64268b73fc7eb45b5c40a7f7013` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 087 終了時点では `vendor/skia-upstream` の local refs に baseline 後の commit がなかったため、候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -214,20 +215,20 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `aba405ee605f2578f3054bc4d997e2f32f57f291`
+- `f37239a7a689d64268b73fc7eb45b5c40a7f7013`
 - committer date: 2026-03-30
-- subject: Add three new Android-specific Precompile PaintOptions
+- subject: [graphite] turn off DrawListLayer caps flag
 
-cycle 086 結果:
+cycle 087 結果:
 
-- baseline `f04d09d1075926a5e5ef0a52171c9c12043fab03` から `aba405ee605f2578f3054bc4d997e2f32f57f291` を採用した。15 commits、`include` / `modules` は 3 files changed, +37/-2、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 42 files changed, +407/-219。
-- deferred boundary `f37239a7a689d64268b73fc7eb45b5c40a7f7013` は 30 commits、`include` / `modules` 53 files changed, +415674/-11322、2週間候補 `b227ca44c8b2548490a7baed3c7ec4ef07e08cc6` は 86 commits、`include` / `modules` 56 files changed, +415787/-11362、3週間候補 `8cbf3db1a0dbd1f6e5e97811cd52daf678fc80c4` は 187 commits、`include` / `modules` 68 files changed, +415885/-11387。large churn は `bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll から始まるため、cycle 086 ではその手前で split した。
-- tracked `skia/DEPS`、`include/gpu/graphite/Context.h`、`include/private/chromium/SkExifChromium.h`、および tracked `src` を同期した。root `gn/`、`bazel/`、`BUILD.bazel` metadata、Vulkan header roll は同期対象外にした。
+- baseline `aba405ee605f2578f3054bc4d997e2f32f57f291` から `f37239a7a689d64268b73fc7eb45b5c40a7f7013` を採用した。15 commits、`include` / `modules` は 50 files changed, +415637/-11320、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 65 files changed, +415864/-11542。
+- immediate next `bf15cfab3bc0242fa854483cf8a36571c3331858` は Vulkan header roll 1 commit で `include` / `modules` 50 files changed, +415637/-11320。`f37239a7a689d64268b73fc7eb45b5c40a7f7013` まで広げても header/module churn は同じだったため、deferred boundary を採用した。
+- tracked `skia/DEPS`、`include/third_party/vulkan` の既存・新規 Vulkan headers、`src/gpu/BufferWriter.h`、Graphite source/header、`src/shaders/SkImageShader.cpp` を同期した。root `gn/`、root `bazel/`、root `BUILD.bazel` metadata、Graphite subtree Bazel metadata は同期対象外にした。
 - 新規 C API gap はなく、C API 追加・削除は不要だった。新規 stale C API はなく、互換維持のみの残存 C API もなし。
 - final coverage は `covered 2939` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `aba405ee605f2578f3054bc4d997e2f32f57f291` から再比較する。`bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll、`f37239a7a689d64268b73fc7eb45b5c40a7f7013` までの Graphite/readback churn、Dawn/Vulkan/ANGLE rolls、Rust JPEG EXIF feature toggle、Bazel/GN metadata の混入リスクを既知リスクとして扱う。
+- 次サイクルでは、accepted baseline `f37239a7a689d64268b73fc7eb45b5c40a7f7013` から再比較する。cycle 087 終了時点では local refs に baseline 後の commit がなかったため、まず refs 範囲を再確認し、不足していれば候補なしとして記録する。Dawn/Vulkan/ANGLE rolls、Graphite transfer/readback churn、Bazel/GN metadata の混入リスクを既知リスクとして扱う。
 
 cycle records:
 
@@ -317,6 +318,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-084-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-085-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-086-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-087-2026-06-02.md`
 
 ## Cycle close の条件
 
