@@ -1418,8 +1418,8 @@ $pure half4 bitmap_text_coverage_fn(half4 texColor, int maskFormat) {
 }
 
 $pure half4 sdf_text_coverage_fn(half texColor,
-                                 half2 gammaParams,
-                                 float2 unormTexCoords) {
+                                 float2 unormTexCoords, // unormalized texture coords
+                                 half2 gammaParams) {
     // TODO: To minimize the number of shaders generated this is the full affine shader.
     // For best performance it may be worth creating the uniform scale shader as well,
     // as that's the most common case.
@@ -1465,10 +1465,10 @@ $pure half4 sdf_text_coverage_fn(half texColor,
     }
 }
 
-$pure half4 sdf_text_lcd_coverage_fn(float2 textureCoords,
-                                     half2 pixelGeometryDelta,
+$pure half4 sdf_text_lcd_coverage_fn(half2 pixelGeometryDelta,
                                      half4 gammaParams,
-                                     float2 unormTexCoords,
+                                     float2 unormTexCoords, // unormalized texture coords
+                                     float2 textureCoords,
                                      float texIndex,
                                      sampler2D atlas0,
                                      sampler2D atlas1,

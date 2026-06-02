@@ -105,6 +105,8 @@ bool SkParagraph_ParagraphStyle_getApplyRoundingHack(const reskia_paragraph_styl
 void SkParagraph_ParagraphStyle_setApplyRoundingHack(reskia_paragraph_style_t *style, bool value);
 bool SkParagraph_ParagraphStyle_getLetterSpacingByCSSSpec(const reskia_paragraph_style_t *style);
 void SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec(reskia_paragraph_style_t *style, bool value);
+bool SkParagraph_ParagraphStyle_getRenderSoftHyphens(const reskia_paragraph_style_t *style);
+void SkParagraph_ParagraphStyle_setRenderSoftHyphens(reskia_paragraph_style_t *style, bool value);
 
 #ifdef __cplusplus
 }

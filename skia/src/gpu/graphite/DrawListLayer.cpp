@@ -67,21 +67,30 @@ void DrawListLayer::recordBackwards(int stepIndex,
         // it drew into.
         targetLayer = stop.fLayer ? stop.fLayer : fLayers.head();
         if (targetLayer) {
-            targetMatch = targetLayer->searchBinding</*kForwards=*/false>(key, stop.fList);
+            targetMatch = targetLayer->searchBinding</*kForwards=*/false>(
+                    key, stop.fList, !fStorageBufferSupport);
         }
     } else {
         current = fLayers.tail();
+        int32_t limit = kMaxSearchLimit;
         auto processLayer = [&](BindingList* boundary) -> bool {
-            auto result =
+            auto [overlapType, match] =
                     isStencil
                             ? current->test</*kIsStencil=*/true, kIsDepthOnly, /*kForwards=*/false>(
-                                      drawParams->drawBounds(), key, requiresBarrier, boundary)
+                                      drawParams->drawBounds(),
+                                      key,
+                                      requiresBarrier,
+                                      boundary,
+                                      !fStorageBufferSupport)
                             : current->test</*kIsStencil=*/false,
                                             kIsDepthOnly,
-                                            /*kForwards=*/false>(
-                                      drawParams->drawBounds(), key, requiresBarrier, boundary);
+                                            /*kForwards=*/false>(drawParams->drawBounds(),
+                                                                 key,
+                                                                 requiresBarrier,
+                                                                 boundary,
+                                                                 !fStorageBufferSupport);
 
-            if (result.first == BoundsTest::kIncompatibleOverlap) {
+            if (overlapType == BoundsTest::kIncompatibleOverlap) {
                 // If we need to read the dst, we cannot go earlier than this layer.
                 if (dependsOnDst) {
                     // Forward merging attempts to pull an earlier, compatible draw out of the
@@ -134,11 +143,11 @@ void DrawListLayer::recordBackwards(int stepIndex,
                     //        clipped draw to execute before Clip B's mask is rendered. Restricting
                     //        forward merges to the tail guarantees our assigned ordering is always
                     //        valid.
-                    if (result.second && current == fLayers.tail() && canForwardMerge) {
-                        if (current->fBindings.head() != current->fBindings.tail()
-                            && (!requiresBarrier ||
-                                !result.second->fBounds.intersects(drawParams->drawBounds()))) {
-                            forwardMerge = result.second;
+                    if (match && current == fLayers.tail() && canForwardMerge) {
+                        if (current->fBindings.head() != current->fBindings.tail() &&
+                            (!requiresBarrier ||
+                             !match->fBounds.intersects(drawParams->drawBounds()))) {
+                            forwardMerge = match;
                             targetMatch = forwardMerge;
                         }
                     }
@@ -151,16 +160,40 @@ void DrawListLayer::recordBackwards(int stepIndex,
             } else {
                 // Found a valid layer (Compatible or Disjoint)
                 targetLayer = current;
-                targetMatch = result.second;
+                targetMatch = match;
 
-                // If it was compatible, we expect a match. If disjoint, match is nullptr.
-                return result.first == BoundsTest::kCompatibleOverlap;
+                // In stencil-heavy scenes, we want to search deeper into the list than the first
+                // compatible overlap we encounter. An earlier match likely contains fewer draws and
+                // less draw coverage, while a later match is likely denser. Stopping at the first
+                // match minimizes search time but fragments batching. Inserting early carries a
+                // dual penalty: it 1) blocks subsequent draws from reaching those denser, later
+                // candidates, and it 2) consumes draw space in the early layer that a succeeding
+                // draw could have utilized.
+                //
+                // To mitigate this, we allow stencils to continue searching even after finding a
+                // CompatibleOverlap, but we penalize the remaining search limit by subtracting half
+                // of kMaxSearchLimit. This heuristic ensures:
+                //  1) The search typically isn't blocked by the first compatible overlap, unless
+                //     the match was found deep (over half the limit) into the search.
+                //  2) If two matches are found, the search halts.
+                //
+                // Ultimately, this is an imprecise heuristic. In an ideal world, we would maximize
+                // batching by exhaustively searching to the end of the list, but that would degrade
+                // insertion performance to O(n^2).
+                if (overlapType == BoundsTest::kCompatibleOverlap) {
+                    if (isStencil) {
+                        limit -= kMaxSearchLimit >> 1;
+                    } else {
+                        return true;
+                    }
+                }
+                return false;
             }
             SkUNREACHABLE;
         };
 
-        for (uint32_t limit = 0; limit < kMaxSearchLimit && current != stop.fLayer; ++limit) {
-            if (processLayer(nullptr)) {
+        for (; limit >= 0; --limit) {
+            if (current == stop.fLayer || processLayer(nullptr)) {
                 break;
             }
             current = current->fPrev;
@@ -218,13 +251,14 @@ void DrawListLayer::recordForwards(int stepIndex,
     SkASSERT(start.fList);
     BindingList* targetMatch = nullptr;
     if (start.fList->fNext) {
-        targetMatch = start.fLayer->searchBinding</*kForwards=*/true>(key, start.fList->fNext);
+        targetMatch = start.fLayer->searchBinding</*kForwards=*/true>(
+                key, start.fList->fNext, !fStorageBufferSupport);
     }
     Draw* draw = fStorage.make<Draw>(drawParams, uniformIndex);
     // Because depth-only draws exclusively `recordBackwards`, it is safe to pass false for
     // `kIsDepthOnly`. This guarantees that new BindingLists append to the end of the layer and
     // draws after their parent.
-    BindingList* insertedList = start.fLayer->add</*kIsDepthOnly*/false>(
+    BindingList* insertedList = start.fLayer->add</*kIsDepthOnly*/ false>(
             &fStorage, targetMatch, key, draw, step, true);
     start.fList = insertedList;
 }
@@ -311,7 +345,7 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
                     requiresBarrier,
                     step,
                     uniformIndex,
-                    LayerKey{pipelineIndex, textureBindingIndex},
+                    LayerKey{pipelineIndex, textureBindingIndex, uniformIndex},
                     drawParams,
                     /*stop=*/{},
                     &stepInsertion,
@@ -325,7 +359,7 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
                         requiresBarrier,
                         step,
                         uniformIndex,
-                        LayerKey{pipelineIndex, textureBindingIndex},
+                        LayerKey{pipelineIndex, textureBindingIndex, uniformIndex},
                         drawParams,
                         latestInsertion,
                         &stepInsertion,
@@ -337,7 +371,7 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
                                      requiresBarrier,
                                      step,
                                      uniformIndex,
-                                     LayerKey{pipelineIndex, textureBindingIndex},
+                                     LayerKey{pipelineIndex, textureBindingIndex, uniformIndex},
                                      drawParams,
                                      stepInsertion);
             }
@@ -385,9 +419,7 @@ std::unique_ptr<DrawPass> DrawListLayer::snapDrawPass(Recorder* recorder,
              SkIRect::MakeSize(drawPass->fTarget->dimensions()).contains(lastScissor));
     drawPass->fCommandList.setScissor(lastScissor);
 
-    const Caps* caps = recorder->priv().caps();
-    const bool useStorageBuffers = caps->storageBufferSupport();
-    UniformTracker uniformTracker(useStorageBuffers);
+    UniformTracker uniformTracker(fStorageBufferSupport);
 
     const bool rebindTexturesOnPipelineChange = dstReadStrategy == DstReadStrategy::kTextureCopy;
     CompressedPaintersOrder priorDrawPaintOrder{};
@@ -451,7 +483,7 @@ std::unique_ptr<DrawPass> DrawListLayer::snapDrawPass(Recorder* recorder,
             lastScissor = *newScissor;
         }
 
-        uint32_t uniformSsboIndex = useStorageBuffers ? uniformTracker.ssboIndex() : 0;
+        uint32_t uniformSsboIndex = fStorageBufferSupport ? uniformTracker.ssboIndex() : 0;
         renderStep->writeVertices(&drawWriter, drawParams, uniformSsboIndex);
 
         if (bufferMgr->hasMappingFailed()) {

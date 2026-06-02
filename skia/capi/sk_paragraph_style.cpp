@@ -435,4 +435,14 @@ void SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec(reskia_paragraph_style
     }
 }
 
+bool SkParagraph_ParagraphStyle_getRenderSoftHyphens(const reskia_paragraph_style_t *style) {
+    return style != nullptr && as_paragraph_style(style)->getRenderSoftHyphens();
+}
+
+void SkParagraph_ParagraphStyle_setRenderSoftHyphens(reskia_paragraph_style_t *style, bool value) {
+    if (style != nullptr) {
+        as_paragraph_style(style)->setRenderSoftHyphens(value);
+    }
+}
+
 } // extern "C"
