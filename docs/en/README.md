@@ -109,6 +109,14 @@ Basic rules:
 
 The workflow overview is in `docs/en/guides/skia-upgrade-workflow.md`. The detailed cycle plan remains in `docs/ja/plans/skia-incremental-upgrade/00-continuous-upgrade-cycle.md`.
 
+## License
+
+Reskia is licensed under the BSD 3-Clause License. Skia-derived source is
+governed by the same BSD-style license. See `LICENSE` and `skia/LICENSE`.
+
+Third-party dependencies are governed by their own licenses. See
+`THIRD_PARTY_NOTICES.md` and the license files in `third_party/src/*`.
+
 ## Main Documents
 
 - `docs/en/guides/repository-structure.md`: repository structure

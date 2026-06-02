@@ -4,9 +4,8 @@ Reskia rebuilds Google Skia with CMake and provides a C ABI for use from other l
 
 ## Documentation
 
-- [日本語](docs/ja/README.md)
 - [English](docs/en/README.md)
-- Deutsch: planned (`docs/de/`)
+- [日本語](docs/ja/README.md)
 
 ## Quick Start
 
@@ -14,3 +13,9 @@ The current detailed setup, build, and maintenance notes are available in Japane
 
 - [English documentation](docs/en/README.md)
 - [Japanese documentation](docs/ja/README.md)
+
+## License
+
+Reskia is licensed under the [BSD 3-Clause License](LICENSE). Skia-derived
+source is governed by the same BSD-style license. Third-party dependencies are
+governed by their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
