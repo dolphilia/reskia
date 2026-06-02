@@ -4,9 +4,11 @@
 
 #include "sk_font_mgr.h"
 
+#include <optional>
 #include <utility>
 
 #include "include/core/SkFontMgr.h"
+#include "include/core/SkSpan.h"
 
 #include "../handles/static_sk_font_mgr.h"
 #include "../handles/static_sk_font_style_set.h"
@@ -51,6 +53,32 @@ sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
 
 bool is_valid_family_index(SkFontMgr *font_mgr, int index) {
     return font_mgr != nullptr && 0 <= index && index < font_mgr->countFamilies();
+}
+
+bool make_font_mgr_request(const reskia_font_mgr_request_t *request, SkFontMgr::Request *out_request) {
+    if (request == nullptr || out_request == nullptr) {
+        return false;
+    }
+    if ((request->cmap_entry_count > 0 && request->cmap_entries == nullptr) ||
+        (request->bcp47_count > 0 && request->bcp47 == nullptr) ||
+        (request->model_count > 0 && request->model == nullptr)) {
+        return false;
+    }
+    out_request->cmapEntries = SkSpan<const SkFontMgr::Request::CMapEntry>(
+            reinterpret_cast<const SkFontMgr::Request::CMapEntry *>(request->cmap_entries),
+            request->cmap_entry_count);
+    out_request->bcp47 = SkSpan<const char *>(request->bcp47, request->bcp47_count);
+    out_request->familyName = request->family_name;
+    out_request->model = SkSpan<const SkFontArguments::VariationPosition::Coordinate>(
+            reinterpret_cast<const SkFontArguments::VariationPosition::Coordinate *>(request->model),
+            request->model_count);
+    out_request->syntheticBold = request->has_synthetic_bold
+            ? std::optional<bool>(request->synthetic_bold)
+            : std::nullopt;
+    out_request->syntheticOblique = request->has_synthetic_oblique
+            ? std::optional<bool>(request->synthetic_oblique)
+            : std::nullopt;
+    return true;
 }
 
 }  // namespace
@@ -122,6 +150,22 @@ sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(reskia_font_mgr_t *font_mgr, c
         return 0;
     }
     return make_typeface_handle(as_font_mgr(font_mgr)->matchFamilyStyleCharacter(familyName, * reinterpret_cast<const SkFontStyle *>(font_style), bcp47, bcp47Count, static_cast<SkUnichar>(character)));
+}
+
+sk_typeface_t SkFontMgr_match(reskia_font_mgr_t *font_mgr, const reskia_font_mgr_request_t *request) {
+    SkFontMgr::Request native_request{};
+    if (font_mgr == nullptr || !make_font_mgr_request(request, &native_request)) {
+        return 0;
+    }
+    return make_typeface_handle(as_font_mgr(font_mgr)->match(native_request));
+}
+
+sk_typeface_t SkFontMgr_fallback(reskia_font_mgr_t *font_mgr, const reskia_font_mgr_request_t *request) {
+    SkFontMgr::Request native_request{};
+    if (font_mgr == nullptr || !make_font_mgr_request(request, &native_request)) {
+        return 0;
+    }
+    return make_typeface_handle(as_font_mgr(font_mgr)->fallback(native_request));
 }
 
 sk_typeface_t SkFontMgr_makeFromData(reskia_font_mgr_t *font_mgr, sk_data_t data, int ttcIndex) {

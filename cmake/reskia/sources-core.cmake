@@ -86,7 +86,7 @@ list(APPEND SOURCE_FILES
         src/core/SkBlitMask_opts_ssse3.cpp
         src/core/SkBlitMask_opts.cpp
         src/core/SkBlitRow_D32.cpp
-        src/core/SkBlitRow_opts_hsw.cpp
+        src/core/SkBlitRow_opts_ml3.cpp
         src/core/SkBlitRow_opts.cpp
         src/core/SkBlitter_A8.cpp
         src/core/SkBlitter_ARGB32.cpp
@@ -250,7 +250,7 @@ list(APPEND SOURCE_FILES
         src/core/SkStrokeRec.cpp
         src/core/SkStrokerPriv.cpp
         src/core/SkSwizzle.cpp
-        src/core/SkSwizzler_opts_hsw.cpp
+        src/core/SkSwizzler_opts_ml3.cpp
         src/core/SkSwizzler_opts_ssse3.cpp
         src/core/SkSwizzler_opts.cpp
         src/core/SkTaskGroup.cpp
@@ -328,7 +328,8 @@ list(APPEND SOURCE_FILES
         src/image/SkSurface.cpp
         src/image/SkTiledImageUtils.cpp
         src/lazy/SkDiscardableMemoryPool.cpp
-        src/opts/SkOpts_hsw.cpp
+        src/opts/SkOpts_ml3.cpp
+        src/opts/SkOpts_ml4.cpp
         src/pathops/SkAddIntersections.cpp
         src/pathops/SkDConicLineIntersection.cpp
         src/pathops/SkDCubicLineIntersection.cpp

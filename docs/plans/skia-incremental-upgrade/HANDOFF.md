@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `f37239a7a689d64268b73fc7eb45b5c40a7f7013`
-- next probe candidate: start from `f37239a7a689d64268b73fc7eb45b5c40a7f7013`; local refs currently did not contain a fixed commit after this baseline, so begin cycle 088 by rechecking local refs and record refs insufficiency if still true.
+- `SKIA_REF`: `bda7232e6772bcc585435ae760983d6d43aa1155`
+- next probe candidate: start from `bda7232e6772bcc585435ae760983d6d43aa1155`; local `vendor/skia-upstream-candidate` refs contained later mainline commits at cycle 088 close, so begin cycle 089 by rechecking 1-week/2-week/3-week candidates from this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -119,21 +119,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 085 accepted: `f04d09d1075926a5e5ef0a52171c9c12043fab03`。
 - cycle 086 accepted: `aba405ee605f2578f3054bc4d997e2f32f57f291`。
 - cycle 087 accepted: `f37239a7a689d64268b73fc7eb45b5c40a7f7013`。
+- cycle 088 accepted: `bda7232e6772bcc585435ae760983d6d43aa1155`。
 
 未実施:
 
-- cycle 088 candidate selection from `f37239a7a689d64268b73fc7eb45b5c40a7f7013`.
-- cycle 088 candidate checkout を使った coverage regression。
-- cycle 088 の source/header sync と C API 追従実装。
+- cycle 089 candidate selection from `bda7232e6772bcc585435ae760983d6d43aa1155`.
+- cycle 089 candidate checkout を使った coverage regression。
+- cycle 089 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 088 の candidate selection から始める。
+次の作業は、cycle 089 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `f37239a7a689d64268b73fc7eb45b5c40a7f7013` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 087 終了時点では `vendor/skia-upstream` の local refs に baseline 後の commit がなかったため、候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `bda7232e6772bcc585435ae760983d6d43aa1155` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 088 終了時点では同 checkout に baseline 後の commit があったため、1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -215,9 +216,21 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `f37239a7a689d64268b73fc7eb45b5c40a7f7013`
-- committer date: 2026-03-30
-- subject: [graphite] turn off DrawListLayer caps flag
+- `bda7232e6772bcc585435ae760983d6d43aa1155`
+- committer date: 2026-04-14
+- subject: Additional performance optimization in SkScan_Hairline
+
+cycle 088 結果:
+
+- baseline `f37239a7a689d64268b73fc7eb45b5c40a7f7013` から `bda7232e6772bcc585435ae760983d6d43aa1155` を採用した。184 commits、`include` / `modules` は 18 files changed, +214/-78、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 201 files changed, +3618/-3767。
+- 1週間候補 `b8f966a30b264e8d897fc825910a25f777ed210b` と 3週間候補 `3150bddf3edd9ff7e9c3171a196cea2fb4d53a1f` を比較し、標準幅内で public header churn が小さい2週間候補を採用した。
+- `SkFontMgr::match(const Request&)` / `fallback(const Request&)` を C API に追加し、request struct で CMap entries、BCP47、family name、variation model、optional synthetic style flags を渡せるようにした。
+- `PrecompileContext::getPipelineLabel` は PrecompileContext ownership と SkData transfer を含む opaque precompile ABI 設計待ちとして `na` に分類した。
+- `SkCodec_Register` は現在も公開されている `SkCodecs::Register` に backed された互換 C API として保持した。`SkShader_isOpaque` と Graphite cleanup wrappers の signature drift は C ABI 互換として記録した。
+- final coverage は `covered 2940` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は `stale_capi 1` / `signature_changed_review 3` で、残す理由は cycle record に記録済み。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは、accepted baseline `bda7232e6772bcc585435ae760983d6d43aa1155` から再比較する。Graphite precompile ABI 設計 debt、Dawn/Vulkan/Metal churn、CPU opts target rename churn、互換維持 stale/signature rows を既知リスクとして扱う。
 
 cycle 087 結果:
 
@@ -319,6 +332,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-085-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-086-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-087-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-088-2026-06-02.md`
 
 ## Cycle close の条件
 
