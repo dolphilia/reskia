@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.26.4)
 project(reskia)
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 set(RESKIA_ROOT_DIR "${PROJECT_SOURCE_DIR}/..")
 include("${RESKIA_ROOT_DIR}/cmake/deps/ReskiaDeps.cmake")
 reskia_resolve_third_party("${RESKIA_ROOT_DIR}" RESKIA_DEP_LINK_DIRS RESKIA_DEP_LIBS)
@@ -21,6 +25,9 @@ if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
 endif()
 
 if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
+    if(NOT TARGET skresources)
+        add_subdirectory("${PROJECT_SOURCE_DIR}/modules/skresources" "${CMAKE_BINARY_DIR}/_deps/skresources")
+    endif()
     set(RESKIA_SVG_SHAPING_INCLUDE_DIRS
             "${PROJECT_SOURCE_DIR}"
             "${PROJECT_SOURCE_DIR}/modules/svg/include"
@@ -36,6 +43,7 @@ if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
     if(NOT TARGET skshaper)
         add_library(skshaper
                 modules/skshaper/src/SkShaper.cpp
+                modules/skshaper/src/SkShaper_factory.cpp
                 modules/skshaper/src/SkShaper_primitive.cpp
                 modules/skshaper/src/SkShaper_coretext.cpp
         )
@@ -230,9 +238,7 @@ include("${RESKIA_ROOT_DIR}/cmake/reskia/sources-handles.cmake")
 
 if (WIN32)
     list(APPEND SOURCE_FILES
-            src/fonts/SkFontMgr_indirect.cpp
-            src/fonts/SkRemotableFontMgr.cpp
-            src/ports/SkDebug_win.cpp
+            src/ports/SkLog_win.cpp
             src/ports/SkOSFile_win.cpp
             src/ports/SkTypeface_win_dw.cpp
             src/ports/SkScalerContext_win_dw.cpp
@@ -245,12 +251,10 @@ if (WIN32)
             src/utils/win/SkHRESULT.cpp
             src/utils/win/SkIStream.cpp
             src/ports/SkFontMgr_win_dw.cpp
-            src/ports/SkFontMgr_win_dw_factory.cpp
     )
 elseif (APPLE)
     list(APPEND SOURCE_FILES
             src/ports/SkFontMgr_mac_ct.cpp
-            src/ports/SkFontMgr_mac_ct_factory.cpp
             src/sfnt/SkOTTable_name.cpp
             src/sfnt/SkOTUtils.cpp
             src/ports/SkScalerContext_mac_ct.cpp
@@ -258,23 +262,21 @@ elseif (APPLE)
             src/ports/SkOSFile_posix.cpp
             capi/sk_typeface_mac.cpp
             src/utils/mac/SkCTFont.cpp
+            src/utils/mac/SkCTFontCreateExactCopy.cpp
     )
 elseif (UNIX)
     list(APPEND SOURCE_FILES
             src/ports/SkOSFile_posix.cpp
     )
-    if(RESKIA_ENABLE_FONTCONFIG_CAPI)
-        list(APPEND SOURCE_FILES src/ports/SkFontMgr_fontconfig_factory.cpp)
-    else()
-        list(APPEND SOURCE_FILES src/ports/SkFontMgr_empty_factory.cpp)
-    endif()
 endif()
 
 add_library(reskia SHARED ${SOURCE_FILES})
 if(APPLE AND RESKIA_ENABLE_GPU_METAL)
+    set_source_files_properties("${PROJECT_SOURCE_DIR}/capi/sk_gpu_context.cpp"
+            PROPERTIES LANGUAGE OBJCXX)
     set(_reskia_gpu_mtl_sources "")
     foreach(_reskia_src IN LISTS SOURCE_FILES)
-        if(_reskia_src MATCHES "^src/gpu/.+\\.mm$")
+        if(_reskia_src MATCHES "^src/gpu/.+\\.mm$" AND NOT _reskia_src MATCHES "^src/gpu/graphite/mtl/.+\\.mm$")
             list(APPEND _reskia_gpu_mtl_sources "${PROJECT_SOURCE_DIR}/${_reskia_src}")
         endif()
     endforeach()
@@ -283,7 +285,11 @@ if(APPLE AND RESKIA_ENABLE_GPU_METAL)
                 PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
     endif()
 endif()
-target_compile_features(reskia PRIVATE cxx_std_17)
+if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE OR RESKIA_ENABLE_SKPARAGRAPH)
+    target_compile_features(reskia PRIVATE cxx_std_20)
+else()
+    target_compile_features(reskia PRIVATE cxx_std_17)
+endif()
 set(_reskia_external_include_root "${RESKIA_THIRD_PARTY_PREFIX}")
 if(_reskia_external_include_root STREQUAL "")
     set(_reskia_external_include_root "${RESKIA_ROOT_DIR}/third_party/install")
@@ -321,6 +327,7 @@ endif()
 if(RESKIA_ENABLE_SKPARAGRAPH)
     target_compile_definitions(reskia PRIVATE
             SK_ENABLE_PARAGRAPH
+            SK_UNICODE_CLIENT_IMPLEMENTATION
             SK_SHAPER_HARFBUZZ_AVAILABLE
     )
     if(RESKIA_SKPARAGRAPH_ICU_UBIDI_INCLUDE_DIR)

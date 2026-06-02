@@ -44,9 +44,6 @@ int main() {
     if (!check(SkMemoryStream_newWithDataAndCopyFlag(nullptr, 1, true) == nullptr, "SkMemoryStream_newWithDataAndCopyFlag(nullptr, 1)")) {
         return 9;
     }
-    if (!check(SkMemoryStream_asData(nullptr) == 0, "SkMemoryStream_asData(nullptr)")) {
-        return 10;
-    }
     if (!check(SkMemoryStream_getAtPos(nullptr) == nullptr, "SkMemoryStream_getAtPos(nullptr)")) {
         return 11;
     }
@@ -75,7 +72,6 @@ int main() {
     SkMemoryStream_setMemory(nullptr, nullptr, 0, true);
     SkMemoryStream_setMemoryOwned(nullptr, nullptr, 0);
     SkMemoryStream_setData(nullptr, 0);
-    SkMemoryStream_skipToAlign4(nullptr);
 
     const uint8_t bytes[] = {10, 20, 30, 40};
     reskia_memory_stream_t *memory_stream = SkMemoryStream_newWithDataAndCopyFlag(bytes, sizeof(bytes), true);

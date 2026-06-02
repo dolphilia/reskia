@@ -17,6 +17,7 @@ typedef struct reskia_shaper_font_run_iterator_t reskia_shaper_font_run_iterator
 typedef struct reskia_shaper_bidi_run_iterator_t reskia_shaper_bidi_run_iterator_t;
 typedef struct reskia_shaper_script_run_iterator_t reskia_shaper_script_run_iterator_t;
 typedef struct reskia_shaper_language_run_iterator_t reskia_shaper_language_run_iterator_t;
+typedef struct reskia_shapers_factory_t reskia_shapers_factory_t;
 typedef struct reskia_unicode_t reskia_unicode_t;
 typedef uint32_t reskia_four_byte_tag_t;
 
@@ -42,16 +43,23 @@ reskia_shaper_t *SkShaper_MakeWithFontMgr(sk_font_mgr_t font_mgr);
 reskia_shaper_t *SkShaper_MakePrimitive(void);
 reskia_shaper_t *SkShaper_MakeShaperDrivenWrapper(sk_font_mgr_t font_mgr);
 reskia_shaper_t *SkShaper_MakeShapeThenWrap(sk_font_mgr_t font_mgr);
-reskia_shaper_t *SkShaper_MakeShapeDontWrapOrReorder(reskia_unicode_t *unicode, sk_font_mgr_t font_mgr); // consumes unicode on success
 reskia_shaper_t *SkShaper_MakeCoreText(void);
 void SkShaper_delete(reskia_shaper_t *shaper);
 void SkShaper_PurgeCaches(void);
 void SkShaper_PurgeHarfBuzzCache(void);
 
+reskia_shapers_factory_t *SkShapers_Primitive_Factory(void);
+void SkShapers_Factory_ref(reskia_shapers_factory_t *factory);
+void SkShapers_Factory_unref(reskia_shapers_factory_t *factory);
+void SkShapers_Factory_release(reskia_shapers_factory_t *factory);
+reskia_shaper_t *SkShapers_Factory_makeShaper(reskia_shapers_factory_t *factory, sk_font_mgr_t fallback);
+reskia_shaper_bidi_run_iterator_t *SkShapers_Factory_makeBidiRunIterator(reskia_shapers_factory_t *factory, const char *utf8, size_t utf8_bytes, uint8_t bidi_level);
+reskia_shaper_script_run_iterator_t *SkShapers_Factory_makeScriptRunIterator(reskia_shapers_factory_t *factory, const char *utf8, size_t utf8_bytes, reskia_four_byte_tag_t script);
+reskia_unicode_t *SkShapers_Factory_getUnicode(reskia_shapers_factory_t *factory); // borrowed; do not delete
+
 reskia_shaper_font_run_iterator_t *SkShaper_MakeFontMgrRunIterator(const char *utf8, size_t utf8_bytes, const reskia_font_t *font, sk_font_mgr_t fallback);
 reskia_shaper_font_run_iterator_t *SkShaper_MakeFontMgrRunIteratorWithRequest(const char *utf8, size_t utf8_bytes, const reskia_font_t *font, sk_font_mgr_t fallback, const char *request_name, int32_t request_weight, int32_t request_width, int32_t request_slant, const reskia_shaper_language_run_iterator_t *language_iterator);
 reskia_shaper_bidi_run_iterator_t *SkShaper_MakeBiDiRunIterator(const char *utf8, size_t utf8_bytes, uint8_t bidi_level);
-reskia_shaper_bidi_run_iterator_t *SkShaper_MakeSkUnicodeBidiRunIterator(reskia_unicode_t *unicode, const char *utf8, size_t utf8_bytes, uint8_t bidi_level);
 reskia_shaper_bidi_run_iterator_t *SkShaper_MakeIcuBiDiRunIterator(const char *utf8, size_t utf8_bytes, uint8_t bidi_level);
 reskia_shaper_script_run_iterator_t *SkShaper_MakeScriptRunIterator(const char *utf8, size_t utf8_bytes, reskia_four_byte_tag_t script);
 reskia_shaper_script_run_iterator_t *SkShaper_MakeSkUnicodeHbScriptRunIterator(const char *utf8, size_t utf8_bytes);

@@ -9,10 +9,11 @@
 #define GrBackendSurfacePriv_DEFINED
 
 #include "include/core/SkRefCnt.h"
-#include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/MutableTextureState.h"  // IWYU pragma: keep
+#include "include/gpu/ganesh/GrBackendSurface.h"
 #include "include/private/base/SkAssert.h"
+#include "include/private/base/SkDebug.h"
 #include "include/private/gpu/ganesh/GrTypesPriv.h"
-#include "src/gpu/MutableTextureStateRef.h"  // IWYU pragma: keep
 
 #include <cstddef>
 #include <cstdint>
@@ -24,7 +25,6 @@ enum class SkTextureCompressionType;
 
 namespace skgpu {
 enum class Mipmapped : bool;
-class MutableTextureState;
 }
 
 class GrBackendFormatData {
@@ -69,14 +69,16 @@ protected:
 private:
     friend class GrBackendTexture;
     virtual bool isProtected() const = 0;
-    virtual bool equal(const GrBackendTextureData* that) const = 0;
     virtual bool isSameTexture(const GrBackendTextureData*) const = 0;
     virtual GrBackendFormat getBackendFormat() const = 0;
     virtual void copyTo(AnyTextureData&) const = 0;
 
     // Vulkan-only API:
-    virtual sk_sp<skgpu::MutableTextureStateRef> getMutableState() const { return nullptr; }
+    virtual sk_sp<skgpu::MutableTextureState> getMutableState() const { return nullptr; }
     virtual void setMutableState(const skgpu::MutableTextureState&) {}
+#if defined(GPU_TEST_UTILS)
+    virtual bool equal(const GrBackendTextureData* that) const = 0;
+#endif
 };
 
 class GrBackendRenderTargetData {
@@ -95,12 +97,14 @@ private:
     friend class GrBackendRenderTarget;
     virtual GrBackendFormat getBackendFormat() const = 0;
     virtual bool isProtected() const = 0;
-    virtual bool equal(const GrBackendRenderTargetData* that) const = 0;
     virtual void copyTo(AnyRenderTargetData&) const = 0;
 
     // Vulkan-only API:
-    virtual sk_sp<skgpu::MutableTextureStateRef> getMutableState() const { return nullptr; }
+    virtual sk_sp<skgpu::MutableTextureState> getMutableState() const { return nullptr; }
     virtual void setMutableState(const skgpu::MutableTextureState&) {}
+#if defined(GPU_TEST_UTILS)
+    virtual bool equal(const GrBackendRenderTargetData* that) const = 0;
+#endif
 };
 
 class GrBackendSurfacePriv final {

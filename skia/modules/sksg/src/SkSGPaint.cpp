@@ -1,14 +1,19 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
 
-#include "modules/sksg/include/SkSGPaint.h"
-
+#include "include/core/SkShader.h"
+#include "include/private/base/SkAssert.h"
 #include "include/private/base/SkTPin.h"
+#include "modules/sksg/include/SkSGPaint.h"
 #include "modules/sksg/include/SkSGRenderEffect.h"
+
+#include <utility>
+
+class SkMatrix;
 
 namespace sksg {
 

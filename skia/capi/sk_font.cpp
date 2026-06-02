@@ -6,7 +6,9 @@
 
 #include "include/core/SkFont.h"
 #include "include/core/SkFontTypes.h"
+#include "include/core/SkStrikeRef.h"
 
+#include "../handles/static_sk_strike_ref.h"
 #include "../handles/static_sk_typeface.h"
 #include "../handles/static_std_vector_sk_scalar.h"
 #include "../handles/static_sk_font.h"
@@ -14,9 +16,11 @@
 
 #include "../handles/static_sk_font-internal.h"
 #include "../handles/static_sk_point-internal.h"
+#include "../handles/static_sk_strike_ref-internal.h"
 #include "../handles/static_std_vector_sk_scalar-internal.h"
 #include "../handles/static_sk_typeface-internal.h"
 
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -40,6 +44,13 @@ void reskia_font_get_paths_bridge(const SkPath *pathOrNull, const SkMatrix &mx, 
 
 sk_font_t make_font_handle(SkFont font) {
     return static_sk_font_make(std::move(font));
+}
+
+sk_strike_ref_t make_strike_ref_handle(SkStrikeRef strike_ref) {
+    if (!strike_ref) {
+        return 0;
+    }
+    return static_sk_strike_ref_make(std::move(strike_ref));
 }
 
 sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
@@ -208,6 +219,13 @@ sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size) {
     return make_font_handle(as_font(font)->makeWithSize(size));
 }
 
+sk_strike_ref_t SkFont_makeStrikeRef(reskia_font_t *font) {
+    if (font == nullptr) {
+        return 0;
+    }
+    return make_strike_ref_handle(as_font(font)->makeStrikeRef());
+}
+
 reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font) {
     if (font == nullptr) {
         return nullptr;
@@ -272,10 +290,14 @@ void SkFont_setSkewX(reskia_font_t *font, float skewX) {
 }
 
 int SkFont_textToGlyphs(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount) {
-    if (font == nullptr || !has_text_input(text, byteLength, encoding) || maxGlyphCount < 0) {
+    if (font == nullptr || !has_text_input(text, byteLength, encoding) || maxGlyphCount < 0 || (maxGlyphCount > 0 && glyphs == nullptr)) {
         return 0;
     }
-    return as_font(font)->textToGlyphs(text, byteLength, static_cast<SkTextEncoding>(encoding), glyphs, maxGlyphCount);
+    return as_font(font)->textToGlyphs(
+            text,
+            byteLength,
+            static_cast<SkTextEncoding>(encoding),
+            {reinterpret_cast<SkGlyphID *>(glyphs), static_cast<size_t>(maxGlyphCount)});
 }
 
 uint16_t SkFont_unicharToGlyph(reskia_font_t *font, reskia_unichar_t uni) {
@@ -289,7 +311,9 @@ void SkFont_unicharsToGlyphs(reskia_font_t *font, const int32_t *uni, int count,
     if (font == nullptr || count <= 0 || uni == nullptr || glyphs == nullptr) {
         return;
     }
-    as_font(font)->unicharsToGlyphs(reinterpret_cast<const SkUnichar *>(uni), count, glyphs);
+    as_font(font)->unicharsToGlyphs(
+            {reinterpret_cast<const SkUnichar *>(uni), static_cast<size_t>(count)},
+            {reinterpret_cast<SkGlyphID *>(glyphs), static_cast<size_t>(count)});
 }
 
 int SkFont_countText(reskia_font_t *font, const uint8_t *text, size_t byteLength, reskia_font_text_encoding_t encoding) {
@@ -317,7 +341,18 @@ void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, fl
     if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
-    as_font(font)->getWidths(glyphs, count, widths, reinterpret_cast<SkRect *>(bounds));
+    as_font(font)->getWidthsBounds(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {widths, widths == nullptr ? 0 : static_cast<size_t>(count)},
+            {reinterpret_cast<SkRect *>(bounds), bounds == nullptr ? 0 : static_cast<size_t>(count)},
+            nullptr);
+}
+
+float SkFont_getWidth(reskia_font_t *font, uint16_t glyph) {
+    if (font == nullptr) {
+        return 0.0f;
+    }
+    return as_font(font)->getWidth(glyph);
 }
 
 // TODO
@@ -325,49 +360,77 @@ void SkFont_getWidths_2(reskia_font_t *font, const void * glyphs, int count, voi
     if (font == nullptr || count <= 0 || glyphs == nullptr || widths == nullptr) {
         return;
     }
-    as_font(font)->getWidths(static_cast<const SkGlyphID *>(glyphs), count, static_cast<SkScalar *>(widths), ptr);
+    as_font(font)->getWidths(
+            {static_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {static_cast<SkScalar *>(widths), static_cast<size_t>(count)});
 }
 
 void SkFont_getWidthsWithoutBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths) {
     if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
-    as_font(font)->getWidths(glyphs, count, widths);
+    if (widths == nullptr) {
+        return;
+    }
+    as_font(font)->getWidths(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {widths, static_cast<size_t>(count)});
 }
 
 void SkFont_getWidthsBounds(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds, const reskia_paint_t *paint) {
     if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
-    as_font(font)->getWidthsBounds(glyphs, count, widths, reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));
+    as_font(font)->getWidthsBounds(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {widths, widths == nullptr ? 0 : static_cast<size_t>(count)},
+            {reinterpret_cast<SkRect *>(bounds), bounds == nullptr ? 0 : static_cast<size_t>(count)},
+            reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkFont_getBounds(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_rect_t *bounds, const reskia_paint_t *paint) {
     if (font == nullptr || !has_required_glyph_input(glyphs, count)) {
         return;
     }
-    as_font(font)->getBounds(glyphs, count, reinterpret_cast<SkRect *>(bounds), reinterpret_cast<const SkPaint *>(paint));
+    if (bounds == nullptr) {
+        return;
+    }
+    as_font(font)->getBounds(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {reinterpret_cast<SkRect *>(bounds), static_cast<size_t>(count)},
+            reinterpret_cast<const SkPaint *>(paint));
 }
 
 void SkFont_getPos(reskia_font_t *font, const uint16_t *glyphs, int count, reskia_point_t *pos, sk_point_t origin) {
     if (font == nullptr || !has_required_glyph_input(glyphs, count) || pos == nullptr) {
         return;
     }
-    as_font(font)->getPos(glyphs, count, reinterpret_cast<SkPoint *>(pos), static_sk_point_get_entity(origin));
+    as_font(font)->getPos(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {reinterpret_cast<SkPoint *>(pos), static_cast<size_t>(count)},
+            static_sk_point_get_entity(origin));
 }
 
 void SkFont_getXPos(reskia_font_t *font, const uint16_t *glyphs, int count, float *xpos, float origin) {
     if (font == nullptr || !has_required_glyph_input(glyphs, count) || xpos == nullptr) {
         return;
     }
-    as_font(font)->getXPos(glyphs, count, xpos, origin);
+    as_font(font)->getXPos(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {xpos, static_cast<size_t>(count)},
+            origin);
 }
 
 int SkFont_getIntercepts(reskia_font_t *font, const uint16_t *glyphs, int count, const reskia_point_t *pos, float top, float bottom, const reskia_paint_t *paint) { // @TODO
     if (font == nullptr || !has_required_glyph_input(glyphs, count) || pos == nullptr) {
         return 0;
     }
-    std::vector<SkScalar> intercepts = as_font(font)->getIntercepts(glyphs, count, reinterpret_cast<const SkPoint *>(pos), top, bottom, reinterpret_cast<const SkPaint *>(paint));
+    std::vector<SkScalar> intercepts = as_font(font)->getIntercepts(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(pos), static_cast<size_t>(count)},
+            top,
+            bottom,
+            reinterpret_cast<const SkPaint *>(paint));
     if (intercepts.empty()) {
         return 0;
     }
@@ -378,7 +441,12 @@ bool SkFont_getPath(reskia_font_t *font, uint16_t glyphID, reskia_path_t *path) 
     if (font == nullptr || path == nullptr) {
         return false;
     }
-    return as_font(font)->getPath(glyphID, reinterpret_cast<SkPath *>(path));
+    std::optional<SkPath> glyphPath = as_font(font)->getPath(glyphID);
+    if (!glyphPath.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(path) = std::move(*glyphPath);
+    return true;
 }
 
 void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, reskia_font_glyph_path_proc_t glyphPathProc, void *ctx) {
@@ -386,7 +454,10 @@ void SkFont_getPaths(reskia_font_t *font, const uint16_t *glyphIDs, int count, r
         return;
     }
     ReskiaFontGetPathsCallback callback = {glyphPathProc, ctx};
-    reinterpret_cast<SkFont *>(font)->getPaths(glyphIDs, count, reskia_font_get_paths_bridge, &callback);
+    reinterpret_cast<SkFont *>(font)->getPaths(
+            {reinterpret_cast<const SkGlyphID *>(glyphIDs), static_cast<size_t>(count)},
+            reskia_font_get_paths_bridge,
+            &callback);
 }
 
 float SkFont_getMetrics(reskia_font_t *font, reskia_font_metrics_t *metrics) {

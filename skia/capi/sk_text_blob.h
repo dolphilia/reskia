@@ -80,6 +80,21 @@ sk_text_blob_t SkTextBlob_MakeFromPosText(const uint8_t *text, size_t byteLength
  */
 sk_text_blob_t SkTextBlob_MakeFromRSXform(const uint8_t *text, size_t byteLength, const reskia_rsxform_t *xform, const reskia_font_t *font, reskia_text_blob_text_encoding_t encoding);
 /**
+ * glyph_count == 0 permits NULL glyphs/xpos.
+ * glyph_count > 0 requires readable glyphs and xpos entries. font is required.
+ */
+sk_text_blob_t SkTextBlob_MakeFromPosHGlyphs(const uint16_t *glyphs, size_t glyph_count, const float *xpos, float constY, const reskia_font_t *font);
+/**
+ * glyph_count == 0 permits NULL glyphs/pos.
+ * glyph_count > 0 requires readable glyphs and position entries. font is required.
+ */
+sk_text_blob_t SkTextBlob_MakeFromPosGlyphs(const uint16_t *glyphs, size_t glyph_count, const reskia_point_t *pos, const reskia_font_t *font);
+/**
+ * glyph_count == 0 permits NULL glyphs/xform.
+ * glyph_count > 0 requires readable glyphs and xform entries. font is required.
+ */
+sk_text_blob_t SkTextBlob_MakeFromRSXformGlyphs(const uint16_t *glyphs, size_t glyph_count, const reskia_rsxform_t *xform, const reskia_font_t *font);
+/**
  * size > 0 requires data.
  * procs may be NULL for default procs. Failed creation returns 0.
  */

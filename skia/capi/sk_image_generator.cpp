@@ -5,6 +5,7 @@
 #include "sk_image_generator.h"
 
 #include "include/core/SkImageGenerator.h"
+#include "include/core/SkRecorder.h"
 
 #include <utility>
 
@@ -25,6 +26,17 @@ sk_data_t make_data_handle(sk_sp<SkData> data) {
         return 0;
     }
     return static_sk_data_make(std::move(data));
+}
+
+sk_data_t make_data_handle(sk_sp<const SkData> data) {
+    if (!data) {
+        return 0;
+    }
+    return static_sk_data_make(sk_ref_sp(const_cast<SkData *>(data.get())));
+}
+
+SkRecorder *as_sk_recorder(reskia_recording_context_t *context) {
+    return nullptr;
 }
 
 } // namespace
@@ -52,7 +64,7 @@ sk_image_info_t SkImageGenerator_getInfo(reskia_image_generator_t *image_generat
 
 bool SkImageGenerator_isValid(reskia_image_generator_t *image_generator, reskia_recording_context_t *context) {
     SkImageGenerator *native = as_image_generator(image_generator);
-    return native != nullptr ? native->isValid(reinterpret_cast<GrRecordingContext *>(context)) : false;
+    return native != nullptr ? native->isValid(as_sk_recorder(context)) : false;
 }
 
 bool SkImageGenerator_isProtected(reskia_image_generator_t *image_generator) {

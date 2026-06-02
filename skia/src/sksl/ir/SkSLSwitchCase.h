@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -50,8 +50,6 @@ public:
     const std::unique_ptr<Statement>& statement() const {
         return fStatement;
     }
-
-    std::unique_ptr<Statement> clone() const override;
 
     std::string description() const override;
 

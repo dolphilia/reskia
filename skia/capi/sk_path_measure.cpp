@@ -4,6 +4,8 @@
 
 #include "sk_path_measure.h"
 
+#include "include/core/SkPath.h"
+#include "include/core/SkPathBuilder.h"
 #include "include/core/SkPathMeasure.h"
 
 extern "C" {
@@ -63,7 +65,12 @@ bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD,
     if (path_measure == nullptr || dst == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkPathMeasure *>(path_measure)->getSegment(startD, stopD, reinterpret_cast<SkPath *>(dst), startWithMoveTo);
+    SkPathBuilder builder;
+    if (!reinterpret_cast<SkPathMeasure *>(path_measure)->getSegment(startD, stopD, &builder, startWithMoveTo)) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(dst) = builder.detach();
+    return true;
 }
 
 bool SkPathMeasure_isClosed(reskia_path_measure_t *path_measure) {
@@ -78,6 +85,13 @@ bool SkPathMeasure_nextContour(reskia_path_measure_t *path_measure) {
         return false;
     }
     return reinterpret_cast<SkPathMeasure *>(path_measure)->nextContour();
+}
+
+const reskia_contour_measure_t *SkPathMeasure_currentMeasure(reskia_path_measure_t *path_measure) {
+    if (path_measure == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<const reskia_contour_measure_t *>(reinterpret_cast<SkPathMeasure *>(path_measure)->currentMeasure());
 }
 
 void SkPathMeasure_dump(reskia_path_measure_t *path_measure) {

@@ -1,9 +1,9 @@
 list(APPEND SOURCE_FILES
         capi/sk_alpha_type.cpp
         capi/sk_animated_image.cpp
-        capi/sk_anim_codec_player.cpp
         capi/sk_android_codec.cpp
         capi/sk_annotation.cpp
+        capi/sk_arc.cpp
         capi/sk_async_read_result.cpp
         capi/sk_auto_canvas_restore.cpp
         capi/sk_b_box_hierarchy.cpp
@@ -55,6 +55,7 @@ list(APPEND SOURCE_FILES
         capi/sk_font_style_set.cpp
         capi/sk_font_style.cpp
         capi/sk_font.cpp
+        capi/sk_gradient.cpp
         capi/sk_gradient_shader.cpp
         capi/sk_graphics.cpp
         capi/sk_gpu_backend_surface.cpp
@@ -118,7 +119,6 @@ list(APPEND SOURCE_FILES
         capi/sk_rect.cpp
         capi/sk_ref_cnt_base.cpp
         capi/sk_ref_cnt.cpp
-        capi/sk_remotable_font_mgr.cpp
         capi/reskia_ffi.cpp
         capi/sk_region.cpp
         capi/sk_rsx_form.cpp
@@ -139,6 +139,7 @@ list(APPEND SOURCE_FILES
         capi/sk_stream_seekable.cpp
         capi/sk_stream.cpp
         capi/sk_string.cpp
+        capi/sk_strike_ref.cpp
         capi/sk_stroke_rec.cpp
         capi/sk_svg_canvas.cpp
         capi/sk_surface_props.cpp
@@ -202,10 +203,10 @@ if(RESKIA_ENABLE_SKPARAGRAPH)
     list(APPEND SOURCE_FILES capi/sk_paragraph_style.cpp)
     list(APPEND SOURCE_FILES capi/sk_paragraph_text_style.cpp)
     list(APPEND SOURCE_FILES capi/sk_paragraph_typeface_font_provider.cpp)
-    list(APPEND SOURCE_FILES capi/sk_text_blob_builder_run_handler.cpp)
 endif()
 
 if(TARGET skshaper)
+    list(APPEND SOURCE_FILES capi/sk_text_blob_builder_run_handler.cpp)
     list(APPEND SOURCE_FILES capi/sk_shaper.cpp)
 endif()
 

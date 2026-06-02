@@ -12,6 +12,7 @@
 #include "include/core/SkImageInfo.h"
 #include "include/core/SkPicture.h"
 #include "include/core/SkRect.h"
+#include "include/core/SkSamplingOptions.h"
 
 #include "../handles/static_sk_android_codec-internal.h"
 #include "../handles/static_sk_image-internal.h"
@@ -29,6 +30,10 @@ reskia_animated_image_t *to_animated_image(sk_sp<SkAnimatedImage> animated_image
         return nullptr;
     }
     return reinterpret_cast<reskia_animated_image_t *>(animated_image.release());
+}
+
+bool valid_filter_mode(reskia_animated_image_filter_mode_t filter_mode) {
+    return filter_mode >= 0 && filter_mode <= static_cast<reskia_animated_image_filter_mode_t>(SkFilterMode::kLast);
 }
 
 }  // namespace
@@ -124,6 +129,20 @@ int SkAnimatedImage_getFrameCount(const reskia_animated_image_t *animated_image)
         return 0;
     }
     return as_animated_image(animated_image)->getFrameCount();
+}
+
+void SkAnimatedImage_setFilterMode(reskia_animated_image_t *animated_image, reskia_animated_image_filter_mode_t filter_mode) {
+    if (animated_image == nullptr || !valid_filter_mode(filter_mode)) {
+        return;
+    }
+    as_animated_image(animated_image)->setFilterMode(static_cast<SkFilterMode>(filter_mode));
+}
+
+reskia_animated_image_filter_mode_t SkAnimatedImage_getFilterMode(const reskia_animated_image_t *animated_image) {
+    if (animated_image == nullptr) {
+        return static_cast<reskia_animated_image_filter_mode_t>(SkFilterMode::kLinear);
+    }
+    return static_cast<reskia_animated_image_filter_mode_t>(as_animated_image(animated_image)->getFilterMode());
 }
 
 }

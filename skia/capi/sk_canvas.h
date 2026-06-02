@@ -343,6 +343,7 @@ void SkCanvas_drawGlyphsAtPositions(reskia_canvas_t *canvas, int count, const ui
  *    const SkFont *font,
  *    const SkPaint *paint).
  */
+void SkCanvas_drawGlyphsRSXform(reskia_canvas_t *canvas, int count, const uint16_t *glyphs, const reskia_rsxform_t *xforms, sk_point_t origin, const reskia_font_t *font, const reskia_paint_t *paint);
 void SkCanvas_drawGlyphsWithXforms(reskia_canvas_t *canvas, int count, const uint16_t *glyphs, const reskia_rsxform_t *xforms, sk_point_t origin, const reskia_font_t *font, const reskia_paint_t *paint);
 /**
  * canvas and valid image handle are required.

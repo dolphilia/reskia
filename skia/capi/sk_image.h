@@ -295,6 +295,21 @@ void SkImage_asyncRescaleAndReadPixelsYUVA420(reskia_image_t *image, reskia_imag
  */
 bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, const reskia_sampling_options_t *sampling, reskia_image_caching_hint_t cachingHint);
 /**
+ * image/info/sampling: non-null.
+ * Returned handle is caller-owned.
+ * Returns 0 on invalid input or factory failure.
+ * Skia: (SkImage *image, const SkImageInfo *info, const SkSamplingOptions *sampling) -> sk_image_t.
+ */
+sk_image_t SkImage_makeScaled(reskia_image_t *image, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling);
+/**
+ * image/info/sampling: non-null.
+ * recorder may be NULL for non-Graphite images.
+ * Returned handle is caller-owned.
+ * Returns 0 on invalid input or factory failure.
+ * Skia: (SkImage *image, skgpu::graphite::Recorder *recorder, const SkImageInfo *info, const SkSamplingOptions *sampling) -> sk_image_t.
+ */
+sk_image_t SkImage_makeScaledWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling);
+/**
  * Returns a caller-owned retained data handle.
  * Caller deletes with static_sk_data_delete.
  * Returns 0 when image is NULL or no encoded data is available.

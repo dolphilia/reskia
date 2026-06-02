@@ -10,6 +10,7 @@
 - `docs/plans/gpu-enablement/`: 機能ギャップ調査 3.6（GPU: Ganesh/Graphite, Vulkan/Metal/Dawn）の有効化計画
 - `docs/plans/pdf-enablement/`: 機能ギャップ調査 3.7（PDF）の有効化計画
 - `docs/plans/public-api-binding-expansion/`: Skia 公開クラスの public method / static factory / helper を C ABI に拡張する長期計画
+- `docs/plans/skia-incremental-upgrade/`: `vendor/skia-upstream` を固定 commit ごとに段階的に進め、C API coverage / source sync / build verification を継続的に追従する運用計画
 - `docs/plans/skparagraph-enablement/`: 機能ギャップ調査 3.4（skparagraph）の有効化計画
 - `docs/plans/sksg-enablement/`: 機能ギャップ調査 3.5（sksg / Scene Graph）の有効化計画
 - `docs/plans/skottie-enablement/`: 機能ギャップ調査 3.3（skottie / Lottie）の有効化計画

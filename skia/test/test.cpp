@@ -60,21 +60,53 @@
 #include "stb_image_write.h"
 #include "handles/static_sk_point_two.h"
 
+static const reskia_image_info_t *get_image_info_ptr(sk_image_info_t image_info) {
+    return reinterpret_cast<const reskia_image_info_t *>(static_sk_image_info_get_ptr(image_info));
+}
+
+static const reskia_image_t *get_image_ptr(sk_image_t image) {
+    return reinterpret_cast<const reskia_image_t *>(static_sk_image_get_ptr(image));
+}
+
+static const reskia_rect_t *get_rect_ptr(sk_rect_t rect) {
+    return reinterpret_cast<const reskia_rect_t *>(static_sk_rect_get_ptr(rect));
+}
+
+static const reskia_point_t *get_point_two_ptr(sk_point_two_t points) {
+    return reinterpret_cast<const reskia_point_t *>(static_sk_point_two_get_ptr(points));
+}
+
+static bool file_exists(const char *path) {
+    FILE *file = fopen(path, "rb");
+    if (file == nullptr) {
+        return false;
+    }
+    fclose(file);
+    return true;
+}
+
+static constexpr reskia_paint_style_t kPaintFillStyle = 0;
+static constexpr reskia_paint_style_t kPaintStrokeStyle = 1;
+static constexpr reskia_text_blob_text_encoding_t kTextEncodingUtf8 = 0;
+static constexpr reskia_gradient_shader_tile_mode_t kTileModeClamp = 0;
+static constexpr reskia_paint_blend_mode_t kBlendModeScreen = 14;
+static constexpr reskia_paint_blend_mode_t kBlendModeOverlay = 15;
+
 /**
  * 矩形を描画する
  */
 UTEST(cskia, drawRect) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
 
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
 
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
     int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
     SkCanvas_drawRect(canvas, rect_key, paint);
@@ -98,13 +130,13 @@ UTEST(cskia, drawRect) {
 UTEST(cskia, drawPath) {
     int image_width = 500;
     int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas* canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPath* path = SkPath_new();
+    reskia_path_t *path = SkPath_new();
     float cx = (float)image_width / 2;
     float cy = (float)image_height / 2;
     float outerRadius = 100;
@@ -119,7 +151,7 @@ UTEST(cskia, drawPath) {
         SkPath_lineTo(path, cx + radius * cos(angle), cy + radius * sin(angle));
     }
     SkPath_close(path);
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint, SK_ColorYELLOW);
     SkPaint_setAntiAlias(paint, true);
     SkCanvas_drawPath(canvas, path, paint);
@@ -143,18 +175,18 @@ UTEST(cskia, drawPath) {
 UTEST(cskia, drawRect_rotate) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
     SkCanvas_save(canvas);
     SkCanvas_translate(canvas, SkIntToScalar(128), SkIntToScalar(128));
     SkCanvas_rotate(canvas, SkIntToScalar(45));
     {
         int rect_key = SkRect_MakeXYWH(-90.5f, -90.5f, 181.0f, 181.0f);
-        SkPaint *paint = SkPaint_new();
+        reskia_paint_t *paint = SkPaint_new();
         SkPaint_setColor(paint, SK_ColorBLUE);
         SkCanvas_drawRect(canvas, rect_key, paint);
         static_sk_rect_delete(rect_key);
@@ -179,23 +211,23 @@ UTEST(cskia, drawRect_rotate) {
 UTEST(cskia, drawTextBlob_Installedfont) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint1 = SkPaint_new();
-    SkPaint *paint2 = SkPaint_new();
-    SkPaint *paint3 = SkPaint_new();
+    reskia_paint_t *paint1 = SkPaint_new();
+    reskia_paint_t *paint2 = SkPaint_new();
+    reskia_paint_t *paint3 = SkPaint_new();
 
     SkPaint_setAntiAlias(paint1, true);
     SkPaint_setColor(paint1, SkColorSetRGB(255, 0, 0));
-    SkPaint_setStyle(paint1, SkPaint::kFill_Style);
+    SkPaint_setStyle(paint1, kPaintFillStyle);
 
     SkPaint_setAntiAlias(paint2, true);
     SkPaint_setColor(paint2, SkColorSetRGB(0, 136, 0));
-    SkPaint_setStyle(paint2, SkPaint::kStroke_Style);
+    SkPaint_setStyle(paint2, kPaintStrokeStyle);
     SkPaint_setStrokeWidth(paint2, SkIntToScalar(3));
 
     SkPaint_setAntiAlias(paint3, true);
@@ -206,16 +238,16 @@ UTEST(cskia, drawTextBlob_Installedfont) {
     CTFontRef fontRef = CTFontCreateWithName(fontName, fontSize, NULL);
     CFRelease(fontName);
 
-    int typeface_key = Mac_SkMakeTypefaceFromCTFont(fontRef);
-    SkFont* font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
-    static_sk_typeface_delete(typeface_key);
+    int typeface_key = Mac_SkMakeTypefaceFromCTFont(reinterpret_cast<const reskia_ct_font_t *>(fontRef));
+    reskia_font_t *font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
 
-    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, SkTextEncoding::kUTF8);
+    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, kTextEncodingUtf8);
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
 
     SkFont_setTypeface(font, typeface_key);
     SkCanvas_drawTextBlob(canvas, textblob_key, 1.0f, 64.0f, paint1);
     static_sk_text_blob_delete(textblob_key);
+    static_sk_typeface_delete(typeface_key);
 
     int bitmap_width = SkBitmap_width(bitmap);
     int bitmap_height = SkBitmap_height(bitmap);
@@ -277,7 +309,7 @@ UTEST(cskia, drawTextBlob_Installedfont) {
 
     SkPaint_setAntiAlias(paint1, true);
     SkPaint_setColor(paint1, SkColorSetRGB(255, 0, 0));
-    SkPaint_setStyle(paint1, SkPaint::kFill_Style);
+    SkPaint_setStyle(paint1, kPaintFillStyle);
 
     SkFont_setTypeface(font, typeface_key);
     SkCanvas_drawTextBlob(canvas, textblob_key, 1.0f, 64.0f, paint1);
@@ -309,25 +341,29 @@ UTEST(cskia, drawTextBlob_Installedfont) {
  */
 #if defined(__APPLE__)
 UTEST(cskia, drawTextBlob_fromFile) {
+    if (!file_exists("Mplus1-Regular.ttf")) {
+        UTEST_SKIP("Mplus1-Regular.ttf is not available");
+    }
+
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint1 = SkPaint_new();
-    SkPaint *paint2 = SkPaint_new();
-    SkPaint *paint3 = SkPaint_new();
+    reskia_paint_t *paint1 = SkPaint_new();
+    reskia_paint_t *paint2 = SkPaint_new();
+    reskia_paint_t *paint3 = SkPaint_new();
 
     SkPaint_setAntiAlias(paint1, true);
     SkPaint_setColor(paint1, SkColorSetRGB(255, 0, 0));
-    SkPaint_setStyle(paint1, SkPaint::kFill_Style);
+    SkPaint_setStyle(paint1, kPaintFillStyle);
 
     SkPaint_setAntiAlias(paint2, true);
     SkPaint_setColor(paint2, SkColorSetRGB(0, 136, 0));
-    SkPaint_setStyle(paint2, SkPaint::kStroke_Style);
+    SkPaint_setStyle(paint2, kPaintStrokeStyle);
     SkPaint_setStrokeWidth(paint2, SkIntToScalar(3));
 
     SkPaint_setAntiAlias(paint3, true);
@@ -350,16 +386,16 @@ UTEST(cskia, drawTextBlob_fromFile) {
     CTFontRef theCTFont = CTFontCreateWithFontDescriptor(fontDescriptor, 12.0, NULL);
 
 
-    int typeface_key = Mac_SkMakeTypefaceFromCTFont(theCTFont);
-    SkFont* font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
-    static_sk_typeface_delete(typeface_key);
+    int typeface_key = Mac_SkMakeTypefaceFromCTFont(reinterpret_cast<const reskia_ct_font_t *>(theCTFont));
+    reskia_font_t *font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
 
-    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, SkTextEncoding::kUTF8);
+    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, kTextEncodingUtf8);
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
 
     SkFont_setTypeface(font, typeface_key);
     SkCanvas_drawTextBlob(canvas, textblob_key, 1.0f, 64.0f, paint1);
     static_sk_text_blob_delete(textblob_key);
+    static_sk_typeface_delete(typeface_key);
 
 
     int bitmap_width = SkBitmap_width(bitmap);
@@ -380,43 +416,43 @@ UTEST(cskia, drawTextBlob_fromFile) {
 #endif
 
 /**
- * 非推奨：SkTypeface_MakeFromFileで外部フォントを取得し、文字を描画する
+ * 非推奨：空 typeface で文字描画 API の呼び出し経路を確認する
  */
-UTEST(cskia, SkTypeface_MakeFromFile) {
+UTEST(cskia, SkTypeface_MakeEmpty) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint1 = SkPaint_new();
-    SkPaint *paint2 = SkPaint_new();
-    SkPaint *paint3 = SkPaint_new();
+    reskia_paint_t *paint1 = SkPaint_new();
+    reskia_paint_t *paint2 = SkPaint_new();
+    reskia_paint_t *paint3 = SkPaint_new();
 
     SkPaint_setAntiAlias(paint1, true);
     SkPaint_setColor(paint1, SkColorSetRGB(255, 0, 0));
-    SkPaint_setStyle(paint1, SkPaint::kFill_Style);
+    SkPaint_setStyle(paint1, kPaintFillStyle);
 
     SkPaint_setAntiAlias(paint2, true);
     SkPaint_setColor(paint2, SkColorSetRGB(0, 136, 0));
-    SkPaint_setStyle(paint2, SkPaint::kStroke_Style);
+    SkPaint_setStyle(paint2, kPaintStrokeStyle);
     SkPaint_setStrokeWidth(paint2, SkIntToScalar(3));
 
     SkPaint_setAntiAlias(paint3, true);
     SkPaint_setColor(paint3, SkColorSetRGB(136, 136, 136));
 
-    int typeface_key = SkTypeface_MakeFromFile("Mplus1-Regular.ttf", 0);
-    SkFont* font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
-    static_sk_typeface_delete(typeface_key);
+    int typeface_key = SkTypeface_MakeEmpty();
+    reskia_font_t *font = SkFont_newWithTypefaceSizeScaleXSkewX(typeface_key, 64.0f, 1.0f, 0.0f);
 
-    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, SkTextEncoding::kUTF8);
+    int textblob_key = SkTextBlob_MakeFromString("Skia!", font, kTextEncodingUtf8);
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
 
     SkFont_setTypeface(font, typeface_key);
     SkCanvas_drawTextBlob(canvas, textblob_key, 1.0f, 64.0f, paint1);
     static_sk_text_blob_delete(textblob_key);
+    static_sk_typeface_delete(typeface_key);
 
     int bitmap_width = SkBitmap_width(bitmap);
     int bitmap_height = SkBitmap_height(bitmap);
@@ -439,11 +475,11 @@ UTEST(cskia, SkTypeface_MakeFromFile) {
 UTEST(cskia, SkGradientShader) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap *bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
     auto two = static_sk_point_two_make_float(0,0,500,500);
 //    auto p1 = SkPoint_Make(0.0f, 0.0f);
@@ -452,8 +488,8 @@ UTEST(cskia, SkGradientShader) {
 //    SkPoint point2 = static_sk_point_get(p2);
 //    SkPoint points[2] = {point1, point2};
     SkColor colors[2] = {SK_ColorBLUE, SK_ColorYELLOW};
-    SkPaint *paint = SkPaint_new();
-    int shader_key = SkGradientShader_MakeLinear(static_sk_point_two_get_ptr(two), colors, nullptr, 2, SkTileMode::kClamp, 0, nullptr);
+    reskia_paint_t *paint = SkPaint_new();
+    int shader_key = SkGradientShader_MakeLinear(get_point_two_ptr(two), colors, nullptr, 2, kTileModeClamp, 0, nullptr);
     SkPaint_setShader(paint, shader_key);
     SkCanvas_drawPaint(canvas, paint);
     static_sk_shader_delete(shader_key);
@@ -476,14 +512,14 @@ UTEST(cskia, SkGradientShader) {
 UTEST(cskia, FractalNoise) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap *bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     int shader_key = SkPerlinNoiseShader_MakeFractalNoise(0.05f, 0.05f, 4, 0.0f, NULL);
     SkPaint_setShader(paint, shader_key);
     SkCanvas_drawPaint(canvas, paint);
@@ -505,22 +541,26 @@ UTEST(cskia, FractalNoise) {
  */
 
 UTEST(cskia, LoadImage) {
+    if (!file_exists("miga.png")) {
+        UTEST_SKIP("miga.png is not available");
+    }
+
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap *bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
     SkCanvas_clearColor(canvas, SK_ColorWHITE);
 
     // PNG画像を読み込む
     int image_file_id = SkStream_MakeFromFile("miga.png");
-    SkStreamAsset* stream_asset = static_sk_stream_asset_get(image_file_id);
+    auto *stream_asset = reinterpret_cast<reskia_stream_asset_t *>(static_sk_stream_asset_get_ptr(image_file_id));
     size_t size = SkStreamAsset_getLength(stream_asset);
-    int image_data_id = SkData_MakeFromStream((SkStream*)stream_asset, size);
+    int image_data_id = SkData_MakeFromStream(reinterpret_cast<reskia_stream_t *>(stream_asset), size);
     int image_id = SkImages_DeferredFromEncodedData(image_data_id);
-    SkCanvas_drawImagePtr(canvas, static_sk_image_get(image_id), 0, 0);
+    SkCanvas_drawImagePtr(canvas, get_image_ptr(image_id), 0, 0);
 
     int bitmap_width = SkBitmap_width(bitmap);
     int bitmap_height = SkBitmap_height(bitmap);
@@ -541,17 +581,17 @@ UTEST(cskia, LoadImage) {
 UTEST(cskia, drawRRect) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
     int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
-    SkRRect *rrect = SkRRect_new();
-    auto rect = static_sk_rect_get_ptr(rect_key);
+    reskia_r_rect_t *rrect = SkRRect_new();
+    const reskia_rect_t *rect = get_rect_ptr(rect_key);
     SkRRect_setOval(rrect, rect);
     SkRRect_offset(rrect, 40, 60);
     SkCanvas_drawRRect(canvas, rrect, paint);
@@ -576,16 +616,16 @@ UTEST(cskia, drawRRect) {
 UTEST(cskia, drawRoundRect) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     SkPaint_setColor(paint,SK_ColorRED);
     int rect_key = SkRect_MakeXYWH(100, 100, 300, 300); // 矩形の位置とサイズ
-    auto rect = static_sk_rect_get_ptr(rect_key);
+    const reskia_rect_t *rect = get_rect_ptr(rect_key);
     SkCanvas_drawRoundRect(canvas, rect, 10, 10, paint);
     static_sk_rect_delete(rect_key);
 
@@ -607,20 +647,20 @@ UTEST(cskia, drawRoundRect) {
 UTEST(cskia, BlendMode) {
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
 
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
-    SkPaint *paint = SkPaint_new();
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_paint_t *paint = SkPaint_new();
 
-    SkPaint_setBlendMode(paint, SkBlendMode::kOverlay);
+    SkPaint_setBlendMode(paint, kBlendModeOverlay);
     SkPaint_setColor(paint,SK_ColorRED);
     int rect_key = SkRect_MakeXYWH(50, 50, 150, 150); // 矩形の位置とサイズ
     SkCanvas_drawRect(canvas, rect_key, paint);
 
-    SkPaint_setBlendMode(paint, SkBlendMode::kScreen);
+    SkPaint_setBlendMode(paint, kBlendModeScreen);
     SkPaint_setColor(paint,SK_ColorBLUE);
     rect_key = SkRect_MakeXYWH(100, 100, 200, 200); // 矩形の位置とサイズ
     SkCanvas_drawRect(canvas, rect_key, paint);
@@ -643,14 +683,18 @@ UTEST(cskia, BlendMode) {
  * 矩形を描画する
  */
 UTEST(cskia, stb_image) {
+    if (!file_exists("miga.png")) {
+        UTEST_SKIP("miga.png is not available");
+    }
+
     const int image_width = 500;
     const int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas *canvas = SkCanvas_newFromBitmap(bitmap);
-    SkPaint *paint = SkPaint_new();
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_paint_t *paint = SkPaint_new();
 
     // LodePNGを使ってPNGファイルを読み込む
     const char* filePath = "miga.png";
@@ -666,11 +710,11 @@ UTEST(cskia, stb_image) {
 
     // Skiaで使用するために画像データをSkImageに変換する
     sk_image_info_t image_info = SkImageInfo_Make(width, height, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kUnpremul_SkAlphaType);
-    SkImageInfo * image_info_ptr = static_sk_image_info_get_ptr(image_info);
+    const reskia_image_info_t *image_info_ptr = get_image_info_ptr(image_info);
 
-    SkBitmap* image_bitmap = SkBitmap_new();
+    reskia_bitmap_t *image_bitmap = SkBitmap_new();
     SkBitmap_allocPixels_withInfo(image_bitmap, image_info_ptr);
-    memcpy(image_bitmap->getPixels(), data, width * height * 4);
+    memcpy(SkBitmap_getPixels(image_bitmap), data, width * height * 4);
     //SkSamplingOptions
     sk_image_t image = SkBitmap_asImage(image_bitmap);
     stbi_image_free(data);
@@ -724,13 +768,13 @@ UTEST(cskia, SkColors_SkPoints) {
 UTEST(cskia, drawPath2) {
     int image_width = 500;
     int image_height = 500;
-    SkBitmap* bitmap = SkBitmap_new();
+    reskia_bitmap_t *bitmap = SkBitmap_new();
     sk_image_info_t imageInfo = SkImageInfo_Make(500, 500, SkColorType::kRGBA_8888_SkColorType, SkAlphaType::kOpaque_SkAlphaType);
-    SkImageInfo * imageInfoPtr = static_sk_image_info_get_ptr(imageInfo);
+    const reskia_image_info_t *imageInfoPtr = get_image_info_ptr(imageInfo);
     SkBitmap_allocPixels_withInfo(bitmap, imageInfoPtr);
-    SkCanvas* canvas = SkCanvas_newFromBitmap(bitmap);
+    reskia_canvas_t *canvas = SkCanvas_newFromBitmap(bitmap);
 
-    SkPath* path = SkPath_new();
+    reskia_path_t *path = SkPath_new();
     //SkPath_moveTo(path, 100, 100);
     //SkPath_quadTo(path, 150, 50, 200, 100); // 二次ベジェ曲線を追加
     //SkPath_cubicTo(path, 250, 150, 300, 50, 350, 100); // 三次ベジェ曲線を追加
@@ -749,17 +793,17 @@ UTEST(cskia, drawPath2) {
     SkPath_arcToTangent(path, 100, 100, 150, 100, 50); // 左上の角を丸める
     SkPath_close(path);
 
-    SkPaint *paint = SkPaint_new();
+    reskia_paint_t *paint = SkPaint_new();
     SkPaint_setAntiAlias(paint, true);
 
     // 塗りつぶし
     SkPaint_setColor(paint,SK_ColorYELLOW);
-    SkPaint_setStyle(paint,SkPaint::kFill_Style);
+    SkPaint_setStyle(paint, kPaintFillStyle);
     SkCanvas_drawPath(canvas, path, paint);
 
     // 線
     SkPaint_setColor(paint, SK_ColorBLACK);
-    SkPaint_setStyle(paint, SkPaint::kStroke_Style);
+    SkPaint_setStyle(paint, kPaintStrokeStyle);
     SkPaint_setStrokeWidth(paint, 4);
     SkCanvas_drawPath(canvas, path, paint);
 

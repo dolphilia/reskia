@@ -4,7 +4,10 @@
 
 #include "sk_dynamic_memory_w_stream.h"
 
+#include "include/core/SkData.h"
 #include "include/core/SkStream.h"
+
+#include <vector>
 
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_stream_asset.h"
@@ -94,6 +97,14 @@ sk_data_t SkDynamicMemoryWStream_detachAsData(reskia_dynamic_memory_w_stream_t *
         return 0;
     }
     return static_sk_data_make(reinterpret_cast<SkDynamicMemoryWStream *>(dynamic_memory_w_stream)->detachAsData());
+}
+
+sk_data_t SkDynamicMemoryWStream_detachAsVector(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream) {
+    if (dynamic_memory_w_stream == nullptr) {
+        return 0;
+    }
+    std::vector<uint8_t> bytes = reinterpret_cast<SkDynamicMemoryWStream *>(dynamic_memory_w_stream)->detachAsVector();
+    return static_sk_data_make(SkData::MakeWithCopy(bytes.data(), bytes.size()));
 }
 
 sk_stream_asset_t SkDynamicMemoryWStream_detachAsStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream) {

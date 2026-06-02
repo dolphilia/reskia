@@ -12,6 +12,9 @@
 #include "include/core/SkStream.h"
 
 #include "include/core/SkGraphics.h"
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+#include "include/ports/SkFontMgr_mac_ct.h"
+#endif
 #include "modules/skshaper/include/SkShaper.h"
 #include "modules/svg/include/SkSVGDOM.h"
 
@@ -28,10 +31,18 @@ bool check(bool condition, const char* message) {
 bool smoke_shape_utf8_bidi_linebreak() {
     const char* text = u8"Hello שלום\nمرحبا 123";
 
-    std::unique_ptr<SkShaper> shaper = SkShaper::Make();
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+    sk_sp<SkFontMgr> font_mgr = SkFontMgr_New_CoreText(nullptr);
+#else
+    sk_sp<SkFontMgr> font_mgr = SkFontMgr::RefEmpty();
+#endif
+    std::unique_ptr<SkShaper> shaper = SkShaper::Make(font_mgr);
     if (!check(shaper != nullptr, "SkShaper::Make")) return false;
 
-    SkFont font(nullptr, 20.0f);
+    sk_sp<SkTypeface> typeface = font_mgr->legacyMakeTypeface(nullptr, SkFontStyle());
+    if (!check(typeface != nullptr, "font_mgr->legacyMakeTypeface")) return false;
+
+    SkFont font(std::move(typeface), 20.0f);
     SkTextBlobBuilderRunHandler handler(text, SkPoint::Make(0.0f, 24.0f));
     shaper->shape(text, std::strlen(text), font, true, 220.0f, &handler);
 
@@ -68,7 +79,11 @@ bool smoke_svg_text_render() {
 
     SkMemoryStream stream(svg, std::strlen(svg), true);
     SkSVGDOM::Builder builder;
-    builder.setFontManager(SkFontMgr::RefDefault());
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+    builder.setFontManager(SkFontMgr_New_CoreText(nullptr));
+#else
+    builder.setFontManager(SkFontMgr::RefEmpty());
+#endif
 
     sk_sp<SkSVGDOM> dom = builder.make(stream);
     if (!check(dom != nullptr, "SkSVGDOM::Builder::make")) return false;

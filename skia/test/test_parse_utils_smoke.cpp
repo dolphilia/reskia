@@ -43,11 +43,6 @@ bool smoke_parse() {
                "SkParse_FindHex")) {
         return false;
     }
-    uint32_t msec = 0;
-    if (!check(SkParse_FindMSec("0.25", &msec) != nullptr && msec == 250,
-               "SkParse_FindMSec")) {
-        return false;
-    }
     int32_t s32 = 0;
     if (!check(SkParse_FindS32("-42", &s32) != nullptr && s32 == -42,
                "SkParse_FindS32")) {

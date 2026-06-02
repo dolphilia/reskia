@@ -152,6 +152,13 @@ sk_image_t SkSurface_makeImageSnapshotWithBounds(reskia_surface_t *surface, cons
     return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeImageSnapshot(* reinterpret_cast<const SkIRect *>(bounds)));
 }
 
+sk_image_t SkSurface_makeTemporaryImage(reskia_surface_t *surface) {
+    if (surface == nullptr) {
+        return 0;
+    }
+    return static_sk_image_make(reinterpret_cast<SkSurface *>(surface)->makeTemporaryImage());
+}
+
 void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint) {
     if (surface == nullptr || canvas == nullptr || sampling == nullptr) {
         return;

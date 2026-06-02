@@ -29,9 +29,13 @@ public:
     typedef SkDOMNode Node;
     typedef SkDOMAttr Attr;
 
-    /** Returns null on failure
-    */
+    /**
+     *  Returns null on failure, and if errorOnLineNumber is present, it is set
+     *  to the line number where the error occurred. On success, returns the
+     *  root node, and, if present, sets errorOnLineNumber to -1 (no error).
+     */
     const Node* build(SkStream&);
+    const Node* build(SkStream&, int* errorOnLineNumber);
     const Node* copy(const SkDOM& dom, const Node* node);
 
     const Node* getRootNode() const;

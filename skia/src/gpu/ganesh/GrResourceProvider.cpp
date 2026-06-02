@@ -11,11 +11,11 @@
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkData.h"
 #include "include/core/SkRect.h"
+#include "include/core/SkSize.h"
 #include "include/gpu/GpuTypes.h"
-#include "include/gpu/GrBackendSurface.h"
-#include "include/gpu/GrTypes.h"
+#include "include/gpu/ganesh/GrBackendSurface.h"
+#include "include/gpu/ganesh/GrTypes.h"
 #include "include/private/base/SingleOwner.h"
-#include "include/private/base/SkMath.h"
 #include "include/private/base/SkTemplates.h"
 #include "src/base/SkMathPriv.h"
 #include "src/core/SkMipmap.h"
@@ -42,8 +42,6 @@
 struct SkImageInfo;
 
 using namespace skia_private;
-
-const int GrResourceProvider::kMinScratchTextureSize = 16;
 
 #define ASSERT_SINGLE_OWNER SKGPU_ASSERT_SINGLE_OWNER(fSingleOwner)
 
@@ -78,7 +76,7 @@ sk_sp<GrTexture> GrResourceProvider::createTexture(SkISize dimensions,
 
     int numMipLevels = 1;
     if (mipmapped == skgpu::Mipmapped::kYes) {
-        numMipLevels = SkMipmap::ComputeLevelCount(dimensions.fWidth, dimensions.fHeight) + 1;
+        numMipLevels = SkMipmap::ComputeLevelCount(dimensions) + 1;
     }
 
     if (!fCaps->validateSurfaceParams(dimensions,
@@ -279,35 +277,6 @@ sk_sp<GrTexture> GrResourceProvider::createTexture(SkISize dimensions,
                                label);
 }
 
-// Map 'value' to a larger multiple of 2. Values <= 'kMagicTol' will pop up to
-// the next power of 2. Those above 'kMagicTol' will only go up half the floor power of 2.
-SkISize GrResourceProvider::MakeApprox(SkISize dimensions) {
-    auto adjust = [](int value) {
-        static const int kMagicTol = 1024;
-
-        value = std::max(kMinScratchTextureSize, value);
-
-        if (SkIsPow2(value)) {
-            return value;
-        }
-
-        int ceilPow2 = SkNextPow2(value);
-        if (value <= kMagicTol) {
-            return ceilPow2;
-        }
-
-        int floorPow2 = ceilPow2 >> 1;
-        int mid = floorPow2 + (floorPow2 >> 1);
-
-        if (value <= mid) {
-            return mid;
-        }
-        return ceilPow2;
-    };
-
-    return {adjust(dimensions.width()), adjust(dimensions.height())};
-}
-
 sk_sp<GrTexture> GrResourceProvider::createApproxTexture(SkISize dimensions,
                                                          const GrBackendFormat& format,
                                                          GrTextureType textureType,
@@ -334,7 +303,7 @@ sk_sp<GrTexture> GrResourceProvider::createApproxTexture(SkISize dimensions,
         return nullptr;
     }
 
-    auto copyDimensions = MakeApprox(dimensions);
+    auto copyDimensions = skgpu::GetApproxSize(dimensions);
 
     if (auto tex = this->findAndRefScratchTexture(copyDimensions,
                                                   format,
@@ -367,7 +336,7 @@ sk_sp<GrTexture> GrResourceProvider::findAndRefScratchTexture(const skgpu::Scrat
     if (GrGpuResource* resource = fCache->findAndRefScratchResource(key)) {
         fGpu->stats()->incNumScratchTexturesReused();
         GrSurface* surface = static_cast<GrSurface*>(resource);
-        resource->setLabel(std::move(label));
+        resource->setLabel(label);
         return sk_sp<GrTexture>(surface->asTexture());
     }
     return nullptr;
@@ -516,7 +485,7 @@ sk_sp<const GrGpuBuffer> GrResourceProvider::findOrMakeStaticBuffer(
     AutoTMalloc<char> stagingBuffer;
     if (!vertexWriter) {
         SkASSERT(!buffer->isMapped());
-        vertexWriter = {stagingBuffer.reset(size), size};
+        vertexWriter = skgpu::VertexWriter{stagingBuffer.reset(size), size};
     }
 
     initializeBufferFn(std::move(vertexWriter), size);
@@ -646,7 +615,7 @@ sk_sp<GrGpuBuffer> GrResourceProvider::createBuffer(size_t size,
     static const size_t MIN_UNIFORM_SIZE = 1 << 7;
     size_t allocSize = intendedType == GrGpuBufferType::kUniform ? std::max(size, MIN_UNIFORM_SIZE)
                                                                  : std::max(size, MIN_SIZE);
-    size_t ceilPow2 = GrNextSizePow2(allocSize);
+    size_t ceilPow2 = SkNextSizePow2(allocSize);
     size_t floorPow2 = ceilPow2 >> 1;
     size_t mid = floorPow2 + (floorPow2 >> 1);
     allocSize = (allocSize <= mid) ? mid : ceilPow2;
@@ -853,7 +822,7 @@ sk_sp<GrAttachment> GrResourceProvider::refScratchMSAAAttachment(SkISize dimensi
     if (resource) {
         fGpu->stats()->incNumScratchMSAAAttachmentsReused();
         GrAttachment* attachment = static_cast<GrAttachment*>(resource);
-        resource->setLabel(std::move(label));
+        resource->setLabel(label);
         return sk_sp<GrAttachment>(attachment);
     }
 

@@ -13,8 +13,12 @@
 #include "handles/static_sk_i_size.h"
 #include "handles/static_sk_image.h"
 #include "handles/static_sk_image_info.h"
+#include "include/private/gpu/ganesh/GrTypesPriv.h"
 
 namespace {
+
+constexpr reskia_gr_color_type_t kRGBA8888GrColorType =
+        static_cast<reskia_gr_color_type_t>(GrColorType::kRGBA_8888);
 
 bool check(bool condition, const char* message) {
     if (!condition) {
@@ -124,7 +128,7 @@ reskia_gr_external_texture_t *external_texture_generate(
     auto *state = static_cast<ExternalTextureState *>(user_data);
     state->generates += 1;
     reskia_gr_backend_texture_t *backend_texture =
-            GrBackendTexture_newMock(1, 1, mipmapped ? 1 : 0, 4, 0, 321 + state->generates, 0);
+            GrBackendTextures_MakeMock(1, 1, mipmapped ? 1 : 0, kRGBA8888GrColorType, 0, 321 + state->generates, 0);
     reskia_gr_external_texture_t *external_texture =
             GrExternalTexture_new(backend_texture, external_texture_dispose, user_data, external_texture_release);
     GrBackendTexture_delete(backend_texture);
@@ -142,16 +146,15 @@ bool smoke_context_create_destroy() {
                GrBackendTexture_getLabel(nullptr) == nullptr &&
                GrBackendRenderTarget_dimensions(nullptr) == 0 &&
                !GrBackendFormat_desc(nullptr, nullptr) &&
-               !GrBackendTexture_getMtlTextureInfo(nullptr, nullptr) &&
-               !GrBackendTexture_getMockTextureInfo(nullptr, nullptr) &&
-               !GrBackendRenderTarget_getMtlTextureInfo(nullptr, nullptr) &&
-               !GrBackendRenderTarget_getMockRenderTargetInfo(nullptr, nullptr) &&
+               !GrBackendTextures_GetMtlTextureInfo(nullptr, nullptr) &&
+               !GrBackendTextures_GetMockTextureInfo(nullptr, nullptr) &&
+               !GrBackendRenderTargets_GetMtlTextureInfo(nullptr, nullptr) &&
+               !GrBackendRenderTargets_GetMockRenderTargetInfo(nullptr, nullptr) &&
                GrBackendSemaphore_newCopy(nullptr) == nullptr &&
                !GrBackendSemaphore_isInitialized(nullptr) &&
                GrBackendSemaphore_backend(nullptr) == 0 &&
-               GrBackendSemaphore_vkSemaphore(nullptr) == 0 &&
-               GrBackendSemaphore_mtlSemaphore(nullptr) == nullptr &&
-               GrBackendSemaphore_mtlValue(nullptr) == 0 &&
+               GrBackendSemaphores_GetMtlHandle(nullptr) == nullptr &&
+               GrBackendSemaphores_GetMtlValue(nullptr) == 0 &&
                GrDriverBugWorkarounds_newWithTypes(nullptr, 0) == nullptr &&
                GrDriverBugWorkarounds_newCopy(nullptr) == nullptr &&
                !GrDriverBugWorkarounds_isEnabled(nullptr, 0) &&
@@ -209,8 +212,8 @@ bool smoke_context_create_destroy() {
     }
 
 #if RESKIA_TEST_GPU_GANESH
-    reskia_gr_backend_format_t *mock_format = GrBackendFormat_MakeMock(4, 0, false);
-    if (!check(mock_format != nullptr && GrBackendFormat_isValid(mock_format), "GrBackendFormat_MakeMock")) {
+    reskia_gr_backend_format_t *mock_format = GrBackendFormats_MakeMockColorType(kRGBA8888GrColorType);
+    if (!check(mock_format != nullptr && GrBackendFormat_isValid(mock_format), "GrBackendFormats_MakeMockColorType")) {
         GrBackendFormat_delete(mock_format);
         return false;
     }
@@ -239,10 +242,10 @@ bool smoke_context_create_destroy() {
                default_mock_texture_info.color_type == 0 &&
                default_mock_texture_info.compression_type == 0 &&
                default_mock_texture_info.id == 0 &&
-               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info) &&
-               GrMockTextureInfo_newWithValues(4, 0, 303, 1, &explicit_mock_texture_info_copy) &&
+               GrMockTextureInfo_newWithValues(kRGBA8888GrColorType, 0, 303, 1, &explicit_mock_texture_info) &&
+               GrMockTextureInfo_newWithValues(kRGBA8888GrColorType, 0, 303, 1, &explicit_mock_texture_info_copy) &&
                GrMockTextureInfo_equals(&explicit_mock_texture_info, &explicit_mock_texture_info_copy) &&
-               GrMockTextureInfo_colorType(&explicit_mock_texture_info) == 4 &&
+               GrMockTextureInfo_colorType(&explicit_mock_texture_info) == kRGBA8888GrColorType &&
                GrMockTextureInfo_compressionType(&explicit_mock_texture_info) == 0 &&
                GrMockTextureInfo_id(&explicit_mock_texture_info) == 303 &&
                GrMockTextureInfo_getProtected(&explicit_mock_texture_info) == 1 &&
@@ -266,10 +269,10 @@ bool smoke_context_create_destroy() {
     if (!check(GrMockRenderTargetInfo_new(&default_mock_render_target_info) &&
                default_mock_render_target_info.color_type == 0 &&
                default_mock_render_target_info.id == 0 &&
-               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info) &&
-               GrMockRenderTargetInfo_newWithValues(4, 404, 1, &explicit_mock_render_target_info_copy) &&
+               GrMockRenderTargetInfo_newWithValues(kRGBA8888GrColorType, 404, 1, &explicit_mock_render_target_info) &&
+               GrMockRenderTargetInfo_newWithValues(kRGBA8888GrColorType, 404, 1, &explicit_mock_render_target_info_copy) &&
                GrMockRenderTargetInfo_equals(&explicit_mock_render_target_info, &explicit_mock_render_target_info_copy) &&
-               GrMockRenderTargetInfo_colorType(&explicit_mock_render_target_info) == 4 &&
+               GrMockRenderTargetInfo_colorType(&explicit_mock_render_target_info) == kRGBA8888GrColorType &&
                GrMockRenderTargetInfo_getProtected(&explicit_mock_render_target_info) == 1 &&
                GrMockRenderTargetInfo_isProtected(&explicit_mock_render_target_info),
                "GrMockRenderTargetInfo value helpers")) {
@@ -338,7 +341,7 @@ bool smoke_context_create_destroy() {
     }
     GrBackendDrawableInfo_delete(drawable_info);
 
-    if (!check(GrBackendFormat_asMtlFormat(mock_format) == 0, "GrBackendFormat_asMtlFormat(mock)")) {
+    if (!check(GrBackendFormats_AsMtlFormat(mock_format) == 0, "GrBackendFormats_AsMtlFormat(mock)")) {
         GrBackendFormat_delete(mock_format);
         return false;
     }
@@ -351,13 +354,13 @@ bool smoke_context_create_destroy() {
     GrBackendFormat_delete(texture2d_format);
     GrBackendFormat_delete(mock_format);
 
-    reskia_gr_backend_texture_t *mock_texture = GrBackendTexture_newMock(8, 4, 1, 4, 0, 101, 0);
+    reskia_gr_backend_texture_t *mock_texture = GrBackendTextures_MakeMock(8, 4, 1, kRGBA8888GrColorType, 0, 101, 0);
     if (!check(mock_texture != nullptr &&
                GrBackendTexture_isValid(mock_texture) &&
                GrBackendTexture_width(mock_texture) == 8 &&
                GrBackendTexture_height(mock_texture) == 4 &&
                GrBackendTexture_hasMipmaps(mock_texture),
-               "GrBackendTexture_newMock")) {
+               "GrBackendTextures_MakeMock")) {
         GrBackendTexture_delete(mock_texture);
         return false;
     }
@@ -387,19 +390,19 @@ bool smoke_context_create_destroy() {
     }
     GrBackendFormat_delete(texture_format);
     reskia_gr_mtl_texture_info_t mtl_texture_info = {reinterpret_cast<void *>(0x1)};
-    if (!check(!GrBackendTexture_getMtlTextureInfo(mock_texture, &mtl_texture_info) &&
+    if (!check(!GrBackendTextures_GetMtlTextureInfo(mock_texture, &mtl_texture_info) &&
                mtl_texture_info.texture == nullptr,
-               "GrBackendTexture_getMtlTextureInfo(mock)")) {
+               "GrBackendTextures_GetMtlTextureInfo(mock)")) {
         GrBackendTexture_delete(mock_texture);
         return false;
     }
     reskia_gr_mock_texture_info_t texture_info = {};
-    if (!check(GrBackendTexture_getMockTextureInfo(mock_texture, &texture_info) &&
-               texture_info.color_type == 4 &&
+    if (!check(GrBackendTextures_GetMockTextureInfo(mock_texture, &texture_info) &&
+               texture_info.color_type == kRGBA8888GrColorType &&
                texture_info.compression_type == 0 &&
                texture_info.id == 101 &&
                texture_info.is_protected == 0,
-               "GrBackendTexture_getMockTextureInfo")) {
+               "GrBackendTextures_GetMockTextureInfo")) {
         GrBackendTexture_delete(mock_texture);
         return false;
     }
@@ -423,14 +426,14 @@ bool smoke_context_create_destroy() {
     MutableTextureState_delete(mutable_state);
     GrBackendTexture_delete(mock_texture);
 
-    reskia_gr_backend_render_target_t *mock_render_target = GrBackendRenderTarget_newMock(16, 12, 1, 8, 4, 202, 0);
+    reskia_gr_backend_render_target_t *mock_render_target = GrBackendRenderTargets_MakeMock(16, 12, 1, 8, kRGBA8888GrColorType, 202, 0);
     if (!check(mock_render_target != nullptr &&
                GrBackendRenderTarget_isValid(mock_render_target) &&
                GrBackendRenderTarget_width(mock_render_target) == 16 &&
                GrBackendRenderTarget_height(mock_render_target) == 12 &&
                GrBackendRenderTarget_sampleCnt(mock_render_target) == 1 &&
                GrBackendRenderTarget_stencilBits(mock_render_target) == 8,
-               "GrBackendRenderTarget_newMock")) {
+               "GrBackendRenderTargets_MakeMock")) {
         GrBackendRenderTarget_delete(mock_render_target);
         return false;
     }
@@ -453,18 +456,18 @@ bool smoke_context_create_destroy() {
     }
     GrBackendFormat_delete(render_target_format);
     reskia_gr_mtl_texture_info_t mtl_render_target_info = {reinterpret_cast<void *>(0x1)};
-    if (!check(!GrBackendRenderTarget_getMtlTextureInfo(mock_render_target, &mtl_render_target_info) &&
+    if (!check(!GrBackendRenderTargets_GetMtlTextureInfo(mock_render_target, &mtl_render_target_info) &&
                mtl_render_target_info.texture == nullptr,
-               "GrBackendRenderTarget_getMtlTextureInfo(mock)")) {
+               "GrBackendRenderTargets_GetMtlTextureInfo(mock)")) {
         GrBackendRenderTarget_delete(mock_render_target);
         return false;
     }
     reskia_gr_mock_render_target_info_t render_target_info = {};
-    if (!check(GrBackendRenderTarget_getMockRenderTargetInfo(mock_render_target, &render_target_info) &&
-               render_target_info.color_type == 4 &&
+    if (!check(GrBackendRenderTargets_GetMockRenderTargetInfo(mock_render_target, &render_target_info) &&
+               render_target_info.color_type == kRGBA8888GrColorType &&
                render_target_info.id == 0 &&
                render_target_info.is_protected == 0,
-               "GrBackendRenderTarget_getMockRenderTargetInfo")) {
+               "GrBackendRenderTargets_GetMockRenderTargetInfo")) {
         GrBackendRenderTarget_delete(mock_render_target);
         return false;
     }
@@ -500,24 +503,28 @@ bool smoke_context_create_destroy() {
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
-    GrBackendSemaphore_initMetal(semaphore, nullptr, 77);
-    if (!check(GrBackendSemaphore_isInitialized(semaphore) &&
-               GrBackendSemaphore_mtlSemaphore(semaphore) == nullptr &&
-               GrBackendSemaphore_mtlValue(semaphore) == 77,
-               "GrBackendSemaphore Metal init/query")) {
+    reskia_gr_backend_semaphore_t *metal_semaphore = GrBackendSemaphores_MakeMtl(nullptr, 77);
+    if (!check(metal_semaphore != nullptr &&
+               GrBackendSemaphore_isInitialized(metal_semaphore) &&
+               GrBackendSemaphores_GetMtlHandle(metal_semaphore) == nullptr &&
+               GrBackendSemaphores_GetMtlValue(metal_semaphore) == 77,
+               "GrBackendSemaphores Metal make/query")) {
+        GrBackendSemaphore_delete(metal_semaphore);
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
-    reskia_gr_backend_semaphore_t *semaphore_copy = GrBackendSemaphore_newCopy(semaphore);
+    reskia_gr_backend_semaphore_t *semaphore_copy = GrBackendSemaphore_newCopy(metal_semaphore);
     if (!check(semaphore_copy != nullptr &&
                GrBackendSemaphore_isInitialized(semaphore_copy) &&
-               GrBackendSemaphore_mtlValue(semaphore_copy) == 77,
+               GrBackendSemaphores_GetMtlValue(semaphore_copy) == 77,
                "GrBackendSemaphore copy")) {
         GrBackendSemaphore_delete(semaphore_copy);
+        GrBackendSemaphore_delete(metal_semaphore);
         GrBackendSemaphore_delete(semaphore);
         return false;
     }
     GrBackendSemaphore_delete(semaphore_copy);
+    GrBackendSemaphore_delete(metal_semaphore);
     GrBackendSemaphore_delete(semaphore);
 
     reskia_gr_driver_bug_workarounds_t *default_workarounds = GrDriverBugWorkarounds_new();
@@ -596,9 +603,9 @@ bool smoke_context_create_destroy() {
         return false;
     }
     reskia_gr_backend_format_t *plane_formats[4] = {
-            GrBackendFormat_MakeMock(1, 0, false),
-            GrBackendFormat_MakeMock(1, 0, false),
-            GrBackendFormat_MakeMock(1, 0, false),
+            GrBackendFormats_MakeMockColorType(1),
+            GrBackendFormats_MakeMockColorType(1),
+            GrBackendFormats_MakeMockColorType(1),
             nullptr,
     };
     reskia_gr_yuva_backend_texture_info_t *yuva_texture_info =
@@ -653,9 +660,9 @@ bool smoke_context_create_destroy() {
     }
 
     reskia_gr_backend_texture_t *plane_textures[4] = {
-            GrBackendTexture_newMock(4, 2, 0, 1, 0, 301, 0),
-            GrBackendTexture_newMock(4, 2, 0, 1, 0, 302, 0),
-            GrBackendTexture_newMock(4, 2, 0, 1, 0, 303, 0),
+            GrBackendTextures_MakeMock(4, 2, 0, 1, 0, 301, 0),
+            GrBackendTextures_MakeMock(4, 2, 0, 1, 0, 302, 0),
+            GrBackendTextures_MakeMock(4, 2, 0, 1, 0, 303, 0),
             nullptr,
     };
     reskia_gr_yuva_backend_textures_t *yuva_textures =
@@ -721,8 +728,7 @@ bool smoke_context_create_destroy() {
                !GrSurfaceCharacterization_isValid(default_characterization) &&
                GrSurfaceCharacterization_width(default_characterization) == 0 &&
                GrSurfaceCharacterization_height(default_characterization) == 0 &&
-               GrSurfaceCharacterization_newCopy(nullptr) == nullptr &&
-               !GrSurfaceCharacterization_isCompatible(default_characterization, nullptr),
+               GrSurfaceCharacterization_newCopy(nullptr) == nullptr,
                "GrSurfaceCharacterization default/null helpers")) {
         GrSurfaceCharacterization_delete(default_characterization);
         return false;
@@ -753,7 +759,10 @@ bool smoke_context_create_destroy() {
     GrDirectContext_flushAndSubmit(nullptr, false);
     GrDirectContext_checkAsyncWorkCompletion(nullptr);
     GrDirectContext_dumpMemoryStatistics(nullptr, nullptr);
+    (void) GrDirectContext_canDetectNewVkPipelineCacheData(nullptr);
+    (void) GrDirectContext_hasNewVkPipelineCacheData(nullptr);
     GrDirectContext_storeVkPipelineCacheData(nullptr);
+    GrDirectContext_storeVkPipelineCacheDataWithMaxSize(nullptr, 0);
     AsyncFailState graphite_async_fail_state = {};
     Graphite_Context_asyncRescaleAndReadPixelsFromImage(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
     Graphite_Context_asyncRescaleAndReadPixelsFromSurface(nullptr, nullptr, nullptr, nullptr, 0, 0, async_fail_callback, &graphite_async_fail_state);
@@ -764,8 +773,7 @@ bool smoke_context_create_destroy() {
     if (!check(graphite_async_fail_state.calls == 6, "Graphite_Context async invalid fail callbacks")) {
         return false;
     }
-    if (GrDirectContext_MakeMetal(nullptr, nullptr) != nullptr ||
-        GrDirectContext_MakeVulkan(nullptr) != nullptr) {
+    if (Reskia_GaneshContext_MakeMetal(nullptr, nullptr) != nullptr) {
         return false;
     }
     GrDirectContext_deleteBackendTexture(nullptr, nullptr);
@@ -783,10 +791,12 @@ bool smoke_context_create_destroy() {
                !GrDirectContext_wait(nullptr, 0, nullptr, false) &&
                GrDirectContext_dump(nullptr) == nullptr &&
                !GrDirectContext_supportsDistanceFieldText(nullptr) &&
+               !GrDirectContext_canDetectNewVkPipelineCacheData(nullptr) &&
+               !GrDirectContext_hasNewVkPipelineCacheData(nullptr) &&
                GrDirectContext_createBackendTexture(nullptr, 1, 1, nullptr, false, false, false, nullptr, 0) == nullptr &&
-               GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, 4, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorType(nullptr, 1, 1, kRGBA8888GrColorType, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureWithColor(nullptr, 1, 1, nullptr, nullptr, false, false, false, nullptr, 0) == nullptr &&
-               GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, 4, nullptr, false, false, false, nullptr, 0) == nullptr &&
+               GrDirectContext_createBackendTextureWithColorTypeColor(nullptr, 1, 1, kRGBA8888GrColorType, nullptr, false, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmaps(nullptr, nullptr, 1, 0, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmap(nullptr, nullptr, 0, false, false, nullptr, 0) == nullptr &&
                GrDirectContext_createBackendTextureFromPixmapsTopLeft(nullptr, nullptr, 1, false, false, nullptr, 0) == nullptr &&
@@ -812,7 +822,10 @@ bool smoke_context_create_destroy() {
                !Graphite_Context_submit(nullptr, false) &&
                !Graphite_Context_insertRecording(nullptr, nullptr) &&
                Graphite_Context_currentBudgetedBytes(nullptr) == 0 &&
+               Graphite_Context_maxBudgetedBytes(nullptr) == 0 &&
                !Graphite_Context_supportsProtectedContent(nullptr) &&
+               !Graphite_Context_isDeviceLost(nullptr) &&
+               Graphite_Context_maxTextureSize(nullptr) == 0 &&
                Graphite_Context_contextID(nullptr) == nullptr &&
                !Graphite_ContextID_isValid(nullptr) &&
                !Graphite_ContextID_equals(nullptr, nullptr) &&
@@ -834,17 +847,19 @@ bool smoke_context_create_destroy() {
                Graphite_Recorder_makeDeferredCanvas(nullptr, nullptr, nullptr) == nullptr &&
                Graphite_Recorder_snap(nullptr) == nullptr &&
                Graphite_Recorder_currentBudgetedBytes(nullptr) == 0 &&
+               Graphite_Recorder_maxBudgetedBytes(nullptr) == 0 &&
                Graphite_Recorder_createBackendTexture(nullptr, 0, nullptr) == nullptr &&
                !Graphite_Recorder_updateBackendTexture(nullptr, nullptr, nullptr, 0) &&
+               !Graphite_Recorder_updateCompressedBackendTexture(nullptr, nullptr, nullptr, 0) &&
                Graphite_TextureInfo_newCopy(nullptr) == nullptr &&
                !Graphite_TextureInfo_equals(nullptr, nullptr) &&
                !Graphite_TextureInfo_isValid(nullptr) &&
                Graphite_TextureInfo_backend(nullptr) == 0 &&
-               Graphite_TextureInfo_numSamples(nullptr) == 0 &&
+               Graphite_TextureInfo_sampleCount(nullptr) == 0 &&
                !Graphite_TextureInfo_mipmapped(nullptr) &&
                !Graphite_TextureInfo_isProtected(nullptr) &&
                !Graphite_TextureInfo_getMtlTextureInfo(nullptr, nullptr) &&
-               !Graphite_TextureInfo_isCompatible(nullptr, nullptr) &&
+               !Graphite_TextureInfo_canBeFulfilledBy(nullptr, nullptr) &&
                Graphite_TextureInfo_toString(nullptr) == nullptr &&
                !Graphite_MtlTextureInfo_new(nullptr) &&
                !Graphite_MtlTextureInfo_newTexture(nullptr, nullptr) &&
@@ -934,7 +949,7 @@ bool smoke_context_create_destroy() {
 
     ExternalTextureState external_state = {};
     reskia_gr_backend_texture_t *backend_texture =
-            GrBackendTexture_newMock(1, 1, 0, 4, 0, 123, 0);
+            GrBackendTextures_MakeMock(1, 1, 0, kRGBA8888GrColorType, 0, 123, 0);
     reskia_gr_external_texture_t *external_texture =
             GrExternalTexture_new(backend_texture, external_texture_dispose, &external_state, external_texture_release);
     reskia_gr_backend_texture_t *external_backend_copy =
@@ -1014,11 +1029,13 @@ bool smoke_context_create_destroy() {
         size_t resource_bytes = 0;
         if (!check(!GrDirectContext_abandoned(direct_context), "GrDirectContext_abandoned(valid initial)") ||
             !check(!GrDirectContext_isDeviceLost(direct_context), "GrDirectContext_isDeviceLost(valid initial)") ||
+            !check(GrDirectContext_hasNewVkPipelineCacheData(direct_context), "GrDirectContext_hasNewVkPipelineCacheData(valid)") ||
             !check(GrDirectContext_getResourceCacheLimits(direct_context, &max_resources, &max_resource_bytes), "GrDirectContext_getResourceCacheLimits(valid)") ||
             !check(GrDirectContext_getResourceCacheUsage(direct_context, &resource_count, &resource_bytes), "GrDirectContext_getResourceCacheUsage(valid)")) {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
+        GrDirectContext_storeVkPipelineCacheDataWithMaxSize(direct_context, 0);
         reskia_gr_direct_context_id_t *context_id = GrDirectContext_directContextID(direct_context);
         if (!check(context_id != nullptr && GrDirectContextID_isValid(context_id), "GrDirectContext_directContextID(valid)")) {
             GrDirectContextID_delete(context_id);
@@ -1055,7 +1072,7 @@ bool smoke_context_create_destroy() {
             Reskia_DirectContext_Release(direct_context);
             return false;
         }
-        reskia_gr_backend_format_t *proxy_format = GrContextThreadSafeProxy_defaultBackendFormat(proxy, 4, true);
+        reskia_gr_backend_format_t *proxy_format = GrContextThreadSafeProxy_defaultBackendFormat(proxy, kRGBA8888GrColorType, true);
         if (!check(proxy_format != nullptr, "GrContextThreadSafeProxy_defaultBackendFormat(valid)")) {
             GrBackendFormat_delete(proxy_format);
             GrContextThreadSafeProxy_release(proxy);
@@ -1103,6 +1120,11 @@ bool smoke_context_create_destroy() {
         }
         if (!check(Graphite_Context_backend(graphite_context) == RESKIA_GPU_BACKEND_API_METAL,
                    "Graphite_Context_backend")) {
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+        if (!check(!Graphite_Context_isDeviceLost(graphite_context),
+                   "Graphite_Context_isDeviceLost")) {
             Reskia_GraphiteContext_Release(graphite_context);
             return false;
         }
@@ -1247,7 +1269,7 @@ bool smoke_context_create_destroy() {
         if (!check(default_texture_info != nullptr &&
                    !Graphite_TextureInfo_isValid(default_texture_info) &&
                    Graphite_TextureInfo_backend(default_texture_info) == 0 &&
-                   Graphite_TextureInfo_numSamples(default_texture_info) == 0 &&
+                   Graphite_TextureInfo_sampleCount(default_texture_info) == 0 &&
                    !Graphite_TextureInfo_mipmapped(default_texture_info) &&
                    !Graphite_TextureInfo_isProtected(default_texture_info) &&
                    texture_info_string != nullptr,
@@ -1265,7 +1287,7 @@ bool smoke_context_create_destroy() {
         if (!check(copied_texture_info != nullptr &&
                    Graphite_TextureInfo_equals(default_texture_info, copied_texture_info) &&
                    !Graphite_TextureInfo_notEquals(default_texture_info, copied_texture_info) &&
-                   Graphite_TextureInfo_isCompatible(default_texture_info, copied_texture_info),
+                   Graphite_TextureInfo_canBeFulfilledBy(default_texture_info, copied_texture_info),
                    "Graphite_TextureInfo copy")) {
             Graphite_TextureInfo_delete(copied_texture_info);
             Graphite_TextureInfo_delete(default_texture_info);

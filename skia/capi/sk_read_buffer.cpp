@@ -335,7 +335,9 @@ void SkReadBuffer_readPath(reskia_read_buffer_t *buffer, reskia_path_t *path) {
     if (readBuffer == nullptr || path == nullptr) {
         return;
     }
-    return readBuffer->readPath(reinterpret_cast<SkPath *>(path));
+    if (std::optional<SkPath> value = readBuffer->readPath()) {
+        *reinterpret_cast<SkPath *>(path) = *value;
+    }
 }
 
 sk_paint_t SkReadBuffer_readPaint(reskia_read_buffer_t *buffer) {
@@ -432,7 +434,7 @@ bool SkReadBuffer_readColorArray(reskia_read_buffer_t *buffer, uint32_t *colors,
     if (readBuffer == nullptr || !has_output(colors, size)) {
         return false;
     }
-    return readBuffer->readColorArray(reinterpret_cast<SkColor *>(colors), size);
+    return readBuffer->readColorArray({reinterpret_cast<SkColor *>(colors), size});
 }
 
 bool SkReadBuffer_readColor4fArray(reskia_read_buffer_t *buffer, reskia_color_4f_t *colors, size_t size) {
@@ -440,7 +442,7 @@ bool SkReadBuffer_readColor4fArray(reskia_read_buffer_t *buffer, reskia_color_4f
     if (readBuffer == nullptr || !has_output(colors, size)) {
         return false;
     }
-    return readBuffer->readColor4fArray(reinterpret_cast<SkColor4f *>(colors), size);
+    return readBuffer->readColor4fArray({reinterpret_cast<SkColor4f *>(colors), size});
 }
 
 bool SkReadBuffer_readIntArray(reskia_read_buffer_t *buffer, int32_t *values, size_t size) {
@@ -448,7 +450,7 @@ bool SkReadBuffer_readIntArray(reskia_read_buffer_t *buffer, int32_t *values, si
     if (readBuffer == nullptr || !has_output(values, size)) {
         return false;
     }
-    return readBuffer->readIntArray(reinterpret_cast<int32_t *>(values), size);
+    return readBuffer->readIntArray({reinterpret_cast<int32_t *>(values), size});
 }
 
 bool SkReadBuffer_readPointArray(reskia_read_buffer_t *buffer, reskia_point_t *points, size_t size) {
@@ -456,7 +458,7 @@ bool SkReadBuffer_readPointArray(reskia_read_buffer_t *buffer, reskia_point_t *p
     if (readBuffer == nullptr || !has_output(points, size)) {
         return false;
     }
-    return readBuffer->readPointArray(reinterpret_cast<SkPoint *>(points), size);
+    return readBuffer->readPointArray({reinterpret_cast<SkPoint *>(points), size});
 }
 
 bool SkReadBuffer_readScalarArray(reskia_read_buffer_t *buffer, float *values, size_t size) {
@@ -464,7 +466,7 @@ bool SkReadBuffer_readScalarArray(reskia_read_buffer_t *buffer, float *values, s
     if (readBuffer == nullptr || !has_output(values, size)) {
         return false;
     }
-    return readBuffer->readScalarArray(reinterpret_cast<SkScalar *>(values), size);
+    return readBuffer->readScalarArray({reinterpret_cast<SkScalar *>(values), size});
 }
 
 const void* SkReadBuffer_skipByteArray(reskia_read_buffer_t *buffer, size_t *size) {

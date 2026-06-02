@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google Inc.
+ * Copyright 2022 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -24,14 +24,18 @@ class MtlComputeCommandEncoder : public Resource {
 public:
     static sk_sp<MtlComputeCommandEncoder> Make(const SharedContext* sharedContext,
                                                 id<MTLCommandBuffer> commandBuffer) {
-        // Adding a retain here to keep our own ref separate from the autorelease pool
-        sk_cfp<id<MTLComputeCommandEncoder>> encoder =
-                sk_ret_cfp([commandBuffer computeCommandEncoder]);
+        // Inserting a pool here so the autorelease occurs when we return and the
+        // only remaining ref is the retain below.
+        @autoreleasepool {
+            // Adding a retain here to keep our own ref separate from the autorelease pool
+            sk_cfp<id<MTLComputeCommandEncoder>> encoder =
+                    sk_ret_cfp([commandBuffer computeCommandEncoder]);
 
-        // TODO(armansito): Support concurrent dispatch of compute passes using
-        // MTLDispatchTypeConcurrent on macOS 10.14+ and iOS 12.0+.
-        return sk_sp<MtlComputeCommandEncoder>(
-                new MtlComputeCommandEncoder(sharedContext, std::move(encoder)));
+            // TODO(armansito): Support concurrent dispatch of compute passes using
+            // MTLDispatchTypeConcurrent on macOS 10.14+ and iOS 12.0+.
+            return sk_sp<MtlComputeCommandEncoder>(
+                    new MtlComputeCommandEncoder(sharedContext, std::move(encoder)));
+        }
     }
 
     const char* getResourceType() const override { return "Metal Compute Command Encoder"; }
@@ -52,21 +56,17 @@ public:
     void setBuffer(id<MTLBuffer> buffer, NSUInteger offset, NSUInteger index) {
         SkASSERT(buffer != nil);
         SkASSERT(index < kMaxExpectedBuffers);
-        if (@available(macOS 10.11, iOS 8.3, tvOS 9.0, *)) {
-            if (fBuffers[index] == buffer) {
-                this->setBufferOffset(offset, index);
-                return;
-            }
+        if (fBuffers[index] == buffer) {
+            this->setBufferOffset(offset, index);
+            return;
         }
-        if (fBuffers[index] != buffer || fBufferOffsets[index] != offset) {
-            [(*fCommandEncoder) setBuffer:buffer offset:offset atIndex:index];
-            fBuffers[index] = buffer;
-            fBufferOffsets[index] = offset;
-        }
+
+        [(*fCommandEncoder) setBuffer:buffer offset:offset atIndex:index];
+        fBuffers[index] = buffer;
+        fBufferOffsets[index] = offset;
     }
 
-    void setBufferOffset(NSUInteger offset, NSUInteger index)
-            SK_API_AVAILABLE(macos(10.11), ios(8.3), tvos(9.0)) {
+    void setBufferOffset(NSUInteger offset, NSUInteger index) {
         SkASSERT(index < kMaxExpectedBuffers);
         if (fBufferOffsets[index] != offset) {
             [(*fCommandEncoder) setBufferOffset:offset atIndex:index];
@@ -105,6 +105,16 @@ public:
                            threadsPerThreadgroup:threadsPerThreadgroup];
     }
 
+    void dispatchThreadgroupsWithIndirectBuffer(id<MTLBuffer> indirectBuffer,
+                                                NSUInteger offset,
+                                                const WorkgroupSize& localSize) {
+        MTLSize threadsPerThreadgroup =
+                MTLSizeMake(localSize.fWidth, localSize.fHeight, localSize.fDepth);
+        [(*fCommandEncoder) dispatchThreadgroupsWithIndirectBuffer:indirectBuffer
+                                              indirectBufferOffset:offset
+                                             threadsPerThreadgroup:threadsPerThreadgroup];
+    }
+
     void endEncoding() { [(*fCommandEncoder) endEncoding]; }
 
 private:
@@ -115,9 +125,7 @@ private:
                              sk_cfp<id<MTLComputeCommandEncoder>> encoder)
             : Resource(sharedContext,
                        Ownership::kOwned,
-                       skgpu::Budgeted::kYes,
-                       /*gpuMemorySize=*/0,
-                       /*label=*/"MtlComputeCommandEncoder")
+                       /*gpuMemorySize=*/0)
             , fCommandEncoder(std::move(encoder)) {
         for (int i = 0; i < kMaxExpectedBuffers; i++) {
             fBuffers[i] = nil;

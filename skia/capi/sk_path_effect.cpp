@@ -4,7 +4,9 @@
 
 #include "sk_path_effect.h"
 
+#include "include/core/SkMatrix.h"
 #include "include/core/SkPathEffect.h"
+#include "include/core/SkPathBuilder.h"
 
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_path_effect.h"
@@ -50,34 +52,38 @@ void SkPathEffect_release(reskia_path_effect_t *pathEffect) {
     reinterpret_cast<SkPathEffect *>(pathEffect)->unref();
 }
 
-int SkPathEffect_asADash(reskia_path_effect_t *path_effect, reskia_path_effect_dash_info_t *info) {
-    if (path_effect == nullptr) {
-        return 0;
-    }
-    return reinterpret_cast<SkPathEffect *>(path_effect)->asADash(reinterpret_cast<SkPathEffect::DashInfo *>(info));
-}
-
 bool SkPathEffect_filterPath(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR) {
     if (path_effect == nullptr || dst == nullptr || src == nullptr || rec == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkPathEffect *>(path_effect)->filterPath(
-        reinterpret_cast<SkPath *>(dst),
+    SkPathBuilder builder;
+    if (!reinterpret_cast<SkPathEffect *>(path_effect)->filterPath(
+        &builder,
         *reinterpret_cast<const SkPath *>(src),
         reinterpret_cast<SkStrokeRec *>(rec),
-        reinterpret_cast<const SkRect *>(cullR));
+        reinterpret_cast<const SkRect *>(cullR),
+        SkMatrix::I())) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(dst) = builder.detach();
+    return true;
 }
 
 bool SkPathEffect_filterPathWithCTM(reskia_path_effect_t *path_effect, reskia_path_t *dst, const reskia_path_t *src, reskia_stroke_rec_t *rec, const reskia_rect_t *cullR, const reskia_matrix_t *ctm) {
     if (path_effect == nullptr || dst == nullptr || src == nullptr || rec == nullptr || ctm == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkPathEffect *>(path_effect)->filterPath(
-        reinterpret_cast<SkPath *>(dst),
+    SkPathBuilder builder;
+    if (!reinterpret_cast<SkPathEffect *>(path_effect)->filterPath(
+        &builder,
         *reinterpret_cast<const SkPath *>(src),
         reinterpret_cast<SkStrokeRec *>(rec),
         reinterpret_cast<const SkRect *>(cullR),
-        *reinterpret_cast<const SkMatrix *>(ctm));
+        *reinterpret_cast<const SkMatrix *>(ctm))) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(dst) = builder.detach();
+    return true;
 }
 
 bool SkPathEffect_needsCTM(reskia_path_effect_t *path_effect) {

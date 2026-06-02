@@ -4,9 +4,12 @@
 
 #include "sk_path_builder.h"
 
+#include "include/core/SkMatrix.h"
 #include "include/core/SkPathBuilder.h"
+#include "src/core/SkPathRaw.h"
 
 #include <initializer_list>
+#include <optional>
 
 #include "../handles/static_sk_path.h"
 #include "../handles/static_sk_point.h"
@@ -75,6 +78,18 @@ void SkPathBuilder_delete(reskia_path_builder_t *path_builder) {
     delete as_builder(path_builder);
 }
 
+bool SkPathBuilder_equals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    const SkPathBuilder *other_native = as_builder(other);
+    return native != nullptr && other_native != nullptr && *native == *other_native;
+}
+
+bool SkPathBuilder_notEquals(const reskia_path_builder_t *path_builder, const reskia_path_builder_t *other) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    const SkPathBuilder *other_native = as_builder(other);
+    return native != nullptr && other_native != nullptr && *native != *other_native;
+}
+
 reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? static_cast<reskia_path_builder_fill_type_t>(native->fillType()) : 0;
@@ -83,6 +98,23 @@ reskia_path_builder_fill_type_t SkPathBuilder_fillType(reskia_path_builder_t *pa
 sk_rect_t SkPathBuilder_computeBounds(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? static_sk_rect_make(native->computeBounds()) : 0;
+}
+
+bool SkPathBuilder_computeFiniteBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr || out_bounds == nullptr) {
+        return false;
+    }
+    std::optional<SkRect> bounds = native->computeFiniteBounds();
+    if (!bounds.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkRect *>(out_bounds) = *bounds;
+    return true;
+}
+
+bool SkPathBuilder_computeTightBounds(reskia_path_builder_t *path_builder, reskia_rect_t *out_bounds) {
+    return SkPathBuilder_computeFiniteBounds(path_builder, out_bounds);
 }
 
 sk_path_t SkPathBuilder_snapshot(reskia_path_builder_t *path_builder) {
@@ -128,6 +160,18 @@ reskia_path_builder_t *SkPathBuilder_lineTo(reskia_path_builder_t *path_builder,
 reskia_path_builder_t *SkPathBuilder_lineToPoint(reskia_path_builder_t *path_builder, float x, float y) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->lineTo(x, y)) : nullptr;
+}
+
+reskia_path_builder_t *SkPathBuilder_addLine(reskia_path_builder_t *path_builder, sk_point_t a, sk_point_t b) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr
+        ? to_api(&native->addLine(static_sk_point_get_entity(a), static_sk_point_get_entity(b)))
+        : nullptr;
+}
+
+reskia_path_builder_t *SkPathBuilder_addLinePoints(reskia_path_builder_t *path_builder, float ax, float ay, float bx, float by) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? to_api(&native->addLine(SkPoint::Make(ax, ay), SkPoint::Make(bx, by))) : nullptr;
 }
 
 reskia_path_builder_t *SkPathBuilder_quadTo(reskia_path_builder_t *path_builder, sk_point_t pt1, sk_point_t pt2) {
@@ -188,7 +232,8 @@ reskia_path_builder_t *SkPathBuilder_polylineTo(reskia_path_builder_t *path_buil
     if (pts == nullptr || count <= 0) {
         return to_api(native);
     }
-    return to_api(&native->polylineTo(reinterpret_cast<const SkPoint *>(pts), count));
+    return to_api(&native->polylineTo(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)}));
 }
 
 reskia_path_builder_t *SkPathBuilder_polylineToFromList(reskia_path_builder_t *path_builder, const void *list) {
@@ -240,6 +285,43 @@ reskia_path_builder_t *SkPathBuilder_rCubicTo(reskia_path_builder_t *path_builde
 reskia_path_builder_t *SkPathBuilder_rCubicToCoordinates(reskia_path_builder_t *path_builder, float x1, float y1, float x2, float y2, float x3, float y3) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->rCubicTo(x1, y1, x2, y2, x3, y3)) : nullptr;
+}
+
+reskia_path_builder_t *SkPathBuilder_rArcTo(reskia_path_builder_t *path_builder, float rx, float ry, float xAxisRotate, int largeArc, int sweep, float dx, float dy) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr
+        ? to_api(&native->rArcTo(
+            SkPoint::Make(rx, ry),
+            xAxisRotate,
+            static_cast<SkPathBuilder::ArcSize>(largeArc),
+            static_cast<SkPathDirection>(sweep),
+            SkPoint::Make(dx, dy)))
+        : nullptr;
+}
+
+reskia_path_builder_t *SkPathBuilder_rMoveTo(reskia_path_builder_t *path_builder, sk_point_t pt) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? to_api(&native->rMoveTo(static_sk_point_get_entity(pt))) : nullptr;
+}
+
+void SkPathBuilder_setPoint(reskia_path_builder_t *path_builder, size_t index, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr || index >= static_cast<size_t>(native->countPoints())) {
+        return;
+    }
+    native->setPoint(index, static_sk_point_get_entity(point));
+}
+
+void SkPathBuilder_setLastPoint(reskia_path_builder_t *path_builder, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr && native->countPoints() > 0) {
+        native->setLastPoint(static_sk_point_get_entity(point));
+    }
+}
+
+bool SkPathBuilder_contains(reskia_path_builder_t *path_builder, sk_point_t point) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr && native->contains(static_sk_point_get_entity(point));
 }
 
 reskia_path_builder_t *SkPathBuilder_arcTo(reskia_path_builder_t *path_builder, const reskia_rect_t *oval, float startAngleDeg, float sweepAngleDeg, bool forceMoveTo) {
@@ -313,7 +395,9 @@ reskia_path_builder_t *SkPathBuilder_addPolygon(reskia_path_builder_t *path_buil
     if (pts == nullptr || count <= 0) {
         return to_api(native);
     }
-    return to_api(&native->addPolygon(reinterpret_cast<const SkPoint *>(pts), count, isClosed));
+    return to_api(&native->addPolygon(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)},
+            isClosed));
 }
 
 reskia_path_builder_t *SkPathBuilder_addPolygonFromList(reskia_path_builder_t *path_builder, const void *list, bool isClosed) {
@@ -333,10 +417,35 @@ reskia_path_builder_t *SkPathBuilder_addPath(reskia_path_builder_t *path_builder
     return native != nullptr && native_path != nullptr ? to_api(&native->addPath(*native_path)) : return_self_or_null(native);
 }
 
+reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder, const reskia_point_t *points, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return nullptr;
+    }
+    if (pointCount < 0 || verbCount < 0 || conicWeightCount < 0 ||
+        (pointCount > 0 && points == nullptr) ||
+        (verbCount > 0 && verbs == nullptr) ||
+        (conicWeightCount > 0 && conicWeights == nullptr)) {
+        return to_api(native);
+    }
+    SkPathRaw raw{
+            {reinterpret_cast<const SkPoint *>(points), static_cast<size_t>(pointCount)},
+            {reinterpret_cast<const SkPathVerb *>(verbs), static_cast<size_t>(verbCount)},
+            {reinterpret_cast<const SkScalar *>(conicWeights), static_cast<size_t>(conicWeightCount)}};
+    return to_api(&native->addRaw(raw, SkPathBuilder::Reserve::kGrow));
+}
+
 void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount) {
     SkPathBuilder *native = as_builder(path_builder);
     if (native != nullptr) {
-        native->incReserve(extraPtCount, extraVerbCount);
+        native->incReserve(extraPtCount, extraVerbCount, 0);
+    }
+}
+
+void SkPathBuilder_incReserveWithConics(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount, int extraConicCount) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr) {
+        native->incReserve(extraPtCount, extraVerbCount, extraConicCount);
     }
 }
 
@@ -352,9 +461,102 @@ reskia_path_builder_t *SkPathBuilder_offset(reskia_path_builder_t *path_builder,
     return native != nullptr ? to_api(&native->offset(dx, dy)) : nullptr;
 }
 
+reskia_path_builder_t *SkPathBuilder_transform(reskia_path_builder_t *path_builder, const reskia_matrix_t *matrix, int pc) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return nullptr;
+    }
+    if (matrix == nullptr) {
+        return to_api(native);
+    }
+    (void) pc;
+    return to_api(&native->transform(*reinterpret_cast<const SkMatrix *>(matrix)));
+}
+
 reskia_path_builder_t *SkPathBuilder_toggleInverseFillType(reskia_path_builder_t *path_builder) {
     SkPathBuilder *native = as_builder(path_builder);
     return native != nullptr ? to_api(&native->toggleInverseFillType()) : nullptr;
+}
+
+bool SkPathBuilder_isEmpty(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native == nullptr || native->isEmpty();
+}
+
+bool SkPathBuilder_isFinite(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native == nullptr || native->isFinite();
+}
+
+sk_point_t SkPathBuilder_getLastPt(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        return 0;
+    }
+    std::optional<SkPoint> point = native->getLastPt();
+    return point.has_value() ? static_sk_point_make(*point) : 0;
+}
+
+void SkPathBuilder_setLastPt(reskia_path_builder_t *path_builder, float x, float y) {
+    SkPathBuilder *native = as_builder(path_builder);
+    if (native != nullptr) {
+        native->setLastPt(x, y);
+    }
+}
+
+int SkPathBuilder_countPoints(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr ? native->countPoints() : 0;
+}
+
+bool SkPathBuilder_isInverseFillType(reskia_path_builder_t *path_builder) {
+    SkPathBuilder *native = as_builder(path_builder);
+    return native != nullptr && native->isInverseFillType();
+}
+
+const reskia_point_t *SkPathBuilder_points(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const SkPoint> points = native->points();
+    if (count != nullptr) {
+        *count = points.size();
+    }
+    return reinterpret_cast<const reskia_point_t *>(points.data());
+}
+
+const uint8_t *SkPathBuilder_verbs(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const SkPathVerb> verbs = native->verbs();
+    if (count != nullptr) {
+        *count = verbs.size();
+    }
+    return reinterpret_cast<const uint8_t *>(verbs.data());
+}
+
+const float *SkPathBuilder_conicWeights(const reskia_path_builder_t *path_builder, size_t *count) {
+    const SkPathBuilder *native = as_builder(path_builder);
+    if (native == nullptr) {
+        if (count != nullptr) {
+            *count = 0;
+        }
+        return nullptr;
+    }
+    SkSpan<const float> weights = native->conicWeights();
+    if (count != nullptr) {
+        *count = weights.size();
+    }
+    return weights.data();
 }
 
 }

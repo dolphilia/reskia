@@ -25,6 +25,7 @@ bool SkTraceMemoryDump_shouldDumpWrappedObjects(reskia_trace_memory_dump_t *trac
 void SkTraceMemoryDump_dumpWrappedState(reskia_trace_memory_dump_t *trace_memory_dump, const char *str, bool b); // trace_memory_dump and str are required; invalid input is no-op.
 bool SkTraceMemoryDump_shouldDumpUnbudgetedObjects(reskia_trace_memory_dump_t *trace_memory_dump); // NULL trace_memory_dump returns false.
 void SkTraceMemoryDump_dumpBudgetedState(reskia_trace_memory_dump_t *trace_memory_dump, const char *str, bool b); // trace_memory_dump and str are required; invalid input is no-op.
+bool SkTraceMemoryDump_shouldDumpSizelessObjects(reskia_trace_memory_dump_t *trace_memory_dump); // NULL trace_memory_dump returns false.
 
 #ifdef __cplusplus
 }

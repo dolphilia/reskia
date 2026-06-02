@@ -16,11 +16,11 @@
 #include "src/core/SkBlendModePriv.h"
 #include "src/core/SkBlenderBase.h"
 #include "src/core/SkEffectPriv.h"
+#include "src/core/SkKnownRuntimeEffects.h"
 #include "src/core/SkRasterPipeline.h"
 #include "src/core/SkRasterPipelineOpContexts.h"
 #include "src/core/SkRasterPipelineOpList.h"
 #include "src/core/SkReadBuffer.h"
-#include "src/core/SkRuntimeEffectPriv.h"
 #include "src/core/SkWriteBuffer.h"
 #include "src/shaders/SkShaderBase.h"
 
@@ -48,6 +48,25 @@ sk_sp<SkFlattenable> SkBlendShader::CreateProc(SkReadBuffer& buffer) {
     return nullptr;
 }
 
+bool SkBlendShader::isOpaque() const {
+    SkBlendModeCoeff srcCoeff, dstCoeff;
+    if (!SkBlendMode_AsCoeff(fMode, &srcCoeff, &dstCoeff)) {
+        return false; // pessimistic
+    }
+    // The result of the blend is opaque if the sum of "srcCoeff*src + dstCoeff*dst"'s alpha is 1.
+    // This is definitely the case if either term of the addition will always be 1.
+    const bool srcIsOpaque = fSrc->isOpaque();
+    const bool dstIsOpaque = fDst->isOpaque();
+    auto coeffIsOpaque = [&](SkBlendModeCoeff coeff) {
+        bool srcAlpha = coeff == SkBlendModeCoeff::kSA || coeff == SkBlendModeCoeff::kSC;
+        bool dstAlpha = coeff == SkBlendModeCoeff::kDA || coeff == SkBlendModeCoeff::kDC;
+        return coeff == SkBlendModeCoeff::kOne ||
+               (srcAlpha && srcIsOpaque) ||
+               (dstAlpha && dstIsOpaque);
+    };
+    return (srcIsOpaque && coeffIsOpaque(srcCoeff)) || (dstIsOpaque && coeffIsOpaque(dstCoeff));
+}
+
 void SkBlendShader::flatten(SkWriteBuffer& buffer) const {
     buffer.writeFlattenable(fDst.get());
     buffer.writeFlattenable(fSrc.get());
@@ -60,8 +79,8 @@ static float* append_two_shaders(const SkStageRec& rec,
                                  SkShader* s0,
                                  SkShader* s1) {
     struct Storage {
-        float fCoords[2 * SkRasterPipeline_kMaxStride];
-        float fRes0[4 * SkRasterPipeline_kMaxStride];
+        float fCoords[2 * SkRasterPipelineContexts::kMaxStride];
+        float fRes0[4 * SkRasterPipelineContexts::kMaxStride];
     };
     auto storage = rec.fAlloc->make<Storage>();
 
@@ -117,6 +136,8 @@ sk_sp<SkShader> SkShaders::Blend(SkBlendMode mode, sk_sp<SkShader> dst, sk_sp<Sk
 sk_sp<SkShader> SkShaders::Blend(sk_sp<SkBlender> blender,
                                  sk_sp<SkShader> dst,
                                  sk_sp<SkShader> src) {
+    using namespace SkKnownRuntimeEffects;
+
     if (!src || !dst) {
         return nullptr;
     }
@@ -124,19 +145,14 @@ sk_sp<SkShader> SkShaders::Blend(sk_sp<SkBlender> blender,
         return SkShaders::Blend(SkBlendMode::kSrcOver, std::move(dst), std::move(src));
     }
     if (std::optional<SkBlendMode> mode = as_BB(blender)->asBlendMode()) {
-        return sk_make_sp<SkBlendShader>(mode.value(), std::move(dst), std::move(src));
+        return SkShaders::Blend(*mode, std::move(dst), std::move(src));
     }
 
     // This isn't a built-in blend mode; we might as well use a runtime effect to evaluate it.
-    static SkRuntimeEffect* sBlendEffect = SkMakeRuntimeEffect(SkRuntimeEffect::MakeForShader,
-        "uniform shader s, d;"
-        "uniform blender b;"
-        "half4 main(float2 xy) {"
-            "return b.eval(s.eval(xy), d.eval(xy));"
-        "}"
-    );
+    const SkRuntimeEffect* blendEffect = GetKnownRuntimeEffect(StableKey::kBlend);
+
     SkRuntimeEffect::ChildPtr children[] = {std::move(src), std::move(dst), std::move(blender)};
-    return sBlendEffect->makeShader(/*uniforms=*/{}, children);
+    return blendEffect->makeShader(/*uniforms=*/{}, children);
 }
 
 void SkRegisterBlendShaderFlattenable() {

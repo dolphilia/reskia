@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -36,19 +36,36 @@ public:
         return result;
     }
 
-    /**
-     *  Return a + b, unless this result is an overflow/underflow. In those cases, fOK will
-     *  be set to false, and it is undefined what this returns.
-     */
     int addInt(int a, int b) {
-        if (b < 0 && a < std::numeric_limits<int>::min() - b) {
+        int64_t result = static_cast<int64_t>(a) + static_cast<int64_t>(b);
+        if (!SkTFitsIn<int>(result)) {
             fOK = false;
-            return a;
-        } else if (b > 0 && a > std::numeric_limits<int>::max() - b) {
+        }
+        return static_cast<int>(result);
+    }
+
+    int subInt(int a, int b) {
+        int64_t result = static_cast<int64_t>(a) - static_cast<int64_t>(b);
+        if (!SkTFitsIn<int>(result)) {
+            fOK = false;
+        }
+        return static_cast<int>(result);
+    }
+
+    int mulInt(int x, int y) {
+        int64_t result = static_cast<int64_t>(x) * static_cast<int64_t>(y);
+        if (!SkTFitsIn<int>(result)) {
+            fOK = false;
+        }
+        return static_cast<int>(result);
+    }
+
+    int divInt(int a, int b) {
+        if (b == 0 || (a == std::numeric_limits<int>::min() && b == -1)) {
             fOK = false;
             return a;
         }
-        return a + b;
+        return a / b;
     }
 
     size_t alignUp(size_t x, size_t alignment) {
@@ -56,11 +73,11 @@ public:
         return add(x, alignment - 1) & ~(alignment - 1);
     }
 
-    template <typename T> T castTo(size_t value) {
-        if (!SkTFitsIn<T>(value)) {
+    template <typename TDst, typename TSrc> TDst castTo(TSrc value) {
+        if (!SkTFitsIn<TDst, TSrc>(value)) {
             fOK = false;
         }
-        return static_cast<T>(value);
+        return static_cast<TDst>(value);
     }
 
     // These saturate to their results
@@ -110,4 +127,4 @@ private:
     bool fOK = true;
 };
 
-#endif//SkSafeMath_DEFINED
+#endif  // SkSafeMath_DEFINED

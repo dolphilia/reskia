@@ -4,6 +4,8 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
+#ifndef SkEmptyShader_DEFINED
+#define SkEmptyShader_DEFINED
 
 #include "src/shaders/SkShaderBase.h"
 
@@ -33,8 +35,11 @@ protected:
     }
 
     ShaderType type() const override { return ShaderType::kEmpty; }
+    bool isOpaque() const override { return false; }
 
 private:
     friend void ::SkRegisterEmptyShaderFlattenable();
     SK_FLATTENABLE_HOOKS(SkEmptyShader)
 };
+
+#endif  // SkEmptyShader_DEFINED

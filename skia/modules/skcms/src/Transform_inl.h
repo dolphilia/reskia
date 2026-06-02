@@ -37,7 +37,7 @@ using U8  = V<uint8_t>;
     #define  USING_AVX
 #endif
 #if !defined(USING_AVX_F16C) && defined(USING_AVX) && defined(__F16C__)
-    #define  USING AVX_F16C
+    #define  USING_AVX_F16C
 #endif
 #if !defined(USING_AVX2)     && defined(USING_AVX) && defined(__AVX2__)
     #define  USING_AVX2
@@ -111,14 +111,9 @@ template <typename D, typename S>
 SI D cast(const S& v) {
 #if N == 1
     return (D)v;
-#elif defined(__clang__)
-    return __builtin_convertvector(v, D);
 #else
-    D d;
-    for (int i = 0; i < N; i++) {
-        d[i] = v[i];
-    }
-    return d;
+    return __builtin_convertvector(v, D);
+
 #endif
 }
 
@@ -156,8 +151,13 @@ SI F F_from_Half(U16 half) {
 #elif defined(USING_AVX512F)
     return (F)_mm512_cvtph_ps((__m256i)half);
 #elif defined(USING_AVX_F16C)
+#if defined(__clang__) && __clang_major__ >= 15 // for _Float16 support
+    typedef _Float16 __attribute__((vector_size(16))) F16;
+    return __builtin_convertvector((F16)half, F);
+#else
     typedef int16_t __attribute__((vector_size(16))) I16;
     return __builtin_ia32_vcvtph2ps256((I16)half);
+#endif // defined(__clang))
 #else
     U32 wide = cast<U32>(half);
     // A half is 1-5-10 sign-exponent-mantissa, with 15 exponent bias.
@@ -211,6 +211,9 @@ SI U64 swap_endian_16x4(const U64& rgba) {
 #if defined(USING_NEON)
     SI F min_(F x, F y) { return (F)vminq_f32((float32x4_t)x, (float32x4_t)y); }
     SI F max_(F x, F y) { return (F)vmaxq_f32((float32x4_t)x, (float32x4_t)y); }
+#elif defined(__loongarch_sx)
+    SI F min_(F x, F y) { return (F)__lsx_vfmin_s(x, y); }
+    SI F max_(F x, F y) { return (F)__lsx_vfmax_s(x, y); }
 #else
     SI F min_(F x, F y) { return if_then_else(x > y, y, x); }
     SI F max_(F x, F y) { return if_then_else(x < y, y, x); }
@@ -231,6 +234,8 @@ SI F floor_(F x) {
     return __builtin_ia32_roundps256(x, 0x01/*_MM_FROUND_FLOOR*/);
 #elif defined(__SSE4_1__)
     return _mm_floor_ps(x);
+#elif defined(__loongarch_sx)
+    return __lsx_vfrintrm_s((__m128)x);
 #else
     // Round trip through integers with a truncating cast.
     F roundtrip = cast<F>(cast<I32>(x));
@@ -354,6 +359,14 @@ SI F apply_hlginv(const skcms_TransferFunction* tf, F x) {
     return bit_pun<F>(sign | bit_pun<U32>(v));
 }
 
+// Compute the luminance Y used in the HLG OOTF. This is equivalent to computing the dot product
+// with the vector [0.2627 0.678  0.0593] in Rec2020 primaries, but is performed in the XYZD50
+// space to simplify the pipeline.
+SI F compute_Y_in_xyzd50(F x, F y, F z) {
+  return -0.02831655f * x +
+          1.00995452f * y +
+          0.02102382f * z;
+}
 
 // Strided loads and stores of N values, starting from p.
 template <typename T, typename P>
@@ -480,16 +493,12 @@ SI U32 gather_32(const uint8_t* p, I32 ix) {
 }
 
 SI U32 gather_24(const uint8_t* p, I32 ix) {
-    // First, back up a byte.  Any place we're gathering from has a safe junk byte to read
-    // in front of it, either a previous table value, or some tag metadata.
-    p -= 1;
-
     // Load the i'th 24-bit value from p, and 1 extra byte.
     auto load_24_32 = [p](int i) {
         return load<uint32_t>(p + 3*i);
     };
 
-    // Now load multiples of 4 bytes (a junk byte, then r,g,b).
+    // Now load multiples of 4 bytes (r,g,b, then a junk byte).
 #if N == 1
     U32 v = load_24_32(ix);
 #elif N == 4
@@ -517,15 +526,12 @@ SI U32 gather_24(const uint8_t* p, I32 ix) {
     U32 v = (U32)_mm512_i32gather_epi32((__m512i)(3*ix), p4, 1);
 #endif
 
-    // Shift off the junk byte, leaving r,g,b in low 24 bits (and zero in the top 8).
-    return v >> 8;
+    // Mask off the junk byte, leaving r,g,b in low 24 bits.
+    return v & 0x00FFFFFF;
 }
 
 #if !defined(__arm__)
     SI void gather_48(const uint8_t* p, I32 ix, U64* v) {
-        // As in gather_24(), with everything doubled.
-        p -= 2;
-
         // Load the i'th 48-bit value from p, and 2 extra bytes.
         auto load_48_64 = [p](int i) {
             return load<uint64_t>(p + 6*i);
@@ -576,7 +582,7 @@ SI U32 gather_24(const uint8_t* p, I32 ix) {
         store((char*)v + 64, hi);
     #endif
 
-        *v >>= 16;
+        *v &= 0x0000FFFFFFFFFFFFULL;
     }
 #endif
 
@@ -644,7 +650,7 @@ SI void sample_clut_8(const uint8_t* grid_8, I32 ix, F* r, F* g, F* b, F* a) {
 }
 
 SI void sample_clut_16(const uint8_t* grid_16, I32 ix, F* r, F* g, F* b) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(__loongarch_sx)
     // This is up to 2x faster on 32-bit ARM than the #else-case fast path.
     *r = F_from_U16_BE(gather_16(grid_16, 3*ix+0));
     *g = F_from_U16_BE(gather_16(grid_16, 3*ix+1));
@@ -674,19 +680,22 @@ static void clut(uint32_t input_channels, uint32_t output_channels,
                  F* r, F* g, F* b, F* a) {
 
     const int dim = (int)input_channels;
-    assert (0 < dim && dim <= 4);
+    if (dim <= 0 || dim > 4) {
+        return;
+    }
     assert (output_channels == 3 ||
             output_channels == 4);
 
     // For each of these arrays, think foo[2*dim], but we use foo[8] since we know dim <= 4.
-    I32 index [8];  // Index contribution by dimension, first low from 0, then high from 4.
-    F   weight[8];  // Weight for each contribution, again first low, then high.
+    I32 index [8] = {0,0,0,0, 0,0,0,0};  // Index contribution by dimension, first low from 0, then high from 4.
+    F   weight[8] = {F0,F0,F0,F0, F0,F0,F0,F0};  // Weight for each contribution, again first low, then high.
 
     // O(dim) work first: calculate index,weight from r,g,b,a.
     const F inputs[] = { *r,*g,*b,*a };
     for (int i = dim-1, stride = 1; i >= 0; i--) {
         // x is where we logically want to sample the grid in the i-th dimension.
-        F x = inputs[i] * (float)(grid_points[i] - 1);
+        // We MUST clamp to [0,1] here to avoid negative indices.
+        F x = max_(F0, min_(inputs[i], F1)) * (float)(grid_points[i] - 1);
 
         // But we can't index at floats.  lo and hi are the two integer grid points surrounding x.
         I32 lo = cast<I32>(            x      ),   // i.e. trunc(x) == floor(x) here.
@@ -769,27 +778,60 @@ struct Ctx {
     template <typename T> operator T*() { return (const T*)fArg; }
 };
 
-#define DECLARE_STAGE(name, arg)                                                                \
-    SI void Exec_##name##_k(arg, const char* src, char* dst, F& r, F& g, F& b, F& a, int i);    \
-                                                                                                \
-    SI void Exec_##name(const void* v, const char* s, char* d, F& r, F& g, F& b, F& a, int i) { \
-        Exec_##name##_k(Ctx{v}, s, d, r, g, b, a, i);                                           \
-    }                                                                                           \
-                                                                                                \
-    SI void Exec_##name##_k(arg,                                                                \
-                            SKCMS_MAYBE_UNUSED const char* src,                                 \
-                            SKCMS_MAYBE_UNUSED char* dst,                                       \
-                            SKCMS_MAYBE_UNUSED F& r,                                            \
-                            SKCMS_MAYBE_UNUSED F& g,                                            \
-                            SKCMS_MAYBE_UNUSED F& b,                                            \
-                            SKCMS_MAYBE_UNUSED F& a,                                            \
-                            SKCMS_MAYBE_UNUSED int i)
+#define STAGE_PARAMS(MAYBE_REF) SKCMS_MAYBE_UNUSED const char* src, \
+                                SKCMS_MAYBE_UNUSED char* dst,       \
+                                SKCMS_MAYBE_UNUSED F MAYBE_REF r,   \
+                                SKCMS_MAYBE_UNUSED F MAYBE_REF g,   \
+                                SKCMS_MAYBE_UNUSED F MAYBE_REF b,   \
+                                SKCMS_MAYBE_UNUSED F MAYBE_REF a,   \
+                                SKCMS_MAYBE_UNUSED int i
 
-#define STAGE(name, arg) \
-    DECLARE_STAGE(name, arg)
+#if SKCMS_HAS_MUSTTAIL
 
-#define FINAL_STAGE(name, arg) \
-    DECLARE_STAGE(name, arg)
+    // Stages take a stage list, and each stage is responsible for tail-calling the next one.
+    //
+    // Unfortunately, we can't declare a StageFn as a function pointer which takes a pointer to
+    // another StageFn; declaring this leads to a circular dependency. To avoid this, StageFn is
+    // wrapped in a single-element `struct StageList` which we are able to forward-declare.
+    struct StageList;
+    using StageFn = void (*)(StageList stages, const void** ctx, STAGE_PARAMS());
+    struct StageList {
+        const StageFn* fn;
+    };
+
+    #define DECLARE_STAGE(name, arg, CALL_NEXT)                                 \
+        SI void Exec_##name##_k(arg, STAGE_PARAMS(&));                          \
+                                                                                \
+        SI void Exec_##name(StageList list, const void** ctx, STAGE_PARAMS()) { \
+            Exec_##name##_k(Ctx{*ctx}, src, dst, r, g, b, a, i);                \
+            ++list.fn; ++ctx;                                                   \
+            CALL_NEXT;                                                          \
+        }                                                                       \
+                                                                                \
+        SI void Exec_##name##_k(arg, STAGE_PARAMS(&))
+
+    #define STAGE(name, arg)                                                                \
+        DECLARE_STAGE(name, arg, [[clang::musttail]] return (*list.fn)(list, ctx, src, dst, \
+                                                                       r, g, b, a, i))
+
+    #define FINAL_STAGE(name, arg) \
+        DECLARE_STAGE(name, arg, /* Stop executing stages and return to the caller. */)
+
+#else
+
+    #define DECLARE_STAGE(name, arg)                            \
+        SI void Exec_##name##_k(arg, STAGE_PARAMS(&));          \
+                                                                \
+        SI void Exec_##name(const void* ctx, STAGE_PARAMS(&)) { \
+            Exec_##name##_k(Ctx{ctx}, src, dst, r, g, b, a, i); \
+        }                                                       \
+                                                                \
+        SI void Exec_##name##_k(arg, STAGE_PARAMS(&))
+
+    #define STAGE(name, arg)       DECLARE_STAGE(name, arg)
+    #define FINAL_STAGE(name, arg) DECLARE_STAGE(name, arg)
+
+#endif
 
 STAGE(load_a8, NoCtx) {
     a = F_from_U8(load<U8>(src + 1*i));
@@ -797,6 +839,12 @@ STAGE(load_a8, NoCtx) {
 
 STAGE(load_g8, NoCtx) {
     r = g = b = F_from_U8(load<U8>(src + 1*i));
+}
+
+STAGE(load_ga88, NoCtx) {
+    U16 u16 = load<U16>(src + 2 * i);
+    r = g = b = cast<F>((u16 >> 0) & 0xff) * (1 / 255.0f);
+            a = cast<F>((u16 >> 8) & 0xff) * (1 / 255.0f);
 }
 
 STAGE(load_4444, NoCtx) {
@@ -860,13 +908,19 @@ STAGE(load_1010102, NoCtx) {
 }
 
 STAGE(load_101010x_XR, NoCtx) {
-    static constexpr float min = -0.752941f;
-    static constexpr float max = 1.25098f;
-    static constexpr float range = max - min;
     U32 rgba = load<U32>(src + 4*i);
-    r = cast<F>((rgba >>  0) & 0x3ff) * (1/1023.0f) * range + min;
-    g = cast<F>((rgba >> 10) & 0x3ff) * (1/1023.0f) * range + min;
-    b = cast<F>((rgba >> 20) & 0x3ff) * (1/1023.0f) * range + min;
+    r = cast<F>(((rgba >>  0) & 0x3ff) - 384) / 510.0f;
+    g = cast<F>(((rgba >> 10) & 0x3ff) - 384) / 510.0f;
+    b = cast<F>(((rgba >> 20) & 0x3ff) - 384) / 510.0f;
+}
+
+STAGE(load_10101010_XR, NoCtx) {
+    U64 rgba = load<U64>(src + 8 * i);
+    // Each channel is 16 bits, where the 6 low bits are padding.
+    r = cast<F>(((rgba >> ( 0+6)) & 0x3ff) - 384) / 510.0f;
+    g = cast<F>(((rgba >> (16+6)) & 0x3ff) - 384) / 510.0f;
+    b = cast<F>(((rgba >> (32+6)) & 0x3ff) - 384) / 510.0f;
+    a = cast<F>(((rgba >> (48+6)) & 0x3ff) - 384) / 510.0f;
 }
 
 STAGE(load_161616LE, NoCtx) {
@@ -1166,6 +1220,27 @@ STAGE(hlg_rgb, const skcms_TransferFunction* tf) {
     b = apply_hlg(tf, b);
 }
 
+// Apply the HLG Reference OOTF, as described in ITU-R BT.2100-3 Table 5.
+STAGE(hlg_ootf_scale, const void*) {
+    // Compute Y in the XYZD50 primaries.
+    F Y = compute_Y_in_xyzd50(r, g, b);
+
+    // Apply the gamma of 1.2.
+    const float gamma_minus_1 = 0.2f;
+    U32 sign;
+    Y = strip_sign(Y, &sign);
+    F Y_to_gamma_minus1 = apply_sign(approx_pow(Y, gamma_minus_1), sign);
+    r = r * Y_to_gamma_minus1;
+    g = g * Y_to_gamma_minus1;
+    b = b * Y_to_gamma_minus1;
+
+    // Scale to the reference peak white (1000 nits) to get display luminance. Then divide by the
+    // HDR reference white (203 nits), to get a value in relative linear color space.
+    r *= 1000.0f / 203.0f;
+    g *= 1000.0f / 203.0f;
+    b *= 1000.0f / 203.0f;
+}
+
 STAGE(hlginv_r, const skcms_TransferFunction* tf) { r = apply_hlginv(tf, r); }
 STAGE(hlginv_g, const skcms_TransferFunction* tf) { g = apply_hlginv(tf, g); }
 STAGE(hlginv_b, const skcms_TransferFunction* tf) { b = apply_hlginv(tf, b); }
@@ -1175,6 +1250,23 @@ STAGE(hlginv_rgb, const skcms_TransferFunction* tf) {
     r = apply_hlginv(tf, r);
     g = apply_hlginv(tf, g);
     b = apply_hlginv(tf, b);
+}
+
+// Perform the inverse of the operation in hlg_ootf_scale.
+STAGE(hlginv_ootf_scale, const void*) {
+    r *= (203.f / 1000.0f);
+    g *= (203.f / 1000.0f);
+    b *= (203.f / 1000.0f);
+
+    const float gamma_inv_minus_1 = 1.0f / 1.2f - 1.0f;
+    F Y = compute_Y_in_xyzd50(r, g, b);
+    U32 sign;
+    Y = strip_sign(Y, &sign);
+    F Y_to_gamma_minus1 = apply_sign(approx_pow(Y, gamma_inv_minus_1), sign);
+
+    r = r * Y_to_gamma_minus1;
+    g = g * Y_to_gamma_minus1;
+    b = b * Y_to_gamma_minus1;
 }
 
 STAGE(table_r, const skcms_Curve* curve) { r = table(curve, r); }
@@ -1195,7 +1287,7 @@ STAGE(clut_B2A, const skcms_B2A* b2a) {
     clut(b2a, &r,&g,&b,&a);
 }
 
-// From here on down, the store_ ops are all "final stages," ending the loop.
+// From here on down, the store_ ops are all "final stages," terminating processing of this group.
 
 FINAL_STAGE(store_a8, NoCtx) {
     store(dst + 1*i, cast<U8>(to_fixed(a * 255)));
@@ -1204,6 +1296,12 @@ FINAL_STAGE(store_a8, NoCtx) {
 FINAL_STAGE(store_g8, NoCtx) {
     // g should be holding luminance (Y) (r,g,b ~~~> X,Y,Z)
     store(dst + 1*i, cast<U8>(to_fixed(g * 255)));
+}
+
+FINAL_STAGE(store_ga88, NoCtx) {
+    // g should be holding luminance (Y) (r,g,b ~~~> X,Y,Z)
+    store<U16>(dst + 2*i, cast<U16>(to_fixed(g * 255) << 0 )
+                        | cast<U16>(to_fixed(a * 255) << 8 ));
 }
 
 FINAL_STAGE(store_4444, NoCtx) {
@@ -1249,13 +1347,17 @@ FINAL_STAGE(store_8888, NoCtx) {
 }
 
 FINAL_STAGE(store_101010x_XR, NoCtx) {
-    static constexpr float min = -0.752941f;
-    static constexpr float max = 1.25098f;
-    static constexpr float range = max - min;
-    store(dst + 4*i, cast<U32>(to_fixed(((r - min) / range) * 1023)) <<  0
-                   | cast<U32>(to_fixed(((g - min) / range) * 1023)) << 10
-                   | cast<U32>(to_fixed(((b - min) / range) * 1023)) << 20);
-    return;
+    store(dst + 4*i, cast<U32>(to_fixed((r * 510) + 384)) <<  0
+                   | cast<U32>(to_fixed((g * 510) + 384)) << 10
+                   | cast<U32>(to_fixed((b * 510) + 384)) << 20);
+}
+
+FINAL_STAGE(store_10101010_XR, NoCtx) {
+    // Each channel is 16 bits, where the 6 low bits are padding.
+    store(dst + 8*i, cast<U64>(to_fixed((r * 510) + 384)) << ( 0+6)
+                   | cast<U64>(to_fixed((g * 510) + 384)) << (16+6)
+                   | cast<U64>(to_fixed((b * 510) + 384)) << (32+6)
+                   | cast<U64>(to_fixed((a * 510) + 384)) << (48+6));
 }
 
 FINAL_STAGE(store_1010102, NoCtx) {
@@ -1433,29 +1535,58 @@ FINAL_STAGE(store_ffff, NoCtx) {
 #endif
 }
 
-static void exec_ops(const Op* ops, const void** contexts,
-                     const char* src, char* dst, int i) {
-    F r = F0, g = F0, b = F0, a = F1;
-    while (true) {
-        switch (*ops++) {
+#if SKCMS_HAS_MUSTTAIL
+
+    SI void exec_stages(StageFn* stages, const void** contexts, const char* src, char* dst, int i) {
+        (*stages)({stages}, contexts, src, dst, F0, F0, F0, F1, i);
+    }
+
+#else
+
+    static void exec_stages(const Op* ops, const void** contexts,
+                            const char* src, char* dst, int i) {
+        F r = F0, g = F0, b = F0, a = F1;
+        while (true) {
+            switch (*ops++) {
 #define M(name) case Op::name: Exec_##name(*contexts++, src, dst, r, g, b, a, i); break;
-            SKCMS_LOAD_OPS(M)
-            SKCMS_WORK_OPS(M)
+                SKCMS_WORK_OPS(M)
 #undef M
 #define M(name) case Op::name: Exec_##name(*contexts++, src, dst, r, g, b, a, i); return;
-            SKCMS_STORE_OPS(M)
+                SKCMS_STORE_OPS(M)
 #undef M
+            }
         }
     }
-}
+
+#endif
 
 // NOLINTNEXTLINE(misc-definitions-in-headers)
-void run_program(const Op* program, const void** contexts, ptrdiff_t /*programSize*/,
+void run_program(const Op* program, const void** contexts, SKCMS_MAYBE_UNUSED ptrdiff_t programSize,
                  const char* src, char* dst, int n,
-                 const size_t src_bpp, const size_t dst_bpp) {
+                size_t src_bpp, size_t dst_bpp) {
+#if SKCMS_HAS_MUSTTAIL
+    // Convert the program into an array of tailcall stages.
+    StageFn stages[32];
+    assert(programSize <= ARRAY_COUNT(stages));
+
+    static constexpr StageFn kStageFns[] = {
+#define M(name) &Exec_##name,
+        SKCMS_WORK_OPS(M)
+        SKCMS_STORE_OPS(M)
+#undef M
+    };
+
+    for (ptrdiff_t index = 0; index < programSize; ++index) {
+        stages[index] = kStageFns[(int)program[index]];
+    }
+#else
+    // Use the op array as-is.
+    const Op* stages = program;
+#endif
+
     int i = 0;
     while (n >= N) {
-        exec_ops(program, contexts, src, dst, i);
+        exec_stages(stages, contexts, src, dst, i);
         i += N;
         n -= N;
     }
@@ -1463,28 +1594,7 @@ void run_program(const Op* program, const void** contexts, ptrdiff_t /*programSi
         char tmp[4*4*N] = {0};
 
         memcpy(tmp, (const char*)src + (size_t)i*src_bpp, (size_t)n*src_bpp);
-        exec_ops(program, contexts, tmp, tmp, 0);
+        exec_stages(stages, contexts, tmp, tmp, 0);
         memcpy((char*)dst + (size_t)i*dst_bpp, tmp, (size_t)n*dst_bpp);
     }
 }
-
-// Clean up any #defines we may have set so that we can be #included again.
-#if defined(USING_AVX)
-    #undef  USING_AVX
-#endif
-#if defined(USING_AVX_F16C)
-    #undef  USING_AVX_F16C
-#endif
-#if defined(USING_AVX2)
-    #undef  USING_AVX2
-#endif
-#if defined(USING_AVX512F)
-    #undef  USING_AVX512F
-#endif
-
-#if defined(USING_NEON)
-    #undef  USING_NEON
-#endif
-#if defined(USING_NEON_F16C)
-    #undef  USING_NEON_F16C
-#endif

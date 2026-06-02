@@ -13,28 +13,34 @@
     #error Define SK_OPTS_TARGET before including SkOpts_SetTarget
 #endif
 
-#if SK_OPTS_TARGET == SK_OPTS_TARGET_DEFAULT
+#if defined(SK_OPTS_NS)
+    // For testing define SK_OPTS_NS before including.
+#elif SK_OPTS_TARGET == SK_OPTS_TARGET_DEFAULT
 
     #if defined(SK_ARM_HAS_NEON)
         #define SK_OPTS_NS neon
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SKX
-        #define SK_OPTS_NS skx
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX2
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_ML4
+        #define SK_OPTS_NS ml4
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_AVX2
         #define SK_OPTS_NS avx2
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_AVX
         #define SK_OPTS_NS avx
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE42
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSE42
         #define SK_OPTS_NS sse42
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE41
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSE41
         #define SK_OPTS_NS sse41
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSSE3
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSSE3
         #define SK_OPTS_NS ssse3
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE3
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSE3
         #define SK_OPTS_NS sse3
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE2
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSE2
         #define SK_OPTS_NS sse2
-    #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1
+    #elif SK_CPU_X64_LEVEL >= SK_CPU_X64_LEVEL_SSE1
         #define SK_OPTS_NS sse
+    #elif SK_CPU_LSX_LEVEL >= SK_CPU_LSX_LEVEL_LASX
+        #define SK_OPTS_NS lasx
+    #elif SK_CPU_LSX_LEVEL >= SK_CPU_LSX_LEVEL_LSX
+        #define SK_OPTS_NS lsx
     #else
         #define SK_OPTS_NS portable
     #endif
@@ -43,12 +49,13 @@
 
 #else  // SK_OPTS_TARGET != SK_OPTS_TARGET_DEFAULT
 
-    #if defined(SK_OLD_CPU_SSE_LEVEL)
+    #if defined(SK_OLD_CPU_X64_LEVEL)
         #error Include SkOpts_RestoreTarget before re-including SkOpts_SetTarget
     #endif
 
-    #define SK_OLD_CPU_SSE_LEVEL SK_CPU_SSE_LEVEL
-    #undef SK_CPU_SSE_LEVEL
+    #define SK_OLD_CPU_X64_LEVEL SK_CPU_X64_LEVEL
+    #undef SK_CPU_X64_LEVEL
+    #undef SK_CPU_LSX_LEVEL
 
     // NOTE: Below, we automatically include arch-specific intrinsic headers when we've detected
     // that the compiler is clang-cl. Clang's headers skip including "unsupported" intrinsics (via
@@ -58,6 +65,7 @@
     // Each of the specific intrinsic headers also checks to ensure that immintrin.h has been
     // included, so do that here, first.
     #if defined(__clang__) && defined(_MSC_VER)
+        #define __RTMINTRIN_H  // Workaround for https://github.com/llvm/llvm-project/issues/95133
         #include <immintrin.h>
     #endif
 
@@ -65,7 +73,7 @@
     // allow the target() option to be expanded by the preprocessor - it must be a literal string.
     #if SK_OPTS_TARGET == SK_OPTS_TARGET_SSSE3
 
-        #define SK_CPU_SSE_LEVEL SK_CPU_SSE_LEVEL_SSSE3
+        #define SK_CPU_X64_LEVEL SK_CPU_X64_LEVEL_SSSE3
         #define SK_OPTS_NS ssse3
 
         #if defined(__clang__)
@@ -82,7 +90,7 @@
 
     #elif SK_OPTS_TARGET == SK_OPTS_TARGET_AVX
 
-        #define SK_CPU_SSE_LEVEL SK_CPU_SSE_LEVEL_AVX
+        #define SK_CPU_X64_LEVEL SK_CPU_X64_LEVEL_AVX
         #define SK_OPTS_NS avx
 
         #if defined(__clang__)
@@ -99,10 +107,10 @@
             #include <avxintrin.h>
         #endif
 
-    #elif SK_OPTS_TARGET == SK_OPTS_TARGET_HSW
+    #elif SK_OPTS_TARGET == SK_OPTS_TARGET_ML3
 
-        #define SK_CPU_SSE_LEVEL SK_CPU_SSE_LEVEL_AVX2
-        #define SK_OPTS_NS hsw
+        #define SK_CPU_X64_LEVEL SK_CPU_X64_LEVEL_AVX2
+        #define SK_OPTS_NS ml3
 
         #if defined(__clang__)
             #pragma clang attribute push(__attribute__((target("sse2,ssse3,sse4.1,sse4.2,avx,avx2,bmi,bmi2,f16c,fma"))), apply_to=function)
@@ -120,6 +128,17 @@
             #include <f16cintrin.h>
             #include <bmi2intrin.h>
             #include <fmaintrin.h>
+        #endif
+
+    #elif SK_OPTS_TARGET == SK_OPTS_TARGET_LASX
+
+        #define SK_CPU_LSX_LEVEL SK_CPU_LSX_LEVEL_LASX
+        #define SK_OPTS_NS lasx
+        // The intrinsic from lasxintrin.h is wrapped by the __loongarch_asx macro, so we need to define it.
+        #define __loongarch_asx
+
+        #if defined(__clang__)
+          #pragma clang attribute push(__attribute__((target("lasx"))), apply_to=function)
         #endif
 
     #else

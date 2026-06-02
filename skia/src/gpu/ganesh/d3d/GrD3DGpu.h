@@ -8,7 +8,10 @@
 #ifndef GrD3DGpu_DEFINED
 #define GrD3DGpu_DEFINED
 
+#include "include/gpu/ganesh/d3d/GrD3DBackendSurface.h"
+#include "include/private/base/SkAssert.h"
 #include "include/private/base/SkDeque.h"
+#include "src/gpu/RefCntedCallback.h"
 #include "src/gpu/ganesh/GrGpu.h"
 #include "src/gpu/ganesh/GrRenderTarget.h"
 #include "src/gpu/ganesh/GrSemaphore.h"
@@ -17,11 +20,14 @@
 #include "src/gpu/ganesh/d3d/GrD3DCommandList.h"
 #include "src/gpu/ganesh/d3d/GrD3DResourceProvider.h"
 
+#include <optional>
+#include <utility>
+
 struct GrD3DBackendContext;
 class GrD3DOpsRenderPass;
 struct GrD3DOptions;
 class GrPipeline;
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
 struct IDXGraphicsAnalysis;
 #endif
 
@@ -60,7 +66,7 @@ public:
 
     bool compile(const GrProgramDesc&, const GrProgramInfo&) override;
 
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
     bool isTestingOnlyBackendTexture(const GrBackendTexture&) const override;
 
     GrBackendRenderTarget createTestingOnlyBackendRenderTarget(SkISize dimensions,
@@ -81,7 +87,7 @@ public:
                                               SkISize dimensions, int numStencilSamples) override;
 
     GrBackendFormat getPreferredStencilFormat(const GrBackendFormat&) override {
-        return GrBackendFormat::MakeDxgi(this->d3dCaps().preferredStencilFormat());
+        return GrBackendFormats::MakeD3D(this->d3dCaps().preferredStencilFormat());
     }
 
     sk_sp<GrAttachment> makeMSAAAttachment(SkISize dimensions,
@@ -100,10 +106,6 @@ public:
                                    int numBarriers,
                                    D3D12_RESOURCE_TRANSITION_BARRIER* barriers) const;
 
-    [[nodiscard]] GrFence insertFence() override;
-    bool waitFence(GrFence) override;
-    void deleteFence(GrFence) override {}
-
     [[nodiscard]] std::unique_ptr<GrSemaphore> makeSemaphore(bool isOwned) override;
     std::unique_ptr<GrSemaphore> wrapBackendSemaphore(const GrBackendSemaphore&,
                                                       GrSemaphoreWrapType,
@@ -118,7 +120,7 @@ public:
     void endRenderPass(GrRenderTarget* target, GrSurfaceOrigin origin,
                        const SkIRect& bounds);
 
-    void checkFinishProcs() override { this->checkForFinishedCommandLists(); }
+    void checkFinishedCallbacks() override { this->checkForFinishedCommandLists(); }
     void finishOutstandingGpuWork() override;
 
 private:
@@ -213,8 +215,12 @@ private:
 
     void onResolveRenderTarget(GrRenderTarget* target, const SkIRect&) override;
 
-    void addFinishedProc(GrGpuFinishedProc finishedProc,
-                         GrGpuFinishedContext finishedContext) override;
+    void addFinishedCallback(skgpu::AutoCallback callback,
+                             std::optional<GrTimerQuery> timerQuery) override {
+        SkASSERT(!timerQuery);
+        this->addFinishedCallback(skgpu::RefCntedCallback::Make(std::move(callback)));
+    }
+
     void addFinishedCallback(sk_sp<skgpu::RefCntedCallback> finishedCallback);
 
     GrOpsRenderPass* onGetOpsRenderPass(
@@ -233,7 +239,7 @@ private:
             SkSurfaces::BackendSurfaceAccess access,
             const skgpu::MutableTextureState* newState) override;
 
-    bool onSubmitToGpu(GrSyncCpu sync) override;
+    bool onSubmitToGpu(const GrSubmitInfo& info) override;
 
     GrBackendTexture onCreateBackendTexture(SkISize dimensions,
                                             const GrBackendFormat&,
@@ -330,7 +336,7 @@ private:
 
     std::unique_ptr<GrD3DOpsRenderPass> fCachedOpsRenderPass;
 
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
     IDXGraphicsAnalysis* fGraphicsAnalysis;
 #endif
 

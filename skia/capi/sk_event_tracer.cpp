@@ -129,7 +129,8 @@ bool SkEventTracer_SetInstance(reskia_event_tracer_t *tracer, bool leak_tracer) 
     if (tracer == nullptr) {
         return false;
     }
-    return SkEventTracer::SetInstance(reinterpret_cast<SkEventTracer *>(tracer), leak_tracer);
+    (void) leak_tracer;
+    return SkEventTracer::SetInstance(reinterpret_cast<SkEventTracer *>(tracer));
 }
 
 reskia_event_tracer_t *SkEventTracer_GetInstance(void) {

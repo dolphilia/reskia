@@ -55,6 +55,7 @@ sk_surface_t SkSurface_makeSurface(reskia_surface_t *surface, const reskia_image
 sk_surface_t SkSurface_makeSurfaceWithDimensions(reskia_surface_t *surface, int width, int height); // (SkSurface *surface, int width, int height) -> sk_surface_t
 sk_image_t SkSurface_makeImageSnapshot(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_t
 sk_image_t SkSurface_makeImageSnapshotWithBounds(reskia_surface_t *surface, const reskia_i_rect_t *bounds); // (SkSurface *surface, const SkIRect *bounds) -> sk_image_t
+sk_image_t SkSurface_makeTemporaryImage(reskia_surface_t *surface); // (SkSurface *surface) -> sk_image_t
 void SkSurface_draw(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_sampling_options_t *sampling, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkSamplingOptions *sampling, const SkPaint *paint)
 void SkSurface_drawWithoutSamplingOptions(reskia_surface_t *surface, reskia_canvas_t *canvas, float x, float y, const reskia_paint_t *paint); // (SkSurface *surface, SkCanvas *canvas, SkScalar x, SkScalar y, const SkPaint *paint)
 /**

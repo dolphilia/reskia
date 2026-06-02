@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -7,18 +7,28 @@
 
 #include "src/gpu/ganesh/text/GrAtlasManager.h"
 
-#include "include/core/SkColorSpace.h"
-#include "include/encode/SkPngEncoder.h"
+#include "include/core/SkColorType.h"
+#include "include/core/SkSize.h"
+#include "include/core/SkSpan.h"
+#include "include/private/base/SkMalloc.h"
+#include "include/private/base/SkTLogic.h"
 #include "src/base/SkAutoMalloc.h"
-#include "src/codec/SkMasks.h"
 #include "src/core/SkDistanceFieldGen.h"
-#include "src/gpu/ganesh/GrImageInfo.h"
+#include "src/core/SkGlyph.h"
+#include "src/core/SkMask.h"
+#include "src/core/SkMasks.h"
+#include "src/core/SkStrikeSpec.h"
+#include "src/gpu/ganesh/GrColor.h"
+#include "src/gpu/ganesh/GrDeferredUpload.h"
 #include "src/gpu/ganesh/GrMeshDrawTarget.h"
-#include "src/text/gpu/Glyph.h"
-#include "src/text/gpu/GlyphVector.h"
+#include "src/gpu/ganesh/text/GlyphData.h"
+#include "src/text/gpu/GlyphUtils.h"
 #include "src/text/gpu/StrikeCache.h"
 
-using Glyph = sktext::gpu::Glyph;
+#include <cstring>
+#include <tuple>
+
+using GlyphEntry = skgpu::ganesh::GlyphEntry;
 using MaskFormat = skgpu::MaskFormat;
 
 GrAtlasManager::GrAtlasManager(GrProxyProvider* proxyProvider,
@@ -39,9 +49,8 @@ void GrAtlasManager::freeAll() {
     }
 }
 
-bool GrAtlasManager::hasGlyph(MaskFormat format, Glyph* glyph) {
-    SkASSERT(glyph);
-    return this->getAtlas(format)->hasID(glyph->fAtlasLocator.plotLocator());
+bool GrAtlasManager::hasGlyph(MaskFormat format, const GlyphEntry& glyph) {
+    return this->getAtlas(format)->hasID(glyph.fAtlasLocator.plotLocator());
 }
 
 template <typename INT_TYPE>
@@ -73,7 +82,7 @@ static void get_packed_glyph_image(
     const void* src = glyph.image();
     SkASSERT(src != nullptr);
 
-    MaskFormat maskFormat = Glyph::FormatFromSkGlyph(glyph.maskFormat());
+    MaskFormat maskFormat = sktext::gpu::FormatFromSkGlyph(glyph.maskFormat());
     if (maskFormat == expectedMaskFormat) {
         int srcRB = glyph.rowBytes();
         // Notice this comparison is with the glyphs raw mask format, and not its MaskFormat.
@@ -119,18 +128,29 @@ static void get_packed_glyph_image(
         };
         constexpr int a565Bpp = MaskFormatBytesPerPixel(MaskFormat::kA565);
         constexpr int argbBpp = MaskFormatBytesPerPixel(MaskFormat::kARGB);
+        constexpr bool kBGRAIsNative = kN32_SkColorType == kBGRA_8888_SkColorType;
         char* dstRow = (char*)dst;
         for (int y = 0; y < height; y++) {
             dst = dstRow;
             for (int x = 0; x < width; x++) {
                 uint16_t color565 = 0;
                 memcpy(&color565, src, a565Bpp);
-                uint32_t colorRGBA = GrColorPackRGBA(masks.getRed(color565),
-                                                     masks.getGreen(color565),
-                                                     masks.getBlue(color565),
-                                                     0xFF);
-                memcpy(dst, &colorRGBA, argbBpp);
-                src = (char*)src + a565Bpp;
+                uint32_t color8888;
+                // On Windows (and possibly others), font data is stored as BGR.
+                // So we need to swizzle the data to reflect that.
+                if (kBGRAIsNative) {
+                    color8888 = GrColorPackRGBA(masks.getBlue(color565),
+                                                masks.getGreen(color565),
+                                                masks.getRed(color565),
+                                                0xFF);
+                } else {
+                    color8888 = GrColorPackRGBA(masks.getRed(color565),
+                                                masks.getGreen(color565),
+                                                masks.getBlue(color565),
+                                                0xFF);
+                }
+                memcpy(dst, &color8888, argbBpp);
+                src = (const char*)src + a565Bpp;
                 dst = (char*)dst + argbBpp;
             }
             dstRow += dstRB;
@@ -142,7 +162,7 @@ static void get_packed_glyph_image(
 
 // returns true if glyph successfully added to texture atlas, false otherwise.
 GrDrawOpAtlas::ErrorCode GrAtlasManager::addGlyphToAtlas(const SkGlyph& skGlyph,
-                                                         Glyph* glyph,
+                                                         GlyphEntry* glyph,
                                                          int srcPadding,
                                                          GrResourceProvider* resourceProvider,
                                                          GrDeferredUploadTarget* uploadTarget) {
@@ -157,8 +177,7 @@ GrDrawOpAtlas::ErrorCode GrAtlasManager::addGlyphToAtlas(const SkGlyph& skGlyph,
     }
     SkASSERT(glyph != nullptr);
 
-    MaskFormat glyphFormat = Glyph::FormatFromSkGlyph(skGlyph.maskFormat());
-    MaskFormat expectedMaskFormat = this->resolveMaskFormat(glyphFormat);
+    MaskFormat expectedMaskFormat = this->resolveMaskFormat(glyph->fGlyphEntryKey.fFormat);
     int bytesPerPixel = MaskFormatBytesPerPixel(expectedMaskFormat);
 
     int padding;
@@ -192,6 +211,14 @@ GrDrawOpAtlas::ErrorCode GrAtlasManager::addGlyphToAtlas(const SkGlyph& skGlyph,
 
     const int width = skGlyph.width() + 2*padding;
     const int height = skGlyph.height() + 2*padding;
+
+    // Verify that the glyph data (received from potentially untrusted source) actually has room
+    // for the padding. Under normal flow, this should always be the case, but if a glyph was
+    // corrupted or manipulated it has no bearing on the code that *should* have produced the glyph.
+    // It's strict comparison since equality would imply the original glyph was empty, which should
+    // have been dropped.
+    SkASSERT_RELEASE(width > 2*srcPadding && height > 2*srcPadding);
+
     int rowBytes = width * bytesPerPixel;
     size_t size = height * rowBytes;
 
@@ -225,112 +252,20 @@ GrDrawOpAtlas::ErrorCode GrAtlasManager::addGlyphToAtlas(const SkGlyph& skGlyph,
 GrDrawOpAtlas::ErrorCode GrAtlasManager::addToAtlas(GrResourceProvider* resourceProvider,
                                                     GrDeferredUploadTarget* target,
                                                     MaskFormat format,
-                                                    int width, int height, const void* image,
-                                                    skgpu::AtlasLocator* atlasLocator) {
+                                                    int width, int height,
+                                                    const void* image,
+                                                    GrAtlasLocator* atlasLocator) {
     return this->getAtlas(format)->addToAtlas(resourceProvider, target, width, height, image,
                                               atlasLocator);
 }
 
-void GrAtlasManager::addGlyphToBulkAndSetUseToken(skgpu::BulkUsePlotUpdater* updater,
-                                                  MaskFormat format, Glyph* glyph,
-                                                  skgpu::AtlasToken token) {
-    SkASSERT(glyph);
-    if (updater->add(glyph->fAtlasLocator)) {
-        this->getAtlas(format)->setLastUseToken(glyph->fAtlasLocator, token);
+void GrAtlasManager::addGlyphToBulkAndSetUseToken(GrBulkUsePlotUpdater* updater,
+                                                  MaskFormat format,
+                                                  const GlyphEntry& glyph,
+                                                  skgpu::Token token) {
+    if (updater->add(glyph.fAtlasLocator)) {
+        this->getAtlas(format)->setLastUseToken(glyph.fAtlasLocator, token);
     }
-}
-
-#ifdef SK_DEBUG
-#include "include/gpu/GrDirectContext.h"
-#include "src/gpu/ganesh/GrDirectContextPriv.h"
-#include "src/gpu/ganesh/GrSurfaceProxy.h"
-#include "src/gpu/ganesh/GrTextureProxy.h"
-#include "src/gpu/ganesh/SurfaceContext.h"
-
-#include "include/core/SkBitmap.h"
-#include "include/core/SkStream.h"
-#include <stdio.h>
-
-/**
-  * Write the contents of the surface proxy to a PNG. Returns true if successful.
-  * @param filename      Full path to desired file
-  */
-static bool save_pixels(GrDirectContext* dContext, GrSurfaceProxyView view, GrColorType colorType,
-                        const char* filename) {
-    if (!view.proxy()) {
-        return false;
-    }
-
-    auto ii = SkImageInfo::Make(view.proxy()->dimensions(), kRGBA_8888_SkColorType,
-                                kPremul_SkAlphaType);
-    SkBitmap bm;
-    if (!bm.tryAllocPixels(ii)) {
-        return false;
-    }
-
-    auto sContext = dContext->priv().makeSC(std::move(view),
-                                            {colorType, kUnknown_SkAlphaType, nullptr});
-    if (!sContext || !sContext->asTextureProxy()) {
-        return false;
-    }
-
-    bool result = sContext->readPixels(dContext, bm.pixmap(), {0, 0});
-    if (!result) {
-        SkDebugf("------ failed to read pixels for %s\n", filename);
-        return false;
-    }
-
-    // remove any previous version of this file
-    remove(filename);
-
-    SkFILEWStream file(filename);
-    if (!file.isValid()) {
-        SkDebugf("------ failed to create file: %s\n", filename);
-        remove(filename);   // remove any partial file
-        return false;
-    }
-
-    if (!SkPngEncoder::Encode(&file, bm.pixmap(), {})) {
-        SkDebugf("------ failed to encode %s\n", filename);
-        remove(filename);   // remove any partial file
-        return false;
-    }
-
-    return true;
-}
-
-void GrAtlasManager::dump(GrDirectContext* context) const {
-    static int gDumpCount = 0;
-    for (int i = 0; i < skgpu::kMaskFormatCount; ++i) {
-        if (fAtlases[i]) {
-            const GrSurfaceProxyView* views = fAtlases[i]->getViews();
-            for (uint32_t pageIdx = 0; pageIdx < fAtlases[i]->numActivePages(); ++pageIdx) {
-                SkASSERT(views[pageIdx].proxy());
-                SkString filename;
-#ifdef SK_BUILD_FOR_ANDROID
-                filename.printf("/sdcard/fontcache_%d%d%d.png", gDumpCount, i, pageIdx);
-#else
-                filename.printf("fontcache_%d%d%d.png", gDumpCount, i, pageIdx);
-#endif
-                SkColorType ct = MaskFormatToColorType(AtlasIndexToMaskFormat(i));
-                save_pixels(context, views[pageIdx], SkColorTypeToGrColorType(ct),
-                            filename.c_str());
-            }
-        }
-    }
-    ++gDumpCount;
-}
-#endif
-
-void GrAtlasManager::setAtlasDimensionsToMinimum_ForTesting() {
-    // Delete any old atlases.
-    // This should be safe to do as long as we are not in the middle of a flush.
-    for (int i = 0; i < skgpu::kMaskFormatCount; i++) {
-        fAtlases[i] = nullptr;
-    }
-
-    // Set all the atlas sizes to 1x1 plot each.
-    new (&fAtlasConfig) GrDrawOpAtlasConfig{};
 }
 
 bool GrAtlasManager::initAtlas(MaskFormat format) {
@@ -359,70 +294,3 @@ bool GrAtlasManager::initAtlas(MaskFormat format) {
     }
     return true;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-namespace sktext::gpu {
-
-std::tuple<bool, int> GlyphVector::regenerateAtlasForGanesh(
-        int begin, int end, MaskFormat maskFormat, int srcPadding, GrMeshDrawTarget* target) {
-    GrAtlasManager* atlasManager = target->atlasManager();
-    GrDeferredUploadTarget* uploadTarget = target->deferredUploadTarget();
-
-    uint64_t currentAtlasGen = atlasManager->atlasGeneration(maskFormat);
-
-    this->packedGlyphIDToGlyph(target->strikeCache());
-
-    if (fAtlasGeneration != currentAtlasGen) {
-        // Calculate the texture coordinates for the vertexes during first use (fAtlasGeneration
-        // is set to kInvalidAtlasGeneration) or the atlas has changed in subsequent calls..
-        fBulkUseUpdater.reset();
-
-        SkBulkGlyphMetricsAndImages metricsAndImages{fTextStrike->strikeSpec()};
-
-        // Update the atlas information in the GrStrike.
-        auto tokenTracker = uploadTarget->tokenTracker();
-        auto glyphs = fGlyphs.subspan(begin, end - begin);
-        int glyphsPlacedInAtlas = 0;
-        bool success = true;
-        for (const Variant& variant : glyphs) {
-            Glyph* gpuGlyph = variant.glyph;
-            SkASSERT(gpuGlyph != nullptr);
-
-            if (!atlasManager->hasGlyph(maskFormat, gpuGlyph)) {
-                const SkGlyph& skGlyph = *metricsAndImages.glyph(gpuGlyph->fPackedID);
-                auto code = atlasManager->addGlyphToAtlas(
-                        skGlyph, gpuGlyph, srcPadding, target->resourceProvider(), uploadTarget);
-                if (code != GrDrawOpAtlas::ErrorCode::kSucceeded) {
-                    success = code != GrDrawOpAtlas::ErrorCode::kError;
-                    break;
-                }
-            }
-            atlasManager->addGlyphToBulkAndSetUseToken(
-                    &fBulkUseUpdater, maskFormat, gpuGlyph,
-                    tokenTracker->nextDrawToken());
-            glyphsPlacedInAtlas++;
-        }
-
-        // Update atlas generation if there are no more glyphs to put in the atlas.
-        if (success && begin + glyphsPlacedInAtlas == SkCount(fGlyphs)) {
-            // Need to get the freshest value of the atlas' generation because
-            // updateTextureCoordinates may have changed it.
-            fAtlasGeneration = atlasManager->atlasGeneration(maskFormat);
-        }
-
-        return {success, glyphsPlacedInAtlas};
-    } else {
-        // The atlas hasn't changed, so our texture coordinates are still valid.
-        if (end == SkCount(fGlyphs)) {
-            // The atlas hasn't changed and the texture coordinates are all still valid. Update
-            // all the plots used to the new use token.
-            atlasManager->setUseTokenBulk(fBulkUseUpdater,
-                                          uploadTarget->tokenTracker()->nextDrawToken(),
-                                          maskFormat);
-        }
-        return {true, end - begin};
-    }
-}
-
-}  // namespace sktext::gpu

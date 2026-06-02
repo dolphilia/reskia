@@ -8,7 +8,7 @@
 #include "include/gpu/GpuTypes.h"
 
 #if defined(SK_GANESH)
-#include "include/gpu/GrBackendSurface.h"
+#include "include/gpu/ganesh/GrBackendSurface.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #endif
 

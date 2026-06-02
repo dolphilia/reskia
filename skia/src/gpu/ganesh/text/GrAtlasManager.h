@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -8,17 +8,30 @@
 #ifndef GrAtlasManager_DEFINED
 #define GrAtlasManager_DEFINED
 
+#include "include/core/SkRefCnt.h"
+#include "include/gpu/GpuTypes.h"
+#include "include/gpu/ganesh/GrBackendSurface.h"
+#include "include/gpu/ganesh/GrTypes.h"
+#include "include/private/base/SkAssert.h"
+#include "include/private/gpu/ganesh/GrTypesPriv.h"
+#include "src/gpu/MaskFormat.h"
 #include "src/gpu/ganesh/GrCaps.h"
 #include "src/gpu/ganesh/GrDrawOpAtlas.h"
 #include "src/gpu/ganesh/GrOnFlushResourceProvider.h"
 #include "src/gpu/ganesh/GrProxyProvider.h"
 
-namespace sktext::gpu {
-class Glyph;
-}
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+
+class GrDeferredUploadTarget;
 class GrResourceProvider;
+class GrSurfaceProxyView;
 class SkGlyph;
-class GrTextStrike;
+
+namespace skgpu::ganesh {
+struct GlyphEntry;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /** The GrAtlasManager manages the lifetime of and access to GrDrawOpAtlases.
@@ -27,7 +40,7 @@ class GrTextStrike;
  *  This implies that all of the advanced atlasManager functionality (i.e.,
  *  adding glyphs to the atlas) are only available at flush time.
  */
-class GrAtlasManager : public GrOnFlushCallbackObject, public skgpu::AtlasGenerationCounter {
+class GrAtlasManager : public GrOnFlushCallbackObject, public GrAtlasGenerationCounter {
 public:
     GrAtlasManager(GrProxyProvider*,
                    size_t maxTextureBytes,
@@ -51,10 +64,12 @@ public:
 
     void freeAll();
 
-    bool hasGlyph(skgpu::MaskFormat, sktext::gpu::Glyph*);
+    bool hasGlyph(skgpu::MaskFormat, const skgpu::ganesh::GlyphEntry&);
+
+    bool supportsBilerp() const { return fSupportBilerpAtlas; }
 
     GrDrawOpAtlas::ErrorCode addGlyphToAtlas(const SkGlyph&,
-                                             sktext::gpu::Glyph*,
+                                             skgpu::ganesh::GlyphEntry*,
                                              int srcPadding,
                                              GrResourceProvider*,
                                              GrDeferredUploadTarget*);
@@ -64,19 +79,24 @@ public:
     // A BulkUsePlotUpdater is used to manage bulk last use token updating in the Atlas.
     // For convenience, this function will also set the use token for the current glyph if required
     // NOTE: the bulk uploader is only valid if the subrun has a valid atlasGeneration
-    void addGlyphToBulkAndSetUseToken(skgpu::BulkUsePlotUpdater*, skgpu::MaskFormat,
-                                      sktext::gpu::Glyph*, skgpu::AtlasToken);
+    void addGlyphToBulkAndSetUseToken(GrBulkUsePlotUpdater*,
+                                      skgpu::MaskFormat,
+                                      const skgpu::ganesh::GlyphEntry&,
+                                      skgpu::Token);
 
-    void setUseTokenBulk(const skgpu::BulkUsePlotUpdater& updater,
-                         skgpu::AtlasToken token,
+    void setUseTokenBulk(const GrBulkUsePlotUpdater& updater,
+                         skgpu::Token token,
                          skgpu::MaskFormat format) {
         this->getAtlas(format)->setLastUseTokenBulk(updater, token);
     }
 
     // add to texture atlas that matches this format
-    GrDrawOpAtlas::ErrorCode addToAtlas(GrResourceProvider*, GrDeferredUploadTarget*,
-                                        skgpu::MaskFormat, int width, int height, const void* image,
-                                        skgpu::AtlasLocator*);
+    GrDrawOpAtlas::ErrorCode addToAtlas(GrResourceProvider*,
+                                        GrDeferredUploadTarget*,
+                                        skgpu::MaskFormat,
+                                        int width, int height,
+                                        const void* image,
+                                        GrAtlasLocator*);
 
     // Some clients may wish to verify the integrity of the texture backing store of the
     // GrDrawOpAtlas. The atlasGeneration returned below is a monotonically increasing number which
@@ -88,7 +108,7 @@ public:
     // GrOnFlushCallbackObject overrides
 
     bool preFlush(GrOnFlushResourceProvider* onFlushRP) override {
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
         if (onFlushRP->failFlushTimeCallbacks()) {
             return false;
         }
@@ -102,7 +122,7 @@ public:
         return true;
     }
 
-    void postFlush(skgpu::AtlasToken startTokenForNextFlush) override {
+    void postFlush(skgpu::Token startTokenForNextFlush) override {
         for (int i = 0; i < skgpu::kMaskFormatCount; ++i) {
             if (fAtlases[i]) {
                 fAtlases[i]->compact(startTokenForNextFlush);
@@ -114,16 +134,8 @@ public:
     // OnFlushCallbackObject list
     bool retainOnFreeGpuResources() override { return true; }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Functions intended debug only
-#ifdef SK_DEBUG
-    void dump(GrDirectContext*) const;
-#endif
-
-    void setAtlasDimensionsToMinimum_ForTesting();
-    void setMaxPages_TestingOnly(uint32_t maxPages);
-
 private:
+    friend class GrAtlasManagerTools;
     bool initAtlas(skgpu::MaskFormat);
     // Change an expected 565 mask format to 8888 if 565 is not supported (will happen when using
     // Metal on macOS). The actual conversion of the data is handled in get_packed_glyph_image() in

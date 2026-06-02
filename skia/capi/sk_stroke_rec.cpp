@@ -6,6 +6,7 @@
 
 #include <cmath>
 
+#include "include/core/SkPathBuilder.h"
 #include "include/core/SkStrokeRec.h"
 
 #include "../handles/static_sk_stroke_rec.h"
@@ -161,7 +162,13 @@ bool SkStrokeRec_applyToPath(reskia_stroke_rec_t *stroke_rec, reskia_path_t *dst
     if (stroke_rec == nullptr || dst == nullptr || src == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkStrokeRec *>(stroke_rec)->applyToPath(reinterpret_cast<SkPath *>(dst), * reinterpret_cast<const SkPath *>(src));
+    SkPathBuilder builder;
+    const bool applied = reinterpret_cast<SkStrokeRec *>(stroke_rec)->applyToPath(
+            &builder, *reinterpret_cast<const SkPath *>(src));
+    if (applied) {
+        *reinterpret_cast<SkPath *>(dst) = builder.detach();
+    }
+    return applied;
 }
 
 void SkStrokeRec_applyToPaint(reskia_stroke_rec_t *stroke_rec, reskia_paint_t *paint) {

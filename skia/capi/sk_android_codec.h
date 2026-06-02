@@ -105,6 +105,11 @@ reskia_codec_t *SkAndroidCodec_codec(reskia_android_codec_t *androidCodec);
  * invalid input returns RESKIA_STATUS_INVALID_ARGUMENT.
  */
 reskia_status_t SkAndroidCodec_getAndroidGainmap(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *out_info, sk_stream_t *out_gainmap_image_stream);
+/**
+ * androidCodec/out_info/out_gainmap_codec: non-null.
+ * invalid input returns RESKIA_STATUS_INVALID_ARGUMENT.
+ */
+reskia_status_t SkAndroidCodec_getGainmapAndroidCodec(reskia_android_codec_t *androidCodec, reskia_gainmap_info_t *out_info, sk_android_codec_t *out_gainmap_codec);
 
 // static
 

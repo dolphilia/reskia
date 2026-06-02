@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -8,16 +8,49 @@
 #ifndef GrMockGpu_DEFINED
 #define GrMockGpu_DEFINED
 
+#include "include/core/SkRect.h"
+#include "include/core/SkRefCnt.h"
+#include "include/core/SkSize.h"
 #include "include/core/SkTextureCompressionType.h"
+#include "include/gpu/ganesh/GrBackendSurface.h"
+#include "include/gpu/ganesh/GrTypes.h"
+#include "include/gpu/ganesh/mock/GrMockBackendSurface.h"
+#include "include/gpu/ganesh/mock/GrMockTypes.h"
+#include "include/private/base/SkAssert.h"
+#include "include/private/base/SkTArray.h"
+#include "include/private/gpu/ganesh/GrTypesPriv.h"
 #include "src/core/SkTHash.h"
+#include "src/gpu/RefCntedCallback.h"
+#include "src/gpu/ganesh/GrAttachment.h"
 #include "src/gpu/ganesh/GrGpu.h"
-#include "src/gpu/ganesh/GrRenderTarget.h"
-#include "src/gpu/ganesh/GrSemaphore.h"
-#include "src/gpu/ganesh/GrTexture.h"
+#include "src/gpu/ganesh/GrOpsRenderPass.h"
+#include "src/gpu/ganesh/GrSamplerState.h"
+#include "src/gpu/ganesh/GrSemaphore.h"  // IWYU pragma: keep
+#include "src/gpu/ganesh/GrXferProcessor.h"
 
-class GrMockOpsRenderPass;
-struct GrMockOptions;
-class GrPipeline;
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string_view>
+
+class GrBackendSemaphore;
+class GrDirectContext;
+class GrGpuBuffer;
+class GrProgramDesc;
+class GrProgramInfo;
+class GrRenderTarget;
+class GrSurface;
+class GrSurfaceProxy;
+class GrTexture;
+class GrThreadSafePipelineBuilder;
+struct GrContextOptions;
+
+namespace skgpu {
+enum class Budgeted : bool;
+enum class Mipmapped : bool;
+}
 
 class GrMockGpu : public GrGpu {
 public:
@@ -29,10 +62,6 @@ public:
 
     GrThreadSafePipelineBuilder* pipelineBuilder() override;
     sk_sp<GrThreadSafePipelineBuilder> refPipelineBuilder() override;
-
-    [[nodiscard]] GrFence insertFence() override { return 0; }
-    bool waitFence(GrFence) override { return true; }
-    void deleteFence(GrFence) override {}
 
     [[nodiscard]] std::unique_ptr<GrSemaphore> makeSemaphore(bool isOwned) override {
         return nullptr;
@@ -50,7 +79,7 @@ public:
 
     void submit(GrOpsRenderPass* renderPass) override;
 
-    void checkFinishProcs() override {}
+    void checkFinishedCallbacks() override {}
     void finishOutstandingGpuWork() override {}
 
 private:
@@ -151,10 +180,8 @@ private:
 
     void onResolveRenderTarget(GrRenderTarget* target, const SkIRect&) override {}
 
-    void addFinishedProc(GrGpuFinishedProc finishedProc,
-                         GrGpuFinishedContext finishedContext) override {
-        SkASSERT(finishedProc);
-        finishedProc(finishedContext);
+    void addFinishedCallback(skgpu::AutoCallback callback, std::optional<GrTimerQuery>) override {
+        SkASSERT(callback);
     }
 
     GrOpsRenderPass* onGetOpsRenderPass(
@@ -168,14 +195,13 @@ private:
             const skia_private::TArray<GrSurfaceProxy*, true>& sampledProxies,
             GrXferBarrierFlags renderPassXferBarriers) override;
 
-    bool onSubmitToGpu(GrSyncCpu) override { return true; }
+    bool onSubmitToGpu(const GrSubmitInfo&) override { return true; }
 
     sk_sp<GrAttachment> makeStencilAttachment(const GrBackendFormat& /*colorFormat*/,
                                               SkISize dimensions, int numStencilSamples) override;
 
     GrBackendFormat getPreferredStencilFormat(const GrBackendFormat&) override {
-        return GrBackendFormat::MakeMock(GrColorType::kUnknown, SkTextureCompressionType::kNone,
-                                         true);
+        return GrBackendFormats::MakeMockStencilFormat();
     }
 
     sk_sp<GrAttachment> makeMSAAAttachment(SkISize dimensions,
@@ -215,7 +241,7 @@ private:
 
     bool compile(const GrProgramDesc&, const GrProgramInfo&) override { return false; }
 
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
     bool isTestingOnlyBackendTexture(const GrBackendTexture&) const override;
 
     GrBackendRenderTarget createTestingOnlyBackendRenderTarget(SkISize dimensions,

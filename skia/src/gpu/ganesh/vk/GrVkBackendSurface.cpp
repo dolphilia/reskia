@@ -9,31 +9,36 @@
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkTextureCompressionType.h"
 #include "include/gpu/GpuTypes.h"
-#include "include/gpu/GrBackendSurface.h"
-#include "include/gpu/GrTypes.h"
 #include "include/gpu/MutableTextureState.h"
-#include "include/gpu/vk/GrVkTypes.h"
+#include "include/gpu/ganesh/GrBackendSurface.h"
+#include "include/gpu/ganesh/GrTypes.h"
+#include "include/gpu/ganesh/vk/GrVkTypes.h"
+#include "include/gpu/vk/VulkanMutableTextureState.h"
+#include "include/gpu/vk/VulkanTypes.h"
 #include "include/private/base/SkAssert.h"
-#include "include/private/base/SkTo.h"
+#include "include/private/base/SkDebug.h"
 #include "include/private/gpu/ganesh/GrTypesPriv.h"
-#include "src/gpu/MutableTextureStateRef.h"
 #include "src/gpu/ganesh/GrBackendSurfacePriv.h"
 #include "src/gpu/ganesh/vk/GrVkTypesPriv.h"
 #include "src/gpu/ganesh/vk/GrVkUtil.h"
+#include "src/gpu/vk/VulkanMutableTextureStatePriv.h"
 #include "src/gpu/vk/VulkanUtilsPriv.h"
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <utility>
 
 class GrVkBackendFormatData final : public GrBackendFormatData {
 public:
-    GrVkBackendFormatData(VkFormat format, const GrVkYcbcrConversionInfo& ycbcrInfo)
+    GrVkBackendFormatData(VkFormat format, const skgpu::VulkanYcbcrConversionInfo& ycbcrInfo)
             : fFormat(format), fYcbcrConversionInfo(ycbcrInfo) {}
 
     VkFormat asVkFormat() const { return fFormat; }
-    const GrVkYcbcrConversionInfo* getYcbcrConversionInfo() const { return &fYcbcrConversionInfo; }
+    const skgpu::VulkanYcbcrConversionInfo* getYcbcrConversionInfo() const {
+        return &fYcbcrConversionInfo;
+    }
 
 private:
     SkTextureCompressionType compressionType() const override {
@@ -75,7 +80,7 @@ private:
     }
 
     std::string toString() const override {
-#if defined(SK_DEBUG) || GR_TEST_UTILS
+#if defined(SK_DEBUG) || defined(GPU_TEST_UTILS)
         return skgpu::VkFormatToStr(fFormat);
 #else
         return "";
@@ -90,7 +95,7 @@ private:
         // If we have a ycbcr we remove it from the backend format and set the VkFormat to
         // R8G8B8A8_UNORM
         if (fYcbcrConversionInfo.isValid()) {
-            fYcbcrConversionInfo = GrVkYcbcrConversionInfo();
+            fYcbcrConversionInfo = skgpu::VulkanYcbcrConversionInfo();
             fFormat = VK_FORMAT_R8G8B8A8_UNORM;
         }
     }
@@ -100,7 +105,7 @@ private:
 #endif
 
     VkFormat fFormat;
-    GrVkYcbcrConversionInfo fYcbcrConversionInfo;
+    skgpu::VulkanYcbcrConversionInfo fYcbcrConversionInfo;
 };
 
 static const GrVkBackendFormatData* get_and_cast_data(const GrBackendFormat& format) {
@@ -115,19 +120,20 @@ GrBackendFormat MakeVk(VkFormat format, bool willUseDRMFormatModifiers) {
     return GrBackendSurfacePriv::MakeGrBackendFormat(
             GrTextureType::k2D,
             GrBackendApi::kVulkan,
-            GrVkBackendFormatData(format, GrVkYcbcrConversionInfo{}));
+            GrVkBackendFormatData(format, skgpu::VulkanYcbcrConversionInfo{}));
 }
 
-GrBackendFormat MakeVk(const GrVkYcbcrConversionInfo& ycbcrInfo, bool willUseDRMFormatModifiers) {
+GrBackendFormat MakeVk(const skgpu::VulkanYcbcrConversionInfo& ycbcrInfo,
+                       bool willUseDRMFormatModifiers) {
     SkASSERT(ycbcrInfo.isValid());
     GrTextureType textureType =
-            ((ycbcrInfo.isValid() && ycbcrInfo.fExternalFormat) || willUseDRMFormatModifiers)
+            ((ycbcrInfo.isValid() && ycbcrInfo.hasExternalFormat()) || willUseDRMFormatModifiers)
                     ? GrTextureType::kExternal
                     : GrTextureType::k2D;
     return GrBackendSurfacePriv::MakeGrBackendFormat(
             textureType,
             GrBackendApi::kVulkan,
-            GrVkBackendFormatData(ycbcrInfo.fFormat, ycbcrInfo));
+            GrVkBackendFormatData(ycbcrInfo.format(), ycbcrInfo));
 }
 
 bool AsVkFormat(const GrBackendFormat& format, VkFormat* vkFormat) {
@@ -141,7 +147,7 @@ bool AsVkFormat(const GrBackendFormat& format, VkFormat* vkFormat) {
     return false;
 }
 
-const GrVkYcbcrConversionInfo* GetVkYcbcrConversionInfo(const GrBackendFormat& format) {
+const skgpu::VulkanYcbcrConversionInfo* GetVkYcbcrConversionInfo(const GrBackendFormat& format) {
     if (format.isValid() && format.backend() == GrBackendApi::kVulkan) {
         const GrVkBackendFormatData* data = get_and_cast_data(format);
         SkASSERT(data);
@@ -156,23 +162,28 @@ const GrVkYcbcrConversionInfo* GetVkYcbcrConversionInfo(const GrBackendFormat& f
 class GrVkBackendTextureData final : public GrBackendTextureData {
 public:
     GrVkBackendTextureData(const GrVkImageInfo& info,
-                           sk_sp<skgpu::MutableTextureStateRef> mutableState = nullptr)
-            : fVkInfo(info)
-            , fMutableState(mutableState ? std::move(mutableState)
-                                         : sk_make_sp<skgpu::MutableTextureStateRef>(
-                                                   info.fImageLayout, info.fCurrentQueueFamily)) {}
+                           sk_sp<skgpu::MutableTextureState> mutableState = nullptr)
+            : fVkInfo(info) {
+        if (mutableState) {
+            fMutableState = std::move(mutableState);
+        } else {
+            fMutableState =
+                    sk_make_sp<skgpu::MutableTextureState>(skgpu::MutableTextureStates::MakeVulkan(
+                            info.fImageLayout, info.fCurrentQueueFamily));
+        }
+    }
 
     const GrVkImageInfo& info() const { return fVkInfo; }
 
-    sk_sp<skgpu::MutableTextureStateRef> getMutableState() const override {
+    sk_sp<skgpu::MutableTextureState> getMutableState() const override {
         return fMutableState;
     }
     void setMutableState(const skgpu::MutableTextureState& state) override {
         fMutableState->set(state);
     }
 
-    skgpu::MutableTextureStateRef* mutableState() { return fMutableState.get(); }
-    const skgpu::MutableTextureStateRef* mutableState() const { return fMutableState.get(); }
+    skgpu::MutableTextureState* mutableState() { return fMutableState.get(); }
+    const skgpu::MutableTextureState* mutableState() const { return fMutableState.get(); }
 
 private:
     void copyTo(AnyTextureData& textureData) const override {
@@ -181,6 +192,7 @@ private:
 
     bool isProtected() const override { return fVkInfo.fProtected == skgpu::Protected::kYes; }
 
+#if defined(GPU_TEST_UTILS)
     bool equal(const GrBackendTextureData* that) const override {
         SkASSERT(!that || that->type() == GrBackendApi::kVulkan);
         if (auto otherVk = static_cast<const GrVkBackendTextureData*>(that)) {
@@ -194,6 +206,7 @@ private:
         }
         return false;
     }
+#endif
 
     bool isSameTexture(const GrBackendTextureData* that) const override {
         SkASSERT(!that || that->type() == GrBackendApi::kVulkan);
@@ -208,7 +221,7 @@ private:
         auto info = GrVkImageInfoWithMutableState(fVkInfo, fMutableState.get());
         bool usesDRMModifier = info.fImageTiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT;
         if (info.fYcbcrConversionInfo.isValid()) {
-            SkASSERT(info.fFormat == info.fYcbcrConversionInfo.fFormat);
+            SkASSERT(info.fFormat == info.fYcbcrConversionInfo.format());
             return GrBackendFormats::MakeVk(info.fYcbcrConversionInfo, usesDRMModifier);
         }
         return GrBackendFormats::MakeVk(info.fFormat, usesDRMModifier);
@@ -219,7 +232,7 @@ private:
 #endif
 
     GrVkImageInfo fVkInfo;
-    sk_sp<skgpu::MutableTextureStateRef> fMutableState;
+    sk_sp<skgpu::MutableTextureState> fMutableState;
 };
 
 static const GrVkBackendTextureData* get_and_cast_data(const GrBackendTexture& texture) {
@@ -235,7 +248,7 @@ static GrVkBackendTextureData* get_and_cast_data(GrBackendTexture* texture) {
 }
 
 static GrTextureType vk_image_info_to_texture_type(const GrVkImageInfo& info) {
-    if ((info.fYcbcrConversionInfo.isValid() && info.fYcbcrConversionInfo.fExternalFormat != 0) ||
+    if ((info.fYcbcrConversionInfo.isValid() && info.fYcbcrConversionInfo.hasExternalFormat()) ||
         info.fImageTiling == VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT) {
         return GrTextureType::kExternal;
     }
@@ -282,7 +295,7 @@ GrBackendTexture MakeVk(int width,
 GrBackendTexture MakeVk(int width,
                         int height,
                         const GrVkImageInfo& vkInfo,
-                        sk_sp<skgpu::MutableTextureStateRef> mutableState) {
+                        sk_sp<skgpu::MutableTextureState> mutableState) {
     return GrBackendSurfacePriv::MakeGrBackendTexture(
             width,
             height,
@@ -308,7 +321,7 @@ void SetVkImageLayout(GrBackendTexture* tex, VkImageLayout layout) {
     if (tex && tex->isValid() && tex->backend() == GrBackendApi::kVulkan) {
         GrVkBackendTextureData* data = get_and_cast_data(tex);
         SkASSERT(data);
-        data->mutableState()->setImageLayout(layout);
+        skgpu::MutableTextureStates::SetVkImageLayout(data->mutableState(), layout);
     }
 }
 
@@ -318,29 +331,34 @@ void SetVkImageLayout(GrBackendTexture* tex, VkImageLayout layout) {
 class GrVkBackendRenderTargetData final : public GrBackendRenderTargetData {
 public:
     GrVkBackendRenderTargetData(const GrVkImageInfo& info,
-                                sk_sp<skgpu::MutableTextureStateRef> mutableState = nullptr)
-            : fVkInfo(info)
-            , fMutableState(mutableState ? std::move(mutableState)
-                                         : sk_make_sp<skgpu::MutableTextureStateRef>(
-                                                   info.fImageLayout, info.fCurrentQueueFamily)) {}
+                                sk_sp<skgpu::MutableTextureState> mutableState = nullptr)
+            : fVkInfo(info) {
+        if (mutableState) {
+            fMutableState = std::move(mutableState);
+        } else {
+            fMutableState =
+                    sk_make_sp<skgpu::MutableTextureState>(skgpu::MutableTextureStates::MakeVulkan(
+                            info.fImageLayout, info.fCurrentQueueFamily));
+        }
+    }
 
     const GrVkImageInfo& info() const { return fVkInfo; }
 
-    sk_sp<skgpu::MutableTextureStateRef> getMutableState() const override {
+    sk_sp<skgpu::MutableTextureState> getMutableState() const override {
         return fMutableState;
     }
     void setMutableState(const skgpu::MutableTextureState& state) override {
         fMutableState->set(state);
     }
 
-    skgpu::MutableTextureStateRef* mutableState() { return fMutableState.get(); }
-    const skgpu::MutableTextureStateRef* mutableState() const { return fMutableState.get(); }
+    skgpu::MutableTextureState* mutableState() { return fMutableState.get(); }
+    const skgpu::MutableTextureState* mutableState() const { return fMutableState.get(); }
 
 private:
     GrBackendFormat getBackendFormat() const override {
         auto info = GrVkImageInfoWithMutableState(fVkInfo, fMutableState.get());
         if (info.fYcbcrConversionInfo.isValid()) {
-            SkASSERT(info.fFormat == info.fYcbcrConversionInfo.fFormat);
+            SkASSERT(info.fFormat == info.fYcbcrConversionInfo.format());
             return GrBackendFormats::MakeVk(info.fYcbcrConversionInfo);
         }
         return GrBackendFormats::MakeVk(info.fFormat);
@@ -348,6 +366,7 @@ private:
 
     bool isProtected() const override { return fVkInfo.fProtected == skgpu::Protected::kYes; }
 
+#if defined(GPU_TEST_UTILS)
     bool equal(const GrBackendRenderTargetData* that) const override {
         SkASSERT(!that || that->type() == GrBackendApi::kVulkan);
         if (auto otherVk = static_cast<const GrVkBackendRenderTargetData*>(that)) {
@@ -361,6 +380,7 @@ private:
         }
         return false;
     }
+#endif
 
     void copyTo(AnyRenderTargetData& rtData) const override {
         rtData.emplace<GrVkBackendRenderTargetData>(fVkInfo, fMutableState);
@@ -371,7 +391,7 @@ private:
 #endif
 
     GrVkImageInfo fVkInfo;
-    sk_sp<skgpu::MutableTextureStateRef> fMutableState;
+    sk_sp<skgpu::MutableTextureState> fMutableState;
 };
 
 static const GrVkBackendRenderTargetData* get_and_cast_data(const GrBackendRenderTarget& rt) {
@@ -402,7 +422,7 @@ GrBackendRenderTarget MakeVk(int width, int height, const GrVkImageInfo& vkInfo)
 GrBackendRenderTarget MakeVk(int width,
                              int height,
                              const GrVkImageInfo& vkInfo,
-                             sk_sp<skgpu::MutableTextureStateRef> mutableState) {
+                             sk_sp<skgpu::MutableTextureState> mutableState) {
     return GrBackendSurfacePriv::MakeGrBackendRenderTarget(
             width,
             height,
@@ -427,7 +447,7 @@ bool GetVkImageInfo(const GrBackendRenderTarget& rt, GrVkImageInfo* outInfo) {
 void SetVkImageLayout(GrBackendRenderTarget* rt, VkImageLayout layout) {
     if (rt && rt->isValid() && rt->backend() == GrBackendApi::kVulkan) {
         GrVkBackendRenderTargetData* data = get_and_cast_data(rt);
-        data->mutableState()->setImageLayout(layout);
+        skgpu::MutableTextureStates::SetVkImageLayout(data->mutableState(), layout);
     }
 }
 

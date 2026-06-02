@@ -76,4 +76,11 @@ void SkTraceMemoryDump_dumpBudgetedState(reskia_trace_memory_dump_t *trace_memor
     reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump)->dumpBudgetedState(str, b);
 }
 
+bool SkTraceMemoryDump_shouldDumpSizelessObjects(reskia_trace_memory_dump_t *trace_memory_dump) {
+    if (trace_memory_dump == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkTraceMemoryDump *>(trace_memory_dump)->shouldDumpSizelessObjects();
+}
+
 }

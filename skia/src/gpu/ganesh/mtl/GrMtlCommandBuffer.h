@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -11,10 +11,10 @@
 #import <Metal/Metal.h>
 
 #include "include/core/SkRefCnt.h"
-#include "include/gpu/GrTypes.h"
+#include "include/gpu/ganesh/GrTypes.h"
+#include "src/gpu/GpuRefCnt.h"
 #include "src/gpu/ganesh/GrBuffer.h"
 #include "src/gpu/ganesh/GrManagedResource.h"
-#include "src/gpu/ganesh/GrRefCnt.h"
 #include "src/gpu/ganesh/GrSurface.h"
 #include "src/gpu/ganesh/mtl/GrMtlRenderCommandEncoder.h"
 #include "src/gpu/ganesh/mtl/GrMtlUtil.h"

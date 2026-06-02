@@ -10,7 +10,9 @@
 #include "include/core/SkImage.h"
 #include "include/core/SkColorType.h"
 #include "include/core/SkImageInfo.h"
+#include "include/core/SkRecorder.h"
 #include "include/core/SkTileMode.h"
+#include "include/gpu/graphite/Recorder.h"
 
 #include "../handles/static_sk_image.h"
 #include "../handles/static_sk_shader.h"
@@ -44,6 +46,10 @@ sk_data_t make_data_handle(sk_sp<SkData> data) {
     return data ? static_sk_data_make(std::move(data)) : 0;
 }
 
+sk_data_t make_data_handle(sk_sp<const SkData> data) {
+    return data ? static_sk_data_make(sk_ref_sp(const_cast<SkData *>(data.get()))) : 0;
+}
+
 bool has_i_size_handle(sk_i_size_t size) {
     return size != 0 && static_sk_i_size_get_ptr(size) != nullptr;
 }
@@ -61,6 +67,18 @@ bool has_valid_pixels(const reskia_image_info_t *info, const void *pixels, size_
         return false;
     }
     return reinterpret_cast<const SkImageInfo *>(info)->validRowBytes(rowBytes);
+}
+
+SkRecorder *as_sk_recorder(reskia_recording_context_t *context) {
+    return nullptr;
+}
+
+SkRecorder *as_sk_recorder(reskia_direct_context_t *context) {
+    return nullptr;
+}
+
+SkRecorder *as_sk_recorder(reskia_graphite_recorder_t *recorder) {
+    return recorder != nullptr ? static_cast<SkRecorder *>(reinterpret_cast<skgpu::graphite::Recorder *>(recorder)) : nullptr;
 }
 
 bool valid_tile_mode(reskia_image_tile_mode_t mode) {
@@ -271,7 +289,7 @@ bool SkImage_isValid(reskia_image_t *image, reskia_recording_context_t *context)
     if (image == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkImage *>(image)->isValid(reinterpret_cast<GrRecordingContext *>(context));
+    return reinterpret_cast<SkImage *>(image)->isValid(as_sk_recorder(context));
 }
 
 bool SkImage_readPixels(reskia_image_t *image, reskia_direct_context_t *context, const reskia_image_info_t *dstInfo, void *dstPixels, size_t dstRowBytes, int srcX, int srcY, reskia_image_caching_hint_t cachingHint) {
@@ -355,6 +373,25 @@ bool SkImage_scalePixels(reskia_image_t *image, const reskia_pixmap_t *dst, cons
     return reinterpret_cast<SkImage *>(image)->scalePixels(* reinterpret_cast<const SkPixmap *>(dst), * reinterpret_cast<const SkSamplingOptions *>(sampling), static_cast<SkImage::CachingHint>(cachingHint));
 }
 
+sk_image_t SkImage_makeScaled(reskia_image_t *image, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling) {
+    if (image == nullptr || info == nullptr || sampling == nullptr) {
+        return 0;
+    }
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeScaled(
+            *reinterpret_cast<const SkImageInfo *>(info),
+            *reinterpret_cast<const SkSamplingOptions *>(sampling)));
+}
+
+sk_image_t SkImage_makeScaledWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_image_info_t *info, const reskia_sampling_options_t *sampling) {
+    if (image == nullptr || info == nullptr || sampling == nullptr) {
+        return 0;
+    }
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeScaled(
+            as_sk_recorder(recorder),
+            *reinterpret_cast<const SkImageInfo *>(info),
+            *reinterpret_cast<const SkSamplingOptions *>(sampling)));
+}
+
 sk_data_t SkImage_refEncodedData(reskia_image_t *image) {
     if (image == nullptr) {
         return 0;
@@ -366,7 +403,7 @@ sk_image_t SkImage_makeSubset(reskia_image_t *image, reskia_direct_context_t *di
     if (image == nullptr || subset == nullptr) {
         return 0;
     }
-    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeSubset(reinterpret_cast<GrDirectContext *>(direct), * reinterpret_cast<const SkIRect *>(subset)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeSubset(as_sk_recorder(direct), * reinterpret_cast<const SkIRect *>(subset), SkImage::RequiredProperties()));
 }
 
 sk_image_t SkImage_makeSubsetWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, const reskia_i_rect_t *subset, sk_image_required_properties_t properties) {
@@ -436,28 +473,28 @@ sk_image_t SkImage_makeColorSpace(reskia_image_t *image, reskia_direct_context_t
     if (image == nullptr || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_sk_color_space_get_entity(color_space)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(as_sk_recorder(direct), static_sk_color_space_get_entity(color_space), SkImage::RequiredProperties()));
 }
 
 sk_image_t SkImage_makeColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, sk_color_space_t color_space, sk_image_required_properties_t properties) {
     if (image == nullptr || recorder == nullptr || !has_optional_color_space_handle(color_space) || !has_required_properties_handle(properties)) {
         return 0;
     }
-    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorSpace(as_sk_recorder(recorder), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpace(reskia_image_t *image, reskia_direct_context_t *direct, reskia_image_color_type_t targetColorType, sk_color_space_t color_space) {
     if (image == nullptr || !valid_color_type(targetColorType) || !has_optional_color_space_handle(color_space)) {
         return 0;
     }
-    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<GrDirectContext *>(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(as_sk_recorder(direct), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), SkImage::RequiredProperties()));
 }
 
 sk_image_t SkImage_makeColorTypeAndColorSpaceWithRecorder(reskia_image_t *image, reskia_graphite_recorder_t *recorder, reskia_image_color_type_t targetColorType, sk_color_space_t color_space, sk_image_required_properties_t properties) {
     if (image == nullptr || recorder == nullptr || !valid_color_type(targetColorType) || !has_optional_color_space_handle(color_space) || !has_required_properties_handle(properties)) {
         return 0;
     }
-    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(reinterpret_cast<skgpu::graphite::Recorder *>(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
+    return make_image_handle(reinterpret_cast<SkImage *>(image)->makeColorTypeAndColorSpace(as_sk_recorder(recorder), static_cast<SkColorType>(targetColorType), static_sk_color_space_get_entity(color_space), static_sk_image_required_properties_get_entity(properties)));
 }
 
 sk_image_t SkImage_reinterpretColorSpace(reskia_image_t *image, sk_color_space_t color_space) {

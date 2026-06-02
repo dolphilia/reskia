@@ -145,18 +145,30 @@ bool SkTypeface_isFixedPitch(reskia_typeface_t *typeface) {
     return typeface != nullptr && as_typeface(typeface)->isFixedPitch();
 }
 
+bool SkTypeface_isSyntheticBold(reskia_typeface_t *typeface) {
+    return typeface != nullptr && as_typeface(typeface)->isSyntheticBold();
+}
+
+bool SkTypeface_isSyntheticOblique(reskia_typeface_t *typeface) {
+    return typeface != nullptr && as_typeface(typeface)->isSyntheticOblique();
+}
+
 int SkTypeface_getVariationDesignPosition(reskia_typeface_t *typeface, reskia_font_arguments_variation_position_coordinate_t *coordinates, int coordinateCount) {
     if (typeface == nullptr || coordinateCount < 0) {
         return -1;
     }
-    return as_typeface(typeface)->getVariationDesignPosition(reinterpret_cast<SkFontArguments::VariationPosition::Coordinate *>(coordinates), coordinateCount);
+    return as_typeface(typeface)->getVariationDesignPosition(
+            {reinterpret_cast<SkFontArguments::VariationPosition::Coordinate *>(coordinates),
+             static_cast<size_t>(coordinateCount)});
 }
 
 int SkTypeface_getVariationDesignParameters(reskia_typeface_t *typeface, reskia_font_parameters_variation_axis_t *parameters, int parameterCount) {
     if (typeface == nullptr || parameterCount < 0) {
         return -1;
     }
-    return as_typeface(typeface)->getVariationDesignParameters(reinterpret_cast<SkFontParameters::Variation::Axis *>(parameters), parameterCount);
+    return as_typeface(typeface)->getVariationDesignParameters(
+            {reinterpret_cast<SkFontParameters::Variation::Axis *>(parameters),
+             static_cast<size_t>(parameterCount)});
 }
 
 uint32_t SkTypeface_uniqueID(reskia_typeface_t *typeface) {
@@ -191,14 +203,20 @@ void SkTypeface_unicharsToGlyphs(reskia_typeface_t *typeface, const int32_t *uni
     if (typeface == nullptr || count <= 0 || uni == nullptr || glyphs == nullptr) {
         return;
     }
-    as_typeface(typeface)->unicharsToGlyphs(reinterpret_cast<const SkUnichar *>(uni), count, reinterpret_cast<SkGlyphID *>(glyphs));
+    as_typeface(typeface)->unicharsToGlyphs(
+            {reinterpret_cast<const SkUnichar *>(uni), static_cast<size_t>(count)},
+            {reinterpret_cast<SkGlyphID *>(glyphs), static_cast<size_t>(count)});
 }
 
 int SkTypeface_textToGlyphs(reskia_typeface_t *typeface, const void *text, size_t byteLength, reskia_typeface_text_encoding_t encoding, uint16_t *glyphs, int maxGlyphCount) {
-    if (typeface == nullptr || !has_text_input(text, byteLength) || maxGlyphCount < 0) {
+    if (typeface == nullptr || !has_text_input(text, byteLength) || maxGlyphCount < 0 || (maxGlyphCount > 0 && glyphs == nullptr)) {
         return 0;
     }
-    return as_typeface(typeface)->textToGlyphs(text, byteLength, static_cast<SkTextEncoding>(encoding), reinterpret_cast<SkGlyphID *>(glyphs), maxGlyphCount);
+    return as_typeface(typeface)->textToGlyphs(
+            text,
+            byteLength,
+            static_cast<SkTextEncoding>(encoding),
+            {reinterpret_cast<SkGlyphID *>(glyphs), static_cast<size_t>(maxGlyphCount)});
 }
 
 uint16_t SkTypeface_unicharToGlyph(reskia_typeface_t *typeface, reskia_typeface_unichar_t unichar) {
@@ -222,11 +240,14 @@ int SkTypeface_countTables(reskia_typeface_t *typeface) {
     return as_typeface(typeface)->countTables();
 }
 
-int SkTypeface_getTableTags(reskia_typeface_t *typeface, uint32_t *tags) {
+int SkTypeface_readTableTags(reskia_typeface_t *typeface, uint32_t *tags, size_t tagCount) {
     if (typeface == nullptr) {
         return 0;
     }
-    return as_typeface(typeface)->getTableTags(reinterpret_cast<SkFontTableTag *>(tags));
+    if (tags == nullptr) {
+        tagCount = 0;
+    }
+    return as_typeface(typeface)->readTableTags({reinterpret_cast<SkFontTableTag *>(tags), tagCount});
 }
 
 size_t SkTypeface_getTableSize(reskia_typeface_t *typeface, uint32_t tag) {
@@ -261,7 +282,9 @@ bool SkTypeface_getKerningPairAdjustments(reskia_typeface_t *typeface, const uin
     if (typeface == nullptr || count < 0 || !has_glyph_output(glyphs, count, adjustments)) {
         return false;
     }
-    return as_typeface(typeface)->getKerningPairAdjustments(reinterpret_cast<const SkGlyphID *>(glyphs), count, adjustments);
+    return as_typeface(typeface)->getKerningPairAdjustments(
+            {reinterpret_cast<const SkGlyphID *>(glyphs), static_cast<size_t>(count)},
+            {adjustments, static_cast<size_t>(count)});
 }
 
 reskia_typeface_localized_strings_t *SkTypeface_createFamilyNameIterator(reskia_typeface_t *typeface) {
@@ -283,6 +306,13 @@ bool SkTypeface_getPostScriptName(reskia_typeface_t *typeface, reskia_string_t *
         return false;
     }
     return as_typeface(typeface)->getPostScriptName(reinterpret_cast<SkString *>(name));
+}
+
+int SkTypeface_getResourceName(reskia_typeface_t *typeface, reskia_string_t *resourceName) {
+    if (typeface == nullptr || resourceName == nullptr) {
+        return -1;
+    }
+    return as_typeface(typeface)->getResourceName(reinterpret_cast<SkString *>(resourceName));
 }
 
 sk_stream_asset_t SkTypeface_openStream(reskia_typeface_t *typeface, int *ttcIndex) {
@@ -381,45 +411,5 @@ bool SkTypeface_Register(
     }
     return true;
 }
-
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-
-sk_typeface_t SkTypeface_MakeDefault() {
-    return make_typeface_handle(SkTypeface::MakeDefault());
-}
-
-sk_typeface_t SkTypeface_MakeFromName(const char familyName[], sk_font_style_t fontStyle) {
-    return make_typeface_handle(SkTypeface::MakeFromName(familyName, static_sk_font_style_get_entity(fontStyle)));
-}
-
-sk_typeface_t SkTypeface_MakeFromFile(const char path[], int index) {
-    if (path == nullptr || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromFile(path, index));
-}
-
-sk_typeface_t SkTypeface_MakeFromStream(sk_stream_asset_t stream_asset, int index) {
-    if (stream_asset == 0 || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromStream(static_sk_stream_asset_take_entity(stream_asset), index));
-}
-
-sk_typeface_t SkTypeface_MakeFromData(sk_data_t data, int index) {
-    if (data == 0 || index < 0) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeFromData(static_sk_data_get_entity(data), index));
-}
-
-sk_typeface_t SkTypeface_MakeDeserializeWithoutFontMgr(reskia_stream_t *stream) {
-    if (stream == nullptr) {
-        return 0;
-    }
-    return make_typeface_handle(SkTypeface::MakeDeserialize(reinterpret_cast<SkStream *>(stream)));
-}
-
-#endif
 
 }

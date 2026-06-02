@@ -16,6 +16,8 @@
 #include "../handles/static_sk_point-internal.h"
 #include "../handles/static_sk_rect-internal.h"
 
+#include <optional>
+
 namespace {
 
 constexpr int kMatrixValueCount = 9;
@@ -487,7 +489,19 @@ bool SkMatrix_setPolyToPoly(reskia_matrix_t *matrix, const reskia_point_t *src, 
     if (matrix == nullptr || count < 0 || count > 4 || (count > 0 && (src == nullptr || dst == nullptr))) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->setPolyToPoly(reinterpret_cast<const SkPoint *>(src), reinterpret_cast<const SkPoint *>(dst), count);
+    return reinterpret_cast<SkMatrix *>(matrix)->setPolyToPoly(
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(dst), static_cast<size_t>(count)});
+}
+
+sk_matrix_t SkMatrix_PolyToPoly(const reskia_point_t *src, const reskia_point_t *dst, int count) {
+    if (count < 0 || count > 4 || (count > 0 && (src == nullptr || dst == nullptr))) {
+        return 0;
+    }
+    std::optional<SkMatrix> matrix = SkMatrix::PolyToPoly(
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(dst), static_cast<size_t>(count)});
+    return matrix.has_value() ? static_sk_matrix_make(*matrix) : 0;
 }
 
 bool SkMatrix_invert(reskia_matrix_t *matrix, reskia_matrix_t *inverse) {
@@ -522,28 +536,58 @@ void SkMatrix_mapPoints(reskia_matrix_t *matrix, reskia_point_t *dst, const resk
     if (matrix == nullptr || count <= 0 || dst == nullptr || src == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapPoints(reinterpret_cast<SkPoint *>(dst), reinterpret_cast<const SkPoint *>(src), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapPoints(
+            {reinterpret_cast<SkPoint *>(dst), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)});
 }
 
 void SkMatrix_mapPointsInPlace(reskia_matrix_t *matrix, reskia_point_t *pts, int count) {
     if (matrix == nullptr || count <= 0 || pts == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapPoints(reinterpret_cast<SkPoint *>(pts), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapPoints(
+            {reinterpret_cast<SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 void SkMatrix_mapHomogeneousPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src, int count) {
     if (matrix == nullptr || count <= 0 || dst == nullptr || src == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoints(reinterpret_cast<SkPoint3 *>(dst), reinterpret_cast<const SkPoint3 *>(src), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoints(
+            {reinterpret_cast<SkPoint3 *>(dst), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint3 *>(src), static_cast<size_t>(count)});
+}
+
+void SkMatrix_mapHomogeneousPoint(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point3_t *src) {
+    if (matrix == nullptr || dst == nullptr || src == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkPoint3 *>(dst) = reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoint(*reinterpret_cast<const SkPoint3 *>(src));
 }
 
 void SkMatrix_mapHomogeneousPointsFromPoints(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count) {
     if (matrix == nullptr || count <= 0 || dst == nullptr || src == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapHomogeneousPoints(reinterpret_cast<SkPoint3 *>(dst), reinterpret_cast<const SkPoint *>(src), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapPointsToHomogeneous(
+            {reinterpret_cast<SkPoint3 *>(dst), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)});
+}
+
+void SkMatrix_mapPointsToHomogeneous(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src, int count) {
+    if (matrix == nullptr || count <= 0 || dst == nullptr || src == nullptr) {
+        return;
+    }
+    reinterpret_cast<SkMatrix *>(matrix)->mapPointsToHomogeneous(
+            {reinterpret_cast<SkPoint3 *>(dst), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkPoint *>(src), static_cast<size_t>(count)});
+}
+
+void SkMatrix_mapPointToHomogeneous(reskia_matrix_t *matrix, reskia_point3_t *dst, const reskia_point_t *src) {
+    if (matrix == nullptr || dst == nullptr || src == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkPoint3 *>(dst) = reinterpret_cast<SkMatrix *>(matrix)->mapPointToHomogeneous(*reinterpret_cast<const SkPoint *>(src));
 }
 
 sk_point_t SkMatrix_mapPoint(reskia_matrix_t *matrix, sk_point_t pt) {
@@ -553,18 +597,18 @@ sk_point_t SkMatrix_mapPoint(reskia_matrix_t *matrix, sk_point_t pt) {
     return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapPoint(static_sk_point_get_entity(pt)));
 }
 
-void SkMatrix_mapXY(reskia_matrix_t *matrix, float x, float y, reskia_point_t *result) {
-    if (matrix == nullptr || result == nullptr) {
-        return;
+sk_point_t SkMatrix_mapPointAffine(reskia_matrix_t *matrix, sk_point_t pt) {
+    if (matrix == nullptr) {
+        return static_sk_point_make({});
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapXY(x, y, reinterpret_cast<SkPoint *>(result));
+    return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapPointAffine(static_sk_point_get_entity(pt)));
 }
 
 sk_point_t SkMatrix_mapXYToPoint(reskia_matrix_t *matrix, float x, float y) {
     if (matrix == nullptr) {
         return static_sk_point_make({});
     }
-    return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapXY(x, y));
+    return static_sk_point_make(reinterpret_cast<SkMatrix *>(matrix)->mapPoint(SkPoint::Make(x, y)));
 }
 
 sk_point_t SkMatrix_mapOrigin(reskia_matrix_t *matrix) {
@@ -578,21 +622,25 @@ void SkMatrix_mapVectors(reskia_matrix_t *matrix, reskia_vector_t *dst, const re
     if (matrix == nullptr || count <= 0 || dst == nullptr || src == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapVectors(reinterpret_cast<SkVector *>(dst), reinterpret_cast<const SkVector *>(src), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapVectors(
+            {reinterpret_cast<SkVector *>(dst), static_cast<size_t>(count)},
+            {reinterpret_cast<const SkVector *>(src), static_cast<size_t>(count)});
 }
 
 void SkMatrix_mapVectorsInPlace(reskia_matrix_t *matrix, reskia_vector_t *vecs, int count) {
     if (matrix == nullptr || count <= 0 || vecs == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapVectors(reinterpret_cast<SkVector *>(vecs), count);
+    reinterpret_cast<SkMatrix *>(matrix)->mapVectors(
+            {reinterpret_cast<SkVector *>(vecs), static_cast<size_t>(count)});
 }
 
 void SkMatrix_mapVector(reskia_matrix_t *matrix, float dx, float dy, reskia_vector_t *result) {
     if (matrix == nullptr || result == nullptr) {
         return;
     }
-    reinterpret_cast<SkMatrix *>(matrix)->mapVector(dx, dy, reinterpret_cast<SkVector *>(result));
+    *reinterpret_cast<SkVector *>(result) =
+            reinterpret_cast<SkMatrix *>(matrix)->mapVector(dx, dy);
 }
 
 sk_point_t SkMatrix_mapVectorToPoint(reskia_matrix_t *matrix, float dx, float dy) {
@@ -606,21 +654,24 @@ bool SkMatrix_mapRect(reskia_matrix_t *matrix, reskia_rect_t *dst, const reskia_
     if (matrix == nullptr || dst == nullptr || src == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(dst), * reinterpret_cast<const SkRect *>(src));
 }
 
 bool SkMatrix_mapRectInPlace(reskia_matrix_t *matrix, reskia_rect_t *rect, reskia_matrix_apply_perspective_clip_t pc) {
     if (matrix == nullptr || rect == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), static_cast<SkApplyPerspectiveClip>(pc));
+    (void) pc;
+    return reinterpret_cast<SkMatrix *>(matrix)->mapRect(reinterpret_cast<SkRect *>(rect), *reinterpret_cast<const SkRect *>(rect));
 }
 
 sk_rect_t SkMatrix_mapRectFromSource(reskia_matrix_t *matrix, const reskia_rect_t *src, reskia_matrix_apply_perspective_clip_t pc) {
     if (matrix == nullptr || src == nullptr) {
         return static_sk_rect_make(SkRect::MakeEmpty());
     }
-    return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src), static_cast<SkApplyPerspectiveClip>(pc)));
+    (void) pc;
+    return static_sk_rect_make(reinterpret_cast<SkMatrix *>(matrix)->mapRect(*reinterpret_cast<const SkRect *>(src)));
 }
 
 void SkMatrix_mapRectToQuad(reskia_matrix_t *matrix, reskia_point_t *dst, const reskia_rect_t *rect) {
@@ -707,6 +758,10 @@ sk_matrix_t SkMatrix_Scale(float sx, float sy) {
     return static_sk_matrix_make(SkMatrix::Scale(sx, sy));
 }
 
+sk_matrix_t SkMatrix_ScaleTranslate(float sx, float sy, float tx, float ty) {
+    return static_sk_matrix_make(SkMatrix::ScaleTranslate(sx, sy, tx, ty));
+}
+
 sk_matrix_t SkMatrix_Translate(float dx, float dy) {
     return static_sk_matrix_make(SkMatrix::Translate(dx, dy));
 }
@@ -735,11 +790,36 @@ sk_matrix_t SkMatrix_Skew(float kx, float ky) {
     return static_sk_matrix_make(SkMatrix::Skew(kx, ky));
 }
 
+bool SkMatrix_Rect2Rect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode, reskia_matrix_t *result) {
+    if (src == nullptr || dst == nullptr || result == nullptr) {
+        return false;
+    }
+    std::optional<SkMatrix> matrix = SkMatrix::Rect2Rect(
+            *reinterpret_cast<const SkRect *>(src),
+            *reinterpret_cast<const SkRect *>(dst),
+            static_cast<SkMatrix::ScaleToFit>(mode));
+    if (!matrix.has_value()) {
+        return false;
+    }
+    *reinterpret_cast<SkMatrix *>(result) = *matrix;
+    return true;
+}
+
+sk_matrix_t SkMatrix_RectToRectOrIdentity(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode) {
+    if (src == nullptr || dst == nullptr) {
+        return static_sk_matrix_make(SkMatrix::I());
+    }
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(
+            *reinterpret_cast<const SkRect *>(src),
+            *reinterpret_cast<const SkRect *>(dst),
+            static_cast<SkMatrix::ScaleToFit>(mode)));
+}
+
 sk_matrix_t SkMatrix_RectToRect(const reskia_rect_t *src, const reskia_rect_t *dst, reskia_matrix_scale_to_fit_t mode) {
     if (src == nullptr || dst == nullptr) {
         return 0;
     }
-    return static_sk_matrix_make(SkMatrix::RectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(mode)));
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(mode)));
 }
 
 sk_matrix_t SkMatrix_MakeAll(float scaleX, float skewX, float transX, float skewY, float scaleY, float transY, float pers0, float pers1, float pers2) {
@@ -750,7 +830,7 @@ sk_matrix_t SkMatrix_MakeRectToRect(const reskia_rect_t *src, const reskia_rect_
     if (src == nullptr || dst == nullptr) {
         return 0;
     }
-    return static_sk_matrix_make(SkMatrix::MakeRectToRect(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf)));
+    return static_sk_matrix_make(SkMatrix::RectToRectOrIdentity(* reinterpret_cast<const SkRect *>(src), * reinterpret_cast<const SkRect *>(dst), static_cast<SkMatrix::ScaleToFit>(stf)));
 }
 
 void SkMatrix_SetAffineIdentity(float *affine) {

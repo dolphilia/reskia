@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "../handles/static_sk_font.h"
 #include "../handles/static_sk_point.h"
+#include "../handles/static_sk_strike_ref.h"
 #include "../handles/static_sk_typeface.h"
 
 #ifdef __cplusplus
@@ -53,6 +54,7 @@ void SkFont_setEdging(reskia_font_t *font, reskia_font_edging_t edging); // NULL
 void SkFont_setHinting(reskia_font_t *font, reskia_font_hinting_t hintingLevel); // NULL/invalid enum 入力では no-op
 reskia_font_hinting_t SkFont_getHinting(reskia_font_t *font); // NULL 入力では -1
 sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size); // NULL 入力では 0
+sk_strike_ref_t SkFont_makeStrikeRef(reskia_font_t *font); // NULL 入力や strike 生成不能では 0
 reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font); // borrowed pointer。NULL 入力や未設定では NULL。caller は解放しない
 float SkFont_getSize(reskia_font_t *font); // NULL 入力では 0
 float SkFont_getScaleX(reskia_font_t *font); // NULL 入力では 0
@@ -88,6 +90,7 @@ float SkFont_measureTextWithPaint(reskia_font_t *font, const uint8_t *text, size
  * count <= 0 では no-op。count > 0 では glyphs は count 要素以上、非 NULL。widths/bounds は NULL 許可
  */
 void SkFont_getWidths(reskia_font_t *font, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds);
+float SkFont_getWidth(reskia_font_t *font, uint16_t glyph); // NULL 入力では 0
 
 // TODO
 //void SkFont_getWidths_2(void *font, const void * glyphs, int count, void * widths, std::nullptr_t ptr); // (SkFont *font, const SkGlyphID glyphs[], int count, SkScalar widths[], std::nullptr_t ptr)

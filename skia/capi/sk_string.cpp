@@ -81,6 +81,34 @@ size_t SkString_size(reskia_string_t *string) {
     return reinterpret_cast<SkString *>(string)->size();
 }
 
+const char * SkString_begin(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->begin();
+}
+
+char * SkString_beginMutable(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->begin();
+}
+
+const char * SkString_end(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->end();
+}
+
+char * SkString_endMutable(reskia_string_t *string) {
+    if (string == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<SkString *>(string)->end();
+}
+
 const char * SkString_data(reskia_string_t *string) {
     if (string == nullptr) {
         return nullptr;
@@ -303,6 +331,13 @@ void SkString_append(reskia_string_t *string, const char text[]) {
         return;
     }
     reinterpret_cast<SkString *>(string)->append(text);
+}
+
+void SkString_addAssign(reskia_string_t *string, char c) {
+    if (string == nullptr) {
+        return;
+    }
+    *reinterpret_cast<SkString *>(string) += c;
 }
 
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len) {

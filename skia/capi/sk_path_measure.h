@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 typedef struct reskia_matrix_t reskia_matrix_t;
+typedef struct reskia_contour_measure_t reskia_contour_measure_t;
 typedef struct reskia_path_measure_t reskia_path_measure_t;
 typedef struct reskia_path_t reskia_path_t;
 typedef struct reskia_point_t reskia_point_t;
@@ -45,6 +46,7 @@ bool SkPathMeasure_getMatrix(reskia_path_measure_t *path_measure, float distance
 bool SkPathMeasure_getSegment(reskia_path_measure_t *path_measure, float startD, float stopD, reskia_path_t *dst, bool startWithMoveTo);
 bool SkPathMeasure_isClosed(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
 bool SkPathMeasure_nextContour(reskia_path_measure_t *path_measure); // (SkPathMeasure *path_measure) -> bool
+const reskia_contour_measure_t *SkPathMeasure_currentMeasure(reskia_path_measure_t *path_measure); // borrowed pointer。NULL input returns NULL
 void SkPathMeasure_dump(reskia_path_measure_t *path_measure); // NULL input is no-op
 
 #ifdef __cplusplus

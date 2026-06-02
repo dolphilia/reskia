@@ -4,44 +4,53 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
-
 #include "src/gpu/graphite/AtlasProvider.h"
 
+#include "include/core/SkSize.h"
+#include "include/gpu/GpuTypes.h"
 #include "include/gpu/graphite/Recorder.h"
-#include "src/gpu/graphite/DrawContext.h"
-#include "src/gpu/graphite/Log.h"
-#include "src/gpu/graphite/PathAtlas.h"
+#include "include/gpu/graphite/TextureInfo.h"
+#include "include/private/base/SkLog.h"
+#include "src/gpu/graphite/Caps.h"
+#include "src/gpu/graphite/ClipAtlasManager.h"
+#include "src/gpu/graphite/ComputePathAtlas.h"
 #include "src/gpu/graphite/RasterPathAtlas.h"
 #include "src/gpu/graphite/RecorderPriv.h"
 #include "src/gpu/graphite/RendererProvider.h"
 #include "src/gpu/graphite/TextureProxy.h"
 #include "src/gpu/graphite/text/TextAtlasManager.h"
 
+#include <utility>
+
 namespace skgpu::graphite {
 
-AtlasProvider::PathAtlasFlagsBitMask AtlasProvider::QueryPathAtlasSupport(const Caps* caps) {
-    PathAtlasFlagsBitMask flags = PathAtlasFlags::kNone;
-    flags |= PathAtlasFlags::kRaster;
-    if (RendererProvider::IsVelloRendererSupported(caps)) {
-        flags |= PathAtlasFlags::kCompute;
-    }
-    return flags;
+static bool use_clip_atlas(const Recorder* recorder) {
+    // Currently only the raster atlas strategy utilizes the clip atlas.
+    return recorder->priv().rendererProvider()->pathRendererStrategy() ==
+            PathRendererStrategy::kRasterAtlas;
 }
 
 AtlasProvider::AtlasProvider(Recorder* recorder)
         : fTextAtlasManager(std::make_unique<TextAtlasManager>(recorder))
-        , fRasterPathAtlas(std::make_unique<RasterPathAtlas>())
-        , fPathAtlasFlags(QueryPathAtlasSupport(recorder->priv().caps())) {}
+        , fRasterPathAtlas(std::make_unique<RasterPathAtlas>(recorder))
+        , fClipAtlasManager(use_clip_atlas(recorder) ? std::make_unique<ClipAtlasManager>(recorder)
+                                                     : nullptr) {}
 
-std::unique_ptr<ComputePathAtlas> AtlasProvider::createComputePathAtlas() const {
-    if (this->isAvailable(PathAtlasFlags::kCompute)) {
-        return ComputePathAtlas::CreateDefault();
+AtlasProvider::~AtlasProvider() = default;
+
+std::unique_ptr<ComputePathAtlas> AtlasProvider::createComputePathAtlas(Recorder* recorder) const {
+    if (recorder->priv().caps()->computeSupport()) {
+        return ComputePathAtlas::CreateDefault(recorder);
     }
     return nullptr;
 }
 
 RasterPathAtlas* AtlasProvider::getRasterPathAtlas() const {
     return fRasterPathAtlas.get();
+}
+
+ClipAtlasManager* AtlasProvider::getClipAtlasManager() const {
+    return fClipAtlasManager.get();
 }
 
 sk_sp<TextureProxy> AtlasProvider::getAtlasTexture(Recorder* recorder,
@@ -59,24 +68,22 @@ sk_sp<TextureProxy> AtlasProvider::getAtlasTexture(Recorder* recorder,
         return iter->second;
     }
 
-    sk_sp<TextureProxy> proxy;
-    if (requireStorageUsage) {
-        proxy = TextureProxy::MakeStorage(recorder->priv().caps(),
-                                          SkISize::Make(int32_t(width), int32_t(height)),
-                                          colorType,
-                                          skgpu::Budgeted::kYes);
-    } else {
-        // We currently only make the distinction between a storage texture (written by a
-        // compute pass) and a plain sampleable texture (written via upload) that won't be
-        // used as a render attachment.
-        proxy = TextureProxy::Make(recorder->priv().caps(),
-                                   SkISize::Make(int32_t(width), int32_t(height)),
-                                   colorType,
-                                   skgpu::Mipmapped::kNo,
-                                   skgpu::Protected::kNo,
-                                   skgpu::Renderable::kNo,
-                                   skgpu::Budgeted::kYes);
-    }
+    // We currently only make the distinction between a storage texture (written by a
+    // compute pass) and a plain sampleable texture (written via upload) that won't be
+    // used as a render attachment.
+    const Caps* caps = recorder->priv().caps();
+    auto textureInfo = requireStorageUsage
+            ? caps->getDefaultStorageTextureInfo(colorType)
+            : caps->getDefaultSampledTextureInfo(colorType,
+                                                 Mipmapped::kNo,
+                                                 recorder->priv().isProtected(),
+                                                 Renderable::kNo);
+    sk_sp<TextureProxy> proxy = TextureProxy::Make(caps,
+                                                   recorder->priv().resourceProvider(),
+                                                   SkISize::Make((int32_t) width, (int32_t) height),
+                                                   textureInfo,
+                                                   "AtlasProviderTexture",
+                                                   Budgeted::kYes);
     if (!proxy) {
         return nullptr;
     }
@@ -85,17 +92,59 @@ sk_sp<TextureProxy> AtlasProvider::getAtlasTexture(Recorder* recorder,
     return proxy;
 }
 
-void AtlasProvider::clearTexturePool() {
+void AtlasProvider::freeGpuResources() {
+    // Clear out any pages not in use or needed for any pending work on the Recorder.
+    // In the event this is called right after a snap(), all pages would be eligible
+    // for cleanup anyways.
+    fTextAtlasManager->freeGpuResources();
+    if (fRasterPathAtlas) {
+        fRasterPathAtlas->freeGpuResources();
+    }
+    if (fClipAtlasManager) {
+        fClipAtlasManager->freeGpuResources();
+    }
+    // Release any textures held directly by the provider. These textures are used by transient
+    // ComputePathAtlases that are reset every time a DrawContext snaps a DrawTask so there is no
+    // need to reset those atlases explicitly here. Since the AtlasProvider gives out refs to the
+    // TextureProxies in the pool, it should be safe to clear the pool in the middle of Recording.
+    // Draws that use the previous TextureProxies will have refs on them.
     fTexturePool.clear();
 }
 
-void AtlasProvider::recordUploads(DrawContext* dc, Recorder* recorder) {
-    if (!dc->recordTextUploads(fTextAtlasManager.get())) {
-        SKGPU_LOG_E("TextAtlasManager uploads have failed -- may see invalid results.");
+void AtlasProvider::recordUploads(DrawContext* dc) {
+    if (!fTextAtlasManager->recordUploads(dc)) {
+        SKIA_LOG_E("TextAtlasManager uploads have failed -- may see invalid results.");
     }
 
     if (fRasterPathAtlas) {
-        fRasterPathAtlas->recordUploads(dc, recorder);
+        fRasterPathAtlas->recordUploads(dc);
+    }
+    if (fClipAtlasManager) {
+        fClipAtlasManager->recordUploads(dc);
+    }
+}
+
+void AtlasProvider::compact() {
+    fTextAtlasManager->compact();
+    if (fRasterPathAtlas) {
+        fRasterPathAtlas->compact();
+    }
+    if (fClipAtlasManager) {
+        fClipAtlasManager->compact();
+    }
+}
+
+void AtlasProvider::invalidateAtlases() {
+    // We must also evict atlases on a failure. The failed tasks can include uploads that the
+    // atlas was depending on for its caches. Failing to prepare means they will never run so
+    // future "successful" Recorder snaps would otherwise reference atlas pages that had stale
+    // contents.
+    fTextAtlasManager->evictAtlases();
+    if (fRasterPathAtlas) {
+        fRasterPathAtlas->evictAtlases();
+    }
+    if (fClipAtlasManager) {
+        fClipAtlasManager->evictAtlases();
     }
 }
 

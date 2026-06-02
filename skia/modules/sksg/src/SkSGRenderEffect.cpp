@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -9,11 +9,15 @@
 
 #include "include/core/SkBlender.h"
 #include "include/core/SkCanvas.h"
-#include "include/core/SkMaskFilter.h"
+#include "include/core/SkPaint.h"
 #include "include/core/SkShader.h"
 #include "include/core/SkTileMode.h"
 #include "include/effects/SkImageFilters.h"
-#include "src/core/SkMaskFilterBase.h"
+#include "modules/sksg/include/SkSGRenderNode.h"
+
+#include <utility>
+
+class SkMatrix;
 
 namespace sksg {
 

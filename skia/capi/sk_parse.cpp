@@ -26,13 +26,6 @@ const char *SkParse_FindHex(const char str[], uint32_t *value) {
     return SkParse::FindHex(str, value);
 }
 
-const char *SkParse_FindMSec(const char str[], uint32_t *value) {
-    if (str == nullptr || value == nullptr) {
-        return nullptr;
-    }
-    return SkParse::FindMSec(str, value);
-}
-
 const char *SkParse_FindNamedColor(const char str[], size_t len, uint32_t *color) {
     if (str == nullptr || color == nullptr) {
         return nullptr;

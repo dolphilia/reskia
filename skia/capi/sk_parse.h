@@ -13,7 +13,6 @@ int SkParse_Count(const char str[]);
 int SkParse_CountWithSeparator(const char str[], char separator);
 const char *SkParse_FindColor(const char str[], uint32_t *value);
 const char *SkParse_FindHex(const char str[], uint32_t *value);
-const char *SkParse_FindMSec(const char str[], uint32_t *value);
 const char *SkParse_FindNamedColor(const char str[], size_t len, uint32_t *color);
 const char *SkParse_FindS32(const char str[], int32_t *value);
 const char *SkParse_FindScalar(const char str[], float *value);

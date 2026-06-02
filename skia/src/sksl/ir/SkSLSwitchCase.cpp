@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2023 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -22,14 +22,9 @@ std::unique_ptr<SwitchCase> SwitchCase::MakeDefault(Position pos,
                                                       std::move(statement)));
 }
 
-std::unique_ptr<Statement> SwitchCase::clone() const {
-    return fDefault ? SwitchCase::MakeDefault(fPosition, fStatement->clone())
-                    : SwitchCase::Make(fPosition, fValue, fStatement->clone());
-}
-
 std::string SwitchCase::description() const {
-    return fDefault ? "default:\n" + fStatement->description()
-                    : "case " + std::to_string(fValue) + ":\n" + fStatement->description();
+    return fDefault ? "default: \n" + fStatement->description()
+                    : "case " + std::to_string(fValue) + ": \n" + fStatement->description();
 }
 
 }  // namespace SkSL

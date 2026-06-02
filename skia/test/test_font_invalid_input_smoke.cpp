@@ -148,10 +148,12 @@ int main() {
         return 29;
     }
     SkFont_setTypeface(font, 0);
-    if (!check(SkFont_refTypeface(font) == 0, "SkFont_setTypeface(null handle)")) {
+    const sk_typeface_t empty_typeface_handle = SkFont_refTypeface(font);
+    if (!check(empty_typeface_handle != 0, "SkFont_setTypeface(empty handle)")) {
         SkFont_delete(font);
         return 29;
     }
+    static_sk_typeface_delete(empty_typeface_handle);
 
     const sk_font_t sized_font_handle = SkFont_makeWithSize(font, 24.0f);
     if (!check(sized_font_handle != 0 && static_sk_font_get_ptr(sized_font_handle) != nullptr, "SkFont_makeWithSize(valid)")) {

@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC.
+// Copyright 2019 Google LLC
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
 #include "bench/Benchmark.h"
@@ -26,7 +26,7 @@ struct ParagraphBench : public Benchmark {
     const char* fName;
     SkScalar fWidth;
     const char* onGetName() override { return fName; }
-    bool isSuitableFor(Backend backend) override { return backend == kNonRendering_Backend; }
+    bool isSuitableFor(Backend backend) override { return backend == Backend::kNonRendering; }
     void onDelayedSetup() override { fData = GetResourceAsData(fResource); }
     void onDraw(int loops, SkCanvas*) override {
         if (!fData) {

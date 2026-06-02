@@ -5,6 +5,8 @@
 #include "sk_contour_measure.h"
 
 #include "include/core/SkContourMeasure.h"
+#include "include/core/SkPath.h"
+#include "include/core/SkPathBuilder.h"
 
 extern "C" {
 
@@ -40,7 +42,12 @@ bool SkContourMeasure_getSegment(reskia_contour_measure_t *contour_measure, floa
     if (contour_measure == nullptr || dst == nullptr) {
         return false;
     }
-    return reinterpret_cast<SkContourMeasure *>(contour_measure)->getSegment(startD, stopD, reinterpret_cast<SkPath *>(dst), startWithMoveTo);
+    SkPathBuilder builder;
+    if (!reinterpret_cast<SkContourMeasure *>(contour_measure)->getSegment(startD, stopD, &builder, startWithMoveTo)) {
+        return false;
+    }
+    *reinterpret_cast<SkPath *>(dst) = builder.detach();
+    return true;
 }
 
 bool SkContourMeasure_isClosed(reskia_contour_measure_t *contour_measure) {

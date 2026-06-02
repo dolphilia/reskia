@@ -395,6 +395,16 @@ void SkParagraph_ParagraphStyle_turnHintingOff(reskia_paragraph_style_t *style) 
     }
 }
 
+bool SkParagraph_ParagraphStyle_fakeMissingFontStyles(const reskia_paragraph_style_t *style) {
+    return style != nullptr && as_paragraph_style(style)->fakeMissingFontStyles();
+}
+
+void SkParagraph_ParagraphStyle_setFakeMissingFontStyles(reskia_paragraph_style_t *style, bool value) {
+    if (style != nullptr) {
+        as_paragraph_style(style)->setFakeMissingFontStyles(value);
+    }
+}
+
 bool SkParagraph_ParagraphStyle_getReplaceTabCharacters(const reskia_paragraph_style_t *style) {
     return style != nullptr && as_paragraph_style(style)->getReplaceTabCharacters();
 }
@@ -412,6 +422,26 @@ bool SkParagraph_ParagraphStyle_getApplyRoundingHack(const reskia_paragraph_styl
 void SkParagraph_ParagraphStyle_setApplyRoundingHack(reskia_paragraph_style_t *style, bool value) {
     if (style != nullptr) {
         as_paragraph_style(style)->setApplyRoundingHack(value);
+    }
+}
+
+bool SkParagraph_ParagraphStyle_getLetterSpacingByCSSSpec(const reskia_paragraph_style_t *style) {
+    return style != nullptr && as_paragraph_style(style)->getLetterSpacingByCSSSpec();
+}
+
+void SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec(reskia_paragraph_style_t *style, bool value) {
+    if (style != nullptr) {
+        as_paragraph_style(style)->setLetterSpacingByCSSSpec(value);
+    }
+}
+
+bool SkParagraph_ParagraphStyle_getRenderSoftHyphens(const reskia_paragraph_style_t *style) {
+    return style != nullptr && as_paragraph_style(style)->getRenderSoftHyphens();
+}
+
+void SkParagraph_ParagraphStyle_setRenderSoftHyphens(reskia_paragraph_style_t *style, bool value) {
+    if (style != nullptr) {
+        as_paragraph_style(style)->setRenderSoftHyphens(value);
     }
 }
 

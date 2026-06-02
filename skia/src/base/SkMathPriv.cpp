@@ -8,9 +8,7 @@
 #include "src/base/SkMathPriv.h"
 
 #include "include/private/base/SkAssert.h"
-#include "include/private/base/SkFloatingPoint.h"
 
-#include <cstddef>
 #include <cstdint>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,36 +36,4 @@ int32_t SkSqrtBits(int32_t x, int count) {
     } while (--count >= 0);
 
     return root;
-}
-
-// Kernighan's method
-int SkPopCount_portable(uint32_t n) {
-    int count = 0;
-
-    while (n) {
-        n &= (n - 1); // Remove the lowest bit in the integer.
-        count++;
-    }
-    return count;
-}
-
-// Here we strip off the unwanted bits and then return the number of trailing zero bits
-int SkNthSet(uint32_t target, int n) {
-    SkASSERT(n < SkPopCount(target));
-
-    for (int i = 0; i < n; ++i) {
-        target &= (target - 1); // Remove the lowest bit in the integer.
-    }
-
-    return SkCTZ(target);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-bool sk_floats_are_unit(const float array[], size_t count) {
-    bool is_unit = true;
-    for (size_t i = 0; i < count; ++i) {
-        is_unit &= (array[i] >= 0) & (array[i] <= 1);
-    }
-    return is_unit;
 }

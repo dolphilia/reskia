@@ -75,10 +75,8 @@ bool ReturnsInputAlpha(const FunctionDefinition& function, const ProgramUsage& u
 
 /**
  * Checks for recursion or overly-deep function-call chains, and rejects programs which have them.
- * Also, computes the size of the program in a completely flattened state--loops fully unrolled,
- * function calls inlined--and rejects programs that exceed an arbitrary upper bound.
  */
-bool CheckProgramStructure(const Program& program, bool enforceSizeLimit);
+bool CheckProgramStructure(const Program& program);
 
 /** Determines if `expr` contains a reference to the variable sk_RTAdjust. */
 bool ContainsRTAdjust(const Expression& expr);
@@ -206,6 +204,12 @@ bool IsConstantExpression(const Expression& expr);
 void ValidateIndexingForES2(const ProgramElement& pe, ErrorReporter& errors);
 
 /**
+ * Emits an internal error if a VarDeclaration exists without a matching entry in the nearest
+ * SymbolTable.
+ */
+void CheckSymbolTableCorrectness(const Program& program);
+
+/**
  * Ensures that a for-loop meets the strict requirements of The OpenGL ES Shading Language 1.00,
  * Appendix A, Section 4.
  * If the requirements are met, information about the loop's structure is returned.
@@ -257,8 +261,7 @@ skia_private::TArray<const SkSL::Variable*> GetComputeShaderMainParams(const Con
 class SymbolTableStackBuilder {
 public:
     // If the passed-in statement holds a symbol table, adds it to the stack.
-    SymbolTableStackBuilder(const Statement* stmt,
-                            std::vector<std::shared_ptr<SymbolTable>>* stack);
+    SymbolTableStackBuilder(const Statement* stmt, std::vector<SymbolTable*>* stack);
 
     // If a symbol table was added to the stack earlier, removes it from the stack.
     ~SymbolTableStackBuilder();
@@ -269,7 +272,7 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<SymbolTable>>* fStackToPop = nullptr;
+    std::vector<SymbolTable*>* fStackToPop = nullptr;
 };
 
 }  // namespace Analysis

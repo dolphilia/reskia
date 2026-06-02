@@ -70,6 +70,19 @@ public:
     static int SetFontCacheCountLimit(int count);
 
     /**
+     *  Return the current limit to the number of entries in the typeface cache.
+     *  A cache "entry" is associated with each typeface.
+     */
+    static int GetTypefaceCacheCountLimit();
+
+    /**
+     *  Set the limit to the number of entries in the typeface cache, and return
+     *  the previous value. Changes to this only take effect the next time
+     *  each cache object is modified.
+     */
+    static int SetTypefaceCacheCountLimit(int count);
+
+    /**
      *  For debugging purposes, this will attempt to purge the font cache. It
      *  does not change the limit, but will cause subsequent font measures and
      *  draws to be recreated, since they will no longer be in the cache.
@@ -127,8 +140,8 @@ public:
      */
     static void PurgeAllCaches();
 
-    typedef std::unique_ptr<SkImageGenerator>
-                                            (*ImageGeneratorFromEncodedDataFactory)(sk_sp<SkData>);
+    using ImageGeneratorFromEncodedDataFactory =
+            std::unique_ptr<SkImageGenerator> (*)(sk_sp<const SkData>);
 
     /**
      *  To instantiate images from encoded data, first looks at this runtime function-ptr. If it

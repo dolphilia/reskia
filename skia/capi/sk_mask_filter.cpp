@@ -5,16 +5,13 @@
 #include "sk_mask_filter.h"
 
 #include "include/core/SkMaskFilter.h"
-#include "include/core/SkRect.h"
 #include "include/core/SkData.h"
 
 #include "../handles/static_sk_mask_filter.h"
-#include "../handles/static_sk_rect.h"
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_flattenable_factory.h"
 
 #include "../handles/static_sk_mask_filter-internal.h"
-#include "../handles/static_sk_rect-internal.h"
 #include "../handles/static_sk_flattenable_factory-internal.h"
 #include "../handles/static_sk_data-internal.h"
 
@@ -52,13 +49,6 @@ void SkMaskFilter_release(reskia_mask_filter_t *maskFilter) {
         return;
     }
     reinterpret_cast<SkMaskFilter *>(maskFilter)->unref();
-}
-
-sk_rect_t SkMaskFilter_approximateFilteredBounds(reskia_mask_filter_t *mask_filter, const reskia_rect_t *src) {
-    if (mask_filter == nullptr || src == nullptr) {
-        return static_sk_rect_make(SkRect::MakeEmpty());
-    }
-    return static_sk_rect_make(reinterpret_cast<SkMaskFilter *>(mask_filter)->approximateFilteredBounds(*reinterpret_cast<const SkRect *>(src)));
 }
 
 sk_flattenable_factory_t SkMaskFilter_getFactory(reskia_mask_filter_t *mask_filter) {

@@ -8,10 +8,12 @@
 
 #include "../handles/static_sk_stream.h"
 #include "../handles/static_sk_stream_asset.h"
+#include "../handles/static_sk_data.h"
 
 #include "../handles/static_sk_stream-internal.h"
 #include "../handles/static_sk_stream_asset-internal.h"
 #include "../handles/static_sk_stream_asset.h"
+#include "../handles/static_sk_data-internal.h"
 
 extern "C" {
 
@@ -68,6 +70,13 @@ bool SkStream_readS32(reskia_stream_t *stream, int32_t *i) {
     return reinterpret_cast<SkStream *>(stream)->readS32(i);
 }
 
+bool SkStream_readS64(reskia_stream_t *stream, int64_t *i) {
+    if (stream == nullptr || i == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkStream *>(stream)->readS64(i);
+}
+
 bool SkStream_readU8(reskia_stream_t *stream, uint8_t *i) {
     if (stream == nullptr || i == nullptr) {
         return false;
@@ -87,6 +96,13 @@ bool SkStream_readU32(reskia_stream_t *stream, uint32_t *i) {
         return false;
     }
     return reinterpret_cast<SkStream *>(stream)->readU32(i);
+}
+
+bool SkStream_readU64(reskia_stream_t *stream, uint64_t *i) {
+    if (stream == nullptr || i == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkStream *>(stream)->readU64(i);
 }
 
 bool SkStream_readBool(reskia_stream_t *stream, bool *b) {
@@ -178,6 +194,13 @@ const void * SkStream_getMemoryBase(reskia_stream_t *stream) {
         return nullptr;
     }
     return reinterpret_cast<SkStream *>(stream)->getMemoryBase();
+}
+
+sk_data_t SkStream_getData(reskia_stream_t *stream) {
+    if (stream == nullptr) {
+        return 0;
+    }
+    return static_const_sk_data_make(reinterpret_cast<SkStream *>(stream)->getData());
 }
 
 // static

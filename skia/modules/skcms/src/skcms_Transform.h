@@ -17,15 +17,17 @@ namespace skcms_private {
 
 /** All transform ops */
 
-#define SKCMS_LOAD_OPS(M) \
+#define SKCMS_WORK_OPS(M) \
     M(load_a8)            \
     M(load_g8)            \
+    M(load_ga88)          \
     M(load_4444)          \
     M(load_565)           \
     M(load_888)           \
     M(load_8888)          \
     M(load_1010102)       \
     M(load_101010x_XR)    \
+    M(load_10101010_XR)   \
     M(load_161616LE)      \
     M(load_16161616LE)    \
     M(load_161616BE)      \
@@ -33,9 +35,8 @@ namespace skcms_private {
     M(load_hhh)           \
     M(load_hhhh)          \
     M(load_fff)           \
-    M(load_ffff)
-
-#define SKCMS_WORK_OPS(M) \
+    M(load_ffff)          \
+                          \
     M(swap_rb)            \
     M(clamp)              \
     M(invert)             \
@@ -71,12 +72,14 @@ namespace skcms_private {
     M(hlg_b)              \
     M(hlg_a)              \
     M(hlg_rgb)            \
+    M(hlg_ootf_scale)     \
                           \
     M(hlginv_r)           \
     M(hlginv_g)           \
     M(hlginv_b)           \
     M(hlginv_a)           \
     M(hlginv_rgb)         \
+    M(hlginv_ootf_scale)  \
                           \
     M(table_r)            \
     M(table_g)            \
@@ -89,6 +92,7 @@ namespace skcms_private {
 #define SKCMS_STORE_OPS(M) \
     M(store_a8)            \
     M(store_g8)            \
+    M(store_ga88)          \
     M(store_4444)          \
     M(store_565)           \
     M(store_888)           \
@@ -99,6 +103,7 @@ namespace skcms_private {
     M(store_161616BE)      \
     M(store_16161616BE)    \
     M(store_101010x_XR)    \
+    M(store_10101010_XR)   \
     M(store_hhh)           \
     M(store_hhhh)          \
     M(store_fff)           \
@@ -106,7 +111,6 @@ namespace skcms_private {
 
 enum class Op : int {
 #define M(op) op,
-    SKCMS_LOAD_OPS(M)
     SKCMS_WORK_OPS(M)
     SKCMS_STORE_OPS(M)
 #undef M
@@ -141,23 +145,23 @@ enum class Op : int {
 
 namespace baseline {
 
-void run_program(const Op* program, const void** contexts, ptrdiff_t /*programSize*/,
+void run_program(const Op* program, const void** contexts, ptrdiff_t programSize,
                  const char* src, char* dst, int n,
-                 const size_t src_bpp, const size_t dst_bpp);
+                size_t src_bpp, size_t dst_bpp);
 
 }
 namespace hsw {
 
-void run_program(const Op* program, const void** contexts, ptrdiff_t /*programSize*/,
+void run_program(const Op* program, const void** contexts, ptrdiff_t programSize,
                  const char* src, char* dst, int n,
-                 const size_t src_bpp, const size_t dst_bpp);
+                size_t src_bpp, size_t dst_bpp);
 
 }
 namespace skx {
 
-void run_program(const Op* program, const void** contexts, ptrdiff_t /*programSize*/,
+void run_program(const Op* program, const void** contexts, ptrdiff_t programSize,
                  const char* src, char* dst, int n,
-                 const size_t src_bpp, const size_t dst_bpp);
+                size_t src_bpp, size_t dst_bpp);
 
 }
 }  // namespace skcms_private

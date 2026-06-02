@@ -37,6 +37,10 @@ reskia_string_t *SkString_new_7(int view); // view must be a valid string_view h
 void SkString_delete(reskia_string_t *string); // (SkString *string)
 bool SkString_isEmpty(reskia_string_t *string); // NULL string returns true.
 size_t SkString_size(reskia_string_t *string); // NULL string returns 0.
+const char * SkString_begin(reskia_string_t *string); // Returns borrowed data begin; NULL string returns NULL.
+char * SkString_beginMutable(reskia_string_t *string); // Returns borrowed mutable data begin; NULL string returns NULL.
+const char * SkString_end(reskia_string_t *string); // Returns borrowed data end; NULL string returns NULL.
+char * SkString_endMutable(reskia_string_t *string); // Returns borrowed mutable data end; NULL string returns NULL.
 const char * SkString_data(reskia_string_t *string); // Returns borrowed data; NULL string returns NULL.
 char * SkString_dataMutable(reskia_string_t *string); // Returns borrowed mutable data; NULL string returns NULL.
 const char * SkString_c_str(reskia_string_t *string); // Returns borrowed C string; NULL string returns NULL.
@@ -70,6 +74,7 @@ void SkString_insertU64(reskia_string_t *string, size_t offset, uint64_t value, 
 void SkString_insertHex(reskia_string_t *string, size_t offset, uint32_t value, int minDigits); // (SkString *string, size_t offset, uint32_t value, int minDigits)
 void SkString_insertScalar(reskia_string_t *string, size_t offset, float v); // (SkString *string, size_t offset, SkScalar v)
 void SkString_append(reskia_string_t *string, const char text[]); // NULL input is no-op.
+void SkString_addAssign(reskia_string_t *string, char c); // operator+=(char); NULL string is no-op.
 void SkString_appendTextWithLength(reskia_string_t *string, const char text[], size_t len); // NULL string or NULL text with len > 0 is no-op.
 void SkString_appendString(reskia_string_t *string, const reskia_string_t *str); // NULL input is no-op.
 void SkString_appendStringView(reskia_string_t *string, int str); // NULL string or invalid string_view handle is no-op.

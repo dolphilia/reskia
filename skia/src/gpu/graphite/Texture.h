@@ -13,19 +13,23 @@
 #include "src/gpu/graphite/Resource.h"
 #include "src/gpu/graphite/ResourceTypes.h"
 
+class SkColorInfo;
+
 namespace skgpu {
-class MutableTextureStateRef;
+class MutableTextureState;
 class RefCntedCallback;
 enum class Budgeted : bool;
-};
+}
 
 namespace skgpu::graphite {
+
+class UploadSource;
 
 class Texture : public Resource {
 public:
     ~Texture() override;
 
-    int numSamples() const { return fInfo.numSamples(); }
+    SampleCount sampleCount() const { return fInfo.sampleCount(); }
     Mipmapped mipmapped() const { return fInfo.mipmapped(); }
 
     SkISize dimensions() const { return fDimensions; }
@@ -35,29 +39,37 @@ public:
 
     const char* getResourceType() const override { return "Texture"; }
 
-#if defined(GRAPHITE_TEST_UTILS)
     const Texture* asTexture() const override { return this; }
-#endif
+
+    virtual bool canUploadOnHost() const { return false; }
+
+    // With the assumption that the source data can upload on the host, attempts to write to the
+    // texture on the host directly. Returns `false` only if driver calls fail.
+    virtual bool uploadDataOnHost(const UploadSource& source);
 
 protected:
     Texture(const SharedContext*,
             SkISize dimensions,
-            const TextureInfo& info,
-            sk_sp<MutableTextureStateRef> mutableState,
+            const TextureInfo&,
+            bool isTransient,
+            sk_sp<MutableTextureState>,
             Ownership,
-            skgpu::Budgeted);
+            std::string_view label);
 
-    MutableTextureStateRef* mutableState() const;
+    MutableTextureState* mutableState() const;
 
     void invokeReleaseProc() override;
+
+    void onDumpMemoryStatistics(SkTraceMemoryDump* traceMemoryDump,
+                                const char* dumpName) const override;
 
 private:
     SkISize fDimensions;
     TextureInfo fInfo;
-    sk_sp<MutableTextureStateRef> fMutableState;
+    sk_sp<MutableTextureState> fMutableState;
     sk_sp<RefCntedCallback> fReleaseCallback;
 };
 
-} // namepsace skgpu::graphite
+} // namespace skgpu::graphite
 
 #endif // skgpu_graphite_Texture_DEFINED

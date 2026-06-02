@@ -70,13 +70,6 @@ bool SkColorFilter_isAlphaUnchanged(reskia_color_filter_t *color_filter) {
     return reinterpret_cast<SkColorFilter *>(color_filter)->isAlphaUnchanged();
 }
 
-reskia_color_t SkColorFilter_filterColor(reskia_color_filter_t *color_filter, reskia_color_t color) {
-    if (color_filter == nullptr) {
-        return color;
-    }
-    return static_cast<reskia_color_t>(reinterpret_cast<SkColorFilter *>(color_filter)->filterColor(static_cast<SkColor>(color)));
-}
-
 sk_color_4f_t SkColorFilter_filterColor4f(reskia_color_filter_t *color_filter, const reskia_color_4f_t *srcColor, reskia_color_space_t *srcCS, reskia_color_space_t *dstCS) {
     if (color_filter == nullptr || srcColor == nullptr) {
         return 0;

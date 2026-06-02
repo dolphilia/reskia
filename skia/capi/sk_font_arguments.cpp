@@ -14,6 +14,8 @@
 #include "handles/static_sk_font_arguments_palette-internal.h"
 #include "handles/static_sk_font_arguments_variation_position-internal.h"
 
+#include <optional>
+
 extern "C" {
 
 reskia_font_arguments_t *SkFontArguments_new() {
@@ -64,6 +66,48 @@ sk_font_arguments_palette_t SkFontArguments_getPalette(reskia_font_arguments_t *
         return 0;
     }
     return static_sk_font_arguments_palette_make(reinterpret_cast<SkFontArguments *>(font_arguments)->getPalette());
+}
+
+sk_font_arguments_t SkFontArguments_setSyntheticBold(reskia_font_arguments_t *font_arguments, bool hasValue, bool bold) {
+    if (font_arguments == nullptr) {
+        return 0;
+    }
+    return static_sk_font_arguments_make(
+            reinterpret_cast<SkFontArguments *>(font_arguments)->setSyntheticBold(
+                    hasValue ? std::optional<bool>(bold) : std::nullopt));
+}
+
+bool SkFontArguments_getSyntheticBold(reskia_font_arguments_t *font_arguments, bool *bold) {
+    if (font_arguments == nullptr || bold == nullptr) {
+        return false;
+    }
+    std::optional<bool> value = reinterpret_cast<SkFontArguments *>(font_arguments)->getSyntheticBold();
+    if (!value.has_value()) {
+        return false;
+    }
+    *bold = *value;
+    return true;
+}
+
+sk_font_arguments_t SkFontArguments_setSyntheticOblique(reskia_font_arguments_t *font_arguments, bool hasValue, bool oblique) {
+    if (font_arguments == nullptr) {
+        return 0;
+    }
+    return static_sk_font_arguments_make(
+            reinterpret_cast<SkFontArguments *>(font_arguments)->setSyntheticOblique(
+                    hasValue ? std::optional<bool>(oblique) : std::nullopt));
+}
+
+bool SkFontArguments_getSyntheticOblique(reskia_font_arguments_t *font_arguments, bool *oblique) {
+    if (font_arguments == nullptr || oblique == nullptr) {
+        return false;
+    }
+    std::optional<bool> value = reinterpret_cast<SkFontArguments *>(font_arguments)->getSyntheticOblique();
+    if (!value.has_value()) {
+        return false;
+    }
+    *oblique = *value;
+    return true;
 }
 
 }

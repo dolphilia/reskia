@@ -436,3 +436,203 @@ commit 数は `git rev-list --count <baseline>..<candidate>` で確認した。
 4. 新規 `missing` を area ごとに `real_gap` / `na` / `false_positive` / `design-required` へ仮分類する。
 5. CMake source list、`DEPS`、`gn/*.gni` の drift を記録する。
 6. 実装・lock 更新は、probe note の accept/reject 判定後に行う。
+
+## 追記: incremental-upgrade ブランチでの作業サイクル
+
+調査時刻: 2026-05-22 08:00:43 JST
+
+`incremental-upgrade` ブランチが作成されたため、今後の段階的アップグレードはこのブランチで進める。これまでの C API coverage freeze を崩さず、Skia の固定 commit を少しずつ受け入れるため、1回の作業を「約2週間分の候補 commit を選び、probe し、追従し、freeze へ戻し、lock を更新する」サイクルとして扱う。
+
+### サイクルの基本単位
+
+1サイクルの推奨幅:
+
+- 原則: baseline commit から Skia upstream main 上で約2週間後の固定 commit。
+- 目安: 150-220 commits 程度。
+- public header 差分目安: `include` / `modules` でおおむね 50-100 files 程度。
+- 初回候補の実測値: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`、181 commits、`include` / `modules` で 83 files, +1147/-565。
+
+2週間を基本単位にする理由:
+
+- 1週間程度では、変更量は扱いやすいが GPU / Graphite など特定領域に偏る場合があり、upgrade probe として得られる知見が狭い。
+- 3週間以上では、Android / Dawn / platform-specific helper など optional backend policy に触れやすくなり、初回から source sync と policy 判断が混ざりすぎる。
+- 2週間前後なら、Core / Codec / Text / GPU / Module に適度な広がりがあり、C API coverage regression の観測にも使いやすい。
+
+### 1サイクルの流れ
+
+#### Step 0: Branch baseline check
+
+目的:
+
+- `incremental-upgrade` ブランチで作業していることを確認する。
+- 現在の Reskia baseline と coverage freeze を記録する。
+
+確認するもの:
+
+- `git branch --show-current`
+- `vendor/skia-source.lock`
+- `vendor/skia-upstream` の HEAD と clean status
+- coverage matrix の `missing 0` / `deferred 0`
+- 直近の build/smoke baseline
+
+この step では lock を変更しない。
+
+#### Step 1: Candidate selection
+
+目的:
+
+- 次に進める固定 Skia commit を1つ選ぶ。
+
+選び方:
+
+- 現 baseline から約2週間後の `main` commit を第一候補にする。
+- 候補の前後に revert storm、large dependency roll、backend migration、generated file 大量更新がある場合は、少し前後にずらす。
+- 1週間候補と3週間候補も併記し、採用候補が大きすぎるか小さすぎるかを判断する。
+
+記録するもの:
+
+- candidate commit hash
+- committer date
+- commit subject
+- baseline からの commit 数
+- `include` / `modules` の diff shortstat
+- 主要 public header list
+- 初回 probe としての accept/reject 予想
+
+#### Step 2: Probe without lock update
+
+目的:
+
+- 候補 commit を baseline として採用する前に、差分の性格を測る。
+
+実施内容:
+
+- 候補を一時 checkout または別 checkout で用意する。
+- baseline と candidate の public header delta を出す。
+- `DEPS`、`gn/*.gni`、Bazel metadata、mirror 済み source directory の drift を見る。
+- coverage generator が candidate root を扱える場合は candidate coverage を取り、新規 `missing` / `partial` / `overcovered` を記録する。
+- generator がまだ candidate root を扱えない場合は、先に tooling を整える。
+
+成果物:
+
+- `docs/notes/` に probe note を作る。
+- この段階では `vendor/skia-source.lock` を更新しない。
+- この段階では C API 実装も原則入れない。ただし probe tooling の小修正は許容する。
+
+#### Step 3: Routing and implementation plan
+
+目的:
+
+- candidate 由来の新規差分を、実装順に分解する。
+
+分類:
+
+- `core-codec-low-risk`: Core / Codec / simple value object / helper。
+- `text-module`: SkUnicode / SkShaper / SkParagraph / Skottie text。
+- `gpu-ganesh-graphite`: Ganesh / Graphite common。
+- `optional-backend`: Dawn / Vulkan / Metal / Android / platform-specific helper。
+- `generator-noise`: public API ではない、または parser 誤検出。
+- `design-required`: callback/provider/global registration/ownership 設計が必要なもの。
+
+判断基準:
+
+- すぐ実装できる public method は `real_gap` として実装へ回す。
+- platform 依存や backend 未有効領域は既存 policy に沿って `na` または roadmap 行へ回す。
+- internal/private surface は `false_positive` として理由を残す。
+- ownership 設計が必要なものは、この段階では実装せず設計メモ化する。
+
+#### Step 4: Source/header sync and C API catch-up
+
+目的:
+
+- candidate snapshot に Reskia の source/header mirror と C API を追従させる。
+
+推奨順:
+
+1. Low-risk Core / Codec。
+2. Text / module helper。
+3. GPU common。
+4. Optional backend routing。
+5. 設計必須領域のメモ化。
+
+作業ルール:
+
+- 1サイクル中でも area ごとに小さく分ける。
+- 各 area の終了ごとに coverage を再生成する。
+- `missing` は一時的に許容しても、cycle close 前に必ず 0 に戻す。
+- 既存の safety policy、ownership policy、optional backend policy を変更する場合は、必ず docs に理由を残す。
+
+#### Step 5: Verification gate
+
+目的:
+
+- candidate bump を accepted baseline にしてよいか判定する。
+
+最低限の gate:
+
+- `scripts/generate_public_api_coverage.py`
+- coverage matrix: `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`
+- prebuilt `reskia` configure/build
+- source `reskia` configure/build
+- GPU smoke: `PASS` または expected `SKIP`/`PASS`
+- source SVG/provider smoke
+
+サイクル中の変更が text stack、optional backend、callback/provider foundation に触れた場合は、その領域の追加 smoke を実行する。
+
+#### Step 6: Lock update and cycle close
+
+目的:
+
+- accepted candidate を新しい Reskia Skia baseline にする。
+
+実施条件:
+
+- coverage が freeze 状態に戻っている。
+- build/smoke gate が通っている。
+- probe note と source sync note が残っている。
+- optional backend / design-required の未実装理由が明確である。
+
+実施内容:
+
+- `vendor/skia-source.lock` の `SKIA_REF` と `SKIA_BASELINE_DATE` を更新する。
+- cycle close note を `docs/notes/` に残す。
+- 次サイクルの候補選定基準を更新する。
+
+### サイクルの停止条件
+
+次のいずれかが出たら、そのサイクルでは lock update へ進まない。
+
+- public header delta が想定より大きく、1サイクルで `missing 0` に戻せない。
+- `DEPS` / third_party roll が Reskia の dependency model に大きな変更を要求する。
+- CMake source sync が広範囲に壊れ、Reskia 側の build system 整備が先に必要になる。
+- callback/provider/global registration など、ABI ownership 設計なしに実装すると危険な API が中心になる。
+- optional backend の有効化方針が未決のまま build surface に入ってくる。
+
+停止した場合は、候補 commit を前倒しして小さくするか、feature area ごとに分割する。
+
+### 初回サイクルの推奨形
+
+初回は次の固定 commit を probe する。
+
+- candidate: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
+- date: 2023-12-05T19:49:10Z
+- baseline からの commit 数: 181
+- 位置づけ: 2週間幅の妥当性を検証する最初の probe。
+
+初回サイクルでは、lock update まで一気に進むより、まず次を完了条件にするのがよい。
+
+1. candidate root を使った public API delta / coverage regression の再現可能な取得。
+2. 新規差分の row-level routing。
+3. Core / Codec など低リスク領域だけの追従可否確認。
+4. GPU / optional backend / design-required の残量見積もり。
+
+この結果が小さければ、そのまま accepted bump へ進む。大きければ `600986ba305dcb2c61f02749d992e46d5996a1e7` へ戻して、1週間幅を初回にする。
+
+### 長期運用の目安
+
+当面は「2週間幅」を標準とし、各サイクルの結果で幅を調整する。
+
+- 連続して build/coverage gate が軽く通る場合: 3-4週間幅を試す。
+- 毎回 optional backend / dependency drift が重い場合: 1週間幅へ戻す。
+- 特定領域が大きい場合: 日付幅ではなく area-specific cycle に切る。
+- latest main への直接追従は、複数サイクルで source sync と coverage regression の傾向が見えてから検討する。

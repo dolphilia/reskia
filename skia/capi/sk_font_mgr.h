@@ -5,7 +5,9 @@
 #ifndef RAIA_SKIA_SK_FONT_MGR_H
 #define RAIA_SKIA_SK_FONT_MGR_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "reskia_status.h"
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_font_mgr.h"
@@ -23,6 +25,31 @@ typedef struct reskia_font_mgr_t reskia_font_mgr_t;
 typedef struct reskia_font_style_t reskia_font_style_t;
 typedef struct reskia_string_t reskia_string_t;
 typedef int32_t reskia_font_mgr_unichar_t;
+typedef uint32_t reskia_font_mgr_four_byte_tag_t;
+
+typedef struct reskia_font_mgr_cmap_entry_t {
+    reskia_font_mgr_unichar_t character;
+    reskia_font_mgr_unichar_t variation;
+} reskia_font_mgr_cmap_entry_t;
+
+typedef struct reskia_font_mgr_variation_coordinate_t {
+    reskia_font_mgr_four_byte_tag_t axis;
+    float value;
+} reskia_font_mgr_variation_coordinate_t;
+
+typedef struct reskia_font_mgr_request_t {
+    const reskia_font_mgr_cmap_entry_t *cmap_entries;
+    size_t cmap_entry_count;
+    const char **bcp47;
+    size_t bcp47_count;
+    const char *family_name;
+    const reskia_font_mgr_variation_coordinate_t *model;
+    size_t model_count;
+    bool has_synthetic_bold;
+    bool synthetic_bold;
+    bool has_synthetic_oblique;
+    bool synthetic_oblique;
+} reskia_font_mgr_request_t;
 
 void SkFontMgr_release(reskia_font_mgr_t *font_mgr); // owned: caller が保持する参照を release する。NULL 入力では no-op
 int SkFontMgr_countFamilies(reskia_font_mgr_t *font_mgr); // NULL 入力では 0
@@ -43,6 +70,8 @@ sk_typeface_t SkFontMgr_matchFamilyStyle(reskia_font_mgr_t *font_mgr, const char
  * bcp47Count > 0 では bcp47 非 NULL。invalid 入力や生成不能では 0
  */
 sk_typeface_t SkFontMgr_matchFamilyStyleCharacter(reskia_font_mgr_t *font_mgr, const char familyName[], const reskia_font_style_t *font_style, const char *bcp47[], int bcp47Count, reskia_font_mgr_unichar_t character);
+sk_typeface_t SkFontMgr_match(reskia_font_mgr_t *font_mgr, const reskia_font_mgr_request_t *request); // request 非 NULL。invalid 入力や生成不能では 0
+sk_typeface_t SkFontMgr_fallback(reskia_font_mgr_t *font_mgr, const reskia_font_mgr_request_t *request); // request 非 NULL。invalid 入力や生成不能では 0
 sk_typeface_t SkFontMgr_makeFromData(reskia_font_mgr_t *font_mgr, sk_data_t data, int ttcIndex); // data 非 0、ttcIndex >= 0。invalid 入力や生成不能では 0
 sk_typeface_t SkFontMgr_makeFromStream(reskia_font_mgr_t *font_mgr, sk_stream_asset_t stream_asset, int ttcIndex); // stream_asset は consumed。ttcIndex >= 0。invalid 入力や生成不能では 0
 /**
@@ -59,9 +88,6 @@ void SkFontMgr_ref(reskia_font_mgr_t *font_mgr); // retained: 参照カウント
 void SkFontMgr_unref(reskia_font_mgr_t *font_mgr); // owned: 参照カウントを減らす。NULL 入力では no-op
 // static
 sk_font_mgr_t SkFontMgr_RefEmpty(); // 生成不能では 0
-#if !defined(SK_DISABLE_LEGACY_FONTMGR_REFDEFAULT)
-sk_font_mgr_t SkFontMgr_RefDefault(); // 生成不能では 0
-#endif
 
 #ifdef __cplusplus
 }

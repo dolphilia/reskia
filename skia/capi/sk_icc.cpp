@@ -10,6 +10,23 @@
 
 #include "../handles/static_sk_data-internal.h"
 
+#include <algorithm>
+#include <cmath>
+
+namespace {
+
+void write_u16_be(uint16_t value, uint8_t *dst) {
+    dst[0] = static_cast<uint8_t>((value >> 8) & 0xff);
+    dst[1] = static_cast<uint8_t>(value & 0xff);
+}
+
+uint16_t float_to_u16(float value) {
+    value = std::clamp(value, 0.0f, 1.0f);
+    return static_cast<uint16_t>(std::lround(value * 65535.0f));
+}
+
+}  // namespace
+
 extern "C" {
 
 sk_data_t SkICC_SkWriteICCProfile(const reskia_transfer_function_t *transferFunction, const reskia_matrix3x3_t *toXYZD50) {
@@ -33,14 +50,16 @@ void SkICC_SkICCFloatXYZD50ToGrid16Lab(const float *float_xyz, uint8_t *grid16_l
     if (float_xyz == nullptr || grid16_lab == nullptr) {
         return;
     }
-    SkICCFloatXYZD50ToGrid16Lab(float_xyz, grid16_lab);
+    write_u16_be(float_to_u16(float_xyz[0]), &grid16_lab[0]);
+    write_u16_be(float_to_u16(float_xyz[1]), &grid16_lab[2]);
+    write_u16_be(float_to_u16(float_xyz[2]), &grid16_lab[4]);
 }
 
 void SkICC_SkICCFloatToTable16(float f, uint8_t *table_16) {
     if (table_16 == nullptr) {
         return;
     }
-    SkICCFloatToTable16(f, table_16);
+    write_u16_be(float_to_u16(f), table_16);
 }
 
 }

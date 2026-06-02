@@ -25,6 +25,7 @@ typedef struct reskia_codec_options_t reskia_codec_options_t;
 typedef struct reskia_codec_result_t reskia_codec_result_t;
 typedef struct reskia_codec_yuva_pixmap_info_t reskia_codec_yuva_pixmap_info_t;
 typedef struct reskia_codec_yuva_pixmaps_t reskia_codec_yuva_pixmaps_t;
+typedef struct reskia_hdr_metadata_t reskia_hdr_metadata_t;
 typedef struct reskia_i_rect_t reskia_i_rect_t;
 typedef struct reskia_image_info_t reskia_image_info_t;
 typedef struct reskia_pixmap_t reskia_pixmap_t;
@@ -35,6 +36,7 @@ typedef int32_t reskia_codec_encoded_image_format_t;
 typedef int32_t reskia_codec_result_code_t;
 typedef int32_t reskia_codec_scanline_order_t;
 typedef int32_t reskia_codec_selection_policy_t;
+typedef int32_t reskia_codec_is_animated_t;
 typedef bool (*reskia_codec_peek_proc_t)(const void *data, size_t size, void *user_data);
 typedef sk_codec_t (*reskia_codec_make_proc_t)(sk_stream_t stream, reskia_codec_result_t *result, void *user_data);
 
@@ -43,7 +45,9 @@ sk_image_info_t SkCodec_getInfo(reskia_codec_t *codec); // (SkCodec* codec) -> s
 sk_i_size_t SkCodec_dimensions(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_size_t. NULL codec returns 0.
 sk_i_rect_t SkCodec_bounds(reskia_codec_t *codec); // (SkCodec* codec) -> sk_i_rect_t. NULL codec returns 0.
 const void * SkCodec_getICCProfile(reskia_codec_t *codec); // (SkCodec* codec) -> const skcms_ICCProfile*. NULL codec returns NULL.
+const reskia_hdr_metadata_t *SkCodec_getHdrMetadata(reskia_codec_t *codec); // borrowed; NULL codec returns NULL.
 reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedOrigin. NULL codec returns -1.
+bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec); // NULL codec returns false.
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale); // (SkCodec* codec, float desiredScale) -> sk_i_size_t. NULL codec returns 0.
 bool SkCodec_getValidSubset(reskia_codec_t *codec, reskia_i_rect_t *desiredSubset); // (SkCodec* codec, SkIRect* desiredSubset) -> bool. codec/subset are required.
 reskia_codec_encoded_image_format_t SkCodec_getEncodedFormat(reskia_codec_t *codec); // (SkCodec* codec) -> SkEncodedImageFormat. NULL codec returns -1.
@@ -119,6 +123,7 @@ int SkCodec_getFrameCount(reskia_codec_t *codec); // (SkCodec* codec) -> int. NU
 bool SkCodec_getFrameInfo(reskia_codec_t *codec, int index, reskia_codec_frame_info_t *info);
 int SkCodec_getFrameInfoList(reskia_codec_t *codec); // (SkCodec* codec) -> int. NULL codec returns 0.
 int SkCodec_getRepetitionCount(reskia_codec_t *codec); // (SkCodec* codec) -> int. NULL codec returns 0.
+reskia_codec_is_animated_t SkCodec_isAnimated(reskia_codec_t *codec); // NULL codec returns SkCodec::IsAnimated::kUnknown.
 
 // static
 

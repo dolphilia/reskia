@@ -62,7 +62,7 @@ int main() {
     if (!check(SkTypeface_countTables(nullptr) == 0, "SkTypeface_countTables(nullptr)")) {
         return 13;
     }
-    if (!check(SkTypeface_getTableTags(nullptr, nullptr) == 0, "SkTypeface_getTableTags(nullptr)")) {
+    if (!check(SkTypeface_readTableTags(nullptr, nullptr, 0) == 0, "SkTypeface_readTableTags(nullptr)")) {
         return 14;
     }
     if (!check(SkTypeface_getTableSize(nullptr, 0) == 0, "SkTypeface_getTableSize(nullptr)")) {
@@ -108,23 +108,10 @@ int main() {
     if (!check(SkTypeface_MakeDeserialize(nullptr, 0) == 0, "SkTypeface_MakeDeserialize(nullptr)")) {
         return 27;
     }
-    if (!check(SkTypeface_MakeFromFile(nullptr, 0) == 0, "SkTypeface_MakeFromFile(nullptr)")) {
-        return 28;
-    }
-    if (!check(SkTypeface_MakeFromStream(0, 0) == 0, "SkTypeface_MakeFromStream(0)")) {
-        return 29;
-    }
-    if (!check(SkTypeface_MakeFromData(0, 0) == 0, "SkTypeface_MakeFromData(0)")) {
-        return 30;
-    }
-    if (!check(SkTypeface_MakeDeserializeWithoutFontMgr(nullptr) == 0, "SkTypeface_MakeDeserializeWithoutFontMgr(nullptr)")) {
-        return 31;
-    }
-
     const sk_typeface_t typeface_handle = SkTypeface_MakeEmpty();
     auto *typeface = static_cast<reskia_typeface_t *>(static_sk_typeface_get_ptr(typeface_handle));
     if (!check(typeface_handle != 0 && typeface != nullptr, "SkTypeface_MakeEmpty()")) {
-        return 32;
+        return 28;
     }
     if (!check(SkTypeface_uniqueID(typeface) != 0, "SkTypeface_uniqueID(valid)")) {
         static_sk_typeface_delete(typeface_handle);

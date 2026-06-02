@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2023 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -9,9 +9,9 @@
 
 #ifndef SK_USE_DRAWING_MIPMAP_DOWNSAMPLER
 
-#include "include/private/SkColorData.h"
 #include "src/base/SkHalf.h"
 #include "src/base/SkVx.h"
+#include "src/core/SkColorData.h"
 #include "src/core/SkMipmap.h"
 
 namespace {
@@ -58,15 +58,15 @@ struct ColorTypeFilter_8 {
     }
 };
 
-struct ColorTypeFilter_Alpha_F16 {
+struct ColorTypeFilter_F16 {
     typedef uint16_t Type;
     static skvx::float4 Expand(uint16_t x) {
-        return SkHalfToFloat_finite_ftz((uint64_t) x); // expand out to four lanes
-
+        uint64_t x4 = (uint64_t)x; // add 0s out to four lanes (0,0,0,x)
+        return from_half(skvx::half4::Load(&x4));
     }
     static uint16_t Compact(const skvx::float4& x) {
         uint64_t r;
-        SkFloatToHalf_finite_ftz(x).store(&r);
+        to_half(x).store(&r);
         return r & 0xFFFF;  // but ignore the extra 3 here
     }
 };
@@ -74,11 +74,11 @@ struct ColorTypeFilter_Alpha_F16 {
 struct ColorTypeFilter_RGBA_F16 {
     typedef uint64_t Type; // SkHalf x4
     static skvx::float4 Expand(uint64_t x) {
-        return SkHalfToFloat_finite_ftz(x);
+        return from_half(skvx::half4::Load(&x));
     }
     static uint64_t Compact(const skvx::float4& x) {
         uint64_t r;
-        SkFloatToHalf_finite_ftz(x).store(&r);
+        to_half(x).store(&r);
         return r;
     }
 };
@@ -106,11 +106,12 @@ struct ColorTypeFilter_1616 {
 struct ColorTypeFilter_F16F16 {
     typedef uint32_t Type;
     static skvx::float4 Expand(uint32_t x) {
-        return SkHalfToFloat_finite_ftz((uint64_t) x); // expand out to four lanes
+        uint64_t x4 = (uint64_t)x; // // add 0s out to four lanes (0,0,x,x)
+        return from_half(skvx::half4::Load(&x4));
     }
     static uint32_t Compact(const skvx::float4& x) {
         uint64_t r;
-        SkFloatToHalf_finite_ftz(x).store(&r);
+        to_half(x).store(&r);
         return (uint32_t) (r & 0xFFFFFFFF);  // but ignore the extra 2 here
     }
 };
@@ -430,8 +431,8 @@ void HQDownSampler::buildLevel(const SkPixmap& dst, const SkPixmap& src) {
 
     for (int y = 0; y < dst.height(); y++) {
         proc(dstBasePtr, srcBasePtr, srcRB, dst.width());
-        srcBasePtr = (char*)srcBasePtr + srcRB * 2; // jump two rows
-        dstBasePtr = (char*)dstBasePtr + dst.rowBytes();
+        srcBasePtr = (const char*)srcBasePtr + srcRB * 2; // jump two rows
+        dstBasePtr = (      char*)dstBasePtr + dst.rowBytes();
     }
 }
 
@@ -523,6 +524,7 @@ std::unique_ptr<SkMipmapDownSampler> SkMipmap::MakeDownSampler(const SkPixmap& r
             proc_3_3 = downsample_3_3<ColorTypeFilter_1616>;
             break;
         case kA16_unorm_SkColorType:
+        case kR16_unorm_SkColorType:
             proc_1_2 = downsample_1_2<ColorTypeFilter_16>;
             proc_1_3 = downsample_1_3<ColorTypeFilter_16>;
             proc_2_1 = downsample_2_1<ColorTypeFilter_16>;
@@ -544,14 +546,15 @@ std::unique_ptr<SkMipmapDownSampler> SkMipmap::MakeDownSampler(const SkPixmap& r
             proc_3_3 = downsample_3_3<ColorTypeFilter_1010102>;
             break;
         case kA16_float_SkColorType:
-            proc_1_2 = downsample_1_2<ColorTypeFilter_Alpha_F16>;
-            proc_1_3 = downsample_1_3<ColorTypeFilter_Alpha_F16>;
-            proc_2_1 = downsample_2_1<ColorTypeFilter_Alpha_F16>;
-            proc_2_2 = downsample_2_2<ColorTypeFilter_Alpha_F16>;
-            proc_2_3 = downsample_2_3<ColorTypeFilter_Alpha_F16>;
-            proc_3_1 = downsample_3_1<ColorTypeFilter_Alpha_F16>;
-            proc_3_2 = downsample_3_2<ColorTypeFilter_Alpha_F16>;
-            proc_3_3 = downsample_3_3<ColorTypeFilter_Alpha_F16>;
+        case kR16_float_SkColorType:
+            proc_1_2 = downsample_1_2<ColorTypeFilter_F16>;
+            proc_1_3 = downsample_1_3<ColorTypeFilter_F16>;
+            proc_2_1 = downsample_2_1<ColorTypeFilter_F16>;
+            proc_2_2 = downsample_2_2<ColorTypeFilter_F16>;
+            proc_2_3 = downsample_2_3<ColorTypeFilter_F16>;
+            proc_3_1 = downsample_3_1<ColorTypeFilter_F16>;
+            proc_3_2 = downsample_3_2<ColorTypeFilter_F16>;
+            proc_3_3 = downsample_3_3<ColorTypeFilter_F16>;
             break;
         case kR16G16_float_SkColorType:
             proc_1_2 = downsample_1_2<ColorTypeFilter_F16F16>;
@@ -579,6 +582,8 @@ std::unique_ptr<SkMipmapDownSampler> SkMipmap::MakeDownSampler(const SkPixmap& r
         case kRGB_101010x_SkColorType:  // TODO: use 1010102?
         case kBGR_101010x_SkColorType:  // TODO: use 1010102?
         case kBGR_101010x_XR_SkColorType:  // TODO: use 1010102?
+        case kRGB_F16F16F16x_SkColorType:  // TODO: use F16?
+        case kBGRA_10101010_XR_SkColorType:
         case kRGBA_10x6_SkColorType:
         case kRGBA_F32_SkColorType:
             return nullptr;

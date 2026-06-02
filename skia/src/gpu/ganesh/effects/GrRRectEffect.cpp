@@ -135,7 +135,7 @@ bool CircularRRectEffect::onIsEqual(const GrFragmentProcessor& other) const {
 
 GR_DEFINE_FRAGMENT_PROCESSOR_TEST(CircularRRectEffect)
 
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
 std::unique_ptr<GrFragmentProcessor> CircularRRectEffect::TestCreate(GrProcessorTestData* d) {
     SkScalar w = d->fRandom->nextRangeScalar(20.f, 1000.f);
     SkScalar h = d->fRandom->nextRangeScalar(20.f, 1000.f);
@@ -469,7 +469,7 @@ bool EllipticalRRectEffect::onIsEqual(const GrFragmentProcessor& other) const {
 
 GR_DEFINE_FRAGMENT_PROCESSOR_TEST(EllipticalRRectEffect)
 
-#if defined(GR_TEST_UTILS)
+#if defined(GPU_TEST_UTILS)
 std::unique_ptr<GrFragmentProcessor> EllipticalRRectEffect::TestCreate(GrProcessorTestData* d) {
     SkScalar w = d->fRandom->nextRangeScalar(20.f, 1000.f);
     SkScalar h = d->fRandom->nextRangeScalar(20.f, 1000.f);
@@ -747,7 +747,10 @@ GrFPResult GrRRectEffect::Make(std::unique_ptr<GrFragmentProcessor> inputFP,
         bool squashedRadii = false;
         for (int c = 0; c < 4; ++c) {
             radii[c] = rrect.radii((SkRRect::Corner)c);
-            SkASSERT((0 == radii[c].fX) == (0 == radii[c].fY));
+            // This effect can't handle a corner with both zero and non-zero radii
+            if ((0 == radii[c].fX) != (0 == radii[c].fY)) {
+                return GrFPFailure(std::move(inputFP));
+            }
             if (0 == radii[c].fX) {
                 // The corner is square, so no need to squash or flag as circular.
                 continue;

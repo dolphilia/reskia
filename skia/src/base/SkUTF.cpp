@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC.
+// Copyright 2018 Google LLC
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
 #include "src/base/SkUTF.h"
@@ -147,8 +147,13 @@ SkUnichar SkUTF::NextUTF8(const char** ptr, const char* end) {
         } while ((hic = left_shift(hic, 1)) < 0);
         c &= ~mask;
     }
-    *ptr = (char*)p + 1;
+    *ptr = (const char*)p + 1;
     return c;
+}
+
+SkUnichar SkUTF::NextUTF8WithReplacement(const char** ptr, const char* end) {
+    SkUnichar val = SkUTF::NextUTF8(ptr, end);
+    return val < 0 ? 0xFFFD : val;
 }
 
 SkUnichar SkUTF::NextUTF16(const uint16_t** ptr, const uint16_t* end) {

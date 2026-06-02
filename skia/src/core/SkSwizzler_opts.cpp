@@ -7,14 +7,13 @@
 
 #include "include/private/base/SkFeatures.h"
 #include "src/core/SkCpu.h"
-#include "src/core/SkOpts.h"
 #include "src/core/SkOptsTargets.h"
 #include "src/core/SkSwizzlePriv.h"
 
 #define SK_OPTS_TARGET SK_OPTS_TARGET_DEFAULT
 #include "src/opts/SkOpts_SetTarget.h"
 
-#include "src/opts/SkSwizzler_opts.h"  // IWYU pragma: keep
+#include "src/opts/SkSwizzler_opts.inc"  // IWYU pragma: keep
 
 #include "src/opts/SkOpts_RestoreTarget.h"
 
@@ -22,6 +21,8 @@ namespace SkOpts {
     DEFINE_DEFAULT(RGBA_to_BGRA);
     DEFINE_DEFAULT(RGBA_to_rgbA);
     DEFINE_DEFAULT(RGBA_to_bgrA);
+    DEFINE_DEFAULT(rgbA_to_RGBA);
+    DEFINE_DEFAULT(rgbA_to_BGRA);
     DEFINE_DEFAULT(RGB_to_RGB1);
     DEFINE_DEFAULT(RGB_to_BGR1);
     DEFINE_DEFAULT(gray_to_RGB1);
@@ -31,18 +32,23 @@ namespace SkOpts {
     DEFINE_DEFAULT(inverted_CMYK_to_BGR1);
 
     void Init_Swizzler_ssse3();
-    void Init_Swizzler_hsw();
+    void Init_Swizzler_ml3();
+    void Init_Swizzler_lasx();
 
     static bool init() {
     #if defined(SK_ENABLE_OPTIMIZE_SIZE)
         // All Init_foo functions are omitted when optimizing for size
     #elif defined(SK_CPU_X86)
-        #if SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_SSSE3
-            if (SkCpu::Supports(SkCpu::SSSE3)) { Init_Swizzler_ssse3(); }
+        #if SK_CPU_X64_LEVEL < SK_CPU_X64_LEVEL_SSSE3
+            if (SkCpu::Supports(SkX64::SSSE3)) { Init_Swizzler_ssse3(); }
         #endif
 
-        #if SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_AVX2
-            if (SkCpu::Supports(SkCpu::HSW)) { Init_Swizzler_hsw(); }
+        #if SK_CPU_X64_LEVEL < SK_CPU_X64_LEVEL_AVX2
+            if (SkCpu::Supports(SkX64::ML3)) { Init_Swizzler_ml3(); }
+        #endif
+    #elif defined(SK_CPU_LOONGARCH)
+        #if SK_CPU_LSX_LEVEL < SK_CPU_LSX_LEVEL_LASX
+            if (SkCpu::Supports(SkLoongArch::ASX)) { Init_Swizzler_lasx(); }
         #endif
     #endif
       return true;

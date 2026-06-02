@@ -1,10 +1,11 @@
-// Copyright 2022 Google LLC.
+// Copyright 2022 Google LLC
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
 #ifndef SkContainers_DEFINED
 #define SkContainers_DEFINED
 
 #include "include/private/base/SkAPI.h"
+#include "include/private/base/SkAlign.h"
 #include "include/private/base/SkSpan_impl.h"
 
 #include <cstddef>
@@ -20,10 +21,17 @@ public:
     // The bytes allocated are freed using sk_free().
     SkSpan<std::byte> allocate(int capacity, double growthFactor = 1.0);
 
+    // Rounds a requested capacity up towards `kCapacityMultiple` in a constexpr-friendly fashion.
+    template <typename T>
+    static constexpr size_t RoundUp(size_t capacity) {
+        return SkAlignTo(capacity * sizeof(T), (size_t) kCapacityMultiple) / sizeof(T);
+    }
+
 private:
     friend struct SkContainerAllocatorTestingPeer;
-    // All capacity counts will be rounded up to kCapacityMultiple.
-    // TODO: this is a constant from the original SkTArray code. This should be checked some how.
+
+    // All capacity counts will be rounded up to kCapacityMultiple. This matches ASAN's shadow
+    // granularity, as well as our typical struct alignment on a 64-bit machine.
     static constexpr int64_t kCapacityMultiple = 8;
 
     // Rounds up capacity to next multiple of kCapacityMultiple and pin to fMaxCapacity.

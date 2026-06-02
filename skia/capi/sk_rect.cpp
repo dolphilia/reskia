@@ -150,21 +150,24 @@ void SkRect_setBounds(reskia_rect_t *rect, const reskia_point_t *pts, int count)
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return;
     }
-    reinterpret_cast<SkRect *>(rect)->setBounds(reinterpret_cast<const SkPoint *>(pts), count);
+    reinterpret_cast<SkRect *>(rect)->setBounds(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 bool SkRect_setBoundsCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return false;
     }
-    return reinterpret_cast<SkRect *>(rect)->setBoundsCheck(reinterpret_cast<const SkPoint *>(pts), count);
+    return reinterpret_cast<SkRect *>(rect)->setBoundsCheck(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 void SkRect_setBoundsNoCheck(reskia_rect_t *rect, const reskia_point_t *pts, int count) {
     if (rect == nullptr || count < 0 || (count > 0 && pts == nullptr)) {
         return;
     }
-    reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(reinterpret_cast<const SkPoint *>(pts), count);
+    reinterpret_cast<SkRect *>(rect)->setBoundsNoCheck(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
 }
 
 void SkRect_setFromPoints(reskia_rect_t *rect, const reskia_point_t *p0, const reskia_point_t *p1) {
@@ -453,6 +456,23 @@ sk_rect_t SkRect_MakeFromIRect(const reskia_i_rect_t *irect) {
         return 0;
     }
     return static_sk_rect_make(SkRect::Make(* reinterpret_cast<const SkIRect *>(irect)));
+}
+
+sk_rect_t SkRect_Bounds(const reskia_point_t *pts, int count) {
+    if (count < 0 || (count > 0 && pts == nullptr)) {
+        return 0;
+    }
+    std::optional<SkRect> bounds = SkRect::Bounds(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)});
+    return bounds.has_value() ? static_sk_rect_make(*bounds) : 0;
+}
+
+sk_rect_t SkRect_BoundsOrEmpty(const reskia_point_t *pts, int count) {
+    if (count < 0 || (count > 0 && pts == nullptr)) {
+        return static_sk_rect_make(SkRect::MakeEmpty());
+    }
+    return static_sk_rect_make(SkRect::BoundsOrEmpty(
+            {reinterpret_cast<const SkPoint *>(pts), static_cast<size_t>(count)}));
 }
 
 bool SkRect_Intersects(const reskia_rect_t *a, const reskia_rect_t *b) {

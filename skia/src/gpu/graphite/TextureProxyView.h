@@ -14,6 +14,8 @@
 #include "src/gpu/Swizzle.h"
 #include "src/gpu/graphite/TextureProxy.h"
 
+enum class SkBackingFit;
+
 namespace skgpu::graphite {
 
 class Recorder;
@@ -51,31 +53,36 @@ public:
     int height() const { return this->proxy()->dimensions().height(); }
     SkISize dimensions() const { return this->proxy()->dimensions(); }
 
-    skgpu::Mipmapped mipmapped() const {
-        if (const TextureProxy* proxy = this->proxy()) {
-            return proxy->mipmapped();
-        }
-        return skgpu::Mipmapped::kNo;
+    Protected isProtected() const {
+        return fProxy ? fProxy->isProtected() : Protected::kNo;
+    }
+    Mipmapped mipmapped() const {
+        return fProxy ? fProxy->mipmapped() : Mipmapped::kNo;
     }
 
     TextureProxy* proxy() const { return fProxy.get(); }
     sk_sp<TextureProxy> refProxy() const { return fProxy; }
 
     Swizzle swizzle() const { return fSwizzle; }
+    Origin origin() const { return fOrigin; }
 
     void concatSwizzle(Swizzle swizzle) {
-        fSwizzle = skgpu::Swizzle::Concat(fSwizzle, swizzle);
+        fSwizzle = Swizzle::Concat(fSwizzle, swizzle);
     }
 
+    // makeSwizzle returns a new view with 'swizzle' composed on to this view's existing swizzle
     TextureProxyView makeSwizzle(Swizzle swizzle) const & {
-        return {fProxy, Swizzle::Concat(fSwizzle, swizzle)};
+        return {fProxy, Swizzle::Concat(fSwizzle, swizzle), fOrigin};
     }
 
     TextureProxyView makeSwizzle(Swizzle swizzle) && {
-        return {std::move(fProxy), Swizzle::Concat(fSwizzle, swizzle)};
+        return {std::move(fProxy), Swizzle::Concat(fSwizzle, swizzle), fOrigin};
     }
 
-    Origin origin() const { return fOrigin; }
+    // resetSwizzle returns a new view that uses 'swizzle' and disregards this view's prior swizzle.
+    TextureProxyView replaceSwizzle(Swizzle swizzle) const {
+        return {fProxy, swizzle, fOrigin};
+    }
 
     void reset() {
         *this = {};
@@ -86,12 +93,6 @@ public:
     sk_sp<TextureProxy> detachProxy() {
         return std::move(fProxy);
     }
-
-    static TextureProxyView Copy(Recorder*,
-                                 const SkColorInfo& srcColorInfo,
-                                 const TextureProxyView& srcView,
-                                 SkIRect srcRect,
-                                 Mipmapped);
 
 private:
     sk_sp<TextureProxy> fProxy;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -7,6 +7,7 @@
 
 #include "src/gpu/ganesh/mtl/GrMtlSemaphore.h"
 
+#include "include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h"
 #include "src/gpu/ganesh/mtl/GrMtlGpu.h"
 
 #if !__has_feature(objc_arc)
@@ -41,7 +42,7 @@ GrBackendSemaphore GrMtlSemaphore::backendSemaphore() const {
     // Whoever uses the GrBackendSemaphore will subsquently steal this ref (see MakeWrapped, above).
     if (@available(macOS 10.14, iOS 12.0, tvOS 12.0, *)) {
         GrMTLHandle handle = (__bridge_retained GrMTLHandle)(fEvent->mtlEvent());
-        backendSemaphore.initMetal(handle, fValue);
+        backendSemaphore = GrBackendSemaphores::MakeMtl(handle, fValue);
     }
     return backendSemaphore;
 }

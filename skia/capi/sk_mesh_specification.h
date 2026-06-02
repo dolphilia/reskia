@@ -16,6 +16,7 @@ extern "C" {
 #include "../handles/static_sk_mesh_specification_result.h"
 
 typedef struct reskia_color_space_sp_t reskia_color_space_sp_t;
+typedef struct reskia_color_space_t reskia_color_space_t;
 typedef struct reskia_mesh_specification_attribute_span_t reskia_mesh_specification_attribute_span_t;
 typedef struct reskia_mesh_specification_attribute_t reskia_mesh_specification_attribute_t;
 typedef struct reskia_mesh_specification_t reskia_mesh_specification_t;
@@ -49,6 +50,7 @@ const reskia_mesh_specification_attribute_t * SkMeshSpecification_findAttribute(
  */
 const reskia_mesh_specification_varying_t * SkMeshSpecification_findVarying(reskia_mesh_specification_t* spec, const reskia_string_view_t * name);
 size_t SkMeshSpecification_stride(reskia_mesh_specification_t* spec); // spec NULL では 0
+reskia_color_space_t *SkMeshSpecification_colorSpace(reskia_mesh_specification_t* spec); // borrowed pointer。spec NULL では NULL
 // static
 /**
  * attributes/varyings/vs/fs は非 NULL。invalid 入力では 0

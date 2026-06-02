@@ -219,6 +219,12 @@ sk_color_space_t SkColorSpace_Make(const reskia_icc_profile_t *profile) {
     return make_color_space_handle(SkColorSpace::Make(* reinterpret_cast<const skcms_ICCProfile *>(profile)));
 }
 
+sk_color_space_t SkColorSpace_MakeCICP(reskia_named_primaries_cicp_id_t color_primaries, reskia_named_transfer_fn_cicp_id_t transfer_characteristics) {
+    return make_color_space_handle(SkColorSpace::MakeCICP(
+            static_cast<SkNamedPrimaries::CicpId>(color_primaries),
+            static_cast<SkNamedTransferFn::CicpId>(transfer_characteristics)));
+}
+
 sk_color_space_t SkColorSpace_Deserialize(const void *data, size_t length) {
     if (data == nullptr) {
         return 0;

@@ -11,6 +11,7 @@ list(APPEND SOURCE_FILES
         src/base/SkDeque.cpp
         src/base/SkFloatingPoint.cpp
         src/base/SkHalf.cpp
+        src/base/SkLog.cpp
         src/base/SkMalloc.cpp
         src/base/SkMathPriv.cpp
         src/base/SkQuads.cpp
@@ -32,30 +33,39 @@ list(APPEND SOURCE_FILES
         src/codec/SkBmpRLECodec.cpp
         src/codec/SkBmpStandardCodec.cpp
         src/codec/SkCodec.cpp
+        src/codec/SkCodecColorProfile.cpp
         src/codec/SkCodecImageGenerator.cpp
         src/codec/SkColorPalette.cpp
         src/codec/SkEncodedInfo.cpp
         src/codec/SkExif.cpp
-        src/codec/SkHeifCodec.cpp
+        src/codec/SkGainmapInfo.cpp
+        src/codec/SkHdrAgtm.cpp
+        src/codec/SkHdrAgtmParse.cpp
+        src/codec/SkHdrMetadata.cpp
         src/codec/SkIcoCodec.cpp
         src/codec/SkImageGenerator_FromEncoded.cpp
         src/codec/SkJpegCodec.cpp
         src/codec/SkJpegDecoderMgr.cpp
+        src/codec/SkJpegMetadataDecoderImpl.cpp
         src/codec/SkJpegMultiPicture.cpp
         src/codec/SkJpegSegmentScan.cpp
         src/codec/SkJpegSourceMgr.cpp
         src/codec/SkJpegUtility.cpp
-        src/codec/SkMasks.cpp
         src/codec/SkMaskSwizzler.cpp
         src/codec/SkParseEncodedOrigin.cpp
         src/codec/SkPixmapUtils.cpp
+        src/codec/SkPngCodecBase.cpp
         src/codec/SkPngCodec.cpp
+        src/codec/SkPngCompositeChunkReader.cpp
         src/codec/SkSampledCodec.cpp
         src/codec/SkSampler.cpp
         src/codec/SkSwizzler.cpp
         src/codec/SkTiffUtility.cpp
         src/codec/SkWbmpCodec.cpp
         src/codec/SkWebpCodec.cpp
+        src/capture/SkCapture.cpp
+        src/capture/SkCaptureCanvas.cpp
+        src/capture/SkCaptureManager.cpp
         src/core/SkAAClip.cpp
         src/core/SkAlphaRuns.cpp
         src/core/SkAnalyticEdge.cpp
@@ -68,7 +78,6 @@ list(APPEND SOURCE_FILES
         src/core/SkBitmapCache.cpp
         src/core/SkBitmapDevice.cpp
         src/core/SkBitmapProcState_matrixProcs.cpp
-        src/core/SkBitmapProcState_opts_hsw.cpp
         src/core/SkBitmapProcState_opts_ssse3.cpp
         src/core/SkBitmapProcState_opts.cpp
         src/core/SkBitmapProcState.cpp
@@ -77,12 +86,13 @@ list(APPEND SOURCE_FILES
         src/core/SkBlitMask_opts_ssse3.cpp
         src/core/SkBlitMask_opts.cpp
         src/core/SkBlitRow_D32.cpp
-        src/core/SkBlitRow_opts_hsw.cpp
+        src/core/SkBlitRow_opts_ml3.cpp
         src/core/SkBlitRow_opts.cpp
         src/core/SkBlitter_A8.cpp
         src/core/SkBlitter_ARGB32.cpp
         src/core/SkBlitter_Sprite.cpp
         src/core/SkBlitter.cpp
+        src/core/SkBlurEngine.cpp
         src/core/SkBlurMask.cpp
         src/core/SkBlurMaskFilterImpl.cpp
         src/core/SkCachedData.cpp
@@ -102,6 +112,8 @@ list(APPEND SOURCE_FILES
         src/core/SkContourMeasure.cpp
         src/core/SkConvertPixels.cpp
         src/core/SkCpu.cpp
+        src/core/SkCPUContext.cpp
+        src/core/SkCPURecorder.cpp
         src/core/SkCubicClipper.cpp
         src/core/SkCubicMap.cpp
         src/core/SkData.cpp
@@ -115,8 +127,6 @@ list(APPEND SOURCE_FILES
         src/core/SkDraw_vertices.cpp
         src/core/SkDraw.cpp
         src/core/SkDrawable.cpp
-        src/core/SkDrawBase.cpp
-        src/core/SkDrawLooper.cpp
         src/core/SkDrawShadowInfo.cpp
         src/core/SkEdge.cpp
         src/core/SkEdgeBuilder.cpp
@@ -147,9 +157,11 @@ list(APPEND SOURCE_FILES
         src/core/SkM44.cpp
         src/core/SkMallocPixelRef.cpp
         src/core/SkMask.cpp
+        src/core/SkMasks.cpp
         src/core/SkMaskBlurFilter.cpp
         src/core/SkMaskCache.cpp
         src/core/SkMaskFilter.cpp
+        src/core/SkMaskFilterBase.cpp
         src/core/SkMaskGamma.cpp
         src/core/SkMatrix.cpp
         src/core/SkMatrixInvert.cpp
@@ -170,9 +182,15 @@ list(APPEND SOURCE_FILES
         src/core/SkPath_serial.cpp
         src/core/SkPath.cpp
         src/core/SkPathBuilder.cpp
+        src/core/SkPathData.cpp
+        src/core/SkPathDump.cpp
         src/core/SkPathEffect.cpp
+        src/core/SkPathIter.cpp
         src/core/SkPathMeasure.cpp
-        src/core/SkPathRef.cpp
+        src/core/SkPathPriv.cpp
+        src/core/SkPathRaw.cpp
+        src/core/SkPathRawShapes.cpp
+        src/core/SkPath_interpolate.cpp
         src/core/SkPathUtils.cpp
         src/core/SkPicture.cpp
         src/core/SkPictureData.cpp
@@ -180,11 +198,13 @@ list(APPEND SOURCE_FILES
         src/core/SkPicturePlayback.cpp
         src/core/SkPictureRecord.cpp
         src/core/SkPictureRecorder.cpp
+        src/core/SkPixelStorage.cpp
         src/core/SkPixelRef.cpp
         src/core/SkPixmap.cpp
         src/core/SkPixmapDraw.cpp
         src/core/SkPoint.cpp
         src/core/SkPoint3.cpp
+        src/core/SkPrebuiltCompat.cpp
         src/core/SkPtrRecorder.cpp
         src/core/SkQuadClipper.cpp
         src/core/SkRasterClip.cpp
@@ -193,18 +213,20 @@ list(APPEND SOURCE_FILES
         src/core/SkReadBuffer.cpp
         src/core/SkReadPixelsRec.cpp
         src/core/SkRecord.cpp
+        src/core/SkRecordCanvas.cpp
         src/core/SkRecordDraw.cpp
         src/core/SkRecordedDrawable.cpp
-        src/core/SkRecorder.cpp
         src/core/SkRecordOpts.cpp
         src/core/SkRecords.cpp
         src/core/SkRect.cpp
         src/core/SkRegion_path.cpp
         src/core/SkRegion.cpp
         src/core/SkResourceCache.cpp
+        src/core/SkSynchronizedResourceCache.cpp
         src/core/SkRRect.cpp
         src/core/SkRSXform.cpp
         src/core/SkRTree.cpp
+        src/core/SkKnownRuntimeEffects.cpp
         src/core/SkRuntimeBlender.cpp
         src/core/SkRuntimeEffect.cpp
         src/core/SkScalar.cpp
@@ -214,7 +236,6 @@ list(APPEND SOURCE_FILES
         src/core/SkScan_AntiPath.cpp
         src/core/SkScan_Hairline.cpp
         src/core/SkScan_Path.cpp
-        src/core/SkScan_SAAPath.cpp
         src/core/SkScan.cpp
         src/core/SkSLTypeShared.cpp
         src/core/SkSpecialImage.cpp
@@ -222,6 +243,7 @@ list(APPEND SOURCE_FILES
         src/core/SkStream.cpp
         src/core/SkStrike.cpp
         src/core/SkStrikeCache.cpp
+        src/core/SkStrikeRef.cpp
         src/core/SkStrikeSpec.cpp
         src/core/SkString.cpp
         src/core/SkStringUtils.cpp
@@ -229,18 +251,16 @@ list(APPEND SOURCE_FILES
         src/core/SkStrokeRec.cpp
         src/core/SkStrokerPriv.cpp
         src/core/SkSwizzle.cpp
-        src/core/SkSwizzler_opts_hsw.cpp
+        src/core/SkSwizzler_opts_ml3.cpp
         src/core/SkSwizzler_opts_ssse3.cpp
         src/core/SkSwizzler_opts.cpp
         src/core/SkTaskGroup.cpp
         src/core/SkTextBlob.cpp
-        src/core/SkTextBlobTrace.cpp
         src/core/SkTypeface_remote.cpp
         src/core/SkTypeface.cpp
         src/core/SkTypefaceCache.cpp
-        src/fonts/SkFontMgr_indirect.cpp
-        src/fonts/SkRemotableFontMgr.cpp
         src/core/SkUnPreMultiply.cpp
+        src/core/SkUnspannedApiCompat.cpp
         src/core/SkVertices.cpp
         src/core/SkVertState.cpp
         src/core/SkWriteBuffer.cpp
@@ -287,12 +307,12 @@ list(APPEND SOURCE_FILES
         src/effects/SkEmbossMask.cpp
         src/effects/SkEmbossMaskFilter.cpp
         src/effects/SkHighContrastFilter.cpp
-        src/effects/SkLayerDrawLooper.cpp
         src/effects/SkShaderMaskFilterImpl.cpp
         src/effects/SkTableMaskFilter.cpp
         src/effects/SkTrimPathEffect.cpp
         src/encode/SkEncoder.cpp
         src/encode/SkICC.cpp
+        src/encode/SkPngEncoderBase.cpp
         src/image/SkImage_AndroidFactories.cpp
         src/image/SkImage_Base.cpp
         src/image/SkImage_Lazy.cpp
@@ -309,7 +329,8 @@ list(APPEND SOURCE_FILES
         src/image/SkSurface.cpp
         src/image/SkTiledImageUtils.cpp
         src/lazy/SkDiscardableMemoryPool.cpp
-        src/opts/SkOpts_hsw.cpp
+        src/opts/SkOpts_ml3.cpp
+        src/opts/SkOpts_ml4.cpp
         src/pathops/SkAddIntersections.cpp
         src/pathops/SkDConicLineIntersection.cpp
         src/pathops/SkDCubicLineIntersection.cpp
@@ -342,7 +363,7 @@ list(APPEND SOURCE_FILES
         src/pathops/SkPathOpsWinding.cpp
         src/pathops/SkPathWriter.cpp
         src/pathops/SkReduceOrder.cpp
-        src/ports/SkDebug_stdio.cpp
+        src/ports/SkLog_stdio.cpp
         src/ports/SkGlobalInitialization_default.cpp
         src/ports/SkMemory_malloc.cpp
         src/ports/SkOSFile_stdio.cpp
@@ -369,6 +390,7 @@ list(APPEND SOURCE_FILES
         src/shaders/SkTriColorShader.cpp
         src/shaders/SkWorkingColorSpaceShader.cpp
         src/sksl/analysis/SkSLCanExitWithoutReturningValue.cpp
+        src/sksl/analysis/SkSLCheckSymbolTableCorrectness.cpp
         src/sksl/analysis/SkSLCheckProgramStructure.cpp
         src/sksl/analysis/SkSLFinalizationChecks.cpp
         src/sksl/analysis/SkSLGetLoopControlFlowInfo.cpp
@@ -381,6 +403,7 @@ list(APPEND SOURCE_FILES
         src/sksl/analysis/SkSLIsTrivialExpression.cpp
         src/sksl/analysis/SkSLProgramUsage.cpp
         src/sksl/analysis/SkSLReturnsInputAlpha.cpp
+        src/sksl/analysis/SkSLSpecialization.cpp
         src/sksl/analysis/SkSLSwitchCaseContainsExit.cpp
         src/sksl/analysis/SkSLSymbolTableStackBuilder.cpp
         src/sksl/codegen/SkSLGLSLCodeGenerator.cpp
@@ -389,7 +412,6 @@ list(APPEND SOURCE_FILES
         src/sksl/codegen/SkSLRasterPipelineBuilder.cpp
         src/sksl/codegen/SkSLRasterPipelineCodeGenerator.cpp
         src/sksl/codegen/SkSLSPIRVCodeGenerator.cpp
-        src/sksl/codegen/SkSLSPIRVtoHLSL.cpp
         src/sksl/codegen/SkSLWGSLCodeGenerator.cpp
         src/sksl/ir/SkSLBinaryExpression.cpp
         src/sksl/ir/SkSLBlock.cpp
@@ -429,6 +451,7 @@ list(APPEND SOURCE_FILES
         src/sksl/ir/SkSLSwitchCase.cpp
         src/sksl/ir/SkSLSwitchStatement.cpp
         src/sksl/ir/SkSLSwizzle.cpp
+        src/sksl/ir/SkSLSymbol.cpp
         src/sksl/ir/SkSLSymbolTable.cpp
         src/sksl/ir/SkSLTernaryExpression.cpp
         src/sksl/ir/SkSLType.cpp
@@ -447,6 +470,9 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLLexer.cpp
         src/sksl/SkSLMangler.cpp
         src/sksl/SkSLMemoryLayout.h
+        src/sksl/SkSLModule.cpp
+        src/sksl/SkSLModuleDataDefault.cpp
+        src/sksl/SkSLGraphiteModules.cpp
         src/sksl/SkSLModuleLoader.cpp
         src/sksl/SkSLOperator.cpp
         src/sksl/SkSLOutputStream.cpp
@@ -455,7 +481,6 @@ list(APPEND SOURCE_FILES
         src/sksl/SkSLPosition.cpp
         src/sksl/SkSLSampleUsage.cpp
         src/sksl/SkSLString.cpp
-        src/sksl/SkSLThreadContext.cpp
         src/sksl/SkSLUtil.cpp
         src/sksl/tracing/SkSLDebugTracePlayer.cpp
         src/sksl/tracing/SkSLDebugTracePriv.cpp
@@ -465,19 +490,24 @@ list(APPEND SOURCE_FILES
         src/sksl/transform/SkSLEliminateDeadGlobalVariables.cpp
         src/sksl/transform/SkSLEliminateDeadLocalVariables.cpp
         src/sksl/transform/SkSLEliminateEmptyStatements.cpp
+        src/sksl/transform/SkSLEliminateUnnecessaryBraces.cpp
         src/sksl/transform/SkSLEliminateUnreachableCode.cpp
         src/sksl/transform/SkSLFindAndDeclareBuiltinFunctions.cpp
+        src/sksl/transform/SkSLFindAndDeclareBuiltinStructs.cpp
         src/sksl/transform/SkSLFindAndDeclareBuiltinVariables.cpp
         src/sksl/transform/SkSLHoistSwitchVarDeclarationsAtTopLevel.cpp
         src/sksl/transform/SkSLRenamePrivateSymbols.cpp
         src/sksl/transform/SkSLReplaceConstVarsWithLiterals.cpp
+        src/sksl/transform/SkSLReplaceSplatCastsWithSwizzles.cpp
         src/sksl/transform/SkSLRewriteIndexedSwizzle.cpp
+        src/sksl/transform/SkSLTransform.cpp
         src/svg/SkSVGCanvas.cpp
         src/svg/SkSVGDevice.cpp
         src/text/GlyphRun.cpp
         src/text/SlugFromBuffer.cpp
         src/text/StrikeForGPU.cpp
-        src/utils/SkAnimCodecPlayer.cpp
+        modules/skresources/src/SkAnimCodecPlayer.cpp
+        modules/jsonreader/SkJSONReader.cpp
         src/utils/SkCamera.cpp
         src/utils/SkCanvasStack.cpp
         src/utils/SkCanvasStateUtils.cpp
@@ -487,10 +517,8 @@ list(APPEND SOURCE_FILES
         src/utils/SkDashPath.cpp
         src/utils/SkEventTracer.cpp
         src/utils/SkFloatToDecimal.cpp
-        src/utils/SkJSON.cpp
         src/utils/SkJSONWriter.cpp
         src/utils/SkMatrix22.cpp
-        src/utils/SkMultiPictureDocument.cpp
         src/utils/SkNullCanvas.cpp
         src/utils/SkNWayCanvas.cpp
         src/utils/SkOrderedFontMgr.cpp
@@ -589,7 +617,6 @@ if(RESKIA_ENABLE_PDF)
     list(APPEND SOURCE_FILES
             src/pdf/SkClusterator.cpp
             src/pdf/SkDeflate.cpp
-            src/pdf/SkJpegInfo_none.cpp
             src/pdf/SkKeyedImage.cpp
             src/pdf/SkPDFBitmap.cpp
             src/pdf/SkPDFDevice.cpp
@@ -737,21 +764,33 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.cpp")
     endif()
 
     if(RESKIA_ENABLE_GPU_GRAPHITE)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/graphite/precompile/*.cpp")
     endif()
 
     if(RESKIA_ENABLE_GPU_VULKAN)
         _reskia_append_gpu_sources(
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/vk/vulkanmemoryallocator/*.cpp")
         if(RESKIA_ENABLE_GPU_GANESH)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/vk/*.c"
@@ -762,7 +801,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
             _reskia_append_gpu_sources(
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.c"
                     "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cc"
-                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cpp")
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/*.cpp"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.c"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.cc"
+                    "${PROJECT_SOURCE_DIR}/src/gpu/graphite/vk/precompile/*.cpp")
         endif()
     endif()
 
@@ -862,7 +904,7 @@ if(RESKIA_BUILD_TESTS)
     list(APPEND SOURCE_FILES
             src/text/gpu/DistanceFieldAdjustTable.cpp
             src/text/gpu/GlyphVector.cpp
-            src/text/gpu/SDFTControl.cpp
+            src/text/gpu/SubRunControl.cpp
             src/text/gpu/SkChromeRemoteGlyphCache.cpp
             src/text/gpu/Slug.cpp
             src/text/gpu/SlugImpl.cpp
@@ -871,7 +913,6 @@ if(RESKIA_BUILD_TESTS)
             src/text/gpu/SubRunContainer.cpp
             src/text/gpu/TextBlob.cpp
             src/text/gpu/VertexFiller.cpp
-            src/utils/SkTestCanvas.cpp
     )
 endif()
 

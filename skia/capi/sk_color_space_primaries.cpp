@@ -19,4 +19,12 @@ void SkColorSpacePrimaries_toXYZD50(reskia_color_space_primaries_t *color_pace_p
     reinterpret_cast<SkColorSpacePrimaries *>(color_pace_primaries)->toXYZD50(reinterpret_cast<skcms_Matrix3x3 *>(toXYZD50));
 }
 
+bool SkColorSpacePrimaries_Equal(const reskia_color_space_primaries_t *a, const reskia_color_space_primaries_t *b) {
+    if (a == nullptr || b == nullptr) {
+        return a == b;
+    }
+    return *reinterpret_cast<const SkColorSpacePrimaries *>(a) ==
+           *reinterpret_cast<const SkColorSpacePrimaries *>(b);
+}
+
 }

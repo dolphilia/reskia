@@ -1,15 +1,23 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
 
-#include "modules/skottie/src/SkottieJson.h"
-
 #include "modules/skottie/utils/SkottieUtils.h"
 
-#include "include/core/SkImage.h"
+#include "include/core/SkData.h"
+#include "include/core/SkRect.h"
+#include "include/core/SkSize.h"
+#include "include/private/base/SkAssert.h"
+#include "modules/skottie/include/Skottie.h"
+#include "modules/skresources/include/SkResources.h"
+
+#include <cstring>
+#include <utility>
+
+class SkCanvas;
 
 namespace skottie_utils {
 

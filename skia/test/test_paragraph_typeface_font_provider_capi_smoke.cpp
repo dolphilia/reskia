@@ -8,6 +8,11 @@
 #include "handles/static_sk_font_style_set.h"
 #include "handles/static_sk_typeface.h"
 
+#if defined(__APPLE__)
+#include "handles/static_sk_font_mgr-internal.h"
+#include "include/ports/SkFontMgr_mac_ct.h"
+#endif
+
 namespace {
 
 bool check(bool condition, const char *message) {
@@ -64,10 +69,11 @@ bool smoke_typeface_font_provider() {
         return false;
     }
 
-    sk_font_mgr_t default_mgr = SkFontMgr_RefDefault();
-    if (default_mgr == 0) {
-        default_mgr = SkFontMgr_RefEmpty();
-    }
+#if defined(__APPLE__)
+    sk_font_mgr_t default_mgr = static_sk_font_mgr_make(SkFontMgr_New_CoreText(nullptr));
+#else
+    sk_font_mgr_t default_mgr = SkFontMgr_RefEmpty();
+#endif
     auto *default_mgr_ptr = reinterpret_cast<reskia_font_mgr_t *>(static_sk_font_mgr_get_ptr(default_mgr));
     sk_typeface_t typeface = default_mgr_ptr == nullptr ? 0 : SkFontMgr_legacyMakeTypeface(default_mgr_ptr, nullptr, 0);
     if (!check(typeface != 0, "default typeface")) {

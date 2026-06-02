@@ -23,7 +23,6 @@ extern "C" {
 #endif
 
 void SkPathEffect_release(reskia_path_effect_t *pathEffect); // owned: caller が保持する参照を release する。NULL 入力では no-op
-int SkPathEffect_asADash(reskia_path_effect_t *path_effect, reskia_path_effect_dash_info_t *info); // out: info は NULL 許可。path_effect NULL では 0
 /**
  * dst/src/rec は非 NULL。cullR は NULL 許可。NULL 入力では false
  */

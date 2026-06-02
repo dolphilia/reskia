@@ -7,11 +7,29 @@
 
 #include "src/gpu/graphite/render/PerEdgeAAQuadRenderStep.h"
 
+#include "include/core/SkM44.h"
+#include "include/private/base/SkAssert.h"
+#include "include/private/base/SkDebug.h"
+#include "include/private/base/SkFloatingPoint.h"
+#include "src/base/SkEnumBitMask.h"
 #include "src/base/SkVx.h"
-#include "src/core/SkRRectPriv.h"
+#include "src/core/SkSLTypeShared.h"
+#include "src/gpu/BufferWriter.h"
+#include "src/gpu/graphite/Attribute.h"
+#include "src/gpu/graphite/BufferManager.h"
+#include "src/gpu/graphite/DrawOrder.h"
 #include "src/gpu/graphite/DrawParams.h"
+#include "src/gpu/graphite/DrawTypes.h"
 #include "src/gpu/graphite/DrawWriter.h"
+#include "src/gpu/graphite/PipelineData.h"
+#include "src/gpu/graphite/geom/EdgeAAQuad.h"
+#include "src/gpu/graphite/geom/Geometry.h"
+#include "src/gpu/graphite/geom/Rect.h"
+#include "src/gpu/graphite/geom/Transform.h"
 #include "src/gpu/graphite/render/CommonDepthStencilSettings.h"
+
+#include <array>
+#include <cstdint>
 
 // This RenderStep is specialized to draw filled rectangles with per-edge AA.
 //
@@ -93,93 +111,6 @@ namespace skgpu::graphite {
 
 using AAFlags = EdgeAAQuad::Flags;
 
-static float local_aa_radius(const Transform& t, const SkV2& p) {
-    // TODO: This should be the logic for Transform::scaleFactor()
-    //              [m00 m01 * m03]                                 [f(u,v)]
-    // Assuming M = [m10 m11 * m13], define the projected p'(u,v) = [g(u,v)] where
-    //              [ *   *  *  * ]
-    //              [m30 m31 * m33]
-    //                                                        [x]     [u]
-    // f(u,v) = x(u,v) / w(u,v), g(u,v) = y(u,v) / w(u,v) and [y] = M*[v]
-    //                                                        [*] =   [0]
-    //                                                        [w]     [1]
-    //
-    // x(u,v) = m00*u + m01*v + m03
-    // y(u,v) = m10*u + m11*v + m13
-    // w(u,v) = m30*u + m31*v + m33
-    //
-    // dx/du = m00, dx/dv = m01,
-    // dy/du = m10, dy/dv = m11
-    // dw/du = m30, dw/dv = m31
-    //
-    // df/du = (dx/du*w - x*dw/du)/w^2 = (m00*w - m30*x)/w^2 = (m00 - m30*f)/w
-    // df/dv = (dx/dv*w - x*dw/dv)/w^2 = (m01*w - m31*x)/w^2 = (m01 - m31*f)/w
-    // dg/du = (dy/du*w - y*dw/du)/w^2 = (m10*w - m30*y)/w^2 = (m10 - m30*g)/w
-    // dg/dv = (dy/dv*w - y*dw/du)/w^2 = (m11*w - m31*y)/w^2 = (m11 - m31*g)/w
-    //
-    // Singular values of [df/du df/dv] define perspective correct minimum and maximum scale factors
-    //                    [dg/du dg/dv]
-    // for M evaluated at  (u,v)
-    const SkM44& matrix = t.matrix();
-    SkV4 devP = matrix.map(p.x, p.y, 0.f, 1.f);
-
-    const float dxdu = matrix.rc(0,0);
-    const float dxdv = matrix.rc(0,1);
-    const float dydu = matrix.rc(1,0);
-    const float dydv = matrix.rc(1,1);
-    const float dwdu = matrix.rc(3,0);
-    const float dwdv = matrix.rc(3,1);
-
-    float invW2 = sk_ieee_float_divide(1.f, (devP.w * devP.w));
-    // non-persp has invW2 = 1, devP.w = 1, dwdu = 0, dwdv = 0
-    float dfdu = (devP.w*dxdu - devP.x*dwdu) * invW2; // non-persp -> dxdu -> m00
-    float dfdv = (devP.w*dxdv - devP.x*dwdv) * invW2; // non-persp -> dxdv -> m01
-    float dgdu = (devP.w*dydu - devP.y*dwdu) * invW2; // non-persp -> dydu -> m10
-    float dgdv = (devP.w*dydv - devP.y*dwdv) * invW2; // non-persp -> dydv -> m11
-
-    // no-persp, these are the singular values of [m00,m01][m10,m11], which is just the upper 2x2
-    // and equivalent to SkMatrix::getMinmaxScales().
-    float s1 = dfdu*dfdu + dfdv*dfdv + dgdu*dgdu + dgdv*dgdv;
-
-    float e = dfdu*dfdu + dfdv*dfdv - dgdu*dgdu - dgdv*dgdv;
-    float f = dfdu*dgdu + dfdv*dgdv;
-    float s2 = SkScalarSqrt(e*e + 4*f*f);
-
-    float singular1 = SkScalarSqrt(0.5f * (s1 + s2));
-    float singular2 = SkScalarSqrt(0.5f * (s1 - s2));
-
-    // singular1 and 2 represent the minimum and maximum scale factors at that transformed point.
-    // Moving 1 from 'p' before transforming will move at least minimum and at most maximum from
-    // the transformed point. Thus moving between [1/max, 1/min] pre-transformation means post
-    // transformation moves between [1,max/min] so using 1/min as the local AA radius ensures that
-    // the post-transformed point is at least 1px away from the original.
-    float aaRadius = sk_ieee_float_divide(1.f, std::min(singular1, singular2));
-    if (sk_float_isfinite(aaRadius)) {
-        return aaRadius;
-    } else {
-        // Treat NaNs and infinities as +inf, which will always trigger the inset self-intersection
-        // logic that snaps inner vertices to the center instead of insetting by the local AA radius
-        return SK_FloatInfinity;
-    }
-}
-
-static float local_aa_radius(const Transform& t, const Rect& bounds) {
-    // Use the maximum radius of the 4 corners so that every local vertex uses the same offset
-    // even if it's more conservative on some corners (when the min/max scale isn't constant due
-    // to perspective).
-    if (t.type() < Transform::Type::kProjection) {
-        // Scale factors are constant, so the point doesn't really matter
-        return local_aa_radius(t, SkV2{0.f, 0.f});
-    } else {
-        // TODO can we share calculation here?
-        float tl = local_aa_radius(t, SkV2{bounds.left(), bounds.top()});
-        float tr = local_aa_radius(t, SkV2{bounds.right(), bounds.top()});
-        float br = local_aa_radius(t, SkV2{bounds.right(), bounds.bot()});
-        float bl = local_aa_radius(t, SkV2{bounds.left(), bounds.bot()});
-        return std::max(std::max(tl, tr), std::max(bl, br));
-    }
-}
-
 static bool is_clockwise(const EdgeAAQuad& quad) {
     if (quad.isRect()) {
         return true; // by construction, these are always locally clockwise
@@ -203,17 +134,35 @@ static bool is_clockwise(const EdgeAAQuad& quad) {
     return winding >= 0.f;
 }
 
-// Represents the per-vertex attributes used in each instance.
-struct Vertex {
-    SkV2 fNormal;
-};
-
 // Allowed values for the center weight instance value (selected at record time based on style
 // and transform), and are defined such that when (insance-weight > vertex-weight) is true, the
 // vertex should be snapped to the center instead of its regular calculation.
 static constexpr int kCornerVertexCount = 4; // sk_VertexID is divided by this in SkSL
 static constexpr int kVertexCount = 4 * kCornerVertexCount;
 static constexpr int kIndexCount = 29;
+
+// Represents the per-vertex attributes used in each instance.
+struct Vertex {
+    uint32_t fCornerID;
+    SkV2 fNormal;
+};
+
+// This template is repeated 4 times in the vertex buffer, for each of the four corners:  TL -> TR
+// -> BR -> BL. The corner ID is used to lookup per-corner instance properties such as positions.
+template<uint32_t kCornerID>
+constexpr std::array<Vertex, kCornerVertexCount> get_per_corner_vertex_attrs() {
+    constexpr float kHR2 = 0.5f * SK_FloatSqrt2; // "half root 2"
+
+    return {{
+        // Normals for device-space AA outsets from outer curve
+        { kCornerID, {1.0f, 0.0f} },
+        { kCornerID, {kHR2, kHR2} },
+        { kCornerID, {0.0f, 1.0f} },
+
+        // Normal for outer anchor (zero length to signal no local or device-space normal outset)
+        { kCornerID, {0.0f, 0.0f} },
+    }};
+}
 
 static void write_index_buffer(VertexWriter writer) {
     static constexpr uint16_t kTL = 0 * kCornerVertexCount;
@@ -232,63 +181,53 @@ static void write_index_buffer(VertexWriter writer) {
         kTL+3,kTR+3,kBL+3,kBR+3
     };
 
-    writer << kIndices;
+    if (writer) {
+        writer << kIndices;
+    } // otherwise static buffer creation failed, so do nothing; Context initialization will fail.
 }
 
 static void write_vertex_buffer(VertexWriter writer) {
-    static constexpr float kHR2 = 0.5f * SK_FloatSqrt2; // "half root 2"
-
-    // This template is repeated 4 times in the vertex buffer, for each of the four corners.
-    // The vertex ID is used to lookup per-corner instance properties such as positions,
-    // but otherwise this vertex data produces a consistent clockwise mesh from
-    // TL -> TR -> BR -> BL.
-    static constexpr Vertex kCornerTemplate[kCornerVertexCount] = {
-        // Normals for device-space AA outsets from outer curve
-        { {1.0f, 0.0f} },
-        { {kHR2, kHR2} },
-        { {0.0f, 1.0f} },
-
-        // Normal for outer anchor (zero length to signal no local or device-space normal outset)
-        { {0.0f, 0.0f} },
-    };
-
-    writer << kCornerTemplate  // TL
-           << kCornerTemplate  // TR
-           << kCornerTemplate  // BR
-           << kCornerTemplate; // BL
+    if (writer) {
+        writer << get_per_corner_vertex_attrs<0>()  // TL
+               << get_per_corner_vertex_attrs<1>()  // TR
+               << get_per_corner_vertex_attrs<2>()  // BR
+               << get_per_corner_vertex_attrs<3>(); // BL
+    } // otherwise static buffer creation failed, so do nothing; Context initialization will fail.
 }
 
-PerEdgeAAQuadRenderStep::PerEdgeAAQuadRenderStep(StaticBufferManager* bufferManager)
-        : RenderStep("PerEdgeAAQuadRenderStep",
-                     "",
-                     Flags::kPerformsShading | Flags::kEmitsCoverage,
+PerEdgeAAQuadRenderStep::PerEdgeAAQuadRenderStep(Layout layout, StaticBufferManager* bufferManager)
+        : RenderStep(layout,
+                     RenderStepID::kPerEdgeAAQuad,
+                     Flags::kPerformsShading | Flags::kEmitsCoverage | Flags::kOutsetBoundsForAA |
+                     Flags::kUseNonAAInnerFill | Flags::kAppendInstances,
                      /*uniforms=*/{},
                      PrimitiveType::kTriangleStrip,
-                     kDirectDepthGreaterPass,
-                     /*vertexAttrs=*/{
-                            {"normal", VertexAttribType::kFloat2, SkSLType::kFloat2},
-                     },
-                     /*instanceAttrs=*/
-                            {{"edgeFlags", VertexAttribType::kUByte4_norm, SkSLType::kFloat4},
+                     kDirectDepthLessPass,
+                     /*staticAttrs=*/{{
+                             {"cornerID", VertexAttribType::kUInt, SkSLType::kUInt },
+                             {"normal", VertexAttribType::kFloat2, SkSLType::kFloat2},
+                     }},
+                     /*appendAttrs=*/{{
+                             {"edgeFlags", VertexAttribType::kUByte4_norm, SkSLType::kFloat4},
                              {"quadXs", VertexAttribType::kFloat4, SkSLType::kFloat4},
                              {"quadYs", VertexAttribType::kFloat4, SkSLType::kFloat4},
 
                              // TODO: pack depth and ssbo index into one 32-bit attribute, if we can
                              // go without needing both render step and paint ssbo index attributes.
                              {"depth", VertexAttribType::kFloat, SkSLType::kFloat},
-                             {"ssboIndices", VertexAttribType::kUShort2, SkSLType::kUShort2},
+                             {"ssboIndex", VertexAttribType::kUInt, SkSLType::kUInt},
 
                              {"mat0", VertexAttribType::kFloat3, SkSLType::kFloat3},
                              {"mat1", VertexAttribType::kFloat3, SkSLType::kFloat3},
-                             {"mat2", VertexAttribType::kFloat3, SkSLType::kFloat3}},
-                     /*varyings=*/{
+                             {"mat2", VertexAttribType::kFloat3, SkSLType::kFloat3}}},
+                     /*varyings=*/{{
                              // Device-space distance to LTRB edges of quad.
                              {"edgeDistances", SkSLType::kFloat4}, // distance to LTRB edges
-                     }) {
+                     }}) {
     // Initialize the static buffers we'll use when recording draw calls.
     // NOTE: Each instance of this RenderStep gets its own copy of the data. Since there should only
     // ever be one PerEdgeAAQuadRenderStep at a time, this shouldn't be an issue.
-    write_vertex_buffer(bufferManager->getVertexWriter(sizeof(Vertex) * kVertexCount,
+    write_vertex_buffer(bufferManager->getVertexWriter(kVertexCount, sizeof(Vertex),
                                                        &fVertexBuffer));
     write_index_buffer(bufferManager->getIndexWriter(sizeof(uint16_t) * kIndexCount,
                                                      &fIndexBuffer));
@@ -300,9 +239,9 @@ std::string PerEdgeAAQuadRenderStep::vertexSkSL() const {
     // Returns the body of a vertex function, which must define a float4 devPosition variable and
     // must write to an already-defined float2 stepLocalCoords variable.
     return "float4 devPosition = per_edge_aa_quad_vertex_fn("
-                   // Vertex Attributes
-                   "normal, "
-                   // Instance Attributes
+                   // Static Data Attributes
+                   "cornerID, normal, "
+                   // Append Data Attributes
                    "edgeFlags, quadXs, quadYs, depth, "
                    "float3x3(mat0, mat1, mat2), "
                    // Varyings
@@ -317,14 +256,9 @@ const char* PerEdgeAAQuadRenderStep::fragmentCoverageSkSL() const {
     return "outputCoverage = per_edge_aa_quad_coverage_fn(sk_FragCoord, edgeDistances);";
 }
 
-float PerEdgeAAQuadRenderStep::boundsOutset(const Transform& localToDevice,
-                                           const Rect& bounds) const {
-    return local_aa_radius(localToDevice, bounds);
-}
-
 void PerEdgeAAQuadRenderStep::writeVertices(DrawWriter* writer,
                                            const DrawParams& params,
-                                           skvx::ushort2 ssboIndices) const {
+                                           uint32_t ssboIndex) const {
     SkASSERT(params.geometry().isEdgeAAQuad());
     const EdgeAAQuad& quad = params.geometry().edgeAAQuad();
 
@@ -356,15 +290,16 @@ void PerEdgeAAQuadRenderStep::writeVertices(DrawWriter* writer,
     const SkM44& m = params.transform().matrix();
 
     vw << params.order().depthAsFloat()
-       << ssboIndices
+       << ssboIndex
        << m.rc(0,0) << m.rc(1,0) << m.rc(3,0)  // mat0
        << m.rc(0,1) << m.rc(1,1) << m.rc(3,1)  // mat1
        << m.rc(0,3) << m.rc(1,3) << m.rc(3,3); // mat2
 }
 
 void PerEdgeAAQuadRenderStep::writeUniformsAndTextures(const DrawParams&,
-                                                       PipelineDataGatherer*) const {
+                                                       PipelineDataGatherer* gatherer) const {
     // All data is uploaded as instance attributes, so no uniforms are needed.
+    SkDEBUGCODE(gatherer->checkRewind());
 }
 
 }  // namespace skgpu::graphite

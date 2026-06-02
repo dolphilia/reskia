@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 #include "sk_color.h"
+#include "sk_font.h"
 #include "../handles/static_sk_font_style.h"
 #include "../handles/static_sk_typeface.h"
 
@@ -119,6 +120,12 @@ void SkParagraph_TextStyle_setDecorationColor(reskia_paragraph_text_style_t *sty
 void SkParagraph_TextStyle_setDecorationThicknessMultiplier(reskia_paragraph_text_style_t *style, float multiplier);
 sk_font_style_t SkParagraph_TextStyle_getFontStyle(const reskia_paragraph_text_style_t *style);
 bool SkParagraph_TextStyle_setFontStyle(reskia_paragraph_text_style_t *style, sk_font_style_t font_style);
+reskia_font_edging_t SkParagraph_TextStyle_getFontEdging(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_setFontEdging(reskia_paragraph_text_style_t *style, reskia_font_edging_t edging);
+bool SkParagraph_TextStyle_getSubpixel(const reskia_paragraph_text_style_t *style);
+void SkParagraph_TextStyle_setSubpixel(reskia_paragraph_text_style_t *style, bool subpixel);
+reskia_font_hinting_t SkParagraph_TextStyle_getFontHinting(const reskia_paragraph_text_style_t *style);
+bool SkParagraph_TextStyle_setFontHinting(reskia_paragraph_text_style_t *style, reskia_font_hinting_t hinting);
 size_t SkParagraph_TextStyle_getShadowNumber(const reskia_paragraph_text_style_t *style);
 int32_t SkParagraph_TextStyle_getShadows(const reskia_paragraph_text_style_t *style, reskia_paragraph_text_shadow_t *dst, int32_t dst_count);
 bool SkParagraph_TextStyle_getShadowAt(const reskia_paragraph_text_style_t *style, size_t index, reskia_paragraph_text_shadow_t *out_shadow);

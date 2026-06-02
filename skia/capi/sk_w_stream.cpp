@@ -79,6 +79,13 @@ bool SkWStream_write32(reskia_w_stream_t *w_stream, uint32_t v) {
     return reinterpret_cast<SkWStream *>(w_stream)->write32(v);
 }
 
+bool SkWStream_write64(reskia_w_stream_t *w_stream, uint64_t value) {
+    if (w_stream == nullptr) {
+        return false;
+    }
+    return reinterpret_cast<SkWStream *>(w_stream)->write64(value);
+}
+
 bool SkWStream_writeText(reskia_w_stream_t *w_stream, const char text[]) {
     if (w_stream == nullptr || text == nullptr) {
         return false;

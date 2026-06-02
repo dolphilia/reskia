@@ -31,9 +31,6 @@ int main() {
     if (!check(!SkColorMatrixFilter_isAlphaUnchanged(nullptr), "SkColorMatrixFilter_isAlphaUnchanged(nullptr)")) {
         return 3;
     }
-    if (!check(SkColorMatrixFilter_filterColor(nullptr, 0x11223344) == 0x11223344, "SkColorMatrixFilter_filterColor(nullptr)")) {
-        return 4;
-    }
     if (!check(SkColorMatrixFilter_filterColor4f(nullptr, nullptr, nullptr, nullptr) == 0, "SkColorMatrixFilter_filterColor4f(nullptr)")) {
         return 5;
     }

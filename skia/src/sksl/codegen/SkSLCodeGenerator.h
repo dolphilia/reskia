@@ -14,21 +14,25 @@
 
 namespace SkSL {
 
+struct ShaderCaps;
+
 /**
  * Abstract superclass of all code generators, which take a Program as input and produce code as
  * output.
  */
 class CodeGenerator {
 public:
-    CodeGenerator(const Context* context, const Program* program, OutputStream* stream)
+    CodeGenerator(const Context* context,
+                  const ShaderCaps* caps,
+                  const Program* program,
+                  OutputStream* stream)
             : fProgram(*program)
-            , fContext(fProgram.fContext->fTypes,
-                       fProgram.fContext->fCaps,
-                       *fProgram.fContext->fErrors)
+            , fContext(fProgram.fContext->fTypes, *fProgram.fContext->fErrors)
+            , fCaps(*caps)
             , fOut(stream) {
         fContext.fConfig = fProgram.fConfig.get();
         fContext.fModule = fProgram.fContext->fModule;
-        fContext.fSymbolTable = fProgram.fSymbols;
+        fContext.fSymbolTable = fProgram.fSymbols.get();
     }
 
     virtual ~CodeGenerator() = default;
@@ -40,9 +44,6 @@ public:
     void setOutputStream(OutputStream* output) { fOut = output; }
 
 protected:
-#if defined(SK_USE_LEGACY_MIPMAP_LOD_BIAS)
-    static constexpr float kSharpenTexturesBias = -.5f;
-#else
     // For SkMipmapMode::kLinear we want a bias such that when the unbiased LOD value is
     // midway between levels we select just the larger level, i.e. a bias of -.5. However, using
     // this bias with kNearest mode with a draw that is a perfect power of two downscale puts us
@@ -53,10 +54,10 @@ protected:
     // we are using -.475. They do not at -.48. All other GPUs passed tests with -.499. Though, at
     // this time the bias is not implemented in the MSL codegen and so iOS/Metal was not tested.
     static constexpr float kSharpenTexturesBias = -.475f;
-#endif
 
     const Program& fProgram;
     Context fContext;
+    const ShaderCaps& fCaps;
     OutputStream* fOut;
 };
 

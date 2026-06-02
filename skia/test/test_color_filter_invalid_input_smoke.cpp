@@ -36,9 +36,6 @@ int main() {
     if (!check(!SkColorFilter_isAlphaUnchanged(nullptr), "SkColorFilter_isAlphaUnchanged(nullptr)")) {
         return 3;
     }
-    if (!check(SkColorFilter_filterColor(nullptr, 0x11223344) == 0x11223344, "SkColorFilter_filterColor(nullptr)")) {
-        return 4;
-    }
     if (!check(SkColorFilter_filterColor4f(nullptr, nullptr, nullptr, nullptr) == 0, "SkColorFilter_filterColor4f(nullptr)")) {
         return 5;
     }

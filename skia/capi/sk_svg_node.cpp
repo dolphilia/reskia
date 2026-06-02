@@ -17,6 +17,7 @@
 #include "modules/svg/include/SkSVGEllipse.h"
 #include "modules/svg/include/SkSVGFeBlend.h"
 #include "modules/svg/include/SkSVGFeColorMatrix.h"
+#include "modules/svg/include/SkSVGFeComponentTransfer.h"
 #include "modules/svg/include/SkSVGFeComposite.h"
 #include "modules/svg/include/SkSVGFeDisplacementMap.h"
 #include "modules/svg/include/SkSVGFe.h"
@@ -25,6 +26,7 @@
 #include "modules/svg/include/SkSVGFeImage.h"
 #include "modules/svg/include/SkSVGFeLightSource.h"
 #include "modules/svg/include/SkSVGFeLighting.h"
+#include "modules/svg/include/SkSVGFeMerge.h"
 #include "modules/svg/include/SkSVGFeMorphology.h"
 #include "modules/svg/include/SkSVGFeOffset.h"
 #include "modules/svg/include/SkSVGFeTurbulence.h"
@@ -194,6 +196,10 @@ reskia_svg_node_t *SkSVGFeColorMatrix_Make(void) {
     return to_svg_node(SkSVGFeColorMatrix::Make());
 }
 
+reskia_svg_node_t *SkSVGFeComponentTransfer_Make(void) {
+    return to_svg_node(SkSVGFeComponentTransfer::Make());
+}
+
 reskia_svg_node_t *SkSVGFeComposite_Make(void) {
     return to_svg_node(SkSVGFeComposite::Make());
 }
@@ -214,12 +220,36 @@ reskia_svg_node_t *SkSVGFeFlood_Make(void) {
     return to_svg_node(SkSVGFeFlood::Make());
 }
 
+reskia_svg_node_t *SkSVGFeFunc_MakeFuncA(void) {
+    return to_svg_node(SkSVGFeFunc::MakeFuncA());
+}
+
+reskia_svg_node_t *SkSVGFeFunc_MakeFuncR(void) {
+    return to_svg_node(SkSVGFeFunc::MakeFuncR());
+}
+
+reskia_svg_node_t *SkSVGFeFunc_MakeFuncG(void) {
+    return to_svg_node(SkSVGFeFunc::MakeFuncG());
+}
+
+reskia_svg_node_t *SkSVGFeFunc_MakeFuncB(void) {
+    return to_svg_node(SkSVGFeFunc::MakeFuncB());
+}
+
 reskia_svg_node_t *SkSVGFeGaussianBlur_Make(void) {
     return to_svg_node(SkSVGFeGaussianBlur::Make());
 }
 
 reskia_svg_node_t *SkSVGFeImage_Make(void) {
     return to_svg_node(SkSVGFeImage::Make());
+}
+
+reskia_svg_node_t *SkSVGFeMerge_Make(void) {
+    return to_svg_node(SkSVGFeMerge::Make());
+}
+
+reskia_svg_node_t *SkSVGFeMergeNode_Make(void) {
+    return to_svg_node(SkSVGFeMergeNode::Make());
 }
 
 reskia_svg_node_t *SkSVGFeMorphology_Make(void) {

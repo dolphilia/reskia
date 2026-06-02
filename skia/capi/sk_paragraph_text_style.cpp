@@ -340,6 +340,40 @@ bool SkParagraph_TextStyle_setFontStyle(reskia_paragraph_text_style_t *style, sk
     return true;
 }
 
+reskia_font_edging_t SkParagraph_TextStyle_getFontEdging(const reskia_paragraph_text_style_t *style) {
+    return style != nullptr ? static_cast<reskia_font_edging_t>(as_text_style(style)->getFontEdging()) : -1;
+}
+
+bool SkParagraph_TextStyle_setFontEdging(reskia_paragraph_text_style_t *style, reskia_font_edging_t edging) {
+    if (style == nullptr || edging < 0 || edging > static_cast<reskia_font_edging_t>(SkFont::Edging::kSubpixelAntiAlias)) {
+        return false;
+    }
+    as_text_style(style)->setFontEdging(static_cast<SkFont::Edging>(edging));
+    return true;
+}
+
+bool SkParagraph_TextStyle_getSubpixel(const reskia_paragraph_text_style_t *style) {
+    return style != nullptr && as_text_style(style)->getSubpixel();
+}
+
+void SkParagraph_TextStyle_setSubpixel(reskia_paragraph_text_style_t *style, bool subpixel) {
+    if (style != nullptr) {
+        as_text_style(style)->setSubpixel(subpixel);
+    }
+}
+
+reskia_font_hinting_t SkParagraph_TextStyle_getFontHinting(const reskia_paragraph_text_style_t *style) {
+    return style != nullptr ? static_cast<reskia_font_hinting_t>(as_text_style(style)->getFontHinting()) : -1;
+}
+
+bool SkParagraph_TextStyle_setFontHinting(reskia_paragraph_text_style_t *style, reskia_font_hinting_t hinting) {
+    if (style == nullptr || hinting < 0 || hinting > 3) {
+        return false;
+    }
+    as_text_style(style)->setFontHinting(static_cast<SkFontHinting>(hinting));
+    return true;
+}
+
 size_t SkParagraph_TextStyle_getShadowNumber(const reskia_paragraph_text_style_t *style) {
     return style == nullptr ? 0 : as_text_style(style)->getShadowNumber();
 }

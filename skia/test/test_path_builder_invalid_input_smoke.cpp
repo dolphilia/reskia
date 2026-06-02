@@ -49,7 +49,13 @@ int main() {
     ok &= check(SkPathBuilder_addPolygonFromList(nullptr, nullptr, true) == nullptr, "addPolygonFromList null builder");
     ok &= check(SkPathBuilder_addPath(nullptr, nullptr) == nullptr, "addPath null builder");
     ok &= check(SkPathBuilder_offset(nullptr, 1.0f, 1.0f) == nullptr, "offset null");
+    ok &= check(SkPathBuilder_transform(nullptr, nullptr, 0) == nullptr, "transform null builder");
     ok &= check(SkPathBuilder_toggleInverseFillType(nullptr) == nullptr, "toggleInverseFillType null");
+    ok &= check(SkPathBuilder_isEmpty(nullptr), "isEmpty null");
+    ok &= check(SkPathBuilder_getLastPt(nullptr) == 0, "getLastPt null");
+    SkPathBuilder_setLastPt(nullptr, 1.0f, 2.0f);
+    ok &= check(SkPathBuilder_countPoints(nullptr) == 0, "countPoints null");
+    ok &= check(!SkPathBuilder_isInverseFillType(nullptr), "isInverseFillType null");
 
     reskia_path_builder_t *builder = SkPathBuilder_new();
     ok &= check(builder != nullptr, "new builder");
@@ -72,9 +78,24 @@ int main() {
         ok &= check(SkPathBuilder_addPolygon(builder, nullptr, 0, true) == builder, "addPolygon zero count no-op");
         ok &= check(SkPathBuilder_addPolygonFromList(builder, nullptr, true) == builder, "addPolygonFromList null list no-op");
         ok &= check(SkPathBuilder_addPath(builder, nullptr) == builder, "addPath null path no-op");
+        ok &= check(SkPathBuilder_transform(builder, nullptr, 0) == builder, "transform null matrix no-op");
+        ok &= check(SkPathBuilder_isEmpty(builder), "isEmpty new builder");
+        ok &= check(SkPathBuilder_getLastPt(builder) == 0, "getLastPt empty builder");
 
         ok &= check(SkPathBuilder_moveToPoint(builder, 1.0f, 2.0f) == builder, "moveToPoint valid");
+        ok &= check(!SkPathBuilder_isEmpty(builder), "isEmpty after moveTo");
+        ok &= check(SkPathBuilder_countPoints(builder) == 1, "countPoints after moveTo");
+        const sk_point_t last_pt = SkPathBuilder_getLastPt(builder);
+        ok &= check(last_pt != 0, "getLastPt valid");
+        if (last_pt != 0) {
+            static_sk_point_delete(last_pt);
+        }
+        SkPathBuilder_setLastPt(builder, 2.0f, 3.0f);
         ok &= check(SkPathBuilder_lineToPoint(builder, 3.0f, 4.0f) == builder, "lineToPoint valid");
+        ok &= check(SkPathBuilder_countPoints(builder) == 2, "countPoints after lineTo");
+        ok &= check(!SkPathBuilder_isInverseFillType(builder), "isInverseFillType default");
+        ok &= check(SkPathBuilder_toggleInverseFillType(builder) == builder, "toggleInverseFillType valid");
+        ok &= check(SkPathBuilder_isInverseFillType(builder), "isInverseFillType toggled");
         const sk_rect_t bounds = SkPathBuilder_computeBounds(builder);
         ok &= check(bounds != 0, "computeBounds valid");
         if (bounds != 0) {

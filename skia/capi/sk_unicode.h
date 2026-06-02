@@ -56,13 +56,11 @@ enum {
     RESKIA_UNICODE_BREAK_TYPE_SENTENCES = 3,
 };
 
-reskia_unicode_t *SkUnicode_Make(void); // owned: delete with SkUnicode_delete; returns NULL when no backend is available
-reskia_unicode_t *SkUnicode_MakeIcuBasedUnicode(void); // owned; returns NULL when ICU backend is unavailable
-reskia_unicode_t *SkUnicode_MakeClientBasedUnicode(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count); // owned; returns NULL when client backend is unavailable
-reskia_unicode_t *SkUnicode_MakeLibgraphemeBasedUnicode(void); // owned; returns NULL when libgrapheme backend is unavailable
-reskia_unicode_t *SkUnicode_MakeIcu4xBasedUnicode(void); // owned; returns NULL when ICU4X backend is unavailable
+reskia_unicode_t *SkUnicodes_ICU_Make(void); // owned: delete with SkUnicode_delete; returns NULL when ICU backend is unavailable
+reskia_unicode_t *SkUnicodes_Client_Make(const char *text, int32_t text_units, const size_t *words, int32_t words_count, const size_t *grapheme_breaks, int32_t grapheme_breaks_count, const size_t *line_breaks, int32_t line_breaks_count); // owned; returns NULL when client backend is unavailable
+reskia_unicode_t *SkUnicodes_Libgrapheme_Make(void); // owned; returns NULL when libgrapheme backend is unavailable
+reskia_unicode_t *SkUnicodes_ICU4X_Make(void); // owned; returns NULL when ICU4X backend is unavailable
 void SkUnicode_delete(reskia_unicode_t *unicode); // NULL input is no-op
-reskia_unicode_t *SkUnicode_copy(reskia_unicode_t *unicode); // owned: NULL input returns NULL
 reskia_string_t *SkUnicode_toUpper(reskia_unicode_t *unicode, const reskia_string_t *text); // owned SkString; NULL input returns NULL
 bool SkUnicode_isControl(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isWhitespace(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
@@ -70,6 +68,10 @@ bool SkUnicode_isSpace(reskia_unicode_t *unicode, reskia_unichar_t unichar); // 
 bool SkUnicode_isTabulation(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isHardBreak(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isEmoji(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiComponent(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiModifierBase(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isEmojiModifier(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
+bool SkUnicode_isRegionalIndicator(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 bool SkUnicode_isIdeographic(reskia_unicode_t *unicode, reskia_unichar_t unichar); // NULL unicode returns false
 
 bool SkUnicode_hasTabulationFlag(reskia_unicode_code_unit_flags_t flags);

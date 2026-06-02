@@ -133,9 +133,19 @@ const void *SkCodec_getICCProfile(reskia_codec_t *codec) {
     return native != nullptr ? native->getICCProfile() : nullptr;
 }
 
+const reskia_hdr_metadata_t *SkCodec_getHdrMetadata(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr ? reinterpret_cast<const reskia_hdr_metadata_t *>(&native->getHdrMetadata()) : nullptr;
+}
+
 reskia_codec_encoded_origin_t SkCodec_getOrigin(reskia_codec_t *codec) {
     SkCodec *native = as_codec(codec);
     return native != nullptr ? static_cast<reskia_codec_encoded_origin_t>(native->getOrigin()) : -1;
+}
+
+bool SkCodec_hasHighBitDepthEncodedData(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr && native->hasHighBitDepthEncodedData();
 }
 
 sk_i_size_t SkCodec_getScaledDimensions(reskia_codec_t *codec, float desiredScale) {
@@ -298,6 +308,13 @@ vector_sk_codec_frame_info_t SkCodec_getFrameInfoList(reskia_codec_t *codec) {
 int SkCodec_getRepetitionCount(reskia_codec_t *codec) {
     SkCodec *native = as_codec(codec);
     return native != nullptr ? native->getRepetitionCount() : 0;
+}
+
+reskia_codec_is_animated_t SkCodec_isAnimated(reskia_codec_t *codec) {
+    SkCodec *native = as_codec(codec);
+    return native != nullptr
+           ? static_cast<reskia_codec_is_animated_t>(native->isAnimated())
+           : static_cast<reskia_codec_is_animated_t>(SkCodec::IsAnimated::kUnknown);
 }
 
 // static

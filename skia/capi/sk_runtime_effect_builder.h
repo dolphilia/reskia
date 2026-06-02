@@ -7,7 +7,11 @@
 
 #include "../handles/static_sk_runtime_effect_builder_builder_child.h"
 #include "../handles/static_sk_runtime_effect_builder_builder_uniform.h"
+#include "../handles/static_sk_blender.h"
+#include "../handles/static_sk_color_filter.h"
+#include "../handles/static_sk_shader.h"
 
+typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_runtime_effect_builder_t reskia_runtime_effect_builder_t;
 typedef struct reskia_runtime_effect_t reskia_runtime_effect_t;
 
@@ -16,10 +20,44 @@ extern "C" {
 #endif
 
 /**
+ * Invalid runtime_effect handle returns NULL.
+ * Skia: (sk_runtime_effect_t runtime_effect) -> SkRuntimeEffectBuilder *.
+ */
+reskia_runtime_effect_builder_t *SkRuntimeEffectBuilder_new(int runtime_effect);
+/**
+ * Invalid runtime_effect/uniforms handle returns NULL.
+ * Skia: (sk_runtime_effect_t runtime_effect, sk_data_t uniforms) -> SkRuntimeEffectBuilder *.
+ */
+reskia_runtime_effect_builder_t *SkRuntimeEffectBuilder_newWithUniforms(int runtime_effect, int uniforms);
+/**
+ * NULL builder returns NULL.
+ * Skia: (const SkRuntimeEffectBuilder *builder) -> SkRuntimeEffectBuilder *.
+ */
+reskia_runtime_effect_builder_t *SkRuntimeEffectBuilder_newCopy(const reskia_runtime_effect_builder_t *builder);
+/**
  * NULL builder is no-op.
  * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder).
  */
 void SkRuntimeEffectBuilder_delete(reskia_runtime_effect_builder_t *runtime_effect_builder);
+/**
+ * localMatrix may be NULL.
+ * Returns a caller-owned shader handle.
+ * NULL builder/factory failure returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder, const SkMatrix *localMatrix) -> sk_shader_t.
+ */
+sk_shader_t SkRuntimeEffectBuilder_makeShader(reskia_runtime_effect_builder_t *runtime_effect_builder, const reskia_matrix_t *localMatrix);
+/**
+ * Returned color filter handle is caller-owned.
+ * NULL builder/factory failure returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> sk_color_filter_t.
+ */
+sk_color_filter_t SkRuntimeEffectBuilder_makeColorFilter(reskia_runtime_effect_builder_t *runtime_effect_builder);
+/**
+ * Returned blender handle is caller-owned.
+ * NULL builder/factory failure returns 0.
+ * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> sk_blender_t.
+ */
+sk_blender_t SkRuntimeEffectBuilder_makeBlender(reskia_runtime_effect_builder_t *runtime_effect_builder);
 /**
  * NULL builder returns NULL.
  * Skia: (SkRuntimeEffectBuilder *runtime_effect_builder) -> const SkRuntimeEffect *.
@@ -55,10 +93,7 @@ int SkRuntimeEffectBuilder_children(reskia_runtime_effect_builder_t *runtime_eff
 // static
 
 // SkRuntimeEffectBuilder()=delete
-// SkRuntimeEffectBuilder(sk_sp<SkRuntimeEffect> effect)
-// SkRuntimeEffectBuilder(sk_sp<SkRuntimeEffect> effect, sk_sp<SkData> uniforms)
 // SkRuntimeEffectBuilder(SkRuntimeEffectBuilder &&)
-// SkRuntimeEffectBuilder(const SkRuntimeEffectBuilder &)
 // SkRuntimeEffectBuilder & operator=(SkRuntimeEffectBuilder &&)=delete
 // SkRuntimeEffectBuilder & operator=(const SkRuntimeEffectBuilder &)=delete
 

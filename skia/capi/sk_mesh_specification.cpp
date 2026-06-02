@@ -107,6 +107,13 @@ size_t SkMeshSpecification_stride(reskia_mesh_specification_t* spec) {
     return as_mesh_specification(spec)->stride();
 }
 
+reskia_color_space_t *SkMeshSpecification_colorSpace(reskia_mesh_specification_t* spec) {
+    if (spec == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<reskia_color_space_t *>(as_mesh_specification(spec)->colorSpace());
+}
+
 // static
 
 sk_mesh_specification_result_t SkMeshSpecification_Make(reskia_mesh_specification_attribute_span_t * attributes, size_t vertexStride, reskia_mesh_specification_varying_span_t * varyings, const reskia_string_t * vs, const reskia_string_t * fs) {

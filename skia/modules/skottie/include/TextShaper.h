@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -11,17 +11,25 @@
 #include "include/core/SkFont.h"
 #include "include/core/SkPoint.h"
 #include "include/core/SkRefCnt.h"
+#include "include/core/SkScalar.h"
+#include "include/core/SkTypes.h"
 #include "include/private/base/SkTypeTraits.h"
 #include "include/utils/SkTextUtils.h"
+#include "modules/skunicode/include/SkUnicode.h"
 
+#include <cstddef>
+#include <cstdint>
+#include <type_traits>
 #include <vector>
 
 class SkCanvas;
 class SkFontMgr;
-class SkTypeface;
+class SkPaint;
 class SkString;
-
+class SkTypeface;
 struct SkRect;
+
+namespace SkShapers { class Factory; }
 
 namespace skottie {
 
@@ -163,22 +171,26 @@ public:
         size_t                    fMaxLines       = 0;  // when auto-sizing, 0 -> no max
         uint32_t                  fFlags          = 0;
         const char*               fLocale         = nullptr;
+        const char*               fFontFamily     = nullptr;
     };
 
     // Performs text layout along an infinite horizontal line, starting at |point|.
     // Only explicit line breaks (\r) are observed.
     static Result Shape(const SkString& text, const TextDesc& desc, const SkPoint& point,
-                        const sk_sp<SkFontMgr>&);
+                        const sk_sp<SkFontMgr>&, const sk_sp<SkShapers::Factory>&);
 
     // Performs text layout within |box|, injecting line breaks as needed to ensure
     // horizontal fitting.  The result is *not* guaranteed to fit vertically (it may extend
     // below the box bottom).
     static Result Shape(const SkString& text, const TextDesc& desc, const SkRect& box,
-                        const sk_sp<SkFontMgr>&);
+                        const sk_sp<SkFontMgr>&, const sk_sp<SkShapers::Factory>&);
 
 private:
     Shaper() = delete;
 };
+
+// Returns an SkUnicode wrapper which suppresses mid-word line breaks.
+sk_sp<SkUnicode> SK_API MakeStrictLinebreakUnicode(sk_sp<SkUnicode>);
 
 } // namespace skottie
 

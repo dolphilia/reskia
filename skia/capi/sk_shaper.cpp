@@ -8,6 +8,8 @@
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkFontStyle.h"
 #include "modules/skshaper/include/SkShaper.h"
+#include "modules/skshaper/include/SkShaper_factory.h"
+#include "modules/skshaper/include/SkShaper_skunicode.h"
 #include "modules/skunicode/include/SkUnicode.h"
 
 #include "../handles/static_sk_font_mgr-internal.h"
@@ -28,6 +30,10 @@ const SkFont *as_font(const reskia_font_t *font) {
 
 SkUnicode *as_unicode(reskia_unicode_t *unicode) {
     return reinterpret_cast<SkUnicode *>(unicode);
+}
+
+SkShapers::Factory *as_factory(reskia_shapers_factory_t *factory) {
+    return reinterpret_cast<SkShapers::Factory *>(factory);
 }
 
 SkShaper::FontRunIterator *as_font_iterator(reskia_shaper_font_run_iterator_t *iterator) {
@@ -52,6 +58,10 @@ SkShaper::LanguageRunIterator *as_language_iterator(reskia_shaper_language_run_i
 
 reskia_shaper_t *release_shaper(std::unique_ptr<SkShaper> shaper) {
     return reinterpret_cast<reskia_shaper_t *>(shaper.release());
+}
+
+reskia_shapers_factory_t *release_factory(sk_sp<SkShapers::Factory> factory) {
+    return reinterpret_cast<reskia_shapers_factory_t *>(factory.release());
 }
 
 reskia_shaper_font_run_iterator_t *release_font_iterator(std::unique_ptr<SkShaper::FontRunIterator> iterator) {
@@ -80,7 +90,7 @@ sk_sp<SkFontMgr> font_mgr_or_null(sk_font_mgr_t font_mgr) {
 
 sk_sp<SkFontMgr> font_mgr_or_default(sk_font_mgr_t font_mgr) {
     sk_sp<SkFontMgr> manager = font_mgr_or_null(font_mgr);
-    return manager ? manager : SkFontMgr::RefDefault();
+    return manager ? manager : SkFontMgr::RefEmpty();
 }
 
 template <typename Iterator>
@@ -124,11 +134,11 @@ std::vector<SkShaper::Feature> make_features(const reskia_shaper_feature_t *feat
 extern "C" {
 
 reskia_shaper_t *SkShaper_Make(void) {
-    return release_shaper(SkShaper::Make());
+    return release_shaper(SkShaper::Make(font_mgr_or_default(0)));
 }
 
 reskia_shaper_t *SkShaper_MakeWithFontMgr(sk_font_mgr_t font_mgr) {
-    return release_shaper(SkShaper::Make(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::Make(font_mgr_or_default(font_mgr)));
 }
 
 reskia_shaper_t *SkShaper_MakePrimitive(void) {
@@ -137,7 +147,7 @@ reskia_shaper_t *SkShaper_MakePrimitive(void) {
 
 reskia_shaper_t *SkShaper_MakeShaperDrivenWrapper(sk_font_mgr_t font_mgr) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    return release_shaper(SkShaper::MakeShaperDrivenWrapper(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::MakeShaperDrivenWrapper(font_mgr_or_default(font_mgr)));
 #else
     (void)font_mgr;
     return nullptr;
@@ -146,23 +156,8 @@ reskia_shaper_t *SkShaper_MakeShaperDrivenWrapper(sk_font_mgr_t font_mgr) {
 
 reskia_shaper_t *SkShaper_MakeShapeThenWrap(sk_font_mgr_t font_mgr) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    return release_shaper(SkShaper::MakeShapeThenWrap(font_mgr_or_null(font_mgr)));
+    return release_shaper(SkShaper::MakeShapeThenWrap(font_mgr_or_default(font_mgr)));
 #else
-    (void)font_mgr;
-    return nullptr;
-#endif
-}
-
-reskia_shaper_t *SkShaper_MakeShapeDontWrapOrReorder(reskia_unicode_t *unicode, sk_font_mgr_t font_mgr) {
-#if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
-    if (unicode == nullptr) {
-        return nullptr;
-    }
-    return release_shaper(SkShaper::MakeShapeDontWrapOrReorder(
-            std::unique_ptr<SkUnicode>(as_unicode(unicode)),
-            font_mgr_or_null(font_mgr)));
-#else
-    (void)unicode;
     (void)font_mgr;
     return nullptr;
 #endif
@@ -188,6 +183,51 @@ void SkShaper_PurgeHarfBuzzCache(void) {
 #if defined(SK_SHAPER_HARFBUZZ_AVAILABLE)
     SkShaper::PurgeHarfBuzzCache();
 #endif
+}
+
+reskia_shapers_factory_t *SkShapers_Primitive_Factory(void) {
+    return release_factory(SkShapers::Primitive::Factory());
+}
+
+void SkShapers_Factory_ref(reskia_shapers_factory_t *factory) {
+    if (factory != nullptr) {
+        as_factory(factory)->ref();
+    }
+}
+
+void SkShapers_Factory_unref(reskia_shapers_factory_t *factory) {
+    if (factory != nullptr) {
+        as_factory(factory)->unref();
+    }
+}
+
+void SkShapers_Factory_release(reskia_shapers_factory_t *factory) {
+    SkShapers_Factory_unref(factory);
+}
+
+reskia_shaper_t *SkShapers_Factory_makeShaper(reskia_shapers_factory_t *factory, sk_font_mgr_t fallback) {
+    if (factory == nullptr) {
+        return nullptr;
+    }
+    return release_shaper(as_factory(factory)->makeShaper(font_mgr_or_null(fallback)));
+}
+
+reskia_shaper_bidi_run_iterator_t *SkShapers_Factory_makeBidiRunIterator(reskia_shapers_factory_t *factory, const char *utf8, size_t utf8_bytes, uint8_t bidi_level) {
+    if (factory == nullptr || !valid_text(utf8, utf8_bytes)) {
+        return nullptr;
+    }
+    return release_bidi_iterator(as_factory(factory)->makeBidiRunIterator(utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
+}
+
+reskia_shaper_script_run_iterator_t *SkShapers_Factory_makeScriptRunIterator(reskia_shapers_factory_t *factory, const char *utf8, size_t utf8_bytes, reskia_four_byte_tag_t script) {
+    if (factory == nullptr || !valid_text(utf8, utf8_bytes)) {
+        return nullptr;
+    }
+    return release_script_iterator(as_factory(factory)->makeScriptRunIterator(utf8 == nullptr ? "" : utf8, utf8_bytes, static_cast<SkFourByteTag>(script)));
+}
+
+reskia_unicode_t *SkShapers_Factory_getUnicode(reskia_shapers_factory_t *factory) {
+    return factory == nullptr ? nullptr : reinterpret_cast<reskia_unicode_t *>(as_factory(factory)->getUnicode());
 }
 
 reskia_shaper_font_run_iterator_t *SkShaper_MakeFontMgrRunIterator(const char *utf8, size_t utf8_bytes, const reskia_font_t *font, sk_font_mgr_t fallback) {
@@ -220,21 +260,6 @@ reskia_shaper_bidi_run_iterator_t *SkShaper_MakeBiDiRunIterator(const char *utf8
         return nullptr;
     }
     return release_bidi_iterator(SkShaper::MakeBiDiRunIterator(utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
-}
-
-reskia_shaper_bidi_run_iterator_t *SkShaper_MakeSkUnicodeBidiRunIterator(reskia_unicode_t *unicode, const char *utf8, size_t utf8_bytes, uint8_t bidi_level) {
-#if defined(SK_SHAPER_UNICODE_AVAILABLE)
-    if (unicode == nullptr || !valid_text(utf8, utf8_bytes)) {
-        return nullptr;
-    }
-    return release_bidi_iterator(SkShaper::MakeSkUnicodeBidiRunIterator(as_unicode(unicode), utf8 == nullptr ? "" : utf8, utf8_bytes, bidi_level));
-#else
-    (void)unicode;
-    (void)utf8;
-    (void)utf8_bytes;
-    (void)bidi_level;
-    return nullptr;
-#endif
 }
 
 reskia_shaper_bidi_run_iterator_t *SkShaper_MakeIcuBiDiRunIterator(const char *utf8, size_t utf8_bytes, uint8_t bidi_level) {

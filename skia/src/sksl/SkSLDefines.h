@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -20,8 +20,6 @@ namespace SkSL {
 
 class Expression;
 class Statement;
-
-using ComponentArray = skia_private::STArray<4, int8_t>; // for Swizzles
 
 class ExpressionArray : public skia_private::STArray<2, std::unique_ptr<Expression>> {
 public:

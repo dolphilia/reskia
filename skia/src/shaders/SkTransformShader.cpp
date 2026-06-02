@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google Inc.
+ * Copyright 2021 Google LLC
  *
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
@@ -20,15 +20,12 @@ SkTransformShader::SkTransformShader(const SkShaderBase& shader, bool allowPersp
 }
 
 bool SkTransformShader::update(const SkMatrix& matrix) {
-    if (SkMatrix inv; matrix.invert(&inv)) {
-        if (!fAllowPerspective && inv.hasPerspective()) {
-            return false;
-        }
-
-        inv.get9(fMatrixStorage);
-        return true;
+    if (!fAllowPerspective && matrix.hasPerspective()) {
+        return false;
     }
-    return false;
+
+    matrix.get9(fMatrixStorage);
+    return true;
 }
 
 bool SkTransformShader::appendStages(const SkStageRec& rec,

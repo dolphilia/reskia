@@ -15,18 +15,15 @@ extern "C" {
 #include "../handles/static_sk_data.h"
 #include "../handles/static_sk_flattenable_factory.h"
 #include "../handles/static_sk_mask_filter.h"
-#include "../handles/static_sk_rect.h"
 
 typedef struct reskia_deserial_procs_t reskia_deserial_procs_t;
 typedef struct reskia_mask_filter_t reskia_mask_filter_t;
-typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_serial_procs_t reskia_serial_procs_t;
 typedef struct reskia_write_buffer_t reskia_write_buffer_t;
 typedef int32_t reskia_mask_filter_type_t;
 typedef int32_t reskia_mask_filter_blur_style_t;
 
 void SkMaskFilter_release(reskia_mask_filter_t *maskFilter); // owned: caller が保持する参照を release する。NULL 入力では no-op
-sk_rect_t SkMaskFilter_approximateFilteredBounds(reskia_mask_filter_t *mask_filter, const reskia_rect_t *src); // src は非 NULL。NULL 入力では empty rect handle
 sk_flattenable_factory_t SkMaskFilter_getFactory(reskia_mask_filter_t *mask_filter); // NULL 入力や factory なしでは 0
 const char *SkMaskFilter_getTypeName(reskia_mask_filter_t *mask_filter); // borrowed: 解放不要。NULL 入力では NULL
 void SkMaskFilter_flatten(reskia_mask_filter_t *mask_filter, reskia_write_buffer_t *buffer); // buffer は非 NULL。NULL 入力では no-op

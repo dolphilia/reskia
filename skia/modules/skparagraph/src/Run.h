@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC.
+// Copyright 2019 Google LLC
 #ifndef Run_DEFINED
 #define Run_DEFINED
 
@@ -111,6 +111,7 @@ public:
     ParagraphImpl* owner() const { return fOwner; }
 
     bool isEllipsis() const { return fEllipsis; }
+    bool isHyphen() const { return fHyphen; }
 
     void calculateMetrics();
     void updateMetrics(InternalLineMetrics* endlineMetrics);
@@ -120,10 +121,13 @@ public:
         return SkRect::MakeXYWH(fOffset.fX, fOffset.fY, fAdvance.fX, fAdvance.fY);
     }
 
+    bool isCursiveScript() const;
+
     void addSpacesAtTheEnd(SkScalar space, Cluster* cluster);
-    SkScalar addSpacesEvenly(SkScalar space, Cluster* cluster);
-    SkScalar addSpacesEvenly(SkScalar space);
+    SkScalar addLetterSpacesEvenly(SkScalar space, Cluster* cluster);
+    SkScalar addLetterSpacesEvenly(SkScalar space);
     void shift(const Cluster* cluster, SkScalar offset);
+    void extend(const Cluster* cluster, SkScalar offset);
 
     SkScalar calculateHeight(LineMetricStyle ascentStyle, LineMetricStyle descentStyle) const {
         auto ascent = ascentStyle == LineMetricStyle::Typographic ? this->ascent()
@@ -210,7 +214,10 @@ private:
     SkScalar fCorrectLeading;
 
     bool fEllipsis;
+    bool fHyphen;
     uint8_t fBidiLevel;
+    SkFourByteTag fScript;
+    SkString fLanguage;
 };
 
 template<typename Visitor>
@@ -287,7 +294,7 @@ public:
             SkScalar width,
             SkScalar height);
 
-    Cluster(TextRange textRange) : fTextRange(textRange), fGraphemeRange(EMPTY_RANGE) { }
+    explicit Cluster(TextRange textRange) : fTextRange(textRange), fGraphemeRange(EMPTY_RANGE) {}
 
     Cluster(const Cluster&) = default;
     ~Cluster() = default;
@@ -310,6 +317,7 @@ public:
     bool isIdeographic() const { return fIsIdeographic; }
 
     bool isSoftBreak() const;
+    bool isSoftHyphen() const;
     bool isGraphemeBreak() const;
     bool canBreakLineAfter() const { return isHardBreak() || isSoftBreak(); }
     size_t startPos() const { return fStart; }
@@ -371,7 +379,7 @@ public:
         fForceStrut = false;
     }
 
-    InternalLineMetrics(bool forceStrut) {
+    explicit InternalLineMetrics(bool forceStrut) {
         clean();
         fForceStrut = forceStrut;
     }

@@ -48,6 +48,7 @@ reskia_sksg_geometry_node_t *SkSG_TrimEffect_Make(reskia_sksg_geometry_node_t *c
 reskia_sksg_geometry_node_t *SkSG_DashEffect_Make(reskia_sksg_geometry_node_t *child); // owned; invalid input returns NULL
 reskia_sksg_geometry_node_t *SkSG_RoundEffect_Make(reskia_sksg_geometry_node_t *child); // owned; invalid input returns NULL
 reskia_sksg_geometry_node_t *SkSG_OffsetEffect_Make(reskia_sksg_geometry_node_t *child); // owned; invalid input returns NULL
+reskia_sksg_geometry_node_t *SkSG_FillTypeOverride_Make(reskia_sksg_geometry_node_t *child, int fill_type); // owned; invalid input returns NULL
 reskia_sksg_geometry_node_t *SkSG_GeometryTransform_Make(reskia_sksg_geometry_node_t *child, reskia_sksg_transform_t *transform); // owned; invalid input returns NULL
 reskia_sksg_transform_t *SkSG_GeometryTransform_getTransform(reskia_sksg_geometry_node_t *geometry_transform); // owned; invalid input returns NULL
 reskia_sksg_geometry_node_t *SkSG_Merge_Make(const reskia_sksg_geometry_node_t *const *geometry_nodes, const int *modes, int count); // owned; invalid input returns NULL

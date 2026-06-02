@@ -39,6 +39,7 @@ bool SkDynamicMemoryWStream_writeToAndReset(reskia_dynamic_memory_w_stream_t *dy
 bool SkDynamicMemoryWStream_writeToAndResetDynamicStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst) -> bool
 void SkDynamicMemoryWStream_prependToAndReset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream, reskia_dynamic_memory_w_stream_t *dst); // (SkDynamicMemoryWStream *dynamic_memory_w_stream, SkDynamicMemoryWStream *dst)
 sk_data_t SkDynamicMemoryWStream_detachAsData(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_data_t
+sk_data_t SkDynamicMemoryWStream_detachAsVector(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // returns vector bytes copied into SkData; NULL returns 0
 sk_stream_asset_t SkDynamicMemoryWStream_detachAsStream(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream) -> sk_stream_asset_t
 void SkDynamicMemoryWStream_reset(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)
 void SkDynamicMemoryWStream_padToAlign4(reskia_dynamic_memory_w_stream_t *dynamic_memory_w_stream); // (SkDynamicMemoryWStream *dynamic_memory_w_stream)

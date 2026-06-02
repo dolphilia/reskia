@@ -10,7 +10,9 @@
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
+#include "include/core/SkRefCnt.h"
 #include "include/core/SkScalar.h"
+#include "include/core/SkTileMode.h"
 #include "include/private/base/SkDebug.h"
 #include "include/private/base/SkNoncopyable.h"
 
@@ -23,13 +25,7 @@ class SkReadBuffer;
 struct SkRect;
 class SkWriteBuffer;
 
-#if defined(GRAPHITE_TEST_UTILS)
-namespace skgpu::graphite {
-    class TextureProxy;
-}
-#endif
-
-class SkAutoCanvasMatrixPaint : SkNoncopyable {
+class [[nodiscard]] SkAutoCanvasMatrixPaint : SkNoncopyable {
 public:
     SkAutoCanvasMatrixPaint(SkCanvas*, const SkMatrix*, const SkPaint*, const SkRect& bounds);
     ~SkAutoCanvasMatrixPaint();
@@ -42,7 +38,7 @@ private:
 class SkCanvasPriv {
 public:
     // The lattice has pointers directly into the readbuffer
-    static bool ReadLattice(SkReadBuffer&, SkCanvas::Lattice*);
+    [[nodiscard]] static bool ReadLattice(SkReadBuffer&, SkCanvas::Lattice*);
 
     static void WriteLattice(SkWriteBuffer&, const SkCanvas::Lattice&);
 
@@ -66,10 +62,6 @@ public:
         return canvas->topDevice();
     }
 
-#if defined(GRAPHITE_TEST_UTILS)
-    static skgpu::graphite::TextureProxy* TopDeviceGraphiteTargetProxy(SkCanvas*);
-#endif
-
     // The experimental_DrawEdgeAAImageSet API accepts separate dstClips and preViewMatrices arrays,
     // where entries refer into them, but no explicit size is provided. Given a set of entries,
     // computes the minimum length for these arrays that would provide index access errors.
@@ -80,8 +72,21 @@ public:
                                                       const SkPaint* paint,
                                                       const SkImageFilter* backdrop,
                                                       SkScalar backdropScale,
-                                                      SkCanvas::SaveLayerFlags saveLayerFlags) {
-        return SkCanvas::SaveLayerRec(bounds, paint, backdrop, backdropScale, saveLayerFlags);
+                                                      SkTileMode backdropTileMode,
+                                                      SkCanvas::SaveLayerFlags saveLayerFlags,
+                                                      SkCanvas::FilterSpan filters = {}) {
+        return SkCanvas::SaveLayerRec(bounds, paint, backdrop, nullptr, backdropScale,
+                                      backdropTileMode, saveLayerFlags, filters);
+    }
+
+    static SkCanvas::SaveLayerRec ScaledBackdropLayer(const SkRect* bounds,
+                                                      const SkPaint* paint,
+                                                      const SkImageFilter* backdrop,
+                                                      SkScalar backdropScale,
+                                                      SkCanvas::SaveLayerFlags saveLayerFlags,
+                                                      SkCanvas::FilterSpan filters = {}) {
+        return ScaledBackdropLayer(bounds, paint, backdrop, backdropScale, SkTileMode::kClamp,
+                                   saveLayerFlags, filters);
     }
 
     static SkScalar GetBackdropScaleFactor(const SkCanvas::SaveLayerRec& rec) {
@@ -123,27 +128,34 @@ constexpr int kMaxPictureOpsToUnrollInsteadOfRef = 1;
  */
 class AutoLayerForImageFilter {
 public:
-    // "rawBounds" is the original bounds of the primitive about to be drawn, unmodified by the
+    // `rawBounds` is the original bounds of the primitive about to be drawn, unmodified by the
     // paint. It's used to determine the size of the offscreen layer for filters.
     // If null, the clip will be used instead.
+    //
+    // If `skipMaskFilterLayer` is true, any SkMaskFilter on `paint` will be left as-is and is
+    // assumed to be handled by the SkDevice that handles the draw.
     //
     // Draw functions should use layer->paint() instead of the passed-in paint.
     AutoLayerForImageFilter(SkCanvas* canvas,
                             const SkPaint& paint,
-                            const SkRect* rawBounds = nullptr);
+                            const SkRect* rawBounds,
+                            bool skipMaskFilterLayer);
 
     AutoLayerForImageFilter(const AutoLayerForImageFilter&) = delete;
     AutoLayerForImageFilter& operator=(const AutoLayerForImageFilter&) = delete;
-    AutoLayerForImageFilter(AutoLayerForImageFilter&&) = default;
-    AutoLayerForImageFilter& operator=(AutoLayerForImageFilter&&) = default;
+    AutoLayerForImageFilter(AutoLayerForImageFilter&&);
+    AutoLayerForImageFilter& operator=(AutoLayerForImageFilter&&);
 
     ~AutoLayerForImageFilter();
 
     const SkPaint& paint() const { return fPaint; }
 
+    // This is public so that a canvas can attempt to specially handle mask filters, specifically
+    // for blurs, and then if the attempt fails fall back on a regular draw with the same autolayer.
+    void addMaskFilterLayer(const SkRect* drawBounds);
+
 private:
     void addImageFilterLayer(const SkRect* drawBounds);
-    void addMaskFilterLayer(const SkRect* drawBounds);
 
     void addLayer(const SkPaint& restorePaint, const SkRect* drawBounds, bool coverageOnly);
 

@@ -17,14 +17,33 @@
 typedef struct reskia_data_t reskia_data_t;
 typedef struct reskia_matrix_t reskia_matrix_t;
 typedef struct reskia_path_t reskia_path_t;
+typedef struct reskia_path_iter_t reskia_path_iter_t;
+typedef struct reskia_path_contour_iter_t reskia_path_contour_iter_t;
 typedef struct reskia_point_t reskia_point_t;
 typedef struct reskia_r_rect_t reskia_r_rect_t;
+typedef struct reskia_arc_t reskia_arc_t;
 typedef struct reskia_rect_t reskia_rect_t;
 typedef struct reskia_w_stream_t reskia_w_stream_t;
 typedef int32_t reskia_path_fill_type_t;
 typedef int32_t reskia_path_direction_t;
 typedef int32_t reskia_path_perspective_clip_t;
 typedef int32_t reskia_path_op_t;
+
+typedef struct reskia_path_iter_rec_t {
+    const reskia_point_t *points;
+    size_t points_count;
+    float conic_weight;
+    uint8_t verb;
+} reskia_path_iter_rec_t;
+
+typedef struct reskia_path_contour_iter_rec_t {
+    const reskia_point_t *points;
+    size_t points_count;
+    const uint8_t *verbs;
+    size_t verbs_count;
+    const float *conic_weights;
+    size_t conic_weights_count;
+} reskia_path_contour_iter_rec_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,26 +55,36 @@ reskia_path_t *SkPath_newCopy(const reskia_path_t *path); // (const SkPath *path
 void SkPath_delete(reskia_path_t *path); // (SkPath *path)
 bool SkPath_isInterpolatable(reskia_path_t *path, const reskia_path_t *compare); // (SkPath *path, const SkPath *compare) -> bool
 reskia_status_t SkPath_interpolate(reskia_path_t *path, const reskia_path_t *ending, float weight, reskia_path_t *out_path); // out_path: non-null
+sk_path_t SkPath_makeInterpolate(reskia_path_t *path, const reskia_path_t *ending, float weight); // NULL input returns 0
 reskia_path_fill_type_t SkPath_getFillType(reskia_path_t *path); // (SkPath *path) -> SkPathFillType
 void SkPath_setFillType(reskia_path_t *path, reskia_path_fill_type_t ft); // (SkPath *path, SkPathFillType ft)
 bool SkPath_isInverseFillType(reskia_path_t *path); // (SkPath *path) -> bool
 void SkPath_toggleInverseFillType(reskia_path_t *path); // (SkPath *path)
+sk_path_t SkPath_makeFillType(reskia_path_t *path, reskia_path_fill_type_t newFillType); // (SkPath *path, SkPathFillType newFillType) -> sk_path_t
+sk_path_t SkPath_makeToggleInverseFillType(reskia_path_t *path); // (SkPath *path) -> sk_path_t
 bool SkPath_isConvex(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isOval(reskia_path_t *path, reskia_rect_t *bounds); // (SkPath *path, SkRect *bounds) -> bool
 bool SkPath_isRRect(reskia_path_t *path, reskia_r_rect_t *rrect); // (SkPath *path, SkRRect *rrect) -> bool
 reskia_path_t *SkPath_reset(reskia_path_t *path); // (SkPath *path) -> SkPath *
 reskia_path_t *SkPath_rewind(reskia_path_t *path); // (SkPath *path) -> SkPath *
+sk_path_t SkPath_snapshot(reskia_path_t *path); // (SkPath *path) -> sk_path_t; NULL returns 0
+sk_path_t SkPath_detach(reskia_path_t *path); // (SkPath *path) -> sk_path_t; NULL returns 0
 bool SkPath_isEmpty(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isLastContourClosed(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isFinite(reskia_path_t *path); // (SkPath *path) -> bool
 bool SkPath_isVolatile(reskia_path_t *path); // (SkPath *path) -> bool
 reskia_path_t *SkPath_setIsVolatile(reskia_path_t *path, bool isVolatile); // (SkPath *path, bool isVolatile) -> SkPath *
+sk_path_t SkPath_makeIsVolatile(reskia_path_t *path, bool isVolatile); // NULL input returns 0
 bool SkPath_isLine(reskia_path_t *path, reskia_point_t *line); // (SkPath *path, SkPoint line[2]) -> bool
 int SkPath_countPoints(reskia_path_t *path); // (SkPath *path) -> int
+const reskia_point_t *SkPath_points(const reskia_path_t *path, size_t *out_count); // borrowed storage; valid while path is unchanged
 sk_point_t SkPath_getPoint(reskia_path_t *path, int index); // (SkPath *path, int index) -> sk_point_t
 int SkPath_getPoints(reskia_path_t *path, reskia_point_t *points, int max); // (SkPath *path, SkPoint points[], int max) -> int
 int SkPath_countVerbs(reskia_path_t *path); // (SkPath *path) -> int
+const uint8_t *SkPath_verbs(const reskia_path_t *path, size_t *out_count); // borrowed SkPathVerb byte storage; valid while path is unchanged
+const float *SkPath_conicWeights(const reskia_path_t *path, size_t *out_count); // borrowed storage; valid while path is unchanged
 int SkPath_getVerbs(reskia_path_t *path, uint8_t *verbs, int max); // (SkPath *path, uint8_t verbs[], int max) -> int
+reskia_path_iter_t *SkPath_iter(const reskia_path_t *path); // borrowed path storage; delete iterator with SkPathIter_delete
 size_t SkPath_approximateBytesUsed(reskia_path_t *path); // (SkPath *path) -> size_t
 void SkPath_swap(reskia_path_t *path, reskia_path_t *other); // (SkPath *path, SkPath *other)
 const reskia_rect_t *SkPath_getBounds(reskia_path_t *path); // (SkPath *path) -> const SkRect *
@@ -63,6 +92,7 @@ void SkPath_updateBoundsCache(reskia_path_t *path); // (SkPath *path)
 sk_rect_t SkPath_computeTightBounds(reskia_path_t *path); // (SkPath *path) -> sk_rect_t
 bool SkPath_conservativelyContainsRect(reskia_path_t *path, const reskia_rect_t *rect); // (SkPath *path, const SkRect *rect) -> bool
 void SkPath_incReserve(reskia_path_t *path, int extraPtCount); // (SkPath *path, int extraPtCount)
+void SkPath_incReserveWithCounts(reskia_path_t *path, int extraPtCount, int extraVerbCount, int extraConicCount); // NULL input is no-op
 reskia_path_t *SkPath_moveTo(reskia_path_t *path, float x, float y); // (SkPath *path, SkScalar x, SkScalar y) -> SkPath *
 reskia_path_t *SkPath_moveToPoint(reskia_path_t *path, const reskia_point_t *p); // (SkPath *path, const SkPoint *p) -> SkPath *
 reskia_path_t *SkPath_rMoveTo(reskia_path_t *path, float dx, float dy); // (SkPath *path, SkScalar dx, SkScalar dy) -> SkPath *
@@ -109,10 +139,14 @@ reskia_path_t *SkPath_addPathWithMatrixAndMode(reskia_path_t *path, const reskia
 reskia_path_t *SkPath_reverseAddPath(reskia_path_t *path, const reskia_path_t *src); // (SkPath *path, const SkPath *src) -> SkPath *
 void SkPath_offset(reskia_path_t *path, float dx, float dy, reskia_path_t *dst); // (SkPath *path, SkScalar dx, SkScalar dy, SkPath *dst)
 void SkPath_offsetInPlace(reskia_path_t *path, float dx, float dy); // (SkPath *path, SkScalar dx, SkScalar dy)
+sk_path_t SkPath_makeOffset(reskia_path_t *path, float dx, float dy); // NULL input returns 0
 void SkPath_transform(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_t *dst, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkPath *dst, SkApplyPerspectiveClip pc)
 void SkPath_transformInPlace(reskia_path_t *path, const reskia_matrix_t *matrix, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *matrix, SkApplyPerspectiveClip pc)
 sk_path_t SkPath_makeTransform(reskia_path_t *path, const reskia_matrix_t *m, reskia_path_perspective_clip_t pc); // (SkPath *path, const SkMatrix *m, SkApplyPerspectiveClip pc) -> sk_path_t
 sk_path_t SkPath_makeScale(reskia_path_t *path, float sx, float sy); // (SkPath *path, SkScalar sx, SkScalar sy) -> sk_path_t
+sk_path_t SkPath_tryMakeTransform(reskia_path_t *path, const reskia_matrix_t *matrix); // NULL/no result returns 0
+sk_path_t SkPath_tryMakeOffset(reskia_path_t *path, float dx, float dy); // NULL/no result returns 0
+sk_path_t SkPath_tryMakeScale(reskia_path_t *path, float sx, float sy); // NULL/no result returns 0
 bool SkPath_getLastPt(reskia_path_t *path, reskia_point_t *lastPt); // (SkPath *path, SkPoint *lastPt) -> bool
 void SkPath_setLastPt(reskia_path_t *path, float x, float y); // (SkPath *path, SkScalar x, SkScalar y)
 void SkPath_setLastPtPoint(reskia_path_t *path, const reskia_point_t *p); // (SkPath *path, const SkPoint *p)
@@ -121,8 +155,6 @@ bool SkPath_contains(reskia_path_t *path, float x, float y); // (SkPath *path, S
 void SkPath_dump(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex); // (SkPath *path, SkWStream *stream, bool dumpAsHex)
 void SkPath_dumpDefault(reskia_path_t *path); // (SkPath *path)
 void SkPath_dumpHex(reskia_path_t *path); // (SkPath *path)
-void SkPath_dumpArrays(reskia_path_t *path, reskia_w_stream_t *stream, bool dumpAsHex); // (SkPath *path, SkWStream *stream, bool dumpAsHex)
-void SkPath_dumpArraysDefault(reskia_path_t *path); // (SkPath *path)
 /**
  * buffer may be null to query required byte size.
  * otherwise caller owns writable buffer with returned-size capacity.
@@ -130,6 +162,7 @@ void SkPath_dumpArraysDefault(reskia_path_t *path); // (SkPath *path)
 size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer);
 sk_data_t SkPath_serialize(reskia_path_t *path); // (SkPath *path) -> sk_data_t
 size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
+sk_path_t SkPath_ReadFromMemory(const void *buffer, size_t length, size_t *bytesRead); // static; invalid input returns 0
 unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
 /**
@@ -143,6 +176,7 @@ bool SkPathOps_AsWinding(const reskia_path_t *path, reskia_path_t *result); // p
 // static
 
 sk_path_t SkPath_Make(const reskia_point_t *point, int pointCount, const uint8_t *i, int verbCount, const float *v, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile); // point/i/v may be null only when their corresponding count is 0
+sk_path_t SkPath_Raw(const reskia_point_t *point, int pointCount, const uint8_t *verbs, int verbCount, const float *conicWeights, int conicWeightCount, reskia_path_fill_type_t type, bool isVolatile); // verbs are SkPathVerb byte values
 sk_path_t SkPath_Rect(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
 sk_path_t SkPath_Oval(const reskia_rect_t *rect, reskia_path_direction_t dir); // (const SkRect *rect, SkPathDirection dir) -> sk_path_t
 sk_path_t SkPath_OvalWithStart(const reskia_rect_t *rect, reskia_path_direction_t dir, unsigned startIndex); // (const SkRect *rect, SkPathDirection dir, unsigned startIndex) -> sk_path_t
@@ -161,6 +195,14 @@ bool SkPath_IsLineDegenerate(const reskia_point_t *p1, const reskia_point_t *p2,
 bool SkPath_IsQuadDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, bool exact) -> bool
 bool SkPath_IsCubicDegenerate(const reskia_point_t *p1, const reskia_point_t *p2, const reskia_point_t *p3, const reskia_point_t *p4, bool exact); // (const SkPoint *p1, const SkPoint *p2, const SkPoint *p3, const SkPoint *p4, bool exact) -> bool
 int SkPath_ConvertConicToQuads(const reskia_point_t *p0, const reskia_point_t *p1, const reskia_point_t *p2, float w, reskia_point_t *pts, int pow2); // (const SkPoint *p0, const SkPoint *p1, const SkPoint *p2, SkScalar w, SkPoint pts[], int pow2) -> int
+
+reskia_path_iter_t *SkPathIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count); // arrays are borrowed through iterator lifetime
+void SkPathIter_delete(reskia_path_iter_t *iter); // NULL input is no-op
+bool SkPathIter_next(reskia_path_iter_t *iter, reskia_path_iter_rec_t *out_rec); // false when exhausted or invalid
+bool SkPathIter_peekNextVerb(const reskia_path_iter_t *iter, uint8_t *out_verb); // false when exhausted or invalid
+reskia_path_contour_iter_t *SkPathContourIter_new(const reskia_point_t *points, size_t points_count, const uint8_t *verbs, size_t verbs_count, const float *conic_weights, size_t conic_weights_count); // arrays are borrowed through iterator lifetime
+void SkPathContourIter_delete(reskia_path_contour_iter_t *iter); // NULL input is no-op
+bool SkPathContourIter_next(reskia_path_contour_iter_t *iter, reskia_path_contour_iter_rec_t *out_rec); // false when exhausted or invalid
 
 #ifdef __cplusplus
 }
