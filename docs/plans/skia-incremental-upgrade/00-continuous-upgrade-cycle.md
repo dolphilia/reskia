@@ -6,11 +6,11 @@
 
 `vendor/skia-upstream` を一度に最新へ近づけるのではなく、固定された Skia commit を小さく選び、Reskia の CMake source sync、C API binding、coverage matrix、verification matrix を段階的に追従する。
 
-この計画は一回きりの upgrade plan ではない。`incremental-upgrade` ブランチ上で、同じ作業サイクルを何度も繰り返し、各サイクルの結果に応じて次の commit 幅を調整するための運用計画である。
+この計画は一回きりの upgrade plan ではない。現在は `main` 上で、同じ作業サイクルを何度も繰り返し、各サイクルの結果に応じて次の commit 幅を調整するための運用計画である。過去の cycle record に残る `incremental-upgrade` ブランチ表記は履歴として扱う。
 
 ## 前提
 
-- 作業ブランチ: `incremental-upgrade`
+- 作業ブランチ: `main`
 - 現在の baseline: `vendor/skia-source.lock`
 - 現在の `SKIA_REF`: `vendor/skia-source.lock` の値を正とする。計画書中の古い例や初回候補より、常に lock と `HANDOFF.md` を優先する。
 - 現在の coverage freeze: `missing 0` / `deferred 0`
@@ -49,7 +49,7 @@
 
 目的:
 
-- `incremental-upgrade` ブランチで作業していることを確認する。
+- 現在の運用ブランチで作業していることを確認する。
 - lock、upstream checkout、coverage、build baseline を確認する。
 
 確認項目:
@@ -295,9 +295,9 @@ lock update 条件:
 - または日付単位ではなく feature area ごとの cycle に分割する。
 - 停止理由は cycle record に残す。
 
-## 初回サイクル
+## 初回サイクル（履歴）
 
-初回は次の commit を probe 候補にする。
+初回は次の commit を probe 候補にした。この節は履歴であり、現在の baseline と次候補は `HANDOFF.md` と `vendor/skia-source.lock` を優先する。
 
 - candidate: `5f54e9f84cff8c42fd645ec53c1727857bdb12ab`
 - date: 2023-12-05T19:49:10Z

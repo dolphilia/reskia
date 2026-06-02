@@ -7,8 +7,8 @@
 
 現在の baseline:
 
-- `SKIA_REF=0d49b661d75adbb8ac8cf88f7d527b1587be2c63`
-- `SKIA_BASELINE_DATE=2026-02-14`
+- `SKIA_REF=70f9d90bc8e6a56101d036153cfef28088e57f5b`
+- `SKIA_BASELINE_DATE=2026-06-01`
 
 取得・更新は以下を使います。
 

@@ -4,7 +4,7 @@
 
 ## 最初に確認すること
 
-この作業は `incremental-upgrade` ブランチで行う。
+この作業は現在 `main` ブランチで行う。過去の cycle record や旧メモに残る `incremental-upgrade` ブランチ表記は履歴として扱う。
 
 開始時に確認するコマンド:
 
@@ -19,7 +19,7 @@ git -C vendor/skia-upstream status --short --branch
 
 期待する現在値:
 
-- branch: `incremental-upgrade`
+- branch: `main`
 - `SKIA_REF`: `70f9d90bc8e6a56101d036153cfef28088e57f5b`
 - next probe candidate: start from `70f9d90bc8e6a56101d036153cfef28088e57f5b`; cycle 091 consumed the currently available local refs through `70f9d90bc8e6a56101d036153cfef28088e57f5b` (committer date 2026-06-01). Begin cycle 092 by rechecking local refs for fixed commits after this baseline. If no newer fixed commit exists, record candidate absence without treating floating `main` as baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。

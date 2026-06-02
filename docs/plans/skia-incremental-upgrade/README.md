@@ -12,11 +12,11 @@
 
 ## 現在地
 
-- branch: `incremental-upgrade`
-- accepted baseline: `73e53abdf54f56fe30d60dba6e62e19597fa2618`
-- baseline date: 2024-06-04T20:41:40Z
-- latest completed cycle: `docs/plans/skia-incremental-upgrade/records/cycle-023-2026-05-24.md`
-- next probe: cycle 024 で baseline から 1週間/2週間/3週間候補を比較する。2-week 候補 `24a4123fc949aad0c98d251b05c8ba2b21a9b931` は標準幅だが `include`/`modules` insertions が大きいため、1-week 候補 `51eabd0d1e4466eb427394912eddb6f7a9d0cafb` と差分内容を比較して選ぶ。
+- branch: `main`
+- accepted baseline: `70f9d90bc8e6a56101d036153cfef28088e57f5b`
+- baseline date: `2026-06-01`
+- latest completed cycle: `docs/plans/skia-incremental-upgrade/records/cycle-091-2026-06-02.md`
+- next probe: cycle 092 で baseline 後の固定 local ref を再確認する。cycle 091 終了時点では local refs を `70f9d90bc8e6a56101d036153cfef28088e57f5b` まで消費済み。候補がない場合は、floating `main` へ進まず候補なしとして記録する。
 
 ## 原則
 
