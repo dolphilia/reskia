@@ -198,6 +198,7 @@ list(APPEND SOURCE_FILES
         src/core/SkPicturePlayback.cpp
         src/core/SkPictureRecord.cpp
         src/core/SkPictureRecorder.cpp
+        src/core/SkPixelStorage.cpp
         src/core/SkPixelRef.cpp
         src/core/SkPixmap.cpp
         src/core/SkPixmapDraw.cpp
@@ -764,7 +765,10 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/*.cpp"
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.c"
                 "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cc"
-                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cpp")
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/image/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.c"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.cc"
+                "${PROJECT_SOURCE_DIR}/src/gpu/ganesh/mock/*.cpp")
     endif()
 
     if(RESKIA_ENABLE_GPU_GRAPHITE)

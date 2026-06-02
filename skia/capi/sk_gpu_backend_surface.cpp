@@ -16,6 +16,7 @@
 #include "include/gpu/MutableTextureState.h"
 #include "include/gpu/ganesh/gl/GrGLExtensions.h"
 #include "include/gpu/ganesh/gl/GrGLTypes.h"
+#include "include/gpu/ganesh/mock/GrMockBackendSurface.h"
 #include "include/gpu/ganesh/mock/GrMockTypes.h"
 #if defined(SK_METAL)
 #include "include/gpu/ganesh/mtl/GrMtlBackendSurface.h"
@@ -246,13 +247,28 @@ reskia_gr_backend_format_t *GrBackendFormat_newCopy(const reskia_gr_backend_form
 #endif
 }
 
-reskia_gr_backend_format_t *GrBackendFormat_MakeMock(reskia_gr_color_type_t color_type, reskia_sk_texture_compression_type_t compression, bool is_stencil_format) {
+reskia_gr_backend_format_t *GrBackendFormats_MakeMockColorType(reskia_gr_color_type_t color_type) {
 #if defined(SK_GANESH)
-    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormat::MakeMock(static_cast<GrColorType>(color_type), static_cast<SkTextureCompressionType>(compression), is_stencil_format)));
+    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormats::MakeMockColorType(static_cast<GrColorType>(color_type))));
 #else
     (void) color_type;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_format_t *GrBackendFormats_MakeMockCompressionType(reskia_sk_texture_compression_type_t compression) {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormats::MakeMockCompressionType(static_cast<SkTextureCompressionType>(compression))));
+#else
     (void) compression;
-    (void) is_stencil_format;
+    return nullptr;
+#endif
+}
+
+reskia_gr_backend_format_t *GrBackendFormats_MakeMockStencilFormat() {
+#if defined(SK_GANESH)
+    return reinterpret_cast<reskia_gr_backend_format_t *>(new GrBackendFormat(GrBackendFormats::MakeMockStencilFormat()));
+#else
     return nullptr;
 #endif
 }
@@ -355,27 +371,27 @@ int GrBackendFormats_AsMtlFormat(const reskia_gr_backend_format_t *format) {
 #endif
 }
 
-reskia_gr_color_type_t GrBackendFormat_asMockColorType(const reskia_gr_backend_format_t *format) {
+reskia_gr_color_type_t GrBackendFormats_AsMockColorType(const reskia_gr_backend_format_t *format) {
 #if defined(SK_GANESH)
-    return format != nullptr ? static_cast<reskia_gr_color_type_t>(as_format(format)->asMockColorType()) : 0;
+    return format != nullptr ? static_cast<reskia_gr_color_type_t>(GrBackendFormats::AsMockColorType(*as_format(format))) : 0;
 #else
     (void) format;
     return 0;
 #endif
 }
 
-reskia_sk_texture_compression_type_t GrBackendFormat_asMockCompressionType(const reskia_gr_backend_format_t *format) {
+reskia_sk_texture_compression_type_t GrBackendFormats_AsMockCompressionType(const reskia_gr_backend_format_t *format) {
 #if defined(SK_GANESH)
-    return format != nullptr ? static_cast<reskia_sk_texture_compression_type_t>(as_format(format)->asMockCompressionType()) : 0;
+    return format != nullptr ? static_cast<reskia_sk_texture_compression_type_t>(GrBackendFormats::AsMockCompressionType(*as_format(format))) : 0;
 #else
     (void) format;
     return 0;
 #endif
 }
 
-bool GrBackendFormat_isMockStencilFormat(const reskia_gr_backend_format_t *format) {
+bool GrBackendFormats_IsMockStencilFormat(const reskia_gr_backend_format_t *format) {
 #if defined(SK_GANESH)
-    return format != nullptr && as_format(format)->isMockStencilFormat();
+    return format != nullptr && GrBackendFormats::IsMockStencilFormat(*as_format(format));
 #else
     (void) format;
     return false;
@@ -426,13 +442,13 @@ reskia_gr_backend_texture_t *GrBackendTexture_newCopy(const reskia_gr_backend_te
 #endif
 }
 
-reskia_gr_backend_texture_t *GrBackendTexture_newMock(int width, int height, reskia_skgpu_mipmapped_t mipmapped, reskia_gr_color_type_t color_type, reskia_sk_texture_compression_type_t compression, int id, reskia_skgpu_protected_t is_protected) {
+reskia_gr_backend_texture_t *GrBackendTextures_MakeMock(int width, int height, reskia_skgpu_mipmapped_t mipmapped, reskia_gr_color_type_t color_type, reskia_sk_texture_compression_type_t compression, int id, reskia_skgpu_protected_t is_protected) {
 #if defined(SK_GANESH)
     if (width <= 0 || height <= 0 || id == 0) {
         return nullptr;
     }
     GrMockTextureInfo info(static_cast<GrColorType>(color_type), static_cast<SkTextureCompressionType>(compression), id, to_protected(is_protected));
-    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(width, height, to_mipmapped(mipmapped), info));
+    return reinterpret_cast<reskia_gr_backend_texture_t *>(new GrBackendTexture(GrBackendTextures::MakeMock(width, height, to_mipmapped(mipmapped), info)));
 #else
     (void) width;
     (void) height;
@@ -545,7 +561,7 @@ reskia_gr_backend_format_t *GrBackendTexture_getBackendFormat(const reskia_gr_ba
 #endif
 }
 
-bool GrBackendTexture_getMockTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mock_texture_info_t *out_info) {
+bool GrBackendTextures_GetMockTextureInfo(const reskia_gr_backend_texture_t *texture, reskia_gr_mock_texture_info_t *out_info) {
     if (out_info != nullptr) {
         *out_info = {};
     }
@@ -553,10 +569,10 @@ bool GrBackendTexture_getMockTextureInfo(const reskia_gr_backend_texture_t *text
     if (texture == nullptr || out_info == nullptr) {
         return false;
     }
-    GrMockTextureInfo info;
-    if (!as_texture(texture)->getMockTextureInfo(&info)) {
+    if (as_texture(texture)->backend() != GrBackendApi::kMock) {
         return false;
     }
+    GrMockTextureInfo info = GrBackendTextures::GetMockTextureInfo(*as_texture(texture));
     out_info->color_type = static_cast<reskia_gr_color_type_t>(info.colorType());
     out_info->compression_type = static_cast<reskia_sk_texture_compression_type_t>(info.compressionType());
     out_info->id = info.id();
@@ -655,13 +671,13 @@ reskia_gr_backend_render_target_t *GrBackendRenderTarget_newCopy(const reskia_gr
 #endif
 }
 
-reskia_gr_backend_render_target_t *GrBackendRenderTarget_newMock(int width, int height, int sample_count, int stencil_bits, reskia_gr_color_type_t color_type, int id, reskia_skgpu_protected_t is_protected) {
+reskia_gr_backend_render_target_t *GrBackendRenderTargets_MakeMock(int width, int height, int sample_count, int stencil_bits, reskia_gr_color_type_t color_type, int id, reskia_skgpu_protected_t is_protected) {
 #if defined(SK_GANESH)
     if (width <= 0 || height <= 0 || id == 0) {
         return nullptr;
     }
     GrMockRenderTargetInfo info(static_cast<GrColorType>(color_type), id, to_protected(is_protected));
-    return reinterpret_cast<reskia_gr_backend_render_target_t *>(new GrBackendRenderTarget(width, height, sample_count, stencil_bits, info));
+    return reinterpret_cast<reskia_gr_backend_render_target_t *>(new GrBackendRenderTarget(GrBackendRenderTargets::MakeMock(width, height, sample_count, stencil_bits, info)));
 #else
     (void) width;
     (void) height;
@@ -774,7 +790,7 @@ reskia_gr_backend_format_t *GrBackendRenderTarget_getBackendFormat(const reskia_
 #endif
 }
 
-bool GrBackendRenderTarget_getMockRenderTargetInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mock_render_target_info_t *out_info) {
+bool GrBackendRenderTargets_GetMockRenderTargetInfo(const reskia_gr_backend_render_target_t *render_target, reskia_gr_mock_render_target_info_t *out_info) {
     if (out_info != nullptr) {
         *out_info = {};
     }
@@ -782,10 +798,10 @@ bool GrBackendRenderTarget_getMockRenderTargetInfo(const reskia_gr_backend_rende
     if (render_target == nullptr || out_info == nullptr) {
         return false;
     }
-    GrMockRenderTargetInfo info;
-    if (!as_render_target(render_target)->getMockRenderTargetInfo(&info)) {
+    if (as_render_target(render_target)->backend() != GrBackendApi::kMock) {
         return false;
     }
+    GrMockRenderTargetInfo info = GrBackendRenderTargets::GetMockRenderTargetInfo(*as_render_target(render_target));
     out_info->color_type = static_cast<reskia_gr_color_type_t>(info.colorType());
     out_info->id = 0;
     out_info->is_protected = to_reskia_protected(info.getProtected());

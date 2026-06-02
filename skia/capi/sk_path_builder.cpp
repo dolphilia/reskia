@@ -432,7 +432,7 @@ reskia_path_builder_t *SkPathBuilder_addRaw(reskia_path_builder_t *path_builder,
             {reinterpret_cast<const SkPoint *>(points), static_cast<size_t>(pointCount)},
             {reinterpret_cast<const SkPathVerb *>(verbs), static_cast<size_t>(verbCount)},
             {reinterpret_cast<const SkScalar *>(conicWeights), static_cast<size_t>(conicWeightCount)}};
-    return to_api(&native->addRaw(raw));
+    return to_api(&native->addRaw(raw, SkPathBuilder::Reserve::kGrow));
 }
 
 void SkPathBuilder_incReserve(reskia_path_builder_t *path_builder, int extraPtCount, int extraVerbCount) {

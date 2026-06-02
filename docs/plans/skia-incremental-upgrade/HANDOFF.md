@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `e4d0350f477005ae71691642ec0db96cce7e3266`
-- next probe candidate: first re-evaluate the normal 1-week window around `812822ad5caa8f39ff4cf5ab96f48fe942562252` or another fixed mainline commit after `e4d0350f477005ae71691642ec0db96cce7e3266`; `vendor/skia-upstream-candidate` currently has local refs that extend beyond this baseline.
+- `SKIA_REF`: `812822ad5caa8f39ff4cf5ab96f48fe942562252`
+- next probe candidate: first re-evaluate the normal 1-week window after `812822ad5caa8f39ff4cf5ab96f48fe942562252`; compare against the large generated/npm/CanvasKit churn seen around `f37239a7a689d64268b73fc7eb45b5c40a7f7013` and `2749807ad6df47d0ad4033b436eadc527a116637`.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -115,21 +115,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 081 accepted: `38761e1803d05e0eca689a296a4ed6ab20e0323f`。
 - cycle 082 accepted: `3f328b35d929c70d2ef57599c8e3872e4db867a8`。
 - cycle 083 accepted: `e4d0350f477005ae71691642ec0db96cce7e3266`。
+- cycle 084 accepted: `812822ad5caa8f39ff4cf5ab96f48fe942562252`。
 
 未実施:
 
-- cycle 084 candidate selection from `e4d0350f477005ae71691642ec0db96cce7e3266`.
-- cycle 084 candidate checkout を使った coverage regression。
-- cycle 084 の source/header sync と C API 追従実装。
+- cycle 085 candidate selection from `812822ad5caa8f39ff4cf5ab96f48fe942562252`.
+- cycle 085 candidate checkout を使った coverage regression。
+- cycle 085 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 084 の candidate selection から始める。
+次の作業は、cycle 085 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `e4d0350f477005ae71691642ec0db96cce7e3266` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先し、まず通常の1週間候補 `812822ad5caa8f39ff4cf5ab96f48fe942562252` 周辺を再評価する。
+1. baseline `812822ad5caa8f39ff4cf5ab96f48fe942562252` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先し、まず通常の1週間候補を評価する。`f37239a7a689d64268b73fc7eb45b5c40a7f7013` 以降は generated/npm/CanvasKit churn が大きいため、必要ならその手前で split する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -211,21 +212,20 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `e4d0350f477005ae71691642ec0db96cce7e3266`
-- committer date: 2026-03-16
-- subject: Fix Google Inc vs Google LLC in file preamble
+- `812822ad5caa8f39ff4cf5ab96f48fe942562252`
+- committer date: 2026-03-20
+- subject: Add SkPixelStorage base class for SkPixelRef and TextureProxy
 
-cycle 083 結果:
+cycle 084 結果:
 
-- baseline `3f328b35d929c70d2ef57599c8e3872e4db867a8` から `e4d0350f477005ae71691642ec0db96cce7e3266` を採用した。18 commits、`include` / `modules` は 390 files changed, +395/-397、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 917 files changed, +958/-951。
-- 通常の1週間候補 `812822ad5caa8f39ff4cf5ab96f48fe942562252` は 83 commits、`include` / `modules` 401 files changed、broader drift 972 files。2週間候補は 408 files、3週間候補は 461 files かつ大量 generated/npm churn を含むため、cycle 083 では preamble churn split を単独で採用した。
-- tracked `skia/DEPS` と tracked existing `include` / `modules` / `src` を同期した。root `gn/`、`bazel/`、untracked optional/generated files、untracked CanvasKit/audioplayer/plaintexteditor metadata は同期対象外にした。
-- C API 追加・削除は不要だった。
-- source smoke 初回で `SkShaper.cpp:105 check(fFallbackMgr)` が出たため、Reskia 側の `SkShaper::MakeFontMgrRunIterator` null fallback guard を復元した。
-- final coverage は `covered 2944` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final stale C API report は空。
-- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `e4d0350f477005ae71691642ec0db96cce7e3266` から再比較する。まず通常の1週間候補 `812822ad5caa8f39ff4cf5ab96f48fe942562252` 周辺を評価する。CanvasKit/npm release churn、generated-file bulk changes、FreeType/HarfBuzz/Dawn/Vulkan/ANGLE rolls、Graphite/Ganesh resource/readback churn、optional backend policy、機械同期で local compatibility patch を上書きするリスクを既知リスクとして扱う。
+- baseline `e4d0350f477005ae71691642ec0db96cce7e3266` から `812822ad5caa8f39ff4cf5ab96f48fe942562252` を採用した。65 commits、`include` / `modules` は 22 files changed, +204/-104、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 74 files changed, +928/-769。
+- 2週間候補 `f37239a7a689d64268b73fc7eb45b5c40a7f7013` は 161 commits、`include` / `modules` 88 files changed, +416225/-11479、3週間候補 `2749807ad6df47d0ad4033b436eadc527a116637` は 238 commits、`include` / `modules` 90 files changed, +416337/-11518。generated/npm/CanvasKit churn が大きいため、cycle 084 では1週間候補を採用した。
+- tracked `skia/DEPS` と tracked `include` / `modules/skcms` / `src` を同期した。新規 `SkPixelStorage` と chromium ICC profile header/source を追加し、`GrMockBackendSurfacePriv.h` を削除した。root `gn/`、`bazel/`、untracked CanvasKit/npm metadata、unrelated generated files は同期対象外にした。
+- `SkPixelRef_type` を追加し、mock backend helper C API を upstream の namespace helper へ追従した。旧 class-method mock helper wrappers は削除し、`SkPathBuilder_addRaw` は新しい `Reserve` parameter に `SkPathBuilder::Reserve::kGrow` を渡して互換維持した。
+- final coverage は `covered 2937` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 120`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は `signature_changed_review 5` のみで `stale_capi 0`。残りは `SkPathBuilder::addRaw` と backend texture/render target default/copy constructor rows で、ABI 互換理由を cycle record に記録済み。
+- prebuilt/source build、GPU smoke、source SVG/provider/text/pixel-ref smoke は pass。
+- 次サイクルでは、accepted baseline `812822ad5caa8f39ff4cf5ab96f48fe942562252` から再比較する。generated-file bulk changes、CanvasKit/npm release churn、Graphite/Ganesh resource/readback churn、mock backend helper relocation fallout、`SkPixelStorage`/`TextureProxy` drift、Dawn/Vulkan/ANGLE rolls、機械同期で local compatibility patch を上書きするリスクを既知リスクとして扱う。
 
 cycle records:
 
@@ -312,6 +312,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-081-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-082-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-083-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-084-2026-06-02.md`
 
 ## Cycle close の条件
 
