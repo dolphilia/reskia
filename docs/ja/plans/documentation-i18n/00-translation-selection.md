@@ -31,10 +31,10 @@
 
 | 日本語文書 | 推奨英訳先 | 判断 | 備考 |
 | --- | --- | --- | --- |
-| `docs/ja/README.md` | `docs/en/README.md` | translate after refresh | リポジトリ説明、ビルド手順、機能フラグの入口。現状値と「主要ドキュメント」欄は次タスクで整理してから翻訳する。 |
-| `docs/ja/guides/cmake-migration-guide.md` | `docs/en/guides/cmake-migration-guide.md` | translate after light refresh | `RESKIA_DEPS_MODE` と標準ビルド手順は外部利用者にも有用。絶対パスと Phase 4 表記は整理してから翻訳する。 |
-| `docs/ja/guides/c-api-safety-guidelines.md` | `docs/en/guides/c-api-safety-guidelines.md` | translate after refresh | C ABI の所有権、invalid input、lifetime の規約は binding 利用者に重要。長いが、履歴ではなく規約文書なので英訳価値が高い。 |
-| `docs/ja/guides/repository-structure.md` | `docs/en/guides/repository-structure.md` | rewrite then translate | 新規 contributor 向けに価値がある。ただし現状は調査メモと履歴が混在しているため、英訳前に構造ガイドとして短く再編する。 |
+| `docs/ja/README.md` | `docs/en/README.md` | ready for translation | リポジトリ説明、ビルド手順、機能フラグの入口。履歴的な数値 snapshot は削減済み。 |
+| `docs/ja/guides/cmake-migration-guide.md` | `docs/en/guides/cmake-migration-guide.md` | ready for translation | `RESKIA_DEPS_MODE` と標準ビルド手順を中心に再編済み。 |
+| `docs/ja/guides/c-api-safety-guidelines.md` | `docs/en/guides/c-api-safety-guidelines.md` | ready for translation | C ABI の所有権、invalid input、lifetime、テスト方針に絞って再編済み。 |
+| `docs/ja/guides/repository-structure.md` | `docs/en/guides/repository-structure.md` | ready for translation | 調査ログではなく、現在の構造ガイドとして再編済み。 |
 
 ## P1: 直接翻訳ではなく、英語ガイドへ再編する候補
 
