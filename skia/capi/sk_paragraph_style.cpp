@@ -425,4 +425,14 @@ void SkParagraph_ParagraphStyle_setApplyRoundingHack(reskia_paragraph_style_t *s
     }
 }
 
+bool SkParagraph_ParagraphStyle_getLetterSpacingByCSSSpec(const reskia_paragraph_style_t *style) {
+    return style != nullptr && as_paragraph_style(style)->getLetterSpacingByCSSSpec();
+}
+
+void SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec(reskia_paragraph_style_t *style, bool value) {
+    if (style != nullptr) {
+        as_paragraph_style(style)->setLetterSpacingByCSSSpec(value);
+    }
+}
+
 } // extern "C"

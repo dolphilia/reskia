@@ -8513,13 +8513,51 @@ UNIX_ONLY_TEST(SkParagraph_ArabicNoLetterSpacing, reporter) {
     }
 }
 
-UNIX_ONLY_TEST(SkParagraph_ArabicWithLetterSpacingWhitespaces, reporter) {
+UNIX_ONLY_TEST(SkParagraph_ArabicWithLetterSpacingWhitespacesAsChrome, reporter) {
     sk_sp<ResourceFontCollection> fontCollection = sk_make_sp<ResourceFontCollection>();
     SKIP_IF_FONTS_NOT_FOUND(reporter, fontCollection)
     TestCanvas canvas("SkParagraph_SpacedArabicParagraph.png");
     const char* arabic = "سلام";
     const char* spaced = "س لا م";
     ParagraphStyle paragraph_style;
+    TextStyle text_style;
+    text_style.setFontSize(20);
+    text_style.setColor(SK_ColorBLACK);
+
+    auto layout = [&](const char* familyName, const char* text, double letterSpacing) -> double {
+        ParagraphBuilderImpl builder(paragraph_style, fontCollection, get_unicode());
+        text_style.setLetterSpacing(letterSpacing);
+        text_style.setFontFamilies({SkString(familyName)});
+        builder.pushStyle(text_style);
+        builder.addText(text, strlen(text));
+        builder.pop();
+
+        auto paragraph = builder.Build();
+        paragraph->layout(TestCanvasWidth);
+        paragraph->paint(canvas.get(), 20, 0);
+        canvas.get()->translate(0, paragraph->getHeight() + 20);
+        return paragraph->getLongestLine();
+    };
+    {   // Letter spacing does not show for Arabic without whitespaces
+        auto noLetterSpacing = layout("Katibeh", arabic, 0.0);
+        auto withLetterSpacing = layout("Katibeh", arabic, 10.0);
+        REPORTER_ASSERT(reporter, SkScalarNearlyEqual(withLetterSpacing, noLetterSpacing, EPSILON100));
+    }
+    {   // Letter spacing shows for Arabic on whitespaces
+        auto noLetterSpacing = layout("Katibeh", spaced, 0.0);
+        auto withLetterSpacing = layout("Katibeh", spaced, 10.0);
+        REPORTER_ASSERT(reporter, SkScalarNearlyEqual(withLetterSpacing, noLetterSpacing, EPSILON100));
+    }
+}
+
+UNIX_ONLY_TEST(SkParagraph_ArabicWithLetterSpacingWhitespacesAsCSS, reporter) {
+    sk_sp<ResourceFontCollection> fontCollection = sk_make_sp<ResourceFontCollection>();
+    SKIP_IF_FONTS_NOT_FOUND(reporter, fontCollection)
+    TestCanvas canvas("SkParagraph_SpacedArabicParagraph.png");
+    const char* arabic = "سلام";
+    const char* spaced = "س لا م";
+    ParagraphStyle paragraph_style;
+    paragraph_style.setLetterSpacingByCSSSpec(true);
     TextStyle text_style;
     text_style.setFontSize(20);
     text_style.setColor(SK_ColorBLACK);

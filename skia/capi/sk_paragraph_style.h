@@ -103,6 +103,8 @@ bool SkParagraph_ParagraphStyle_getReplaceTabCharacters(const reskia_paragraph_s
 void SkParagraph_ParagraphStyle_setReplaceTabCharacters(reskia_paragraph_style_t *style, bool value);
 bool SkParagraph_ParagraphStyle_getApplyRoundingHack(const reskia_paragraph_style_t *style);
 void SkParagraph_ParagraphStyle_setApplyRoundingHack(reskia_paragraph_style_t *style, bool value);
+bool SkParagraph_ParagraphStyle_getLetterSpacingByCSSSpec(const reskia_paragraph_style_t *style);
+void SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec(reskia_paragraph_style_t *style, bool value);
 
 #ifdef __cplusplus
 }
