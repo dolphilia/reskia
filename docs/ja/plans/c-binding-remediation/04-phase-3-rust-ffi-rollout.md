@@ -1,6 +1,6 @@
 # 04 Phase 3: Rust FFI Rollout (Archived)
 
-更新: 2026-06-02 に `bindings/` ディレクトリと root Rust workspace は削除された。この文書は過去の PoC 記録としてのみ残し、現行の Reskia 計画には含めない。Reskia 本体は `skia/capi` と `skia/handles` による C ABI 提供に集中し、言語別 wrapper はリポジトリ外で扱う。
+更新: 2026-06-02 に `bindings/` ディレクトリ、root Rust workspace、`.github/workflows/rust-ffi-rollout.yml` は削除された。この文書は過去の PoC 記録としてのみ残し、現行の Reskia 計画には含めない。Reskia 本体は `skia/capi` と `skia/handles` による C ABI 提供に集中し、言語別 wrapper はリポジトリ外で扱う。
 
 ## ゴール
 
@@ -102,6 +102,7 @@ ctest --test-dir skia/cmake-build-local --output-on-failure
     - `RESKIA_BUILD_TESTS=OFF` 既定のため CTest 対象が未登録でも終了コードは成功。
 - 2026-02-16: ステップ5（CI検証追加）を完了。
   - 追加: `.github/workflows/rust-ffi-rollout.yml`
+  - 2026-06-02: `.github/` 削除に伴い、この workflow は廃止。
   - 内容:
     - `cmake -S skia -B skia/cmake-build-local -DCMAKE_BUILD_TYPE=Debug`
     - `cmake --build skia/cmake-build-local -j 8`

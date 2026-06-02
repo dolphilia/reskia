@@ -1,5 +1,5 @@
 file,status,phase,owner,note
-cmake/deps/ReskiaDeps.cmake,done,phase3,,step1-4完了(mode別関数分離・サポート表・CI行列・回帰検証): 2026-02-14
+cmake/deps/ReskiaDeps.cmake,done,phase3,,step1-4完了(mode別関数分離・サポート表・ローカル検証行列・回帰検証): 2026-02-14; GitHub Actions は 2026-06-02 に削除
 cmake/reskia/sources-capi.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-core.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14
 cmake/reskia/sources-handles.cmake,done,phase2,,step1(ソース列挙の移設)で新規追加: 2026-02-14

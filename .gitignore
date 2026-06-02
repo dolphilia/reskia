@@ -21,6 +21,7 @@ third_party/**/*
 /CLAUDE.md
 /target/
 /Cargo.lock
+/reskia_skresources_fixture.png
 
 !dummy.txt
 

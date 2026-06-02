@@ -1,13 +1,12 @@
-# 04 Phase 3: Dependency Matrix and CI
+# 04 Phase 3: Dependency Matrix and Local Verification
 
 ## ゴール
 
-`ReskiaDeps.cmake` の mode/platform 挙動を明文化し、CIで継続検証する。
+`ReskiaDeps.cmake` の mode/platform 挙動を明文化し、ローカルで再現できる検証手順として維持する。
 
 ## 対象
 
 - `cmake/deps/ReskiaDeps.cmake`
-- （必要に応じて）CI設定ファイル
 
 ## 作業ステップ
 
@@ -43,16 +42,13 @@
 | Linux (`UNIX` かつ非 `APPLE`) | ✅ | ✅ | ✅ | 現状は3 mode とも外部画像系依存は未接続で、`skia/CMakeLists.txt` 側の `skcms` 最小リンク運用。 |
 | Windows (`WIN32`) | ✅ | ❌ | ✅ | `source` は未実装で `FATAL_ERROR`。`system` は prebuilt 互換名で `skia/lib` を参照。 |
 
-3. CI検証最小行列 ✅ 完了（2026-02-14）
-- `prebuilt` + `source` の configure を自動実行。
-- 失敗時に mode/platform を即特定できるログ出力にする。
+3. 依存モード検証最小行列 ✅ 完了（2026-02-14、2026-06-02 更新）
+- `prebuilt` + `source` の configure をローカルで再現できるようにする。
+- 失敗時に mode/platform を即特定できるコマンドを維持する。
   - 実施内容:
-    - GitHub Actions workflow を追加: `.github/workflows/cmake-deps-matrix.yml`
-    - `os x mode` 行列で `configure` を実行:
-      - OS: `ubuntu-latest`, `macos-latest`
-      - mode: `prebuilt`, `source`
-    - `runner_os` / `matrix_os` / `deps_mode` をログ出力し、失敗時に mode/platform を即特定可能化
-    - `macOS + source` のみ `scripts/bootstrap_third_party.sh` と `scripts/build_third_party.sh` を事前実行
+    - 当初は GitHub Actions workflow `.github/workflows/cmake-deps-matrix.yml` を追加していた。
+    - 2026-06-02 に、Reskia の検証はローカル重視とし、`.github/` を削除した。
+    - 今後は下記のローカル configure/build コマンドを標準検証として扱う。
   - ローカル検証結果:
     - `cmake -S skia -B skia/cmake-build-ci-prebuilt -DRESKIA_DEPS_MODE=prebuilt -DCMAKE_BUILD_TYPE=Release`: 成功
     - `cmake -S skia -B skia/cmake-build-ci-source -DRESKIA_DEPS_MODE=source -DCMAKE_BUILD_TYPE=Release`: 成功
@@ -73,11 +69,11 @@ cmake -S skia -B skia/cmake-build-ci-source -DRESKIA_DEPS_MODE=source
 
 - `ReskiaDeps.cmake` が mode別に追える構造
 - サポート行列が docs に存在
-- CIで mode別 configure が常時走る
+- mode別 configure/build をローカルで再現できる
 
-## 完了状況（2026-02-14）
+## 完了状況（2026-02-14、2026-06-02 更新）
 
 - 作業ステップ 1: 完了
 - 作業ステップ 2: 完了
-- 作業ステップ 3: 完了
+- 作業ステップ 3: 完了。GitHub Actions workflow は 2026-06-02 に削除し、ローカル検証運用へ移行。
 - 作業ステップ 4: 完了
