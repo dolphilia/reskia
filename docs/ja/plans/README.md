@@ -8,6 +8,7 @@
 - `docs/ja/plans/cmake-remediation/`: CMake構成（`skia/CMakeLists.txt` 等）の改善計画一式
 - `docs/ja/plans/codec-encoder-enablement/`: 機能ギャップ調査 3.8/3.9（コーデック拡張・エンコーダ）の有効化計画
 - `docs/ja/plans/gpu-enablement/`: 機能ギャップ調査 3.6（GPU: Ganesh/Graphite, Vulkan/Metal/Dawn）の有効化計画
+- `docs/ja/plans/documentation-i18n/`: 日本語ドキュメントから英訳対象を選定し、翻訳前の整理順を決める計画
 - `docs/ja/plans/pdf-enablement/`: 機能ギャップ調査 3.7（PDF）の有効化計画
 - `docs/ja/plans/public-api-binding-expansion/`: Skia 公開クラスの public method / static factory / helper を C ABI に拡張する長期計画
 - `docs/ja/plans/skia-incremental-upgrade/`: `vendor/skia-upstream` を固定 commit ごとに段階的に進め、C API coverage / source sync / build verification を継続的に追従する運用計画
