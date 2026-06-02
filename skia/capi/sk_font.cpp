@@ -6,7 +6,9 @@
 
 #include "include/core/SkFont.h"
 #include "include/core/SkFontTypes.h"
+#include "include/core/SkStrikeRef.h"
 
+#include "../handles/static_sk_strike_ref.h"
 #include "../handles/static_sk_typeface.h"
 #include "../handles/static_std_vector_sk_scalar.h"
 #include "../handles/static_sk_font.h"
@@ -14,6 +16,7 @@
 
 #include "../handles/static_sk_font-internal.h"
 #include "../handles/static_sk_point-internal.h"
+#include "../handles/static_sk_strike_ref-internal.h"
 #include "../handles/static_std_vector_sk_scalar-internal.h"
 #include "../handles/static_sk_typeface-internal.h"
 
@@ -41,6 +44,13 @@ void reskia_font_get_paths_bridge(const SkPath *pathOrNull, const SkMatrix &mx, 
 
 sk_font_t make_font_handle(SkFont font) {
     return static_sk_font_make(std::move(font));
+}
+
+sk_strike_ref_t make_strike_ref_handle(SkStrikeRef strike_ref) {
+    if (!strike_ref) {
+        return 0;
+    }
+    return static_sk_strike_ref_make(std::move(strike_ref));
 }
 
 sk_typeface_t make_typeface_handle(sk_sp<SkTypeface> typeface) {
@@ -207,6 +217,13 @@ sk_font_t SkFont_makeWithSize(reskia_font_t *font, float size) {
         return 0;
     }
     return make_font_handle(as_font(font)->makeWithSize(size));
+}
+
+sk_strike_ref_t SkFont_makeStrikeRef(reskia_font_t *font) {
+    if (font == nullptr) {
+        return 0;
+    }
+    return make_strike_ref_handle(as_font(font)->makeStrikeRef());
 }
 
 reskia_typeface_t * SkFont_getTypeface(reskia_font_t *font) {

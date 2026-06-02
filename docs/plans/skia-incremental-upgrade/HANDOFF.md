@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `7b88c5c281e587c267457dba51f53e0b962c1748`
-- next probe candidate: start from `7b88c5c281e587c267457dba51f53e0b962c1748`; local `vendor/skia-upstream-candidate` refs contained later mainline commits through at least 2026-05-13 at cycle 089 close, so begin cycle 090 by rechecking 1-week/2-week/3-week candidates from this baseline.
+- `SKIA_REF`: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`
+- next probe candidate: start from `3b718ddc8ae51dbfb311afe02c35a83dd7999172`; `vendor/skia-upstream-candidate` is currently checked out at the accepted cycle 090 candidate. Local refs still include `upstream/main` commit `70f9d90bc8e6a56101d036153cfef28088e57f5b` (committer date 2026-06-01). Begin cycle 091 by rechecking 1-week/2-week/3-week fixed candidates from this baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -121,21 +121,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 087 accepted: `f37239a7a689d64268b73fc7eb45b5c40a7f7013`。
 - cycle 088 accepted: `bda7232e6772bcc585435ae760983d6d43aa1155`。
 - cycle 089 accepted: `7b88c5c281e587c267457dba51f53e0b962c1748`。
+- cycle 090 accepted: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`。
 
 未実施:
 
-- cycle 090 candidate selection from `7b88c5c281e587c267457dba51f53e0b962c1748`.
-- cycle 090 candidate checkout を使った coverage regression。
-- cycle 090 の source/header sync と C API 追従実装。
+- cycle 091 candidate selection from `3b718ddc8ae51dbfb311afe02c35a83dd7999172`.
+- cycle 091 candidate checkout を使った coverage regression。
+- cycle 091 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 090 の candidate selection から始める。
+次の作業は、cycle 091 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `7b88c5c281e587c267457dba51f53e0b962c1748` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 089 終了時点では同 checkout に baseline 後の commit が少なくとも 2026-05-13 付近まであったため、1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `3b718ddc8ae51dbfb311afe02c35a83dd7999172` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 090 終了時点で checkout は accepted candidate `3b718ddc8ae51dbfb311afe02c35a83dd7999172`、local refs の `upstream/main` は `70f9d90bc8e6a56101d036153cfef28088e57f5b`（committer date 2026-06-01）まで進んでいる。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -217,6 +218,23 @@ cycle 072 の比較候補メモ:
 
 候補:
 
+- `3b718ddc8ae51dbfb311afe02c35a83dd7999172`
+- committer date: 2026-05-13
+- subject: Roll vulkan-deps from 1b6c53ba0f23 to df04fe18c28e (6 revisions)
+
+cycle 090 結果:
+
+- baseline `7b88c5c281e587c267457dba51f53e0b962c1748` から `3b718ddc8ae51dbfb311afe02c35a83dd7999172` を採用した。128 commits、`include` / `modules` は 18 files changed, +323/-20、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 143 files changed, +3705/-1717。
+- 1週間候補 `8a3d4001f093702aaaa80eb55a8cf36dd3c694b4` と 3週間候補 `f71b040b55a3023cfb8d71d160fb1dc821e93a42` を比較し、標準幅内で public header churn が小さい2週間候補を採用した。
+- `SkFont::makeStrikeRef()` と新規 `SkStrikeRef` value wrapper を C API / handle に追加した。`SkStrikeRef_operator_bool` は generator の exact token に合わせ、利用しやすい alias として `SkStrikeRef_isValid` も追加した。
+- SkSL `raw_ptr` 互換のため `src/partition_alloc` no-op headers を同期した。Bazel/GN metadata、未参照の sparse_strips `Flatten.*` / `Tiler.h` は CMake tracked source では不要なため同期対象外にした。
+- final coverage は `covered 2951` / `split_covered 42` / `false_positive 299` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は空。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは、accepted baseline `3b718ddc8ae51dbfb311afe02c35a83dd7999172` から再比較する。`vendor/skia-upstream-candidate` は cycle 090 終了時点で accepted candidate checkout、local refs の `upstream/main` は `70f9d90bc8e6a56101d036153cfef28088e57f5b`（committer date 2026-06-01）まである。raw_ptr/`partition_alloc` 互換、Graphite sparse_strips/Vello/compute churn、Dawn/Vulkan/Metal backend churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
+
+候補:
+
 - `7b88c5c281e587c267457dba51f53e0b962c1748`
 - committer date: 2026-04-29
 - subject: Roll vulkan-deps from a5c5df5b99ef to 68b1d78abfc4 (10 revisions)
@@ -231,7 +249,7 @@ cycle 089 結果:
 - final coverage は `covered 2942` / `split_covered 42` / `false_positive 299` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `7b88c5c281e587c267457dba51f53e0b962c1748` から再比較する。Graphite precompile ABI 設計 debt、Dawn/Vulkan/Metal churn、SkRP/CPU opts flag churn、skcms roll compatibility、private Graphite accessor false-positive rows を既知リスクとして扱う。
+- 次サイクルでは、accepted baseline `7b88c5c281e587c267457dba51f53e0b962c1748` から再比較する。cycle 089 close 後に `vendor/skia-upstream-candidate` は `upstream` から fetch 済みで、`upstream/main` checkout は `70f9d90bc8e6a56101d036153cfef28088e57f5b`（committer date 2026-06-01）。Graphite precompile ABI 設計 debt、Dawn/Vulkan/Metal churn、SkRP/CPU opts flag churn、skcms roll compatibility、private Graphite accessor false-positive rows を既知リスクとして扱う。
 
 cycle 088 結果:
 

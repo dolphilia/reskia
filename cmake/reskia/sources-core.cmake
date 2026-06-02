@@ -243,6 +243,7 @@ list(APPEND SOURCE_FILES
         src/core/SkStream.cpp
         src/core/SkStrike.cpp
         src/core/SkStrikeCache.cpp
+        src/core/SkStrikeRef.cpp
         src/core/SkStrikeSpec.cpp
         src/core/SkString.cpp
         src/core/SkStringUtils.cpp

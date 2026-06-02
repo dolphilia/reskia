@@ -87,6 +87,7 @@ list(APPEND SOURCE_FILES
         handles/static_sk_stream_seekable.cpp
         handles/static_sk_stream.cpp
         handles/static_sk_string.cpp
+        handles/static_sk_strike_ref.cpp
         handles/static_sk_stroke_rec.cpp
         handles/static_sk_surface_props.cpp
         handles/static_sk_surface.cpp

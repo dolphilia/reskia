@@ -139,6 +139,7 @@ list(APPEND SOURCE_FILES
         capi/sk_stream_seekable.cpp
         capi/sk_stream.cpp
         capi/sk_string.cpp
+        capi/sk_strike_ref.cpp
         capi/sk_stroke_rec.cpp
         capi/sk_svg_canvas.cpp
         capi/sk_surface_props.cpp
