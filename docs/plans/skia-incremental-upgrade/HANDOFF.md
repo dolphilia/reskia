@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`
-- next probe candidate: start from `3b718ddc8ae51dbfb311afe02c35a83dd7999172`; `vendor/skia-upstream-candidate` is currently checked out at the accepted cycle 090 candidate. Local refs still include `upstream/main` commit `70f9d90bc8e6a56101d036153cfef28088e57f5b` (committer date 2026-06-01). Begin cycle 091 by rechecking 1-week/2-week/3-week fixed candidates from this baseline.
+- `SKIA_REF`: `70f9d90bc8e6a56101d036153cfef28088e57f5b`
+- next probe candidate: start from `70f9d90bc8e6a56101d036153cfef28088e57f5b`; cycle 091 consumed the currently available local refs through `70f9d90bc8e6a56101d036153cfef28088e57f5b` (committer date 2026-06-01). Begin cycle 092 by rechecking local refs for fixed commits after this baseline. If no newer fixed commit exists, record candidate absence without treating floating `main` as baseline.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -122,21 +122,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 088 accepted: `bda7232e6772bcc585435ae760983d6d43aa1155`。
 - cycle 089 accepted: `7b88c5c281e587c267457dba51f53e0b962c1748`。
 - cycle 090 accepted: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`。
+- cycle 091 accepted: `70f9d90bc8e6a56101d036153cfef28088e57f5b`。
 
 未実施:
 
-- cycle 091 candidate selection from `3b718ddc8ae51dbfb311afe02c35a83dd7999172`.
-- cycle 091 candidate checkout を使った coverage regression。
-- cycle 091 の source/header sync と C API 追従実装。
+- cycle 092 candidate selection from `70f9d90bc8e6a56101d036153cfef28088e57f5b`.
+- cycle 092 candidate checkout を使った coverage regression。
+- cycle 092 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 091 の candidate selection から始める。
+次の作業は、cycle 092 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `3b718ddc8ae51dbfb311afe02c35a83dd7999172` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 090 終了時点で checkout は accepted candidate `3b718ddc8ae51dbfb311afe02c35a83dd7999172`、local refs の `upstream/main` は `70f9d90bc8e6a56101d036153cfef28088e57f5b`（committer date 2026-06-01）まで進んでいる。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `70f9d90bc8e6a56101d036153cfef28088e57f5b` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 091 終了時点で local refs は accepted candidate `70f9d90bc8e6a56101d036153cfef28088e57f5b` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -215,6 +216,24 @@ cycle 072 の比較候補メモ:
 - `docs/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
 
 ## 直近 accepted candidate のメモ
+
+候補:
+
+- `70f9d90bc8e6a56101d036153cfef28088e57f5b`
+- committer date: 2026-06-01
+- subject: Roll recipe dependencies (trivial).
+
+cycle 091 結果:
+
+- baseline `3b718ddc8ae51dbfb311afe02c35a83dd7999172` から `70f9d90bc8e6a56101d036153cfef28088e57f5b` を採用した。181 commits、`include` / `modules` は 17 files changed, +80/-38、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 193 files changed, +3374/-3419。
+- 1週間候補 `f71b040b55a3023cfb8d71d160fb1dc821e93a42`、2週間候補 `3f20d9676d08ab11d7e2f3690176d531b8d8b492`、local-ref endpoint `70f9d90bc8e6a56101d036153cfef28088e57f5b` を比較し、public churn が小さく local refs 内で固定 hash の endpoint を採用した。3週間相当の target は local refs に存在しなかった。
+- 新規 missing はなく、C API 追加は不要だった。`SkRegion::setRects` は canonical signature が `SkSpan<const SkIRect>` へ移ったが、legacy array/count helper が upstream に残るため既存 `SkRegion_setRects` C ABI を維持した。`SkFILEStream::Make` は実装 drift のみで public signature は互換だった。
+- tracked `skia/DEPS`、public/private headers、skcms、skottie、core/codec/pathops/pdf/ports/shaders/utils、Ganesh/Graphite/Dawn/Metal/Vulkan backend、SkSL generated drift を同期した。`src/gpu/graphite/Log.h` と `src/partition_alloc` raw_ptr compatibility shim は upstream 削除に合わせて削除した。
+- Reskia の optimize-size build で `SK_DISABLE_SDF_TEXT` が定義される場合に `SDFTextLCDRenderStep.cpp` が `SK_DistanceFieldInset` を参照できないため、SDF disabled 用の local inset fallback を追加した。
+- final coverage は `covered 2952` / `split_covered 42` / `false_positive 299` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は空。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは、accepted baseline `70f9d90bc8e6a56101d036153cfef28088e57f5b` から再比較する。cycle 091 で local refs はこの commit まで消費済みなので、cycle 092 開始時に local refs を再確認し、候補がなければ floating `main` に進まず記録する。Graphite sparse_strips/Vello/compute churn、Dawn/Vulkan/Metal backend churn、`SK_ENABLE_OPTIMIZE_SIZE` + SDF text guard、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 
 候補:
 
@@ -365,6 +384,8 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-087-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-088-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-089-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-090-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-091-2026-06-02.md`
 
 ## Cycle close の条件
 
