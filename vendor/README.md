@@ -20,5 +20,5 @@ scripts/fetch_skia_upstream.sh
 
 関連文書:
 
-- `docs/plans/skia-incremental-upgrade/`
-- `docs/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
+- `docs/ja/plans/skia-incremental-upgrade/`
+- `docs/ja/notes/skia-incremental-upgrade-readiness-2026-05-22.md`

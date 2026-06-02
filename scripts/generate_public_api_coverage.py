@@ -344,21 +344,21 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
     schema for platform/testing classifications discovered after Phase 10.
     """
     paths = [
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-10-generator-polish-backlog.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-11-gpu-platform-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-12-svg-sksg-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-13-text-stack-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-14-callback-provider-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-15-platform-internal-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-17-gpu-small-gap-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-18-svg-polish-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-21-gpu-platform-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-22-gpu-value-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-23-gpu-provider-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-24-svg-provider-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-25-gpu-provider-bridge-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-28-ganesh-external-texture-overrides.csv",
-        repo / "docs/plans/c-binding-remediation/checklists/public-api-phase-34-upgrade-probe-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-10-generator-polish-backlog.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-11-gpu-platform-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-12-svg-sksg-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-13-text-stack-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-14-callback-provider-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-15-platform-internal-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-17-gpu-small-gap-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-18-svg-polish-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-21-gpu-platform-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-22-gpu-value-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-23-gpu-provider-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-24-svg-provider-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-25-gpu-provider-bridge-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-28-ganesh-external-texture-overrides.csv",
+        repo / "docs/ja/plans/c-binding-remediation/checklists/public-api-phase-34-upgrade-probe-overrides.csv",
     ]
 
     overrides: dict[tuple[str, str, str, str, str], MethodOverride] = {}
@@ -756,7 +756,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("docs/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv"),
+        default=Path("docs/ja/plans/c-binding-remediation/checklists/public-api-coverage-matrix.csv"),
     )
     parser.add_argument(
         "--previous-matrix",

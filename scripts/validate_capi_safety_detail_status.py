@@ -10,9 +10,9 @@ from pathlib import Path
 
 
 DEFAULT_CHECKLIST = Path(
-    "docs/plans/c-binding-remediation/checklists/capi-safety-detail-status.csv"
+    "docs/ja/plans/c-binding-remediation/checklists/capi-safety-detail-status.csv"
 )
-STABILITY_DIR = Path("docs/plans/stability-hardening")
+STABILITY_DIR = Path("docs/ja/plans/stability-hardening")
 
 EXPECTED_FIELDS = [
     "id",

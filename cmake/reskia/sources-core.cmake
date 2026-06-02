@@ -720,7 +720,7 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
     if(NOT _reskia_gpu_all_sources)
         message(FATAL_ERROR
                 "GPU トグルが有効ですが src/gpu に実ファイルがありません。"
-                "docs/plans/gpu-enablement/manifests/phase1-gpu-diff.txt を参照して同期してください。")
+                "docs/ja/plans/gpu-enablement/manifests/phase1-gpu-diff.txt を参照して同期してください。")
     endif()
 
     macro(_reskia_append_gpu_sources)
