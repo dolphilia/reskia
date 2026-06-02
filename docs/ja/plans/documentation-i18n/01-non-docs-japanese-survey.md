@@ -7,7 +7,7 @@
 `docs/` 以外に残っている日本語文書・日本語コメント・日本語メッセージを把握し、今後の国際化作業でどのように扱うかを整理する。
 
 この調査文書は、初回調査時点では変更方針の整理のみを目的としていた。
-2026-06-02 に、優先対象3件の英語化を完了した。
+2026-06-02 に、優先対象のうち `third_party/README.md` と `vendor/README.md` の英語化を完了した。`bindings/` は同日削除されたため、対象外になった。
 
 ## 調査範囲
 
@@ -30,7 +30,7 @@
 | `README.md` | 1 | ルート入口 | 言語名として `日本語` があるのみ。本文は英語。 | 現状維持でよい。 |
 | `vendor/README.md` | 7 | 運用 README | Skia lock / upstream checkout / incremental upgrade の日本語説明。 | 完了: 英語化し、詳細を `docs/en/guides/skia-upgrade-workflow.md` へ誘導した。 |
 | `third_party/README.md` | 14 | 運用 README | dependency source/build/install と bootstrap/build 手順の日本語説明。 | 完了: 英語化し、`docs/en/guides/cmake-migration-guide.md` と整合させた。 |
-| `bindings/rust/reskia/examples/README.md` | 5 | サンプル README | `window_shapes` example の日本語説明。絶対パス例を含む。 | 完了: 英語化し、`RESKIA_LIB_DIR` を repo-relative な例にした。 |
+| `bindings/rust/reskia/examples/README.md` | 5 | サンプル README | `window_shapes` example の日本語説明。絶対パス例を含む。 | 対象外: `bindings/` 削除により文書自体が廃止。 |
 
 ## 文書ではないが日本語が残る主要領域
 
@@ -119,19 +119,19 @@
 
 1. `third_party/README.md` を英語化する。
 2. `vendor/README.md` を英語化し、詳細は `docs/en/guides/skia-upgrade-workflow.md` へ誘導する。
-3. `bindings/rust/reskia/examples/README.md` を英語化し、絶対パス例を避ける。
-4. CMake の user-facing error / warning を英語化する。
-5. C API header の日本語 safety comment を、API 群単位で英語化する。
-6. test/sample source の日本語コメントを必要に応じて整理する。テストデータとしての日本語文字列は維持する。
+3. CMake の user-facing error / warning を英語化する。
+4. C API header の日本語 safety comment を、API 群単位で英語化する。
+5. test/sample source の日本語コメントを必要に応じて整理する。テストデータとしての日本語文字列は維持する。
 
 ## まとめ
 
 docs 外の「文書」として優先対応すべきものは少ない。
 
-最優先だった次の3件は、2026-06-02 に英語化済み:
+最優先だった docs 外文書のうち、次の2件は 2026-06-02 に英語化済み:
 
 - `third_party/README.md`
 - `vendor/README.md`
-- `bindings/rust/reskia/examples/README.md`
+
+`bindings/rust/reskia/examples/README.md` は、`bindings/` 削除により対象外になった。
 
 次点は、実行時に利用者へ出る CMake message と、public header として読まれる `skia/capi/*.h` の日本語 safety comment である。

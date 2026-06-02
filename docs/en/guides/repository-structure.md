@@ -21,7 +21,6 @@ The repository has three main responsibilities:
 | `scripts/` | Scripts for upstream fetches, dependency builds, coverage generation, and checks. |
 | `third_party/` | Dependency source / build / install management. |
 | `vendor/` | Skia upstream reference checkout and lock file. |
-| `bindings/` | Helper code for external language bindings. |
 | `docs/` | Language-specific documentation. English docs live under `docs/en/`. |
 
 The repository root does not contain a `CMakeLists.txt`. Use `skia/CMakeLists.txt`.
@@ -60,14 +59,14 @@ Properties:
 
 ### `skia/handles`
 
-`skia/handles` is the integer-handle API for language bindings.
+`skia/handles` is the integer-handle API for FFI users that should avoid exposing raw pointers.
 
 Properties:
 
 - Exposes integer handles such as `sk_image_t`.
 - Stores objects in an internal `HandleTable`.
 - Detects invalid and stale handles.
-- Helps bindings avoid exposing raw pointers across language boundaries.
+- Helps FFI users avoid exposing raw pointers across language boundaries.
 
 ## C API Policy
 

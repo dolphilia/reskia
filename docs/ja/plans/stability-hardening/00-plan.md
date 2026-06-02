@@ -17,7 +17,7 @@
 
 - `docs/ja/plans/c-binding-remediation/checklists/capi-status.csv` は `done=34`, `todo=276` で、C ABI 全体の品質レビューが未完了。
 - `docs/ja/plans/c-binding-remediation/checklists/handles-status.csv` は `.cpp` / `*-internal.h` の Phase 1 は進んでいるが、公開 `.h` の進捗記録が未整理。
-- borrowed pointer の寿命規約は実装・Rust wrapper には現れ始めているが、全 C API で一貫した文書化には至っていない。
+- borrowed pointer の寿命規約は実装に現れ始めているが、全 C API で一貫した文書化には至っていない。
 - `RESKIA_BUILD_TESTS=ON` の CMake target build は、既存 test 構成の link issue により一部 smoke が `ctest` へ完全統合されていない。
 - sanitizer 用の標準 configure/build/test 手順が未整備。
 - GPU / optional codec / SkParagraph などは platform と依存条件が重く、失敗理由を分類しないと安定性評価が難しい。
@@ -36,7 +36,7 @@
 - Skia 公開 API の完全網羅をこの計画だけで完了すること。
 - GPU Graphite / Vulkan / Dawn / SkParagraph C API などの大きな機能追加を本計画の主タスクにすること。
 - 既存 C API の ABI 互換を一括破壊すること。
-- Rust safe wrapper を広範囲に拡張すること。Rust 側は C ABI 安定化後に広げる。
+- 言語別 wrapper を本リポジトリ内で実装・拡張すること。外部言語向けには C ABI と規約を提供する。
 
 ## 対象
 
@@ -46,8 +46,6 @@
 - `cmake/reskia/tests.cmake`
 - `cmake/deps/ReskiaDeps.cmake`
 - `cmake/reskia/*.cmake`
-- `bindings/rust/reskia`
-- `bindings/rust/reskia-sys`
 - `docs/ja/plans/c-binding-remediation/checklists/`
 - `docs/ja/guides/`
 
@@ -108,7 +106,7 @@ python3 scripts/generate_public_api_coverage.py --repo /Users/dolphilia/github/r
 
 - 1 バッチごとに `capi-status.csv` の該当行が `done` または理由付き `na` になる。
 - 各バッチで configure/build が成功する。
-- invalid input の smoke または Rust unit test が少なくとも 1 つ追加される。
+- invalid input の smoke が少なくとも 1 つ追加される。
 
 検証候補:
 
@@ -119,7 +117,7 @@ cmake --build skia/cmake-build-stability-prebuilt -j 8
 
 ### Phase 3: borrowed pointer / handle lifetime 規約の固定
 
-目的: `HandleTable::get_ptr()` や callback borrowed pointer の寿命を、C/Rust 利用者が誤解しない形にする。
+目的: `HandleTable::get_ptr()` や callback borrowed pointer の寿命を、C ABI 利用者が誤解しない形にする。
 
 分類:
 
@@ -136,14 +134,12 @@ cmake --build skia/cmake-build-stability-prebuilt -j 8
 
 1. `docs/ja/guides/` に C ABI ownership/lifetime guide を追加する。
 2. `reskia_ffi.h` の borrowed bridge API に lifetime コメントを追加する。
-3. Rust wrapper の `borrow_from_handle` 系 safety comment を C guide と揃える。
-4. callback 系 API の result / context / thread / reentrancy を個別に記録する。
-5. handle delete 後の stale handle が `nullptr` / `false` / no-op になる smoke を追加する。
+3. callback 系 API の result / context / thread / reentrancy を個別に記録する。
+4. handle delete 後の stale handle が `nullptr` / `false` / no-op になる smoke を追加する。
 
 完了条件:
 
 - C API 利用者が、返却 pointer を解放すべきか保持してよいかをヘッダまたは guide から判断できる。
-- Rust 側の unsafe API comment と C 側規約が矛盾しない。
 - stale handle の最小回帰テストが存在する。
 
 ### Phase 4: `RESKIA_BUILD_TESTS=ON` の標準化
@@ -192,7 +188,7 @@ ctest --test-dir skia/cmake-build-stability-tests --output-on-failure
 1. ASan/UBSan 用 configure コマンドを docs に定義する。
 2. 必要なら CMake option として `RESKIA_ENABLE_SANITIZERS` または preset 相当を追加する。
 3. まず CPU raster + C API smoke のみに適用する。
-4. TSan は handle table / Rust wrapper 周辺の小さい smoke から試す。
+4. TSan は handle table 周辺の小さい smoke から試す。
 5. sanitizer で既知 false positive が出る場合は、Skia 側由来か Reskia 側由来かを分類する。
 
 初期対象:
@@ -225,22 +221,22 @@ ctest --test-dir skia/cmake-build-stability-tests --output-on-failure
 - configure 失敗時に「依存不足」「platform 未対応」「実装未完了」の区別がつく。
 - README または guide から、安定サポート対象と experimental 対象が読める。
 
-### Phase 7: Rust wrapper の最小回帰強化
+### Phase 7: 外部 FFI 利用を想定した C API 回帰強化
 
-目的: C ABI 安全化の成果を Rust safe wrapper で破らないようにする。
+目的: C ABI 安全化の成果を、外部の言語別 wrapper から利用しても破綻しにくい形で固定する。
 
 作業:
 
-1. invalid handle / stale handle / null return の unit test を増やす。
-2. `Drop` / `Clone` / borrow の lifetime comment を C guide と揃える。
-3. `from_handle_retained` が retain 成功後に handle 削除されても安全に使えることを確認する。
-4. borrowed wrapper は handle storage 生存前提であることを unsafe API として明示し続ける。
-5. C API が安定した型から safe wrapper を広げる。
+1. invalid handle / stale handle / null return の C API smoke を増やす。
+2. retain / release / borrowed pointer の lifetime comment を C guide と揃える。
+3. retain 成功後に元 handle を削除しても caller-owned pointer が安全に使えることを確認する。
+4. borrowed pointer は owner / handle storage 生存前提であることを header と guide に明示し続ける。
+5. 外部 wrapper が参照できる C API smoke と最小 C example を維持する。
 
 完了条件:
 
-- Rust unit test が C ABI の所有権規約をカバーする。
-- C 側の lifetime guide と Rust doc comment が矛盾しない。
+- C API smoke が所有権規約をカバーする。
+- C 側の lifetime guide と header comment が矛盾しない。
 
 ## 優先順位
 
@@ -258,7 +254,7 @@ ctest --test-dir skia/cmake-build-stability-tests --output-on-failure
 
 ### P2
 
-- Rust wrapper の回帰テスト拡張。
+- 外部 FFI 利用を想定した C API 回帰テスト拡張。
 - `system` / 非 Apple Unix / Windows の unsupported 条件整理。
 - public API coverage の追加 triage。
 
@@ -281,4 +277,3 @@ ctest --test-dir skia/cmake-build-stability-tests --output-on-failure
 4. C API の主要型について、所有権・NULL・borrowed lifetime がヘッダまたは guide に明記される。
 5. `capi-status.csv` の高リスク型バッチが `done` または理由付き `na` で閉じる。
 6. platform / dependency / feature flag の安定サポート範囲と experimental 範囲が文書化される。
-

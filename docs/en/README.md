@@ -1,6 +1,6 @@
 # Reskia
 
-Reskia rebuilds Google Skia with CMake and provides C API bindings that are easier to use from other languages.
+Reskia rebuilds Google Skia with CMake and provides a C ABI that is easier to use from other languages.
 
 Main components:
 
@@ -91,7 +91,7 @@ Reskia exposes Skia public classes, public methods, static factories, and helper
 There are two API boundaries:
 
 - `skia/capi`: pointer-oriented API for direct C usage
-- `skia/handles`: integer-handle API for language bindings that should avoid raw pointers
+- `skia/handles`: integer-handle API for FFI users that should avoid raw pointers
 
 When adding or changing C APIs, document ownership, NULL input behavior, invalid handle behavior, borrowed lifetimes, and callback lifetimes. See `docs/en/guides/c-api-safety-guidelines.md`.
 

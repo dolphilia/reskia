@@ -1,6 +1,6 @@
 # Reskia
 
-Reskia rebuilds Google Skia with CMake and provides C API bindings for use from other languages. The main library lives under `skia/`, with pointer-based bindings in `skia/capi` and integer-handle bindings in `skia/handles`.
+Reskia rebuilds Google Skia with CMake and provides a C ABI for use from other languages. The main library lives under `skia/`, with pointer-oriented C APIs in `skia/capi` and integer-handle APIs in `skia/handles`.
 
 ## Documentation
 

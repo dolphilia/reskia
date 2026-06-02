@@ -1,4 +1,6 @@
-# 04 Phase 3: Rust FFI Rollout
+# 04 Phase 3: Rust FFI Rollout (Archived)
+
+更新: 2026-06-02 に `bindings/` ディレクトリと root Rust workspace は削除された。この文書は過去の PoC 記録としてのみ残し、現行の Reskia 計画には含めない。Reskia 本体は `skia/capi` と `skia/handles` による C ABI 提供に集中し、言語別 wrapper はリポジトリ外で扱う。
 
 ## ゴール
 
