@@ -247,7 +247,7 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
         list(APPEND SOURCE_FILES capi/sk_font_mgr_fontconfig.cpp)
     else()
         message(WARNING
-                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが UNIX 向け実装ファイル "
-                "または SkFontConfigInterface が利用できないため FontConfig C API は未追加です。")
+                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON, but the UNIX implementation files "
+                "or SkFontConfigInterface are unavailable; the FontConfig C API will not be added.")
     endif()
 endif()

@@ -15,7 +15,7 @@ typedef uint32_t reskia_u32_t;
 typedef uint32_t reskia_pmcolor_t;
 
 // static
-// U8CPU 引数は Skia 側の規約に従い 8-bit channel 値として扱う。
+// U8CPU arguments follow Skia conventions and are treated as 8-bit channel values.
 reskia_u32_t SkColorPriv_SkAlpha255To256(reskia_u32_t alpha); // (U8CPU alpha) -> unsigned
 reskia_u32_t SkColorPriv_SkAlphaMulQ(reskia_u32_t c, reskia_u32_t scale); // (uint32_t c, unsigned scale) -> uint32_t
 reskia_pmcolor_t SkColorPriv_SkPackARGB32(reskia_u32_t a, reskia_u32_t r, reskia_u32_t g, reskia_u32_t b); // (U8CPU a, U8CPU r, U8CPU g, U8CPU b) -> SkPMColor

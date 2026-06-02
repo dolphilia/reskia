@@ -89,12 +89,12 @@ endforeach()
 
 if(RESKIA_ENABLE_SKOTTIE)
     if(NOT APPLE)
-        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON は現在 APPLE のみ対応です。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON is currently supported only on Apple platforms.")
     endif()
     if(RESKIA_DEPS_MODE_LOWER STREQUAL "source")
         if((NOT TARGET skresources) OR (NOT TARGET svg))
             message(FATAL_ERROR
-                    "RESKIA_ENABLE_SKOTTIE=ON には skresources と svg の source モード解決が必要です。"
+                    "RESKIA_ENABLE_SKOTTIE=ON requires skresources and svg to be resolved in source mode."
             )
         endif()
     endif()
@@ -102,14 +102,14 @@ endif()
 
 if(RESKIA_ENABLE_SKPARAGRAPH)
     if(NOT APPLE)
-        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON は現在 APPLE のみ対応です。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON is currently supported only on Apple platforms.")
     endif()
     if(NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
-        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON は現在 RESKIA_DEPS_MODE=source のみ対応です。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON currently requires RESKIA_DEPS_MODE=source.")
     endif()
     if(NOT TARGET skshaper OR NOT TARGET skunicode)
         message(FATAL_ERROR
-                "RESKIA_ENABLE_SKPARAGRAPH=ON には skshaper/skunicode の source モード解決が必要です。"
+                "RESKIA_ENABLE_SKPARAGRAPH=ON requires skshaper/skunicode to be resolved in source mode."
         )
     endif()
 
@@ -124,7 +124,7 @@ if(RESKIA_ENABLE_SKPARAGRAPH)
     )
     if(NOT RESKIA_SKPARAGRAPH_HARFBUZZ_INCLUDE_DIR)
         message(FATAL_ERROR
-                "RESKIA_ENABLE_SKPARAGRAPH=ON ですが hb.h が見つかりません。HarfBuzz を導入してください。"
+                "RESKIA_ENABLE_SKPARAGRAPH=ON requires hb.h. Install HarfBuzz or provide its include path."
         )
     endif()
     find_library(RESKIA_SKPARAGRAPH_HARFBUZZ_LIBRARY
@@ -134,7 +134,7 @@ if(RESKIA_ENABLE_SKPARAGRAPH)
     )
     if(NOT RESKIA_SKPARAGRAPH_HARFBUZZ_LIBRARY)
         message(FATAL_ERROR
-                "RESKIA_ENABLE_SKPARAGRAPH=ON ですが libharfbuzz が見つかりません。HarfBuzz を導入してください。"
+                "RESKIA_ENABLE_SKPARAGRAPH=ON requires libharfbuzz. Install HarfBuzz or provide its library path."
         )
     endif()
 
@@ -148,23 +148,23 @@ endif()
 if(RESKIA_ENABLE_GPU_VULKAN OR RESKIA_ENABLE_GPU_METAL OR RESKIA_ENABLE_GPU_DAWN)
     if(NOT (RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE))
         message(FATAL_ERROR
-                "RESKIA_ENABLE_GPU_VULKAN/METAL/DAWN を有効化する場合は "
-                "RESKIA_ENABLE_GPU_GANESH または RESKIA_ENABLE_GPU_GRAPHITE も有効化してください。")
+                "RESKIA_ENABLE_GPU_VULKAN/METAL/DAWN requires "
+                "RESKIA_ENABLE_GPU_GANESH or RESKIA_ENABLE_GPU_GRAPHITE to be enabled.")
     endif()
 endif()
 
 if(RESKIA_ENABLE_GPU_DAWN AND NOT RESKIA_ENABLE_GPU_GRAPHITE)
-    message(FATAL_ERROR "RESKIA_ENABLE_GPU_DAWN=ON は現在 RESKIA_ENABLE_GPU_GRAPHITE=ON が必須です。")
+    message(FATAL_ERROR "RESKIA_ENABLE_GPU_DAWN=ON currently requires RESKIA_ENABLE_GPU_GRAPHITE=ON.")
 endif()
 
 if(RESKIA_ENABLE_GPU_METAL AND NOT APPLE)
-    message(FATAL_ERROR "RESKIA_ENABLE_GPU_METAL=ON は現在 APPLE のみ対応です。")
+    message(FATAL_ERROR "RESKIA_ENABLE_GPU_METAL=ON is currently supported only on Apple platforms.")
 endif()
 
 if(RESKIA_ENABLE_GPU_GRAPHITE AND NOT (RESKIA_ENABLE_GPU_METAL OR RESKIA_ENABLE_GPU_VULKAN OR RESKIA_ENABLE_GPU_DAWN))
     message(FATAL_ERROR
-            "RESKIA_ENABLE_GPU_GRAPHITE=ON の場合は少なくとも 1 つの backend "
-            "(RESKIA_ENABLE_GPU_METAL / RESKIA_ENABLE_GPU_VULKAN / RESKIA_ENABLE_GPU_DAWN) を有効化してください。")
+            "RESKIA_ENABLE_GPU_GRAPHITE=ON requires at least one backend "
+            "(RESKIA_ENABLE_GPU_METAL / RESKIA_ENABLE_GPU_VULKAN / RESKIA_ENABLE_GPU_DAWN) to be enabled.")
 endif()
 
 if(RESKIA_ENABLE_GPU_GRAPHITE)
@@ -180,9 +180,9 @@ if(RESKIA_ENABLE_GPU_GRAPHITE)
     if(_reskia_missing_graphite_sksl)
         string(JOIN ", " _reskia_missing_graphite_sksl_joined ${_reskia_missing_graphite_sksl})
         message(FATAL_ERROR
-                "RESKIA_ENABLE_GPU_GRAPHITE=ON ですが src/sksl/generated の同期が不足しています: "
-                "${_reskia_missing_graphite_sksl_joined}。"
-                "vendor/skia-upstream/src/sksl/generated から同期してください。")
+                "RESKIA_ENABLE_GPU_GRAPHITE=ON requires missing src/sksl/generated files: "
+                "${_reskia_missing_graphite_sksl_joined}. "
+                "Sync them from vendor/skia-upstream/src/sksl/generated.")
     endif()
 endif()
 
@@ -201,8 +201,8 @@ if(RESKIA_ENABLE_GPU_VULKAN)
     endif()
     if(NOT RESKIA_VMA_INCLUDE_DIR)
         message(FATAL_ERROR
-                "RESKIA_ENABLE_GPU_VULKAN=ON ですが vk_mem_alloc.h が見つかりません。"
-                "RESKIA_VMA_INCLUDE_DIR を指定してください。")
+                "RESKIA_ENABLE_GPU_VULKAN=ON requires vk_mem_alloc.h. "
+                "Set RESKIA_VMA_INCLUDE_DIR.")
     endif()
 endif()
 
@@ -225,8 +225,8 @@ if(RESKIA_ENABLE_GPU_DAWN)
     endif()
     if(NOT RESKIA_DAWN_INCLUDE_DIR OR NOT RESKIA_DAWN_LIBRARY)
         message(FATAL_ERROR
-                "RESKIA_ENABLE_GPU_DAWN=ON ですが Dawn 依存が見つかりません。"
-                "RESKIA_DAWN_INCLUDE_DIR と RESKIA_DAWN_LIBRARY を指定してください。")
+                "RESKIA_ENABLE_GPU_DAWN=ON requires Dawn dependencies. "
+                "Set RESKIA_DAWN_INCLUDE_DIR and RESKIA_DAWN_LIBRARY.")
     endif()
 endif()
 
@@ -338,14 +338,14 @@ if(RESKIA_ENABLE_AVIF)
     if("src/codec/SkAvifCodec.cpp" IN_LIST SOURCE_FILES)
         target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_AVIF)
     else()
-        message(WARNING "RESKIA_ENABLE_AVIF=ON ですが src/codec/SkAvifCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+        message(WARNING "RESKIA_ENABLE_AVIF=ON, but src/codec/SkAvifCodec.cpp is not registered in SOURCE_FILES; the decoder macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_JPEGXL)
     if("src/codec/SkJpegxlCodec.cpp" IN_LIST SOURCE_FILES)
         target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_JPEGXL)
     else()
-        message(WARNING "RESKIA_ENABLE_JPEGXL=ON ですが src/codec/SkJpegxlCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+        message(WARNING "RESKIA_ENABLE_JPEGXL=ON, but src/codec/SkJpegxlCodec.cpp is not registered in SOURCE_FILES; the decoder macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_JPEG_GAINMAP)
@@ -353,8 +353,8 @@ if(RESKIA_ENABLE_JPEG_GAINMAP)
         target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_JPEG_GAINMAPS)
     else()
         message(WARNING
-                "RESKIA_ENABLE_JPEG_GAINMAP=ON ですが src/codec/SkJpegXmp.cpp または src/codec/SkXmp.cpp が "
-                "SOURCE_FILES に未登録のため gainmap マクロは未定義です。")
+                "RESKIA_ENABLE_JPEG_GAINMAP=ON, but src/codec/SkJpegXmp.cpp or src/codec/SkXmp.cpp is "
+                "not registered in SOURCE_FILES; the gainmap macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_RAW)
@@ -376,7 +376,7 @@ if(RESKIA_ENABLE_RAW)
         )
         target_compile_definitions(reskia PRIVATE SK_CODEC_DECODES_RAW)
     else()
-        message(WARNING "RESKIA_ENABLE_RAW=ON ですが src/codec/SkRawCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+        message(WARNING "RESKIA_ENABLE_RAW=ON, but src/codec/SkRawCodec.cpp is not registered in SOURCE_FILES; the decoder macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_GIF)
@@ -391,19 +391,19 @@ if(RESKIA_ENABLE_GIF)
         endif()
         target_compile_definitions(reskia PRIVATE SK_HAS_WUFFS_LIBRARY)
     else()
-        message(WARNING "RESKIA_ENABLE_GIF=ON ですが src/codec/SkWuffsCodec.cpp が SOURCE_FILES に未登録のため decoder マクロは未定義です。")
+        message(WARNING "RESKIA_ENABLE_GIF=ON, but src/codec/SkWuffsCodec.cpp is not registered in SOURCE_FILES; the decoder macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_PDF)
     if("src/pdf/SkPDFDocument.cpp" IN_LIST SOURCE_FILES)
         target_compile_definitions(reskia PRIVATE SK_SUPPORT_PDF)
     else()
-        message(WARNING "RESKIA_ENABLE_PDF=ON ですが src/pdf/SkPDFDocument.cpp が SOURCE_FILES に未登録のため PDF マクロは未定義です。")
+        message(WARNING "RESKIA_ENABLE_PDF=ON, but src/pdf/SkPDFDocument.cpp is not registered in SOURCE_FILES; the PDF macro will not be defined.")
     endif()
 endif()
 if(RESKIA_ENABLE_FONTCONFIG_CAPI)
     if(NOT UNIX)
-        message(FATAL_ERROR "RESKIA_ENABLE_FONTCONFIG_CAPI=ON は現在 UNIX のみ対応です。")
+        message(FATAL_ERROR "RESKIA_ENABLE_FONTCONFIG_CAPI=ON is currently supported only on UNIX platforms.")
     endif()
     if("capi/sk_font_mgr_fontconfig.cpp" IN_LIST SOURCE_FILES)
         find_path(RESKIA_FONTCONFIG_INCLUDE_DIR
@@ -418,8 +418,8 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
         )
         if(NOT RESKIA_FONTCONFIG_INCLUDE_DIR OR NOT RESKIA_FONTCONFIG_LIBRARY)
             message(FATAL_ERROR
-                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが fontconfig 依存が見つかりません。"
-                    "fontconfig/fontconfig.h と libfontconfig を導入してください。")
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON requires fontconfig. "
+                    "Install fontconfig/fontconfig.h and libfontconfig, or provide their paths.")
         endif()
         find_package(Freetype QUIET)
         if(Freetype_FOUND)
@@ -443,15 +443,15 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
         endif()
         if(NOT RESKIA_FREETYPE_INCLUDE_DIRS OR NOT RESKIA_FREETYPE_LIBRARIES)
             message(FATAL_ERROR
-                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが FreeType 依存が見つかりません。"
-                    "ft2build.h と libfreetype を導入してください。")
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON requires FreeType. "
+                    "Install ft2build.h and libfreetype, or provide their paths.")
         endif()
         target_include_directories(reskia PRIVATE "${RESKIA_FONTCONFIG_INCLUDE_DIR}")
         target_include_directories(reskia PRIVATE ${RESKIA_FREETYPE_INCLUDE_DIRS})
         target_link_libraries(reskia "${RESKIA_FONTCONFIG_LIBRARY}" ${RESKIA_FREETYPE_LIBRARIES})
     else()
         message(WARNING
-                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが capi/sk_font_mgr_fontconfig.cpp が SOURCE_FILES に未登録です。")
+                "RESKIA_ENABLE_FONTCONFIG_CAPI=ON, but capi/sk_font_mgr_fontconfig.cpp is not registered in SOURCE_FILES.")
     endif()
 endif()
 if(RESKIA_ENABLE_GPU_GANESH)

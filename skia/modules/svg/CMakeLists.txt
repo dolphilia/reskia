@@ -112,7 +112,7 @@ if(HARFBUZZ_INCLUDE_DIR AND HARFBUZZ_LIBRARY)
     target_sources(skshaper PRIVATE ../skshaper/src/SkShaper_harfbuzz.cpp)
     target_link_libraries(skshaper PUBLIC "${HARFBUZZ_LIBRARY}")
 elseif(HARFBUZZ_INCLUDE_DIR AND NOT HARFBUZZ_LIBRARY)
-    message(WARNING "hb.h は検出されましたが libharfbuzz が見つからないため HarfBuzz 実装は無効化します。")
+    message(WARNING "hb.h was found, but libharfbuzz was not found; the HarfBuzz implementation will be disabled.")
 endif()
 
 find_path(ICU_UBIDI_INCLUDE_DIR

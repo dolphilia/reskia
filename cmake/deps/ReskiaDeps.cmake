@@ -56,9 +56,9 @@ function(_reskia_resolve_mode_prebuilt root_dir out_link_dirs out_link_libs)
     # mode=prebuilt
     # | Platform | Link Dirs | Libraries                                      |
     # |----------|-----------|------------------------------------------------|
-    # | WIN32    | (none)    | third_party/install から find_library で解決 |
-    # | APPLE    | (none)    | third_party/install から find_library で解決 |
-    # | UNIX     | (none)    | third_party/install から find_library で解決 |
+    # | WIN32    | (none)    | resolved with find_library under third_party/install |
+    # | APPLE    | (none)    | resolved with find_library under third_party/install |
+    # | UNIX     | (none)    | resolved with find_library under third_party/install |
     set(_link_dirs "")
     set(_libs "")
 
@@ -135,8 +135,8 @@ function(_reskia_resolve_mode_source root_dir out_link_dirs out_link_libs)
     # mode=source
     # | Platform | Link Dirs | Libraries                                     |
     # |----------|-----------|-----------------------------------------------|
-    # | WIN32    | (none)    | 未実装 (FATAL_ERROR)                          |
-    # | APPLE    | (none)    | third_party/install から find_library で解決 |
+    # | WIN32    | (none)    | not implemented (FATAL_ERROR)                  |
+    # | APPLE    | (none)    | resolved with find_library under third_party/install |
     # | UNIX     | (none)    | (none)                                        |
     set(_link_dirs "")
     set(_libs "")
@@ -201,7 +201,7 @@ function(_reskia_resolve_mode_system root_dir out_link_dirs out_link_libs)
     # mode=system
     # | Platform | Link Dirs       | Libraries                                         |
     # |----------|-----------------|---------------------------------------------------|
-    # | WIN32    | <root>/skia/lib | prebuilt 互換名 (zlib, libpng, turbojpeg-static) |
+    # | WIN32    | <root>/skia/lib | prebuilt-compatible names (zlib, libpng, turbojpeg-static) |
     # | APPLE    | (none)          | EXPAT/PNG/JPEG: find_package + webp*: find_library |
     # | UNIX     | (none)          | (none)                                            |
     set(_link_dirs "")
@@ -246,8 +246,8 @@ function(_reskia_resolve_mode_system root_dir out_link_dirs out_link_libs)
                 "${_lib_sharpyuv}"
         )
     elseif(WIN32)
-        # 互換維持: prebuilt と同名ライブラリ指定を許容（削除期限: 2026-06-30）。
-        # 期限までに imported target ベースへ移行する。
+        # Compatibility: allow the same library names as prebuilt mode until 2026-06-30.
+        # Move this path to imported targets before that deadline.
         set(_link_dirs "${root_dir}/skia/lib")
         set(_libs zlib libpng turbojpeg-static libwebp libwebpdemux libwebpmux)
         if(RESKIA_ENABLE_AVIF)

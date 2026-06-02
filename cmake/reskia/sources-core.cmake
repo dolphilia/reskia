@@ -572,13 +572,13 @@ if(RESKIA_ENABLE_FONTCONFIG_CAPI)
         if(_reskia_fontconfig_missing)
             string(JOIN ", " _reskia_fontconfig_missing_joined ${_reskia_fontconfig_missing})
             message(WARNING
-                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON ですが必要ソースが不足しています: "
+                    "RESKIA_ENABLE_FONTCONFIG_CAPI=ON is missing required source files: "
                     "${_reskia_fontconfig_missing_joined}")
         else()
             list(APPEND SOURCE_FILES ${_reskia_fontconfig_sources})
         endif()
     else()
-        message(WARNING "RESKIA_ENABLE_FONTCONFIG_CAPI=ON は現在 UNIX のみ対応です。")
+        message(WARNING "RESKIA_ENABLE_FONTCONFIG_CAPI=ON is currently supported only on UNIX platforms.")
     endif()
 endif()
 
@@ -600,7 +600,7 @@ if(RESKIA_ENABLE_RAW)
                 "${RESKIA_ROOT_DIR}/third_party/src/piex/src/tiff_parser.cc"
         )
     else()
-        message(WARNING "RESKIA_ENABLE_RAW=ON ですが third_party/src/dng_sdk または third_party/src/piex が未配置のため SkRawCodec.cpp は未追加です。")
+        message(WARNING "RESKIA_ENABLE_RAW=ON, but third_party/src/dng_sdk or third_party/src/piex is missing; SkRawCodec.cpp will not be added.")
     endif()
 endif()
 
@@ -609,7 +609,7 @@ if(RESKIA_ENABLE_GIF)
         list(APPEND SOURCE_FILES src/codec/SkWuffsCodec.cpp)
         list(APPEND SOURCE_FILES "${RESKIA_ROOT_DIR}/third_party/src/wuffs/release/c/wuffs-v0.3.c")
     else()
-        message(WARNING "RESKIA_ENABLE_GIF=ON ですが third_party/src/wuffs/release/c/wuffs-v0.3.c が未配置のため SkWuffsCodec.cpp は未追加です。")
+        message(WARNING "RESKIA_ENABLE_GIF=ON, but third_party/src/wuffs/release/c/wuffs-v0.3.c is missing; SkWuffsCodec.cpp will not be added.")
     endif()
 endif()
 
@@ -642,8 +642,8 @@ endif()
 if(RESKIA_ENABLE_SKSG OR RESKIA_ENABLE_SKOTTIE)
     if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/sksg/sksg.gni")
         message(FATAL_ERROR
-                "RESKIA_ENABLE_SKSG=ON または RESKIA_ENABLE_SKOTTIE=ON ですが modules/sksg/sksg.gni が見つかりません。"
-                "Phase 1 の同期を実施してください。"
+                "RESKIA_ENABLE_SKSG=ON or RESKIA_ENABLE_SKOTTIE=ON requires modules/sksg/sksg.gni. "
+                "Run the Phase 1 source sync."
         )
     endif()
     set(_reskia_sksg_sources "")
@@ -662,10 +662,10 @@ endif()
 
 if(RESKIA_ENABLE_SKOTTIE)
     if(NOT APPLE)
-        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON は現在 APPLE のみ対応です。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON is currently supported only on Apple platforms.")
     endif()
     if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/skottie/skottie.gni")
-        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON ですが modules/skottie/skottie.gni が見つかりません。Phase 1 の同期を実施してください。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKOTTIE=ON requires modules/skottie/skottie.gni. Run the Phase 1 source sync.")
     endif()
 
     set(_reskia_skottie_sources "")
@@ -684,7 +684,7 @@ endif()
 
 if(RESKIA_ENABLE_SKPARAGRAPH)
     if(NOT EXISTS "${PROJECT_SOURCE_DIR}/modules/skparagraph/skparagraph.gni")
-        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON ですが modules/skparagraph/skparagraph.gni が見つかりません。Phase 1 の同期を実施してください。")
+        message(FATAL_ERROR "RESKIA_ENABLE_SKPARAGRAPH=ON requires modules/skparagraph/skparagraph.gni. Run the Phase 1 source sync.")
     endif()
 
     set(_reskia_skparagraph_sources "")
@@ -707,8 +707,8 @@ endif()
 if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
     if(NOT EXISTS "${PROJECT_SOURCE_DIR}/src/gpu")
         message(FATAL_ERROR
-                "RESKIA_ENABLE_GPU_GANESH=ON または RESKIA_ENABLE_GPU_GRAPHITE=ON ですが "
-                "src/gpu が見つかりません。Phase 1 の同期を実施してください。")
+                "RESKIA_ENABLE_GPU_GANESH=ON or RESKIA_ENABLE_GPU_GRAPHITE=ON requires "
+                "src/gpu. Run the Phase 1 source sync.")
     endif()
 
     file(GLOB_RECURSE _reskia_gpu_all_sources
@@ -719,8 +719,8 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
             "${PROJECT_SOURCE_DIR}/src/gpu/*.mm")
     if(NOT _reskia_gpu_all_sources)
         message(FATAL_ERROR
-                "GPU トグルが有効ですが src/gpu に実ファイルがありません。"
-                "docs/ja/plans/gpu-enablement/manifests/phase1-gpu-diff.txt を参照して同期してください。")
+                "A GPU toggle is enabled, but src/gpu contains no source files. "
+                "Sync the GPU sources listed in docs/ja/plans/gpu-enablement/manifests/phase1-gpu-diff.txt.")
     endif()
 
     macro(_reskia_append_gpu_sources)
@@ -875,8 +875,8 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
     list(REMOVE_DUPLICATES _reskia_gpu_sources)
     if(NOT _reskia_gpu_sources)
         message(FATAL_ERROR
-                "GPU トグルに対応する src/gpu ソースが見つかりません。"
-                "有効化オプションと同期内容を確認してください。")
+                "No src/gpu sources match the enabled GPU toggles. "
+                "Check the enabled options and synced sources.")
     endif()
 
     list(APPEND SOURCE_FILES ${_reskia_gpu_sources})
@@ -896,7 +896,7 @@ endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/src/encode/SkPngEncoderImpl.cpp")
     list(APPEND SOURCE_FILES src/encode/SkPngEncoderImpl.cpp)
 else()
-    message(WARNING "SkPngEncoderImpl.cpp が見つからないため SkPngEncoder_none.cpp を使用します。")
+    message(WARNING "SkPngEncoderImpl.cpp is missing; SkPngEncoder_none.cpp will be used.")
     list(APPEND SOURCE_FILES src/encode/SkPngEncoder_none.cpp)
 endif()
 
@@ -920,7 +920,7 @@ if(RESKIA_ENABLE_WEBP_ENCODER)
     if(EXISTS "${PROJECT_SOURCE_DIR}/src/encode/SkWebpEncoderImpl.cpp")
         list(APPEND SOURCE_FILES src/encode/SkWebpEncoderImpl.cpp)
     else()
-        message(WARNING "RESKIA_ENABLE_WEBP_ENCODER=ON ですが SkWebpEncoderImpl.cpp が見つからないため none 実装を使用します。")
+        message(WARNING "RESKIA_ENABLE_WEBP_ENCODER=ON, but SkWebpEncoderImpl.cpp is missing; the none implementation will be used.")
         list(APPEND SOURCE_FILES src/encode/SkWebpEncoder_none.cpp)
     endif()
 else()
