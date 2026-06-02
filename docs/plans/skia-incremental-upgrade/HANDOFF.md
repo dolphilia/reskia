@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `incremental-upgrade`
-- `SKIA_REF`: `f04d09d1075926a5e5ef0a52171c9c12043fab03`
-- next probe candidate: start from `f04d09d1075926a5e5ef0a52171c9c12043fab03`; re-evaluate the generated/npm/CanvasKit churn boundary at `f37239a7a689d64268b73fc7eb45b5c40a7f7013`, and compare against later contained commits before accepting.
+- `SKIA_REF`: `aba405ee605f2578f3054bc4d997e2f32f57f291`
+- next probe candidate: start from `aba405ee605f2578f3054bc4d997e2f32f57f291`; re-evaluate the Vulkan header roll at `bf15cfab3bc0242fa854483cf8a36571c3331858` and the deferred boundary `f37239a7a689d64268b73fc7eb45b5c40a7f7013` before accepting.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -117,21 +117,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 083 accepted: `e4d0350f477005ae71691642ec0db96cce7e3266`。
 - cycle 084 accepted: `812822ad5caa8f39ff4cf5ab96f48fe942562252`。
 - cycle 085 accepted: `f04d09d1075926a5e5ef0a52171c9c12043fab03`。
+- cycle 086 accepted: `aba405ee605f2578f3054bc4d997e2f32f57f291`。
 
 未実施:
 
-- cycle 086 candidate selection from `f04d09d1075926a5e5ef0a52171c9c12043fab03`.
-- cycle 086 candidate checkout を使った coverage regression。
-- cycle 086 の source/header sync と C API 追従実装。
+- cycle 087 candidate selection from `aba405ee605f2578f3054bc4d997e2f32f57f291`.
+- cycle 087 candidate checkout を使った coverage regression。
+- cycle 087 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 086 の candidate selection から始める。
+次の作業は、cycle 087 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `f04d09d1075926a5e5ef0a52171c9c12043fab03` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先し、まず `f37239a7a689d64268b73fc7eb45b5c40a7f7013` の generated/npm/CanvasKit churn を再評価する。tracked mirror surface だけなら進めてもよいが、必要ならもう一段 split する。
+1. baseline `aba405ee605f2578f3054bc4d997e2f32f57f291` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先し、まず `bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll と `f37239a7a689d64268b73fc7eb45b5c40a7f7013` の deferred boundary を再評価する。tracked mirror surface だけなら進めてもよいが、必要ならもう一段 split する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -213,20 +214,20 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `f04d09d1075926a5e5ef0a52171c9c12043fab03`
-- committer date: 2026-03-27
-- subject: Use a local data copy for strike deserialization
+- `aba405ee605f2578f3054bc4d997e2f32f57f291`
+- committer date: 2026-03-30
+- subject: Add three new Android-specific Precompile PaintOptions
 
-cycle 085 結果:
+cycle 086 結果:
 
-- baseline `812822ad5caa8f39ff4cf5ab96f48fe942562252` から `f04d09d1075926a5e5ef0a52171c9c12043fab03` を採用した。66 commits、`include` / `modules` は 15 files changed, +347/-53、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 74 files changed, +1622/-237。
-- deferred comparison `f37239a7a689d64268b73fc7eb45b5c40a7f7013` は 96 commits、`include` / `modules` 67 files changed, +416021/-11375、2週間候補 `b227ca44c8b2548490a7baed3c7ec4ef07e08cc6` は 152 commits、`include` / `modules` 70 files changed, +416134/-11415、3週間候補 `8cbf3db1a0dbd1f6e5e97811cd52daf678fc80c4` は 253 commits、`include` / `modules` 82 files changed, +416232/-11440。generated/npm/CanvasKit churn が大きいため、cycle 085 ではその手前で split した。
-- tracked `skia/DEPS` と tracked `include` / `modules` / `src` を同期した。新規 Graphite `TextureFormatXferFn` と `sparse_strips` source/header を追加した。root `gn/`、`bazel/`、generated/npm/CanvasKit churn、`src/**/BUILD.bazel` metadata は同期対象外にした。
-- `SkParagraph_ParagraphStyle_getLetterSpacingByCSSSpec` と `SkParagraph_ParagraphStyle_setLetterSpacingByCSSSpec` を追加した。新規 stale C API はなく、互換維持のみの残存 C API もなし。
+- baseline `f04d09d1075926a5e5ef0a52171c9c12043fab03` から `aba405ee605f2578f3054bc4d997e2f32f57f291` を採用した。15 commits、`include` / `modules` は 3 files changed, +37/-2、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 42 files changed, +407/-219。
+- deferred boundary `f37239a7a689d64268b73fc7eb45b5c40a7f7013` は 30 commits、`include` / `modules` 53 files changed, +415674/-11322、2週間候補 `b227ca44c8b2548490a7baed3c7ec4ef07e08cc6` は 86 commits、`include` / `modules` 56 files changed, +415787/-11362、3週間候補 `8cbf3db1a0dbd1f6e5e97811cd52daf678fc80c4` は 187 commits、`include` / `modules` 68 files changed, +415885/-11387。large churn は `bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll から始まるため、cycle 086 ではその手前で split した。
+- tracked `skia/DEPS`、`include/gpu/graphite/Context.h`、`include/private/chromium/SkExifChromium.h`、および tracked `src` を同期した。root `gn/`、`bazel/`、`BUILD.bazel` metadata、Vulkan header roll は同期対象外にした。
+- 新規 C API gap はなく、C API 追加・削除は不要だった。新規 stale C API はなく、互換維持のみの残存 C API もなし。
 - final coverage は `covered 2939` / `split_covered 42` / `false_positive 297` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は空。
 - prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは、accepted baseline `f04d09d1075926a5e5ef0a52171c9c12043fab03` から再比較する。`f37239a7a689d64268b73fc7eb45b5c40a7f7013` の generated/npm/CanvasKit churn、Graphite/Ganesh resource/readback churn、SkParagraph CSS letter-spacing behavior fallout、Dawn/Vulkan/ANGLE rolls、Bazel/GN metadata の混入リスクを既知リスクとして扱う。
+- 次サイクルでは、accepted baseline `aba405ee605f2578f3054bc4d997e2f32f57f291` から再比較する。`bf15cfab3bc0242fa854483cf8a36571c3331858` の Vulkan header roll、`f37239a7a689d64268b73fc7eb45b5c40a7f7013` までの Graphite/readback churn、Dawn/Vulkan/ANGLE rolls、Rust JPEG EXIF feature toggle、Bazel/GN metadata の混入リスクを既知リスクとして扱う。
 
 cycle records:
 
@@ -315,6 +316,7 @@ cycle records:
 - `docs/plans/skia-incremental-upgrade/records/cycle-083-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-084-2026-06-02.md`
 - `docs/plans/skia-incremental-upgrade/records/cycle-085-2026-06-02.md`
+- `docs/plans/skia-incremental-upgrade/records/cycle-086-2026-06-02.md`
 
 ## Cycle close の条件
 
