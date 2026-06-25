@@ -179,7 +179,7 @@ static std::tuple<AtlasTextOp::MaskType, uint32_t, bool> calculate_sdf_parameter
         //
         // Multiply by 3 because the derivative offset is multiplied by 1/3 for R and B offsets.
         static constexpr float kLCDOffsetLimit = 3.f * (SK_DistanceFieldInset - 0.5f);
-        const float maxLCDOffset = viewDiffMatrix.getMaxScale();
+        const float maxLCDOffset = sk_ieee_float_divide(1.f, viewDiffMatrix.getMinScale());
         isLCD &= (maxLCDOffset > 0.f && maxLCDOffset < kLCDOffsetLimit);
     }
 
@@ -565,11 +565,9 @@ void AtlasTextOp::onPrepareDraws(GrMeshDrawTarget* target) {
 
         auto& glyphData = subRun.glyphVector().accessBackendData<GlyphData>();
 
-        SkDEBUGCODE(int strideCheck = SkToInt(glyphData.vertexStride(subRun.maskFormat(),
-                                                                     geo->fDrawMatrix)));
-        SkASSERTF(strideCheck == vertexStride,
-                   "subRun stride: %d vertex buffer stride: %d\n",
-                   strideCheck, vertexStride);
+        int strideCheck = SkToInt(glyphData.vertexStride(subRun.maskFormat(), geo->fDrawMatrix));
+        // If we (unexpectedly) have buffers of different sizes between CPU and GPU, bail out.
+        SkASSERTF_RELEASE(strideCheck == vertexStride, "stride mismatch");
 
         const int subRunEnd = subRun.glyphCount();
 

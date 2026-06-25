@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `70f9d90bc8e6a56101d036153cfef28088e57f5b`
-- next probe candidate: start from `70f9d90bc8e6a56101d036153cfef28088e57f5b`; cycle 091 consumed the currently available local refs through `70f9d90bc8e6a56101d036153cfef28088e57f5b` (committer date 2026-06-01). Begin cycle 092 by rechecking local refs for fixed commits after this baseline. If no newer fixed commit exists, record candidate absence without treating floating `main` as baseline.
+- `SKIA_REF`: `688ca258abd6030f7377a7fa2d22d4e548b8f369`
+- next probe candidate: start from `688ca258abd6030f7377a7fa2d22d4e548b8f369`; cycle 092 refreshed `vendor/skia-upstream-candidate` from upstream and accepted the 1-week candidate through 2026-06-08. Begin cycle 093 by rechecking fixed local refs after this baseline. The next 1-week candidate currently includes a large `include/private/base` to `include/private` relocation, so evaluate whether to split immediately before that relocation, take it as a focused cycle, or prepare a broader private-header migration cycle.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -123,16 +123,17 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 089 accepted: `7b88c5c281e587c267457dba51f53e0b962c1748`。
 - cycle 090 accepted: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`。
 - cycle 091 accepted: `70f9d90bc8e6a56101d036153cfef28088e57f5b`。
+- cycle 092 accepted: `688ca258abd6030f7377a7fa2d22d4e548b8f369`。
 
 未実施:
 
-- cycle 092 candidate selection from `70f9d90bc8e6a56101d036153cfef28088e57f5b`.
-- cycle 092 candidate checkout を使った coverage regression。
-- cycle 092 の source/header sync と C API 追従実装。
+- cycle 093 candidate selection from `688ca258abd6030f7377a7fa2d22d4e548b8f369`.
+- cycle 093 candidate checkout を使った coverage regression。
+- cycle 093 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 092 の candidate selection から始める。
+次の作業は、cycle 093 の candidate selection から始める。
 
 推奨順:
 
@@ -216,6 +217,24 @@ cycle 072 の比較候補メモ:
 - `docs/ja/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
 
 ## 直近 accepted candidate のメモ
+
+候補:
+
+- `688ca258abd6030f7377a7fa2d22d4e548b8f369`
+- committer date: 2026-06-08
+- subject: Roll vulkan-deps from 537ea5cb1a35 to 2f96412cd516 (9 revisions)
+
+cycle 092 結果:
+
+- cycle 092 開始時に `vendor/skia-upstream-candidate` を upstream から fetch し、`upstream/main` が `68f005836bf7fe6826d429b507a89b7041ab67fc`（2026-06-25, `Add isEmpty to SkPixmap`）まで進んでいることを確認した。
+- baseline `70f9d90bc8e6a56101d036153cfef28088e57f5b` から `688ca258abd6030f7377a7fa2d22d4e548b8f369` を採用した。79 commits、`include` / `modules` は 5 files changed, +40/-7、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 64 files changed, +1556/-287。
+- 2週間候補 `d2addcfb3bb60272a49947cddc4d200f681487c5` は 159 commits だが、`include/private/base` to `include/private` relocation を含み、`include` / `modules` が 426 files changed まで膨らむため見送った。3週間候補 `ffac3e91fbc7b6dc6e5bfce8c54a623407261051` と endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` も同じ relocation を含む。
+- 新規 missing は `PrecompileContext::containsExternalFormat(sk_sp<SkData>) const` 1件。`PrecompileContext` ownership、`SkData` transfer、`ExternalFormatResult` enum policy を含む Graphite precompile opaque ABI 設計待ちとして `na` に分類した。C API 追加は不要だった。
+- tracked `skia/DEPS`、public/private headers、core/geometry/canvas helpers、Ganesh render/task source、Graphite caps/draw/serialization/precompile/render/backend source、SkSL Graphite generated drift、text GPU subrun drift を同期した。`include/private/SkMalloc.h` と `src/partition_alloc` raw pointer shim headers は upstream reland に合わせて追加した。
+- final coverage は `covered 2952` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は空。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは、accepted baseline `688ca258abd6030f7377a7fa2d22d4e548b8f369` から再比較する。次の 1週間候補 `d2addcfb3bb60272a49947cddc4d200f681487c5` は private header relocation を含む大きな節目なので、relocation 直前 split、relocation focused cycle、または broader private-header migration cycle のどれで進めるかを最初に判断する。Graphite sparse_strips/Vello/compute churn、Dawn/Vulkan/Metal/ANGLE rolls、raw_ptr/partition_alloc compatibility churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 
 候補:
 
@@ -386,6 +405,7 @@ cycle records:
 - `docs/ja/plans/skia-incremental-upgrade/records/cycle-089-2026-06-02.md`
 - `docs/ja/plans/skia-incremental-upgrade/records/cycle-090-2026-06-02.md`
 - `docs/ja/plans/skia-incremental-upgrade/records/cycle-091-2026-06-02.md`
+- `docs/ja/plans/skia-incremental-upgrade/records/cycle-092-2026-06-25.md`
 
 ## Cycle close の条件
 

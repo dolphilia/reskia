@@ -47,12 +47,6 @@ namespace {
 // We are expecting to sample from up to 4 textures
 constexpr int kNumSDFAtlasTextures = 4;
 
-#if defined(SK_DISABLE_SDF_TEXT)
-constexpr int kDistanceFieldInset = 2;
-#else
-constexpr int kDistanceFieldInset = SK_DistanceFieldInset;
-#endif
-
 }  // namespace
 
 SDFTextLCDRenderStep::SDFTextLCDRenderStep(Layout layout)
@@ -62,6 +56,7 @@ SDFTextLCDRenderStep::SDFTextLCDRenderStep(Layout layout)
                      Flags::kLCDCoverage | Flags::kAppendInstances,
                      /*uniforms=*/{{"maskToDevice", SkSLType::kFloat4x4},
                                    {"localToDevice", SkSLType::kFloat4x4},
+                                   {"atlasSizeInv", SkSLType::kFloat2},
                                    {"pixelGeometryDelta", SkSLType::kHalf2},
                                    {"gammaParams", SkSLType::kHalf4}},
                      PrimitiveType::kTriangleStrip,
@@ -77,6 +72,7 @@ SDFTextLCDRenderStep::SDFTextLCDRenderStep(Layout layout)
                       {"ssboIndex", VertexAttribType::kUInt, SkSLType::kUInt}}},
                      /*varyings=*/
                      {{{"unormTexCoords", SkSLType::kFloat2},
+                      {"textureCoords", SkSLType::kFloat2},
                       {"texIndex", SkSLType::kFloat}}}) {}
 
 SDFTextLCDRenderStep::~SDFTextLCDRenderStep() {}
@@ -88,11 +84,13 @@ std::string SDFTextLCDRenderStep::vertexSkSL() const {
            "float4 devPosition = text_vertex_fn(float2(sk_VertexID >> 1, sk_VertexID & 1), "
                                                "maskToDevice, "
                                                "localToDevice, "
+                                               "atlasSizeInv, "
                                                "float2(size), "
                                                "float2(uvPos), "
                                                "xyPos, "
                                                "strikeToSourceScale, "
                                                "depth, "
+                                               "textureCoords, "
                                                "unormTexCoords, "
                                                "stepLocalCoords);";
 }
@@ -119,7 +117,8 @@ const char* SDFTextLCDRenderStep::fragmentCoverageSkSL() const {
     // TODO: Need to add 565 support.
     // TODO: Need aliased and possibly sRGB support.
     static_assert(kNumSDFAtlasTextures == 4);
-    return "outputCoverage = sdf_text_lcd_coverage_fn(pixelGeometryDelta, "
+    return "outputCoverage = sdf_text_lcd_coverage_fn(textureCoords, "
+                                                     "pixelGeometryDelta, "
                                                      "gammaParams, "
                                                      "unormTexCoords, "
                                                      "texIndex, "
@@ -167,6 +166,9 @@ void SDFTextLCDRenderStep::writeUniformsAndTextures(const DrawParams& params,
     // instances? We can derive it from the Transform's existing 4x4 inverse.
     gatherer->write(subRunData.maskToDevice());
     gatherer->write(params.transform().matrix()); // local-to-device
+    SkV2 atlasDimensionsInverse = {1.f/proxies[0]->dimensions().width(),
+                                   1.f/proxies[0]->dimensions().height()};
+    gatherer->write(atlasDimensionsInverse);
 
     // compute and write pixelGeometry vector
     SkV2 pixelGeometryDelta = {0, 0};
@@ -177,7 +179,8 @@ void SDFTextLCDRenderStep::writeUniformsAndTextures(const DrawParams& params,
     // atlas, so an adjacent glyph may not actually have its own padding.
     //
     // NOTE: kLCDOffsetLimit is multiplied by 3 to account for the scale added to pixelGeometryDelta
-    static constexpr float kLCDOffsetLimit = 3.f * (kDistanceFieldInset - 0.5f);
+#if !defined(SK_DISABLE_SDF_TEXT)
+    static constexpr float kLCDOffsetLimit = 3.f * (SK_DistanceFieldInset - 0.5f);
     float maxLCDOffset = Transform(subRunData.maskToDevice()).localAARadius(subRunData.bounds());
     if (maxLCDOffset < kLCDOffsetLimit) {
         if (SkPixelGeometryIsH(subRunData.pixelGeometry())) {
@@ -189,6 +192,8 @@ void SDFTextLCDRenderStep::writeUniformsAndTextures(const DrawParams& params,
             pixelGeometryDelta = -pixelGeometryDelta;
         }
     }
+#endif
+
     gatherer->writeHalf(pixelGeometryDelta);
 
     // compute and write gamma adjustment

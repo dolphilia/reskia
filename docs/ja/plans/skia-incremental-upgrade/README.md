@@ -13,10 +13,10 @@
 ## 現在地
 
 - branch: `main`
-- accepted baseline: `70f9d90bc8e6a56101d036153cfef28088e57f5b`
-- baseline date: `2026-06-01`
-- latest completed cycle: `docs/ja/plans/skia-incremental-upgrade/records/cycle-091-2026-06-02.md`
-- next probe: cycle 092 で baseline 後の固定 local ref を再確認する。cycle 091 終了時点では local refs を `70f9d90bc8e6a56101d036153cfef28088e57f5b` まで消費済み。候補がない場合は、floating `main` へ進まず候補なしとして記録する。
+- accepted baseline: `688ca258abd6030f7377a7fa2d22d4e548b8f369`
+- baseline date: `2026-06-08`
+- latest completed cycle: `docs/ja/plans/skia-incremental-upgrade/records/cycle-092-2026-06-25.md`
+- next probe: cycle 093 で baseline 後の固定 local ref を再確認する。次の 1週間候補は `include/private/base` to `include/private` relocation を含む大きな節目なので、split 方針を先に判断する。
 
 ## 原則
 
