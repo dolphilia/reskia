@@ -30,9 +30,6 @@ int main() {
     if (!check(SkPixelRef_dimensions(nullptr) == 0, "SkPixelRef_dimensions(nullptr)")) {
         return 2;
     }
-    if (!check(SkPixelRef_type(nullptr) == -1, "SkPixelRef_type(nullptr)")) {
-        return 2;
-    }
     if (!check(SkPixelRef_width(nullptr) == 0, "SkPixelRef_width(nullptr)")) {
         return 3;
     }
@@ -70,10 +67,6 @@ int main() {
         return 13;
     }
     if (!check(SkPixelRef_width(pixelRef) == 1, "SkPixelRef_width valid")) {
-        SkPixelRef_release(pixelRef);
-        return 14;
-    }
-    if (!check(SkPixelRef_type(pixelRef) == 1, "SkPixelRef_type valid")) {
         SkPixelRef_release(pixelRef);
         return 14;
     }

@@ -68,6 +68,14 @@ float SkStrikeRef_getWidth(const reskia_strike_ref_t *strike_ref, uint16_t glyph
     return native->getWidth(glyph);
 }
 
+void SkStrikeRef_getWidthsStrided(const reskia_strike_ref_t *strike_ref, unsigned count, const uint32_t *first_glyph, unsigned glyph_stride_32, float *first_advance, unsigned advance_stride_32) {
+    const SkStrikeRef *native = as_strike_ref(strike_ref);
+    if (native == nullptr || !static_cast<bool>(*native) || count == 0 || first_glyph == nullptr || first_advance == nullptr || glyph_stride_32 == 0 || advance_stride_32 == 0) {
+        return;
+    }
+    native->getWidthsStrided(count, first_glyph, glyph_stride_32, first_advance, advance_stride_32);
+}
+
 void SkStrikeRef_getWidthsBounds(const reskia_strike_ref_t *strike_ref, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds) {
     const SkStrikeRef *native = as_strike_ref(strike_ref);
     if (native == nullptr || !static_cast<bool>(*native) || !has_glyph_input(glyphs, count) || (widths == nullptr && bounds == nullptr)) {

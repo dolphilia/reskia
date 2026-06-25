@@ -10,9 +10,9 @@
 
 #include "include/core/SkScalar.h"
 #include "include/core/SkTypes.h"
-#include "include/private/base/SkNoncopyable.h"
-#include "include/private/base/SkTemplates.h"
-#include "src/base/SkArenaAlloc.h"
+#include "include/private/SkNoncopyable.h"
+#include "include/private/SkTemplates.h"
+#include "src/core/SkArenaAlloc.h"
 
 struct SkDOMNode;
 struct SkDOMAttr;
@@ -34,8 +34,7 @@ public:
      *  to the line number where the error occurred. On success, returns the
      *  root node, and, if present, sets errorOnLineNumber to -1 (no error).
      */
-    const Node* build(SkStream&);
-    const Node* build(SkStream&, int* errorOnLineNumber);
+    const Node* build(SkStream&, int* errorOnLineNumber = nullptr);
     const Node* copy(const SkDOM& dom, const Node* node);
 
     const Node* getRootNode() const;

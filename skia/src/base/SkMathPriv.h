@@ -8,9 +8,9 @@
 #ifndef SkMathPriv_DEFINED
 #define SkMathPriv_DEFINED
 
-#include "include/private/base/SkAssert.h"
-#include "include/private/base/SkCPUTypes.h"
-#include "include/private/base/SkTemplates.h"
+#include "include/private/SkAssert.h"
+#include "include/private/SkCPUTypes.h"
+#include "include/private/SkTemplates.h"
 
 #include <bit>
 #include <cstddef>
@@ -20,33 +20,21 @@
  * Return the number of leading zero bits.
  */
 static constexpr int SkCLZ(uint32_t x) {
-#if __cplusplus >= 202002L
     return std::countl_zero<uint32_t>(x);
-#else
-    return x == 0 ? 32 : __builtin_clz(x);
-#endif
 }
 
 /**
  * Return the number of trailing zero bits.
  */
 static constexpr int SkCTZ(uint32_t x) {
-#if __cplusplus >= 202002L
     return std::countr_zero<uint32_t>(x);
-#else
-    return x == 0 ? 32 : __builtin_ctz(x);
-#endif
 }
 
 /*
  * Return the number of set bits (i.e., the population count) in the provided uint32_t.
  */
 static constexpr int SkPopCount(uint32_t x) {
-#if __cplusplus >= 202002L
     return std::popcount<uint32_t>(x);
-#else
-    return __builtin_popcount(x);
-#endif
 }
 
 /**

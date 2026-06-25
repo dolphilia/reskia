@@ -11,8 +11,8 @@
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkScalar.h"
 #include "include/effects/SkColorMatrix.h"
-#include "include/private/base/SkAssert.h"
-#include "include/private/base/SkFloatingPoint.h"
+#include "include/private/SkAssert.h"
+#include "include/private/SkFloatingPoint.h"
 #include "src/core/SkEffectPriv.h"
 #include "src/core/SkPicturePriv.h"
 #include "src/core/SkRasterPipeline.h"
@@ -115,14 +115,6 @@ sk_sp<SkColorFilter> SkColorFilters::Matrix(const float array[20], Clamp clamp) 
 sk_sp<SkColorFilter> SkColorFilters::Matrix(const SkColorMatrix& cm, Clamp clamp) {
     return MakeMatrix(cm.fMat.data(), SkMatrixColorFilter::Domain::kRGBA, clamp);
 }
-
-#if defined(__APPLE__)
-sk_sp<SkColorFilter> SkColorFilters_Matrix_SkColorMatrix_prebuilt_compat(
-        const SkColorMatrix& cm) asm("__ZN14SkColorFilters6MatrixERK13SkColorMatrix");
-sk_sp<SkColorFilter> SkColorFilters_Matrix_SkColorMatrix_prebuilt_compat(const SkColorMatrix& cm) {
-    return SkColorFilters::Matrix(cm, SkColorFilters::Clamp::kYes);
-}
-#endif
 
 sk_sp<SkColorFilter> SkColorFilters::HSLAMatrix(const float array[20]) {
     return MakeMatrix(array, SkMatrixColorFilter::Domain::kHSLA, Clamp::kYes);

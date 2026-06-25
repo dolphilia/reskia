@@ -7,7 +7,7 @@
 #include <set>
 #include <string>
 #include <map>
-#include "include/private/base/SkSpan_impl.h"
+#include "include/core/SkSpan.h"
 #include "include/core/SkColor.h"
 #include "static_sk_color-internal.h"
 

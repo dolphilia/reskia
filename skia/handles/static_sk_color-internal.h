@@ -5,7 +5,7 @@
 #define STATIC_SK_COLOR_INTERNAL_H
 #include <set>
 #include <map>
-//#include "include/private/base/SkSpan_impl.h"
+//#include "include/core/SkSpan.h"
 //#include "include/core/SkColor.h"
 //
 //int static_sk_color_make(SkSpan<SkColor> value);

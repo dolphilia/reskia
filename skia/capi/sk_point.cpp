@@ -92,6 +92,41 @@ void SkPoint_setAbs(sk_point_t point, const reskia_point_t *pt) {
     static_sk_point_get_entity(point).setAbs(* reinterpret_cast<const SkPoint *>(pt));
 }
 
+bool SkPoint_normalize(sk_point_t point) {
+    SkPoint native = static_sk_point_get_entity(point);
+    bool result = native.normalize();
+    static_sk_point_set(point, native);
+    return result;
+}
+
+void SkPoint_addAssign(sk_point_t point, const reskia_vector_t *vec) {
+    if (vec == nullptr) {
+        return;
+    }
+    SkPoint native = static_sk_point_get_entity(point);
+    native += * reinterpret_cast<const SkVector *>(vec);
+    static_sk_point_set(point, native);
+}
+
+void SkPoint_subtractAssign(sk_point_t point, const reskia_vector_t *vec) {
+    if (vec == nullptr) {
+        return;
+    }
+    SkPoint native = static_sk_point_get_entity(point);
+    native -= * reinterpret_cast<const SkVector *>(vec);
+    static_sk_point_set(point, native);
+}
+
+sk_point_t SkPoint_multiply(sk_point_t point, float scale) {
+    return static_sk_point_make(static_sk_point_get_entity(point) * scale);
+}
+
+void SkPoint_multiplyAssign(sk_point_t point, float scale) {
+    SkPoint native = static_sk_point_get_entity(point);
+    native *= scale;
+    static_sk_point_set(point, native);
+}
+
 bool SkPoint_setLength(sk_point_t point, float length) {
     return static_sk_point_get_entity(point).setLength(length);
 }

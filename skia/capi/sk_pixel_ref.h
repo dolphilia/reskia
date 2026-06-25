@@ -14,8 +14,6 @@
 typedef struct reskia_discardable_memory_t reskia_discardable_memory_t;
 typedef struct reskia_pixel_ref_t reskia_pixel_ref_t;
 
-typedef int32_t reskia_pixel_storage_type_t;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -25,7 +23,6 @@ extern "C" {
  */
 reskia_pixel_ref_t *SkPixelRef_new(int width, int height, void *addr, size_t rowBytes);
 void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref); // Owned reference: releases the caller-held reference. No-op for NULL input.
-reskia_pixel_storage_type_t SkPixelRef_type(reskia_pixel_ref_t *pixel_ref); // Returns -1 for NULL input.
 sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
 int SkPixelRef_width(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.
 int SkPixelRef_height(reskia_pixel_ref_t *pixel_ref); // Returns 0 for NULL input.

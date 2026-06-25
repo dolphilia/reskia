@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "include/core/SkStream.h"
-#include "include/private/base/SkTo.h"
+#include "include/private/SkTo.h"
 #include "src/xml/SkXMLParser.h"
 #include "src/xml/SkXMLWriter.h"
 
@@ -187,10 +187,6 @@ SkDOM::~SkDOM() {}
 
 const SkDOM::Node* SkDOM::getRootNode() const {
     return fRoot;
-}
-
-const SkDOM::Node* SkDOM::build(SkStream& docStream) {
-    return this->build(docStream, nullptr);
 }
 
 const SkDOM::Node* SkDOM::getFirstChild(const Node* node, const char name[]) const {

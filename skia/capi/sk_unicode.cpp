@@ -5,7 +5,7 @@
 #include "sk_unicode.h"
 
 #include "include/core/SkString.h"
-#include "include/private/base/SkTArray.h"
+#include "include/private/SkTArray.h"
 #include "modules/skunicode/include/SkUnicode.h"
 #include "modules/skunicode/include/SkUnicode_client.h"
 #include "modules/skunicode/include/SkUnicode_icu.h"

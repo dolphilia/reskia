@@ -42,14 +42,6 @@ void SkPixelRef_release(reskia_pixel_ref_t *pixel_ref) {
     ref->unref();
 }
 
-reskia_pixel_storage_type_t SkPixelRef_type(reskia_pixel_ref_t *pixel_ref) {
-    const SkPixelRef *ref = as_pixel_ref(pixel_ref);
-    if (ref == nullptr) {
-        return -1;
-    }
-    return static_cast<reskia_pixel_storage_type_t>(ref->type());
-}
-
 sk_i_size_t SkPixelRef_dimensions(reskia_pixel_ref_t *pixel_ref) {
     const SkPixelRef *ref = as_pixel_ref(pixel_ref);
     if (ref == nullptr) {

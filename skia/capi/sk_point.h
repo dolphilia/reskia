@@ -32,6 +32,11 @@ void SkPoint_iset(sk_point_t point, const reskia_i_point_t *p); // NULL p is no-
 void SkPoint_isetXY(sk_point_t point, int x, int y); // (sk_point_t point, int32_t x, int32_t y)
 void SkPoint_negate(sk_point_t point); // (sk_point_t point)
 void SkPoint_setAbs(sk_point_t point, const reskia_point_t *pt); // NULL pt is no-op.
+bool SkPoint_normalize(sk_point_t point); // (sk_point_t point) -> bool
+void SkPoint_addAssign(sk_point_t point, const reskia_vector_t *vec); // NULL vec is no-op.
+void SkPoint_subtractAssign(sk_point_t point, const reskia_vector_t *vec); // NULL vec is no-op.
+sk_point_t SkPoint_multiply(sk_point_t point, float scale); // (sk_point_t point, float scale) -> sk_point_t
+void SkPoint_multiplyAssign(sk_point_t point, float scale); // (sk_point_t point, float scale)
 bool SkPoint_setLength(sk_point_t point, float length); // (sk_point_t point, float length) -> bool
 bool SkPoint_setNormalize(sk_point_t point, float x, float y); // (sk_point_t point, float x, float y) -> bool
 

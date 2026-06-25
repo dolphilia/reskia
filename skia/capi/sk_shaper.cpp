@@ -11,6 +11,9 @@
 #include "modules/skshaper/include/SkShaper_factory.h"
 #include "modules/skshaper/include/SkShaper_skunicode.h"
 #include "modules/skunicode/include/SkUnicode.h"
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS) || defined(__APPLE__)
+#include "include/ports/SkFontMgr_mac_ct.h"
+#endif
 
 #include "../handles/static_sk_font_mgr-internal.h"
 
@@ -90,7 +93,16 @@ sk_sp<SkFontMgr> font_mgr_or_null(sk_font_mgr_t font_mgr) {
 
 sk_sp<SkFontMgr> font_mgr_or_default(sk_font_mgr_t font_mgr) {
     sk_sp<SkFontMgr> manager = font_mgr_or_null(font_mgr);
-    return manager ? manager : SkFontMgr::RefEmpty();
+    if (manager) {
+        return manager;
+    }
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS) || defined(__APPLE__)
+    manager = SkFontMgr_New_CoreText(nullptr);
+    if (manager) {
+        return manager;
+    }
+#endif
+    return SkFontMgr::RefEmpty();
 }
 
 template <typename Iterator>

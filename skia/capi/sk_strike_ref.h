@@ -24,6 +24,7 @@ bool SkStrikeRef_operator_bool(const reskia_strike_ref_t *strike_ref); // Return
 bool SkStrikeRef_isValid(const reskia_strike_ref_t *strike_ref); // Returns false for NULL input.
 void SkStrikeRef_getWidths(const reskia_strike_ref_t *strike_ref, const uint16_t *glyphs, int count, float *widths); // No-op when count is <= 0. glyphs and widths must be non-NULL when count is greater than 0.
 float SkStrikeRef_getWidth(const reskia_strike_ref_t *strike_ref, uint16_t glyph); // Returns 0 for NULL or invalid strike_ref.
+void SkStrikeRef_getWidthsStrided(const reskia_strike_ref_t *strike_ref, unsigned count, const uint32_t *first_glyph, unsigned glyph_stride_32, float *first_advance, unsigned advance_stride_32); // No-op for NULL/invalid input.
 void SkStrikeRef_getWidthsBounds(const reskia_strike_ref_t *strike_ref, const uint16_t *glyphs, int count, float *widths, reskia_rect_t *bounds); // No-op when count is <= 0. At least one of widths or bounds must be non-NULL.
 
 #ifdef __cplusplus

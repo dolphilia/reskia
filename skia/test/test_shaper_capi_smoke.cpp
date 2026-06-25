@@ -36,7 +36,7 @@ bool smoke_null_inputs() {
 }
 
 bool smoke_shape() {
-    const char *text = u8"Hello שלום";
+    const char *text = "Hello שלום";
     const size_t text_size = std::strlen(text);
 
     reskia_shaper_t *shaper = SkShaper_Make();

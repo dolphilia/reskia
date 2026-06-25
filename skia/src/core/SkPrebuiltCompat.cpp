@@ -7,10 +7,13 @@
 #include "include/core/SkPath.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkPoint.h"
+#include "include/core/SkColorFilter.h"
 #include "include/core/SkShader.h"
+#include "include/effects/SkColorMatrix.h"
 #include "include/effects/SkGradient.h"
 #include "include/pathops/SkPathOps.h"
 #include "modules/skcms/src/skcms_public.h"
+#include "src/xml/SkDOM.h"
 
 #include <utility>
 
@@ -117,6 +120,26 @@ extern "C" bool SkPathOps_AsWinding_outparam_compat(
         return true;
     }
     return false;
+}
+
+extern "C" const SkDOM::Node* SkDOM_build_stream_only_compat(
+        SkDOM* self,
+        SkStream& stream)
+        __asm("__ZN5SkDOM5buildER8SkStream");
+
+extern "C" const SkDOM::Node* SkDOM_build_stream_only_compat(
+        SkDOM* self,
+        SkStream& stream) {
+    return self != nullptr ? self->build(stream, nullptr) : nullptr;
+}
+
+extern "C" sk_sp<SkColorFilter> SkColorFilters_Matrix_no_clamp_compat(
+        const SkColorMatrix& matrix)
+        __asm("__ZN14SkColorFilters6MatrixERK13SkColorMatrix");
+
+extern "C" sk_sp<SkColorFilter> SkColorFilters_Matrix_no_clamp_compat(
+        const SkColorMatrix& matrix) {
+    return SkColorFilters::Matrix(matrix);
 }
 
 extern "C" __attribute__((weak)) bool skcms_TransferFunction_isPQ(

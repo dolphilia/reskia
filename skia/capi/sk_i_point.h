@@ -17,6 +17,9 @@ int SkIPoint_x(void * i_point); // NULL i_point returns 0.
 int SkIPoint_y(void * i_point); // NULL i_point returns 0.
 bool SkIPoint_isZero(void * i_point); // NULL i_point returns true.
 void SkIPoint_set(void * i_point, int x, int y); // NULL i_point is no-op.
+sk_i_point_t SkIPoint_negate(void * i_point); // NULL i_point returns a default SkIPoint handle.
+void SkIPoint_addAssign(void * i_point, const void *ivector); // NULL input is no-op.
+void SkIPoint_subtractAssign(void * i_point, const void *ivector); // NULL input is no-op.
 bool SkIPoint_equals(void * i_point, int x, int y); // NULL i_point returns false.
 
 // static

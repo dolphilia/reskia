@@ -12,7 +12,7 @@
 #include "include/core/SkStream.h"
 
 #include "include/core/SkGraphics.h"
-#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS) || defined(__APPLE__)
 #include "include/ports/SkFontMgr_mac_ct.h"
 #endif
 #include "modules/skshaper/include/SkShaper.h"
@@ -29,9 +29,9 @@ bool check(bool condition, const char* message) {
 }
 
 bool smoke_shape_utf8_bidi_linebreak() {
-    const char* text = u8"Hello שלום\nمرحبا 123";
+    const char* text = "Hello שלום\nمرحبا 123";
 
-#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS) || defined(__APPLE__)
     sk_sp<SkFontMgr> font_mgr = SkFontMgr_New_CoreText(nullptr);
 #else
     sk_sp<SkFontMgr> font_mgr = SkFontMgr::RefEmpty();
@@ -79,7 +79,7 @@ bool smoke_svg_text_render() {
 
     SkMemoryStream stream(svg, std::strlen(svg), true);
     SkSVGDOM::Builder builder;
-#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
+#if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS) || defined(__APPLE__)
     builder.setFontManager(SkFontMgr_New_CoreText(nullptr));
 #else
     builder.setFontManager(SkFontMgr::RefEmpty());

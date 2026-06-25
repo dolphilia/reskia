@@ -11,11 +11,11 @@
 #include "include/core/SkStream.h"
 #include "include/core/SkString.h"
 #include "include/core/SkTypeface.h"
-#include "include/private/base/SkFixed.h"
-#include "include/private/base/SkMutex.h"
-#include "include/private/base/SkTArray.h"
-#include "include/private/base/SkTDArray.h"
-#include "include/private/base/SkTemplates.h"
+#include "include/private/SkFixed.h"
+#include "include/private/SkMutex.h"
+#include "include/private/SkTArray.h"
+#include "include/private/SkTDArray.h"
+#include "include/private/SkTemplates.h"
 #include "src/base/SkAutoMalloc.h"
 #include "src/base/SkBuffer.h"
 #include "src/ports/SkFontConfigInterface_direct.h"
@@ -227,7 +227,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { SYMBOL, "Symbol" },
         { SYMBOL, "Symbol Neu" },
 
-        // MS PGothic Japanese-name alias
+        // ＭＳ Ｐゴシック
         { PGOTHIC, "MS PGothic" },
         { PGOTHIC, "\xef\xbc\xad\xef\xbc\xb3 \xef\xbc\xb0"
                    "\xe3\x82\xb4\xe3\x82\xb7\xe3\x83\x83\xe3\x82\xaf" },
@@ -235,7 +235,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { PGOTHIC, "IPAPGothic" },
         { PGOTHIC, "MotoyaG04Gothic" },
 
-        // MS Gothic Japanese-name alias
+        // ＭＳ ゴシック
         { GOTHIC, "MS Gothic" },
         { GOTHIC, "\xef\xbc\xad\xef\xbc\xb3 "
                   "\xe3\x82\xb4\xe3\x82\xb7\xe3\x83\x83\xe3\x82\xaf" },
@@ -243,7 +243,7 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { GOTHIC, "IPAGothic" },
         { GOTHIC, "MotoyaG04GothicMono" },
 
-        // MS PMincho Japanese-name alias
+        // ＭＳ Ｐ明朝
         { PMINCHO, "MS PMincho" },
         { PMINCHO, "\xef\xbc\xad\xef\xbc\xb3 \xef\xbc\xb0"
                    "\xe6\x98\x8e\xe6\x9c\x9d"},
@@ -251,53 +251,53 @@ FontEquivClass GetFontEquivClass(const char* fontname)
         { PMINCHO, "IPAPMincho" },
         { PMINCHO, "MotoyaG04Mincho" },
 
-        // MS Mincho Japanese-name alias
+        // ＭＳ 明朝
         { MINCHO, "MS Mincho" },
         { MINCHO, "\xef\xbc\xad\xef\xbc\xb3 \xe6\x98\x8e\xe6\x9c\x9d" },
         { MINCHO, "Noto Serif CJK JP" },
         { MINCHO, "IPAMincho" },
         { MINCHO, "MotoyaG04MinchoMono" },
 
-        // Simsun Chinese-name alias
+        // 宋体
         { SIMSUN, "Simsun" },
         { SIMSUN, "\xe5\xae\x8b\xe4\xbd\x93" },
         { SIMSUN, "Noto Serif CJK SC" },
         { SIMSUN, "MSung GB18030" },
         { SIMSUN, "Song ASC" },
 
-        // NSimsun Chinese-name alias
+        // 新宋体
         { NSIMSUN, "NSimsun" },
         { NSIMSUN, "\xe6\x96\xb0\xe5\xae\x8b\xe4\xbd\x93" },
         { NSIMSUN, "Noto Serif CJK SC" },
         { NSIMSUN, "MSung GB18030" },
         { NSIMSUN, "N Song ASC" },
 
-        // Simhei Chinese-name alias
+        // 黑体
         { SIMHEI, "Simhei" },
         { SIMHEI, "\xe9\xbb\x91\xe4\xbd\x93" },
         { SIMHEI, "Noto Sans CJK SC" },
         { SIMHEI, "MYingHeiGB18030" },
         { SIMHEI, "MYingHeiB5HK" },
 
-        // PMingLiU Chinese-name alias
+        // 新細明體
         { PMINGLIU, "PMingLiU"},
         { PMINGLIU, "\xe6\x96\xb0\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94" },
         { PMINGLIU, "Noto Serif CJK TC"},
         { PMINGLIU, "MSung B5HK"},
 
-        // MingLiU Chinese-name alias
+        // 細明體
         { MINGLIU, "MingLiU"},
         { MINGLIU, "\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94" },
         { MINGLIU, "Noto Serif CJK TC"},
         { MINGLIU, "MSung B5HK"},
 
-        // PMingLiU_HKSCS Chinese-name alias
+        // 新細明體
         { PMINGLIUHK, "PMingLiU_HKSCS"},
         { PMINGLIUHK, "\xe6\x96\xb0\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94_HKSCS" },
         { PMINGLIUHK, "Noto Serif CJK TC"},
         { PMINGLIUHK, "MSung B5HK"},
 
-        // MingLiU_HKSCS Chinese-name alias
+        // 細明體
         { MINGLIUHK, "MingLiU_HKSCS"},
         { MINGLIUHK, "\xe7\xb4\xb0\xe6\x98\x8e\xe9\xab\x94_HKSCS" },
         { MINGLIUHK, "Noto Serif CJK TC"},

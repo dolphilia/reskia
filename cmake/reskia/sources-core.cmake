@@ -1,11 +1,11 @@
 list(APPEND SOURCE_FILES
         src/android/SkAnimatedImage.cpp
-        src/base/SkArenaAlloc.cpp
+        src/core/SkArenaAlloc.cpp
         src/base/SkBase64.cpp
-        src/base/SkBezierCurves.cpp
+        src/core/SkBezierCurves.cpp
         src/base/SkBlockAllocator.cpp
         src/base/SkBuffer.cpp
-        src/base/SkContainers.cpp
+        src/core/SkContainers.cpp
         src/base/SkCubics.cpp
         src/base/SkDebug.cpp
         src/base/SkDeque.cpp

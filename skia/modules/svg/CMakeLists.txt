@@ -58,7 +58,7 @@ add_library(svg
         src/SkSVGUse.cpp
         src/SkSVGValue.cpp
 )
-target_compile_features(svg PUBLIC cxx_std_17)
+target_compile_features(svg PUBLIC cxx_std_20)
 target_include_directories(svg PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 #---
@@ -68,14 +68,14 @@ add_library(skshaper
         ../skshaper/src/SkShaper_factory.cpp
         ../skshaper/src/SkShaper_primitive.cpp
 )
-target_compile_features(skshaper PUBLIC cxx_std_17)
+target_compile_features(skshaper PUBLIC cxx_std_20)
 target_include_directories(skshaper PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 add_library(skunicode
         ../skunicode/src/SkUnicode.cpp
         ../skunicode/src/SkUnicode_hardcoded.cpp
 )
-target_compile_features(skunicode PUBLIC cxx_std_17)
+target_compile_features(skunicode PUBLIC cxx_std_20)
 target_include_directories(skunicode PRIVATE ${SVG_COMMON_INCLUDE_DIRS})
 
 # Ensure text shaping symbols are resolved transitively:

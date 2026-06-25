@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `688ca258abd6030f7377a7fa2d22d4e548b8f369`
-- next probe candidate: start from `688ca258abd6030f7377a7fa2d22d4e548b8f369`; cycle 092 refreshed `vendor/skia-upstream-candidate` from upstream and accepted the 1-week candidate through 2026-06-08. Begin cycle 093 by rechecking fixed local refs after this baseline. The next 1-week candidate currently includes a large `include/private/base` to `include/private` relocation, so evaluate whether to split immediately before that relocation, take it as a focused cycle, or prepare a broader private-header migration cycle.
+- `SKIA_REF`: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`
+- next probe candidate: start from `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`; cycle 093 accepted the focused private-header relocation commit dated 2026-06-10. Begin cycle 094 by rechecking fixed local refs after this baseline. The next local 1-week candidate currently observed is `d2addcfb3bb60272a49947cddc4d200f681487c5` (2026-06-15), 58 commits after cycle 093.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -124,21 +124,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 090 accepted: `3b718ddc8ae51dbfb311afe02c35a83dd7999172`。
 - cycle 091 accepted: `70f9d90bc8e6a56101d036153cfef28088e57f5b`。
 - cycle 092 accepted: `688ca258abd6030f7377a7fa2d22d4e548b8f369`。
+- cycle 093 accepted: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`。
 
 未実施:
 
-- cycle 093 candidate selection from `688ca258abd6030f7377a7fa2d22d4e548b8f369`.
-- cycle 093 candidate checkout を使った coverage regression。
-- cycle 093 の source/header sync と C API 追従実装。
+- cycle 094 candidate selection from `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`.
+- cycle 094 candidate checkout を使った coverage regression。
+- cycle 094 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 093 の candidate selection から始める。
+次の作業は、cycle 094 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `70f9d90bc8e6a56101d036153cfef28088e57f5b` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 091 終了時点で local refs は accepted candidate `70f9d90bc8e6a56101d036153cfef28088e57f5b` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 093 終了時点で local refs は accepted candidate `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。

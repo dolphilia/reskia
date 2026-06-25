@@ -37,7 +37,7 @@ if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
                 modules/skunicode/src/SkUnicode.cpp
                 modules/skunicode/src/SkUnicode_hardcoded.cpp
         )
-        target_compile_features(skunicode PUBLIC cxx_std_17)
+        target_compile_features(skunicode PUBLIC cxx_std_20)
         target_include_directories(skunicode PRIVATE ${RESKIA_SVG_SHAPING_INCLUDE_DIRS})
     endif()
     if(NOT TARGET skshaper)
@@ -47,7 +47,7 @@ if(APPLE AND NOT RESKIA_DEPS_MODE_LOWER STREQUAL "source")
                 modules/skshaper/src/SkShaper_primitive.cpp
                 modules/skshaper/src/SkShaper_coretext.cpp
         )
-        target_compile_features(skshaper PUBLIC cxx_std_17)
+        target_compile_features(skshaper PUBLIC cxx_std_20)
         target_include_directories(skshaper PRIVATE ${RESKIA_SVG_SHAPING_INCLUDE_DIRS})
         target_compile_definitions(skshaper PRIVATE SK_SHAPER_CORETEXT_AVAILABLE SK_BUILD_FOR_MAC)
         target_link_libraries(skshaper PUBLIC skunicode)

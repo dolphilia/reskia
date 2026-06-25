@@ -44,6 +44,27 @@ void SkIPoint_set(void *  i_point, int32_t x, int32_t y) {
     reinterpret_cast<SkIPoint *>(i_point)->set(x, y);
 }
 
+sk_i_point_t SkIPoint_negate(void * i_point) {
+    if (i_point == nullptr) {
+        return static_sk_i_point_make({});
+    }
+    return static_sk_i_point_make(-(* reinterpret_cast<SkIPoint *>(i_point)));
+}
+
+void SkIPoint_addAssign(void * i_point, const void *ivector) {
+    if (i_point == nullptr || ivector == nullptr) {
+        return;
+    }
+    (* reinterpret_cast<SkIPoint *>(i_point)) += (* reinterpret_cast<const SkIVector *>(ivector));
+}
+
+void SkIPoint_subtractAssign(void * i_point, const void *ivector) {
+    if (i_point == nullptr || ivector == nullptr) {
+        return;
+    }
+    (* reinterpret_cast<SkIPoint *>(i_point)) -= (* reinterpret_cast<const SkIVector *>(ivector));
+}
+
 bool SkIPoint_equals(void * i_point, int32_t x, int32_t y) {
     if (i_point == nullptr) {
         return false;
