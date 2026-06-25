@@ -1,30 +1,30 @@
 list(APPEND SOURCE_FILES
         src/android/SkAnimatedImage.cpp
         src/core/SkArenaAlloc.cpp
-        src/base/SkBase64.cpp
+        src/core/SkBase64.cpp
         src/core/SkBezierCurves.cpp
-        src/base/SkBlockAllocator.cpp
-        src/base/SkBuffer.cpp
+        src/core/SkBlockAllocator.cpp
+        src/core/SkBuffer.cpp
         src/core/SkContainers.cpp
-        src/base/SkCubics.cpp
-        src/base/SkDebug.cpp
-        src/base/SkDeque.cpp
-        src/base/SkFloatingPoint.cpp
-        src/base/SkHalf.cpp
-        src/base/SkLog.cpp
-        src/base/SkMalloc.cpp
-        src/base/SkMathPriv.cpp
-        src/base/SkQuads.cpp
-        src/base/SkSafeMath.cpp
-        src/base/SkSemaphore.cpp
-        src/base/SkSharedMutex.cpp
-        src/base/SkSpinlock.cpp
-        src/base/SkTDArray.cpp
-        src/base/SkThreadID.cpp
-        src/base/SkTime.cpp
-        src/base/SkTSearch.cpp
-        src/base/SkUTF.cpp
-        src/base/SkUtils.cpp
+        src/core/SkCubics.cpp
+        src/core/SkDebug.cpp
+        src/core/SkDeque.cpp
+        src/core/SkFloatingPoint.cpp
+        src/core/SkHalf.cpp
+        src/core/SkLog.cpp
+        src/core/SkMalloc.cpp
+        src/core/SkMathPriv.cpp
+        src/core/SkQuads.cpp
+        src/core/SkSafeMath.cpp
+        src/core/SkSemaphore.cpp
+        src/core/SkSharedMutex.cpp
+        src/core/SkSpinlock.cpp
+        src/core/SkTDArray.cpp
+        src/core/SkThreadID.cpp
+        src/core/SkTime.cpp
+        src/core/SkTSearch.cpp
+        src/core/SkUTF.cpp
+        src/core/SkUtils.cpp
         src/codec/SkAndroidCodec.cpp
         src/codec/SkAndroidCodecAdapter.cpp
         src/codec/SkBmpBaseCodec.cpp

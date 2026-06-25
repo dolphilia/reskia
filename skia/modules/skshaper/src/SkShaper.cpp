@@ -12,7 +12,7 @@
 #include "include/core/SkTypeface.h"
 #include "include/private/SkTFitsIn.h"
 #include "modules/skshaper/include/SkShaper.h"
-#include "src/base/SkUTF.h"
+#include "src/core/SkUTF.h"
 #include <limits.h>
 #include <algorithm>
 #include <cstring>
@@ -188,7 +188,7 @@ SkShaper::MakeFontMgrRunIterator(const char* utf8, size_t utf8Bytes,
                                  const SkFont& font, sk_sp<SkFontMgr> fallback)
 {
     if (!fallback) {
-        fallback = SkFontMgr::RefEmpty();
+        return std::make_unique<TrivialFontRunIterator>(font, utf8Bytes);
     }
     return std::make_unique<FontMgrRunIterator>(utf8, utf8Bytes, font, std::move(fallback));
 }
@@ -200,7 +200,7 @@ SkShaper::MakeFontMgrRunIterator(const char* utf8, size_t utf8Bytes, const SkFon
                                  const SkShaper::LanguageRunIterator* language)
 {
     if (!fallback) {
-        fallback = SkFontMgr::RefEmpty();
+        return std::make_unique<TrivialFontRunIterator>(font, utf8Bytes);
     }
     return std::make_unique<FontMgrRunIterator>(utf8, utf8Bytes, font, std::move(fallback),
                                                 requestName, requestStyle, language);

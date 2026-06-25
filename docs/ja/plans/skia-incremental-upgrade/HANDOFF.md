@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`
-- next probe candidate: start from `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`; cycle 093 accepted the focused private-header relocation commit dated 2026-06-10. Begin cycle 094 by rechecking fixed local refs after this baseline. The next local 1-week candidate currently observed is `d2addcfb3bb60272a49947cddc4d200f681487c5` (2026-06-15), 58 commits after cycle 093.
+- `SKIA_REF`: `d2addcfb3bb60272a49947cddc4d200f681487c5`
+- next probe candidate: start from `d2addcfb3bb60272a49947cddc4d200f681487c5`; cycle 094 accepted the 1-week local candidate dated 2026-06-15 after the `src/base` to `src/core` helper relocation. Begin cycle 095 by rechecking fixed local refs after this baseline. The next local 1-week candidate currently observed is `df87c52d7e863998119c0ea1985dbd9aa539f389` (2026-06-22), 64 commits after cycle 094. The current local endpoint is `68f005836bf7fe6826d429b507a89b7041ab67fc` (2026-06-25), 113 commits after cycle 094.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -125,21 +125,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 091 accepted: `70f9d90bc8e6a56101d036153cfef28088e57f5b`。
 - cycle 092 accepted: `688ca258abd6030f7377a7fa2d22d4e548b8f369`。
 - cycle 093 accepted: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`。
+- cycle 094 accepted: `d2addcfb3bb60272a49947cddc4d200f681487c5`。
 
 未実施:
 
-- cycle 094 candidate selection from `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`.
-- cycle 094 candidate checkout を使った coverage regression。
-- cycle 094 の source/header sync と C API 追従実装。
+- cycle 095 candidate selection from `d2addcfb3bb60272a49947cddc4d200f681487c5`.
+- cycle 095 candidate checkout を使った coverage regression。
+- cycle 095 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 094 の candidate selection から始める。
+次の作業は、cycle 095 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 093 終了時点で local refs は accepted candidate `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `d2addcfb3bb60272a49947cddc4d200f681487c5` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 094 終了時点で local refs は accepted candidate `d2addcfb3bb60272a49947cddc4d200f681487c5` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -218,6 +219,23 @@ cycle 072 の比較候補メモ:
 - `docs/ja/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
 
 ## 直近 accepted candidate のメモ
+
+候補:
+
+- `d2addcfb3bb60272a49947cddc4d200f681487c5`
+- committer date: 2026-06-15
+- subject: Roll recipe dependencies (trivial).
+
+cycle 094 結果:
+
+- baseline `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc` から `d2addcfb3bb60272a49947cddc4d200f681487c5` を採用した。58 commits、`include` / `modules` は 70 files changed, +113/-91、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 605 files changed, +1702/-1935。
+- 2週間候補 `df87c52d7e863998119c0ea1985dbd9aa539f389` は 122 commits、endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` は 171 commits で broader drift が増えるため見送った。
+- initial/final coverage は `covered 2992` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は header only。C API 追加・削除は不要だった。
+- tracked source/header drift を同期し、`src/base` helper 群を upstream に合わせて `src/core` へ移し、`cmake/reskia/sources-core.cmake` を更新した。tracked `skia/` と `cmake/reskia` の旧 `src/base/` include 参照はなくなっている。
+- `SkShaper::MakeFontMgrRunIterator` は fallback manager が null の場合に `TrivialFontRunIterator` を返すようにし、legacy Reskia smoke behavior を維持した。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは accepted baseline `d2addcfb3bb60272a49947cddc4d200f681487c5` から再比較する。次の 1週間候補は `df87c52d7e863998119c0ea1985dbd9aa539f389`、local endpoint は `68f005836bf7fe6826d429b507a89b7041ab67fc`。Dawn/Vulkan/ANGLE rolls、generated Dawn Bazel helper churn、Graphite sparse strips/Vello/compute churn、optional Rust PNG/libjxl updates、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 
 候補:
 
