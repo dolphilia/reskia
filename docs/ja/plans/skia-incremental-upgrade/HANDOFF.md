@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `d2addcfb3bb60272a49947cddc4d200f681487c5`
-- next probe candidate: start from `d2addcfb3bb60272a49947cddc4d200f681487c5`; cycle 094 accepted the 1-week local candidate dated 2026-06-15 after the `src/base` to `src/core` helper relocation. Begin cycle 095 by rechecking fixed local refs after this baseline. The next local 1-week candidate currently observed is `df87c52d7e863998119c0ea1985dbd9aa539f389` (2026-06-22), 64 commits after cycle 094. The current local endpoint is `68f005836bf7fe6826d429b507a89b7041ab67fc` (2026-06-25), 113 commits after cycle 094.
+- `SKIA_REF`: `df87c52d7e863998119c0ea1985dbd9aa539f389`
+- next probe candidate: start from `df87c52d7e863998119c0ea1985dbd9aa539f389`; cycle 095 accepted the 1-week local candidate dated 2026-06-22 after PNG metadata/chunk handling, Graphite paint/key/precompile/render drift, and the `SkEnumBitMask` private-header relocation. Begin cycle 096 by rechecking fixed local refs after this baseline. The current local endpoint is `68f005836bf7fe6826d429b507a89b7041ab67fc` (2026-06-25), 49 commits after cycle 095.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -126,21 +126,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 092 accepted: `688ca258abd6030f7377a7fa2d22d4e548b8f369`。
 - cycle 093 accepted: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`。
 - cycle 094 accepted: `d2addcfb3bb60272a49947cddc4d200f681487c5`。
+- cycle 095 accepted: `df87c52d7e863998119c0ea1985dbd9aa539f389`。
 
 未実施:
 
-- cycle 095 candidate selection from `d2addcfb3bb60272a49947cddc4d200f681487c5`.
-- cycle 095 candidate checkout を使った coverage regression。
-- cycle 095 の source/header sync と C API 追従実装。
+- cycle 096 candidate selection from `df87c52d7e863998119c0ea1985dbd9aa539f389`.
+- cycle 096 candidate checkout を使った coverage regression。
+- cycle 096 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 095 の candidate selection から始める。
+次の作業は、cycle 096 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `d2addcfb3bb60272a49947cddc4d200f681487c5` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 094 終了時点で local refs は accepted candidate `d2addcfb3bb60272a49947cddc4d200f681487c5` まで確認済み。1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `df87c52d7e863998119c0ea1985dbd9aa539f389` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 095 終了時点で local refs は accepted candidate `df87c52d7e863998119c0ea1985dbd9aa539f389` まで確認済み。local endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` を含めて 1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -219,6 +220,23 @@ cycle 072 の比較候補メモ:
 - `docs/ja/notes/skia-incremental-upgrade-readiness-2026-05-22.md`
 
 ## 直近 accepted candidate のメモ
+
+候補:
+
+- `df87c52d7e863998119c0ea1985dbd9aa539f389`
+- committer date: 2026-06-22
+- subject: Add opt-in metadata to rasterize alpha gradients for printing
+
+cycle 095 結果:
+
+- baseline `d2addcfb3bb60272a49947cddc4d200f681487c5` から `df87c52d7e863998119c0ea1985dbd9aa539f389` を採用した。64 commits、`include` / `modules` は 14 files changed, +158/-33、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 140 files changed, +1996/-1011。
+- local endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` は 113 commits after cycle 094 / 49 commits after cycle 095 で、Graphite sparse strips / compute、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl drift がさらに広がるため見送った。
+- initial/final coverage は `covered 2992` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は header only。C API 追加・削除は不要だった。
+- tracked source/header drift を同期し、`SkEnumBitMask.h` を upstream に合わせて `src/core` から `include/private` へ移した。PNG codec metadata/chunk handling、Graphite paint/key/precompile/render drift、SkSL generated drift、skunicode ICU subset drift も同期した。
+- GPU context smoke は upstream の default `TextureInfo::sampleCount()` と invalid `BackendTexture::operator==` semantics に合わせて更新した。`Graphite_Recorder_makeDeferredCanvas` smoke は arbitrary fixed Metal fields ではなく実 `MTLTexture` 由来の `MtlTextureInfo` を使う。
+- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
+- 次サイクルでは accepted baseline `df87c52d7e863998119c0ea1985dbd9aa539f389` から再比較する。local endpoint は `68f005836bf7fe6826d429b507a89b7041ab67fc`。Graphite sparse strips/Vello/compute churn、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl updates、generated Dawn Bazel helper churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 
 候補:
 

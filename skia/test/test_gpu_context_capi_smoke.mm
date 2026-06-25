@@ -1269,7 +1269,7 @@ bool smoke_context_create_destroy() {
         if (!check(default_texture_info != nullptr &&
                    !Graphite_TextureInfo_isValid(default_texture_info) &&
                    Graphite_TextureInfo_backend(default_texture_info) == 0 &&
-                   Graphite_TextureInfo_sampleCount(default_texture_info) == 0 &&
+                   Graphite_TextureInfo_sampleCount(default_texture_info) == 1 &&
                    !Graphite_TextureInfo_mipmapped(default_texture_info) &&
                    !Graphite_TextureInfo_isProtected(default_texture_info) &&
                    texture_info_string != nullptr,
@@ -1315,7 +1315,24 @@ bool smoke_context_create_destroy() {
             Reskia_GraphiteContext_Release(graphite_context);
             return false;
         }
-        reskia_graphite_texture_info_t *mtl_texture_info = Graphite_TextureInfo_newMtl(&explicit_mtl_info);
+
+        MTLTextureDescriptor *texture_descriptor =
+                [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm
+                                                                    width:4
+                                                                   height:4
+                                                                mipmapped:NO];
+        texture_descriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+        id<MTLTexture> texture = [device newTextureWithDescriptor:texture_descriptor];
+        reskia_graphite_mtl_texture_info_t texture_mtl_info = {};
+        if (!check(texture != nil &&
+                   Graphite_MtlTextureInfo_newTexture((void *) texture, &texture_mtl_info),
+                   "Graphite_MtlTextureInfo_newTexture")) {
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
+
+        reskia_graphite_texture_info_t *mtl_texture_info = Graphite_TextureInfo_newMtl(&texture_mtl_info);
         if (!check(mtl_texture_info != nullptr &&
                    Graphite_TextureInfo_isValid(mtl_texture_info) &&
                    Graphite_TextureInfo_backend(mtl_texture_info) == RESKIA_GPU_BACKEND_API_METAL,
@@ -1404,8 +1421,8 @@ bool smoke_context_create_destroy() {
                    copied_backend_texture != nullptr &&
                    !Graphite_BackendTexture_isValid(default_backend_texture) &&
                    Graphite_BackendTexture_backend(default_backend_texture) == 0 &&
-                   Graphite_BackendTexture_equals(default_backend_texture, copied_backend_texture) &&
-                   !Graphite_BackendTexture_notEquals(default_backend_texture, copied_backend_texture) &&
+                   !Graphite_BackendTexture_equals(default_backend_texture, copied_backend_texture) &&
+                   Graphite_BackendTexture_notEquals(default_backend_texture, copied_backend_texture) &&
                    default_backend_dimensions != 0 &&
                    backend_texture_info != nullptr,
                    "Graphite_BackendTexture default")) {
