@@ -43,6 +43,7 @@ int main() {
     ok &= check(SkPixmap_colorSpace(nullptr) == nullptr, "colorSpace null");
     ok &= check(SkPixmap_refColorSpace(nullptr) == 0, "refColorSpace null");
     ok &= check(!SkPixmap_isOpaque(nullptr), "isOpaque null");
+    ok &= check(SkPixmap_isEmpty(nullptr), "isEmpty null");
     ok &= check(SkPixmap_bounds(nullptr) == 0, "bounds null");
     ok &= check(SkPixmap_rowBytesAsPixels(nullptr) == 0, "rowBytesAsPixels null");
     ok &= check(SkPixmap_shiftPerPixel(nullptr) == 0, "shiftPerPixel null");
@@ -89,6 +90,7 @@ int main() {
     ok &= check(pixmap != nullptr, "newWithImageInfo creates pixmap");
     ok &= check(SkPixmap_width(pixmap) == 1, "width valid");
     ok &= check(SkPixmap_height(pixmap) == 1, "height valid");
+    ok &= check(!SkPixmap_isEmpty(pixmap), "isEmpty valid");
     ok &= check(SkPixmap_addr(pixmap) == pixels, "addr valid");
     ok &= check(SkPixmap_addrAt(pixmap, 0, 0) == pixels, "addrAt valid");
     ok &= check(SkPixmap_addrAt(pixmap, 1, 0) == nullptr, "addrAt out of bounds");

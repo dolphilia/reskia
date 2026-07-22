@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `df87c52d7e863998119c0ea1985dbd9aa539f389`
-- next probe candidate: start from `df87c52d7e863998119c0ea1985dbd9aa539f389`; cycle 095 accepted the 1-week local candidate dated 2026-06-22 after PNG metadata/chunk handling, Graphite paint/key/precompile/render drift, and the `SkEnumBitMask` private-header relocation. Begin cycle 096 by rechecking fixed local refs after this baseline. The current local endpoint is `68f005836bf7fe6826d429b507a89b7041ab67fc` (2026-06-25), 49 commits after cycle 095.
+- `SKIA_REF`: `68f005836bf7fe6826d429b507a89b7041ab67fc`
+- next probe candidate: start from `68f005836bf7fe6826d429b507a89b7041ab67fc`; cycle 096 accepted the local endpoint dated 2026-06-25 after SkPixmap `isEmpty` C API catch-up, `VulkanGraphiteUtils.h` public wrapper removal, and tracked Core/Codec/GPU/SkSL/skshaper source sync. cycle 097, cycle 098, and cycle 099 then rechecked local refs and found no fixed mainline commit after this baseline, so the lock remains unchanged. Begin cycle 100 by rechecking fixed local refs after `68f005836bf7fe6826d429b507a89b7041ab67fc`.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -127,21 +127,25 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 093 accepted: `d2b9e48baf1697760afc1dc8ea3ad40110b8cacc`。
 - cycle 094 accepted: `d2addcfb3bb60272a49947cddc4d200f681487c5`。
 - cycle 095 accepted: `df87c52d7e863998119c0ea1985dbd9aa539f389`。
+- cycle 096 accepted: `68f005836bf7fe6826d429b507a89b7041ab67fc`。
+- cycle 097 split-required: local refs did not contain a fixed commit after `68f005836bf7fe6826d429b507a89b7041ab67fc`; lock unchanged.
+- cycle 098 split-required: local refs did not contain a fixed commit after `68f005836bf7fe6826d429b507a89b7041ab67fc`; lock unchanged.
+- cycle 099 split-required: local refs did not contain a fixed commit after `68f005836bf7fe6826d429b507a89b7041ab67fc`; lock unchanged.
 
 未実施:
 
-- cycle 096 candidate selection from `df87c52d7e863998119c0ea1985dbd9aa539f389`.
-- cycle 096 candidate checkout を使った coverage regression。
-- cycle 096 の source/header sync と C API 追従実装。
+- cycle 100 candidate selection from `68f005836bf7fe6826d429b507a89b7041ab67fc`.
+- cycle 100 candidate checkout を使った coverage regression。
+- cycle 100 の source/header sync と C API 追従実装。
 
 ## 次にやること
 
-次の作業は、cycle 096 の candidate selection から始める。
+次の作業は、cycle 100 の candidate selection から始める。
 
 推奨順:
 
-1. baseline `df87c52d7e863998119c0ea1985dbd9aa539f389` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 095 終了時点で local refs は accepted candidate `df87c52d7e863998119c0ea1985dbd9aa539f389` まで確認済み。local endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` を含めて 1週間/2週間/3週間候補を再比較する。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `68f005836bf7fe6826d429b507a89b7041ab67fc` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 099 終了時点で local refs は accepted candidate `68f005836bf7fe6826d429b507a89b7041ab67fc` まで確認済みで、その後の固定 commit は見つかっていない。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -223,20 +227,19 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `df87c52d7e863998119c0ea1985dbd9aa539f389`
-- committer date: 2026-06-22
-- subject: Add opt-in metadata to rasterize alpha gradients for printing
+- `68f005836bf7fe6826d429b507a89b7041ab67fc`
+- committer date: 2026-06-25
+- subject: Add isEmpty to SkPixmap
 
-cycle 095 結果:
+cycle 096 結果:
 
-- baseline `d2addcfb3bb60272a49947cddc4d200f681487c5` から `df87c52d7e863998119c0ea1985dbd9aa539f389` を採用した。64 commits、`include` / `modules` は 14 files changed, +158/-33、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 140 files changed, +1996/-1011。
-- local endpoint `68f005836bf7fe6826d429b507a89b7041ab67fc` は 113 commits after cycle 094 / 49 commits after cycle 095 で、Graphite sparse strips / compute、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl drift がさらに広がるため見送った。
-- initial/final coverage は `covered 2992` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
-- final stale C API report は header only。C API 追加・削除は不要だった。
-- tracked source/header drift を同期し、`SkEnumBitMask.h` を upstream に合わせて `src/core` から `include/private` へ移した。PNG codec metadata/chunk handling、Graphite paint/key/precompile/render drift、SkSL generated drift、skunicode ICU subset drift も同期した。
-- GPU context smoke は upstream の default `TextureInfo::sampleCount()` と invalid `BackendTexture::operator==` semantics に合わせて更新した。`Graphite_Recorder_makeDeferredCanvas` smoke は arbitrary fixed Metal fields ではなく実 `MTLTexture` 由来の `MtlTextureInfo` を使う。
-- prebuilt/source build、GPU smoke、source SVG/provider/text smoke は pass。
-- 次サイクルでは accepted baseline `df87c52d7e863998119c0ea1985dbd9aa539f389` から再比較する。local endpoint は `68f005836bf7fe6826d429b507a89b7041ab67fc`。Graphite sparse strips/Vello/compute churn、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl updates、generated Dawn Bazel helper churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
+- baseline `df87c52d7e863998119c0ea1985dbd9aa539f389` から `68f005836bf7fe6826d429b507a89b7041ab67fc` を採用した。49 commits、`include` / `modules` は 11 files changed, +378/-84、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 67 files changed, +2502/-535。
+- initial coverage は `missing 1`（`SkPixmap::isEmpty`）と `signature_changed_review 1`（`SkBitmap::empty` inline 実装差分）。`SkPixmap_isEmpty` を追加し、`SkBitmap_empty` は C ABI 互換として維持した。
+- final coverage は `covered 2993` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- final stale C API report は header only。
+- tracked source/header drift を同期し、upstream で削除された public wrapper `include/gpu/graphite/vk/VulkanGraphiteUtils.h` を削除した。`sk_gpu_context.cpp` は `VulkanGraphiteContext.h` include に更新した。Bazel/GN/CanvasKit/test/raw SkSL/Rust PNG optional source は同期対象外として除外した。
+- prebuilt/source build、GPU smoke、source SVG/provider/text/pixmap smoke は pass。
+- 次サイクルでは accepted baseline `68f005836bf7fe6826d429b507a89b7041ab67fc` から再比較する。cycle 096 close 時点で local refs に baseline 後の固定 commit は見つかっていない。Graphite sparse strips/Vello/compute churn、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl updates、generated Dawn Bazel helper churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 
 候補:
 

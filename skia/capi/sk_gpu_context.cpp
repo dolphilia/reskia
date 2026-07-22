@@ -47,7 +47,7 @@
 #endif
 
 #if defined(SK_GRAPHITE) && defined(SK_VULKAN)
-#include "include/gpu/graphite/vk/VulkanGraphiteUtils.h"
+#include "include/gpu/graphite/vk/VulkanGraphiteContext.h"
 #include "include/gpu/vk/VulkanBackendContext.h"
 #endif
 

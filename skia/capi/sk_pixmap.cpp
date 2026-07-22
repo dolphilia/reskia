@@ -216,6 +216,11 @@ bool SkPixmap_isOpaque(reskia_pixmap_t *pixmap) {
     return native != nullptr && native->isOpaque();
 }
 
+bool SkPixmap_isEmpty(reskia_pixmap_t *pixmap) {
+    const SkPixmap *native = as_pixmap(pixmap);
+    return native == nullptr || native->isEmpty();
+}
+
 sk_i_rect_t SkPixmap_bounds(reskia_pixmap_t *pixmap) {
     const SkPixmap *native = as_pixmap(pixmap);
     if (native == nullptr) {

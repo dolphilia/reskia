@@ -77,6 +77,7 @@ reskia_color_space_t *SkPixmap_colorSpace(reskia_pixmap_t *pixmap);
  */
 sk_color_space_t SkPixmap_refColorSpace(reskia_pixmap_t *pixmap);
 bool SkPixmap_isOpaque(reskia_pixmap_t *pixmap); // returns false on null pixmap
+bool SkPixmap_isEmpty(reskia_pixmap_t *pixmap); // returns true on null pixmap
 sk_i_rect_t SkPixmap_bounds(reskia_pixmap_t *pixmap); // returns handle 0 on null pixmap
 int SkPixmap_rowBytesAsPixels(reskia_pixmap_t *pixmap); // returns 0 on null pixmap
 int SkPixmap_shiftPerPixel(reskia_pixmap_t *pixmap); // returns 0 on null pixmap
