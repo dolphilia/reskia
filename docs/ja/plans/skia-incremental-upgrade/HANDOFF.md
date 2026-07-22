@@ -20,8 +20,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `cf6d28f51d5ae0332aee7118ff8891f291b77a88`
-- next probe candidate: start from `cf6d28f51d5ae0332aee7118ff8891f291b77a88`; cycle 100 accepted the local endpoint dated 2026-07-09 after tracked Core/Codec/GPU/SkSL/text source sync and coverage matrix refresh. `SkPixmap::isEmpty` changed from `int` to `bool` upstream, but Reskia's existing C ABI already returns `bool`, so no C API implementation change was needed. Begin cycle 101 by selecting a fixed local mainline commit after `cf6d28f51d5ae0332aee7118ff8891f291b77a88`.
+- `SKIA_REF`: `418ab117fa0e9c92319ba746de2b659c115e36f8`
+- next probe candidate: none in current local refs; cycle 102 accepted refreshed `origin/main` dated 2026-07-21 and `git -C vendor/skia-upstream-candidate rev-list --count 418ab117fa0e9c92319ba746de2b659c115e36f8..origin/main` returned `0`. If new Skia refs are provided later, begin the next cycle from `418ab117fa0e9c92319ba746de2b659c115e36f8`.
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -132,21 +132,22 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 098 split-required: local refs did not contain a fixed commit after `68f005836bf7fe6826d429b507a89b7041ab67fc`; lock unchanged.
 - cycle 099 split-required: local refs did not contain a fixed commit after `68f005836bf7fe6826d429b507a89b7041ab67fc`; lock unchanged.
 - cycle 100 accepted: `cf6d28f51d5ae0332aee7118ff8891f291b77a88`。
+- cycle 101 accepted: `aee3692371639d705d05da1c99918b59ea003129`。
+- cycle 102 accepted: `418ab117fa0e9c92319ba746de2b659c115e36f8`。
 
 未実施:
 
-- cycle 101 candidate selection from `cf6d28f51d5ae0332aee7118ff8891f291b77a88`.
-- cycle 101 candidate checkout を使った coverage regression。
-- cycle 101 の source/header sync と C API 追従実装。
+- 現在の local refs では未実施 candidate なし。
+- 新しい Skia refs が提供された場合の次 cycle candidate selection from `418ab117fa0e9c92319ba746de2b659c115e36f8`.
 
 ## 次にやること
 
-次の作業は、cycle 101 の candidate selection から始める。
+次の作業は、新しい Skia refs が提供された場合に次 cycle の candidate selection から始める。
 
 推奨順:
 
-1. baseline `cf6d28f51d5ae0332aee7118ff8891f291b77a88` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 100 で candidate refs は `origin/main` at `aee3692371639d705d05da1c99918b59ea003129` まで refresh 済みで、新 baseline から 129 commits 先まで local refs がある。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
+1. baseline `418ab117fa0e9c92319ba746de2b659c115e36f8` より後の固定 mainline commit を local refs から選ぶ。
+2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 102 終了時点では `origin/main` が accepted candidate と同じ `418ab117fa0e9c92319ba746de2b659c115e36f8` を指している。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
 3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
 4. candidate checkout を用意して coverage regression と stale C API report を取る。
 5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
@@ -228,19 +229,19 @@ cycle 072 の比較候補メモ:
 
 候補:
 
-- `cf6d28f51d5ae0332aee7118ff8891f291b77a88`
-- committer date: 2026-07-09
-- subject: Updated "procs_utils" build rules to support PNG encoding
+- `aee3692371639d705d05da1c99918b59ea003129`
+- committer date: 2026-07-21
+- subject: Roll recipe dependencies (trivial).
 
-cycle 100 結果:
+cycle 101 結果:
 
-- baseline `68f005836bf7fe6826d429b507a89b7041ab67fc` から `cf6d28f51d5ae0332aee7118ff8891f291b77a88` を採用した。161 commits、`include` / `modules` は 9 files changed, +52/-8、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 82 files changed, +2828/-899。
-- initial coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。`SkPixmap::isEmpty` の `int` から `bool` への signature drift は、既存 C ABI がすでに `bool` 返却のため matrix 更新のみで閉じた。
-- final coverage は `covered 2993` / `split_covered 42` / `false_positive 299` / `na 267` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
+- baseline `cf6d28f51d5ae0332aee7118ff8891f291b77a88` から `aee3692371639d705d05da1c99918b59ea003129` を採用した。129 commits、`include` / `modules` は 11 files changed, +126/-51、`DEPS` / `gn` / `bazel` / `include` / `modules` / `src` drift は 106 files changed, +1507/-868。
+- initial coverage は `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。`SkTypeface::MakeDeserialize` に optional sanitizer proc が追加された signature drift は、既存 C ABI が sanitizer なし動作として互換維持できるため matrix 更新のみで閉じた。
+- final coverage は `covered 2993` / `split_covered 42` / `false_positive 299` / `na 266` / `no_public_methods_found 121`、かつ `missing 0` / `deferred 0` / `partial 0` / `overcovered 0`。
 - final stale C API report は header only。
-- tracked source/header 65 files を同期した。Rust PNG optional encoder、CanvasKit、GN/Bazel-only metadata、未追跡 Graphite sparse strip helper headers は同期対象外として除外した。
+- tracked source/header/generated 66 files を同期した。`DEPS`、root `gn`/`bazel`、`BUILD.bazel`/`BUILD.gn` metadata、未追跡 Skottie test、raw SkSL source は同期対象外として除外した。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/paragraph/pixmap smoke は pass。
-- 次 cycle では accepted baseline `cf6d28f51d5ae0332aee7118ff8891f291b77a88` から再比較する。candidate refs は `aee3692371639d705d05da1c99918b59ea003129` まで refresh 済みで、新 baseline から 129 commits 先まで利用可能。
+- local refs 上では `origin/main` が accepted candidate と同じ commit を指しており、現時点の local latest に追いついている。
 - prebuilt/source build、GPU smoke、source SVG/provider/text/pixmap smoke は pass。
 - 次サイクルでは accepted baseline `68f005836bf7fe6826d429b507a89b7041ab67fc` から再比較する。cycle 096 close 時点で local refs に baseline 後の固定 commit は見つかっていない。Graphite sparse strips/Vello/compute churn、Dawn/Vulkan/ANGLE rolls、optional Rust PNG/libjxl updates、generated Dawn Bazel helper churn、Graphite precompile ABI 設計 debt を既知リスクとして扱う。
 

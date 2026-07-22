@@ -46,164 +46,78 @@ void DrawListLayer::reset(LoadOp loadOp, SkColor4f color) {
 //         the stopLayer, thus preserving the relative ordering between the draws. (Note: will be
 //         changed in future CL, so kind of stub comment)
 std::pair<Layer*, BindingList*> DrawListLayer::searchBackwards(
-        int stepIndex,
-        bool isStencil,
-        bool isDepthOnly,
-        bool dependsOnDst,
-        bool requiresBarrier,
         const RenderStep* step,
-        const UniformDataCache::Index& uniformIndex,
         const LayerKey& key,
+        SkEnumBitMask<BoundsFlags> testMask,
         const DrawParams* drawParams,
-        const Insertion& stop,
-        Insertion* capture,
-        bool canForwardMerge) {
-    Layer* current = nullptr;
+        const Layer* stop) {
     Layer* targetLayer = nullptr;
     BindingList* targetMatch = nullptr;
     BindingList* forwardMerge = nullptr;
-    // If we're an easy draw (!kIsStencil and !dependsOnDst), try the head first.
-    if (!isStencil && !dependsOnDst) {
-        // A valid stopLayer will never be null, because the depth draw will always return the layer
-        // it drew into.
-        targetLayer = stop.fLayer ? stop.fLayer : fLayers.head();
-        if (targetLayer) {
-            targetMatch = targetLayer->searchBinding(
-                    key, /*startList=*/nullptr, !fStorageBufferSupport);
+
+    // Forward merging attempts to pull an earlier, compatible draw out of the current layer and
+    // push it into a newly created layer to improve pipeline/texture batching.
+    //
+    // 1. Draw Type Restrictions (Single Renderstep & No Depth-Only):
+    //    Forward merging is strictly limited to single-renderstep shading draws. We explicitly
+    //    forbid depth-only draws (which pass `false` for `canForwardMerge`), and the single-step
+    //    requirement inherently excludes stencil draws. If we allowed multi-step renderers to
+    //    forward merge, we would risk pulling a parent renderstep forward and over its
+    //    already-inserted child.
+    //
+    // 2. Directional & Spatial Validity:
+    //    Because we evaluate bindings backwards (tail to head), any binding matches found prior to
+    //    intersecting a draw are executed *after* that intersecting draw. Furthermore, because
+    //    standard shading draws within the same layer are guaranteed by the `test()` logic to be
+    //    mutually disjoint, the matched draw does not overlap with any of the later bindings we
+    //    evaluated and skipped. Therefore, it is visually safe to extract this disjoint match and
+    //    defer its execution to a new, subsequent layer without violating the Painter's Algorithm.
+    //
+    // 3. The Tail-Only Restriction:
+    //    We strictly limit forward merging to the *tail* of the layer list. If we allowed forward
+    //    merging from a middle layer, we would be forced to insert the newly generated target layer
+    //    into the middle of the list. This would break the structural invariant that
+    //    `Layer::fOrder` strictly increases with the physical list order; this invariant necessary
+    //    to ensure that a draw is inserted after *ALL* depth-only clip draws that affect it.
+    bool canForwardMerge = key.isSimpleShading();
+
+    Layer* current = fLayers.tail();
+    for (int limit = kMaxSearchLimit; limit > 0 && current; --limit) {
+        auto [result, match] = current->test(drawParams->drawBounds(), key, testMask);
+
+        if (result & BoundsTestResult::kAllowedInLayer) {
+            // Allowed in the layer, so remember it. In complex scenes, we want to search deeper
+            // in the layer list than just the first compatible overlap we encounter. Stopping early
+            // reduces search time but fragments batching. Inserting early blocks subsequent draws
+            // from reaching those denser, later candidates (particularly when this is a clip draw
+            // as that propagates into the stop layer for subsequent draws).
+            targetLayer = current;
+            targetMatch = match;
+        } else if (match && canForwardMerge) {
+            SkASSERT(result == BoundsTestResult::kBlocked &&
+                     !SkToBool(key.fFlags & BoundsFlags::kMustBeDisjoint) &&
+                     current == fLayers.tail());
+            forwardMerge = match;
         }
-    } else {
-        current = fLayers.tail();
-        int32_t limit = kMaxSearchLimit;
-        auto processLayer = [&](BindingList* boundary) -> bool {
-            auto [overlapType, match] =
-                    isStencil
-                            ? current->test</*kIsStencil=*/true>(
-                                      isDepthOnly,
-                                      drawParams->drawBounds(),
-                                      key,
-                                      requiresBarrier,
-                                      boundary,
-                                      !fStorageBufferSupport)
-                            : current->test</*kIsStencil=*/false>(
-                                      isDepthOnly,
-                                      drawParams->drawBounds(),
-                                      key,
-                                      requiresBarrier,
-                                      boundary,
-                                      !fStorageBufferSupport);
 
-            if (overlapType == BoundsTest::kIncompatibleOverlap) {
-                // If we need to read the dst, we cannot go earlier than this layer.
-                if (dependsOnDst) {
-                    // Forward merging attempts to pull an earlier, compatible draw out of the
-                    // current layer and push it into a newly created layer to improve
-                    // pipeline/texture batching.
-                    //
-                    // 1. Draw Type Restrictions (Single Renderstep & No Depth-Only):
-                    //    Forward merging is strictly limited to single-renderstep shading draws. We
-                    //    explicitly forbid depth-only draws (which pass `false` for
-                    //    `canForwardMerge`), and the single-step requirement inherently excludes
-                    //    stencil draws. If we allowed multi-step renderers to forward merge, we
-                    //    would risk pulling a parent renderstep forward and over its
-                    //    already-inserted child.
-                    //
-                    // 2. Directional & Spatial Validity:
-                    //    Because we evaluate bindings backwards (tail to head), any binding matches
-                    //    prior to intersection are necessarily execute *after* that intersecting
-                    //    draw. Furthermore, because standard shading draws within the same layer
-                    //    are guaranteed by the `test()` logic to be mutually disjoint, the matched
-                    //    draw does not overlap with any of the later bindings we evaluated and
-                    //    skipped. Therefore, it is visually safe to extract this disjoint match and
-                    //    defer its execution to a new, subsequent layer without violating the
-                    //    Painter's Algorithm.
-                    //
-                    // 3. The Tail-Only Restriction: We strictly limit forward merging to the *tail*
-                    //    of the layer list. If we allowed forward merging from a middle layer, we
-                    //    would be forced to insert the newly generated target layer into the middle
-                    //    of the list. This would break the structural invariant that
-                    //    `Layer::fOrder` strictly increases with the physical list order.
-                    //
-                    // 4. The Clip State Complication (Drawn/Undrawn Mix):
-                    //    While depth-only draws never forward merge themselves, allowing forward
-                    //    merging to middle-insert layers risks clip stack ordering issues. The clip
-                    //    stack relies on the `CompressedPaintersOrder` invariant when processing a
-                    //    mix of drawn and undrawn elements. `updateClipStateForDraw` uses
-                    //    `Insertion::operator>` (which compares `fOrder`) to find the latest
-                    //    insertion across all depth-only clips affecting a draw. If a layer were
-                    //    middle-inserted via `addAfter`, assigning it a valid `fOrder` is
-                    //    intractable:
-                    //      - Case A (New Highest Order): If we give the middle layer the next
-                    //        highest integer (e.g., L1(1) -> L_mid(3) -> L2(2)), the `max()`
-                    //        calculation incorrectly flags `L_mid` as the absolute latest boundary.
-                    //        A draw depending on a clip in `L2` will incorrectly take `L_mid` as
-                    //        its stop layer and bypass its actual stop layer `L2`.
-                    //      - Case B (Duplicate Order): If we duplicate the order to avoid Case A
-                    //        (e.g., L1(1) -> L2(2) -> L2b(2)), the tie-breaker math breaks. If Clip
-                    //        A inserts into `L2` and Clip B inserts into `L2b`, `max(A, B)` cannot
-                    //        distinguish them because `2 > 2` is false. Depending on iteration
-                    //        order, it may incorrectly return `L2` as the boundary, causing the
-                    //        clipped draw to execute before Clip B's mask is rendered. Restricting
-                    //        forward merges to the tail guarantees our assigned ordering is always
-                    //        valid.
-                    if (match && current == fLayers.tail() && canForwardMerge) {
-                        if (current->fBindings.head() != current->fBindings.tail() &&
-                            (!requiresBarrier ||
-                             !match->fBounds.intersects(drawParams->drawBounds()))) {
-                            forwardMerge = match;
-                            targetMatch = forwardMerge;
-                        }
-                    }
-                    return true;
-                }
-                // If !dependsOnDst, simply keep searching backwards. Since we guarantee stencil
-                // atomicity to a layer, a stencil intersection can still safely bypass this layer,
-                // because an insertion downstream cannot disrupt this stencil region.
-                return false;
-            } else {
-                // Found a valid layer (Compatible or Disjoint)
-                targetLayer = current;
-                targetMatch = match;
-
-                // In stencil-heavy scenes, we want to search deeper into the list than the first
-                // compatible overlap we encounter. An earlier match likely contains fewer draws and
-                // less draw coverage, while a later match is likely denser. Stopping at the first
-                // match minimizes search time but fragments batching. Inserting early carries a
-                // dual penalty: it 1) blocks subsequent draws from reaching those denser, later
-                // candidates, and it 2) consumes draw space in the early layer that a succeeding
-                // draw could have utilized.
-                //
-                // To mitigate this, we allow stencils to continue searching even after finding a
-                // CompatibleOverlap, but we penalize the remaining search limit by subtracting half
-                // of kMaxSearchLimit. This heuristic ensures:
-                //  1) The search typically isn't blocked by the first compatible overlap, unless
-                //     the match was found deep (over half the limit) into the search.
-                //  2) If two matches are found, the search halts.
-                //
-                // Ultimately, this is an imprecise heuristic. In an ideal world, we would maximize
-                // batching by exhaustively searching to the end of the list, but that would degrade
-                // insertion performance to O(n^2).
-                if (overlapType == BoundsTest::kCompatibleOverlap) {
-                    if (isStencil) {
-                        limit -= kMaxSearchLimit >> 1;
-                    } else {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            SkUNREACHABLE;
-        };
-
-        for (; limit >= 0; --limit) {
-            if (current == stop.fLayer || processLayer(nullptr)) {
-                break;
-            }
+        if (!SkToBool(result & BoundsTestResult::kAllowedBeforeLayer) || current == stop) {
+            break;
+        } else {
             current = current->fPrev;
-        }
-        if (!targetMatch && current == stop.fLayer && current) {
-            processLayer(stop.fList);
+            canForwardMerge = false;
+
+            // To support deeper searches while mitigating search time, if we found a matching
+            // BindingList then we penalize the remaining search limit by subtracting half of
+            // kMaxSearchLimit. Ultimately this is an imprecise heuristic. In an ideal world, we
+            // would maximize batching by exhaustively searching to the end of the list, but that
+            // would degrade insertion performance to O(n^2).
+            if (match) {
+                limit -= kMaxSearchLimit >> 1;
+            }
         }
     }
+
+    SkASSERT(!targetLayer || !stop || targetLayer->fOrder >= stop->fOrder);
 
     if (!targetLayer) {
         fOrderCounter = fOrderCounter.next();
@@ -213,38 +127,40 @@ std::pair<Layer*, BindingList*> DrawListLayer::searchBackwards(
             SkASSERT(current == fLayers.tail());
             current->fBindings.remove(forwardMerge);
             targetLayer->fBindings.addToHead(forwardMerge);
-            forwardMerge->fOrder = CompressedPaintersOrder::First();
+            targetMatch = forwardMerge;
         }
         fLayers.addToTail(targetLayer);
     }
 
     if (!targetMatch) {
-        // We pass `isDepthOnly` so that depth lists are prepended and shading lists are appended,
-        // guaranteeing that depth draws always come before shading draws within a layer.
-        targetMatch = targetLayer->addNewBinding(isDepthOnly, &fStorage, nullptr, key, step);
+        targetMatch = targetLayer->addNewBinding(&fStorage, nullptr, key, step);
+    } else {
+        SkASSERT(targetLayer->fBindings.isInList(targetMatch));
     }
 
     return {targetLayer, targetMatch};
 }
 
-BindingList* DrawListLayer::findOrCreateBindingInLayer(bool isDepthOnly,
+BindingList* DrawListLayer::findOrCreateBindingInLayer(Layer* layer,
+                                                       BindingList* parent,
                                                        const RenderStep* step,
-                                                       const LayerKey& key,
-                                                       const Insertion& start) {
+                                                       const LayerKey& key) {
     // If we're recording a new step in the layer, there better have been a draw that searched
     // backwards for the layer first!
-    SkASSERT(start.fLayer);
-    SkASSERT(start.fList);
+    SkASSERT(layer);
+    // If we have a parent step's BindingList to insert before, it must be in `layer`.
+    SkASSERT(!parent || layer->fBindings.isInList(parent));
+
     BindingList* targetMatch = nullptr;
-    // Search through preceding bindings (exclusive) for a match for the new step.
-    if (start.fList->fPrev) {
-        targetMatch = start.fLayer->searchBinding(
-            key, start.fList->fPrev, !fStorageBufferSupport);
+
+    // If we don't have a parent, search through all bindings of the layer as this is the first time
+    // through the layer. If we do have a parent, search through the preceding bindings (exclusive).
+    if (!parent || parent->fPrev) {
+        targetMatch = layer->searchBinding(key, parent ? parent->fPrev : nullptr);
     } // else there are no preceding bindings so we know we have to add a new one
 
     if (!targetMatch) {
-        targetMatch = start.fLayer->addNewBinding(
-                isDepthOnly, &fStorage, start.fList, key, step);
+        targetMatch = layer->addNewBinding(&fStorage, parent, key, step);
     }
     return targetMatch;
 }
@@ -269,23 +185,34 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
     SkASSERT(localToDevice.valid());
     SkASSERT(!geometry.isEmpty() && !clip.drawBounds().isEmptyNegativeOrNaN());
 
-    // Stencil-based renderers consist of a non-shading "producer" step, which writes into the
-    // stencil buffer, and shading "consumer" render steps which test against the stencil mask and
-    // clear the buffer afterwards. Because both types of step modify the buffer, we treat all steps
-    // as stenciling operations.
-    //
-    // Previously, interleaving one stencil sequence into another could corrupt the stencil buffer
-    // state, forcing stencil steps to immediately halt upon any overlap to protect "stencil
-    // regions." However, the current system guarantees stencil atomicity within a single layer. The
-    // first step of a stencil sequence finds a safe layer, and all subsequent steps are explicitly
-    // recorded forwards into that exact same layer.
-    //
-    // Because an entire stencil sequence is fully self-contained within a single layer, incoming
-    // stencil draws that encounter an incompatible overlap during their backwards traversal do not
-    // need to halt. They can safely bypass the intersecting layer and continue searching backwards.
-    bool rendererIsStencil = SkToBool(renderer->depthStencilFlags() & DepthStencilFlags::kStencil);
-    bool dependsOnDst = SkToBool(dstUsage & DstUsage::kDependsOnDst);
-    bool requiresBarrier = barrierBeforeDraws != BarrierType::kNone;
+    // `testMask` limits what we test against when searching backwards, which is based on the
+    // Renderer's aggregate requirements so that the layer we find will be valid for all steps. This
+    // is particularly important for stencil-based renderers, which consist of a non-shading
+    // "producer" step, which writes into the stencil buffer, and shading "consumer" render steps
+    // which test against the stencil mask and clear the buffer afterwards. This guarantees
+    // atomicity within a single layer, where the last step finds a safe layer and all earlier steps
+    // are explicitly inserted before that. This minimizes pipeline switches as rendering can
+    // proceed through the steps in bulk.
+    SkEnumBitMask<BoundsFlags> testMask;
+    if (SkToBool(renderer->depthStencilFlags() & DepthStencilFlags::kStencil)) {
+        testMask |= BoundsFlags::kStencil;
+    }
+    // Draws that blend must respect painter's order, and clipping depth-only draws cannot be
+    // ordered in front of shading draws.
+    const bool isDepthOnly = !paintID.isValid();
+    const bool dependsOnDst = SkToBool(dstUsage & DstUsage::kDependsOnDst);
+    if (dependsOnDst || isDepthOnly) {
+        testMask |= BoundsFlags::kColor;
+    }
+
+    // In simple situations, we can allow overlaps within a BindingList and let GPU rasterization
+    // resolve the rendering order automatically. This does not apply if barriers are required,
+    // and it does not apply when the Renderer has multiple steps (must keep the sets of draws in
+    // each step disjoint so there isn't interference).
+    SkEnumBitMask<BoundsFlags> baseLayerMask = BoundsFlags::kNone;
+    if (barrierBeforeDraws != BarrierType::kNone || renderer->numRenderSteps() > 1) {
+        baseLayerMask |= BoundsFlags::kMustBeDisjoint;
+    }
 
     // Currently, the draw params are created once per record draw call, and the pointer is passed
     // to each draw call. This is storage effecient but will still introduce some pointer chasing,
@@ -299,9 +226,14 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
                                                        stroke,
                                                        barrierBeforeDraws);
 
-    Insertion stepInsertion = {nullptr, nullptr};
+    Layer* insertionLayer = nullptr;
+    BindingList* lastStepBinding = nullptr;
+    // If we're an easy draw, jump to the latestInsertion layer since we don't have to test
+    if (testMask == BoundsFlags::kNone && baseLayerMask == BoundsFlags::kNone) {
+        insertionLayer = latestInsertion ? latestInsertion.fLayer : fLayers.head();
+    }
+
     fRenderStepCount += renderer->numRenderSteps();
-    bool canForwardMerge = renderer->numRenderSteps() == 1;
     for (int stepIndex = renderer->numRenderSteps() - 1; stepIndex >= 0; --stepIndex) {
         const RenderStep* const step = renderer->steps()[stepIndex];
 
@@ -323,36 +255,43 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
                 combinedTextures ? fTextureDataCache.insert(combinedTextures)
                                  : TextureDataCache::kInvalidIndex;
 
-        // Invalid ID implies depth only draw
-        bool isDepthOnly = paintID == UniquePaintParamsID::Invalid();
-        LayerKey layerKey{pipelineIndex, textureBindingIndex, uniformIndex};
 
-        if (!stepInsertion) {
-            auto [layer, binding] = this->searchBackwards(
-                    stepIndex,
-                    rendererIsStencil,
-                    isDepthOnly,
-                    dependsOnDst || isDepthOnly,
-                    requiresBarrier,
-                    step,
-                    uniformIndex,
-                    layerKey,
-                    drawParams,
-                    /*stop=*/isDepthOnly ? Insertion{} : latestInsertion,
-                    &stepInsertion,
-                    /*canForwardMerge=*/isDepthOnly ? false : canForwardMerge);
-            stepInsertion.fLayer = layer;
-            stepInsertion.fList = binding;
-        } else {
-            stepInsertion.fList = this->findOrCreateBindingInLayer(
-                    isDepthOnly,
-                    step,
-                    layerKey,
-                    stepInsertion);
+        // `layerMask` defines what this draw will block in new draws from going backwards. This is
+        // per-step so that stencil-only draws can be grouped between shading and clip draws.
+        SkEnumBitMask<BoundsFlags> layerMask = baseLayerMask;
+        if (step->depthStencilFlags() & DepthStencilFlags::kStencil) {
+            layerMask |= BoundsFlags::kStencil;
+        }
+        if (step->performsShading() && paintID.isValid()) {
+            // NOTE: This is not dependsOnDst because it represents what is written by the draw,
+            // not what might be read for blending the draw.
+            layerMask |= BoundsFlags::kColor;
         }
 
-        SkASSERT(stepInsertion);
-        stepInsertion.fList->addDraw(fStorage.make<Draw>(drawParams, uniformIndex),
+        LayerKey key{pipelineIndex,
+                     textureBindingIndex,
+                     fStorageBufferSupport ? UniformDataCache::kInvalidIndex : uniformIndex,
+                     layerMask};
+
+        if (!insertionLayer) {
+            // Since we don't have a layer yet, search from the most recent layer back.
+            const Layer* stop = latestInsertion.fLayer;
+            std::tie(insertionLayer, lastStepBinding) = this->searchBackwards(step,
+                                                                              key,
+                                                                              testMask,
+                                                                              drawParams,
+                                                                              stop);
+        } else {
+            // Put the earlier steps in the same layer (valid because we used BoundsFlags for the
+            // whole Renderer).
+            lastStepBinding = this->findOrCreateBindingInLayer(insertionLayer,
+                                                               lastStepBinding,
+                                                               step,
+                                                               key);
+        }
+
+        SkASSERT(lastStepBinding);
+        lastStepBinding->addDraw(fStorage.make<Draw>(drawParams, uniformIndex),
                                      /*backToFront=*/dependsOnDst);
 
         gatherer->rewindForRenderStep();
@@ -374,7 +313,7 @@ std::pair<DrawParams*, Insertion> DrawListLayer::recordDraw(const Renderer* rend
     }
 #endif
 
-    return {drawParams, stepInsertion};
+    return {drawParams, {insertionLayer, lastStepBinding}};
 }
 
 std::unique_ptr<DrawPass> DrawListLayer::snapDrawPass(Recorder* recorder,
