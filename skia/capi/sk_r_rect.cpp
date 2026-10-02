@@ -215,6 +215,12 @@ sk_r_rect_t SkRRect_makeOffset(reskia_r_rect_t *rrect, float dx, float dy) {
     return static_sk_r_rect_make(reinterpret_cast<SkRRect *>(rrect)->makeOffset(dx, dy));
 }
 
+bool SkRRect_containsPoint(const reskia_r_rect_t *rrect, const reskia_point_t *point) {
+    return rrect != nullptr && point != nullptr &&
+           reinterpret_cast<const SkRRect *>(rrect)->contains(
+                   *reinterpret_cast<const SkPoint *>(point));
+}
+
 bool SkRRect_contains(reskia_r_rect_t *rrect, const reskia_rect_t *rect) {
     if (rrect == nullptr || rect == nullptr) {
         return false;

@@ -82,7 +82,7 @@ VkShaderModule CreateVulkanShaderModule(const VulkanSharedContext*,
 
 VkDescriptorType DsTypeEnumToVkDs(DescriptorType);
 void DescriptorDataToVkDescSetLayout(const VulkanSharedContext*,
-                                     const SkSpan<DescriptorData>&,
+                                     const SkSpan<const DescriptorData>&,
                                      VkDescriptorSetLayout*);
 
 TextureFormat VkFormatToTextureFormat(VkFormat);
@@ -100,6 +100,7 @@ constexpr VkSampleCountFlagBits SampleCountToVkSampleCount(SampleCount sampleCou
 }
 
 VkShaderStageFlags PipelineStageFlagsToVkShaderStageFlags(SkEnumBitMask<PipelineStageFlags>);
+VkPipelineStageFlags PipelineStageFlagsToVkPipelineStageFlags(SkEnumBitMask<PipelineStageFlags>);
 
 // When multisampling is used, Graphite never retains the multisampled data at the end of the render
 // pass. It is always resolved to the single sampled color attachment. If the next multisampled

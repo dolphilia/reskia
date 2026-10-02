@@ -30,6 +30,7 @@ list(APPEND SOURCE_FILES
         capi/sk_color_table.cpp
         capi/sk_color.cpp
         capi/sk_contour_measure_iter.cpp
+        capi/sk_context.cpp
         capi/sk_contour_measure.cpp
         capi/sk_corner_path_effect.cpp
         capi/sk_cubic_map.cpp

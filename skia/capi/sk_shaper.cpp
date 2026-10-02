@@ -18,6 +18,7 @@
 #include "../handles/static_sk_font_mgr-internal.h"
 
 #include <algorithm>
+#include <cmath>
 #include <memory>
 #include <vector>
 
@@ -440,6 +441,19 @@ bool SkShaper_shapeWithFeatures(reskia_shaper_t *shaper, const char *utf8, size_
     }
     const std::vector<SkShaper::Feature> feature_values = make_features(features, features_count);
     as_shaper(shaper)->shape(utf8 == nullptr ? "" : utf8, utf8_bytes, *as_font_iterator(font), *as_bidi_iterator(bidi), *as_script_iterator(script), *as_language_iterator(language), feature_values.data(), feature_values.size(), width, handler);
+    return true;
+}
+
+bool SkShaper_shapeWithTextTracking(reskia_shaper_t *shaper, const char *utf8, size_t utf8_bytes, reskia_shaper_font_run_iterator_t *font, reskia_shaper_bidi_run_iterator_t *bidi, reskia_shaper_script_run_iterator_t *script, reskia_shaper_language_run_iterator_t *language, const reskia_shaper_feature_t *features, size_t features_count, float width, float text_tracking, SkTextBlobBuilderRunHandler *handler) {
+    if (shaper == nullptr || !valid_text(utf8, utf8_bytes) || font == nullptr || bidi == nullptr || script == nullptr || language == nullptr || handler == nullptr || (features == nullptr && features_count != 0) || width < 0.0f || !std::isfinite(width) || !std::isfinite(text_tracking)) {
+        return false;
+    }
+    const std::vector<SkShaper::Feature> feature_values = make_features(features, features_count);
+    const SkShaper::Options options{width, text_tracking};
+    as_shaper(shaper)->shape({utf8 == nullptr ? "" : utf8, utf8_bytes},
+                            *as_font_iterator(font), *as_bidi_iterator(bidi),
+                            *as_script_iterator(script), *as_language_iterator(language),
+                            {feature_values.data(), feature_values.size()}, options, handler);
     return true;
 }
 

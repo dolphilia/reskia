@@ -57,13 +57,14 @@ sk_sp<DrawContext> DrawContext::Make(const Caps* caps,
                                      sk_sp<TextureProxy> target,
                                      SkISize deviceSize,
                                      const SkColorInfo& colorInfo,
-                                     const SkSurfaceProps& props) {
+                                     const SkSurfaceProps& props,
+                                     bool allowUnpremul) {
     if (!target) {
         return nullptr;
     }
-    // We don't render to unknown or unpremul alphatypes
+    // We don't render to unknown or unpremul alphatypes unless allowUnpremul is explicitly enabled.
     if (colorInfo.alphaType() == kUnknown_SkAlphaType ||
-        colorInfo.alphaType() == kUnpremul_SkAlphaType) {
+        (colorInfo.alphaType() == kUnpremul_SkAlphaType && !allowUnpremul)) {
         return nullptr;
     }
     if (!caps->isRenderable(target->textureInfo())) {
@@ -100,7 +101,9 @@ DrawContext::DrawContext(const Caps* caps,
                           ? std::unique_ptr<DrawListBase>(std::make_unique<DrawListLayer>(
                                    caps->storageBufferSupport()))
                           : std::unique_ptr<DrawListBase>(std::make_unique<DrawList>()))
-        , fPendingUploads(std::make_unique<UploadList>()) {
+        , fPendingUploads(std::make_unique<UploadList>())
+        , fStorageContext(caps->resourceBindingRequirements().fMaxFallbackTextureSize,
+                          caps->storageBufferSupport()) {
     // Must determine a valid strategy to use should a dst texture read be required.
     SkASSERT(fDstReadStrategy != DstReadStrategy::kNoneRequired);
 
@@ -152,7 +155,7 @@ bool DrawContext::readsTexture(const TextureProxy* texture) const {
     return !notFound; // double negation means its found in a pending child task
 }
 
-std::pair<DrawParams*, Insertion> DrawContext::recordDraw(
+std::pair<DrawParams*, Layer*> DrawContext::recordDraw(
         const Renderer* renderer,
         const Transform& localToDevice,
         const Geometry& geometry,
@@ -162,7 +165,7 @@ std::pair<DrawParams*, Insertion> DrawContext::recordDraw(
         SkEnumBitMask<DstUsage> dstUsage,
         PipelineDataGatherer* gatherer,
         const StrokeStyle* stroke,
-        const Insertion& latestInsertion) {
+        Layer* lastInsertion) {
     SkASSERTF(SkIRect::MakeSize(this->imageInfo().dimensions()).contains(clip.scissor()),
               "Image %dx%d, scissor %d,%d,%d,%d",
               this->imageInfo().width(), this->imageInfo().height(),
@@ -183,8 +186,8 @@ std::pair<DrawParams*, Insertion> DrawContext::recordDraw(
     }
 
     return fPendingDraws->recordDraw(renderer, localToDevice, geometry, clip, ordering, paintID,
-                                     dstUsage,  barrierBeforeDraws, gatherer, stroke,
-                                     latestInsertion);
+                                     dstUsage, barrierBeforeDraws, gatherer, &fStorageContext,
+                                     stroke, lastInsertion);
 }
 
 bool DrawContext::recordUpload(Recorder* recorder,
@@ -205,7 +208,8 @@ void DrawContext::recordDependency(sk_sp<Task> task) {
 
 PathAtlas* DrawContext::getComputePathAtlas(Recorder* recorder) {
     if (!fComputePathAtlas) {
-        fComputePathAtlas = recorder->priv().atlasProvider()->createComputePathAtlas(recorder);
+        fComputePathAtlas =
+                recorder->priv().getOrCreateAtlasProvider()->createComputePathAtlas(recorder);
     }
     return fComputePathAtlas.get();
 }
@@ -259,6 +263,8 @@ void DrawContext::flush(Recorder* recorder) {
     // subpasses are implemented, they will either be collected alongside fPendingDraws or added
     // to the RenderPassTask separately.
     std::unique_ptr<DrawPass> pass = fPendingDraws->snapDrawPass(recorder,
+                                                                 &fStorageContext,
+                                                                 this,
                                                                  fTarget.refProxy(),
                                                                  this->imageInfo(),
                                                                  drawPassDstReadStrategy);

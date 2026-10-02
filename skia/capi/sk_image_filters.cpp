@@ -8,6 +8,8 @@
 #include "include/effects/SkImageFilters.h"
 
 #include <utility>
+#include <cmath>
+#include <vector>
 
 #include "../handles/static_sk_image_filter.h"
 #include "../handles/static_sk_color_filter.h"
@@ -194,6 +196,38 @@ sk_image_filter_t SkImageFilters_RuntimeShaderWithMaxSampleRadius(const reskia_r
         return 0;
     }
     return make_image_filter_handle(SkImageFilters::RuntimeShader(* reinterpret_cast<const SkRuntimeEffectBuilder *>(builder), maxSampleRadius, reinterpret_cast<std::string_view *>(childShaderNames), reinterpret_cast<const sk_sp<SkImageFilter> *>(inputs), inputCount));
+}
+
+sk_image_filter_t SkImageFilters_RuntimeShaderWithBounds(const reskia_runtime_effect_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input, bool restrictOutputToInputBounds) {
+    if (builder == nullptr || !std::isfinite(sampleRadius) || sampleRadius < 0 ||
+        (childShaderName != 0 && !static_string_view_contains(childShaderName)) ||
+        (input != 0 && static_sk_image_filter_get_ptr(input) == nullptr)) {
+        return 0;
+    }
+    return make_image_filter_handle(SkImageFilters::RuntimeShader(
+            *reinterpret_cast<const SkRuntimeEffectBuilder *>(builder), sampleRadius,
+            static_string_view_get_entity(childShaderName), static_sk_image_filter_get_entity(input),
+            restrictOutputToInputBounds));
+}
+
+sk_image_filter_t SkImageFilters_RuntimeShaderWithChildBounds(const reskia_runtime_effect_builder_t *builder, float maxSampleRadius, const reskia_string_view_t *childShaderNames, const sk_image_filter_t *inputs, int inputCount, bool restrictOutputToInputBounds) {
+    if (builder == nullptr || inputCount < 0 || !std::isfinite(maxSampleRadius) ||
+        maxSampleRadius < 0 || (inputCount > 0 && (childShaderNames == nullptr || inputs == nullptr))) {
+        return 0;
+    }
+    std::vector<std::string_view> names;
+    std::vector<sk_sp<SkImageFilter>> filters;
+    for (int i = 0; i < inputCount; ++i) {
+        if (!static_string_view_contains(childShaderNames[i]) ||
+            (inputs[i] != 0 && static_sk_image_filter_get_ptr(inputs[i]) == nullptr)) {
+            return 0;
+        }
+        names.push_back(static_string_view_get_entity(childShaderNames[i]));
+        filters.push_back(static_sk_image_filter_get_entity(inputs[i]));
+    }
+    return make_image_filter_handle(SkImageFilters::RuntimeShader(
+            *reinterpret_cast<const SkRuntimeEffectBuilder *>(builder), maxSampleRadius,
+            names.data(), filters.data(), inputCount, restrictOutputToInputBounds));
 }
 
 sk_image_filter_t SkImageFilters_Shader(sk_shader_t shader, const reskia_crop_rect_t *cropRect) {

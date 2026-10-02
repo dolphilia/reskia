@@ -56,8 +56,7 @@ class SkPathData;
     outside the geometry. SkPath also describes the winding rule used to fill
     overlapping contours.
 
-    Internally, SkPath lazily computes metrics likes bounds and convexity. Call
-    SkPath::updateBoundsCache to make SkPath thread safe.
+    Internally, SkPath lazily computes convexity.
 */
 class SK_API SkPath {
 public:
@@ -509,23 +508,6 @@ public:
         @return  bounds of the path's points
     */
     const SkRect& getBounds() const;
-
-#if !defined(SK_DISABLE_LEGACY_UPDATEBOUNDSCACHE)
-    /** Updates internal bounds so that subsequent calls to getBounds() are instantaneous.
-        Unaltered copies of SkPath may also access cached bounds through getBounds().
-
-        For now, identical to calling getBounds() and ignoring the returned value.
-
-        Call to prepare SkPath subsequently drawn from multiple threads,
-        to avoid a race condition where each draw separately computes the bounds.
-
-        DEPRECATED: after the path immutability changes, this is a no-op
-    */
-    void updateBoundsCache() const {
-        // for now, just calling getBounds() is sufficient
-        this->getBounds();
-    }
-#endif
 
     /** Returns minimum and maximum axes values of the lines and curves in SkPath.
         Returns (0, 0, 0, 0) if SkPath contains no points.
@@ -1106,7 +1088,7 @@ public:
 
         example: https://fiddle.skia.org/c/@Path_getGenerationID
     */
-    uint32_t getGenerationID() const;
+    uint64_t getGenerationID() const;
 
     /** Returns if SkPath data is consistent. Corrupt SkPath data is detected if
         internal values are out of range or internal storage does not match

@@ -45,10 +45,6 @@ reskia_status_t SkExecutor_addToWorkList(reskia_executor_t *executor, function_v
     return RESKIA_STATUS_OK;
 }
 
-int SkExecutor_discardAllPendingWork(reskia_executor_t *executor) {
-    return executor != nullptr ? reinterpret_cast<SkExecutor *>(executor)->discardAllPendingWork() : 0;
-}
-
 void SkExecutor_borrow(reskia_executor_t *executor) {
     reinterpret_cast<SkExecutor *>(executor)->borrow();
 }

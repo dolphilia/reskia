@@ -126,13 +126,16 @@ SkAlphaType renderable_alphatype(SkAlphaType srcAT, SkAlphaType dstAT) {
             // The src image claims to be opaque, so the output pixels should be opaque.
             return kOpaque_SkAlphaType;
         case kPremul_SkAlphaType:
+            if (dstAT == kUnpremul_SkAlphaType) {
+                // If the requested dst AT is kUnpremul, allow rendering directly to a kUnpremul
+                // scratch surface using kSrc blending.
+                return kUnpremul_SkAlphaType;
+            }
             // Always render to kPremul, regardless of the requested dst AT. If the dst AT was
             // kPremul this is a no-op. If it was kOpaque, SkColorSpaceXformSteps treats it as the
             // src AT, so it's also a no-op. If it was kUnknown, the image view will presumably be
             // sampled with a masked opaque alpha channel, so producing premul RGB values emulates
-            // having blended with solid black. If it is kUnpremul, there is no current way to
-            // render to a kUnpremul render target; using kPremul here allows the copy to proceed
-            // and then any unpremul math will happen during sampling or readback conversion.
+            // having blended with solid black.
             return kPremul_SkAlphaType;
         case kUnpremul_SkAlphaType:
             // If the requested dst AT is kPremul, then keep that so the premultiply is performed
@@ -297,8 +300,8 @@ TextureProxyView MakeBitmapProxyView(Recorder* recorder,
                                                    recorder->priv().resourceProvider(),
                                                    bitmap.dimensions(),
                                                    textureInfo,
-                                                   label,
-                                                   budgeted);
+                                                   budgeted,
+                                                   label);
     if (!proxy) {
         return {};
     }
@@ -406,7 +409,8 @@ sk_sp<Image> CopyAsDraw(Recorder* recorder,
     // The surface goes out of scope when we return, so it can be scratch, but it may or may
     // not be budgeted depending on how the copied image is used (or returned to the client).
     sk_sp<Surface> surface =
-            Surface::MakeScratch(recorder, dstInfo, label, budgeted, mipmapped, backingFit);
+            Surface::MakeScratch(recorder, dstInfo, label, budgeted, mipmapped, backingFit,
+                                 /*allowUnpremul=*/true);
     if (!surface) {
         return nullptr;
     }
@@ -449,7 +453,8 @@ sk_sp<Image> RescaleImage(Recorder* recorder,
             "RescaleDstTexture",
             Budgeted::kYes,
             Mipmapped::kNo,
-            SkBackingFit::kExact);
+            SkBackingFit::kExact,
+            /*allowUnpremul=*/true);
     if (!dst) {
         return nullptr;
     }
@@ -650,18 +655,28 @@ std::pair<sk_sp<SkImage>, SkSamplingOptions> GetGraphiteBacked(Recorder* recorde
 
     if (imageIn->dimensions().area() <= 1 && mipmapped == Mipmapped::kYes) {
         mipmapped = Mipmapped::kNo;
-        sampling = SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone);
+        sampling = SkSamplingOptions(SkFilterMode::kLinear);
     }
 
     sk_sp<SkImage> result;
     if (as_IB(imageIn)->isGraphiteBacked()) {
         result = sk_ref_sp(imageIn);
 
-        // If the preexisting Graphite-backed image doesn't have the required mipmaps we will drop
-        // down the sampling
-        if (mipmapped == Mipmapped::kYes && !result->hasMipmaps()) {
-            mipmapped = Mipmapped::kNo;
-            sampling = SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone);
+        // If the preexisting Graphite-backed image isn't texturable or doesn't have the required
+        // mipmaps, we drop down the sampling
+        const auto graphiteImage = static_cast<const Image_Base*>(result.get());
+        bool isTexturable = true;
+        for (const TextureProxyView& view : graphiteImage->textureProxyViews()) {
+            if (view && !recorder->priv().caps()->isTexturable(view.proxy()->textureInfo())) {
+                isTexturable = false;
+                break;
+            }
+        }
+
+        if (!isTexturable) {
+            sampling = SkSamplingOptions(SkFilterMode::kNearest);
+        } else if (mipmapped == Mipmapped::kYes && !result->hasMipmaps()) {
+            sampling = SkSamplingOptions(SkFilterMode::kLinear);
         }
     } else {
         auto clientImageProvider = recorder->clientImageProvider();

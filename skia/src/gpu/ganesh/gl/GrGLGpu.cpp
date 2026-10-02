@@ -73,6 +73,7 @@
 #include "src/sksl/ir/SkSLProgram.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <functional>
 #include <memory>
@@ -106,32 +107,32 @@ using namespace skia_private;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-static const GrGLenum gXfermodeEquation2Blend[] = {
-    // Basic OpenGL blend equations.
-    GR_GL_FUNC_ADD,
-    GR_GL_FUNC_SUBTRACT,
-    GR_GL_FUNC_REVERSE_SUBTRACT,
+static constexpr auto gXfermodeEquation2Blend = std::to_array<GrGLenum>({
+        // Basic OpenGL blend equations.
+        GR_GL_FUNC_ADD,
+        GR_GL_FUNC_SUBTRACT,
+        GR_GL_FUNC_REVERSE_SUBTRACT,
 
-    // GL_KHR_blend_equation_advanced.
-    GR_GL_SCREEN,
-    GR_GL_OVERLAY,
-    GR_GL_DARKEN,
-    GR_GL_LIGHTEN,
-    GR_GL_COLORDODGE,
-    GR_GL_COLORBURN,
-    GR_GL_HARDLIGHT,
-    GR_GL_SOFTLIGHT,
-    GR_GL_DIFFERENCE,
-    GR_GL_EXCLUSION,
-    GR_GL_MULTIPLY,
-    GR_GL_HSL_HUE,
-    GR_GL_HSL_SATURATION,
-    GR_GL_HSL_COLOR,
-    GR_GL_HSL_LUMINOSITY,
+        // GL_KHR_blend_equation_advanced.
+        GR_GL_SCREEN,
+        GR_GL_OVERLAY,
+        GR_GL_DARKEN,
+        GR_GL_LIGHTEN,
+        GR_GL_COLORDODGE,
+        GR_GL_COLORBURN,
+        GR_GL_HARDLIGHT,
+        GR_GL_SOFTLIGHT,
+        GR_GL_DIFFERENCE,
+        GR_GL_EXCLUSION,
+        GR_GL_MULTIPLY,
+        GR_GL_HSL_HUE,
+        GR_GL_HSL_SATURATION,
+        GR_GL_HSL_COLOR,
+        GR_GL_HSL_LUMINOSITY,
 
-    // Illegal... needs to map to something.
-    GR_GL_FUNC_ADD,
-};
+        // Illegal... needs to map to something.
+        GR_GL_FUNC_ADD,
+});
 static_assert(0 == (int)skgpu::BlendEquation::kAdd);
 static_assert(1 == (int)skgpu::BlendEquation::kSubtract);
 static_assert(2 == (int)skgpu::BlendEquation::kReverseSubtract);
@@ -152,29 +153,29 @@ static_assert(16 == (int)skgpu::BlendEquation::kHSLColor);
 static_assert(17 == (int)skgpu::BlendEquation::kHSLLuminosity);
 static_assert(std::size(gXfermodeEquation2Blend) == skgpu::kBlendEquationCnt);
 
-static const GrGLenum gXfermodeCoeff2Blend[] = {
-    GR_GL_ZERO,
-    GR_GL_ONE,
-    GR_GL_SRC_COLOR,
-    GR_GL_ONE_MINUS_SRC_COLOR,
-    GR_GL_DST_COLOR,
-    GR_GL_ONE_MINUS_DST_COLOR,
-    GR_GL_SRC_ALPHA,
-    GR_GL_ONE_MINUS_SRC_ALPHA,
-    GR_GL_DST_ALPHA,
-    GR_GL_ONE_MINUS_DST_ALPHA,
-    GR_GL_CONSTANT_COLOR,
-    GR_GL_ONE_MINUS_CONSTANT_COLOR,
+static constexpr auto gXfermodeCoeff2Blend = std::to_array<GrGLenum>({
+        GR_GL_ZERO,
+        GR_GL_ONE,
+        GR_GL_SRC_COLOR,
+        GR_GL_ONE_MINUS_SRC_COLOR,
+        GR_GL_DST_COLOR,
+        GR_GL_ONE_MINUS_DST_COLOR,
+        GR_GL_SRC_ALPHA,
+        GR_GL_ONE_MINUS_SRC_ALPHA,
+        GR_GL_DST_ALPHA,
+        GR_GL_ONE_MINUS_DST_ALPHA,
+        GR_GL_CONSTANT_COLOR,
+        GR_GL_ONE_MINUS_CONSTANT_COLOR,
 
-    // extended blend coeffs
-    GR_GL_SRC1_COLOR,
-    GR_GL_ONE_MINUS_SRC1_COLOR,
-    GR_GL_SRC1_ALPHA,
-    GR_GL_ONE_MINUS_SRC1_ALPHA,
+        // extended blend coeffs
+        GR_GL_SRC1_COLOR,
+        GR_GL_ONE_MINUS_SRC1_COLOR,
+        GR_GL_SRC1_ALPHA,
+        GR_GL_ONE_MINUS_SRC1_ALPHA,
 
-    // Illegal... needs to map to something.
-    GR_GL_ZERO,
-};
+        // Illegal... needs to map to something.
+        GR_GL_ZERO,
+});
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -2642,15 +2643,15 @@ namespace {
 
 
 GrGLenum gr_to_gl_stencil_op(GrStencilOp op) {
-    static const GrGLenum gTable[kGrStencilOpCount] = {
-        GR_GL_KEEP,        // kKeep
-        GR_GL_ZERO,        // kZero
-        GR_GL_REPLACE,     // kReplace
-        GR_GL_INVERT,      // kInvert
-        GR_GL_INCR_WRAP,   // kIncWrap
-        GR_GL_DECR_WRAP,   // kDecWrap
-        GR_GL_INCR,        // kIncClamp
-        GR_GL_DECR,        // kDecClamp
+    static constexpr std::array<GrGLenum, kGrStencilOpCount> gTable = {
+            GR_GL_KEEP,       // kKeep
+            GR_GL_ZERO,       // kZero
+            GR_GL_REPLACE,    // kReplace
+            GR_GL_INVERT,     // kInvert
+            GR_GL_INCR_WRAP,  // kIncWrap
+            GR_GL_DECR_WRAP,  // kDecWrap
+            GR_GL_INCR,       // kIncClamp
+            GR_GL_DECR,       // kDecClamp
     };
     static_assert(0 == (int)GrStencilOp::kKeep);
     static_assert(1 == (int)GrStencilOp::kZero);
@@ -3322,13 +3323,12 @@ bool GrGLGpu::createCopyProgram(GrTexture* srcTex) {
                                                    sizeof(vdata),
                                                    GrGpuBufferType::kVertex,
                                                    kStatic_GrAccessPattern);
-        if (fCopyProgramArrayBuffer) {
-            fCopyProgramArrayBuffer->updateData(
-                    vdata, /*offset=*/0, sizeof(vdata), /*preserve=*/false);
+        if (!fCopyProgramArrayBuffer ||
+            !fCopyProgramArrayBuffer->updateData(
+                    vdata, /*offset=*/0, sizeof(vdata), /*preserve=*/false)) {
+            fCopyProgramArrayBuffer.reset();
+            return false;
         }
-    }
-    if (!fCopyProgramArrayBuffer) {
-        return false;
     }
 
     SkASSERT(!fCopyPrograms[progIdx].fProgram);
@@ -3473,12 +3473,12 @@ bool GrGLGpu::createMipmapProgram(int progIdx) {
                                GrShaderVar::TypeModifier::Uniform);
     GrShaderVar uTexture("u_texture", SkSLType::kTexture2DSampler);
     // We need 1, 2, or 4 texture coordinates (depending on parity of each dimension):
-    GrShaderVar vTexCoords[] = {
-        GrShaderVar("v_texCoord0", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
-        GrShaderVar("v_texCoord1", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
-        GrShaderVar("v_texCoord2", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
-        GrShaderVar("v_texCoord3", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
-    };
+    auto vTexCoords = std::to_array<GrShaderVar>({
+            GrShaderVar("v_texCoord0", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
+            GrShaderVar("v_texCoord1", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
+            GrShaderVar("v_texCoord2", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
+            GrShaderVar("v_texCoord3", SkSLType::kHalf2, GrShaderVar::TypeModifier::Out),
+    });
     GrShaderVar oFragColor("o_FragColor", SkSLType::kHalf4,GrShaderVar::TypeModifier::Out);
 
     SkString vshaderTxt;
@@ -3821,13 +3821,12 @@ bool GrGLGpu::onRegenerateMipMapLevels(GrTexture* texture) {
                                                      sizeof(vdata),
                                                      GrGpuBufferType::kVertex,
                                                      kStatic_GrAccessPattern);
-        fMipmapProgramArrayBuffer->updateData(vdata, /*offset=*/0,
-
-                                              sizeof(vdata),
-                                              /*preserve=*/false);
-    }
-    if (!fMipmapProgramArrayBuffer) {
-        return false;
+        if (!fMipmapProgramArrayBuffer ||
+            !fMipmapProgramArrayBuffer->updateData(vdata, /*offset=*/0,sizeof(vdata),
+                                                   /*preserve=*/false)) {
+            fMipmapProgramArrayBuffer.reset();
+            return false;
+        }
     }
 
     fHWVertexArrayState.setVertexArrayID(this, 0);
@@ -4055,7 +4054,7 @@ bool GrGLGpu::onClearBackendTexture(const GrBackendTexture& backendTexture,
     return result;
 }
 
-void GrGLGpu::deleteBackendTexture(const GrBackendTexture& tex) {
+void GrGLGpu::onDeleteBackendTexture(const GrBackendTexture& tex) {
     SkASSERT(GrBackendApi::kOpenGL == tex.backend());
 
     GrGLTextureInfo info;

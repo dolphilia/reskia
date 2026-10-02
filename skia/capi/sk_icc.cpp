@@ -46,6 +46,15 @@ const_sk_data_t SkICC_SkWriteICCProfileFromICCProfile(const reskia_icc_profile_t
         reinterpret_cast<const skcms_ICCProfile *>(iccProfile), description));
 }
 
+sk_data_t SkICC_SkWriteICCProfileFromColorSpace(const reskia_color_space_t *colorSpace, const reskia_hdr_metadata_t *hdrMetadata) {
+    if (colorSpace == nullptr) {
+        return 0;
+    }
+    auto profile = SkWriteICCProfile(reinterpret_cast<const SkColorSpace *>(colorSpace),
+                                    reinterpret_cast<const skhdr::Metadata *>(hdrMetadata));
+    return profile ? static_sk_data_make(std::move(profile)) : 0;
+}
+
 void SkICC_SkICCFloatXYZD50ToGrid16Lab(const float *float_xyz, uint8_t *grid16_lab) {
     if (float_xyz == nullptr || grid16_lab == nullptr) {
         return;

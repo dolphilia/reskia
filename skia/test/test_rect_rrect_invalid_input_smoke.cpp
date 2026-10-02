@@ -2,6 +2,8 @@
 #include "capi/sk_rect.h"
 
 #include <cstdio>
+#include <limits>
+#include "include/core/SkPoint.h"
 
 namespace {
 
@@ -121,6 +123,29 @@ int main() {
         SkRRect_delete(rrect);
         static_sk_rect_delete(rect_handle);
         return 23;
+    }
+
+    SkRRect_setRectXY(rrect, rect, 2.0f, 2.0f);
+    auto contains = [rrect](float x, float y) {
+        const SkPoint point = SkPoint::Make(x, y);
+        return SkRRect_containsPoint(rrect, reinterpret_cast<const reskia_point_t *>(&point));
+    };
+    if (!check(contains(5, 5), "rounded rect center") ||
+        !check(contains(0, 5), "straight edge") ||
+        !check(!contains(0, 0), "outside curved corner") ||
+        !check(!contains(11, 5), "outside bounds") ||
+        !check(!contains(std::numeric_limits<float>::quiet_NaN(), 5), "NaN point") ||
+        !check(!SkRRect_containsPoint(rrect, nullptr), "NULL point") ||
+        !check(!SkRRect_containsPoint(nullptr, nullptr), "NULL rrect")) {
+        SkRRect_delete(rrect);
+        static_sk_rect_delete(rect_handle);
+        return 24;
+    }
+    SkRRect_setEmpty(rrect);
+    if (!check(!contains(0, 0), "empty rounded rect")) {
+        SkRRect_delete(rrect);
+        static_sk_rect_delete(rect_handle);
+        return 25;
     }
 
     SkRRect_delete(rrect);

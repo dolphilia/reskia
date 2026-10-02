@@ -199,6 +199,18 @@ if(RESKIA_BUILD_TESTS)
     target_link_libraries(test_paint_invalid_input_smoke reskia ${RESKIA_DEP_LIBS})
     add_test(NAME c_skia_paint_invalid_input_smoke COMMAND test_paint_invalid_input_smoke)
 
+    if(TARGET skshaper)
+    add_executable(test_upgrade_api_smoke test/test_upgrade_api_smoke.cpp)
+    target_include_directories(test_upgrade_api_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    target_link_libraries(test_upgrade_api_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_upgrade_api_smoke COMMAND test_upgrade_api_smoke)
+    endif()
+
+    add_executable(test_log_handler_smoke test/test_log_handler_smoke.cpp)
+    target_include_directories(test_log_handler_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
+    target_link_libraries(test_log_handler_smoke reskia ${RESKIA_DEP_LIBS})
+    add_test(NAME c_skia_log_handler_smoke COMMAND test_log_handler_smoke)
+
     add_executable(test_rect_rrect_invalid_input_smoke test/test_rect_rrect_invalid_input_smoke.cpp)
     target_include_directories(test_rect_rrect_invalid_input_smoke PRIVATE ${RESKIA_PUBLIC_INCLUDE_DIRS})
     if(RESKIA_DEP_LINK_DIRS)

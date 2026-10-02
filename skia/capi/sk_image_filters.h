@@ -159,6 +159,18 @@ sk_image_filter_t SkImageFilters_RuntimeShaderWithMaxSampleRadius(const reskia_r
  * shader may be 0.
  * cropRect may be NULL.
  */
+/**
+ * Explicit output bounds policy. Existing RuntimeShader wrappers keep false.
+ * builder is required; sampleRadius must be finite and nonnegative.
+ * input may be 0. Returns a caller-owned filter handle, or 0 on failure.
+ */
+sk_image_filter_t SkImageFilters_RuntimeShaderWithBounds(const reskia_runtime_effect_builder_t *builder, float sampleRadius, reskia_string_view_t childShaderName, sk_image_filter_t input, bool restrictOutputToInputBounds);
+/**
+ * Arrays contain borrowed handles, not C++ string_view/sk_sp objects.
+ * Arrays are required when inputCount > 0; input handles may be 0.
+ * Invalid name/input handles, negative count/radius or nonfinite radius return 0.
+ */
+sk_image_filter_t SkImageFilters_RuntimeShaderWithChildBounds(const reskia_runtime_effect_builder_t *builder, float maxSampleRadius, const reskia_string_view_t *childShaderNames, const sk_image_filter_t *inputs, int inputCount, bool restrictOutputToInputBounds);
 sk_image_filter_t SkImageFilters_Shader(sk_shader_t shader, const reskia_crop_rect_t *cropRect);
 /**
  * shader may be 0.

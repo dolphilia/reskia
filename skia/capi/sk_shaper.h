@@ -91,6 +91,8 @@ const char *SkShaper_LanguageRunIterator_currentLanguage(reskia_shaper_language_
 bool SkShaper_shape(reskia_shaper_t *shaper, const char *utf8, size_t utf8_bytes, const reskia_font_t *font, bool left_to_right, float width, SkTextBlobBuilderRunHandler *handler);
 bool SkShaper_shapeWithIterators(reskia_shaper_t *shaper, const char *utf8, size_t utf8_bytes, reskia_shaper_font_run_iterator_t *font, reskia_shaper_bidi_run_iterator_t *bidi, reskia_shaper_script_run_iterator_t *script, reskia_shaper_language_run_iterator_t *language, float width, SkTextBlobBuilderRunHandler *handler);
 bool SkShaper_shapeWithFeatures(reskia_shaper_t *shaper, const char *utf8, size_t utf8_bytes, reskia_shaper_font_run_iterator_t *font, reskia_shaper_bidi_run_iterator_t *bidi, reskia_shaper_script_run_iterator_t *script, reskia_shaper_language_run_iterator_t *language, const reskia_shaper_feature_t *features, size_t features_count, float width, SkTextBlobBuilderRunHandler *handler);
+// text_tracking is finite extra advance in em units; backend may ignore it.
+bool SkShaper_shapeWithTextTracking(reskia_shaper_t *shaper, const char *utf8, size_t utf8_bytes, reskia_shaper_font_run_iterator_t *font, reskia_shaper_bidi_run_iterator_t *bidi, reskia_shaper_script_run_iterator_t *script, reskia_shaper_language_run_iterator_t *language, const reskia_shaper_feature_t *features, size_t features_count, float width, float text_tracking, SkTextBlobBuilderRunHandler *handler);
 
 #ifdef __cplusplus
 }

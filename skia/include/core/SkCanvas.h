@@ -2529,12 +2529,12 @@ private:
     std::unique_ptr<SkRasterHandleAllocator> fAllocator;
 
     SkSurface_Base*  fSurfaceBase;
-    SkSurface_Base* getSurfaceBase() const { return fSurfaceBase; }
     void setSurfaceBase(SkSurface_Base* sb) {
         fSurfaceBase = sb;
     }
     friend class SkSurface_Base;
     friend class SkSurface_Ganesh;
+    friend class SkCaptureCanvas;
 
     SkIRect fClipRestrictionRect = SkIRect::MakeEmpty();
     int fClipRestrictionSaveCount = -1;
@@ -2542,8 +2542,6 @@ private:
     void doSave();
     void checkForDeferredSave();
     void internalSetMatrix(const SkM44&);
-
-    virtual void onSurfaceDelete() {}
 
     friend class SkAndroidFrameworkUtils;
     friend class SkCanvasPriv;      // needs to expose android functions for testing outside android

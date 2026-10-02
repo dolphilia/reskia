@@ -1,4 +1,8 @@
 #include "capi/sk_picture.h"
+#include "capi/sk_canvas.h"
+#include "handles/static_sk_data.h"
+#include "include/core/SkBitmap.h"
+#include "include/core/SkCanvas.h"
 #include "capi/sk_picture_recorder.h"
 #include "handles/static_sk_picture.h"
 #include "handles/static_sk_rect.h"
@@ -137,10 +141,32 @@ int main() {
         SkPictureRecorder_delete(recorder);
         return 28;
     }
+    SkCanvas_clearColor(canvas, 0xff123456u);
     const sk_picture_t picture_handle = SkPictureRecorder_finishRecordingAsPicture(recorder);
     if (!check(picture_handle != 0 && static_sk_picture_get_ptr(picture_handle) != nullptr, "SkPictureRecorder_finishRecordingAsPicture(valid)")) {
         SkPictureRecorder_delete(recorder);
         return 29;
+    }
+    auto* picture = static_cast<reskia_picture_t*>(static_sk_picture_get_ptr(picture_handle));
+    auto serialized = SkPicture_serialize(picture, nullptr);
+    auto restored = SkPicture_MakeFromData(
+            static_cast<const reskia_data_t*>(static_sk_data_get_ptr(serialized)), nullptr);
+    SkBitmap bitmap;
+    bool valid = bitmap.tryAllocN32Pixels(10, 10) && restored &&
+                 SkPicture_approximateOpCount(picture) > 0 &&
+                 SkPicture_approximateBytesUsed(picture) > 0;
+    if (valid) {
+        SkCanvas target(bitmap);
+        SkPicture_playback(static_cast<reskia_picture_t*>(static_sk_picture_get_ptr(restored)),
+                           reinterpret_cast<reskia_canvas_t*>(&target), nullptr);
+        valid = bitmap.getColor(5, 5) == 0xff123456u;
+    }
+    static_sk_data_delete(serialized);
+    static_sk_picture_delete(restored);
+    if (!check(valid, "picture serialization/playback preserves recorded pixels")) {
+        static_sk_picture_delete(picture_handle);
+        SkPictureRecorder_delete(recorder);
+        return 34;
     }
     static_sk_picture_delete(picture_handle);
     SkPictureRecorder_delete(recorder);

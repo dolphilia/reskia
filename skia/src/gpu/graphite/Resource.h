@@ -239,6 +239,8 @@ public:
     Shareable shareable() const { return fShareable; }
     const GraphiteResourceKey& key() const { return fKey; }
 
+    virtual Protected isProtected() const { return Protected::kNo; }
+
     // Retrieves the amount of GPU memory used by this resource in bytes. It is approximate since we
     // aren't aware of additional padding or copies made by the driver.
     size_t gpuMemorySize() const { return fGpuMemorySize; }
@@ -262,7 +264,7 @@ public:
     // when the content of the Resource object changes. This will never return 0.
     UniqueID uniqueID() const { return fUniqueID; }
 
-    const char* getLabel() const { return fLabel.c_str(); }
+    const std::string& getLabel() const { return fLabel; }
 
     // Tests whether a object has been abandoned or released. All objects will be in this state
     // after their creating Context is destroyed or abandoned.

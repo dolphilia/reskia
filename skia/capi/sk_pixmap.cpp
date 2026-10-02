@@ -56,6 +56,10 @@ bool has_pixels(const SkPixmap *pixmap) {
     return pixmap != nullptr && pixmap->addr() != nullptr;
 }
 
+bool has_nonempty_pixels(const SkPixmap *pixmap) {
+    return has_pixels(pixmap) && pixmap->width() > 0 && pixmap->height() > 0;
+}
+
 bool has_pixel_at(const SkPixmap *pixmap, int x, int y) {
     return has_pixels(pixmap) && x >= 0 && y >= 0 && x < pixmap->width() && y < pixmap->height();
 }
@@ -418,7 +422,7 @@ bool SkPixmap_scalePixels(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, c
 bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect_t *subset) {
     SkPixmap *native = as_pixmap(pixmap);
     const SkIRect *native_subset = as_irect(subset);
-    if (native == nullptr || native_subset == nullptr) {
+    if (!has_nonempty_pixels(native) || native_subset == nullptr) {
         return false;
     }
     return native->erase(color, *native_subset);
@@ -426,7 +430,7 @@ bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect
 
 bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color) {
     SkPixmap *native = as_pixmap(pixmap);
-    if (native == nullptr) {
+    if (!has_nonempty_pixels(native)) {
         return false;
     }
     return native->erase(color);
@@ -435,7 +439,7 @@ bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color) {
 bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset) {
     SkPixmap *native = as_pixmap(pixmap);
     const SkColor4f *native_color = as_color4f(color);
-    if (native == nullptr || native_color == nullptr) {
+    if (!has_nonempty_pixels(native) || native_color == nullptr) {
         return false;
     }
     return native->erase(*native_color, as_irect(subset));

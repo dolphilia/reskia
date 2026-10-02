@@ -133,14 +133,14 @@ bool SkPixmap_scalePixels(reskia_pixmap_t *pixmap, const reskia_pixmap_t *dst, c
  * pixmap/subset: non-null.
  * false on invalid input.
  */
-bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect_t *subset);
-bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color); // returns false on null pixmap
+bool SkPixmap_erase(reskia_pixmap_t *pixmap, uint32_t color, const reskia_i_rect_t *subset); // false for NULL/empty/no-pixel storage
+bool SkPixmap_eraseColor(reskia_pixmap_t *pixmap, uint32_t color); // false for NULL/empty/no-pixel storage
 /**
  * pixmap/color: non-null.
  * subset may be null.
  * false on invalid input.
  */
-bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset);
+bool SkPixmap_eraseColor4fWithSubset(reskia_pixmap_t *pixmap, const reskia_color_4f_t *color, const reskia_i_rect_t *subset); // false for NULL/empty/no-pixel storage; NULL subset erases all
 
 #ifdef __cplusplus
 }

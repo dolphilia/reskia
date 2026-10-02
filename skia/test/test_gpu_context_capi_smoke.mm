@@ -898,6 +898,15 @@ bool smoke_context_create_destroy() {
 #if RESKIA_TEST_GPU_GANESH
     reskia_direct_context_t *mock_context = GrDirectContext_MakeMock();
     if (mock_context != nullptr) {
+        const auto flush = GrDirectContext_flushWithResult(mock_context);
+        const auto submit = GrDirectContext_flushAndSubmitWithResult(mock_context, false);
+        const auto invalid = GrDirectContext_flushWithResult(nullptr);
+        if (!check(flush.success && flush.submitted == 0 && submit.success && submit.submitted == 0 &&
+                   GrDirectContext_flush(mock_context) == 0 && !invalid.success && invalid.submitted == -1,
+                   "flush result success and semaphore submission are independent")) {
+            Reskia_DirectContext_Release(mock_context);
+            return false;
+        }
         GrDirectContext_resetGLTextureBindings(mock_context);
         Reskia_DirectContext_Release(mock_context);
     }
@@ -1263,6 +1272,19 @@ bool smoke_context_create_destroy() {
             return false;
         }
         Graphite_Recording_delete(recording);
+
+        auto* detailed_recording = Graphite_Recorder_snap(recorder);
+        auto* insertion = Graphite_Context_insertRecordingWithStatus(graphite_context, detailed_recording);
+        Graphite_Recording_delete(detailed_recording);
+        const bool insertion_ok = insertion && Graphite_InsertStatusInfo_isSuccess(insertion) &&
+                Graphite_InsertStatus_numPendingCommands(insertion) >= 0 &&
+                Graphite_InsertStatus_numPendingPasses(insertion) >= 0;
+        Graphite_InsertStatus_deleteInfo(insertion);
+        if (!check(insertion_ok, "Graphite insert status snapshot ownership/counts")) {
+            Reskia_GraphiteRecorder_Release(recorder);
+            Reskia_GraphiteContext_Release(graphite_context);
+            return false;
+        }
 
         reskia_graphite_texture_info_t* default_texture_info = Graphite_TextureInfo_new();
         reskia_string_t* texture_info_string = Graphite_TextureInfo_toString(default_texture_info);

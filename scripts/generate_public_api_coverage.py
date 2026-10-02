@@ -392,7 +392,9 @@ def load_method_overrides(repo: Path) -> dict[tuple[str, str, str, str, str], Me
                     row.get("signature", ""),
                 )
                 note = row.get("note", "") or action or f"Coverage override: {triage}"
-                overrides[key] = MethodOverride(status=status, note=note)
+                overrides[key] = MethodOverride(
+                    status=status, note=note, matched_capi=row.get("matched_capi", "")
+                )
     return overrides
 
 

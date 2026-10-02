@@ -2,6 +2,20 @@
 
 作成時刻: 2026-05-22 08:05:52 JST
 
+## 2026-10-02 継続作業の最新状態
+
+- latest accepted cycle: 108
+- accepted baseline: `92b1f4ed4c32e0d52ef09690da4d7c015d74dace` (2026-10-01)
+- 実行開始時の固定目標: `92b1f4ed4c32e0d52ef09690da4d7c015d74dace`
+- 残り: 0 commits
+- coverage: missing/deferred/partial/overcovered はすべて0。最終 stale/signature report は header のみ。
+- Debug の prebuilt/source/Ganesh+Graphite+Metal/source-smoke の4 configure/build は PASS。GPU 4件・source 15件、C11 ABI runtime 2構成は PASS。実 Metal surface/context は device 不在による既定 SKIP。
+- 今回の更新は完了（2026-10-02 17:48:21 JST）。cycle 103〜108 を accepted とし、開始時の固定目標まで到達。
+- 次回の番号: cycle 109。今回の固定目標に対する残作業なし。
+- 実行開始: 2026-10-02 16:43:48 JST。公式 main の取得完了: 16:44:03 JST。実行中の追加 fetch なし。
+- 作業は main 上の未コミット変更として残している。commit/push は今回の対象に含めていない。
+- 最新の記録: `docs/ja/plans/skia-incremental-upgrade/records/cycle-108-2026-10-02.md`
+
 ## 最初に確認すること
 
 この作業は現在 `main` ブランチで行う。過去の cycle record や旧メモに残る `incremental-upgrade` ブランチ表記は履歴として扱う。
@@ -20,8 +34,8 @@ git -C vendor/skia-upstream status --short --branch
 期待する現在値:
 
 - branch: `main`
-- `SKIA_REF`: `418ab117fa0e9c92319ba746de2b659c115e36f8`
-- next probe candidate: none in current local refs; cycle 102 accepted refreshed `origin/main` dated 2026-07-21 and `git -C vendor/skia-upstream-candidate rev-list --count 418ab117fa0e9c92319ba746de2b659c115e36f8..origin/main` returned `0`. If new Skia refs are provided later, begin the next cycle from `418ab117fa0e9c92319ba746de2b659c115e36f8`.
+- `SKIA_REF`: `92b1f4ed4c32e0d52ef09690da4d7c015d74dace`
+- next probe candidate: 未選定。今回の固定目標に到達済み。次回は cycle 109 から新しい固定目標へ進める。
 - `vendor/skia-source.lock` は probe が通るまで更新しない。
 
 ## 作業の現在地
@@ -135,23 +149,31 @@ git -C vendor/skia-upstream status --short --branch
 - cycle 101 accepted: `aee3692371639d705d05da1c99918b59ea003129`。
 - cycle 102 accepted: `418ab117fa0e9c92319ba746de2b659c115e36f8`。
 
-未実施:
+- cycle 103 accepted: `4409e239a1af5522863ff2d67fd326f5dd0980f4`。
+- cycle 104 accepted: `90e9f68af5404c76707fc31de5173471a9046710`。
+- cycle 105 accepted: `22379c11f3e9739372f731da6f81b4b23fcf563d`。
 
-- 現在の local refs では未実施 candidate なし。
-- 新しい Skia refs が提供された場合の次 cycle candidate selection from `418ab117fa0e9c92319ba746de2b659c115e36f8`.
+- cycle 106 accepted: `14da4fce14a3f46b1e4e2a646b274dfece91d763`。
+
+- cycle 107 accepted: `dfa8a23d8f91310aa1b2c4800c80ee4e80251be8`。
+
+- cycle 108 accepted: `92b1f4ed4c32e0d52ef09690da4d7c015d74dace`。
+
+今回の未実施項目:
+
+- なし。開始時に固定した目標までの残りは0 commits。
+- Metal device 不在で実 GPU 経路が SKIP となった環境制約、互換維持/削除 API の方針、失敗からの修正・再検証は各 cycle record に記録済み。
 
 ## 次にやること
 
-次の作業は、新しい Skia refs が提供された場合に次 cycle の candidate selection から始める。
+今回の要求範囲は完了。次回は cycle 109 として、accepted baseline `92b1f4ed4c32e0d52ef09690da4d7c015d74dace` から継続する。
 
-推奨順:
+1. lock、両 vendor HEAD/clean 状態、main の作業変更、coverage を確認する。今回の未コミット変更を保持する。
+2. 新しい最新目標への更新が依頼された場合、開始時の公式 main を一度取得して目標 SHA を固定する。
+3. 継続計画に沿って約2週間幅の local mainline commit を比較し、coverage/source/header/C API と4構成の verification gate を進める。
+4. 全 gate が通るまで lock を更新しない。
 
-1. baseline `418ab117fa0e9c92319ba746de2b659c115e36f8` より後の固定 mainline commit を local refs から選ぶ。
-2. `vendor/skia-upstream-candidate` の refs を優先する。cycle 102 終了時点では `origin/main` が accepted candidate と同じ `418ab117fa0e9c92319ba746de2b659c115e36f8` を指している。候補がない場合は無理に floating `main` へ進まず cycle record / HANDOFF に記録する。
-3. 1週間候補と必要に応じて2-3週間候補も比較し、commit 数、`include` / `modules` diff、dependency/source-list drift を見る。
-4. candidate checkout を用意して coverage regression と stale C API report を取る。
-5. 新規 `missing` / `partial` / `overcovered` / `stale_capi` / `signature_changed_review` を area ごとに routing する。
-6. low-risk source/header sync と C API catch-up へ進む。
+## 参考: 過去サイクルの候補メモ
 
 cycle 072 の比較候補メモ:
 

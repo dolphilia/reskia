@@ -458,7 +458,7 @@ void SkPath_updateBoundsCache(reskia_path_t *path) {
     if (path == nullptr) {
         return;
     }
-    reinterpret_cast<SkPath *>(path)->updateBoundsCache();
+    (void)reinterpret_cast<SkPath *>(path)->getBounds();
 }
 
 sk_rect_t SkPath_computeTightBounds(reskia_path_t *path) {
@@ -1012,7 +1012,11 @@ uint32_t SkPath_getGenerationID(reskia_path_t *path) {
     if (path == nullptr) {
         return 0;
     }
-    return reinterpret_cast<SkPath *>(path)->getGenerationID();
+    return static_cast<uint32_t>(reinterpret_cast<SkPath *>(path)->getGenerationID());
+}
+
+uint64_t SkPath_getGenerationID64(const reskia_path_t *path) {
+    return path ? reinterpret_cast<const SkPath *>(path)->getGenerationID() : 0;
 }
 
 bool SkPath_isValid(reskia_path_t *path) {

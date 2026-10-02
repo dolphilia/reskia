@@ -2,6 +2,7 @@
 #include <cstdint>
 
 #include "capi/sk_image_info.h"
+#include "capi/sk_i_rect.h"
 #include "capi/sk_pixmap.h"
 #include "capi/sk_pixmap_utils.h"
 #include "handles/static_sk_color_4f.h"
@@ -114,6 +115,47 @@ int main() {
     uint32_t dst_pixels[1] = {0};
     ok &= check(SkPixmap_readPixels(pixmap, info, dst_pixels, sizeof(uint32_t)), "readPixels valid");
     ok &= check(SkPixmap_eraseColor(pixmap, 0xff000000u), "eraseColor valid");
+
+    const auto fill_handle = SkPixmap_getColor4f(pixmap, 0, 0);
+    const auto *fill = reinterpret_cast<const reskia_color_4f_t *>(static_sk_color_4f_get_ptr(fill_handle));
+    const auto clip_handle = SkIRect_MakeLTRB(-1, -1, 1, 1);
+    const auto *clip = reinterpret_cast<const reskia_i_rect_t *>(static_sk_i_rect_get_ptr(clip_handle));
+    // A known color type with zero area now asserts in upstream erase(). The C API
+    // must reject it before entering Skia, for either empty dimension.
+    for (int axis = 0; axis < 2; ++axis) {
+        const int width = axis == 0 ? 0 : 1;
+        const int height = axis == 0 ? 1 : 0;
+        const auto empty_info_handle = SkImageInfo_MakeN32Premul(width, height);
+        const auto *empty_info = reinterpret_cast<const reskia_image_info_t *>(static_sk_image_info_get_ptr(empty_info_handle));
+        auto *empty = SkPixmap_newWithImageInfoAddressAndRowBytes(empty_info, pixels, width * sizeof(uint32_t));
+        ok &= check(empty && !SkPixmap_eraseColor(empty, 0) &&
+                    !SkPixmap_erase(empty, 0, clip) &&
+                    !SkPixmap_eraseColor4fWithSubset(empty, fill, nullptr), "erase rejects known-color empty area");
+        SkPixmap_delete(empty);
+        static_sk_image_info_delete(empty_info_handle);
+    }
+    auto *no_storage = SkPixmap_newWithImageInfoAddressAndRowBytes(info, nullptr, sizeof(uint32_t));
+    ok &= check(no_storage && !SkPixmap_eraseColor(no_storage, 0) &&
+                !SkPixmap_erase(no_storage, 0, clip) &&
+                !SkPixmap_eraseColor4fWithSubset(no_storage, fill, nullptr), "erase rejects missing pixel storage");
+    SkPixmap_delete(no_storage);
+
+    const auto grid_info_handle = SkImageInfo_MakeN32Premul(2, 2);
+    const auto *grid_info = reinterpret_cast<const reskia_image_info_t *>(static_sk_image_info_get_ptr(grid_info_handle));
+    uint32_t grid_pixels[4] = {0xffffffffu, 0xffffffffu, 0xffffffffu, 0xffffffffu};
+    auto *grid = SkPixmap_newWithImageInfoAddressAndRowBytes(grid_info, grid_pixels, 2 * sizeof(uint32_t));
+    ok &= check(SkPixmap_erase(grid, 0xff000000u, clip) && grid_pixels[0] == 0xff000000u &&
+                grid_pixels[1] == 0xffffffffu && grid_pixels[2] == 0xffffffffu && grid_pixels[3] == 0xffffffffu,
+                "erase clips subset to bounds without touching surrounding pixels");
+    const auto outside_handle = SkIRect_MakeLTRB(4, 4, 5, 5);
+    const auto *outside = reinterpret_cast<const reskia_i_rect_t *>(static_sk_i_rect_get_ptr(outside_handle));
+    ok &= check(!SkPixmap_erase(grid, 0, outside), "erase rejects disjoint subset");
+    ok &= check(SkPixmap_eraseColor4fWithSubset(grid, fill, nullptr), "eraseColor4f NULL subset erases full bounds");
+    static_sk_i_rect_delete(outside_handle);
+    SkPixmap_delete(grid);
+    static_sk_image_info_delete(grid_info_handle);
+    static_sk_i_rect_delete(clip_handle);
+    static_sk_color_4f_delete(fill_handle);
 
     const sk_image_info_t swapped = SkPixmapUtils_SwapWidthHeight(info);
     ok &= check(swapped != 0, "SwapWidthHeight valid");

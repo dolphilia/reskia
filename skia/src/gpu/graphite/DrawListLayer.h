@@ -43,7 +43,7 @@ public:
     // DrawList requires that all Transforms be valid and asserts as much; invalid transforms should
     // be detected at the Device level or similar. The provided Renderer must be compatible with the
     // 'shape' and 'stroke' parameters.
-    std::pair<DrawParams*, Insertion> recordDraw(
+    std::pair<DrawParams*, Layer*> recordDraw(
             const Renderer* renderer,
             const Transform& localToDevice,
             const Geometry& geometry,
@@ -53,10 +53,13 @@ public:
             SkEnumBitMask<DstUsage> dstUsage,
             BarrierType barrierBeforeDraws,
             PipelineDataGatherer* gatherer,
+            StorageContext* storageContext,
             const StrokeStyle* stroke,
-            const Insertion& latestInsertion) override;
+            Layer* lastInsertion) override;
 
     std::unique_ptr<DrawPass> snapDrawPass(Recorder* recorder,
+                                           StorageContext* storageContext,
+                                           DrawContext* drawContext,
                                            sk_sp<TextureProxy> target,
                                            const SkImageInfo& targetInfo,
                                            const DstReadStrategy dstReadStrategy) override;
@@ -70,7 +73,7 @@ private:
                                                     const LayerKey& key,
                                                     SkEnumBitMask<BoundsFlags> testMask,
                                                     const DrawParams* drawParams,
-                                                    const Layer* stop);
+                                                    CompressedPaintersOrder stop);
 
     BindingList* findOrCreateBindingInLayer(Layer* layer,
                                             BindingList* parent,
@@ -79,12 +82,7 @@ private:
 
     friend class DrawPass;
 
-    static constexpr int32_t  kMaxSearchLimit = 32;
-    static constexpr uint32_t kDefaultAllocation = 4096;
-
-    // TODO (thomsmit): Try using SkSTArenaAllocWithReset that has the first storage block stored
-    // inline so it's embedded in the DrawListLayer object.
-    SkArenaAllocWithReset fStorage{kDefaultAllocation};
+    SkSTArenaAllocWithReset<256> fStorage;
     SkTInternalLList<Layer> fLayers;
 
     int fDrawCount = 0;

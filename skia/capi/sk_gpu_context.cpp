@@ -24,6 +24,7 @@
 
 #include <chrono>
 #include <memory>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -85,6 +86,17 @@
 #include "../handles/static_sk_image-internal.h"
 #include "../handles/static_sk_image_required_properties-internal.h"
 #include "../handles/static_sk_i_size.h"
+
+struct reskia_graphite_insert_status_info_t {
+#if defined(SK_GRAPHITE)
+    skgpu::graphite::InsertStatus native;
+#else
+    int32_t value;
+    std::string message;
+    int num_pending_commands;
+    int num_pending_passes;
+#endif
+};
 
 namespace {
 
@@ -804,11 +816,36 @@ reskia_gr_semaphores_submitted_t GrDirectContext_flush(reskia_direct_context_t *
     if (ctx == nullptr) {
         return -1;
     }
-    return static_cast<reskia_gr_semaphores_submitted_t>(as_direct_context(ctx)->flush(GrFlushInfo()));
+    return static_cast<reskia_gr_semaphores_submitted_t>(as_direct_context(ctx)->flush(GrFlushInfo()).fSubmitted);
 #else
     (void) ctx;
     return -1;
 #endif
+}
+
+reskia_gr_flush_result_t GrDirectContext_flushWithResult(reskia_direct_context_t *ctx) {
+#if defined(SK_GANESH)
+    if (ctx != nullptr) {
+        auto result = as_direct_context(ctx)->flush(GrFlushInfo());
+        return {result.fSuccess, static_cast<reskia_gr_semaphores_submitted_t>(result.fSubmitted)};
+    }
+#else
+    (void)ctx;
+#endif
+    return {false, -1};
+}
+
+reskia_gr_flush_result_t GrDirectContext_flushAndSubmitWithResult(reskia_direct_context_t *ctx, bool sync_cpu) {
+#if defined(SK_GANESH)
+    if (ctx != nullptr) {
+        auto result = as_direct_context(ctx)->flushAndSubmit(to_sync_cpu(sync_cpu));
+        return {result.fSuccess, static_cast<reskia_gr_semaphores_submitted_t>(result.fSubmitted)};
+    }
+#else
+    (void)ctx;
+    (void)sync_cpu;
+#endif
+    return {false, -1};
 }
 
 bool GrDirectContext_submit(reskia_direct_context_t *ctx, bool sync_cpu) {
@@ -2169,6 +2206,88 @@ reskia_string_t *Graphite_InsertStatus_message(reskia_graphite_insert_status_t s
 
 bool Graphite_InsertStatus_operator_bool(reskia_graphite_insert_status_t status) {
     return Graphite_InsertStatus_newWithValue(status) == 0;
+}
+
+reskia_graphite_insert_status_info_t *Graphite_InsertStatus_newWithPendingCounts(
+        int32_t value, int num_pending_commands, int num_pending_passes) {
+    if (value < 0 || value > 5 || num_pending_commands < 0 || num_pending_passes < 0) {
+        return nullptr;
+    }
+#if defined(SK_GRAPHITE)
+    return new reskia_graphite_insert_status_info_t{skgpu::graphite::InsertStatus(
+            static_cast<skgpu::graphite::InsertStatus::V>(value), num_pending_commands, num_pending_passes)};
+#else
+    return new reskia_graphite_insert_status_info_t{value, {}, num_pending_commands, num_pending_passes};
+#endif
+}
+
+reskia_graphite_insert_status_info_t *Graphite_InsertStatus_newWithMessage(int32_t value, const char *message) {
+    if (value < 0 || value > 5) { return nullptr; }
+#if defined(SK_GRAPHITE)
+    return new reskia_graphite_insert_status_info_t{skgpu::graphite::InsertStatus(
+            static_cast<skgpu::graphite::InsertStatus::V>(value), std::string(message ? message : ""))};
+#else
+    return new reskia_graphite_insert_status_info_t{value, message ? message : "", 0, 0};
+#endif
+}
+
+void Graphite_InsertStatus_deleteInfo(reskia_graphite_insert_status_info_t *status) {
+    delete status;
+}
+
+int32_t Graphite_InsertStatusInfo_value(const reskia_graphite_insert_status_info_t *status) {
+    if (!status) { return -1; }
+#if defined(SK_GRAPHITE)
+    return static_cast<int32_t>(static_cast<skgpu::graphite::InsertStatus::V>(status->native));
+#else
+    return status->value;
+#endif
+}
+
+bool Graphite_InsertStatusInfo_isSuccess(const reskia_graphite_insert_status_info_t *status) {
+    return status && Graphite_InsertStatusInfo_value(status) == 0;
+}
+
+reskia_string_t *Graphite_InsertStatusInfo_message(const reskia_graphite_insert_status_info_t *status) {
+    if (!status) { return nullptr; }
+#if defined(SK_GRAPHITE)
+    const auto& message = status->native.message();
+#else
+    const auto& message = status->message;
+#endif
+    return reinterpret_cast<reskia_string_t *>(new SkString(message.data(), message.size()));
+}
+
+int Graphite_InsertStatus_numPendingCommands(const reskia_graphite_insert_status_info_t *status) {
+    if (!status) { return 0; }
+#if defined(SK_GRAPHITE)
+    return status->native.numPendingCommands();
+#else
+    return status->num_pending_commands;
+#endif
+}
+
+int Graphite_InsertStatus_numPendingPasses(const reskia_graphite_insert_status_info_t *status) {
+    if (!status) { return 0; }
+#if defined(SK_GRAPHITE)
+    return status->native.numPendingPasses();
+#else
+    return status->num_pending_passes;
+#endif
+}
+
+reskia_graphite_insert_status_info_t *Graphite_Context_insertRecordingWithStatus(
+        reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording) {
+#if defined(SK_GRAPHITE)
+    if (!ctx || !recording) { return nullptr; }
+    skgpu::graphite::InsertRecordingInfo info;
+    info.fRecording = as_graphite_recording(recording);
+    return new reskia_graphite_insert_status_info_t{as_graphite_context(ctx)->insertRecording(info)};
+#else
+    (void) ctx;
+    (void) recording;
+    return nullptr;
+#endif
 }
 
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording) {

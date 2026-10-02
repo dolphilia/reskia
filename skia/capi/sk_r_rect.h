@@ -61,6 +61,8 @@ void SkRRect_outset(reskia_r_rect_t *rrect, float dx, float dy, reskia_r_rect_t 
 void SkRRect_outsetInPlace(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy)
 void SkRRect_offset(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy)
 sk_r_rect_t SkRRect_makeOffset(reskia_r_rect_t *rrect, float dx, float dy); // (SkRRect *rrect, SkScalar dx, SkScalar dy) -> sk_r_rect_t
+// NULL rrect or point returns false. Point is borrowed for this call.
+bool SkRRect_containsPoint(const reskia_r_rect_t *rrect, const reskia_point_t *point);
 bool SkRRect_contains(reskia_r_rect_t *rrect, const reskia_rect_t *rect); // (SkRRect *rrect, const SkRect *rect) -> bool
 bool SkRRect_isValid(reskia_r_rect_t *rrect); // (SkRRect *rrect) -> bool
 /**

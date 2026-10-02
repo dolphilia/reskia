@@ -54,10 +54,15 @@ typedef struct reskia_surface_props_t reskia_surface_props_t;
 typedef struct reskia_trace_memory_dump_t reskia_trace_memory_dump_t;
 typedef int32_t reskia_gr_purge_resource_options_t;
 typedef int32_t reskia_gr_semaphores_submitted_t;
+typedef struct reskia_gr_flush_result_t {
+    bool success;
+    reskia_gr_semaphores_submitted_t submitted; // -1 for NULL/disabled backend; otherwise GrSemaphoresSubmitted.
+} reskia_gr_flush_result_t;
 typedef int32_t reskia_sk_texture_compression_type_t;
 typedef int32_t reskia_graphite_rescale_gamma_t;
 typedef int32_t reskia_graphite_rescale_mode_t;
 typedef int32_t reskia_graphite_insert_status_t;
+typedef struct reskia_graphite_insert_status_info_t reskia_graphite_insert_status_info_t;
 typedef int32_t reskia_graphite_yuv_color_space_t;
 typedef uint32_t reskia_gpu_stats_flags_t;
 typedef void (*reskia_shader_error_proc_t)(void *user_data, const char *shader, const char *errors);
@@ -114,6 +119,9 @@ void GrDirectContext_purgeUnlockedResources(reskia_direct_context_t *ctx, reskia
 void GrDirectContext_purgeUnlockedResourcesWithBytes(reskia_direct_context_t *ctx, size_t bytesToPurge, bool preferScratchResources); // NULL input is no-op
 void GrDirectContext_flushAndSubmit(reskia_direct_context_t *ctx, bool sync_cpu); // NULL input is no-op
 reskia_gr_semaphores_submitted_t GrDirectContext_flush(reskia_direct_context_t *ctx); // NULL input returns -1
+// Report flush success separately from semaphore submission. NULL/disabled backend: {false, -1}.
+reskia_gr_flush_result_t GrDirectContext_flushWithResult(reskia_direct_context_t *ctx);
+reskia_gr_flush_result_t GrDirectContext_flushAndSubmitWithResult(reskia_direct_context_t *ctx, bool sync_cpu);
 bool GrDirectContext_submit(reskia_direct_context_t *ctx, bool sync_cpu); // NULL input returns false
 void GrDirectContext_checkAsyncWorkCompletion(reskia_direct_context_t *ctx); // NULL input is no-op
 void GrDirectContext_dumpMemoryStatistics(reskia_direct_context_t *ctx, reskia_trace_memory_dump_t *traceMemoryDump); // NULL input is no-op
@@ -252,6 +260,20 @@ reskia_graphite_submit_info_t Graphite_SubmitInfo_newWithSyncAndFrameID(bool syn
 bool Graphite_Context_submitWithInfo(reskia_graphite_context_t *ctx, const reskia_graphite_submit_info_t *submit_info); // invalid input returns false
 bool Graphite_Context_hasUnfinishedGpuWork(reskia_graphite_context_t *ctx); // NULL input returns false
 bool Graphite_Context_hasPendingGPUWork(reskia_graphite_context_t *ctx); // NULL input returns false
+// Owned result snapshots; release with Graphite_InsertStatus_deleteInfo.
+// Invalid status (outside 0..5) or negative pending counts return NULL.
+reskia_graphite_insert_status_info_t *Graphite_InsertStatus_newWithPendingCounts(int32_t value, int num_pending_commands, int num_pending_passes);
+reskia_graphite_insert_status_info_t *Graphite_InsertStatus_newWithMessage(int32_t value, const char *message); // NULL message means empty
+void Graphite_InsertStatus_deleteInfo(reskia_graphite_insert_status_info_t *status); // NULL is a no-op
+int32_t Graphite_InsertStatusInfo_value(const reskia_graphite_insert_status_info_t *status); // NULL returns -1
+bool Graphite_InsertStatusInfo_isSuccess(const reskia_graphite_insert_status_info_t *status); // NULL returns false
+reskia_string_t *Graphite_InsertStatusInfo_message(const reskia_graphite_insert_status_info_t *status); // owned string; NULL returns NULL
+int Graphite_InsertStatus_numPendingCommands(const reskia_graphite_insert_status_info_t *status); // NULL returns 0
+int Graphite_InsertStatus_numPendingPasses(const reskia_graphite_insert_status_info_t *status); // NULL returns 0
+// Borrowed recording; owned snapshot preserves value, message, and pending counts.
+// NULL inputs or disabled Graphite return NULL.
+reskia_graphite_insert_status_info_t *Graphite_Context_insertRecordingWithStatus(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording);
+
 bool Graphite_Context_insertRecording(reskia_graphite_context_t *ctx, reskia_graphite_recording_t *recording); // borrowed recording; NULL input returns false
 void Graphite_Context_startCapture(reskia_graphite_context_t *ctx); // NULL input is no-op
 void Graphite_Context_endCapture(reskia_graphite_context_t *ctx); // NULL input is no-op

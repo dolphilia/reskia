@@ -25,6 +25,8 @@
 #include "src/sksl/codegen/SkSLNativeShader.h"
 #include "src/sksl/ir/SkSLProgram.h"
 
+#include <array>
+
 namespace skgpu::graphite {
 
 namespace {
@@ -183,7 +185,7 @@ static MTLBlendFactor blend_coeff_to_mtl_blend(skgpu::BlendCoeff coeff) {
 
 // TODO: share this w/ Ganesh Metal backend?
 static MTLBlendOperation blend_equation_to_mtl_blend_op(skgpu::BlendEquation equation) {
-    static const MTLBlendOperation gTable[] = {
+    static constexpr std::array<MTLBlendOperation, 3> gTable = {
             MTLBlendOperationAdd,              // skgpu::BlendEquation::kAdd
             MTLBlendOperationSubtract,         // skgpu::BlendEquation::kSubtract
             MTLBlendOperationReverseSubtract,  // skgpu::BlendEquation::kReverseSubtract
@@ -305,7 +307,7 @@ sk_sp<MtlGraphicsPipeline> MtlGraphicsPipeline::Make(
                step->appendsVertices() ? MTLVertexStepFunctionPerVertex :
                                          MTLVertexStepFunctionPerInstance,
                step->staticAttributes(),
-               step->appendAttributes(),
+               shaderInfo->appendAttributes(),
                {fsLibrary.get(), "fragmentMain"},
                std::move(dss),
                step->depthStencilSettings().fStencilReferenceValue,

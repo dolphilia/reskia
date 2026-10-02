@@ -73,7 +73,6 @@ list(APPEND SOURCE_FILES
         src/core/SkATrace.cpp
         src/core/SkAutoPixmapStorage.cpp
         src/core/SkBBHFactory.cpp
-        src/core/SkBigPicture.cpp
         src/core/SkBitmap.cpp
         src/core/SkBitmapCache.cpp
         src/core/SkBitmapDevice.cpp
@@ -111,9 +110,11 @@ list(APPEND SOURCE_FILES
         src/core/SkCompressedDataUtils.cpp
         src/core/SkContourMeasure.cpp
         src/core/SkConvertPixels.cpp
+        src/core/RasterContext.cpp
+        src/core/SkContext.cpp
+        src/core/SkSharedContext.cpp
         src/core/SkCpu.cpp
-        src/core/SkCPUContext.cpp
-        src/core/SkCPURecorder.cpp
+        src/core/Recorder.cpp
         src/core/SkCubicClipper.cpp
         src/core/SkCubicMap.cpp
         src/core/SkData.cpp
@@ -204,6 +205,7 @@ list(APPEND SOURCE_FILES
         src/core/SkPixmapDraw.cpp
         src/core/SkPoint.cpp
         src/core/SkPoint3.cpp
+        src/utils/SkLogHandler.cpp
         src/core/SkPrebuiltCompat.cpp
         src/core/SkPtrRecorder.cpp
         src/core/SkQuadClipper.cpp
@@ -854,6 +856,11 @@ if(RESKIA_ENABLE_GPU_GANESH OR RESKIA_ENABLE_GPU_GRAPHITE)
         list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/dawn/")
         list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/dawn/")
     endif()
+    # Sparse Strips is not enabled in Reskia. Upstream gates both its helper
+    # implementations and RenderSteps behind SK_ENABLE_SPARSE_STRIPS.
+    list(FILTER _reskia_gpu_sources EXCLUDE REGEX
+            "^src/gpu/graphite/(sparse_strips/|render/(EndCap|WideTile)RenderStep[.]cpp$)")
+
     if(NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/vello/cpp/vello.h")
         list(FILTER _reskia_gpu_sources EXCLUDE REGEX "^src/gpu/graphite/compute/Vello")
     endif()

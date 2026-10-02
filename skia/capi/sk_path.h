@@ -162,7 +162,8 @@ size_t SkPath_writeToMemory(reskia_path_t *path, void *buffer);
 sk_data_t SkPath_serialize(reskia_path_t *path); // (SkPath *path) -> sk_data_t
 size_t SkPath_readFromMemory(reskia_path_t *path, const void *buffer, size_t length); // buffer may be null only when length == 0; reads at most length bytes
 sk_path_t SkPath_ReadFromMemory(const void *buffer, size_t length, size_t *bytesRead); // static; invalid input returns 0
-unsigned int SkPath_getGenerationID(reskia_path_t *path); // (SkPath *path) -> uint32_t
+unsigned int SkPath_getGenerationID(reskia_path_t *path); // legacy low 32 bits; NULL returns 0. Use the 64-bit API for full IDs.
+uint64_t SkPath_getGenerationID64(const reskia_path_t *path); // full upstream generation ID; NULL returns 0
 bool SkPath_isValid(reskia_path_t *path); // (SkPath *path) -> bool
 /**
  * one, two, and result must be non-NULL, and op must be in the SkPathOp range.
